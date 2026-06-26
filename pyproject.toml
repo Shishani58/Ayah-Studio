@@ -1,0 +1,70 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "surah-cutter"
+version = "0.1.0"
+description = "Generate per-ayah timecodes for Qur'an recitation audio, with visual/audio verification."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "surah-cutter contributors" }]
+keywords = ["quran", "forced-alignment", "timecodes", "ayah", "recitation"]
+
+# Core is the full shipped runtime: GUI (dashboard + review), DB I/O, decode,
+# metric AND timing generation. Generation runs the int8 ONNX model
+# (models/wav2vec2-quran-phonetics.onnx) via onnxruntime + the vendored CTC
+# Viterbi (surah_cutter.core._ctc) + the vendored per-word transliteration cache
+# (data/word_tr_cache.json). No torch, transformers, librosa or HF at runtime.
+dependencies = [
+    "numpy>=1.24",
+    "onnxruntime>=1.17",       # Silero VAD + int8 acoustic model (alignment)
+    "soundfile>=0.12",
+    "imageio-ffmpeg>=0.4.9",   # bundled cross-platform ffmpeg binary for decode
+    "fastapi>=0.110",          # local web-GUI server (API + SSE progress)
+    "uvicorn>=0.27",           # ASGI server for the web GUI
+    "pywebview>=4.4",          # native window via the system WebView (no Chromium)
+]
+
+[project.optional-dependencies]
+# Dev/export only — NOT needed to run the app. Pulls the heavy torch stack used
+# to (a) re-export the int8 ONNX model (tools/export_onnx.py) and refresh the
+# transliteration cache, and (b) run the torch "oracle" backend
+# (SURAH_CUTTER_ALIGN_BACKEND=torch) for ONNX↔torch parity checks in tests.
+align = [
+    "torch>=2.1",
+    "transformers>=4.38",
+    "onnx>=1.15",              # graph load/inspect for export
+    "onnxscript>=0.1",         # torch.onnx export dependency
+    "ctc-forced-aligner",      # torch CTC oracle (parity reference for _ctc)
+    "librosa>=0.10",           # audio loading inside ctc-forced-aligner
+    "pyarrow>=14",             # read the transliteration dataset (text columns)
+    "huggingface-hub>=0.20",   # fetch model + transliteration dataset
+]
+# Back-compat alias for the old extra name.
+oracle = [
+    "surah-cutter[align]",
+]
+# Legacy PySide6/Qt desktop GUI (surah_cutter.gui). The shipped GUI is now the
+# lightweight web UI (surah_cutter.webgui); Qt is optional and heavy (~1.2 GB).
+qt = [
+    "PySide6>=6.6",
+    "pyqtgraph>=0.13",
+]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.4",
+]
+
+[project.scripts]
+surah-cutter = "surah_cutter.cli:main"
+surah-cutter-gui = "surah_cutter.webgui.launch:main"
+surah-cutter-gui-qt = "surah_cutter.gui.app:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["surah_cutter"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"

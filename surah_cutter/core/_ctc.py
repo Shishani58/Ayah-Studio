@@ -1,0 +1,118 @@
+"""Pure-numpy CTC forced alignment — vendored to avoid heavy deps.
+
+``ctc_forced_aligner.forced_align`` pulls in librosa/numba/scipy/llvmlite (~250 MB)
+just for two small functions. Since the runtime ships an int8 ONNX model and does
+not need any of that, we vendor the CTC forced-alignment Viterbi here in numpy.
+
+API mirrors what :mod:`surah_cutter.core.align` consumes:
+
+- :func:`forced_align` (log_probs ``(1, T, V)``, targets ``(1, L)``, blank id) ->
+  ``(path (1, T), scores (1, T))`` where ``path`` is the per-frame vocab id of the
+  aligned token (or blank) and ``scores`` are the per-frame log-probs of that id.
+- :func:`merge_repeats` collapses consecutive equal ids into :class:`Segment`
+  runs with inclusive ``end``.
+
+This is forced alignment, not decoding: the token sequence is fixed; we only find
+its best monotonic time path through the CTC trellis (blanks inserted between
+tokens; a blank is mandatory between two identical adjacent tokens).
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+import numpy as np
+
+_NEG = -1.0e30
+
+
+@dataclass
+class Segment:
+    """A run of one label over an inclusive frame range ``[start, end]``."""
+
+    label: int
+    start: int
+    end: int
+
+
+def forced_align(log_probs, targets, blank: int = 0):
+    """Viterbi forced alignment of a fixed token sequence to CTC emissions.
+
+    Args:
+        log_probs: ``(1, T, V)`` log-softmax emissions over the vocab.
+        targets: ``(1, L)`` target vocab ids (the fixed sequence to place).
+        blank: CTC blank id.
+
+    Returns:
+        ``(path, scores)`` each ``(1, T)``: ``path[0, t]`` is the vocab id the
+        frame is assigned to (a target token or ``blank``); ``scores[0, t]`` is
+        the emission log-prob of that id at frame ``t``.
+    """
+    emis = np.asarray(log_probs, dtype=np.float64)[0]  # (T, V)
+    tgt = np.asarray(targets).reshape(-1).astype(np.int64)  # (L,)
+    t_len, _ = emis.shape
+    n_tok = tgt.shape[0]
+    if n_tok == 0:
+        path = np.full((1, t_len), blank, dtype=np.int64)
+        return path, emis[np.arange(t_len), blank][None, :]
+
+    # Extended state sequence: blank between every token -> [b, t0, b, t1, ..., b].
+    n_st = 2 * n_tok + 1
+    ext = np.full(n_st, blank, dtype=np.int64)
+    ext[1::2] = tgt
+
+    # A skip (s-2 -> s) is allowed only into a non-blank state whose token differs
+    # from the one two states back (can't skip the mandatory blank between equal
+    # adjacent tokens).
+    allowed_skip = np.zeros(n_st, dtype=bool)
+    allowed_skip[2:] = (ext[2:] != blank) & (ext[2:] != ext[:-2])
+
+    dp = np.full(n_st, _NEG)
+    dp[0] = emis[0, ext[0]]
+    if n_st > 1:
+        dp[1] = emis[0, ext[1]]
+
+    back = np.zeros((t_len, n_st), dtype=np.int64)
+    back[0] = np.arange(n_st)
+    idx = np.arange(n_st)
+
+    for t in range(1, t_len):
+        stay = dp
+        prev1 = np.concatenate(([_NEG], dp[:-1]))
+        prev2 = np.concatenate(([_NEG, _NEG], dp[:-2]))
+        prev2 = np.where(allowed_skip, prev2, _NEG)
+        stacked = np.stack((stay, prev1, prev2))  # (3, n_st)
+        choice = np.argmax(stacked, axis=0)  # 0:stay 1:-1 2:-2
+        best = stacked[choice, idx]
+        dp = best + emis[t, ext]
+        back[t] = idx - choice
+
+    s = n_st - 1 if dp[n_st - 1] >= dp[n_st - 2] else n_st - 2
+    states = np.zeros(t_len, dtype=np.int64)
+    for t in range(t_len - 1, -1, -1):
+        states[t] = s
+        s = back[t, s]
+
+    path = ext[states]
+    scores = emis[np.arange(t_len), path]
+    return path[None, :], scores[None, :]
+
+
+def merge_repeats(path, id_map=None):
+    """Collapse consecutive equal ids in ``path`` into :class:`Segment` runs.
+
+    ``id_map`` (optional) maps raw path values to labels; defaults to identity.
+    ``end`` is inclusive (the last frame index of the run).
+    """
+    seq = list(path)
+    segments: list[Segment] = []
+    i = 0
+    n = len(seq)
+    while i < n:
+        j = i
+        while j + 1 < n and seq[j + 1] == seq[i]:
+            j += 1
+        label = seq[i] if id_map is None else id_map.get(seq[i], seq[i])
+        segments.append(Segment(int(label), i, j))
+        i = j + 1
+    return segments

@@ -1,0 +1,38 @@
+MIT License
+
+Copyright (c) 2026 surah-cutter contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+NOTE ON BUNDLED DATA AND MODELS (not covered by the MIT license above):
+
+- data/quran_mushaf.db — Qur'anic text (qpc_hafs and related scripts). The
+  Qur'anic text itself is not subject to copyright; the database packaging
+  derives from the King Fahd Glorious Qur'an Printing Complex (KFGQPC) scripts.
+- data/references/*.db — per-ayah timecodes for various reciters, derived from
+  community datasets (e.g. quran.com / Tarteel QUL / quran-align), typically
+  licensed CC-BY 4.0. Attribution is required; see README "Acknowledgements".
+- assets/fonts/qpc_hafs.ttf — KFGQPC HAFS Uthmanic Script font, distributed
+  under the KFGQPC font license. Used for on-screen Qur'an text rendering.
+- Acoustic models (downloaded/exported at build time, not committed) retain the
+  licenses of their upstream Hugging Face repositories.
+
+Redistributors must preserve these notices and the upstream attributions.

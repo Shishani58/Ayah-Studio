@@ -1,0 +1,77 @@
+name: build
+
+# Build the windowed GUI app on macOS + Windows.
+# Trigger: push a tag like v0.1.0, or run manually from the Actions tab.
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write  # the release job needs this to attach assets
+
+jobs:
+  build:
+    name: build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            artifact: surah-cutter-macos
+          - os: windows-latest
+            artifact: surah-cutter-windows
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install project + build deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+          pip install pyinstaller
+
+      - name: Build with PyInstaller
+        run: pyinstaller surah_cutter.spec --noconfirm --clean
+
+      # Package dist/ into a single archive per platform so the artifact
+      # keeps the bundle structure (the app reads data/ siblings at runtime).
+      - name: Archive (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          cd dist
+          zip -r -y ../${{ matrix.artifact }}.zip surah-cutter.app
+
+      - name: Archive (Windows)
+        if: runner.os == 'Windows'
+        run: Compress-Archive -Path dist/surah-cutter -DestinationPath ${{ matrix.artifact }}.zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.artifact }}.zip
+          if-no-files-found: error
+
+  release:
+    name: release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create / update release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**/*.zip
+          generate_release_notes: true

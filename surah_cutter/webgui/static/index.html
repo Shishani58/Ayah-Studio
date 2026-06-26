@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>surah-cutter</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <!-- ===== Dashboard ===== -->
+  <section id="dashboard" class="view">
+    <header class="topbar">
+      <div class="brand-row">
+        <h1>surah-cutter</h1>
+        <span class="tagline">тайм-коды аятов из аудио Корана</span>
+        <button id="helpBtn" class="ghost" title="Как это работает">? Как это работает</button>
+      </div>
+
+      <!-- onboarding / how it works -->
+      <div id="help" class="help-card">
+        <ol>
+          <li><b>Папка аудио</b> — выберите папку, где файлы названы по номеру суры
+            (<code>001.mp3 … 114.mp3</code>). Один файл = одна сура.</li>
+          <li><b>Проект</b> — выберите/создайте файл <code>.db</code>: в нём копится
+            разметка. Можно вернуться и продолжить позже.</li>
+          <li><b>Сгенерировать</b> — программа сама расставит начало каждого аята
+            (forced alignment). Это <b>черновик</b>.</li>
+          <li><b>Проверить</b> — откройте суру: слушайте, смотрите на волну,
+            при необходимости двигайте границы и отмечайте «проверено».</li>
+          <li><b>Экспорт</b> — когда все 114 сур готовы, выгрузите чистую <code>.db</code>.</li>
+        </ol>
+      </div>
+
+      <!-- project setup -->
+      <div class="setup">
+        <div class="field">
+          <label>1 · Папка аудио</label>
+          <div class="input-row">
+            <input id="audioDir" type="text" placeholder="например ~/Desktop/Reciter" />
+            <button id="browseAudio" class="browse hidden">Обзор…</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>2 · Файл проекта (.db)</label>
+          <div class="input-row">
+            <input id="dbPath" type="text" placeholder="например reciter.db" />
+            <button id="browseDb" class="browse hidden">Обзор…</button>
+          </div>
+        </div>
+        <button id="openBtn" class="primary">Открыть проект</button>
+      </div>
+
+      <!-- generation -->
+      <div class="genbar">
+        <label class="inline">Режим
+          <select id="mode" title="hybrid — быстрее (нейронка только на трудных местах); full — точнее">
+            <option value="hybrid">hybrid · быстро</option>
+            <option value="full">full · точнее</option>
+          </select>
+        </label>
+        <button id="genBtn" class="primary" disabled>▶ Сгенерировать всё</button>
+        <button id="regenBtn" class="ghost hidden" title="Перегенерировать все суры с нуля (кроме размеченных вручную)">↻ Заново всё</button>
+      </div>
+
+      <!-- explicit generation panel: progress + elapsed + start time + cancel -->
+      <div id="genPanel" class="gen-panel hidden">
+        <div class="gen-row">
+          <strong id="genTitle">Генерация…</strong>
+          <span id="genCur" class="gen-cur">подготовка…</span>
+          <button id="cancelBtn" class="danger">✕ Отменить</button>
+        </div>
+        <div class="progress big">
+          <div id="progressFill" class="progress-fill"></div>
+          <span id="progressText"></span>
+        </div>
+        <div class="gen-meta">
+          <span>⏱ прошло <b id="genElapsed">0:00</b></span>
+          <span>старт в <b id="genStart">—</b></span>
+        </div>
+      </div>
+
+      <div class="statusbar">
+        <p id="status" class="status">Шаг 1: выберите папку аудио и файл проекта.</p>
+        <div class="legend">
+          <span><i class="dot blue"></i>есть аудио</span>
+          <span><i class="sw not-processed"></i>не обработана</span>
+          <span><i class="sw processed"></i>черновик</span>
+          <span><i class="sw verified"></i>проверена</span>
+        </div>
+      </div>
+    </header>
+    <div id="grid" class="grid"></div>
+  </section>
+
+  <!-- ===== Review ===== -->
+  <section id="review" class="view hidden">
+    <header class="topbar review-top">
+      <button id="backBtn" class="ghost">← Дашборд</button>
+      <h2 id="reviewTitle">Сура</h2>
+      <select id="reviewMode" title="Режим расчёта этой суры">
+        <option value="hybrid">hybrid · быстро</option>
+        <option value="full">full · точно</option>
+      </select>
+      <button id="regenSuraBtn" class="primary" title="Рассчитать тайм-коды этой суры выбранным режимом">↻ Пересчитать суру</button>
+      <span id="suraGenStatus" class="sura-gen-status"></span>
+      <div class="player-controls">
+        <button id="playBtn" class="primary" title="Пробел">▶</button>
+        <button id="prevBtn" title="Предыдущий аят (←)">⏮</button>
+        <button id="nextBtn" title="Следующий аят (→)">⏭</button>
+        <button id="loopBtn" class="toggle" title="Повторять текущий аят">↻ луп</button>
+        <label class="inline">скорость
+          <select id="rate">
+            <option value="0.5">0.5×</option>
+            <option value="0.75">0.75×</option>
+            <option value="1" selected>1×</option>
+            <option value="1.25">1.25×</option>
+            <option value="1.5">1.5×</option>
+          </select>
+        </label>
+        <span id="clock" class="clock">0:00 / 0:00</span>
+        <button id="exportBtn" class="ghost" title="Экспорт чистой .db">⇩ Экспорт</button>
+      </div>
+    </header>
+
+    <div class="wave-wrap">
+      <canvas id="wave"></canvas>
+      <p id="waveHint" class="wave-hint">Клик по волне — перемотка · тяните золотую линию — двигайте начало аята</p>
+    </div>
+
+    <ul id="ayahList" class="ayah-list"></ul>
+
+    <audio id="audio" preload="auto"></audio>
+  </section>
+
+  <script src="/app.js"></script>
+</body>
+</html>

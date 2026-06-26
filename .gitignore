@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.venv/
+venv/
+env/
+
+# Build / dist
+build/
+dist/
+*.spec
+
+# PyInstaller / packaging
+*.app/
+*.dmg
+*.exe
+
+# Models (large; downloaded/exported separately) + derived caches
+models/*.onnx
+models/*.bin
+models/*.safetensors
+models/*.json
+
+# User projects / generated databases (keep vendored data/ and references/)
+*.scproj
+out/
+*.out.db
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Local tooling (MCP / assistant)
+.serena/
