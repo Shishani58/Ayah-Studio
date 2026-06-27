@@ -11,10 +11,10 @@ Two explicit phases (the UI exposes both so the user can steer them):
 An energy detector gives silence segments. Each pause is used only as a *rough*
 anchor — its centre (``pause.center_ms``), a point reliably *before* speech
 resumes — matched to the ayah's expected position (structural prior). The exact
-onset is not read off the pause edge; Phase 2's neural refine recovers it (and on
-the Shatri juz the centre beat ``end_ms`` slightly — the detector's silence-end
-can overshoot into speech). Ayahs with no nearby pause are *wasl* (joined) —
-their rough guess comes from the prior plus the running tempo.
+onset is not read off the pause edge; Phase 2's neural refine recovers it (the
+centre is a deliberately safe early anchor — the detector's silence-end can
+overshoot into speech). Ayahs with no nearby pause are *wasl* (joined) — their
+rough guess comes from the prior plus the running tempo.
 
 **Phase 2 — neural refinement with a growing window (from 1 s).**
 For each boundary we read a **1-second** window around its rough position, run
@@ -272,22 +272,22 @@ def align_surah_fast(
                          ayahs=[], model_reads=[], phase1_pauses=[])
         return rows
 
-    # ayah -> ordered global word indices; weighted units per ayah (tempo unit:
-    # long vowels count double — see _unit_len. This proxy tracks audio timing
-    # better than raw chars or the mushaf render-width prior).
+    # ayah -> ordered global word indices; raw chars per ayah for WINDOW SIZING
+    # only (a rough ms/char is all the windows need; weighting it just perturbs
+    # window widths and the emissions cache for no gain — see weighted units below).
     ayah_words: "OrderedDict[int, list[int]]" = OrderedDict()
     for i, w in enumerate(words):
         ayah_words.setdefault(w.ayah, []).append(i)
     ayah_list = list(ayah_words.keys())
     chars = {
-        a: max(1.0, sum(_unit_len(word_trs[i]) for i in ayah_words[a] if i < len(word_trs)))
+        a: max(1, sum(len(word_trs[i]) for i in ayah_words[a] if i < len(word_trs)))
         for a in ayah_list
     }
-    total_chars = max(1.0, sum(chars.values()))
-    rate = total_ms / total_chars  # ms per weighted unit (window sizing)
+    total_chars = max(1, sum(chars.values()))
+    rate = total_ms / total_chars  # ms per char (window sizing only)
 
     def wlen(i: int) -> float:
-        return _unit_len(word_trs[i]) * rate if i < len(word_trs) else rate
+        return len(word_trs[i]) * rate if i < len(word_trs) else rate
 
     # wav2vec2's conv feature-extractor needs a minimum input length.
     min_win_ms = 800.0
@@ -448,16 +448,22 @@ def align_surah_fast(
     # floor/ceiling. The DP still skips extra onsets (breaths) and marks
     # pause-less boundaries as wasl; a wrong match never cascades.
     # Prior position = content duration distributed by cumulative WEIGHTED units
-    # (long vowels ×2). This beat the old mushaf render-width prior on the tempo
-    # probe; used only for the floor/ceiling and wasl interpolation, not placement.
+    # (long vowels ×2 — a long vowel is recited longer). This beat both raw chars
+    # and the mushaf render-width prior on the tempo probe. Used only for the
+    # duration floor/ceiling and the repair interpolation, never for placement.
+    wunit = {
+        a: max(1.0, sum(_unit_len(word_trs[i]) for i in ayah_words[a] if i < len(word_trs)))
+        for a in ayah_list
+    }
+    total_w = max(1.0, sum(wunit.values()))
     cum_u: dict[int, float] = {}
     _acc = 0.0
     for a in ayah_list:
         cum_u[a] = _acc
-        _acc += chars[a]
+        _acc += wunit[a]
     content_dur = max(1.0, total_ms - content_start)
     inner = ayah_list[1:]  # boundaries we must place (ayah 1 is anchored)
-    exp = [content_start + (cum_u[a] / total_chars) * content_dur for a in inner]
+    exp = [content_start + (cum_u[a] / total_w) * content_dur for a in inner]
     # Only pauses inside the content region can be ayah boundaries.
     pause_onsets = [p for p in pause_onsets if p > content_start - 200.0]
     # Opening tokens (first four words) per inner ayah, and a greedy decode per
@@ -657,6 +663,14 @@ def align_surah_fast(
     cum = cum_u  # cumulative weighted units (already built for the prior above)
     rel = {a: confs.get(a, 0.0) >= conf_reliable for a in ayah_list}
     rel[ayah_list[0]] = True
+    # A real boundary sits at a pause; a repair that moves a pause-backed onset
+    # (which the model was at least somewhat sure of) to a non-pause spot is a
+    # spurious refine match — keep the original (sura 80 a3). Garbage-conf onsets
+    # (< conf_thresh, never locked on) are exempt: geometry may move them freely
+    # (sura 89 a23). ``pause_onsets`` is the detected pause grid from Phase 1c.
+    def _dist_pause(t: float) -> float:
+        return min((abs(t - p) for p in pause_onsets), default=1e9)
+
     # Measured tempo (ms per weighted unit) from reliable anchors — robust to the
     # basmala / trailing silence that inflates the global ``rate``; used to
     # extrapolate a repair guess past the last reliable anchor.
@@ -699,6 +713,10 @@ def align_surah_fast(
             # boundary at all. Geometry between two reliable anchors beats model
             # noise, so fall back to the interpolated guess in that case.
             chosen = o2 if c2 >= conf_thresh else pred
+            # Don't pull a decent pause-backed onset off the pause grid (spurious).
+            if (place[a][1] and confs.get(a, 0.0) >= conf_thresh
+                    and _dist_pause(chosen) > 350.0):
+                continue
             starts_ms[a] = chosen
             confs[a] = c2
             for t in tr_ayahs:
