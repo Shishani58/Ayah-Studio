@@ -44,6 +44,24 @@ def _collapse(s: str) -> str:
     return "".join(out)
 
 
+#: Latin long-vowel (madd-carrier) chars. As a *tempo unit* a long vowel is
+#: recited longer, so it weighs double. The tempo probe (tools/bench_fast) showed
+#: this proxy predicts where ayah boundaries land in audio better than raw char
+#: count and than the mushaf render-width prior used before.
+_LONG_VOWELS = frozenset("āīū")
+
+
+def _unit_len(s: str) -> float:
+    """Tempo-unit length of a transliteration token (long vowels count double)."""
+    return float(sum(2 if c in _LONG_VOWELS else 1 for c in s))
+
+
+#: Below this duration the windowed path is skipped for the accurate full path:
+#: a short sura aligns in ~1-2 s either way (no speed win), and its sparse pauses
+#: / long wasl runs / repeated openings make the windowed heuristics *less*
+#: reliable. Correctness-first fallback (the project's "при сомнении — full").
+_FAST_MIN_MS = 60_000.0
+
 #: Chars of the (collapsed) decode/opening compared. Must span ~4 words so that
 #: ayahs sharing an opening phrase (e.g. al-Bayyinah 6/7 "inna lladhīna kafarū"
 #: vs "…āmanū", al-Falaq's repeated "wa-min sharri…") are told apart by a later,
@@ -243,23 +261,69 @@ def align_surah_fast(
     n_words = len(words)
     total_ms = len(pcm) * 1000.0 / sr
 
-    # ayah -> ordered global word indices; chars per ayah (tempo unit).
+    # Short sura → accurate full path (see _FAST_MIN_MS). No speed lost, more robust.
+    if total_ms < _FAST_MIN_MS:
+        rows = A.align_surah(pcm, sr, words, surah=surah, model=bundle)
+        if trace is not None:
+            trace.update(fallback_full=True, total_ms=total_ms, audio_ms=total_ms,
+                         coverage=1.0, n_pause=0, n_wasl=0,
+                         ayahs=[], model_reads=[], phase1_pauses=[])
+        return rows
+
+    # ayah -> ordered global word indices; weighted units per ayah (tempo unit:
+    # long vowels count double — see _unit_len. This proxy tracks audio timing
+    # better than raw chars or the mushaf render-width prior).
     ayah_words: "OrderedDict[int, list[int]]" = OrderedDict()
     for i, w in enumerate(words):
         ayah_words.setdefault(w.ayah, []).append(i)
     ayah_list = list(ayah_words.keys())
     chars = {
-        a: max(1, sum(len(word_trs[i]) for i in ayah_words[a] if i < len(word_trs)))
+        a: max(1.0, sum(_unit_len(word_trs[i]) for i in ayah_words[a] if i < len(word_trs)))
         for a in ayah_list
     }
-    total_chars = max(1, sum(chars.values()))
-    rate = total_ms / total_chars  # ms per transliteration char (window sizing)
+    total_chars = max(1.0, sum(chars.values()))
+    rate = total_ms / total_chars  # ms per weighted unit (window sizing)
 
     def wlen(i: int) -> float:
-        return len(word_trs[i]) * rate if i < len(word_trs) else rate
+        return _unit_len(word_trs[i]) * rate if i < len(word_trs) else rate
 
     # wav2vec2's conv feature-extractor needs a minimum input length.
     min_win_ms = 800.0
+
+    # Transparent emissions cache: every computed window is kept, so a later read
+    # that falls *inside* one (a refine window around a pause we already decoded)
+    # reuses the emissions instead of re-running the model. ``audio_ms`` counts
+    # only freshly computed audio, so it reflects the true model load (coverage).
+    inv_vocab = {v: k for k, v in bundle.vocab.items()}
+    emis_cache: list[tuple[int, int, Any, float]] = []  # (s0, s1, emis, stride_ms)
+    audio_ms = 0.0
+
+    def emissions_for(t0_ms: float, t1_ms: float):
+        """Emissions over [t0,t1] as ``(emis, base_ms, stride_ms, end_ms)``.
+
+        Returns a covering cached window's sub-slice when one exists (no model
+        run), else computes, caches and accounts it. ``None`` if too short.
+        """
+        nonlocal audio_ms
+        s0 = max(0, int(round(t0_ms * sr / 1000.0)))
+        s1 = min(len(pcm), int(round(t1_ms * sr / 1000.0)))
+        if s1 - s0 < int(0.3 * sr):
+            return None
+        for cs0, cs1, cemis, cstride in emis_cache:
+            if cs0 <= s0 and s1 <= cs1:
+                nf = cemis.shape[0]
+                spf = (cs1 - cs0) / nf  # samples per frame
+                f0 = max(0, int(round((s0 - cs0) / spf)))
+                f1 = min(nf, int(round((s1 - cs0) / spf)))
+                if f1 - f0 >= 2:
+                    base = (cs0 + f0 * spf) * 1000.0 / sr
+                    end = (cs0 + f1 * spf) * 1000.0 / sr
+                    return cemis[f0:f1], base, cstride, end
+        emis = A._emissions(bundle, np.ascontiguousarray(pcm[s0:s1], dtype=np.float32), np)
+        stride = A._stride_ms(s1 - s0, sr, emis.shape[0])
+        emis_cache.append((s0, s1, emis, stride))
+        audio_ms += (s1 - s0) * 1000.0 / sr
+        return emis, s0 * 1000.0 / sr, stride, s1 * 1000.0 / sr
 
     # --- low-level: align words[i0:i1] within audio [t0_ms, t1_ms]. ----------
     def align_slice(i0: int, i1: int, t0_ms: float, t1_ms: float, basmala: bool):
@@ -273,9 +337,7 @@ def align_surah_fast(
                 t1_ms = min(total_ms, min_win_ms)
             else:
                 t0_ms = max(0.0, total_ms - min_win_ms)
-        s0 = max(0, int(round(t0_ms * sr / 1000.0)))
-        s1 = min(len(pcm), int(round(t1_ms * sr / 1000.0)))
-        if s1 - s0 < int(0.6 * sr) or i1 <= i0:  # < 0.6 s or no words
+        if i1 <= i0:  # no words
             return None
         sub_words = words[i0:i1]
         sub_trs = word_trs[i0:i1]
@@ -283,10 +345,11 @@ def align_surah_fast(
         targets, spans = A._build_targets(sub_words, sub_trs, bundle, basmala_trs)
         if not targets:
             return None
-        slice_pcm = np.ascontiguousarray(pcm[s0:s1], dtype=np.float32)
-        emis = A._emissions(bundle, slice_pcm, np)
+        em = emissions_for(t0_ms, t1_ms)
+        if em is None:  # < 0.3 s of audio
+            return None
+        emis, base, stride, end = em
         nf = emis.shape[0]
-        stride = A._stride_ms(s1 - s0, sr, nf)
         path, fscores = forced_align(
             np.ascontiguousarray(emis[None, :, :], dtype=np.float32),
             np.asarray(targets, dtype=np.int64)[None, :],
@@ -301,7 +364,6 @@ def align_surah_fast(
         tspans = [(s.start, s.end) for s in segs]
         while len(tspans) < len(targets):
             tspans.append(tspans[-1] if tspans else (nf - 1, nf - 1))
-        base = s0 * 1000.0 / sr
         # CTC emission-lag compensation, same as the full path.
         lag = A.ALIGN_LAG_MS
         starts, confs = [], []
@@ -312,22 +374,17 @@ def align_surah_fast(
             seg = fscores[sf:max(sf + 1, ef + 1)]
             confs.append(float(np.exp(seg.mean())) if seg.size else 0.0)
         return {"starts": starts, "confs": confs,
-                "base": base, "end": s1 * 1000.0 / sr,
-                "win_ms": s1 * 1000.0 / sr - base}
+                "base": base, "end": end, "win_ms": end - base}
 
     # --- low-level: greedy CTC decode of [t0_ms, t1_ms] -> transliteration. ---
     # Unlike forced alignment (which is *told* the words), greedy decode reports
     # what the model actually *hears* — the signal that says which ayah opens
     # right after a pause, immune to the char prior's drift.
-    inv_vocab = {v: k for k, v in bundle.vocab.items()}
-
     def greedy_decode(t0_ms: float, t1_ms: float) -> str:
-        s0 = max(0, int(round(t0_ms * sr / 1000.0)))
-        s1 = min(len(pcm), int(round(t1_ms * sr / 1000.0)))
-        if s1 - s0 < int(0.3 * sr):
+        em = emissions_for(t0_ms, t1_ms)
+        if em is None:
             return ""
-        emis = A._emissions(bundle, np.ascontiguousarray(pcm[s0:s1], dtype=np.float32), np)
-        ids = emis.argmax(-1)
+        ids = em[0].argmax(-1)
         out: list[str] = []
         prev = -1
         for i in ids.tolist():
@@ -340,7 +397,6 @@ def align_surah_fast(
     confs: dict[int, float] = {}
     tr_ayahs: list[dict] = []
     model_reads: list[dict] = []
-    audio_ms = 0.0
 
     # ===================================================================== #
     # Phase 1a — detect pauses (cheap, no neural).                           #
@@ -362,7 +418,6 @@ def align_surah_fast(
     res = align_slice(0, head_end, 0.0, min(intro + head_dur + 900.0, total_ms), basmala)
     if res is None:  # degenerate: fall back to full accurate alignment
         return A.align_surah(pcm, sr, words, surah=surah, model=bundle)
-    audio_ms += res["win_ms"]
     a1 = ayah_list[0]
     content_start = res["starts"][fa1]
     model_reads.append({
@@ -390,21 +445,35 @@ def align_surah_fast(
     # wrong pause (the off-by-one bug). The prior is kept only for the duration
     # floor/ceiling. The DP still skips extra onsets (breaths) and marks
     # pause-less boundaries as wasl; a wrong match never cascades.
-    fractions = candidates.expected_boundary_fractions(surah)
+    # Prior position = content duration distributed by cumulative WEIGHTED units
+    # (long vowels ×2). This beat the old mushaf render-width prior on the tempo
+    # probe; used only for the floor/ceiling and wasl interpolation, not placement.
+    cum_u: dict[int, float] = {}
+    _acc = 0.0
+    for a in ayah_list:
+        cum_u[a] = _acc
+        _acc += chars[a]
     content_dur = max(1.0, total_ms - content_start)
     inner = ayah_list[1:]  # boundaries we must place (ayah 1 is anchored)
-    exp = [content_start + fractions.get(a, 0.0) * content_dur for a in inner]
+    exp = [content_start + (cum_u[a] / total_chars) * content_dur for a in inner]
     # Only pauses inside the content region can be ayah boundaries.
     pause_onsets = [p for p in pause_onsets if p > content_start - 200.0]
-    # Opening tokens (first two words) per inner ayah, and a greedy decode per
-    # pause — the two sides of the acoustic match.
+    # Opening tokens (first four words) per inner ayah, and a greedy decode per
+    # pause — the two sides of the acoustic match. The cached emissions window is
+    # widened ~0.8 s to the LEFT of the pause so phase-2 refine windows around the
+    # same pause fall inside it and reuse the emissions (no second model run);
+    # the decode string itself still starts just before the onset (``p - 50``).
     openings = [
         "".join(word_trs[i] for i in ayah_words[a][:4] if i < len(word_trs))
         for a in inner
     ]
     decode_win_ms = 2500.0  # long enough to reach a distinguishing word in slow melisma
-    pause_decodes = [greedy_decode(p - 50.0, p + decode_win_ms) for p in pause_onsets]
-    audio_ms += sum(min(total_ms, p + decode_win_ms) - max(0.0, p - 50.0) for p in pause_onsets)
+    # Widen the cached window ~1.4 s left of the pause so phase-2 refine windows
+    # (which grow to ~3 s: t0 ≈ c − 1350) stay inside it and reuse the emissions.
+    pause_decodes = []
+    for p in pause_onsets:
+        emissions_for(p - 1400.0, p + decode_win_ms)  # populate cache for refine reuse
+        pause_decodes.append(greedy_decode(p - 50.0, p + decode_win_ms))
     sim_cache: dict[tuple[int, int], float] = {}
 
     def acoustic_cost(i: int, j: int) -> float:
@@ -455,7 +524,6 @@ def align_surah_fast(
         means it never locked on confidently. ``start_step`` skips the smallest
         window(s) for boundaries whose initial guess is known to be looser.
         """
-        nonlocal audio_ms
         onset, conf, win_used = None, 0.0, 0.0
         for w in range(start_step, n_steps):
             win_ms = (min_win_s + w * grow_s) * 1000.0
@@ -479,7 +547,6 @@ def align_surah_fast(
             res = align_slice(i0, i1, t0, t1, basmala=False)
             if res is None:
                 break
-            audio_ms += res["win_ms"]
             win_used = res["win_ms"] / 1000.0
             cand = res["starts"][fa - i0]
             cconf = res["confs"][fa - i0]
@@ -502,23 +569,71 @@ def align_surah_fast(
                 break  # boundary comfortably inside, confident → trust it
         return onset, conf, win_used
 
+    # A run of consecutive *wasl* ayahs (no pause) is not refined per-ayah: the
+    # char prior interpolates each one's centre too early and a narrow window can
+    # miss the true onset entirely (its right edge falls before the boundary). We
+    # instead align the WHOLE run in one window between its bracketing anchors —
+    # the continuous forced alignment that the full path uses locally — and read
+    # off each ayah's first-word onset. Accurate and one read per run.
+    wasl_onsets: dict[int, tuple[float, float]] = {}
+
+    def fill_wasl_run(ai: int) -> None:
+        left_a = ayah_list[ai - 1]  # always an anchor (run starts after one)
+        i0 = ayah_words[left_a][0]
+        t0 = starts_ms[left_a]
+        j = ai
+        run: list[int] = []
+        while j < len(ayah_list) and not place[ayah_list[j]][1]:
+            run.append(ayah_list[j])
+            j += 1
+        if j < len(ayah_list):  # bracketed on the right by the next anchor
+            right_a = ayah_list[j]
+            i1 = ayah_words[right_a][0] + 1  # include its first word as the closer
+            t1 = place[right_a][0]
+        else:  # trailing wasl run: to the end of the sura
+            i1 = n_words
+            t1 = total_ms
+        res = align_slice(i0, i1, t0 - 60.0, t1 + 60.0, basmala=False)
+        for a in run:
+            fa = ayah_words[a][0]
+            if res is None:
+                wasl_onsets[a] = (place[a][0], 0.0)
+            else:
+                k = fa - i0
+                wasl_onsets[a] = (res["starts"][k], res["confs"][k])
+        if res is not None:
+            model_reads.append({
+                "phase": "wasl-run",
+                "ayah": run[0],
+                "window_ms": [round(res["base"], 1), round(res["end"], 1)],
+                "words": " ".join(w.text for w in words[i0:i1]),
+                "target": " ".join(words[ayah_words[a][0]].text for a in run),
+                "onset_ms": round(wasl_onsets[run[0]][0], 1),
+                "conf": round(wasl_onsets[run[0]][1], 3),
+            })
+
     for ai in range(1, len(ayah_list)):
         a = ayah_list[ai]
-        prev_a = ayah_list[ai - 1]
-        prev_start = starts_ms[prev_a]
         fa = ayah_words[a][0]
-
-        # Position fixed by the global match (no cascade). Pause-backed onsets are
-        # already ~200 ms accurate; a tiny window nails them. Wasl positions are
-        # interpolated (looser) → start the window wider.
         c0, from_pause = place[a]
-        c = min(max(c0, prev_start + 30.0), total_ms)
-        start_step = 0 if from_pause else 1  # wasl: skip the 1 s window
 
-        onset, conf, win_used = refine(c, fa, prev_start, start_step, ayah=a)
-        reliable = onset is not None and conf >= conf_thresh
-        if not reliable:  # never locked on → trust the matched/interpolated guess
-            onset = c if onset is None else onset
+        if from_pause:
+            prev_start = starts_ms[ayah_list[ai - 1]]
+            # Pause-backed onsets are already ~200 ms accurate; a tiny window nails
+            # them. Position fixed by the global match → no cascade.
+            c = min(max(c0, prev_start + 30.0), total_ms)
+            onset, conf, win_used = refine(c, fa, prev_start, 0, ayah=a)
+            reliable = onset is not None and conf >= conf_thresh
+            if not reliable:  # never locked on → trust the matched guess
+                onset = c if onset is None else onset
+        else:
+            if a not in wasl_onsets:
+                fill_wasl_run(ai)
+            onset, conf = wasl_onsets[a]
+            win_used = 0.0
+            reliable = conf >= conf_thresh
+            if onset is None:
+                onset = c0
 
         starts_ms[a] = onset
         confs[a] = conf
@@ -531,13 +646,18 @@ def align_surah_fast(
     # onto earlier pauses (detectable as low neural confidence). Re-anchor such
     # ayahs by interpolating between the nearest CONFIDENT onsets (real anchors
     # average out melodic drift), then re-run the neural window around that guess.
-    cum: dict[int, int] = {}
-    acc = 0
-    for a in ayah_list:
-        cum[a] = acc
-        acc += chars[a]
+    cum = cum_u  # cumulative weighted units (already built for the prior above)
     rel = {a: confs.get(a, 0.0) >= conf_reliable for a in ayah_list}
     rel[ayah_list[0]] = True
+    # Measured tempo (ms per weighted unit) from reliable anchors — robust to the
+    # basmala / trailing silence that inflates the global ``rate``; used to
+    # extrapolate a repair guess past the last reliable anchor.
+    _pts = [(cum[a], starts_ms[a]) for a in ayah_list if rel[a] and a in starts_ms]
+    _slopes = sorted(
+        (t1 - t0) / (u1 - u0)
+        for (u0, t0), (u1, t1) in zip(_pts, _pts[1:]) if u1 > u0
+    )
+    tempo_meas = _slopes[len(_slopes) // 2] if _slopes else rate
     for idx in range(1, len(ayah_list)):
         a = ayah_list[idx]
         if rel[a]:
@@ -553,7 +673,7 @@ def align_surah_fast(
             frac = (cum[a] - cum[lo]) / (cum[hi] - cum[lo])
             pred = starts_ms[lo] + (starts_ms[hi] - starts_ms[lo]) * frac
         else:
-            pred = starts_ms[lo] + (cum[a] - cum[lo]) * rate
+            pred = starts_ms[lo] + (cum[a] - cum[lo]) * tempo_meas
         if abs(starts_ms.get(a, pred) - pred) < 1200.0:
             continue  # already consistent with the reliable anchors → leave it
         fa = ayah_words[a][0]
@@ -566,11 +686,16 @@ def align_surah_fast(
             phase="repair",
         )
         if o2 is not None and c2 >= confs.get(a, 0.0):
-            starts_ms[a] = o2
+            # A refine that still never locks on (conf below thresh) returns a
+            # noisy onset — on a long melodic ayah the model may not find the
+            # boundary at all. Geometry between two reliable anchors beats model
+            # noise, so fall back to the interpolated guess in that case.
+            chosen = o2 if c2 >= conf_thresh else pred
+            starts_ms[a] = chosen
             confs[a] = c2
             for t in tr_ayahs:
                 if t["ayah"] == a:
-                    t.update(onset_ms=o2, conf=round(c2, 3), repaired=True)
+                    t.update(onset_ms=chosen, conf=round(c2, 3), repaired=True)
                     break
 
     # --- shape: monotonic non-decreasing starts, per-ayah rows. ------------
