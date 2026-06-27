@@ -54,11 +54,15 @@ _GATE_SMAX = float(os.environ.get("SC_FAST_GATE_SMAX", "0.50"))
 #: (p90 2699→151) and improves juz Amma p95 without the sura-89 blow-up 0.38+ caused.
 _WASL_SIM = float(os.environ.get("SC_FAST_WASL_SIM", "0.36"))
 #: Self-diagnostic fallback. A drifted sura (off-by-one cascade with no recovery
-#: anchor — sparse pauses + long ayahs, e.g. 65/66) shows up as low MEAN boundary
-#: confidence (65/66 ≈ 0.53). Below this we fall back to the full continuous path,
-#: which recovers such suras. Strictly safer (full ≥ fast in accuracy), at the
-#: cost of a full run on the few flagged suras. 0 disables.
-_FALLBACK_CONF = float(os.environ.get("SC_FAST_FALLBACK_CONF", "0.55"))
+#: anchor — sparse pauses + long wasl-heavy ayahs, e.g. 57/59/65/66) shows up as
+#: low MEAN boundary confidence; below this we fall back to the full continuous
+#: path, which recovers such suras. Strictly safer (full ≥ fast in accuracy) at
+#: the cost of a full run on flagged suras. NOTE: mean-conf is a weak separator —
+#: catastrophes span 0.53–0.65 and so do clean suras, so 0.61 catches the worst
+#: multi-second drifts (57/59/65/66) but cannot catch all (47 at 0.65) without
+#: flagging most suras. For a guaranteed-correct run, use the full path. Raise
+#: toward ~0.66 for safety-over-speed (flags most suras). 0 disables.
+_FALLBACK_CONF = float(os.environ.get("SC_FAST_FALLBACK_CONF", "0.61"))
 
 
 def _collapse(s: str) -> str:
