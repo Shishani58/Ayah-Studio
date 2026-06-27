@@ -16,19 +16,93 @@ function fmt(ms) {
   return `${m}:${r.toFixed(1).padStart(4, "0")}`;
 }
 const setStatus = (msg) => ($("status").textContent = msg);
-const modeLabel = (mode) => ({ full: "точно", fast: "быстро", hybrid: "hybrid" }[mode] || mode);
+function resetLiveLog(id) {
+  const el = $(id);
+  if (!el) return;
+  el.textContent = "";
+  el.dataset.lines = "0";
+  updateLogCopyButton(id);
+}
+function appendLiveLog(id, line) {
+  const el = $(id);
+  if (!el) return;
+  const box = el.closest(".log-box");
+  if (box && box.classList.contains("hidden") && id !== "suraLiveLog") {
+    box.classList.remove("hidden");
+  }
+  if (el.classList.contains("hidden")) el.classList.remove("hidden");
+  const lines = el.textContent ? el.textContent.split("\n").filter(Boolean) : [];
+  lines.push(line);
+  while (lines.length > 200) lines.shift();
+  el.textContent = lines.join("\n");
+  el.dataset.lines = String(lines.length);
+  updateLogCopyButton(id);
+  el.scrollTop = el.scrollHeight;
+}
+function logCopyButton(id) {
+  return document.querySelector(`[data-copy-log="${id}"]`);
+}
+function updateLogCopyButton(id) {
+  const btn = logCopyButton(id), el = $(id);
+  if (!btn || !el) return;
+  btn.disabled = !el.textContent.trim();
+  if (!btn.disabled && !btn.dataset.busy) btn.textContent = "Копировать";
+}
+async function copyLiveLog(id) {
+  const el = $(id), btn = logCopyButton(id);
+  const text = el ? el.textContent.trim() : "";
+  if (!text || !btn) return;
+  btn.disabled = true;
+  btn.dataset.busy = "1";
+  try {
+    await writeClipboard(text);
+    btn.textContent = "Скопировано";
+  } catch {
+    btn.textContent = "Не скопировано";
+  } finally {
+    setTimeout(() => {
+      delete btn.dataset.busy;
+      updateLogCopyButton(id);
+    }, 1200);
+  }
+}
+async function writeClipboard(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+  const area = document.createElement("textarea");
+  area.value = text;
+  area.setAttribute("readonly", "");
+  area.style.position = "fixed";
+  area.style.left = "-9999px";
+  document.body.appendChild(area);
+  let ok = false;
+  try {
+    area.select();
+    ok = document.execCommand("copy");
+  } finally {
+    document.body.removeChild(area);
+  }
+  if (!ok) throw new Error("copy failed");
+}
+const modeLabel = (mode) => ({ auto: "авто", full: "точно", tiled: "точно·большие", fast: "быстро", hybrid: "hybrid" }[mode] || mode);
 function selectedMode() { return $("genMode") ? $("genMode").value : "full"; }
 function selectedSuraMode() { return $("suraMode") ? $("suraMode").value : selectedMode(); }
 function setMode(mode) {
-  const m = mode === "fast" ? "fast" : "full";
+  const m = (mode === "auto" || mode === "fast" || mode === "tiled" || mode === "full") ? mode : "auto";
   if ($("genMode")) $("genMode").value = m;
   if ($("suraMode")) $("suraMode").value = m;
   updateModeHint();
 }
 function updateModeHint() {
   const mode = selectedMode();
-  $("modeHint").textContent = mode === "fast"
+  $("modeHint").textContent = mode === "auto"
+    ? "сам выбирает режим, калибрует лаг и ремонтирует подозрительные авто-метки"
+    : mode === "fast"
     ? "паузы → растущее окно; трудные суры проверять внимательнее"
+    : mode === "tiled"
+    ? "точное выравнивание тайлами — для длинных сур (Бакъара и т.п.) без перегрузки памяти"
     : "полное нейровыравнивание (~57 мс)";
 }
 
@@ -117,6 +191,7 @@ function startGenUI() {
   GEN.startMs = Date.now();
   $("genStart").textContent = new Date(GEN.startMs).toLocaleTimeString();
   $("genElapsed").textContent = "0:00";
+  resetLiveLog("genLog");
   setProgress(0, 1, "запуск…");
   if (GEN.timer) clearInterval(GEN.timer);
   GEN.timer = setInterval(updateElapsed, 1000);
@@ -128,10 +203,15 @@ function updateElapsed() {
 function handleGenEvent(d) {
   if (d.type === "start") { GEN.total = d.total || 1; setProgress(0, GEN.total, `0 / ${GEN.total}`); }
   else if (d.type === "sura_start") { $("genCur").textContent = `обрабатываю суру ${d.surah}…`; }
+  else if (d.type === "sura_log") {
+    appendLiveLog("genLog", `Сура ${d.surah}: ${d.line}`);
+    if (R.surah === d.surah) appendLiveLog("suraLiveLog", d.line);
+  }
   else if (d.type === "sura") {
     setProgress(d.index + 1, GEN.total, `${d.index + 1} / ${GEN.total}`);
     const fast = d.fast_trace ? ` · пауз ${d.fast_trace.n_pause}, wasl ${d.fast_trace.n_wasl}, окно ${(d.fast_trace.coverage || 0).toFixed(2)}×` : "";
     $("genCur").textContent = `сура ${d.surah} готова${d.written != null ? ` · ${d.written} аят.` : ""}${fast}`;
+    if (d.log_paths && d.log_paths.log) appendLiveLog("genLog", `Лог сохранён: ${d.log_paths.log}`);
     refreshSuras();
   }
   else if (d.type === "done") { endGenUI("done", d.completed); }
@@ -174,13 +254,23 @@ function setProgress(done, total, text) {
 // ===========================================================================
 const R = {
   surah: null, ayahs: [], duration: 0, peaks: [], audio: null, current: -1,
-  loop: false, drag: -1, zoom: 1, phase1: null, showPhase1: false, phaseCurrent: -1,
-  dsp: null, showDsp: false,
-  combined: null, showCombined: false,
-  showTen: false, tenRanges: new Map(), tenLoading: false, tenTimer: null,
-  tenThreshold: 0.5, tenMergeGap: 180,
-  showVad: false, vadRanges: new Map(), vadLoading: false, vadTimer: null,
+  loop: false, drag: -1, zoom: 1, recheck: null,
+  pausesVisible: false, pauseDecisions: null,
+  pinch: null, logResize: null,
 };
+
+function setSuraLogVisible(visible) {
+  $("suraLiveLogBox").classList.toggle("hidden", !visible);
+  $("review").classList.toggle("log-open", visible);
+}
+
+function setSuraLogHeight(px) {
+  const review = $("review");
+  const min = 90;
+  const max = Math.max(min, Math.round(window.innerHeight * 0.72));
+  const height = Math.max(min, Math.min(max, Math.round(px)));
+  review.style.setProperty("--sura-log-height", `${height}px`);
+}
 
 async function openReview(surah) {
   R.surah = surah;
@@ -190,28 +280,13 @@ async function openReview(surah) {
     [sura, wave] = await Promise.all([api.get(`/api/sura/${surah}`), api.get(`/api/sura/${surah}/waveform`)]);
   } catch (e) { setStatus("Ошибка: " + e.message); return; }
   R.ayahs = sura.ayahs; R.peaks = wave.peaks; R.duration = wave.duration_ms; R.current = -1;
-  R.phase1 = null; R.showPhase1 = false; R.phaseCurrent = -1;
-  R.dsp = null; R.showDsp = false;
-  R.combined = null; R.showCombined = false;
-  R.showTen = false; R.tenRanges = new Map(); R.tenLoading = false;
-  if (R.tenTimer) { clearTimeout(R.tenTimer); R.tenTimer = null; }
-  R.showVad = false; R.vadRanges = new Map(); R.vadLoading = false;
-  if (R.vadTimer) { clearTimeout(R.vadTimer); R.vadTimer = null; }
-  R.zoom = 1;
-  $("zoomRange").value = "1";
-  $("zoomLabel").textContent = "1×";
-  $("phase1Btn").classList.remove("active");
-  $("phase1Btn").textContent = "фаза 1";
-  $("dspBtn").classList.remove("active");
-  $("dspBtn").textContent = "DSP";
-  $("combinedBtn").classList.remove("active");
-  $("combinedBtn").textContent = "фаза 1 итог";
-  $("tenBtn").classList.remove("active");
-  $("tenBtn").textContent = "TEN";
-  $("vadBtn").classList.remove("active");
-  $("vadBtn").textContent = "VAD";
-  $("tenThreshold").value = String(R.tenThreshold);
-  $("tenMergeGap").value = String(R.tenMergeGap);
+  R.recheck = null;
+  R.pausesVisible = false;
+  R.pauseDecisions = null;
+  R.zoom = adaptiveWaveZoom();
+  R.pinch = null;
+  resetLiveLog("suraLiveLog");
+  setSuraLogVisible(false);
   updateWaveControls();
   $("reviewTitle").textContent = `Сура ${surah} · ${sura.ayah_count} аят.`;
   const audio = $("audio");
@@ -220,6 +295,7 @@ async function openReview(surah) {
   R.audio = audio;
   $("suraGenStatus").textContent = "";
   $("suraGenStatus").className = "sura-gen-status";
+  updatePauseOverlayUi();
   renderAyahList();
   updateGenHint();
   updateSuraProgress();
@@ -235,7 +311,7 @@ function updateGenHint() {
     hint.classList.remove("warn");
     $("regenSuraBtn").textContent = "↻ Пересчитать суру";
   } else {
-    hint.textContent = "⚠ Сура не рассчитана — нажмите «Рассчитать суру». Без тайм-кодов подсветки и маркеров нет.";
+    hint.textContent = "Сура без тайм-кодов: выберите аят, слушайте волну и нажмите «Поставить старт» или «Разметить по паузам».";
     hint.classList.add("warn");
     $("regenSuraBtn").textContent = "▶ Рассчитать суру";
   }
@@ -257,266 +333,6 @@ function updateSuraProgress(state = "") {
     + (total > 0 && marked === total ? " done" : "");
 }
 
-async function togglePhase1() {
-  if (R.surah == null) return;
-  const btn = $("phase1Btn");
-  if (R.showPhase1) {
-    R.showPhase1 = false;
-    R.phaseCurrent = -1;
-    btn.classList.remove("active");
-    btn.textContent = "фаза 1";
-    drawWave();
-    return;
-  }
-  btn.disabled = true;
-  btn.textContent = "фаза 1…";
-  try {
-    if (!R.phase1) R.phase1 = await api.get(`/api/sura/${R.surah}/fast-phase1`);
-    R.showPhase1 = true;
-    R.phaseCurrent = currentPhaseByTime(R.audio ? R.audio.currentTime * 1000 : 0);
-    btn.classList.add("active");
-    btn.textContent = `фаза 1 · ${R.phase1.pauses.length}`;
-    drawWave();
-  } catch (e) {
-    setStatus("Ошибка фазы 1: " + e.message);
-    btn.textContent = "фаза 1";
-  } finally {
-    btn.disabled = false;
-  }
-}
-
-async function toggleCombined() {
-  if (R.surah == null) return;
-  const btn = $("combinedBtn");
-  if (R.showCombined) {
-    R.showCombined = false;
-    btn.classList.remove("active");
-    btn.textContent = "фаза 1 итог";
-    drawWave();
-    return;
-  }
-  btn.disabled = true;
-  btn.textContent = "фаза 1 итог…";
-  try {
-    if (!R.combined) R.combined = await api.get(`/api/sura/${R.surah}/fast-combined-phase1`);
-    R.showCombined = true;
-    btn.classList.add("active");
-    btn.textContent = `фаза 1 итог · ${R.combined.pauses.length}`;
-    drawWave();
-  } catch (e) {
-    setStatus("Ошибка фазы 1 итог: " + e.message);
-    btn.textContent = "фаза 1 итог";
-  } finally {
-    btn.disabled = false;
-  }
-}
-
-async function toggleDsp() {
-  if (R.surah == null) return;
-  const btn = $("dspBtn");
-  if (R.showDsp) {
-    R.showDsp = false;
-    btn.classList.remove("active");
-    btn.textContent = "DSP";
-    drawWave();
-    return;
-  }
-  btn.disabled = true;
-  btn.textContent = "DSP…";
-  try {
-    if (!R.dsp) R.dsp = await api.get(`/api/sura/${R.surah}/pause-pipeline`);
-    R.showDsp = true;
-    const accepted = (R.dsp.decisions || []).filter((d) => d.accepted).length;
-    btn.classList.add("active");
-    btn.textContent = `DSP · ${accepted}/${R.dsp.decisions.length}`;
-    drawWave();
-  } catch (e) {
-    setStatus("Ошибка DSP: " + e.message);
-    btn.textContent = "DSP";
-  } finally {
-    btn.disabled = false;
-  }
-}
-
-async function toggleTen() {
-  if (R.surah == null) return;
-  const btn = $("tenBtn");
-  if (R.showTen) {
-    R.showTen = false;
-    btn.classList.remove("active");
-    btn.textContent = "TEN";
-    drawWave();
-    return;
-  }
-  R.showTen = true;
-  btn.classList.add("active");
-  btn.textContent = "TEN…";
-  drawWave();
-  await loadVisibleTen();
-}
-
-async function toggleVad() {
-  if (R.surah == null) return;
-  const btn = $("vadBtn");
-  if (R.showVad) {
-    R.showVad = false;
-    btn.classList.remove("active");
-    btn.textContent = "VAD";
-    drawWave();
-    return;
-  }
-  R.showVad = true;
-  btn.classList.add("active");
-  btn.textContent = "VAD…";
-  drawWave();
-  await loadVisibleVad();
-}
-
-function visibleMsRange(padRatio = 0.15) {
-  const wrap = $("waveScroll"), content = $("waveContent");
-  const left = wrap.scrollLeft, right = left + wrap.clientWidth;
-  const ms0 = (left / Math.max(1, content.clientWidth)) * R.duration;
-  const ms1 = (right / Math.max(1, content.clientWidth)) * R.duration;
-  const pad = Math.max(1000, (ms1 - ms0) * padRatio);
-  return [Math.max(0, ms0 - pad), Math.min(R.duration, ms1 + pad)];
-}
-
-function tenRangeKey(startMs, endMs) {
-  const bucket = 30_000;
-  return [
-    Math.floor(startMs / bucket) * bucket,
-    Math.ceil(endMs / bucket) * bucket,
-    R.tenThreshold.toFixed(2),
-    Math.round(R.tenMergeGap),
-  ].join(":");
-}
-
-function tenPausesForView() {
-  const out = [];
-  for (const r of R.tenRanges.values()) out.push(...(r.pauses || []));
-  const seen = new Set();
-  return out
-    .sort((a, b) => a.start_ms - b.start_ms)
-    .filter((p) => {
-      const key = `${Math.round(p.start_ms)}:${Math.round(p.end_ms)}`;
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
-}
-
-async function loadVisibleTen() {
-  if (!R.showTen || R.tenLoading || R.surah == null || !R.duration) return;
-  const [startMs, endMs] = visibleMsRange();
-  const key = tenRangeKey(startMs, endMs);
-  if (R.tenRanges.has(key)) { updateTenButton(); drawWave(); return; }
-  const [start, end] = key.split(":").map(Number);
-  R.tenLoading = true;
-  updateTenButton("…");
-  try {
-    const params = new URLSearchParams({
-      start_ms: String(start),
-      end_ms: String(end),
-      threshold: String(R.tenThreshold),
-      merge_gap_ms: String(R.tenMergeGap),
-    });
-    const data = await api.get(`/api/sura/${R.surah}/ten-phase?${params.toString()}`);
-    R.tenRanges.set(key, data);
-    updateTenButton();
-    drawWave();
-  } catch (e) {
-    setStatus("Ошибка TEN: " + e.message);
-    R.showTen = false;
-    $("tenBtn").classList.remove("active");
-    $("tenBtn").textContent = "TEN";
-  } finally {
-    R.tenLoading = false;
-  }
-}
-
-function scheduleTenLoad() {
-  if (!R.showTen) return;
-  if (R.tenTimer) clearTimeout(R.tenTimer);
-  R.tenTimer = setTimeout(loadVisibleTen, 220);
-}
-
-function updateTenButton(suffix = "") {
-  const n = tenPausesForView().length;
-  $("tenBtn").textContent = suffix ? `TEN${suffix}` : `TEN · ${n}`;
-}
-
-function vadRangeKey(startMs, endMs) {
-  const bucket = 30_000;
-  return `${Math.floor(startMs / bucket) * bucket}:${Math.ceil(endMs / bucket) * bucket}`;
-}
-
-function vadPausesForView() {
-  const out = [];
-  for (const r of R.vadRanges.values()) out.push(...(r.pauses || []));
-  const seen = new Set();
-  return out
-    .sort((a, b) => a.start_ms - b.start_ms)
-    .filter((p) => {
-      const key = `${Math.round(p.start_ms)}:${Math.round(p.end_ms)}`;
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
-}
-
-async function loadVisibleVad() {
-  if (!R.showVad || R.vadLoading || R.surah == null || !R.duration) return;
-  const [startMs, endMs] = visibleMsRange();
-  const key = vadRangeKey(startMs, endMs);
-  if (R.vadRanges.has(key)) { updateVadButton(); drawWave(); return; }
-  const [start, end] = key.split(":").map(Number);
-  R.vadLoading = true;
-  updateVadButton("…");
-  try {
-    const params = new URLSearchParams({
-      start_ms: String(start),
-      end_ms: String(end),
-    });
-    const data = await api.get(`/api/sura/${R.surah}/vad-phase?${params.toString()}`);
-    R.vadRanges.set(key, data);
-    updateVadButton();
-    drawWave();
-  } catch (e) {
-    setStatus("Ошибка VAD: " + e.message);
-    R.showVad = false;
-    $("vadBtn").classList.remove("active");
-    $("vadBtn").textContent = "VAD";
-  } finally {
-    R.vadLoading = false;
-  }
-}
-
-function scheduleVadLoad() {
-  if (!R.showVad) return;
-  if (R.vadTimer) clearTimeout(R.vadTimer);
-  R.vadTimer = setTimeout(loadVisibleVad, 220);
-}
-
-function updateVadButton(suffix = "") {
-  const n = vadPausesForView().length;
-  $("vadBtn").textContent = suffix ? `VAD${suffix}` : `VAD · ${n}`;
-}
-
-function updateTenSettings() {
-  const threshold = parseFloat($("tenThreshold").value);
-  const mergeGap = parseFloat($("tenMergeGap").value);
-  R.tenThreshold = Number.isFinite(threshold) ? Math.max(0.05, Math.min(0.95, threshold)) : 0.5;
-  R.tenMergeGap = Number.isFinite(mergeGap) ? Math.max(0, Math.min(800, mergeGap)) : 180;
-  $("tenThreshold").value = String(R.tenThreshold);
-  $("tenMergeGap").value = String(Math.round(R.tenMergeGap));
-  R.tenRanges = new Map();
-  if (R.showTen) {
-    updateTenButton("…");
-    drawWave();
-    scheduleTenLoad();
-  }
-}
-
 // regenerate just this sura with the chosen per-sura mode
 async function regenerateSura() {
   if (R.surah == null) return;
@@ -527,6 +343,8 @@ async function regenerateSura() {
     + `Пересчитать только auto-аяты (${modeLabel(mode)})? Ручные правки не затрагиваются.`)) return;
   const btn = $("regenSuraBtn"), st = $("suraGenStatus");
   btn.disabled = true;
+  resetLiveLog("suraLiveLog");
+  setSuraLogVisible(true);
   const t0 = Date.now();
   const tick = () => {
     st.textContent = `расчёт… ${Math.floor((Date.now() - t0) / 1000)}с`;
@@ -541,9 +359,14 @@ async function regenerateSura() {
   const es = new EventSource("/api/generate/stream");
   es.onmessage = async (ev) => {
     const d = JSON.parse(ev.data);
+    if (d.type === "sura_log" && d.surah === surah) {
+      appendLiveLog("suraLiveLog", d.line);
+      st.textContent = d.line;
+    }
     if (d.type === "sura" && d.surah === surah) {
       await reloadSura();
       st.textContent = `записано ${d.written ?? 0} аят.`;
+      if (d.log_paths && d.log_paths.log) appendLiveLog("suraLiveLog", `Лог сохранён: ${d.log_paths.log}`);
     }
     if (d.type === "done" || d.type === "cancelled") {
       es.close(); stop("ok", `✓ готово за ${Math.floor((Date.now() - t0) / 1000)}с`);
@@ -553,21 +376,86 @@ async function regenerateSura() {
   es.onerror = () => { es.close(); if (btn.disabled) stop("", ""); };
 }
 
-async function showFastLog() {
+async function draftPausesSura() {
   if (R.surah == null) return;
-  const btn = $("fastLogBtn");
-  const panel = $("fastLogPanel");
-  const pre = $("fastLogText");
-  panel.classList.remove("hidden");
-  pre.textContent = "читаю fast-лог…";
+  const btn = $("draftPausesBtn"), st = $("suraGenStatus");
+  if (!confirm("Разметить суру по паузам? Ручные и проверенные метки не будут затронуты.")) return;
   btn.disabled = true;
+  st.className = "sura-gen-status running";
+  st.textContent = "разметка по паузам…";
   try {
-    const data = await api.get(`/api/sura/${R.surah}/fast-log`);
-    pre.textContent = data.log || "";
+    const data = await api.post(`/api/sura/${R.surah}/draft-pauses`, {});
+    await reloadSura();
+    refreshSuras();
+    st.className = "sura-gen-status ok";
+    st.textContent = `паузы: записано ${data.written}, найдено ${data.pauses}`;
   } catch (e) {
-    pre.textContent = "Ошибка лога: " + e.message;
+    st.className = "sura-gen-status err";
+    st.textContent = "ошибка: " + e.message;
   } finally {
     btn.disabled = false;
+  }
+}
+
+async function correctDraftSura() {
+  if (R.surah == null) return;
+  const generated = R.ayahs.some((a) => a.time != null);
+  if (!generated) { setStatus("Сначала поставьте метки или разметьте суру по паузам."); return; }
+  const mode = selectedSuraMode() === "fast" ? "tiled" : selectedSuraMode();
+  if (!confirm(`Запустить корректировку auto-тайм-кодов в режиме «${modeLabel(mode)}»? Ручные и проверенные метки не будут затронуты.`)) return;
+  const btn = $("correctDraftBtn"), st = $("suraGenStatus");
+  btn.disabled = true;
+  const t0 = Date.now();
+  const tick = () => { st.textContent = `корректировка… ${Math.floor((Date.now() - t0) / 1000)}с`; };
+  st.className = "sura-gen-status running"; tick();
+  const timer = setInterval(tick, 1000);
+  try {
+    const data = await api.post(`/api/sura/${R.surah}/correct-draft`, { mode });
+    clearInterval(timer);
+    await reloadSura();
+    refreshSuras();
+    st.className = "sura-gen-status ok";
+    st.textContent = `корректировка: записано ${data.written} аят.`;
+  } catch (e) {
+    clearInterval(timer);
+    st.className = "sura-gen-status err";
+    st.textContent = "ошибка: " + e.message;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// Перепроверка: аудит готовых тайм-кодов суры (read-only, БД не меняет).
+async function recheckSura() {
+  if (R.surah == null) return;
+  const generated = R.ayahs.some((a) => a.time != null);
+  if (!generated) { setStatus("Сура не рассчитана — нечего перепроверять."); return; }
+  const btn = $("recheckBtn"), st = $("suraGenStatus");
+  btn.disabled = true;
+  st.className = "sura-gen-status running";
+  const t0 = Date.now();
+  const tick = () => { st.textContent = `перепроверка… ${Math.floor((Date.now() - t0) / 1000)}с`; };
+  tick();
+  const timer = setInterval(tick, 1000);
+  try {
+    const data = await api.get(`/api/sura/${R.surah}/recheck`);
+    R.recheck = {};
+    for (const r of data.results) R.recheck[r.ayah] = r;
+    const s = data.summary || {};
+    clearInterval(timer);
+    btn.disabled = false;
+    const suspect = s.suspect || 0;
+    st.className = "sura-gen-status " + (suspect ? "warn" : "ok");
+    st.textContent = suspect
+      ? `⚠ перепроверка: ${suspect} подозрит. из ${s.checked || 0}`
+      : `✓ перепроверка: все ${s.checked || 0} в норме`;
+    renderAyahList();
+    drawWave();
+  } catch (e) {
+    clearInterval(timer);
+    btn.disabled = false;
+    st.className = "sura-gen-status err";
+    st.textContent = "ошибка: " + e.message;
   }
 }
 
@@ -577,6 +465,7 @@ async function reloadSura() {
     const sura = await api.get(`/api/sura/${R.surah}`);
     R.ayahs = sura.ayahs;
   } catch { return; }
+  R.recheck = null;  // times changed → stale verification
   renderAyahList();
   updateGenHint();
   updateSuraProgress();
@@ -596,19 +485,32 @@ function renderAyahList() {
     li.classList.add(marked ? "marked" : "missing");
     if (a.status === "verified") li.classList.add("verified");
     else if (a.status === "edited") li.classList.add("edited");
+    const rc = R.recheck ? R.recheck[a.ayah] : null;
+    if (rc && rc.verdict === "shift") li.classList.add("rc-suspect");
     li.innerHTML = `
       <span class="a-conf" style="background:${confColor(a.confidence, a.status)}"></span>
       <span class="a-num">${a.ayah}</span>
       <span class="a-time">${fmt(a.time)}</span>
       <span class="a-mark">${marked ? "разм." : "нет"}</span>
+      ${recheckBadge(rc)}
       <button class="a-verify" ${marked ? "" : "disabled"}>${a.status === "verified" ? "✓ пров." : "пров."}</button>
       <span class="a-text" dir="rtl" lang="ar">${escapeHtml(a.text || "")}</span>`;
     li.onclick = (e) => {
       if (e.target.classList.contains("a-verify")) { toggleVerify(i); e.stopPropagation(); }
-      else seekAyah(i, true);
+      else if (marked) seekAyah(i, true);
+      else setCurrent(i);
     };
     ul.appendChild(li);
   });
+}
+// recheck verdict pill: ✓ ok / →N "звучит как соседний аят". Empty until re-checked.
+function recheckBadge(rc) {
+  if (!rc || rc.verdict === "no_time") return `<span class="a-recheck"></span>`;
+  const sc = (rc.score != null) ? rc.score.toFixed(2) : "—";
+  if (rc.verdict === "shift") {
+    return `<span class="a-recheck rc-shift" title="${escapeHtml(rc.hint)} (здесь слышно скорее начало аята ${rc.match_ayah}: ${rc.match_score.toFixed(2)} против ${sc})">→${rc.match_ayah}</span>`;
+  }
+  return `<span class="a-recheck rc-ok" title="слышно своё начало (совпадение ${sc})">✓</span>`;
 }
 function confColor(conf, status) {
   if (status === "verified") return "var(--green)";
@@ -632,6 +534,15 @@ function resizeWave() {
   c.height = Math.round(c.clientHeight * dpr);
   c.getContext("2d").setTransform(dpr, 0, 0, dpr, 0, 0);
 }
+function adaptiveWaveZoom() {
+  if (!R.duration) return 1;
+  const durationSec = R.duration / 1000;
+  const ayahCount = Math.max(1, R.ayahs.length);
+  const avgAyahSec = durationSec / ayahCount;
+  const targetVisibleSec = Math.max(35, Math.min(80, avgAyahSec * 5));
+  const zoom = durationSec / targetVisibleSec;
+  return Math.max(1, Math.min(100, Math.round(zoom)));
+}
 function setWaveZoom(zoom, centerMs = null) {
   const oldZoom = R.zoom;
   const wrap = $("waveScroll"), content = $("waveContent");
@@ -644,17 +555,149 @@ function setWaveZoom(zoom, centerMs = null) {
   if (R.zoom !== oldZoom) {
     wrap.scrollLeft = Math.max(0, centerRatio * content.clientWidth - wrap.clientWidth / 2);
   }
+  renderPauseInspector();
   drawWave();
-  scheduleTenLoad();
-  scheduleVadLoad();
 }
 function updateWaveControls() {
-  if (!$("zoomRange")) return;
-  $("zoomRange").value = String(R.zoom);
+  if (!$("zoomLabel")) return;
   $("zoomLabel").textContent = `${R.zoom}×`;
+}
+function updatePauseOverlayUi() {
+  const btn = $("pauseOverlayBtn"), legend = $("pauseLegend"), inspector = $("pauseInspector");
+  if (!btn || !legend || !inspector) return;
+  btn.classList.toggle("active", R.pausesVisible);
+  legend.classList.toggle("hidden", !R.pausesVisible);
+  inspector.classList.toggle("hidden", !R.pausesVisible);
+  renderPauseInspector();
+}
+async function togglePauseOverlay() {
+  if (R.surah == null) return;
+  const btn = $("pauseOverlayBtn"), st = $("suraGenStatus");
+  if (R.pausesVisible) {
+    R.pausesVisible = false;
+    updatePauseOverlayUi();
+    drawWave();
+    return;
+  }
+  R.pausesVisible = true;
+  updatePauseOverlayUi();
+  if (!R.pauseDecisions) {
+    btn.disabled = true;
+    st.className = "sura-gen-status running";
+    st.textContent = "ищу паузы…";
+    try {
+      const data = await api.get(`/api/sura/${R.surah}/pause-pipeline`);
+      R.pauseDecisions = data.decisions || [];
+      const accepted = R.pauseDecisions.filter((d) => d.accepted).length;
+      const weak = R.pauseDecisions.filter((d) => d.accepted && d.reason === "weak-dsp").length;
+      const rejected = R.pauseDecisions.length - accepted;
+      st.className = "sura-gen-status ok";
+      st.textContent = `паузы: ${accepted} принято, weak ${weak}, откл. ${rejected}`;
+    } catch (e) {
+      R.pausesVisible = false;
+      st.className = "sura-gen-status err";
+      st.textContent = "ошибка пауз: " + e.message;
+    } finally {
+      btn.disabled = false;
+      updatePauseOverlayUi();
+    }
+  }
+  drawWave();
+}
+function visibleWaveMs() {
+  const wrap = $("waveScroll"), content = $("waveContent");
+  const totalW = Math.max(1, content.clientWidth);
+  const start = (wrap.scrollLeft / totalW) * Math.max(1, R.duration);
+  const end = ((wrap.scrollLeft + wrap.clientWidth) / totalW) * Math.max(1, R.duration);
+  return [Math.max(0, start), Math.min(R.duration || end, end)];
+}
+function pauseDecisionLabel(d) {
+  if (!d.accepted) return "отклонена";
+  if (d.reason === "weak-dsp") return "weak";
+  if (d.reason === "intro-vad-tight") return "intro vad";
+  if (d.reason === "intro-vad") return "intro";
+  return "strict";
+}
+function pauseDecisionClass(d) {
+  if (!d.accepted) return "rejected";
+  return d.reason === "weak-dsp" ? "weak" : "strong";
+}
+function renderPauseInspector() {
+  const panel = $("pauseInspector"), rows = $("pauseRows");
+  if (!panel || !rows) return;
+  if (!R.pausesVisible) {
+    rows.innerHTML = "";
+    return;
+  }
+  if (!R.pauseDecisions) {
+    $("pauseInspectorSummary").textContent = "загрузка…";
+    rows.innerHTML = "";
+    return;
+  }
+  const accepted = R.pauseDecisions.filter((d) => d.accepted).length;
+  const weak = R.pauseDecisions.filter((d) => d.accepted && d.reason === "weak-dsp").length;
+  const rejected = R.pauseDecisions.length - accepted;
+  const [viewStart, viewEnd] = visibleWaveMs();
+  const visible = R.pauseDecisions.filter((d) => d.end_ms >= viewStart && d.start_ms <= viewEnd);
+  $("pauseInspectorSummary").textContent =
+    `всего ${R.pauseDecisions.length} · принято ${accepted} · weak ${weak} · откл. ${rejected} · видно ${visible.length}`;
+  rows.innerHTML = "";
+  for (const d of visible.slice(0, 120)) {
+    const tr = document.createElement("tr");
+    tr.className = "pause-row " + pauseDecisionClass(d);
+    tr.title = `центр ${fmt(d.center_ms)} · ${d.reason}`;
+    tr.innerHTML = `
+      <td>${fmt(d.start_ms)}–${fmt(d.end_ms)}</td>
+      <td>${Math.round(d.depth_ms)}мс</td>
+      <td><span class="pause-pill ${pauseDecisionClass(d)}">${pauseDecisionLabel(d)}</span></td>
+      <td>${Number(d.rms_ratio).toFixed(3)}</td>
+      <td>${Number(d.flatness).toFixed(3)}</td>
+      <td>${Number(d.zcr).toFixed(3)}</td>
+      <td>${d.vad_ok == null ? "—" : (d.vad_ok ? "ok" : "нет")}</td>`;
+    tr.onclick = () => {
+      if (R.audio) R.audio.currentTime = d.center_ms / 1000;
+      scrollWaveToMs(d.center_ms);
+      drawWave();
+    };
+    rows.appendChild(tr);
+  }
+  if (visible.length > 120) {
+    const tr = document.createElement("tr");
+    tr.className = "pause-row muted";
+    tr.innerHTML = `<td colspan="7">ещё ${visible.length - 120} в этом диапазоне — увеличьте масштаб</td>`;
+    rows.appendChild(tr);
+  }
 }
 function msToVirtualX(ms) {
   return (ms / Math.max(1, R.duration)) * $("waveContent").clientWidth;
+}
+function drawPauseOverlay(ctx, left, right, h) {
+  if (!R.pausesVisible || !R.pauseDecisions || !R.duration) return;
+  for (const d of R.pauseDecisions) {
+    const x0 = msToVirtualX(d.start_ms);
+    const x1 = msToVirtualX(d.end_ms);
+    if (x1 < left || x0 > right) continue;
+    const x = Math.max(0, x0 - left);
+    const w = Math.max(2, Math.min(right, x1) - Math.max(left, x0));
+    const isWeak = d.accepted && d.reason === "weak-dsp";
+    if (d.accepted) {
+      ctx.fillStyle = isWeak ? "rgba(217,164,65,.24)" : "rgba(74,144,217,.22)";
+      ctx.strokeStyle = isWeak ? "#d9a441" : "#4a90d9";
+      ctx.setLineDash([]);
+    } else {
+      ctx.fillStyle = "rgba(217,106,90,.10)";
+      ctx.strokeStyle = "rgba(217,106,90,.75)";
+      ctx.setLineDash([4, 3]);
+    }
+    ctx.fillRect(x, 14, w, h - 28);
+    ctx.lineWidth = d.accepted ? 1.5 : 1;
+    ctx.strokeRect(x + 0.5, 14.5, Math.max(1, w - 1), h - 29);
+    const cx = msToVirtualX(d.center_ms) - left;
+    if (cx >= 0 && cx <= ctx.canvas.clientWidth) {
+      ctx.beginPath(); ctx.moveTo(cx, 8); ctx.lineTo(cx, h - 8); ctx.stroke();
+    }
+  }
+  ctx.setLineDash([]);
 }
 function drawWave() {
   const c = $("wave"), wrap = $("waveScroll"), content = $("waveContent"), ctx = c.getContext("2d");
@@ -671,145 +714,25 @@ function drawWave() {
     ctx.moveTo(x, mid - amp); ctx.lineTo(x, mid + amp);
   }
   ctx.stroke();
-  if (R.showPhase1 && R.phase1) drawPhase1(ctx, left, right, h);
-  if (R.showDsp && R.dsp) drawDsp(ctx, left, right, h);
-  if (R.showCombined && R.combined) drawCombined(ctx, left, right, h);
-  if (R.showTen) drawTen(ctx, left, right, h);
-  if (R.showVad) drawVad(ctx, left, right, h);
+  drawPauseOverlay(ctx, left, right, h);
   R.ayahs.forEach((a, i) => {
     if (a.time == null || !R.duration) return;
     const vx = msToVirtualX(a.time);
     if (vx < left - 1 || vx > right + 1) return;
     const x = vx - left;
-    ctx.strokeStyle = i === R.current ? "#ffd56b" : "#d4a843";
-    ctx.lineWidth = i === R.current ? 2 : 1;
+    const rc = R.recheck ? R.recheck[a.ayah] : null;
+    const suspect = rc && rc.verdict === "shift";
+    ctx.strokeStyle = suspect ? "#ff6b6b" : (i === R.current ? "#ffd56b" : "#d4a843");
+    ctx.lineWidth = (suspect || i === R.current) ? 2 : 1;
     ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
     ctx.fillStyle = ctx.strokeStyle; ctx.font = "10px sans-serif";
-    ctx.fillText(a.ayah, x + 3, 11);
+    ctx.fillText(suspect ? a.ayah + "→" + rc.match_ayah : a.ayah, x + 3, 11);
   });
   if (R.audio && R.duration) {
     const playMs = R.audio.currentTime * 1000;
     const px = msToVirtualX(playMs) - left;
     ctx.strokeStyle = "#fff"; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, h); ctx.stroke();
-  }
-}
-
-function drawDsp(ctx, left, right, h) {
-  ctx.font = "10px sans-serif";
-  for (const p of R.dsp.decisions || []) {
-    const start = msToVirtualX(p.start_ms);
-    const end = msToVirtualX(p.end_ms);
-    if (end < left - 1 || start > right + 1) continue;
-    const x0 = Math.max(0, start - left);
-    const x1 = Math.min(right - left, end - left);
-    ctx.fillStyle = p.accepted ? "rgba(255, 166, 61, 0.10)" : "rgba(255, 93, 93, 0.14)";
-    ctx.fillRect(x0, 0, Math.max(1, x1 - x0), h);
-    const mark = msToVirtualX(p.center_ms) - left;
-    ctx.strokeStyle = p.accepted ? "#ffa63d" : "#ff5d5d";
-    ctx.lineWidth = p.accepted ? 1.5 : 2;
-    ctx.beginPath(); ctx.moveTo(mark, 0); ctx.lineTo(mark, h); ctx.stroke();
-    if (mark >= 0 && mark <= right - left) {
-      ctx.fillStyle = ctx.strokeStyle;
-      ctx.fillText(p.accepted ? Math.round(p.depth_ms) : "x", mark + 3, 66);
-    }
-  }
-}
-
-function drawCombined(ctx, left, right, h) {
-  ctx.font = "10px sans-serif";
-  for (const p of R.combined.pauses || []) {
-    const start = msToVirtualX(p.start_ms);
-    const end = msToVirtualX(p.end_ms);
-    if (end < left - 1 || start > right + 1) continue;
-    const x0 = Math.max(0, start - left);
-    const x1 = Math.min(right - left, end - left);
-    ctx.fillStyle = "rgba(49, 211, 214, 0.11)";
-    ctx.fillRect(x0, 0, Math.max(1, x1 - x0), h);
-    const mark = msToVirtualX(p.center_ms) - left;
-    ctx.strokeStyle = "#31d3d6";
-    ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(mark, 0); ctx.lineTo(mark, h); ctx.stroke();
-    if (mark >= 0 && mark <= right - left) {
-      ctx.fillStyle = "#9af4f6";
-      ctx.fillText(Math.round(p.depth_ms), mark + 3, 52);
-    }
-  }
-}
-
-function drawTen(ctx, left, right, h) {
-  ctx.font = "10px sans-serif";
-  for (const p of tenPausesForView()) {
-    const start = msToVirtualX(p.start_ms);
-    const end = msToVirtualX(p.end_ms);
-    if (end < left - 1 || start > right + 1) continue;
-    const x0 = Math.max(0, start - left);
-    const x1 = Math.min(right - left, end - left);
-    ctx.fillStyle = "rgba(178, 113, 255, 0.10)";
-    ctx.fillRect(x0, 0, Math.max(1, x1 - x0), h);
-    const mark = msToVirtualX(p.center_ms) - left;
-    ctx.strokeStyle = "#b271ff";
-    ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(mark, 0); ctx.lineTo(mark, h); ctx.stroke();
-    if (mark >= 0 && mark <= right - left) {
-      ctx.fillStyle = "#d6bdff";
-      ctx.fillText(Math.round(p.depth_ms), mark + 3, 24);
-    }
-  }
-}
-
-function drawVad(ctx, left, right, h) {
-  ctx.font = "10px sans-serif";
-  for (const p of vadPausesForView()) {
-    const start = msToVirtualX(p.start_ms);
-    const end = msToVirtualX(p.end_ms);
-    if (end < left - 1 || start > right + 1) continue;
-    const x0 = Math.max(0, start - left);
-    const x1 = Math.min(right - left, end - left);
-    ctx.fillStyle = "rgba(73, 214, 130, 0.10)";
-    ctx.fillRect(x0, 0, Math.max(1, x1 - x0), h);
-    const mark = msToVirtualX(p.center_ms) - left;
-    ctx.strokeStyle = "#49d682";
-    ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(mark, 0); ctx.lineTo(mark, h); ctx.stroke();
-    if (mark >= 0 && mark <= right - left) {
-      ctx.fillStyle = "#93f0ba";
-      ctx.fillText(Math.round(p.depth_ms), mark + 3, 38);
-    }
-  }
-}
-
-function drawPhase1(ctx, left, right, h) {
-  ctx.font = "10px sans-serif";
-  const marks = phaseMarks();
-  const cur = R.audio ? currentPhaseByTime(R.audio.currentTime * 1000) : R.phaseCurrent;
-  if (marks && cur >= 0) {
-    const start = msToVirtualX(marks[cur]);
-    const end = msToVirtualX(marks[cur + 1]);
-    if (end >= left && start <= right) {
-      const x0 = Math.max(0, start - left);
-      const x1 = Math.min(right - left, end - left);
-      ctx.fillStyle = "rgba(74, 144, 217, 0.09)";
-      ctx.fillRect(x0, 0, Math.max(1, x1 - x0), h);
-    }
-  }
-  for (const p of R.phase1.pauses || []) {
-    const start = msToVirtualX(p.start_ms);
-    const end = msToVirtualX(p.end_ms);
-    if (end < left - 1 || start > right + 1) continue;
-    const x0 = Math.max(0, start - left);
-    const x1 = Math.min(right - left, end - left);
-    ctx.fillStyle = "rgba(74, 144, 217, 0.13)";
-    ctx.fillRect(x0, 0, Math.max(1, x1 - x0), h);
-    const markMs = p.center_ms ?? p.onset_ms;
-    const onset = msToVirtualX(markMs) - left;
-    ctx.strokeStyle = "#4a90d9";
-    ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(onset, 0); ctx.lineTo(onset, h); ctx.stroke();
-    if (onset >= 0 && onset <= right - left) {
-      ctx.fillStyle = "#8fc4ff";
-      ctx.fillText(Math.round(p.depth_ms), onset + 3, h - 7);
-    }
   }
 }
 function xToMs(clientX) {
@@ -834,6 +757,12 @@ function scrollWaveToMs(ms) {
   const wrap = $("waveScroll"), x = msToVirtualX(ms);
   wrap.scrollLeft = Math.max(0, x - wrap.clientWidth / 2);
 }
+function scrollWaveToEdge(edge) {
+  const wrap = $("waveScroll");
+  wrap.scrollLeft = edge === "end" ? wrap.scrollWidth - wrap.clientWidth : 0;
+  renderPauseInspector();
+  drawWave();
+}
 function seekAyah(i, play) {
   const a = R.ayahs[i]; if (!a || a.time == null || !R.audio) return;
   R.audio.currentTime = a.time / 1000;
@@ -842,51 +771,11 @@ function seekAyah(i, play) {
   drawWave();
   if (play) R.audio.play();
 }
-function phaseMarks() {
-  if (!R.showPhase1 || !R.phase1 || !R.duration) return null;
-  const raw = [0, ...(R.phase1.pauses || []).map((p) => p.center_ms ?? p.onset_ms), R.duration]
-    .filter((t) => t != null && Number.isFinite(t))
-    .map((t) => Math.max(0, Math.min(R.duration, t)))
-    .sort((a, b) => a - b);
-  const marks = [];
-  for (const t of raw) {
-    if (!marks.length || t - marks[marks.length - 1] > 1) marks.push(t);
-  }
-  return marks.length >= 2 ? marks : null;
-}
-function currentPhaseByTime(ms) {
-  const marks = phaseMarks();
-  if (!marks) return -1;
-  let idx = 0;
-  for (let i = 0; i < marks.length - 1; i++) {
-    if (marks[i] <= ms + 1) idx = i;
-    else break;
-  }
-  return Math.min(idx, marks.length - 2);
-}
-function phaseEndMs(i) {
-  const marks = phaseMarks();
-  if (!marks || i < 0) return R.duration;
-  return marks[Math.min(i + 1, marks.length - 1)];
-}
-function seekPhase(i, play) {
-  const marks = phaseMarks();
-  if (!marks || !R.audio) return;
-  const idx = Math.max(0, Math.min(i, marks.length - 2));
-  R.phaseCurrent = idx;
-  R.audio.currentTime = marks[idx] / 1000;
-  scrollWaveToMs(marks[idx]);
-  drawWave();
-  if (play) R.audio.play();
-}
 function seekPrevUnit() {
-  if (phaseMarks()) seekPhase(currentPhaseByTime(R.audio ? R.audio.currentTime * 1000 : 0) - 1, false);
-  else seekAyah(Math.max(R.current - 1, 0), false);
+  seekAyah(Math.max(R.current - 1, 0), false);
 }
 function seekNextUnit() {
-  const marks = phaseMarks();
-  if (marks) seekPhase(currentPhaseByTime(R.audio ? R.audio.currentTime * 1000 : 0) + 1, false);
-  else seekAyah(Math.min(R.current + 1, R.ayahs.length - 1), false);
+  seekAyah(Math.min(R.current + 1, R.ayahs.length - 1), false);
 }
 function setCurrent(i) {
   if (i === R.current) return;
@@ -921,6 +810,17 @@ async function toggleVerify(i) {
     renderAyahList(); updateSuraProgress(); const cur = R.current; R.current = -1; setCurrent(cur); drawWave();
   } catch (e) { setStatus("Ошибка: " + e.message); }
 }
+
+async function markCurrentStart() {
+  if (!R.audio || R.surah == null) return;
+  let idx = R.current;
+  if (idx < 0) idx = currentAyahByTime(R.audio.currentTime * 1000);
+  if (idx < 0) idx = R.ayahs.findIndex((a) => a.time == null);
+  if (idx < 0) idx = 0;
+  setCurrent(idx);
+  await commitMarker(idx, R.audio.currentTime * 1000);
+}
+
 async function commitMarker(i, ms) {
   const a = R.ayahs[i];
   try {
@@ -969,19 +869,23 @@ function wire() {
   $("regenBtn").onclick = () => runGeneration(false);
   $("cancelBtn").onclick = cancelGeneration;
   $("regenSuraBtn").onclick = regenerateSura;
-  $("fastLogBtn").onclick = showFastLog;
-  $("closeFastLogBtn").onclick = () => $("fastLogPanel").classList.add("hidden");
+  $("draftPausesBtn").onclick = draftPausesSura;
+  $("correctDraftBtn").onclick = correctDraftSura;
+  $("recheckBtn").onclick = recheckSura;
+  $("markCurrentBtn").onclick = markCurrentStart;
   $("zoomOutBtn").onclick = () => setWaveZoom(R.zoom / 2);
   $("zoomInBtn").onclick = () => setWaveZoom(R.zoom * 2);
   $("zoomFitBtn").onclick = () => setWaveZoom(1, R.duration / 2);
-  $("phase1Btn").onclick = togglePhase1;
-  $("dspBtn").onclick = toggleDsp;
-  $("combinedBtn").onclick = toggleCombined;
-  $("tenBtn").onclick = toggleTen;
-  $("vadBtn").onclick = toggleVad;
-  $("tenThreshold").onchange = updateTenSettings;
-  $("tenMergeGap").onchange = updateTenSettings;
-  $("zoomRange").oninput = () => setWaveZoom(parseInt($("zoomRange").value, 10), R.audio ? R.audio.currentTime * 1000 : null);
+  $("waveStartBtn").onclick = () => scrollWaveToEdge("start");
+  $("waveEndBtn").onclick = () => scrollWaveToEdge("end");
+  $("hideSuraLogBtn").onclick = () => setSuraLogVisible(false);
+  $("suraLogResizeHandle").addEventListener("pointerdown", (e) => {
+    const box = $("suraLiveLogBox");
+    box.setPointerCapture(e.pointerId);
+    R.logResize = { pointerId: e.pointerId, startY: e.clientY, startHeight: box.getBoundingClientRect().height };
+    e.preventDefault();
+  });
+  $("pauseOverlayBtn").onclick = togglePauseOverlay;
   $("genMode").onchange = async () => {
     setMode(selectedMode());
     try { await api.post("/api/settings", { mode: selectedMode() }); } catch {}
@@ -994,6 +898,10 @@ function wire() {
   $("loopBtn").onclick = () => { R.loop = !R.loop; $("loopBtn").classList.toggle("active", R.loop); };
   $("rate").onchange = () => { if (R.audio) R.audio.playbackRate = parseFloat($("rate").value); };
   $("exportBtn").onclick = exportProject;
+  for (const btn of document.querySelectorAll("[data-copy-log]")) {
+    btn.addEventListener("click", () => copyLiveLog(btn.dataset.copyLog));
+    updateLogCopyButton(btn.dataset.copyLog);
+  }
 
   const audio = $("audio");
   audio.addEventListener("play", () => ($("playBtn").textContent = "⏸"));
@@ -1001,25 +909,67 @@ function wire() {
   audio.addEventListener("timeupdate", () => {
     const ms = audio.currentTime * 1000;
     $("clock").textContent = `${fmt(ms)} / ${fmt(R.duration)}`;
-    const activePhase = phaseMarks();
-    if (activePhase) R.phaseCurrent = currentPhaseByTime(ms);
-    else {
-      const i = currentAyahByTime(ms);
-      if (i >= 0 && i !== R.current) setCurrent(i);
-    }
+    const i = currentAyahByTime(ms);
+    if (i >= 0 && i !== R.current) setCurrent(i);
     if (R.zoom > 1) {
       const wrap = $("waveScroll"), x = msToVirtualX(ms);
       if (x < wrap.scrollLeft || x > wrap.scrollLeft + wrap.clientWidth) {
         wrap.scrollLeft = Math.max(0, x - wrap.clientWidth / 2);
       }
     }
-    if (R.loop && activePhase && R.phaseCurrent >= 0 && ms >= phaseEndMs(R.phaseCurrent)) seekPhase(R.phaseCurrent, true);
-    else if (R.loop && !activePhase && R.current >= 0 && ms >= ayahEndMs(R.current)) seekAyah(R.current, true);
+    if (R.loop && R.current >= 0 && ms >= ayahEndMs(R.current)) seekAyah(R.current, true);
     drawWave();
   });
 
   const c = $("wave");
-  $("waveScroll").addEventListener("scroll", () => { drawWave(); scheduleTenLoad(); scheduleVadLoad(); });
+  const waveScroll = $("waveScroll");
+  waveScroll.addEventListener("scroll", () => { renderPauseInspector(); drawWave(); });
+  waveScroll.addEventListener("wheel", (e) => {
+    if (!e.ctrlKey && !e.metaKey) return;
+    e.preventDefault();
+    const ms = xToMs(e.clientX);
+    const factor = Math.exp(-e.deltaY / 180);
+    setWaveZoom(R.zoom * factor, ms);
+  }, { passive: false });
+  waveScroll.addEventListener("pointerdown", (e) => {
+    if (e.pointerType === "mouse") return;
+    waveScroll.setPointerCapture(e.pointerId);
+    if (!R.pinch) R.pinch = { points: new Map(), startDistance: 0, startZoom: R.zoom, centerMs: null };
+    R.pinch.points.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (R.pinch.points.size === 2) {
+      const pts = [...R.pinch.points.values()];
+      R.pinch.startDistance = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+      R.pinch.startZoom = R.zoom;
+      R.pinch.centerMs = xToMs((pts[0].x + pts[1].x) / 2);
+    }
+  });
+  waveScroll.addEventListener("pointermove", (e) => {
+    if (!R.pinch || !R.pinch.points.has(e.pointerId)) return;
+    R.pinch.points.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (R.pinch.points.size !== 2 || R.pinch.startDistance <= 0) return;
+    e.preventDefault();
+    const pts = [...R.pinch.points.values()];
+    const distance = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    setWaveZoom(R.pinch.startZoom * (distance / R.pinch.startDistance), R.pinch.centerMs);
+  });
+  const endPinchPoint = (e) => {
+    if (!R.pinch) return;
+    R.pinch.points.delete(e.pointerId);
+    if (R.pinch.points.size < 2) R.pinch = null;
+  };
+  waveScroll.addEventListener("pointerup", endPinchPoint);
+  waveScroll.addEventListener("pointercancel", endPinchPoint);
+  window.addEventListener("pointermove", (e) => {
+    if (!R.logResize || e.pointerId !== R.logResize.pointerId) return;
+    setSuraLogHeight(R.logResize.startHeight + (R.logResize.startY - e.clientY));
+    e.preventDefault();
+  });
+  window.addEventListener("pointerup", (e) => {
+    if (R.logResize && e.pointerId === R.logResize.pointerId) R.logResize = null;
+  });
+  window.addEventListener("pointercancel", (e) => {
+    if (R.logResize && e.pointerId === R.logResize.pointerId) R.logResize = null;
+  });
   c.addEventListener("mousedown", (e) => {
     const mi = markerNearX(e.clientX);
     if (mi >= 0) { R.drag = mi; c.style.cursor = "ew-resize"; }
@@ -1031,7 +981,13 @@ function wire() {
     const i = R.drag; R.drag = -1; c.style.cursor = "pointer";
     commitMarker(i, xToMs(e.clientX));
   });
-  window.addEventListener("resize", () => { if (!$("review").classList.contains("hidden")) { resizeWave(); drawWave(); } });
+  window.addEventListener("resize", () => {
+    if (!$("review").classList.contains("hidden")) {
+      resizeWave();
+      renderPauseInspector();
+      drawWave();
+    }
+  });
 
   window.addEventListener("keydown", (e) => {
     if ($("review").classList.contains("hidden") || e.target.tagName === "INPUT") return;

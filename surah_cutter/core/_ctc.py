@@ -98,6 +98,83 @@ def forced_align(log_probs, targets, blank: int = 0):
     return path[None, :], scores[None, :]
 
 
+def forced_align_banded(log_probs, targets, blank: int = 0, radius: int = 256):
+    """Banded Viterbi forced alignment with fallback-compatible output.
+
+    The search is restricted to states near a linear token/time trajectory. This
+    is an optimisation for tiled chunks, not a different alignment objective. If
+    the band is too narrow and the final CTC state is unreachable, ``ValueError``
+    is raised so callers can retry with :func:`forced_align`.
+    """
+    if radius <= 0:
+        raise ValueError("band radius must be positive")
+
+    emis = np.asarray(log_probs, dtype=np.float64)[0]
+    tgt = np.asarray(targets).reshape(-1).astype(np.int64)
+    t_len, _ = emis.shape
+    n_tok = tgt.shape[0]
+    if n_tok == 0:
+        path = np.full((1, t_len), blank, dtype=np.int64)
+        return path, emis[np.arange(t_len), blank][None, :]
+
+    n_st = 2 * n_tok + 1
+    ext = np.full(n_st, blank, dtype=np.int64)
+    ext[1::2] = tgt
+
+    allowed_skip = np.zeros(n_st, dtype=bool)
+    allowed_skip[2:] = (ext[2:] != blank) & (ext[2:] != ext[:-2])
+
+    idx = np.arange(n_st)
+
+    def band_mask(t: int) -> np.ndarray:
+        if t_len <= 1:
+            center = n_st - 1
+        else:
+            center = (n_st - 1) * (t / (t_len - 1))
+        lo = max(0, int(center) - radius)
+        hi = min(n_st, int(center) + radius + 1)
+        mask = np.zeros(n_st, dtype=bool)
+        mask[lo:hi] = True
+        return mask
+
+    dp = np.full(n_st, _NEG)
+    dp[0] = emis[0, ext[0]]
+    if n_st > 1:
+        dp[1] = emis[0, ext[1]]
+    dp = np.where(band_mask(0), dp, _NEG)
+
+    choices = np.zeros((t_len, n_st), dtype=np.uint8)
+
+    for t in range(1, t_len):
+        stay = dp
+        prev1 = np.concatenate(([_NEG], dp[:-1]))
+        prev2 = np.concatenate(([_NEG, _NEG], dp[:-2]))
+        prev2 = np.where(allowed_skip, prev2, _NEG)
+        stacked = np.stack((stay, prev1, prev2))
+        choice = np.argmax(stacked, axis=0).astype(np.uint8)
+        best = stacked[choice, idx]
+        dp = best + emis[t, ext]
+        dp = np.where(band_mask(t), dp, _NEG)
+        choices[t] = choice
+
+    end_a = dp[n_st - 1]
+    end_b = dp[n_st - 2] if n_st > 1 else _NEG
+    if end_a <= _NEG / 2 and end_b <= _NEG / 2:
+        raise ValueError("banded CTC path unreachable")
+
+    s = n_st - 1 if end_a >= end_b else n_st - 2
+    states = np.zeros(t_len, dtype=np.int64)
+    for t in range(t_len - 1, -1, -1):
+        states[t] = s
+        s -= int(choices[t, s])
+        if s < 0:
+            raise ValueError("banded CTC backtrace left trellis")
+
+    path = ext[states]
+    scores = emis[np.arange(t_len), path]
+    return path[None, :], scores[None, :]
+
+
 def merge_repeats(path, id_map=None):
     """Collapse consecutive equal ids in ``path`` into :class:`Segment` runs.
 

@@ -42,6 +42,17 @@ def build_parser() -> argparse.ArgumentParser:
         help="known-reciter id; if it matches a bundled reference, use its "
         "timings instead of running the model",
     )
+    p.add_argument(
+        "--mode",
+        default="auto",
+        choices=("auto", "full", "fast", "tiled", "hybrid", "fingerprint"),
+        help="alignment mode (default: auto)",
+    )
+    p.add_argument(
+        "--ayah-audio-dir",
+        default=None,
+        help="folder with per-ayah clips for --mode fingerprint",
+    )
     return p
 
 
@@ -104,7 +115,11 @@ def main(argv: list[str] | None = None) -> int:
             print(f"[{i}/{total}] sura {surah:03d} <- {path.name} ...", flush=True)
             try:
                 rows = pipeline.process_surah(
-                    str(path), surah, reciter=args.reciter
+                    str(path),
+                    surah,
+                    reciter=args.reciter,
+                    mode=args.mode,
+                    ayah_audio_dir=args.ayah_audio_dir,
                 )
             except Exception as exc:  # noqa: BLE001 - keep batch going, report
                 failures += 1

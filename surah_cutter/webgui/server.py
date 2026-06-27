@@ -30,7 +30,7 @@ from surah_cutter.webgui.state import (
 _STATIC_DIR = Path(__file__).resolve().parent / "static"
 #: Bundled Qur'an (QPC Hafs Uthmani) font, served at /fonts for the review text.
 _FONTS_DIR = Path(__file__).resolve().parents[2] / "assets" / "fonts"
-_GEN_MODES = {"full", "fast", "hybrid"}
+_GEN_MODES = {"auto", "full", "fast", "hybrid", "tiled"}
 
 
 # --- generation job (one at a time) ---------------------------------------
@@ -85,17 +85,34 @@ class _GenJob:
                         completed = i + 1
                         continue
                     trace: dict[str, Any] = {}
+                    log_lines: list[str] = []
+
+                    def log_event(line: str) -> None:
+                        text = str(line)
+                        log_lines.append(text)
+                        self._emit({
+                            "type": "sura_log",
+                            "surah": surah,
+                            "index": i,
+                            "line": text,
+                        })
+
                     rows = process_surah(
                         str(audio), surah, reciter=reciter, mode=mode,
                         project_db=db,
-                        trace=trace if mode == "fast" else None,
+                        trace=trace if mode in ("auto", "fast", "tiled") else None,
+                        log_event=log_event,
                     )
                     written = db.write_timings(rows, source="auto")
+                    _write_trace_confidences(db, surah, trace)
+                    log_paths = _save_sura_log(surah, mode, trace, log_lines, rows)
                     completed = i + 1
                     event = {
                         "type": "sura", "surah": surah, "index": i,
                         "ayahs": len(rows), "written": written,
                     }
+                    if log_paths:
+                        event["log_paths"] = log_paths
                     if trace:
                         event["fast_trace"] = _fast_trace_summary(trace)
                     self._emit(event)
@@ -128,7 +145,7 @@ def create_app() -> FastAPI:
             "db_path": str(STATE.db_path) if STATE.db_path else None,
             "audio_count": len(STATE.audio_map),
             "suras_with_audio": sorted(STATE.audio_map),
-            "mode": cfg.get("mode", "hybrid"),
+            "mode": cfg.get("mode", "auto"),
         }
 
     @app.post("/api/project/open")
@@ -192,7 +209,7 @@ def create_app() -> FastAPI:
             suras = [s for s in suras if s not in done]
         if not suras:
             raise HTTPException(400, "no suras to process (all done or no audio)")
-        mode = payload.get("mode", "hybrid")
+        mode = payload.get("mode", "auto")
         if mode not in _GEN_MODES:
             raise HTTPException(400, f"unknown mode: {mode}")
         reciter = payload.get("reciter")
@@ -256,6 +273,111 @@ def create_app() -> FastAPI:
             raise HTTPException(404, f"no audio for sura {surah}")
         peaks, duration_ms = waveform_peaks(str(audio))
         return {"surah": surah, "peaks": peaks, "duration_ms": duration_ms}
+
+    @app.get("/api/sura/{surah}/recheck")
+    def recheck_sura(surah: int) -> dict[str, Any]:
+        """Audit this sura's stored timings against the audio (read-only).
+
+        Greedy-decodes the audio at every stored ayah onset and compares what is
+        heard to that ayah's expected opening, flagging timecodes that look
+        drifted / off-by-one. Writes nothing — it only reports, so it never
+        clobbers manual work; the user fixes flagged ayahs by ear.
+        """
+        _check_surah(surah)
+        audio = STATE.audio_for(surah)
+        if audio is None:
+            raise HTTPException(404, f"no audio for sura {surah}")
+        timings, _reviews = _sura_timings_reviews(surah)
+        if not timings:
+            raise HTTPException(400, "у суры нет тайм-кодов — сначала рассчитайте её")
+        from surah_cutter.core import decode, recheck
+
+        words = quran_text.surah_words(surah)
+        pcm = decode.decode(str(audio))
+        results = recheck.recheck_surah(
+            pcm, decode.DEFAULT_SR, words, timings, surah=surah
+        )
+        return {
+            "surah": surah,
+            "results": results,
+            "summary": recheck.summarize(results),
+        }
+
+    @app.post("/api/sura/{surah}/draft-pauses")
+    def draft_pauses(surah: int) -> dict[str, Any]:
+        """Write a rough pause/onset draft for this sura.
+
+        This is deliberately approximate: it creates usable markers from the
+        waveform before the heavier correction pass. Existing ``edited`` and
+        ``verified`` rows are treated as anchors and are not overwritten.
+        """
+        _check_surah(surah)
+        _require_db()
+        audio = STATE.audio_for(surah)
+        if audio is None:
+            raise HTTPException(404, f"no audio for sura {surah}")
+        from surah_cutter.core import decode, draft
+        from surah_cutter.data.project_db import ProjectDB
+
+        timings, reviews = _sura_timings_reviews(surah)
+        anchors = {
+            ayah: timings[ayah]
+            for ayah, review in reviews.items()
+            if review.get("status") in ("edited", "verified") and ayah in timings
+        }
+        pcm = decode.decode(str(audio))
+        result = draft.draft_from_pauses(
+            pcm,
+            decode.DEFAULT_SR,
+            surah,
+            anchors=anchors,
+        )
+        with ProjectDB.open(str(STATE.db_path), DB_CODE, DB_VERSION) as db:
+            written = db.write_timings(result.rows, source="pause-draft")
+        return {
+            "ok": True,
+            "surah": surah,
+            "written": written,
+            "ayahs": len(result.rows),
+            "pauses": result.pause_count,
+            "pause_backed": result.pause_backed,
+            "interpolated": result.interpolated,
+            "anchored": result.anchored,
+        }
+
+    @app.post("/api/sura/{surah}/correct-draft")
+    def correct_draft(
+        surah: int,
+        payload: dict[str, Any] = Body(default={}),
+    ) -> dict[str, Any]:
+        """Correct current draft timings with the exact alignment pipeline.
+
+        The write path still preserves ``edited``/``verified`` rows. In practice
+        those rows are the known anchors; if an auto pause drifted in the middle,
+        the correction pass recomputes the surrounding auto timings from the
+        audio/text model instead of trusting the pause sequence.
+        """
+        _check_surah(surah)
+        _require_db()
+        audio = STATE.audio_for(surah)
+        if audio is None:
+            raise HTTPException(404, f"no audio for sura {surah}")
+        mode = payload.get("mode", "tiled")
+        if mode not in ("auto", "full", "fast", "tiled"):
+            raise HTTPException(400, f"unknown correction mode: {mode}")
+        from surah_cutter.core.pipeline import process_surah
+        from surah_cutter.data.project_db import ProjectDB
+
+        with ProjectDB.open(str(STATE.db_path), DB_CODE, DB_VERSION) as db:
+            rows = process_surah(str(audio), surah, mode=mode, project_db=db)
+            written = db.write_timings(rows, source=f"correct-{mode}")
+        return {
+            "ok": True,
+            "surah": surah,
+            "mode": mode,
+            "written": written,
+            "ayahs": len(rows),
+        }
 
     @app.get("/api/sura/{surah}/fast-phase1")
     def get_fast_phase1(surah: int) -> dict[str, Any]:
@@ -548,7 +670,60 @@ def _fast_trace_summary(trace: dict[str, Any]) -> dict[str, Any]:
         "reliable": reliable,
         "repaired": repaired,
         "ayahs": len(ayahs),
+        "drift_detected": trace.get("drift_detected"),
+        "mean_conf": trace.get("mean_conf"),
+        "verify_sim": trace.get("verify_sim"),
     }
+
+
+def _write_trace_confidences(db: Any, surah: int, trace: dict[str, Any]) -> None:
+    """Persist per-ayah fast confidence for UI highlighting."""
+    ayahs = trace.get("ayahs") or []
+    confidences: dict[int, float | None] = {}
+    for item in ayahs:
+        ayah = item.get("ayah")
+        if ayah is None:
+            continue
+        conf = item.get("conf")
+        confidences[int(ayah)] = float(conf) if conf is not None else None
+    if confidences:
+        db.update_auto_confidences(surah, confidences)
+
+
+def _save_sura_log(
+    surah: int,
+    mode: str,
+    trace: dict[str, Any],
+    log_lines: list[str],
+    rows: list[tuple[int, int, int]],
+) -> dict[str, str] | None:
+    """Persist per-sura realtime logs next to the project DB."""
+    if STATE.db_path is None or not log_lines:
+        return None
+    db_path = Path(STATE.db_path)
+    log_dir = db_path.with_name(f"{db_path.stem}.logs")
+    log_dir.mkdir(parents=True, exist_ok=True)
+    base = f"sura_{surah:03d}_{mode}"
+    log_path = log_dir / f"{base}.log"
+    json_path = log_dir / f"{base}.json"
+    log_path.write_text("\n".join(log_lines) + "\n", encoding="utf-8")
+    json_path.write_text(
+        json.dumps(
+            {
+                "surah": surah,
+                "mode": mode,
+                "log": log_lines,
+                "rows": rows,
+                "trace": trace,
+            },
+            ensure_ascii=False,
+            indent=2,
+            default=str,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    return {"log": str(log_path), "json": str(json_path)}
 
 
 def _check_surah(surah: int) -> None:

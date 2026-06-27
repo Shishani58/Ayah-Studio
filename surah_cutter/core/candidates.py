@@ -61,6 +61,12 @@ SPEECH_THRESHOLD = 0.5
 # аята / между словами, а не межаятная цезура.
 MIN_PAUSE_MS = 300.0
 
+# Second-pass pause detector: the strict pass intentionally favours precision,
+# but weak inter-ayah pauses can be shorter and less contrasted on melodic
+# recitation. These candidates still pass a relaxed DSP gate and the fast DP can
+# skip extras acoustically.
+WEAK_MIN_PAUSE_MS = 200.0
+
 # Допуск сопоставления (доля длительности суры): пауза дальше этого от ожидаемой
 # позиции границы не считается «чёткой» для этой границы.
 MATCH_TOLERANCE_FRAC = 0.04
@@ -246,8 +252,9 @@ def detect_pauses(
 
     Совместимая замена старого VAD-пути: ``model_path``/``allow_download`` и
     ``threshold`` оставлены в сигнатуре для существующих вызовов, но больше не
-    используются. Нам нужна акустическая тишина и её конец (``pause.end_ms`` как
-    onset следующей волны), поэтому energy detector прозрачнее и дешевле VAD.
+    используются. Для pause-backed старта аята канонична середина тишины
+    (``pause.center_ms``): ``pause.end_ms`` — правый край паузы и может дать
+    резкий старт на атаке следующей фразы без отдельного акустического refine.
     """
     del model_path, allow_download, threshold
 
@@ -290,17 +297,17 @@ def pause_pipeline_decisions(
     min_pause_ms: float = MIN_PAUSE_MS,
 ) -> list[PauseDecision]:
     """Run the production pause pipeline and return per-candidate decisions."""
-    energy = detect_energy_pauses(pcm, sr, min_pause_ms=min_pause_ms, use_ten_vad=False)
+    energy = _pause_recall_candidates(pcm, sr, min_pause_ms=min_pause_ms)
     if not energy:
         return []
 
     decisions: list[PauseDecision] = []
     intro_basmala = surah not in (None, 1, 9)
-    for idx, p in enumerate(energy):
+    for idx, (p, weak) in enumerate(energy):
         dsp = _dsp_pause_metrics(pcm, sr, p)
-        dsp_ok = _dsp_accepts_pause(dsp)
+        dsp_ok = _dsp_accepts_pause(dsp) or (weak and _dsp_accepts_weak_pause(dsp, p))
         vad_ok: bool | None = None
-        reason = "dsp"
+        reason = "weak-dsp" if weak else "dsp"
         pause = p
 
         needs_vad = idx == 0 and intro_basmala
@@ -332,6 +339,45 @@ def pause_pipeline_decisions(
             )
         )
     return decisions
+
+
+def _pause_recall_candidates(
+    pcm,
+    sr: int,
+    *,
+    min_pause_ms: float,
+) -> list[tuple[Pause, bool]]:
+    """Strict pauses plus non-overlapping weak candidates.
+
+    The strict pass stays unchanged. The weak pass lowers duration and contrast
+    requirements to recover quiet inter-ayah pauses; overlapping strict pauses
+    win so their timing and reason remain stable.
+    """
+    strict = detect_energy_pauses(pcm, sr, min_pause_ms=min_pause_ms, use_ten_vad=False)
+    if min_pause_ms > MIN_PAUSE_MS:
+        return [(p, False) for p in strict]
+
+    weak_min = min(min_pause_ms, WEAK_MIN_PAUSE_MS)
+    weak = detect_energy_pauses(
+        pcm,
+        sr,
+        min_pause_ms=weak_min,
+        smooth_frames=4,
+        merge_gap_ms=180.0,
+        side_ratio=1.65,
+        one_side_ratio=2.15,
+        flat_ratio=3.0,
+        long_pause_ms=500.0,
+        deep_long_pause_ms=900.0,
+        use_ten_vad=True,
+    )
+
+    out: list[tuple[Pause, bool]] = [(p, False) for p in strict]
+    for p in weak:
+        if _best_overlapping(p, strict) is None:
+            out.append((p, True))
+    out.sort(key=lambda item: (item[0].start_ms, item[0].end_ms))
+    return out
 
 
 def _local_vad_pauses(
@@ -368,8 +414,16 @@ def _dsp_pause_metrics(pcm, sr: int, pause: Pause) -> dict[str, float]:
     import numpy as np
 
     audio = np.asarray(pcm, dtype=np.float32).reshape(-1)
-    a = max(0, int(round(pause.start_ms * sr / 1000.0)))
-    b = min(audio.size, int(round(pause.end_ms * sr / 1000.0)))
+    # The energy pass works on smoothed frames, so candidate edges often include
+    # a bit of speech/decay. Measure the middle shelf; keep the original pause
+    # bounds for timing.
+    trim_ms = min(80.0, max(0.0, pause.depth_ms * 0.22))
+    start_ms = pause.start_ms + trim_ms
+    end_ms = pause.end_ms - trim_ms
+    if end_ms <= start_ms:
+        start_ms, end_ms = pause.start_ms, pause.end_ms
+    a = max(0, int(round(start_ms * sr / 1000.0)))
+    b = min(audio.size, int(round(end_ms * sr / 1000.0)))
     seg = audio[a:b]
     if seg.size < max(32, int(0.04 * sr)):
         return {"flatness": 0.0, "zcr": 0.0, "rms_ratio": 1.0}
@@ -380,8 +434,9 @@ def _dsp_pause_metrics(pcm, sr: int, pause: Pause) -> dict[str, float]:
     all_rms = float(np.sqrt(np.mean(audio * audio))) if audio.size else eps
     rms_ratio = rms / max(all_rms, eps)
 
+    max_fft = min(seg.size, 2048)
     n_fft = 1
-    while n_fft < min(seg.size, 2048):
+    while n_fft * 2 <= max_fft:
         n_fft *= 2
     frame = seg[:n_fft] * np.hanning(n_fft)
     mag = np.abs(np.fft.rfft(frame)) + eps
@@ -402,6 +457,26 @@ def _dsp_accepts_pause(metrics: dict[str, float]) -> bool:
     if rms_ratio <= 0.30 and flatness >= 0.12:
         return True
     if rms_ratio <= 0.34 and zcr >= 0.045:
+        return True
+    return False
+
+
+def _dsp_accepts_weak_pause(metrics: dict[str, float], pause: Pause) -> bool:
+    """Relaxed gate for second-pass pause candidates.
+
+    It still rejects loud tonal tails, but allows weaker low-energy shelves that
+    fail the strict two-sided contrast filter.
+    """
+    rms_ratio = metrics["rms_ratio"]
+    flatness = metrics["flatness"]
+    zcr = metrics["zcr"]
+    if rms_ratio <= 0.16:
+        return True
+    if pause.depth_ms >= 260.0 and rms_ratio <= 0.24 and flatness >= 0.08:
+        return True
+    if pause.depth_ms >= 360.0 and rms_ratio <= 0.38 and flatness >= 0.12:
+        return True
+    if pause.depth_ms >= 360.0 and rms_ratio <= 0.40 and zcr >= 0.035:
         return True
     return False
 
@@ -477,7 +552,8 @@ def detect_energy_pauses(
         return []
 
     trimmed = audio[: n_frames * frame].reshape(n_frames, frame)
-    rms = np.sqrt(np.mean(trimmed * trimmed, axis=1))
+    raw_rms = np.sqrt(np.mean(trimmed * trimmed, axis=1))
+    rms = raw_rms
     if smooth_frames > 1:
         kernel = np.ones(int(smooth_frames), dtype=np.float32) / float(smooth_frames)
         rms = np.convolve(rms, kernel, mode="same")
@@ -501,7 +577,7 @@ def detect_energy_pauses(
         window_samples=frame,
     )
     pauses = _merge_close_pauses(pauses, merge_gap_ms)
-    return _filter_contrasted_pauses(
+    pauses = _filter_contrasted_pauses(
         pauses,
         rms,
         pcm=audio,
@@ -516,6 +592,14 @@ def detect_energy_pauses(
         deep_long_pause_ms=deep_long_pause_ms,
         use_ten_vad=use_ten_vad,
         ten_threshold=ten_threshold,
+    )
+    return _refine_pause_edges(
+        pauses,
+        raw_rms,
+        frame_ms=frame * 1000.0 / sr,
+        cutoff=cutoff,
+        min_pause_ms=min_pause_ms,
+        pad_frames=max(1, int(smooth_frames)),
     )
 
 
@@ -732,6 +816,58 @@ def _filter_contrasted_pauses(
             )
         if flat_enough and (energy_accept or ten_rescue):
             out.append(p)
+    return out
+
+
+def _refine_pause_edges(
+    pauses: list[Pause],
+    raw_rms,
+    *,
+    frame_ms: float,
+    cutoff: float,
+    min_pause_ms: float,
+    pad_frames: int,
+) -> list[Pause]:
+    """Snap smoothed pause candidates back to the raw low-energy shelf."""
+    if not pauses:
+        return []
+
+    import numpy as np
+
+    rms = np.asarray(raw_rms, dtype=np.float32).reshape(-1)
+    out: list[Pause] = []
+    for p in pauses:
+        a = max(0, int(round(p.start_ms / frame_ms)) - pad_frames)
+        b = min(len(rms), int(round(p.end_ms / frame_ms)) + pad_frames)
+        if b <= a:
+            continue
+
+        region = rms[a:b]
+        low_ref = float(np.percentile(region, 20))
+        edge_cutoff = min(
+            cutoff * 0.85,
+            max(cutoff * 0.25, low_ref * 1.8, 1e-7),
+        )
+        low = region <= edge_cutoff
+        best: tuple[int, int] | None = None
+        run_start: int | None = None
+        for i, is_low in enumerate(low.tolist() + [False]):
+            if is_low:
+                if run_start is None:
+                    run_start = i
+            elif run_start is not None:
+                run_end = i
+                if best is None or run_end - run_start > best[1] - best[0]:
+                    best = (run_start, run_end)
+                run_start = None
+
+        if best is None:
+            continue
+        start_ms = (a + best[0]) * frame_ms
+        end_ms = (a + best[1]) * frame_ms
+        depth_ms = end_ms - start_ms
+        if depth_ms >= min_pause_ms:
+            out.append(Pause(start_ms, end_ms, depth_ms))
     return out
 
 

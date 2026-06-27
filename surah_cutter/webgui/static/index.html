@@ -54,7 +54,9 @@
       <div class="genbar">
         <label class="inline">режим
           <select id="genMode">
+            <option value="auto">авто</option>
             <option value="full">точно</option>
+            <option value="tiled">точно · большие</option>
             <option value="fast">быстро</option>
           </select>
         </label>
@@ -78,6 +80,13 @@
           <span>⏱ прошло <b id="genElapsed">0:00</b></span>
           <span>старт в <b id="genStart">—</b></span>
         </div>
+        <div class="log-box">
+          <div class="log-toolbar">
+            <span>Лог</span>
+            <button class="ghost log-copy" data-copy-log="genLog" disabled>Копировать</button>
+          </div>
+          <pre id="genLog" class="live-log"></pre>
+        </div>
       </div>
 
       <div class="statusbar">
@@ -96,39 +105,57 @@
   <!-- ===== Review ===== -->
   <section id="review" class="view hidden">
     <header class="topbar review-top">
-      <button id="backBtn" class="ghost">← Дашборд</button>
-      <h2 id="reviewTitle">Сура</h2>
-      <label class="inline">режим
-        <select id="suraMode">
-          <option value="full">точно</option>
-          <option value="fast">быстро</option>
-        </select>
-      </label>
-      <button id="regenSuraBtn" class="primary" title="Рассчитать тайм-коды этой суры выбранным режимом">↻ Пересчитать суру</button>
-      <button id="fastLogBtn" class="ghost" title="Показать лог fast-фаз этой суры">лог</button>
-      <span id="suraGenStatus" class="sura-gen-status"></span>
-      <div class="player-controls">
-        <button id="playBtn" class="primary" title="Пробел">▶</button>
-        <button id="prevBtn" title="Предыдущий аят (←)">⏮</button>
-        <button id="nextBtn" title="Следующий аят (→)">⏭</button>
-        <button id="loopBtn" class="toggle" title="Повторять текущий аят">↻ луп</button>
-        <label class="inline">скорость
-          <select id="rate">
-            <option value="0.25">0.25×</option>
-            <option value="0.5">0.5×</option>
-            <option value="0.75">0.75×</option>
-            <option value="1" selected>1×</option>
-            <option value="1.25">1.25×</option>
-            <option value="1.5">1.5×</option>
-            <option value="1.75">1.75×</option>
-            <option value="2">2×</option>
-            <option value="2.5">2.5×</option>
-            <option value="3">3×</option>
-            <option value="4">4×</option>
+      <div class="review-mainbar">
+        <div class="review-heading">
+          <button id="backBtn" class="ghost back-btn">← Дашборд</button>
+          <div class="review-title-block">
+            <h2 id="reviewTitle">Сура</h2>
+            <span id="suraGenStatus" class="sura-gen-status" aria-live="polite"></span>
+          </div>
+        </div>
+        <div class="player-controls">
+          <button id="playBtn" class="primary icon-btn play-btn" title="Пробел">▶</button>
+          <button id="prevBtn" class="icon-btn" title="Предыдущий аят (←)">⏮</button>
+          <button id="nextBtn" class="icon-btn" title="Следующий аят (→)">⏭</button>
+          <button id="loopBtn" class="toggle" title="Повторять текущий аят">↻ луп</button>
+          <button id="markCurrentBtn" title="Записать текущую позицию как старт выбранного аята">Поставить старт</button>
+          <label class="inline">скорость
+            <select id="rate">
+              <option value="0.25">0.25×</option>
+              <option value="0.5">0.5×</option>
+              <option value="0.75">0.75×</option>
+              <option value="1" selected>1×</option>
+              <option value="1.25">1.25×</option>
+              <option value="1.5">1.5×</option>
+              <option value="1.75">1.75×</option>
+              <option value="2">2×</option>
+              <option value="2.5">2.5×</option>
+              <option value="3">3×</option>
+              <option value="4">4×</option>
+            </select>
+          </label>
+          <span id="clock" class="clock">0:00 / 0:00</span>
+        </div>
+      </div>
+
+      <div class="review-actions">
+        <label class="inline mode-control">режим
+          <select id="suraMode">
+            <option value="auto">авто</option>
+            <option value="full">точно</option>
+            <option value="tiled">точно · большие</option>
+            <option value="fast">быстро</option>
           </select>
         </label>
-        <span id="clock" class="clock">0:00 / 0:00</span>
-        <button id="exportBtn" class="ghost" title="Экспорт чистой .db">⇩ Экспорт</button>
+        <div class="action-group">
+          <button id="regenSuraBtn" class="primary" title="Рассчитать тайм-коды этой суры выбранным режимом">↻ Пересчитать суру</button>
+          <button id="draftPausesBtn" class="ghost" title="Черновая разметка по паузам и волне, без перезаписи ручных меток">Разметить по паузам</button>
+          <button id="correctDraftBtn" class="ghost" title="Исправить auto-тайм-коды точным проходом, не трогая ручные метки">Корректировка</button>
+        </div>
+        <div class="action-group secondary-actions">
+          <button id="recheckBtn" class="ghost" title="Перепроверить готовые тайм-коды: что реально слышно в каждой точке (ничего не меняет)">🔍 Перепроверить</button>
+          <button id="exportBtn" class="ghost" title="Экспорт чистой .db">⇩ Экспорт</button>
+        </div>
       </div>
     </header>
 
@@ -142,46 +169,68 @@
         <span id="suraProgressPct">0%</span>
       </div>
     </div>
-
     <div class="wave-wrap">
       <div class="wave-tools">
         <button id="zoomOutBtn" title="Уменьшить волну">−</button>
-        <label class="inline">масштаб
-          <input id="zoomRange" type="range" min="1" max="256" step="1" value="1" />
-          <span id="zoomLabel">1×</span>
-        </label>
+        <span id="zoomLabel" class="zoom-label">1×</span>
         <button id="zoomInBtn" title="Увеличить волну">+</button>
         <button id="zoomFitBtn" class="ghost" title="Показать всю суру">вся сура</button>
-        <button id="phase1Btn" class="ghost" title="Показать паузы fast phase 1">фаза 1</button>
-        <button id="dspBtn" class="ghost" title="Показать DSP-валидацию energy-пауз">DSP</button>
-        <button id="combinedBtn" class="ghost" title="Показать итоговые паузы fast: energy + TEN + VAD">фаза 1 итог</button>
-        <button id="tenBtn" class="ghost" title="Показать TEN VAD по видимому диапазону">TEN</button>
-        <button id="vadBtn" class="ghost" title="Показать Silero VAD по видимому диапазону">VAD</button>
-        <label class="inline ten-control" title="Порог TEN speech/non-speech">thr
-          <input id="tenThreshold" type="number" min="0.05" max="0.95" step="0.05" value="0.5" />
-        </label>
-        <label class="inline ten-control" title="Склеивать TEN-паузы через короткие speech-разрывы, мс">gap
-          <input id="tenMergeGap" type="number" min="0" max="800" step="20" value="180" />
-        </label>
+        <button id="pauseOverlayBtn" class="ghost toggle" title="Показать паузы, найденные алгоритмом">паузы</button>
+        <span id="pauseLegend" class="pause-legend hidden">
+          <span><i class="pause-key strong"></i>строгие</span>
+          <span><i class="pause-key weak"></i>weak</span>
+          <span><i class="pause-key rejected"></i>откл.</span>
+        </span>
       </div>
-      <div id="waveScroll" class="wave-scroll">
-        <div id="waveContent" class="wave-content">
-          <canvas id="wave"></canvas>
+      <div class="wave-row">
+        <button id="waveStartBtn" class="ghost wave-edge-btn" title="В начало волны">⏮</button>
+        <div id="waveScroll" class="wave-scroll">
+          <div id="waveContent" class="wave-content">
+            <canvas id="wave"></canvas>
+          </div>
         </div>
+        <button id="waveEndBtn" class="ghost wave-edge-btn" title="В конец волны">⏭</button>
       </div>
       <p id="waveHint" class="wave-hint">Клик по волне — перемотка · тяните золотую линию — двигайте начало аята</p>
+      <div id="pauseInspector" class="pause-inspector hidden">
+        <div class="pause-inspector-head">
+          <strong id="pauseInspectorTitle">Паузы</strong>
+          <span id="pauseInspectorSummary">—</span>
+        </div>
+        <div class="pause-table-wrap">
+          <table class="pause-table">
+            <thead>
+              <tr>
+                <th>время</th>
+                <th>длит.</th>
+                <th>решение</th>
+                <th>rms</th>
+                <th>flat</th>
+                <th>zcr</th>
+                <th>vad</th>
+              </tr>
+            </thead>
+            <tbody id="pauseRows"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <ul id="ayahList" class="ayah-list"></ul>
 
-    <audio id="audio" preload="auto"></audio>
-    <div id="fastLogPanel" class="log-panel hidden">
-      <div class="log-head">
-        <strong>fast log</strong>
-        <button id="closeFastLogBtn" class="ghost">×</button>
+    <div id="suraLiveLogBox" class="log-box sura-live-log-box hidden">
+      <div id="suraLogResizeHandle" class="log-resize-handle" title="Тянуть, чтобы изменить высоту лога"></div>
+      <div class="log-toolbar">
+        <span>Лог</span>
+        <div class="log-actions">
+          <button class="ghost log-copy" data-copy-log="suraLiveLog" disabled>Копировать</button>
+          <button id="hideSuraLogBtn" class="ghost log-hide" title="Скрыть лог">Скрыть</button>
+        </div>
       </div>
-      <pre id="fastLogText"></pre>
+      <pre id="suraLiveLog" class="live-log sura-live-log"></pre>
     </div>
+
+    <audio id="audio" preload="auto"></audio>
   </section>
 
   <script src="/app.js"></script>

@@ -1,19 +1,22 @@
-"""Per-sura orchestration: known-reciter shortcut, fast, hybrid, or full align.
+"""Per-sura orchestration: known-reciter shortcut, auto, fast, tiled, or full.
 
 Three paths today:
 
 1. **Known reciter** — if the reciter has a reference timing set, use it
    directly (no audio model needed).
-2. **Hybrid** (``mode='hybrid'``, default) — decode the audio, get cheap
+2. **Auto** (``mode='auto'``, default) — choose full/fast/tiled by duration, then
+   run conservative lag calibration and local repair of suspicious auto rows.
+3. **Hybrid** (``mode='hybrid'``) — decode the audio, get cheap
    pause/boundary candidates (Silero VAD + structural prior, see
    :mod:`surah_cutter.core.candidates`), take every ayah whose expected
    boundary sits on a clear pause directly, and run the NN forced aligner only
    when the cheap stage is unreliable (missing/ambiguous pauses, or the pause
    count disagrees with the ayah count). Full-sura alignment is the accuracy
    fallback.
-3. **Fast** (``mode='fast'``) — decode once, place rough boundaries from pause
+4. **Fast** (``mode='fast'``) — decode once, place rough boundaries from pause
    onsets, then refine each ayah start with short growing NN windows.
-4. **Full** (``mode='full'``) — always decode + run the forced aligner over the
+5. **Tiled** (``mode='tiled'``) — exact chunked CTC for long suras.
+6. **Full** (``mode='full'``) — always decode + run the forced aligner over the
    sura's whole known word sequence (the original Phase-3 path).
 
 Output rows ``(sura, ayah, start_ms)`` are shaped to feed straight into
@@ -30,9 +33,22 @@ importable without torch/onnxruntime.
 
 from __future__ import annotations
 
+import os
+from typing import Callable
+
 #: Default minimum candidate confidence for taking a pause-backed boundary
 #: directly (no NN). Below this the ayah is "hard" and goes to the aligner.
 PAUSE_ACCEPT_CONFIDENCE = 0.5
+
+#: Local repair currently runs a second whole-sura emissions pass via recheck.
+#: Keep it opt-in until it can reuse emissions from the selected aligner.
+AUTO_REPAIR = os.environ.get("SC_AUTO_REPAIR", "0") == "1"
+LogEvent = Callable[[str], None]
+
+
+def _emit_log(log_event: LogEvent | None, message: str) -> None:
+    if log_event is not None:
+        log_event(message)
 
 
 def process_surah(
@@ -41,9 +57,11 @@ def process_surah(
     *,
     db_path: str | None = None,
     reciter: str | None = None,
-    mode: str = "hybrid",
+    mode: str = "auto",
     project_db: object | None = None,
     trace: dict | None = None,
+    ayah_audio_dir: str | None = None,
+    log_event: LogEvent | None = None,
 ) -> list[tuple[int, int, int]]:
     """Produce per-ayah start timings for one sura.
 
@@ -56,14 +74,14 @@ def process_surah(
             (:data:`quran_text.DEFAULT_DB_PATH`).
         reciter: Optional reciter identifier. If it matches a reference set, the
             stored timings are returned and no audio is processed.
-        mode: ``'hybrid'`` (default), ``'fast'`` or ``'full'``. ``'hybrid'`` uses
-            cheap pause/prior candidates and only aligns hard ayahs; ``'fast'``
-            uses pause onsets plus growing NN windows; ``'full'`` always runs
-            full-sura forced alignment.
+        mode: ``'auto'`` (default), ``'hybrid'``, ``'fast'``, ``'tiled'``,
+            ``'full'`` or ``'fingerprint'``.
         project_db: Optional working :class:`~data.project_db.ProjectDB` (or a
             path to one) for resumption. Ayahs whose review status is
             ``edited``/``verified`` keep their stored start and are not
             recomputed.
+        log_event: Optional realtime logger for human-readable per-sura
+            diagnostics.
 
     Returns:
         Rows ``(sura, ayah, start_ms)``, one per ayah of the sura, ordered by
@@ -71,10 +89,13 @@ def process_surah(
         a separate argument there).
 
     Raises:
-        ValueError: If ``mode`` is not ``'hybrid'``, ``'fast'`` or ``'full'``.
+        ValueError: If ``mode`` is unknown.
     """
-    if mode not in ("hybrid", "fast", "full"):
-        raise ValueError(f"unknown mode {mode!r}; use 'hybrid', 'fast' or 'full'")
+    if mode not in ("hybrid", "fast", "full", "tiled", "auto", "fingerprint"):
+        raise ValueError(
+            f"unknown mode {mode!r}; use 'hybrid', 'fast', 'full', 'tiled', "
+            "'auto' or 'fingerprint'"
+        )
 
     # Lazy imports: keep module import light and free of heavy deps.
     from surah_cutter.data import quran_text, references
@@ -101,9 +122,18 @@ def process_surah(
         words = quran_text.surah_words(surah, db_path=db_path)
 
     if mode == "full":
-        rows = _full_align(audio_path, surah, words)
+        rows = _full_align(audio_path, surah, words, log_event=log_event)
     elif mode == "fast":
-        rows = _fast_align(audio_path, surah, words, trace=trace)
+        rows = _fast_align(audio_path, surah, words, trace=trace, log_event=log_event)
+    elif mode == "tiled":
+        rows = _tiled_align(audio_path, surah, words, trace=trace, log_event=log_event)
+    elif mode == "auto":
+        rows = _auto_align(
+            audio_path, surah, words, frozen=set(frozen), trace=trace,
+            log_event=log_event,
+        )
+    elif mode == "fingerprint":
+        rows = _fingerprint_align(audio_path, surah, words, ayah_audio_dir=ayah_audio_dir)
     else:
         rows = _hybrid(audio_path, surah, words, db_path=db_path)
 
@@ -114,6 +144,79 @@ def process_surah(
     return rows
 
 
+# --- automatic route ------------------------------------------------------
+
+
+def _auto_align(
+    audio_path: str,
+    surah: int,
+    words: list,
+    *,
+    frozen: set[int],
+    trace: dict | None = None,
+    log_event: LogEvent | None = None,
+) -> list[tuple[int, int, int]]:
+    """Decode once, choose the safest practical mode, then lag-calibrate."""
+    from surah_cutter.core import align, align_fast, align_tiled, decode, lag
+
+    pcm = decode.decode(audio_path)
+    sr = decode.DEFAULT_SR
+    total_ms = len(pcm) * 1000.0 / sr if sr else 0.0
+    _emit_log(log_event, f"Сура {surah}: auto, длительность {total_ms / 1000.0:.2f} сек.")
+    if total_ms < 60_000:
+        selected = "full"
+        _emit_log(log_event, "Auto выбрал full: короткая сура")
+        ar = align.align_surah(pcm, sr, words, surah=surah)
+    elif total_ms < 600_000:
+        selected = "fast"
+        _emit_log(log_event, "Auto выбрал fast: паузы + короткие нейро-окна")
+        ar = align_fast.align_surah_fast(
+            pcm, sr, words, surah=surah, trace=trace, log_event=log_event
+        )
+    else:
+        selected = "tiled"
+        _emit_log(log_event, "Auto выбрал tiled: точное выравнивание тайлами")
+        ar = align_tiled.align_surah_tiled(
+            pcm, sr, words, surah=surah, trace=trace, log_event=log_event
+        )
+
+    rows = [(surah, ayah, start_ms) for ayah, start_ms, _conf in ar]
+    rows, lag_adjust = lag.calibrate_rows_to_pauses(
+        pcm, sr, rows, surah=surah, frozen=frozen
+    )
+    _emit_log(log_event, f"Калибровка лага по паузам: {lag_adjust:+.0f} мс")
+    repair_enabled = AUTO_REPAIR
+    if repair_enabled:
+        from surah_cutter.core import repair
+
+        rows = repair.repair_surah_timings(
+            pcm, sr, words, rows, surah=surah, frozen=frozen
+        )
+        _emit_log(log_event, "Repair-pass: подозрительные auto-метки проверены")
+    if trace is not None:
+        trace["auto_mode"] = selected
+        trace["lag_adjust_ms"] = lag_adjust
+        trace["repair_enabled"] = repair_enabled
+    return rows
+
+
+# --- fingerprint alignment ------------------------------------------------
+
+
+def _fingerprint_align(
+    audio_path: str,
+    surah: int,
+    words: list,
+    *,
+    ayah_audio_dir: str | None = None,
+) -> list[tuple[int, int, int]]:
+    from surah_cutter.core import fingerprint
+
+    return fingerprint.align_surah_by_fingerprint(
+        audio_path, surah, words, ayah_audio_dir=ayah_audio_dir
+    )
+
+
 # --- full alignment (original Phase-3 path) -------------------------------
 
 
@@ -121,6 +224,8 @@ def _full_align(
     audio_path: str,
     surah: int,
     words: list,
+    *,
+    log_event: LogEvent | None = None,
 ) -> list[tuple[int, int, int]]:
     """Decode + full-sura forced alignment; one row per ayah.
 
@@ -129,6 +234,11 @@ def _full_align(
     from surah_cutter.core import align, decode
 
     pcm = decode.decode(audio_path)
+    total_ms = len(pcm) * 1000.0 / decode.DEFAULT_SR
+    _emit_log(
+        log_event,
+        f"Чтение аудио всей суры {total_ms / 1000.0:.2f} сек. - full alignment",
+    )
     # The acoustic model emits a Latin transliteration; align_surah pulls the
     # known per-word transliterations via transliteration.surah_word_tr(surah).
     rows = align.align_surah(pcm, decode.DEFAULT_SR, words, surah=surah)
@@ -146,13 +256,43 @@ def _fast_align(
     words: list,
     *,
     trace: dict | None = None,
+    log_event: LogEvent | None = None,
 ) -> list[tuple[int, int, int]]:
     """Decode + two-phase fast alignment; one row per ayah."""
     from surah_cutter.core import align_fast, decode
 
     pcm = decode.decode(audio_path)
     rows = align_fast.align_surah_fast(
-        pcm, decode.DEFAULT_SR, words, surah=surah, trace=trace
+        pcm, decode.DEFAULT_SR, words, surah=surah, trace=trace,
+        log_event=log_event,
+    )
+    return [(surah, ayah, start_ms) for ayah, start_ms, _conf in rows]
+
+
+# --- tiled alignment ------------------------------------------------------
+
+
+def _tiled_align(
+    audio_path: str,
+    surah: int,
+    words: list,
+    *,
+    trace: dict | None = None,
+    log_event: LogEvent | None = None,
+) -> list[tuple[int, int, int]]:
+    """Decode + tiled exact forced alignment; one row per ayah.
+
+    Full-equivalent accuracy without the whole-sura Viterbi's memory blow-up
+    (see :mod:`surah_cutter.core.align_tiled`). The workable path for very long
+    suras (e.g. al-Baqarah) where ``full`` allocates a ~hundred-GB backpointer
+    matrix and ``fast`` drifts on sparse pauses.
+    """
+    from surah_cutter.core import align_tiled, decode
+
+    pcm = decode.decode(audio_path)
+    rows = align_tiled.align_surah_tiled(
+        pcm, decode.DEFAULT_SR, words, surah=surah, trace=trace,
+        log_event=log_event,
     )
     return [(surah, ayah, start_ms) for ayah, start_ms, _conf in rows]
 

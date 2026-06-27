@@ -163,6 +163,20 @@ class ProjectDB:
         self._conn.commit()
         return written
 
+    def update_auto_confidences(
+        self,
+        sura: int,
+        confidences: dict[int, float | None],
+    ) -> None:
+        """Update per-ayah confidence for machine-generated rows only."""
+        for ayah, confidence in confidences.items():
+            self._conn.execute(
+                "UPDATE review_meta SET confidence = ? "
+                "WHERE sura = ? AND ayah = ? AND status = 'auto'",
+                (confidence, sura, ayah),
+            )
+        self._conn.commit()
+
     def set_time(self, sura: int, ayah: int, time: int) -> None:
         """Manually set an ayah's start time.
 
