@@ -33,8 +33,20 @@ Returns the same shape as :func:`align.align_surah`: ``[(ayah, start_ms, conf)]`
 from __future__ import annotations
 
 import difflib
+import os
 from collections import OrderedDict
 from typing import Any, Callable
+
+#: Lookahead "don't steal the next ayah's pause" gate (Phase 1c). If a near-next
+#: ayah's opening is heard distinctly better after a pause (sim margin), penalise
+#: matching that pause to the earlier ayah so the DP leaves it wasl instead of an
+#: off-by-one grab. Env-tunable for benchmarking; ``_GATE_PEN=0`` disables it.
+_GATE_PEN = float(os.environ.get("SC_FAST_GATE_PEN", "2000"))
+_GATE_MARGIN = float(os.environ.get("SC_FAST_GATE_MARGIN", "0.25"))
+#: Only gate a pause away from ayah i when i's OWN match is weak (s < this) — a
+#: strong legitimate match is never penalised just because a neighbour is noisier.
+#: (margin 0.25 + smax 0.50 fix Yasin's off-by-one without breaking sura 85.)
+_GATE_SMAX = float(os.environ.get("SC_FAST_GATE_SMAX", "0.50"))
 
 
 def _collapse(s: str) -> str:
@@ -484,13 +496,28 @@ def align_surah_fast(
         pause_decodes.append(greedy_decode(p - 50.0, p + decode_win_ms))
     sim_cache: dict[tuple[int, int], float] = {}
 
-    def acoustic_cost(i: int, j: int) -> float:
+    def _sim_ij(i: int, j: int) -> float:
         key = (i, j)
         s = sim_cache.get(key)
         if s is None:
             s = _sim(pause_decodes[j], openings[i])
             sim_cache[key] = s
-        return 3000.0 * (1.0 - s)  # lower cost = better-heard match
+        return s
+
+    def acoustic_cost(i: int, j: int) -> float:
+        s = _sim_ij(i, j)
+        cost = 3000.0 * (1.0 - s)  # lower cost = better-heard match
+        # Don't let ayah i "steal" a pause that clearly opens a LATER ayah: if a
+        # near-next ayah's opening is heard distinctly better after pause j, this
+        # pause belongs to it — penalise so the DP leaves ayah i wasl instead of
+        # an off-by-one grab (Yasin 29 took ayah 30's pause; 30 then fell on a
+        # breath). Bounded lookahead keeps it local.
+        if _GATE_PEN and s < _GATE_SMAX:
+            for k in (i + 1, i + 2):
+                if k < len(openings) and _sim_ij(k, j) > s + _GATE_MARGIN:
+                    cost += _GATE_PEN
+                    break
+        return cost
 
     # With a reliable acoustic match cost the char prior is no longer trusted for
     # position — so the plausibility *ceiling* (which used the prior's gap) must
