@@ -8,11 +8,13 @@ placed by the neural aligner (not by a pause), so accuracy is preserved.
 Two explicit phases (the UI exposes both so the user can steer them):
 
 **Phase 1 — rough pass by pauses (cheap, no neural).**
-Silero VAD gives silence segments. For each ayah boundary we take the *onset of
-the wave* after the pause (``pause.end_ms``, where speech resumes) — NOT the
-quiet centre — matched to the ayah's expected position (structural prior). Ayahs
-with no nearby pause are *wasl* (joined) — their rough guess comes from the prior
-plus the running tempo.
+An energy detector gives silence segments. Each pause is used only as a *rough*
+anchor — its centre (``pause.center_ms``), a point reliably *before* speech
+resumes — matched to the ayah's expected position (structural prior). The exact
+onset is not read off the pause edge; Phase 2's neural refine recovers it (and on
+the Shatri juz the centre beat ``end_ms`` slightly — the detector's silence-end
+can overshoot into speech). Ayahs with no nearby pause are *wasl* (joined) —
+their rough guess comes from the prior plus the running tempo.
 
 **Phase 2 — neural refinement with a growing window (from 1 s).**
 For each boundary we read a **1-second** window around its rough position, run
@@ -525,6 +527,7 @@ def align_surah_fast(
         window(s) for boundaries whose initial guess is known to be looser.
         """
         onset, conf, win_used = None, 0.0, 0.0
+        best_score: tuple[int, float] | None = None  # (inside_window, conf)
         for w in range(start_step, n_steps):
             win_ms = (min_win_s + w * grow_s) * 1000.0
             t0 = max(prev_start + 30.0, c - win_ms * 0.45)
@@ -547,12 +550,17 @@ def align_surah_fast(
             res = align_slice(i0, i1, t0, t1, basmala=False)
             if res is None:
                 break
-            win_used = res["win_ms"] / 1000.0
             cand = res["starts"][fa - i0]
             cconf = res["confs"][fa - i0]
-            onset, conf = cand, cconf  # keep best-so-far
             guard = min(edge_guard_ms, 0.2 * res["win_ms"])
             near_edge = (cand - res["base"] < guard) or (res["end"] - cand < guard)
+            # Keep the genuinely best window seen, not merely the last one: a
+            # comfortably-inside onset is preferred over a near-edge one (its
+            # boundary may lie outside that window), then higher confidence.
+            score = (0 if near_edge else 1, cconf)
+            if best_score is None or score > best_score:
+                best_score = score
+                onset, conf, win_used = cand, cconf, res["win_ms"] / 1000.0
             model_reads.append({
                 "phase": phase,
                 "ayah": ayah,
