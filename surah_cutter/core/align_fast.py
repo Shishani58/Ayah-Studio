@@ -53,6 +53,12 @@ _GATE_SMAX = float(os.environ.get("SC_FAST_GATE_SMAX", "0.50"))
 #: pause (suras 50/67 over-match with n_wasl=0). 0 disables. 0.36 fixes sura 67
 #: (p90 2699→151) and improves juz Amma p95 without the sura-89 blow-up 0.38+ caused.
 _WASL_SIM = float(os.environ.get("SC_FAST_WASL_SIM", "0.36"))
+#: Self-diagnostic fallback. A drifted sura (off-by-one cascade with no recovery
+#: anchor — sparse pauses + long ayahs, e.g. 65/66) shows up as low MEAN boundary
+#: confidence (65/66 ≈ 0.53). Below this we fall back to the full continuous path,
+#: which recovers such suras. Strictly safer (full ≥ fast in accuracy), at the
+#: cost of a full run on the few flagged suras. 0 disables.
+_FALLBACK_CONF = float(os.environ.get("SC_FAST_FALLBACK_CONF", "0.55"))
 
 
 def _collapse(s: str) -> str:
@@ -764,6 +770,20 @@ def align_surah_fast(
                 if t["ayah"] == a:
                     t.update(onset_ms=chosen, conf=round(c2, 3), repaired=True)
                     break
+
+    # --- self-diagnostic fallback: drifted sura → full continuous path. -----
+    # A cascaded off-by-one with no recovery anchor (sparse pauses + long ayahs,
+    # suras 65/66) drives the mean boundary confidence down; full recovers it.
+    inner_confs = [confs.get(a, 0.0) for a in ayah_list[1:]]
+    mean_conf = sum(inner_confs) / len(inner_confs) if inner_confs else 1.0
+    if _FALLBACK_CONF and mean_conf < _FALLBACK_CONF:
+        full_rows = A.align_surah(pcm, sr, words, surah=surah, model=bundle)
+        if trace is not None:
+            trace.update(fallback_lowconf=True, mean_conf=round(mean_conf, 3),
+                         total_ms=total_ms, audio_ms=total_ms, coverage=1.0,
+                         n_pause=0, n_wasl=0, ayahs=[], model_reads=[],
+                         phase1_pauses=[])
+        return full_rows
 
     # --- shape: monotonic non-decreasing starts, per-ayah rows. ------------
     rows: list[tuple[int, int, float]] = []
