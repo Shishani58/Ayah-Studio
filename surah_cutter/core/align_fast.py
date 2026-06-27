@@ -47,6 +47,12 @@ _GATE_MARGIN = float(os.environ.get("SC_FAST_GATE_MARGIN", "0.25"))
 #: strong legitimate match is never penalised just because a neighbour is noisier.
 #: (margin 0.25 + smax 0.50 fix Yasin's off-by-one without breaking sura 85.)
 _GATE_SMAX = float(os.environ.get("SC_FAST_GATE_SMAX", "0.50"))
+#: Post-DP wasl conversion: a matched pause whose opening is heard this poorly
+#: (sim below) probably isn't this ayah's boundary at all — drop the match to wasl
+#: so the continuous fill (≈ local full) places it, instead of trusting a breath
+#: pause (suras 50/67 over-match with n_wasl=0). 0 disables. 0.36 fixes sura 67
+#: (p90 2699→151) and improves juz Amma p95 without the sura-89 blow-up 0.38+ caused.
+_WASL_SIM = float(os.environ.get("SC_FAST_WASL_SIM", "0.36"))
 
 
 def _collapse(s: str) -> str:
@@ -532,6 +538,14 @@ def align_surah_fast(
     )
     # ayah -> (rough_ms, from_pause). Wasl boundaries: interpolate between the
     # matched onsets that bracket them (anchored both sides — no drift).
+    # First drop matches whose pause opening barely resembles the ayah — a likely
+    # breath/wrong pause grab; leaving it wasl lets the continuous fill place it.
+    if _WASL_SIM:
+        pidx = {ms: j for j, ms in enumerate(pause_onsets)}
+        for k in range(len(matched)):
+            mk = matched[k]
+            if mk is not None and _sim_ij(k, pidx[mk]) < _WASL_SIM:
+                matched[k] = None
     place: dict[int, tuple[float, bool]] = {}
     for k, a in enumerate(inner):
         if matched[k] is not None:
