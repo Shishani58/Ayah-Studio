@@ -2,7 +2,7 @@
 
 // ---- tiny API helpers ----------------------------------------------------
 const api = {
-  async get(url) { const r = await fetch(url); if (!r.ok) throw new Error((await r.json()).detail || r.status); return r.json(); },
+  async get(url) { const r = await fetch(url, { cache: "no-store" }); if (!r.ok) throw new Error((await r.json()).detail || r.status); return r.json(); },
   async post(url, body) {
     const r = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body || {}) });
     if (!r.ok) { let d; try { d = (await r.json()).detail; } catch { d = r.statusText; } throw new Error(d || r.status); }
@@ -16,6 +16,21 @@ function fmt(ms) {
   return `${m}:${r.toFixed(1).padStart(4, "0")}`;
 }
 const setStatus = (msg) => ($("status").textContent = msg);
+const modeLabel = (mode) => ({ full: "точно", fast: "быстро", hybrid: "hybrid" }[mode] || mode);
+function selectedMode() { return $("genMode") ? $("genMode").value : "full"; }
+function selectedSuraMode() { return $("suraMode") ? $("suraMode").value : selectedMode(); }
+function setMode(mode) {
+  const m = mode === "fast" ? "fast" : "full";
+  if ($("genMode")) $("genMode").value = m;
+  if ($("suraMode")) $("suraMode").value = m;
+  updateModeHint();
+}
+function updateModeHint() {
+  const mode = selectedMode();
+  $("modeHint").textContent = mode === "fast"
+    ? "паузы → растущее окно; трудные суры проверять внимательнее"
+    : "полное нейровыравнивание (~57 мс)";
+}
 
 // ===========================================================================
 //  Dashboard
@@ -73,12 +88,12 @@ let audioCount = 0;
 const GEN = { es: null, timer: null, startMs: 0, total: 0 };
 
 function runGeneration(onlyMissing = true) {
-  const mode = $("mode").value;
+  const mode = selectedMode();
   // Explicit start: confirm the deliberate, long-running action.
   const what = onlyMissing
     ? "недостающих (ещё не сгенерированных) сур"
     : `ВСЕХ ${audioCount || ""} сур заново`;
-  const msg = `Запустить генерацию ${what} в режиме «${mode}»?\n`
+  const msg = `Запустить генерацию ${what} в режиме «${modeLabel(mode)}»?\n`
     + `Размеченные вручную аяты (edited/verified) не затрагиваются. Можно отменить (после текущей суры).`;
   if (!confirm(msg)) return;
   startGenUI();
@@ -115,7 +130,8 @@ function handleGenEvent(d) {
   else if (d.type === "sura_start") { $("genCur").textContent = `обрабатываю суру ${d.surah}…`; }
   else if (d.type === "sura") {
     setProgress(d.index + 1, GEN.total, `${d.index + 1} / ${GEN.total}`);
-    $("genCur").textContent = `сура ${d.surah} готова${d.written != null ? ` · ${d.written} аят.` : ""}`;
+    const fast = d.fast_trace ? ` · пауз ${d.fast_trace.n_pause}, wasl ${d.fast_trace.n_wasl}, окно ${(d.fast_trace.coverage || 0).toFixed(2)}×` : "";
+    $("genCur").textContent = `сура ${d.surah} готова${d.written != null ? ` · ${d.written} аят.` : ""}${fast}`;
     refreshSuras();
   }
   else if (d.type === "done") { endGenUI("done", d.completed); }
@@ -156,7 +172,10 @@ function setProgress(done, total, text) {
 // ===========================================================================
 //  Review
 // ===========================================================================
-const R = { surah: null, ayahs: [], duration: 0, peaks: [], audio: null, current: -1, loop: false, drag: -1 };
+const R = {
+  surah: null, ayahs: [], duration: 0, peaks: [], audio: null, current: -1,
+  loop: false, drag: -1, zoom: 1,
+};
 
 async function openReview(surah) {
   R.surah = surah;
@@ -166,16 +185,20 @@ async function openReview(surah) {
     [sura, wave] = await Promise.all([api.get(`/api/sura/${surah}`), api.get(`/api/sura/${surah}/waveform`)]);
   } catch (e) { setStatus("Ошибка: " + e.message); return; }
   R.ayahs = sura.ayahs; R.peaks = wave.peaks; R.duration = wave.duration_ms; R.current = -1;
+  R.zoom = 1;
+  $("zoomRange").value = "1";
+  $("zoomLabel").textContent = "1×";
+  updateWaveControls();
   $("reviewTitle").textContent = `Сура ${surah} · ${sura.ayah_count} аят.`;
   const audio = $("audio");
   audio.src = `/api/audio/${surah}`;
   audio.playbackRate = parseFloat($("rate").value);
   R.audio = audio;
-  $("reviewMode").value = $("mode").value;  // default per-sura mode = global
   $("suraGenStatus").textContent = "";
   $("suraGenStatus").className = "sura-gen-status";
   renderAyahList();
   updateGenHint();
+  updateSuraProgress();
   showView("review");
   requestAnimationFrame(() => { resizeWave(); drawWave(); });
 }
@@ -188,29 +211,56 @@ function updateGenHint() {
     hint.classList.remove("warn");
     $("regenSuraBtn").textContent = "↻ Пересчитать суру";
   } else {
-    hint.textContent = "⚠ Сура не рассчитана — нажмите «Рассчитать суру» (выберите режим слева). Без тайм-кодов подсветки и маркеров нет.";
+    hint.textContent = "⚠ Сура не рассчитана — нажмите «Рассчитать суру». Без тайм-кодов подсветки и маркеров нет.";
     hint.classList.add("warn");
     $("regenSuraBtn").textContent = "▶ Рассчитать суру";
   }
+}
+function updateSuraProgress(state = "") {
+  const total = R.ayahs.length;
+  const marked = R.ayahs.filter((a) => a.time != null).length;
+  const edited = R.ayahs.filter((a) => a.status === "edited").length;
+  const verified = R.ayahs.filter((a) => a.status === "verified").length;
+  const pct = total ? Math.round((marked / total) * 100) : 0;
+  $("suraProgressFill").style.right = (100 - pct) + "%";
+  $("suraProgressPct").textContent = `${pct}%`;
+  $("suraProgressText").textContent = state === "running"
+    ? `расчёт суры… размечено ${marked} / ${total}`
+    : `размечено ${marked} / ${total}`;
+  $("suraProgressMeta").textContent = `проверено ${verified} · вручную ${edited} · осталось ${Math.max(0, total - marked)}`;
+  $("suraProgress").className = "sura-progress"
+    + (state === "running" ? " running" : "")
+    + (total > 0 && marked === total ? " done" : "");
 }
 
 // regenerate just this sura with the chosen per-sura mode
 async function regenerateSura() {
   if (R.surah == null) return;
-  const surah = R.surah, mode = $("reviewMode").value;
+  const surah = R.surah, mode = selectedSuraMode();
+  const manual = R.ayahs.filter((a) => a.status === "edited" || a.status === "verified").length;
+  if (manual > 0 && !confirm(
+    `В этой суре ${manual} аят(ов) с ручной правкой/проверкой.\n`
+    + `Пересчитать только auto-аяты (${modeLabel(mode)})? Ручные правки не затрагиваются.`)) return;
   const btn = $("regenSuraBtn"), st = $("suraGenStatus");
   btn.disabled = true;
   const t0 = Date.now();
-  const tick = () => (st.textContent = `расчёт… ${Math.floor((Date.now() - t0) / 1000)}с`);
+  const tick = () => {
+    st.textContent = `расчёт… ${Math.floor((Date.now() - t0) / 1000)}с`;
+    updateSuraProgress("running");
+  };
   st.className = "sura-gen-status running"; tick();
   const timer = setInterval(tick, 1000);
-  const stop = (cls, text) => { clearInterval(timer); btn.disabled = false; st.className = "sura-gen-status " + cls; st.textContent = text; };
+  const stop = (cls, text) => { clearInterval(timer); btn.disabled = false; st.className = "sura-gen-status " + cls; st.textContent = text; updateSuraProgress(); };
   try {
     await api.post("/api/generate", { suras: [surah], mode });
   } catch (e) { stop("err", "ошибка: " + e.message); return; }
   const es = new EventSource("/api/generate/stream");
   es.onmessage = async (ev) => {
     const d = JSON.parse(ev.data);
+    if (d.type === "sura" && d.surah === surah) {
+      await reloadSura();
+      st.textContent = `записано ${d.written ?? 0} аят.`;
+    }
     if (d.type === "done" || d.type === "cancelled") {
       es.close(); stop("ok", `✓ готово за ${Math.floor((Date.now() - t0) / 1000)}с`);
       await reloadSura(); refreshSuras();
@@ -226,6 +276,7 @@ async function reloadSura() {
   } catch { return; }
   renderAyahList();
   updateGenHint();
+  updateSuraProgress();
   drawWave();
   const cur = R.current; R.current = -1;
   setCurrent(currentAyahByTime((R.audio ? R.audio.currentTime : 0) * 1000));
@@ -238,13 +289,16 @@ function renderAyahList() {
   R.ayahs.forEach((a, i) => {
     const li = document.createElement("li");
     li.dataset.i = i;
+    const marked = a.time != null;
+    li.classList.add(marked ? "marked" : "missing");
     if (a.status === "verified") li.classList.add("verified");
     else if (a.status === "edited") li.classList.add("edited");
     li.innerHTML = `
       <span class="a-conf" style="background:${confColor(a.confidence, a.status)}"></span>
       <span class="a-num">${a.ayah}</span>
       <span class="a-time">${fmt(a.time)}</span>
-      <button class="a-verify">${a.status === "verified" ? "✓ пров." : "пров."}</button>
+      <span class="a-mark">${marked ? "разм." : "нет"}</span>
+      <button class="a-verify" ${marked ? "" : "disabled"}>${a.status === "verified" ? "✓ пров." : "пров."}</button>
       <span class="a-text" dir="rtl" lang="ar">${escapeHtml(a.text || "")}</span>`;
     li.onclick = (e) => {
       if (e.target.classList.contains("a-verify")) { toggleVerify(i); e.stopPropagation(); }
@@ -268,24 +322,54 @@ function escapeHtml(s) {
 
 // ---- waveform canvas ----
 function resizeWave() {
-  const c = $("wave"), dpr = window.devicePixelRatio || 1;
-  c.width = Math.round(c.clientWidth * dpr); c.height = Math.round(c.clientHeight * dpr);
+  const c = $("wave"), wrap = $("waveScroll"), content = $("waveContent"), dpr = window.devicePixelRatio || 1;
+  content.style.width = Math.max(wrap.clientWidth, wrap.clientWidth * R.zoom) + "px";
+  c.style.width = wrap.clientWidth + "px";
+  c.width = Math.round(wrap.clientWidth * dpr);
+  c.height = Math.round(c.clientHeight * dpr);
   c.getContext("2d").setTransform(dpr, 0, 0, dpr, 0, 0);
 }
+function setWaveZoom(zoom, centerMs = null) {
+  const oldZoom = R.zoom;
+  const wrap = $("waveScroll"), content = $("waveContent");
+  const centerRatio = centerMs != null && R.duration
+    ? centerMs / R.duration
+    : (wrap.scrollLeft + wrap.clientWidth / 2) / Math.max(1, content.clientWidth);
+  R.zoom = Math.max(1, Math.min(256, Math.round(zoom)));
+  updateWaveControls();
+  resizeWave();
+  if (R.zoom !== oldZoom) {
+    wrap.scrollLeft = Math.max(0, centerRatio * content.clientWidth - wrap.clientWidth / 2);
+  }
+  drawWave();
+}
+function updateWaveControls() {
+  if (!$("zoomRange")) return;
+  $("zoomRange").value = String(R.zoom);
+  $("zoomLabel").textContent = `${R.zoom}×`;
+}
+function msToVirtualX(ms) {
+  return (ms / Math.max(1, R.duration)) * $("waveContent").clientWidth;
+}
 function drawWave() {
-  const c = $("wave"), ctx = c.getContext("2d");
+  const c = $("wave"), wrap = $("waveScroll"), content = $("waveContent"), ctx = c.getContext("2d");
   const w = c.clientWidth, h = c.clientHeight, mid = h / 2;
   ctx.clearRect(0, 0, w, h);
   const n = R.peaks.length;
+  const left = wrap.scrollLeft, right = left + w, virtualW = content.clientWidth;
   ctx.strokeStyle = "#3a4456"; ctx.lineWidth = 1; ctx.beginPath();
   for (let i = 0; i < n; i++) {
-    const x = (i / n) * w, amp = (R.peaks[i] / 100) * (mid - 2);
+    const vx = (i / Math.max(1, n - 1)) * virtualW;
+    if (vx < left - 1 || vx > right + 1) continue;
+    const x = vx - left, amp = (R.peaks[i] / 100) * (mid - 2);
     ctx.moveTo(x, mid - amp); ctx.lineTo(x, mid + amp);
   }
   ctx.stroke();
   R.ayahs.forEach((a, i) => {
     if (a.time == null || !R.duration) return;
-    const x = (a.time / R.duration) * w;
+    const vx = msToVirtualX(a.time);
+    if (vx < left - 1 || vx > right + 1) return;
+    const x = vx - left;
     ctx.strokeStyle = i === R.current ? "#ffd56b" : "#d4a843";
     ctx.lineWidth = i === R.current ? 2 : 1;
     ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
@@ -293,20 +377,22 @@ function drawWave() {
     ctx.fillText(a.ayah, x + 3, 11);
   });
   if (R.audio && R.duration) {
-    const px = (R.audio.currentTime * 1000 / R.duration) * w;
+    const playMs = R.audio.currentTime * 1000;
+    const px = msToVirtualX(playMs) - left;
     ctx.strokeStyle = "#fff"; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, h); ctx.stroke();
   }
 }
 function xToMs(clientX) {
   const rect = $("wave").getBoundingClientRect();
-  return Math.max(0, Math.min(R.duration, ((clientX - rect.left) / rect.width) * R.duration));
+  const vx = $("waveScroll").scrollLeft + (clientX - rect.left);
+  return Math.max(0, Math.min(R.duration, (vx / Math.max(1, $("waveContent").clientWidth)) * R.duration));
 }
 function markerNearX(clientX) {
-  const rect = $("wave").getBoundingClientRect(), tol = 7;
+  const rect = $("wave").getBoundingClientRect(), tol = 7, left = $("waveScroll").scrollLeft;
   for (let i = 0; i < R.ayahs.length; i++) {
     const t = R.ayahs[i].time; if (t == null) continue;
-    const x = rect.left + (t / R.duration) * rect.width;
+    const x = rect.left + msToVirtualX(t) - left;
     if (Math.abs(clientX - x) <= tol) return i;
   }
   return -1;
@@ -318,6 +404,11 @@ function seekAyah(i, play) {
   const a = R.ayahs[i]; if (!a || a.time == null || !R.audio) return;
   R.audio.currentTime = a.time / 1000;
   setCurrent(i);
+  if (R.zoom > 1) {
+    const wrap = $("waveScroll"), x = msToVirtualX(a.time);
+    wrap.scrollLeft = Math.max(0, x - wrap.clientWidth / 2);
+  }
+  drawWave();
   if (play) R.audio.play();
 }
 function setCurrent(i) {
@@ -350,7 +441,7 @@ async function toggleVerify(i) {
   try {
     await api.post("/api/verify", { surah: R.surah, ayah: a.ayah, status: next });
     a.status = next === "auto" ? null : next;
-    renderAyahList(); const cur = R.current; R.current = -1; setCurrent(cur); drawWave();
+    renderAyahList(); updateSuraProgress(); const cur = R.current; R.current = -1; setCurrent(cur); drawWave();
   } catch (e) { setStatus("Ошибка: " + e.message); }
 }
 async function commitMarker(i, ms) {
@@ -358,7 +449,7 @@ async function commitMarker(i, ms) {
   try {
     await api.post("/api/timing", { surah: R.surah, ayah: a.ayah, time: Math.round(ms) });
     a.time = Math.round(ms); a.status = "edited";
-    renderAyahList(); drawWave();
+    renderAyahList(); updateGenHint(); updateSuraProgress(); drawWave();
   } catch (e) { setStatus("Ошибка: " + e.message); }
 }
 async function exportProject() {
@@ -401,7 +492,15 @@ function wire() {
   $("regenBtn").onclick = () => runGeneration(false);
   $("cancelBtn").onclick = cancelGeneration;
   $("regenSuraBtn").onclick = regenerateSura;
-  $("mode").onchange = () => api.post("/api/settings", { mode: $("mode").value }).catch(() => {});
+  $("zoomOutBtn").onclick = () => setWaveZoom(R.zoom / 2);
+  $("zoomInBtn").onclick = () => setWaveZoom(R.zoom * 2);
+  $("zoomFitBtn").onclick = () => setWaveZoom(1, R.duration / 2);
+  $("zoomRange").oninput = () => setWaveZoom(parseInt($("zoomRange").value, 10), R.audio ? R.audio.currentTime * 1000 : null);
+  $("genMode").onchange = async () => {
+    setMode(selectedMode());
+    try { await api.post("/api/settings", { mode: selectedMode() }); } catch {}
+  };
+  $("suraMode").onchange = () => setMode(selectedSuraMode());
   $("backBtn").onclick = () => { if (R.audio) R.audio.pause(); showView("dashboard"); refreshSuras(); };
   $("playBtn").onclick = togglePlay;
   $("prevBtn").onclick = () => seekAyah(Math.max(R.current - 1, 0), false);
@@ -418,6 +517,12 @@ function wire() {
     $("clock").textContent = `${fmt(ms)} / ${fmt(R.duration)}`;
     const i = currentAyahByTime(ms);
     if (i >= 0 && i !== R.current) setCurrent(i);
+    if (R.zoom > 1) {
+      const wrap = $("waveScroll"), x = msToVirtualX(ms);
+      if (x < wrap.scrollLeft || x > wrap.scrollLeft + wrap.clientWidth) {
+        wrap.scrollLeft = Math.max(0, x - wrap.clientWidth / 2);
+      }
+    }
     if (R.loop && R.current >= 0 && ms >= ayahEndMs(R.current)) seekAyah(R.current, true);
     drawWave();
   });
@@ -455,9 +560,9 @@ function wire() {
   try {
     const p = await api.get("/api/project");
     audioCount = p.audio_count || 0;
-    if (p.mode) $("mode").value = p.mode;
     if (p.audio_dir) $("audioDir").value = p.audio_dir;
     if (p.db_path) $("dbPath").value = p.db_path;
+    setMode(p.mode);
     if (p.db_path && p.audio_count) { $("genBtn").disabled = false; $("help").classList.add("collapsed"); }
   } catch {}
   await refreshSuras();

@@ -128,6 +128,7 @@ class ProjectDB:
         rows: Iterable[Sequence[int]],
         source: str,
         confidence: float | None = None,
+        force: bool = False,
     ) -> int:
         """Merge auto-generated timings.
 
@@ -136,13 +137,17 @@ class ProjectDB:
         or absent; ``edited``/``verified`` ayahs are skipped (left untouched).
         Written ayahs get/keep ``review_meta.status = 'auto'``.
 
+        With ``force=True`` the skip is bypassed: every row is written and reset
+        to ``auto`` (used by an explicit per-sura "recompute from scratch" that
+        the user opted into, discarding prior manual edits for those ayahs).
+
         Returns the number of ayahs actually written.
         """
         written = 0
         now = _now()
         for sura, ayah, time in rows:
             status = self._status(sura, ayah)
-            if status in ("edited", "verified"):
+            if not force and status in ("edited", "verified"):
                 continue
             self._set_timing(sura, ayah, time)
             self._conn.execute(

@@ -1,4 +1,4 @@
-"""Per-sura orchestration: known-reciter shortcut, hybrid, or full align.
+"""Per-sura orchestration: known-reciter shortcut, fast, hybrid, or full align.
 
 Three paths today:
 
@@ -11,7 +11,9 @@ Three paths today:
    when the cheap stage is unreliable (missing/ambiguous pauses, or the pause
    count disagrees with the ayah count). Full-sura alignment is the accuracy
    fallback.
-3. **Full** (``mode='full'``) — always decode + run the forced aligner over the
+3. **Fast** (``mode='fast'``) — decode once, place rough boundaries from pause
+   onsets, then refine each ayah start with short growing NN windows.
+4. **Full** (``mode='full'``) — always decode + run the forced aligner over the
    sura's whole known word sequence (the original Phase-3 path).
 
 Output rows ``(sura, ayah, start_ms)`` are shaped to feed straight into
@@ -41,6 +43,7 @@ def process_surah(
     reciter: str | None = None,
     mode: str = "hybrid",
     project_db: object | None = None,
+    trace: dict | None = None,
 ) -> list[tuple[int, int, int]]:
     """Produce per-ayah start timings for one sura.
 
@@ -53,9 +56,10 @@ def process_surah(
             (:data:`quran_text.DEFAULT_DB_PATH`).
         reciter: Optional reciter identifier. If it matches a reference set, the
             stored timings are returned and no audio is processed.
-        mode: ``'hybrid'`` (default) or ``'full'``. ``'hybrid'`` uses cheap
-            pause/prior candidates and only aligns hard ayahs; ``'full'`` always
-            runs full-sura forced alignment.
+        mode: ``'hybrid'`` (default), ``'fast'`` or ``'full'``. ``'hybrid'`` uses
+            cheap pause/prior candidates and only aligns hard ayahs; ``'fast'``
+            uses pause onsets plus growing NN windows; ``'full'`` always runs
+            full-sura forced alignment.
         project_db: Optional working :class:`~data.project_db.ProjectDB` (or a
             path to one) for resumption. Ayahs whose review status is
             ``edited``/``verified`` keep their stored start and are not
@@ -67,10 +71,10 @@ def process_surah(
         a separate argument there).
 
     Raises:
-        ValueError: If ``mode`` is not ``'hybrid'`` or ``'full'``.
+        ValueError: If ``mode`` is not ``'hybrid'``, ``'fast'`` or ``'full'``.
     """
-    if mode not in ("hybrid", "full"):
-        raise ValueError(f"unknown mode {mode!r}; use 'hybrid' or 'full'")
+    if mode not in ("hybrid", "fast", "full"):
+        raise ValueError(f"unknown mode {mode!r}; use 'hybrid', 'fast' or 'full'")
 
     # Lazy imports: keep module import light and free of heavy deps.
     from surah_cutter.data import quran_text, references
@@ -98,6 +102,8 @@ def process_surah(
 
     if mode == "full":
         rows = _full_align(audio_path, surah, words)
+    elif mode == "fast":
+        rows = _fast_align(audio_path, surah, words, trace=trace)
     else:
         rows = _hybrid(audio_path, surah, words, db_path=db_path)
 
@@ -128,6 +134,26 @@ def _full_align(
     rows = align.align_surah(pcm, decode.DEFAULT_SR, words, surah=surah)
     # align_surah yields (ayah, start_ms, confidence); shape to write_timings'
     # (sura, ayah, time_ms) and drop confidence (a separate write_timings arg).
+    return [(surah, ayah, start_ms) for ayah, start_ms, _conf in rows]
+
+
+# --- fast alignment -------------------------------------------------------
+
+
+def _fast_align(
+    audio_path: str,
+    surah: int,
+    words: list,
+    *,
+    trace: dict | None = None,
+) -> list[tuple[int, int, int]]:
+    """Decode + two-phase fast alignment; one row per ayah."""
+    from surah_cutter.core import align_fast, decode
+
+    pcm = decode.decode(audio_path)
+    rows = align_fast.align_surah_fast(
+        pcm, decode.DEFAULT_SR, words, surah=surah, trace=trace
+    )
     return [(surah, ayah, start_ms) for ayah, start_ms, _conf in rows]
 
 

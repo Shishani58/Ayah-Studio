@@ -76,6 +76,7 @@ label.inline { display: inline-flex; gap: 6px; align-items: center; font-size: 1
 .browse { white-space: nowrap; }
 
 .genbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.hint-inline { font-size: 11px; color: var(--muted); }
 .progress {
   position: relative; width: 280px; height: 24px; border-radius: 6px;
   background: var(--panel2); border: 1px solid var(--line); overflow: hidden;
@@ -149,8 +150,32 @@ button.danger:hover:not(:disabled) { background: var(--red); color: #1a0d0a; }
 .sura-gen-status.ok { color: var(--green); }
 .sura-gen-status.err { color: var(--red); }
 
+.sura-progress {
+  padding: 10px 18px; background: var(--panel); border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; gap: 14px;
+}
+.sura-progress-head { min-width: 220px; display: flex; flex-direction: column; gap: 2px; }
+.sura-progress-head span:first-child { font-size: 13px; color: var(--text); font-weight: 600; }
+.sura-progress-head span:last-child { font-size: 11px; color: var(--muted); }
+.sura-progress-bar { flex: 1; width: auto; min-width: 180px; }
+.sura-progress.running .sura-progress-head span:first-child { color: var(--accent); }
+.sura-progress.done .sura-progress-head span:first-child { color: var(--green); }
+
 .wave-wrap { padding: 12px 18px 6px; background: var(--bg); }
-#wave { width: 100%; height: 150px; display: block; cursor: pointer; }
+.wave-tools {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  margin-bottom: 8px; flex-wrap: wrap;
+}
+.wave-tools button { min-width: 34px; padding: 5px 10px; }
+.wave-tools input[type="range"] { width: 180px; accent-color: var(--accent); }
+.wave-tools #zoomLabel {
+  min-width: 36px; color: var(--text); font-variant-numeric: tabular-nums;
+}
+.wave-scroll { overflow-x: auto; overflow-y: hidden; }
+.wave-content { position: relative; height: 150px; min-width: 100%; }
+#wave {
+  position: sticky; left: 0; width: 100%; height: 150px; display: block; cursor: pointer;
+}
 .wave-hint { margin: 4px 0 0; font-size: 11px; color: var(--muted); text-align: center; }
 .wave-hint.warn { color: var(--amber); font-size: 13px; font-weight: 600; }
 
@@ -164,12 +189,20 @@ button.danger:hover:not(:disabled) { background: var(--red); color: #1a0d0a; }
 .ayah-list li.active {
   background: rgba(212,168,67,.12); box-shadow: inset 4px 0 0 var(--accent);
 }
+.ayah-list li.missing { opacity: .68; }
+.ayah-list li.missing .a-time { color: var(--red); }
+.ayah-list li.marked .a-num { box-shadow: inset 0 0 0 1px rgba(212,168,67,.45); }
 .ayah-list li .a-conf { width: 5px; align-self: stretch; border-radius: 3px; background: var(--line); flex-shrink: 0; }
 .ayah-list li .a-num {
   width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
   font-size: 13px; background: var(--panel2); flex-shrink: 0;
 }
 .ayah-list li .a-time { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 12px; width: 56px; flex-shrink: 0; }
+.ayah-list li .a-mark {
+  width: 58px; font-size: 11px; color: var(--muted); flex-shrink: 0;
+}
+.ayah-list li.marked .a-mark { color: var(--green); }
+.ayah-list li.missing .a-mark { color: var(--red); }
 .ayah-list li .a-verify { font-size: 11px; padding: 4px 9px; flex-shrink: 0; }
 .ayah-list li .a-text {
   flex: 1; text-align: right; direction: rtl; line-height: 2;

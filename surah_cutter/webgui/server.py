@@ -30,6 +30,7 @@ from surah_cutter.webgui.state import (
 _STATIC_DIR = Path(__file__).resolve().parent / "static"
 #: Bundled Qur'an (QPC Hafs Uthmani) font, served at /fonts for the review text.
 _FONTS_DIR = Path(__file__).resolve().parents[2] / "assets" / "fonts"
+_GEN_MODES = {"full", "fast", "hybrid"}
 
 
 # --- generation job (one at a time) ---------------------------------------
@@ -83,15 +84,21 @@ class _GenJob:
                         )
                         completed = i + 1
                         continue
+                    trace: dict[str, Any] = {}
                     rows = process_surah(
-                        str(audio), surah, reciter=reciter, mode=mode, project_db=db
+                        str(audio), surah, reciter=reciter, mode=mode,
+                        project_db=db,
+                        trace=trace if mode == "fast" else None,
                     )
                     written = db.write_timings(rows, source="auto")
                     completed = i + 1
-                    self._emit(
-                        {"type": "sura", "surah": surah, "index": i,
-                         "ayahs": len(rows), "written": written}
-                    )
+                    event = {
+                        "type": "sura", "surah": surah, "index": i,
+                        "ayahs": len(rows), "written": written,
+                    }
+                    if trace:
+                        event["fast_trace"] = _fast_trace_summary(trace)
+                    self._emit(event)
             finally:
                 db.close()
             self._emit(
@@ -147,6 +154,8 @@ def create_app() -> FastAPI:
     @app.post("/api/settings")
     def set_settings(payload: dict[str, Any] = Body(default={})) -> dict[str, Any]:
         allowed = {k: v for k, v in payload.items() if k in ("mode",)}
+        if "mode" in allowed and allowed["mode"] not in _GEN_MODES:
+            raise HTTPException(400, f"unknown mode: {allowed['mode']}")
         return settings.update(**allowed)
 
     # -- suras + statuses -------------------------------------------------
@@ -184,6 +193,8 @@ def create_app() -> FastAPI:
         if not suras:
             raise HTTPException(400, "no suras to process (all done or no audio)")
         mode = payload.get("mode", "hybrid")
+        if mode not in _GEN_MODES:
+            raise HTTPException(400, f"unknown mode: {mode}")
         reciter = payload.get("reciter")
         settings.update(mode=mode)  # remember last-used mode
         _JOB = _GenJob()
@@ -310,6 +321,21 @@ def create_app() -> FastAPI:
 
 def _sse(event: dict[str, Any]) -> str:
     return f"data: {json.dumps(event)}\n\n"
+
+
+def _fast_trace_summary(trace: dict[str, Any]) -> dict[str, Any]:
+    """Compact fast-align diagnostics for generation progress UI."""
+    ayahs = trace.get("ayahs") or []
+    repaired = sum(1 for a in ayahs if a.get("repaired"))
+    reliable = sum(1 for a in ayahs if a.get("reliable"))
+    return {
+        "coverage": trace.get("coverage"),
+        "n_pause": trace.get("n_pause"),
+        "n_wasl": trace.get("n_wasl"),
+        "reliable": reliable,
+        "repaired": repaired,
+        "ayahs": len(ayahs),
+    }
 
 
 def _check_surah(surah: int) -> None:

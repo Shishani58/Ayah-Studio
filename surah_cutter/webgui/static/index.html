@@ -52,14 +52,15 @@
 
       <!-- generation -->
       <div class="genbar">
-        <label class="inline">Режим
-          <select id="mode" title="hybrid — быстрее (нейронка только на трудных местах); full — точнее">
-            <option value="hybrid">hybrid · быстро</option>
-            <option value="full">full · точнее</option>
+        <label class="inline">режим
+          <select id="genMode">
+            <option value="full">точно</option>
+            <option value="fast">быстро</option>
           </select>
         </label>
         <button id="genBtn" class="primary" disabled>▶ Сгенерировать всё</button>
         <button id="regenBtn" class="ghost hidden" title="Перегенерировать все суры с нуля (кроме размеченных вручную)">↻ Заново всё</button>
+        <span id="modeHint" class="hint-inline">точное нейровыравнивание (~57 мс)</span>
       </div>
 
       <!-- explicit generation panel: progress + elapsed + start time + cancel -->
@@ -97,10 +98,12 @@
     <header class="topbar review-top">
       <button id="backBtn" class="ghost">← Дашборд</button>
       <h2 id="reviewTitle">Сура</h2>
-      <select id="reviewMode" title="Режим расчёта этой суры">
-        <option value="hybrid">hybrid · быстро</option>
-        <option value="full">full · точно</option>
-      </select>
+      <label class="inline">режим
+        <select id="suraMode">
+          <option value="full">точно</option>
+          <option value="fast">быстро</option>
+        </select>
+      </label>
       <button id="regenSuraBtn" class="primary" title="Рассчитать тайм-коды этой суры выбранным режимом">↻ Пересчитать суру</button>
       <span id="suraGenStatus" class="sura-gen-status"></span>
       <div class="player-controls">
@@ -110,11 +113,17 @@
         <button id="loopBtn" class="toggle" title="Повторять текущий аят">↻ луп</button>
         <label class="inline">скорость
           <select id="rate">
+            <option value="0.25">0.25×</option>
             <option value="0.5">0.5×</option>
             <option value="0.75">0.75×</option>
             <option value="1" selected>1×</option>
             <option value="1.25">1.25×</option>
             <option value="1.5">1.5×</option>
+            <option value="1.75">1.75×</option>
+            <option value="2">2×</option>
+            <option value="2.5">2.5×</option>
+            <option value="3">3×</option>
+            <option value="4">4×</option>
           </select>
         </label>
         <span id="clock" class="clock">0:00 / 0:00</span>
@@ -122,8 +131,32 @@
       </div>
     </header>
 
+    <div id="suraProgress" class="sura-progress">
+      <div class="sura-progress-head">
+        <span id="suraProgressText">размечено 0 / 0</span>
+        <span id="suraProgressMeta">—</span>
+      </div>
+      <div class="progress sura-progress-bar">
+        <div id="suraProgressFill" class="progress-fill"></div>
+        <span id="suraProgressPct">0%</span>
+      </div>
+    </div>
+
     <div class="wave-wrap">
-      <canvas id="wave"></canvas>
+      <div class="wave-tools">
+        <button id="zoomOutBtn" title="Уменьшить волну">−</button>
+        <label class="inline">масштаб
+          <input id="zoomRange" type="range" min="1" max="256" step="1" value="1" />
+          <span id="zoomLabel">1×</span>
+        </label>
+        <button id="zoomInBtn" title="Увеличить волну">+</button>
+        <button id="zoomFitBtn" class="ghost" title="Показать всю суру">вся сура</button>
+      </div>
+      <div id="waveScroll" class="wave-scroll">
+        <div id="waveContent" class="wave-content">
+          <canvas id="wave"></canvas>
+        </div>
+      </div>
       <p id="waveHint" class="wave-hint">Клик по волне — перемотка · тяните золотую линию — двигайте начало аята</p>
     </div>
 
