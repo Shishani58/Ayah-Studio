@@ -63,6 +63,15 @@ _WASL_SIM = float(os.environ.get("SC_FAST_WASL_SIM", "0.36"))
 #: flagging most suras. For a guaranteed-correct run, use the full path. Raise
 #: toward ~0.66 for safety-over-speed (flags most suras). 0 disables.
 _FALLBACK_CONF = float(os.environ.get("SC_FAST_FALLBACK_CONF", "0.61"))
+#: Independent placement verification fallback. Unlike refine confidence (high even
+#: when forced-aligned to the wrong spot — the opening words recur elsewhere), a
+#: greedy decode of what is actually HEARD at each placed boundary, compared to the
+#: ayah's opening, is low across the board when the sura has drifted. Below this
+#: mean verify-sim we fall back to full. Catches drift that mean-conf misses. 0 off.
+#: 0.57 catches all observed catastrophes (57/59/66/47); both signals confound with
+#: wasl density, so this also flags some correct wasl-heavy suras (→ full, slower
+#: but correct). High-recall by design — full is the only absolute guarantee.
+_VERIFY_SIM = float(os.environ.get("SC_FAST_VERIFY_SIM", "0.57"))
 
 
 def _collapse(s: str) -> str:
@@ -780,7 +789,20 @@ def align_surah_fast(
     # suras 65/66) drives the mean boundary confidence down; full recovers it.
     inner_confs = [confs.get(a, 0.0) for a in ayah_list[1:]]
     mean_conf = sum(inner_confs) / len(inner_confs) if inner_confs else 1.0
-    if _FALLBACK_CONF and mean_conf < _FALLBACK_CONF:
+    # Independent check: does the audio at each placed boundary actually sound like
+    # that ayah's opening? Low across the board ⇒ drift (mean-conf can miss this).
+    vsims = [
+        _sim(greedy_decode(starts_ms[a] - 50.0, starts_ms[a] + 2500.0), openings[k])
+        for k, a in enumerate(inner) if a in starts_ms
+    ]
+    verify_sim = sum(vsims) / len(vsims) if vsims else 1.0
+    if trace is not None:
+        trace["verify_sim"] = round(verify_sim, 3)
+        trace["mean_conf"] = round(mean_conf, 3)
+    drifted = (_FALLBACK_CONF and mean_conf < _FALLBACK_CONF) or (
+        _VERIFY_SIM and verify_sim < _VERIFY_SIM
+    )
+    if drifted:
         full_rows = A.align_surah(pcm, sr, words, surah=surah, model=bundle)
         if trace is not None:
             trace.update(fallback_lowconf=True, mean_conf=round(mean_conf, 3),
