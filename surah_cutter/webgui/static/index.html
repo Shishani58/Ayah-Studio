@@ -105,6 +105,7 @@
         </select>
       </label>
       <button id="regenSuraBtn" class="primary" title="Рассчитать тайм-коды этой суры выбранным режимом">↻ Пересчитать суру</button>
+      <button id="fastLogBtn" class="ghost" title="Показать лог fast-фаз этой суры">лог</button>
       <span id="suraGenStatus" class="sura-gen-status"></span>
       <div class="player-controls">
         <button id="playBtn" class="primary" title="Пробел">▶</button>
@@ -151,6 +152,17 @@
         </label>
         <button id="zoomInBtn" title="Увеличить волну">+</button>
         <button id="zoomFitBtn" class="ghost" title="Показать всю суру">вся сура</button>
+        <button id="phase1Btn" class="ghost" title="Показать паузы fast phase 1">фаза 1</button>
+        <button id="dspBtn" class="ghost" title="Показать DSP-валидацию energy-пауз">DSP</button>
+        <button id="combinedBtn" class="ghost" title="Показать итоговые паузы fast: energy + TEN + VAD">фаза 1 итог</button>
+        <button id="tenBtn" class="ghost" title="Показать TEN VAD по видимому диапазону">TEN</button>
+        <button id="vadBtn" class="ghost" title="Показать Silero VAD по видимому диапазону">VAD</button>
+        <label class="inline ten-control" title="Порог TEN speech/non-speech">thr
+          <input id="tenThreshold" type="number" min="0.05" max="0.95" step="0.05" value="0.5" />
+        </label>
+        <label class="inline ten-control" title="Склеивать TEN-паузы через короткие speech-разрывы, мс">gap
+          <input id="tenMergeGap" type="number" min="0" max="800" step="20" value="180" />
+        </label>
       </div>
       <div id="waveScroll" class="wave-scroll">
         <div id="waveContent" class="wave-content">
@@ -163,6 +175,13 @@
     <ul id="ayahList" class="ayah-list"></ul>
 
     <audio id="audio" preload="auto"></audio>
+    <div id="fastLogPanel" class="log-panel hidden">
+      <div class="log-head">
+        <strong>fast log</strong>
+        <button id="closeFastLogBtn" class="ghost">×</button>
+      </div>
+      <pre id="fastLogText"></pre>
+    </div>
   </section>
 
   <script src="/app.js"></script>

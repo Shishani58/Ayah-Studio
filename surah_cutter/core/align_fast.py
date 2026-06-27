@@ -30,8 +30,36 @@ Returns the same shape as :func:`align.align_surah`: ``[(ayah, start_ms, conf)]`
 
 from __future__ import annotations
 
+import difflib
 from collections import OrderedDict
-from typing import Any
+from typing import Any, Callable
+
+
+def _collapse(s: str) -> str:
+    """Collapse runs of the same character (melodic vowel elongation -> 1)."""
+    out: list[str] = []
+    for c in s:
+        if not out or out[-1] != c:
+            out.append(c)
+    return "".join(out)
+
+
+#: Chars of the (collapsed) decode/opening compared. Must span ~4 words so that
+#: ayahs sharing an opening phrase (e.g. al-Bayyinah 6/7 "inna lladhīna kafarū"
+#: vs "…āmanū", al-Falaq's repeated "wa-min sharri…") are told apart by a later,
+#: differing word — the shared prefix alone is ambiguous.
+_SIM_CHARS = 26
+
+
+def _sim(dec: str, opening: str) -> float:
+    """Fuzzy similarity of a greedy-decoded onset to an ayah's opening tokens.
+
+    Both are collapsed (recitation stretches vowels) and capped at
+    :data:`_SIM_CHARS` chars. Returns ``[0, 1]``.
+    """
+    return difflib.SequenceMatcher(
+        None, _collapse(dec)[:_SIM_CHARS], _collapse(opening)[:_SIM_CHARS]
+    ).ratio()
 
 
 def _default_bundle() -> Any:
@@ -49,6 +77,7 @@ def _match_boundaries(
     anchor: float,
     wasl_pen: float,
     extra_pen: float,
+    match_cost: Callable[[int, int], float] | None = None,
     dur_floor: float = 0.4,
     dur_ceil: float = 6.0,
     abs_floor: float = 650.0,
@@ -57,21 +86,22 @@ def _match_boundaries(
 ) -> list[float | None]:
     """Order-preserving match of boundaries ``exp`` to pause onsets ``ons``.
 
-    Global DP, but the match cost is **bias-free / relative**: a boundary's
-    predicted position is the *previously matched pause* plus the prior's
-    *expected gap* (``exp[i] - exp[i']``), not the prior's absolute position.
-    This is the key robustness fix — the structural prior is reliable about the
-    relative spacing of ayahs but biased in absolute time (it ignores melodic
-    tempo drift and the basmala), so anchoring each step on a real onset removes
-    the bias while keeping global optimality (unlike a per-step cascade).
+    Global DP. The per-pair *match quality* term is supplied by ``match_cost``
+    (lower = better fit of pause ``j`` to boundary ``i``). When given, this is an
+    **acoustic** cost — how well the words actually heard right after pause ``j``
+    match ayah ``i``'s opening — which is bias-free (it does not depend on the
+    char prior's absolute or relative position guesses, which drift by seconds in
+    melodic recitation and caused the off-by-one runs). When ``match_cost`` is
+    ``None`` the legacy positional cost is used: a boundary's predicted position
+    is the *previously matched pause* plus the prior's *expected gap*
+    (``exp[i] - exp[i']``); kept as a fallback.
 
-    A **duration floor/ceiling** rejects implausible matches: a matched ayah
-    span shorter than ``dur_floor`` × its char-expected duration (an early grab
-    of a within-ayah waqf / breath pause) or longer than ``dur_ceil`` × (a far
-    jump past the real pause) is forbidden. Melodic recitation only *lengthens*
-    ayahs versus the char estimate, so a low floor is safe and is what stops the
-    off-by-one runs. ``anchor`` is the neural content start (ayah-1 onset), used
-    as the floor reference for the first matched boundary.
+    Either way a **duration floor/ceiling** rejects implausible matches: a matched
+    ayah span shorter than ``dur_floor`` × its char-expected duration (an early
+    grab of a within-ayah waqf / breath pause) or longer than ``dur_ceil`` × (a
+    far jump past the real pause) is forbidden. ``exp`` is used only for these
+    bounds when ``match_cost`` is given. ``anchor`` is the neural content start
+    (ayah-1 onset), the floor reference for the first matched boundary.
 
     Each boundary is matched, left *wasl* (cost ``wasl_pen``), or skips an onset
     as an extra pause (cost ``extra_pen``). Skips are bounded to ``max_skip``
@@ -100,10 +130,12 @@ def _match_boundaries(
     for i in range(m):
         for j in range(p):
             best, bb = inf, None
+            # Match-quality term: acoustic if given, else positional distance.
+            mq = match_cost(i, j) if match_cost is not None else abs(ons[j] - exp[i])
             # Base: boundary i is the FIRST matched one (i wasls + j extras
             # before it); the span back to the neural anchor covers i+1 ayahs.
             if plausible(ons[j] - anchor, exp[i] - anchor, i + 1):
-                best = wasl_pen * i + extra_pen * j + abs(ons[j] - exp[i])
+                best = wasl_pen * i + extra_pen * j + mq
             for ip in range(max(0, i - 1 - max_skip), i):
                 base_ip = dp[ip]
                 egap = exp[i] - exp[ip]
@@ -112,12 +144,12 @@ def _match_boundaries(
                         continue
                     if not plausible(ons[j] - ons[jp], egap, i - ip):
                         continue  # implausible ayah span → forbid this match
-                    pred = ons[jp] + egap  # relative: real onset + expected gap
+                    step_mq = mq if match_cost is not None else abs(ons[j] - (ons[jp] + egap))
                     cost = (
                         base_ip[jp]
                         + wasl_pen * (i - ip - 1)
                         + extra_pen * (j - jp - 1)
-                        + abs(ons[j] - pred)
+                        + step_mq
                     )
                     if cost < best:
                         best, bb = cost, (ip, jp)
@@ -283,16 +315,38 @@ def align_surah_fast(
                 "base": base, "end": s1 * 1000.0 / sr,
                 "win_ms": s1 * 1000.0 / sr - base}
 
+    # --- low-level: greedy CTC decode of [t0_ms, t1_ms] -> transliteration. ---
+    # Unlike forced alignment (which is *told* the words), greedy decode reports
+    # what the model actually *hears* — the signal that says which ayah opens
+    # right after a pause, immune to the char prior's drift.
+    inv_vocab = {v: k for k, v in bundle.vocab.items()}
+
+    def greedy_decode(t0_ms: float, t1_ms: float) -> str:
+        s0 = max(0, int(round(t0_ms * sr / 1000.0)))
+        s1 = min(len(pcm), int(round(t1_ms * sr / 1000.0)))
+        if s1 - s0 < int(0.3 * sr):
+            return ""
+        emis = A._emissions(bundle, np.ascontiguousarray(pcm[s0:s1], dtype=np.float32), np)
+        ids = emis.argmax(-1)
+        out: list[str] = []
+        prev = -1
+        for i in ids.tolist():
+            if i != prev and i != bundle.blank_id:
+                out.append(inv_vocab.get(int(i), ""))
+            prev = i
+        return "".join(out)
+
     starts_ms: dict[int, float] = {}
     confs: dict[int, float] = {}
     tr_ayahs: list[dict] = []
+    model_reads: list[dict] = []
     audio_ms = 0.0
 
     # ===================================================================== #
     # Phase 1a — detect pauses (cheap, no neural).                           #
     # ===================================================================== #
-    pauses = candidates.detect_pauses(pcm, sr)
-    pause_onsets = sorted(p.end_ms for p in pauses)
+    pauses = candidates.detect_combined_pauses(pcm, sr, surah=surah)
+    pause_onsets = sorted(p.center_ms for p in pauses)
 
     # ===================================================================== #
     # Phase 1b — anchor ayah 1 (absorbs the intro-basmala for non-Fatiha).   #
@@ -311,6 +365,15 @@ def align_surah_fast(
     audio_ms += res["win_ms"]
     a1 = ayah_list[0]
     content_start = res["starts"][fa1]
+    model_reads.append({
+        "phase": "anchor",
+        "ayah": a1,
+        "window_ms": [round(res["base"], 1), round(res["end"], 1)],
+        "words": " ".join(w.text for w in words[0:head_end]),
+        "target": words[fa1].text,
+        "onset_ms": round(content_start, 1),
+        "conf": round(res["confs"][fa1], 3),
+    })
     starts_ms[a1] = content_start
     confs[a1] = res["confs"][fa1]
     tr_ayahs.append({"ayah": a1, "rough_ms": 0.0, "from_pause": False,
@@ -320,17 +383,48 @@ def align_surah_fast(
     # ===================================================================== #
     # Phase 1c — match pause onsets to boundaries (order-preserving DP).      #
     # ===================================================================== #
-    # Boundary positions from the structural prior (render-width fractions),
-    # OFFSET so the content region is [content_start, total] — not [0, total].
-    # The DP only needs roughly-monotonic positions; it may skip extra onsets
-    # (breath / within-ayah waqf pauses) and mark pause-less boundaries as wasl.
-    # A globally-wrong position never cascades (unlike per-step prediction).
+    # The DP assigns pauses to ayah boundaries by ACOUSTIC fit: for each pause we
+    # greedy-decode the ~1.3 s after it and compare what was heard to each ayah's
+    # opening tokens. This is bias-free — unlike the char prior, which drifts by
+    # seconds under melodic stretch and made the DP shift whole runs onto the
+    # wrong pause (the off-by-one bug). The prior is kept only for the duration
+    # floor/ceiling. The DP still skips extra onsets (breaths) and marks
+    # pause-less boundaries as wasl; a wrong match never cascades.
     fractions = candidates.expected_boundary_fractions(surah)
     content_dur = max(1.0, total_ms - content_start)
     inner = ayah_list[1:]  # boundaries we must place (ayah 1 is anchored)
     exp = [content_start + fractions.get(a, 0.0) * content_dur for a in inner]
+    # Only pauses inside the content region can be ayah boundaries.
+    pause_onsets = [p for p in pause_onsets if p > content_start - 200.0]
+    # Opening tokens (first two words) per inner ayah, and a greedy decode per
+    # pause — the two sides of the acoustic match.
+    openings = [
+        "".join(word_trs[i] for i in ayah_words[a][:4] if i < len(word_trs))
+        for a in inner
+    ]
+    decode_win_ms = 2500.0  # long enough to reach a distinguishing word in slow melisma
+    pause_decodes = [greedy_decode(p - 50.0, p + decode_win_ms) for p in pause_onsets]
+    audio_ms += sum(min(total_ms, p + decode_win_ms) - max(0.0, p - 50.0) for p in pause_onsets)
+    sim_cache: dict[tuple[int, int], float] = {}
+
+    def acoustic_cost(i: int, j: int) -> float:
+        key = (i, j)
+        s = sim_cache.get(key)
+        if s is None:
+            s = _sim(pause_decodes[j], openings[i])
+            sim_cache[key] = s
+        return 3000.0 * (1.0 - s)  # lower cost = better-heard match
+
+    # With a reliable acoustic match cost the char prior is no longer trusted for
+    # position — so the plausibility *ceiling* (which used the prior's gap) must
+    # be loose, or it would reject the genuinely long melodic ayahs (sura 98 runs
+    # ~18 s/ayah) and force the DP onto an earlier within-ayah pause. The floor
+    # still rejects grabbing a breath pause too soon; the acoustic cost does the
+    # rest.
     matched = _match_boundaries(
-        exp, pause_onsets, anchor=content_start, wasl_pen=2600.0, extra_pen=350.0
+        exp, pause_onsets, anchor=content_start, wasl_pen=2600.0,
+        extra_pen=350.0, match_cost=acoustic_cost,
+        dur_ceil=12.0, abs_ceil=22000.0,
     )
     # ayah -> (rough_ms, from_pause). Wasl boundaries: interpolate between the
     # matched onsets that bracket them (anchored both sides — no drift).
@@ -346,7 +440,15 @@ def align_surah_fast(
     # ===================================================================== #
     n_steps = max(1, int(round((max_win_s - min_win_s) / max(grow_s, 0.1))) + 1)
 
-    def refine(c: float, fa: int, prev_start: float, start_step: int = 0):
+    def refine(
+        c: float,
+        fa: int,
+        prev_start: float,
+        start_step: int = 0,
+        *,
+        ayah: int | None = None,
+        phase: str = "probe",
+    ):
         """Grow a window around ``c`` until the onset of word ``fa`` locks on.
 
         Returns ``(onset_ms, conf, win_s)`` — best onset seen; conf < thresh
@@ -384,6 +486,18 @@ def align_surah_fast(
             onset, conf = cand, cconf  # keep best-so-far
             guard = min(edge_guard_ms, 0.2 * res["win_ms"])
             near_edge = (cand - res["base"] < guard) or (res["end"] - cand < guard)
+            model_reads.append({
+                "phase": phase,
+                "ayah": ayah,
+                "candidate_ms": round(c, 1),
+                "window_ms": [round(res["base"], 1), round(res["end"], 1)],
+                "words": " ".join(w.text for w in words[i0:i1]),
+                "target": words[fa].text if fa < len(words) else "",
+                "onset_ms": round(cand, 1),
+                "delta_ms": round(cand - c, 1),
+                "conf": round(cconf, 3),
+                "near_edge": near_edge,
+            })
             if cconf >= conf_thresh and not near_edge:
                 break  # boundary comfortably inside, confident → trust it
         return onset, conf, win_used
@@ -401,7 +515,7 @@ def align_surah_fast(
         c = min(max(c0, prev_start + 30.0), total_ms)
         start_step = 0 if from_pause else 1  # wasl: skip the 1 s window
 
-        onset, conf, win_used = refine(c, fa, prev_start, start_step)
+        onset, conf, win_used = refine(c, fa, prev_start, start_step, ayah=a)
         reliable = onset is not None and conf >= conf_thresh
         if not reliable:  # never locked on → trust the matched/interpolated guess
             onset = c if onset is None else onset
@@ -444,7 +558,12 @@ def align_surah_fast(
             continue  # already consistent with the reliable anchors → leave it
         fa = ayah_words[a][0]
         o2, c2, _w = refine(
-            min(max(pred, starts_ms[lo] + 30.0), total_ms), fa, starts_ms[lo], 1
+            min(max(pred, starts_ms[lo] + 30.0), total_ms),
+            fa,
+            starts_ms[lo],
+            1,
+            ayah=a,
+            phase="repair",
         )
         if o2 is not None and c2 >= confs.get(a, 0.0):
             starts_ms[a] = o2
@@ -464,6 +583,16 @@ def align_surah_fast(
         last = ms
 
     if trace is not None:
+        trace["phase1_pauses"] = [
+            {
+                "start_ms": round(p.start_ms, 1),
+                "end_ms": round(p.end_ms, 1),
+                "center_ms": round(p.center_ms, 1),
+                "depth_ms": round(p.depth_ms, 1),
+            }
+            for p in pauses
+        ]
+        trace["model_reads"] = model_reads
         trace["ayahs"] = tr_ayahs
         trace["audio_ms"] = audio_ms
         trace["total_ms"] = total_ms

@@ -174,7 +174,12 @@ function setProgress(done, total, text) {
 // ===========================================================================
 const R = {
   surah: null, ayahs: [], duration: 0, peaks: [], audio: null, current: -1,
-  loop: false, drag: -1, zoom: 1,
+  loop: false, drag: -1, zoom: 1, phase1: null, showPhase1: false, phaseCurrent: -1,
+  dsp: null, showDsp: false,
+  combined: null, showCombined: false,
+  showTen: false, tenRanges: new Map(), tenLoading: false, tenTimer: null,
+  tenThreshold: 0.5, tenMergeGap: 180,
+  showVad: false, vadRanges: new Map(), vadLoading: false, vadTimer: null,
 };
 
 async function openReview(surah) {
@@ -185,9 +190,28 @@ async function openReview(surah) {
     [sura, wave] = await Promise.all([api.get(`/api/sura/${surah}`), api.get(`/api/sura/${surah}/waveform`)]);
   } catch (e) { setStatus("Ошибка: " + e.message); return; }
   R.ayahs = sura.ayahs; R.peaks = wave.peaks; R.duration = wave.duration_ms; R.current = -1;
+  R.phase1 = null; R.showPhase1 = false; R.phaseCurrent = -1;
+  R.dsp = null; R.showDsp = false;
+  R.combined = null; R.showCombined = false;
+  R.showTen = false; R.tenRanges = new Map(); R.tenLoading = false;
+  if (R.tenTimer) { clearTimeout(R.tenTimer); R.tenTimer = null; }
+  R.showVad = false; R.vadRanges = new Map(); R.vadLoading = false;
+  if (R.vadTimer) { clearTimeout(R.vadTimer); R.vadTimer = null; }
   R.zoom = 1;
   $("zoomRange").value = "1";
   $("zoomLabel").textContent = "1×";
+  $("phase1Btn").classList.remove("active");
+  $("phase1Btn").textContent = "фаза 1";
+  $("dspBtn").classList.remove("active");
+  $("dspBtn").textContent = "DSP";
+  $("combinedBtn").classList.remove("active");
+  $("combinedBtn").textContent = "фаза 1 итог";
+  $("tenBtn").classList.remove("active");
+  $("tenBtn").textContent = "TEN";
+  $("vadBtn").classList.remove("active");
+  $("vadBtn").textContent = "VAD";
+  $("tenThreshold").value = String(R.tenThreshold);
+  $("tenMergeGap").value = String(R.tenMergeGap);
   updateWaveControls();
   $("reviewTitle").textContent = `Сура ${surah} · ${sura.ayah_count} аят.`;
   const audio = $("audio");
@@ -233,6 +257,266 @@ function updateSuraProgress(state = "") {
     + (total > 0 && marked === total ? " done" : "");
 }
 
+async function togglePhase1() {
+  if (R.surah == null) return;
+  const btn = $("phase1Btn");
+  if (R.showPhase1) {
+    R.showPhase1 = false;
+    R.phaseCurrent = -1;
+    btn.classList.remove("active");
+    btn.textContent = "фаза 1";
+    drawWave();
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = "фаза 1…";
+  try {
+    if (!R.phase1) R.phase1 = await api.get(`/api/sura/${R.surah}/fast-phase1`);
+    R.showPhase1 = true;
+    R.phaseCurrent = currentPhaseByTime(R.audio ? R.audio.currentTime * 1000 : 0);
+    btn.classList.add("active");
+    btn.textContent = `фаза 1 · ${R.phase1.pauses.length}`;
+    drawWave();
+  } catch (e) {
+    setStatus("Ошибка фазы 1: " + e.message);
+    btn.textContent = "фаза 1";
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function toggleCombined() {
+  if (R.surah == null) return;
+  const btn = $("combinedBtn");
+  if (R.showCombined) {
+    R.showCombined = false;
+    btn.classList.remove("active");
+    btn.textContent = "фаза 1 итог";
+    drawWave();
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = "фаза 1 итог…";
+  try {
+    if (!R.combined) R.combined = await api.get(`/api/sura/${R.surah}/fast-combined-phase1`);
+    R.showCombined = true;
+    btn.classList.add("active");
+    btn.textContent = `фаза 1 итог · ${R.combined.pauses.length}`;
+    drawWave();
+  } catch (e) {
+    setStatus("Ошибка фазы 1 итог: " + e.message);
+    btn.textContent = "фаза 1 итог";
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function toggleDsp() {
+  if (R.surah == null) return;
+  const btn = $("dspBtn");
+  if (R.showDsp) {
+    R.showDsp = false;
+    btn.classList.remove("active");
+    btn.textContent = "DSP";
+    drawWave();
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = "DSP…";
+  try {
+    if (!R.dsp) R.dsp = await api.get(`/api/sura/${R.surah}/pause-pipeline`);
+    R.showDsp = true;
+    const accepted = (R.dsp.decisions || []).filter((d) => d.accepted).length;
+    btn.classList.add("active");
+    btn.textContent = `DSP · ${accepted}/${R.dsp.decisions.length}`;
+    drawWave();
+  } catch (e) {
+    setStatus("Ошибка DSP: " + e.message);
+    btn.textContent = "DSP";
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function toggleTen() {
+  if (R.surah == null) return;
+  const btn = $("tenBtn");
+  if (R.showTen) {
+    R.showTen = false;
+    btn.classList.remove("active");
+    btn.textContent = "TEN";
+    drawWave();
+    return;
+  }
+  R.showTen = true;
+  btn.classList.add("active");
+  btn.textContent = "TEN…";
+  drawWave();
+  await loadVisibleTen();
+}
+
+async function toggleVad() {
+  if (R.surah == null) return;
+  const btn = $("vadBtn");
+  if (R.showVad) {
+    R.showVad = false;
+    btn.classList.remove("active");
+    btn.textContent = "VAD";
+    drawWave();
+    return;
+  }
+  R.showVad = true;
+  btn.classList.add("active");
+  btn.textContent = "VAD…";
+  drawWave();
+  await loadVisibleVad();
+}
+
+function visibleMsRange(padRatio = 0.15) {
+  const wrap = $("waveScroll"), content = $("waveContent");
+  const left = wrap.scrollLeft, right = left + wrap.clientWidth;
+  const ms0 = (left / Math.max(1, content.clientWidth)) * R.duration;
+  const ms1 = (right / Math.max(1, content.clientWidth)) * R.duration;
+  const pad = Math.max(1000, (ms1 - ms0) * padRatio);
+  return [Math.max(0, ms0 - pad), Math.min(R.duration, ms1 + pad)];
+}
+
+function tenRangeKey(startMs, endMs) {
+  const bucket = 30_000;
+  return [
+    Math.floor(startMs / bucket) * bucket,
+    Math.ceil(endMs / bucket) * bucket,
+    R.tenThreshold.toFixed(2),
+    Math.round(R.tenMergeGap),
+  ].join(":");
+}
+
+function tenPausesForView() {
+  const out = [];
+  for (const r of R.tenRanges.values()) out.push(...(r.pauses || []));
+  const seen = new Set();
+  return out
+    .sort((a, b) => a.start_ms - b.start_ms)
+    .filter((p) => {
+      const key = `${Math.round(p.start_ms)}:${Math.round(p.end_ms)}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+}
+
+async function loadVisibleTen() {
+  if (!R.showTen || R.tenLoading || R.surah == null || !R.duration) return;
+  const [startMs, endMs] = visibleMsRange();
+  const key = tenRangeKey(startMs, endMs);
+  if (R.tenRanges.has(key)) { updateTenButton(); drawWave(); return; }
+  const [start, end] = key.split(":").map(Number);
+  R.tenLoading = true;
+  updateTenButton("…");
+  try {
+    const params = new URLSearchParams({
+      start_ms: String(start),
+      end_ms: String(end),
+      threshold: String(R.tenThreshold),
+      merge_gap_ms: String(R.tenMergeGap),
+    });
+    const data = await api.get(`/api/sura/${R.surah}/ten-phase?${params.toString()}`);
+    R.tenRanges.set(key, data);
+    updateTenButton();
+    drawWave();
+  } catch (e) {
+    setStatus("Ошибка TEN: " + e.message);
+    R.showTen = false;
+    $("tenBtn").classList.remove("active");
+    $("tenBtn").textContent = "TEN";
+  } finally {
+    R.tenLoading = false;
+  }
+}
+
+function scheduleTenLoad() {
+  if (!R.showTen) return;
+  if (R.tenTimer) clearTimeout(R.tenTimer);
+  R.tenTimer = setTimeout(loadVisibleTen, 220);
+}
+
+function updateTenButton(suffix = "") {
+  const n = tenPausesForView().length;
+  $("tenBtn").textContent = suffix ? `TEN${suffix}` : `TEN · ${n}`;
+}
+
+function vadRangeKey(startMs, endMs) {
+  const bucket = 30_000;
+  return `${Math.floor(startMs / bucket) * bucket}:${Math.ceil(endMs / bucket) * bucket}`;
+}
+
+function vadPausesForView() {
+  const out = [];
+  for (const r of R.vadRanges.values()) out.push(...(r.pauses || []));
+  const seen = new Set();
+  return out
+    .sort((a, b) => a.start_ms - b.start_ms)
+    .filter((p) => {
+      const key = `${Math.round(p.start_ms)}:${Math.round(p.end_ms)}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+}
+
+async function loadVisibleVad() {
+  if (!R.showVad || R.vadLoading || R.surah == null || !R.duration) return;
+  const [startMs, endMs] = visibleMsRange();
+  const key = vadRangeKey(startMs, endMs);
+  if (R.vadRanges.has(key)) { updateVadButton(); drawWave(); return; }
+  const [start, end] = key.split(":").map(Number);
+  R.vadLoading = true;
+  updateVadButton("…");
+  try {
+    const params = new URLSearchParams({
+      start_ms: String(start),
+      end_ms: String(end),
+    });
+    const data = await api.get(`/api/sura/${R.surah}/vad-phase?${params.toString()}`);
+    R.vadRanges.set(key, data);
+    updateVadButton();
+    drawWave();
+  } catch (e) {
+    setStatus("Ошибка VAD: " + e.message);
+    R.showVad = false;
+    $("vadBtn").classList.remove("active");
+    $("vadBtn").textContent = "VAD";
+  } finally {
+    R.vadLoading = false;
+  }
+}
+
+function scheduleVadLoad() {
+  if (!R.showVad) return;
+  if (R.vadTimer) clearTimeout(R.vadTimer);
+  R.vadTimer = setTimeout(loadVisibleVad, 220);
+}
+
+function updateVadButton(suffix = "") {
+  const n = vadPausesForView().length;
+  $("vadBtn").textContent = suffix ? `VAD${suffix}` : `VAD · ${n}`;
+}
+
+function updateTenSettings() {
+  const threshold = parseFloat($("tenThreshold").value);
+  const mergeGap = parseFloat($("tenMergeGap").value);
+  R.tenThreshold = Number.isFinite(threshold) ? Math.max(0.05, Math.min(0.95, threshold)) : 0.5;
+  R.tenMergeGap = Number.isFinite(mergeGap) ? Math.max(0, Math.min(800, mergeGap)) : 180;
+  $("tenThreshold").value = String(R.tenThreshold);
+  $("tenMergeGap").value = String(Math.round(R.tenMergeGap));
+  R.tenRanges = new Map();
+  if (R.showTen) {
+    updateTenButton("…");
+    drawWave();
+    scheduleTenLoad();
+  }
+}
+
 // regenerate just this sura with the chosen per-sura mode
 async function regenerateSura() {
   if (R.surah == null) return;
@@ -268,6 +552,25 @@ async function regenerateSura() {
   };
   es.onerror = () => { es.close(); if (btn.disabled) stop("", ""); };
 }
+
+async function showFastLog() {
+  if (R.surah == null) return;
+  const btn = $("fastLogBtn");
+  const panel = $("fastLogPanel");
+  const pre = $("fastLogText");
+  panel.classList.remove("hidden");
+  pre.textContent = "читаю fast-лог…";
+  btn.disabled = true;
+  try {
+    const data = await api.get(`/api/sura/${R.surah}/fast-log`);
+    pre.textContent = data.log || "";
+  } catch (e) {
+    pre.textContent = "Ошибка лога: " + e.message;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
 // re-fetch this sura's timings after a recompute, keep audio position
 async function reloadSura() {
   try {
@@ -342,6 +645,8 @@ function setWaveZoom(zoom, centerMs = null) {
     wrap.scrollLeft = Math.max(0, centerRatio * content.clientWidth - wrap.clientWidth / 2);
   }
   drawWave();
+  scheduleTenLoad();
+  scheduleVadLoad();
 }
 function updateWaveControls() {
   if (!$("zoomRange")) return;
@@ -358,13 +663,19 @@ function drawWave() {
   const n = R.peaks.length;
   const left = wrap.scrollLeft, right = left + w, virtualW = content.clientWidth;
   ctx.strokeStyle = "#3a4456"; ctx.lineWidth = 1; ctx.beginPath();
-  for (let i = 0; i < n; i++) {
+  const i0 = Math.max(0, Math.floor((left / Math.max(1, virtualW)) * Math.max(0, n - 1)) - 2);
+  const i1 = Math.min(n - 1, Math.ceil((right / Math.max(1, virtualW)) * Math.max(0, n - 1)) + 2);
+  for (let i = i0; i <= i1; i++) {
     const vx = (i / Math.max(1, n - 1)) * virtualW;
-    if (vx < left - 1 || vx > right + 1) continue;
     const x = vx - left, amp = (R.peaks[i] / 100) * (mid - 2);
     ctx.moveTo(x, mid - amp); ctx.lineTo(x, mid + amp);
   }
   ctx.stroke();
+  if (R.showPhase1 && R.phase1) drawPhase1(ctx, left, right, h);
+  if (R.showDsp && R.dsp) drawDsp(ctx, left, right, h);
+  if (R.showCombined && R.combined) drawCombined(ctx, left, right, h);
+  if (R.showTen) drawTen(ctx, left, right, h);
+  if (R.showVad) drawVad(ctx, left, right, h);
   R.ayahs.forEach((a, i) => {
     if (a.time == null || !R.duration) return;
     const vx = msToVirtualX(a.time);
@@ -381,6 +692,124 @@ function drawWave() {
     const px = msToVirtualX(playMs) - left;
     ctx.strokeStyle = "#fff"; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, h); ctx.stroke();
+  }
+}
+
+function drawDsp(ctx, left, right, h) {
+  ctx.font = "10px sans-serif";
+  for (const p of R.dsp.decisions || []) {
+    const start = msToVirtualX(p.start_ms);
+    const end = msToVirtualX(p.end_ms);
+    if (end < left - 1 || start > right + 1) continue;
+    const x0 = Math.max(0, start - left);
+    const x1 = Math.min(right - left, end - left);
+    ctx.fillStyle = p.accepted ? "rgba(255, 166, 61, 0.10)" : "rgba(255, 93, 93, 0.14)";
+    ctx.fillRect(x0, 0, Math.max(1, x1 - x0), h);
+    const mark = msToVirtualX(p.center_ms) - left;
+    ctx.strokeStyle = p.accepted ? "#ffa63d" : "#ff5d5d";
+    ctx.lineWidth = p.accepted ? 1.5 : 2;
+    ctx.beginPath(); ctx.moveTo(mark, 0); ctx.lineTo(mark, h); ctx.stroke();
+    if (mark >= 0 && mark <= right - left) {
+      ctx.fillStyle = ctx.strokeStyle;
+      ctx.fillText(p.accepted ? Math.round(p.depth_ms) : "x", mark + 3, 66);
+    }
+  }
+}
+
+function drawCombined(ctx, left, right, h) {
+  ctx.font = "10px sans-serif";
+  for (const p of R.combined.pauses || []) {
+    const start = msToVirtualX(p.start_ms);
+    const end = msToVirtualX(p.end_ms);
+    if (end < left - 1 || start > right + 1) continue;
+    const x0 = Math.max(0, start - left);
+    const x1 = Math.min(right - left, end - left);
+    ctx.fillStyle = "rgba(49, 211, 214, 0.11)";
+    ctx.fillRect(x0, 0, Math.max(1, x1 - x0), h);
+    const mark = msToVirtualX(p.center_ms) - left;
+    ctx.strokeStyle = "#31d3d6";
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(mark, 0); ctx.lineTo(mark, h); ctx.stroke();
+    if (mark >= 0 && mark <= right - left) {
+      ctx.fillStyle = "#9af4f6";
+      ctx.fillText(Math.round(p.depth_ms), mark + 3, 52);
+    }
+  }
+}
+
+function drawTen(ctx, left, right, h) {
+  ctx.font = "10px sans-serif";
+  for (const p of tenPausesForView()) {
+    const start = msToVirtualX(p.start_ms);
+    const end = msToVirtualX(p.end_ms);
+    if (end < left - 1 || start > right + 1) continue;
+    const x0 = Math.max(0, start - left);
+    const x1 = Math.min(right - left, end - left);
+    ctx.fillStyle = "rgba(178, 113, 255, 0.10)";
+    ctx.fillRect(x0, 0, Math.max(1, x1 - x0), h);
+    const mark = msToVirtualX(p.center_ms) - left;
+    ctx.strokeStyle = "#b271ff";
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(mark, 0); ctx.lineTo(mark, h); ctx.stroke();
+    if (mark >= 0 && mark <= right - left) {
+      ctx.fillStyle = "#d6bdff";
+      ctx.fillText(Math.round(p.depth_ms), mark + 3, 24);
+    }
+  }
+}
+
+function drawVad(ctx, left, right, h) {
+  ctx.font = "10px sans-serif";
+  for (const p of vadPausesForView()) {
+    const start = msToVirtualX(p.start_ms);
+    const end = msToVirtualX(p.end_ms);
+    if (end < left - 1 || start > right + 1) continue;
+    const x0 = Math.max(0, start - left);
+    const x1 = Math.min(right - left, end - left);
+    ctx.fillStyle = "rgba(73, 214, 130, 0.10)";
+    ctx.fillRect(x0, 0, Math.max(1, x1 - x0), h);
+    const mark = msToVirtualX(p.center_ms) - left;
+    ctx.strokeStyle = "#49d682";
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(mark, 0); ctx.lineTo(mark, h); ctx.stroke();
+    if (mark >= 0 && mark <= right - left) {
+      ctx.fillStyle = "#93f0ba";
+      ctx.fillText(Math.round(p.depth_ms), mark + 3, 38);
+    }
+  }
+}
+
+function drawPhase1(ctx, left, right, h) {
+  ctx.font = "10px sans-serif";
+  const marks = phaseMarks();
+  const cur = R.audio ? currentPhaseByTime(R.audio.currentTime * 1000) : R.phaseCurrent;
+  if (marks && cur >= 0) {
+    const start = msToVirtualX(marks[cur]);
+    const end = msToVirtualX(marks[cur + 1]);
+    if (end >= left && start <= right) {
+      const x0 = Math.max(0, start - left);
+      const x1 = Math.min(right - left, end - left);
+      ctx.fillStyle = "rgba(74, 144, 217, 0.09)";
+      ctx.fillRect(x0, 0, Math.max(1, x1 - x0), h);
+    }
+  }
+  for (const p of R.phase1.pauses || []) {
+    const start = msToVirtualX(p.start_ms);
+    const end = msToVirtualX(p.end_ms);
+    if (end < left - 1 || start > right + 1) continue;
+    const x0 = Math.max(0, start - left);
+    const x1 = Math.min(right - left, end - left);
+    ctx.fillStyle = "rgba(74, 144, 217, 0.13)";
+    ctx.fillRect(x0, 0, Math.max(1, x1 - x0), h);
+    const markMs = p.center_ms ?? p.onset_ms;
+    const onset = msToVirtualX(markMs) - left;
+    ctx.strokeStyle = "#4a90d9";
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(onset, 0); ctx.lineTo(onset, h); ctx.stroke();
+    if (onset >= 0 && onset <= right - left) {
+      ctx.fillStyle = "#8fc4ff";
+      ctx.fillText(Math.round(p.depth_ms), onset + 3, h - 7);
+    }
   }
 }
 function xToMs(clientX) {
@@ -400,16 +829,64 @@ function markerNearX(clientX) {
 
 // ---- playback ----
 function togglePlay() { if (!R.audio) return; R.audio.paused ? R.audio.play() : R.audio.pause(); }
+function scrollWaveToMs(ms) {
+  if (R.zoom <= 1) return;
+  const wrap = $("waveScroll"), x = msToVirtualX(ms);
+  wrap.scrollLeft = Math.max(0, x - wrap.clientWidth / 2);
+}
 function seekAyah(i, play) {
   const a = R.ayahs[i]; if (!a || a.time == null || !R.audio) return;
   R.audio.currentTime = a.time / 1000;
   setCurrent(i);
-  if (R.zoom > 1) {
-    const wrap = $("waveScroll"), x = msToVirtualX(a.time);
-    wrap.scrollLeft = Math.max(0, x - wrap.clientWidth / 2);
-  }
+  scrollWaveToMs(a.time);
   drawWave();
   if (play) R.audio.play();
+}
+function phaseMarks() {
+  if (!R.showPhase1 || !R.phase1 || !R.duration) return null;
+  const raw = [0, ...(R.phase1.pauses || []).map((p) => p.center_ms ?? p.onset_ms), R.duration]
+    .filter((t) => t != null && Number.isFinite(t))
+    .map((t) => Math.max(0, Math.min(R.duration, t)))
+    .sort((a, b) => a - b);
+  const marks = [];
+  for (const t of raw) {
+    if (!marks.length || t - marks[marks.length - 1] > 1) marks.push(t);
+  }
+  return marks.length >= 2 ? marks : null;
+}
+function currentPhaseByTime(ms) {
+  const marks = phaseMarks();
+  if (!marks) return -1;
+  let idx = 0;
+  for (let i = 0; i < marks.length - 1; i++) {
+    if (marks[i] <= ms + 1) idx = i;
+    else break;
+  }
+  return Math.min(idx, marks.length - 2);
+}
+function phaseEndMs(i) {
+  const marks = phaseMarks();
+  if (!marks || i < 0) return R.duration;
+  return marks[Math.min(i + 1, marks.length - 1)];
+}
+function seekPhase(i, play) {
+  const marks = phaseMarks();
+  if (!marks || !R.audio) return;
+  const idx = Math.max(0, Math.min(i, marks.length - 2));
+  R.phaseCurrent = idx;
+  R.audio.currentTime = marks[idx] / 1000;
+  scrollWaveToMs(marks[idx]);
+  drawWave();
+  if (play) R.audio.play();
+}
+function seekPrevUnit() {
+  if (phaseMarks()) seekPhase(currentPhaseByTime(R.audio ? R.audio.currentTime * 1000 : 0) - 1, false);
+  else seekAyah(Math.max(R.current - 1, 0), false);
+}
+function seekNextUnit() {
+  const marks = phaseMarks();
+  if (marks) seekPhase(currentPhaseByTime(R.audio ? R.audio.currentTime * 1000 : 0) + 1, false);
+  else seekAyah(Math.min(R.current + 1, R.ayahs.length - 1), false);
 }
 function setCurrent(i) {
   if (i === R.current) return;
@@ -492,9 +969,18 @@ function wire() {
   $("regenBtn").onclick = () => runGeneration(false);
   $("cancelBtn").onclick = cancelGeneration;
   $("regenSuraBtn").onclick = regenerateSura;
+  $("fastLogBtn").onclick = showFastLog;
+  $("closeFastLogBtn").onclick = () => $("fastLogPanel").classList.add("hidden");
   $("zoomOutBtn").onclick = () => setWaveZoom(R.zoom / 2);
   $("zoomInBtn").onclick = () => setWaveZoom(R.zoom * 2);
   $("zoomFitBtn").onclick = () => setWaveZoom(1, R.duration / 2);
+  $("phase1Btn").onclick = togglePhase1;
+  $("dspBtn").onclick = toggleDsp;
+  $("combinedBtn").onclick = toggleCombined;
+  $("tenBtn").onclick = toggleTen;
+  $("vadBtn").onclick = toggleVad;
+  $("tenThreshold").onchange = updateTenSettings;
+  $("tenMergeGap").onchange = updateTenSettings;
   $("zoomRange").oninput = () => setWaveZoom(parseInt($("zoomRange").value, 10), R.audio ? R.audio.currentTime * 1000 : null);
   $("genMode").onchange = async () => {
     setMode(selectedMode());
@@ -503,8 +989,8 @@ function wire() {
   $("suraMode").onchange = () => setMode(selectedSuraMode());
   $("backBtn").onclick = () => { if (R.audio) R.audio.pause(); showView("dashboard"); refreshSuras(); };
   $("playBtn").onclick = togglePlay;
-  $("prevBtn").onclick = () => seekAyah(Math.max(R.current - 1, 0), false);
-  $("nextBtn").onclick = () => seekAyah(Math.min(R.current + 1, R.ayahs.length - 1), false);
+  $("prevBtn").onclick = seekPrevUnit;
+  $("nextBtn").onclick = seekNextUnit;
   $("loopBtn").onclick = () => { R.loop = !R.loop; $("loopBtn").classList.toggle("active", R.loop); };
   $("rate").onchange = () => { if (R.audio) R.audio.playbackRate = parseFloat($("rate").value); };
   $("exportBtn").onclick = exportProject;
@@ -515,19 +1001,25 @@ function wire() {
   audio.addEventListener("timeupdate", () => {
     const ms = audio.currentTime * 1000;
     $("clock").textContent = `${fmt(ms)} / ${fmt(R.duration)}`;
-    const i = currentAyahByTime(ms);
-    if (i >= 0 && i !== R.current) setCurrent(i);
+    const activePhase = phaseMarks();
+    if (activePhase) R.phaseCurrent = currentPhaseByTime(ms);
+    else {
+      const i = currentAyahByTime(ms);
+      if (i >= 0 && i !== R.current) setCurrent(i);
+    }
     if (R.zoom > 1) {
       const wrap = $("waveScroll"), x = msToVirtualX(ms);
       if (x < wrap.scrollLeft || x > wrap.scrollLeft + wrap.clientWidth) {
         wrap.scrollLeft = Math.max(0, x - wrap.clientWidth / 2);
       }
     }
-    if (R.loop && R.current >= 0 && ms >= ayahEndMs(R.current)) seekAyah(R.current, true);
+    if (R.loop && activePhase && R.phaseCurrent >= 0 && ms >= phaseEndMs(R.phaseCurrent)) seekPhase(R.phaseCurrent, true);
+    else if (R.loop && !activePhase && R.current >= 0 && ms >= ayahEndMs(R.current)) seekAyah(R.current, true);
     drawWave();
   });
 
   const c = $("wave");
+  $("waveScroll").addEventListener("scroll", () => { drawWave(); scheduleTenLoad(); scheduleVadLoad(); });
   c.addEventListener("mousedown", (e) => {
     const mi = markerNearX(e.clientX);
     if (mi >= 0) { R.drag = mi; c.style.cursor = "ew-resize"; }

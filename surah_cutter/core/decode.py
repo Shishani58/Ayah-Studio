@@ -52,6 +52,43 @@ def decode(path: str, sr: int = DEFAULT_SR) -> np.ndarray:
     return np.frombuffer(proc.stdout, dtype=np.float32).copy()
 
 
+def decode_range(
+    path: str,
+    *,
+    start_ms: float,
+    end_ms: float,
+    sr: int = DEFAULT_SR,
+) -> np.ndarray:
+    """Decode a time range to mono float32 PCM at ``sr``.
+
+    Used by debug overlays that inspect only the visible waveform region on long
+    suras; avoids decoding multi-hour audio just to run a local detector.
+    """
+    start_s = max(0.0, start_ms / 1000.0)
+    dur_s = max(0.0, (end_ms - start_ms) / 1000.0)
+    if dur_s <= 0:
+        return np.array([], dtype=np.float32)
+    cmd = [
+        _ffmpeg_exe(),
+        "-nostdin",
+        "-hide_banner",
+        "-loglevel", "error",
+        "-ss", f"{start_s:.3f}",
+        "-t", f"{dur_s:.3f}",
+        "-i", str(path),
+        "-f", "f32le",
+        "-acodec", "pcm_f32le",
+        "-ac", "1",
+        "-ar", str(sr),
+        "-",
+    ]
+    proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if proc.returncode != 0:
+        msg = proc.stderr.decode("utf-8", "replace").strip()
+        raise DecodeError(f"ffmpeg failed for {path!r}: {msg or 'unknown error'}")
+    return np.frombuffer(proc.stdout, dtype=np.float32).copy()
+
+
 def duration_ms(path: str, sr: int = DEFAULT_SR) -> int:
     """Длительность аудио в миллисекундах (через декод при `sr`)."""
     n = len(decode(path, sr=sr))

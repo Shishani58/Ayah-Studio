@@ -65,11 +65,18 @@ def classify_status(statuses: list[str] | None, ayah_count: int) -> str:
     return "processed"
 
 
-def waveform_peaks(audio_path: str, buckets: int = 1600) -> tuple[list[int], int]:
+MIN_WAVEFORM_BUCKETS = 1600
+MAX_WAVEFORM_BUCKETS = 65536
+WAVEFORM_BUCKET_MS = 100
+
+
+def waveform_peaks(audio_path: str, buckets: int | None = None) -> tuple[list[int], int]:
     """Downsampled |amplitude| envelope for the waveform canvas.
 
-    Decodes the audio to 16 kHz mono PCM and reduces it to ``buckets`` peak
-    values scaled to 0..100 (small ints → compact JSON). Returns
+    Decodes the audio to 16 kHz mono PCM and reduces it to peak values scaled
+    to 0..100 (small ints → compact JSON). By default the bucket count grows
+    with audio duration, capped so long suras still get enough horizontal zoom
+    detail without returning an unbounded JSON payload. Returns
     ``(peaks, duration_ms)``.
     """
     import numpy as np
@@ -81,6 +88,11 @@ def waveform_peaks(audio_path: str, buckets: int = 1600) -> tuple[list[int], int
     duration_ms = int(round(n / decode.DEFAULT_SR * 1000))
     if n == 0:
         return [], 0
+    if buckets is None:
+        buckets = max(
+            MIN_WAVEFORM_BUCKETS,
+            min(MAX_WAVEFORM_BUCKETS, duration_ms // WAVEFORM_BUCKET_MS),
+        )
     buckets = max(1, min(buckets, n))
     # Pad to a whole number of buckets, then peak-reduce per bucket.
     edges = np.linspace(0, n, buckets + 1, dtype=np.int64)
