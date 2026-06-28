@@ -7,14 +7,14 @@ placed by the neural aligner (not by a pause), so accuracy is preserved.
 
 Two explicit phases (the UI exposes both so the user can steer them):
 
-**Phase 1 — rough pass by pauses (cheap, no neural).**
-An energy detector gives silence segments. Each pause is used only as a *rough*
-anchor — its centre (``pause.center_ms``), a point reliably *before* speech
-resumes — matched to the ayah's expected position (structural prior). The exact
-onset is not read off the pause edge; Phase 2's neural refine recovers it (the
-centre is a deliberately safe early anchor — the detector's silence-end can
-overshoot into speech). Ayahs with no nearby pause are *wasl* (joined) — their
-rough guess comes from the prior plus the running tempo.
+**Phase 1 — sequential pause confirmation.**
+An energy/DSP detector gives all plausible silence segments. For each pause we
+read only a short slice after speech resumes, greedy-decode what the model hears,
+and compare it to the known opening of the current ayah. A pause is accepted only
+when it confirms the next expected ayah. If it sounds like a later ayah, the
+matcher first searches the skipped span for weaker/missed pauses; unresolved
+gaps become *wasl* windows for local alignment instead of being forced onto a
+weak pause.
 
 **Phase 2 — neural refinement with a growing window (from 1 s).**
 For each boundary we read a **1-second** window around its rough position, run
@@ -55,6 +55,14 @@ _WASL_SIM = float(os.environ.get("SC_FAST_WASL_SIM", "0.36"))
 #: Harder gate for accepting a pause as an ayah anchor. Values below this are
 #: still logged, but are treated as too weak to be a real boundary match.
 _MIN_MATCH_SIM = float(os.environ.get("SC_FAST_MIN_MATCH_SIM", "0.40"))
+#: Recovery pass is only used after a later pause already proved we skipped over
+#: an ayah. In that narrow context we can accept a slightly weaker similarity for
+#: an intermediate pause instead of forcing the ayah into a long wasl window.
+_RECOVER_MATCH_SIM = float(os.environ.get("SC_FAST_RECOVER_MATCH_SIM", "0.34"))
+#: If the short decode after a pause already identifies the ayah this well, the
+#: pause edge is trusted as the timing and Phase 2 does not run another
+#: forced-align window for that boundary.
+_PAUSE_TRUST_SIM = float(os.environ.get("SC_FAST_PAUSE_TRUST_SIM", "0.50"))
 #: A weak match far from the structural/tempo prior is almost certainly a random
 #: similar syllable elsewhere in the sura. Strong matches can still override it.
 _MATCH_PRIOR_WINDOW_MS = float(os.environ.get("SC_FAST_MATCH_PRIOR_WINDOW_MS", "15000"))
@@ -62,13 +70,41 @@ _FAR_MATCH_SIM = float(os.environ.get("SC_FAST_FAR_MATCH_SIM", "0.72"))
 #: Raw pause lists contain many within-ayah breaths. Let DP skip long runs of
 #: them, otherwise it is forced onto early pauses just to keep the chain alive.
 _MATCH_MAX_SKIP = int(os.environ.get("SC_FAST_MATCH_MAX_SKIP", "48"))
-#: Greedy pause verification should start at speech resumption, not at the centre
-#: of a long silence segment.
-_PAUSE_DECODE_PRE_ROLL_MS = float(os.environ.get("SC_FAST_PAUSE_DECODE_PRE_ROLL_MS", "80"))
+#: Sequential matcher only looks a few ayahs ahead when classifying what is heard
+#: after a pause. Larger values read more text comparisons and can overfit repeated
+#: openings; 3 catches the practical "we jumped over one/two ayahs" cases.
+_MATCH_LOOKAHEAD = int(os.environ.get("SC_FAST_MATCH_LOOKAHEAD", "3"))
+#: Future-ayah classification needs this similarity margin over the current ayah;
+#: otherwise we keep the algorithm sequential and let the current ayah claim it.
+_FUTURE_MATCH_MARGIN = float(os.environ.get("SC_FAST_FUTURE_MATCH_MARGIN", "0.12"))
+#: Only openings that share this many initial collapsed transliteration
+#: characters with a nearby ayah get a longer greedy decode; unique ayahs stay on
+#: the short default read.
+_AMBIG_PREFIX_CHARS = int(os.environ.get("SC_FAST_AMBIG_PREFIX_CHARS", "6"))
+#: Greedy pause verification should start near speech resumption, not at the
+#: centre of a long silence segment. This is only for reading; the emitted
+#: pause-backed ayah start remains the pause centre.
+_PAUSE_DECODE_PRE_ROLL_MS = float(os.environ.get("SC_FAST_PAUSE_DECODE_PRE_ROLL_MS", "50"))
+_PAUSE_DECODE_WIN_MS = float(os.environ.get("SC_FAST_PAUSE_DECODE_WIN_MS", "2500"))
+_PAUSE_DECODE_AMBIG_WIN_MS = float(os.environ.get("SC_FAST_PAUSE_DECODE_AMBIG_WIN_MS", "4500"))
+_AMBIG_DECODE_PRIOR_MS = float(os.environ.get("SC_FAST_AMBIG_DECODE_PRIOR_MS", "7000"))
+# A weak intra-ayah breath may fuzzy-match the next ayah because the short decode
+# contains a tail from the previous ayah plus a little future text. Require the
+# decode to actually begin like the target opening before accepting such pauses.
+_PREFIX_WEAK_MIN = int(os.environ.get("SC_FAST_PREFIX_WEAK_MIN", "2"))
+_PREFIX_STRONG_MIN = int(os.environ.get("SC_FAST_PREFIX_STRONG_MIN", "0"))
+_PREFIX_BYPASS_SIM = float(os.environ.get("SC_FAST_PREFIX_BYPASS_SIM", "0.62"))
+#: Small left context around speech resumption, cached with the pause decode so a
+#: later 1s refine window can reuse the same emissions instead of rereading.
+_PAUSE_CACHE_PRE_ROLL_MS = float(os.environ.get("SC_FAST_PAUSE_CACHE_PRE_ROLL_MS", "650"))
 #: A wasl run longer than this is no longer a "short local fill"; aligning it
 #: whole turns fast into full-ish ONNX inference. Keep rough points and let
 #: review/repair flag them instead.
 _MAX_WASL_RUN_ALIGN_MS = float(os.environ.get("SC_FAST_MAX_WASL_RUN_ALIGN_MS", "20000"))
+# If local wasl alignment lands next to a strong detected pause, later repair may
+# improve confidence but must not pull that boundary away from the visible pause.
+_WASL_PAUSE_HINT_MS = float(os.environ.get("SC_FAST_WASL_PAUSE_HINT_MS", "900"))
+_REPAIR_PAUSE_PULL_MS = float(os.environ.get("SC_FAST_REPAIR_PAUSE_PULL_MS", "250"))
 #: Self-diagnostic threshold. A drifted sura (off-by-one cascade with no recovery
 #: anchor) shows up as low MEAN boundary confidence. Fast mode no longer falls
 #: back to full automatically; this threshold marks the result as suspicious so
@@ -79,6 +115,10 @@ _FALLBACK_CONF = float(os.environ.get("SC_FAST_FALLBACK_CONF", "0.61"))
 #: heard at each placed boundary is low across the board when the sura has drifted.
 #: Below this mean verify-sim the result is marked suspicious. 0 disables.
 _VERIFY_SIM = float(os.environ.get("SC_FAST_VERIFY_SIM", "0.57"))
+_VERIFY_WINDOW_MS = float(os.environ.get("SC_FAST_VERIFY_WINDOW_MS", "1600"))
+_DRIFT_MIN_PAUSE_COVERAGE = float(os.environ.get("SC_FAST_DRIFT_MIN_PAUSE_COVERAGE", "0.80"))
+
+_WAQF_STOP_SIGNS = frozenset("ۖۗۘۙۚۛۜ")
 
 
 def _collapse(s: str) -> str:
@@ -88,6 +128,16 @@ def _collapse(s: str) -> str:
         if not out or out[-1] != c:
             out.append(c)
     return "".join(out)
+
+
+def _common_prefix_len(a: str, b: str) -> int:
+    """Length of the common collapsed prefix of two transliteration strings."""
+    common = 0
+    for ca, cb in zip(_collapse(a), _collapse(b)):
+        if ca != cb:
+            break
+        common += 1
+    return common
 
 
 #: Latin long-vowel (madd-carrier) chars. As a *tempo unit* a long vowel is
@@ -250,6 +300,241 @@ def _interp_wasl(k: int, exp: list[float], matched: list[float | None]) -> float
     if hi is not None:
         return matched[hi] - (exp[hi] - exp[k])
     return exp[k]
+
+
+def _count_waqf_marks(words: list) -> int:
+    """Count explicit stop signs available in the bundled mushaf text."""
+    return sum(
+        1
+        for w in words
+        for ch in str(getattr(w, "text", ""))
+        if ch in _WAQF_STOP_SIGNS
+    )
+
+
+def _ambiguous_openings(
+    openings: list[str],
+    *,
+    lookahead: int = _MATCH_LOOKAHEAD,
+    prefix_chars: int = _AMBIG_PREFIX_CHARS,
+) -> set[int]:
+    """Indices whose opening text shares an actual prefix with a nearby ayah."""
+    ambiguous: set[int] = set()
+    for i, opening in enumerate(openings):
+        hi = min(len(openings), i + max(1, lookahead) + 1)
+        ci = _collapse(opening)
+        for k in range(i + 1, hi):
+            ck = _collapse(openings[k])
+            common = 0
+            for a, b in zip(ci, ck):
+                if a != b:
+                    break
+                common += 1
+            if common >= prefix_chars:
+                ambiguous.add(i)
+                ambiguous.add(k)
+    return ambiguous
+
+
+def _sequential_pause_match(
+    exp: list[float],
+    ons: list[float],
+    sim: Callable[[int, int], float],
+    *,
+    min_sim: float,
+    prior_window_ms: float,
+    recover_min_sim: float | None = None,
+    lookahead: int = _MATCH_LOOKAHEAD,
+    future_margin: float = _FUTURE_MATCH_MARGIN,
+    max_candidates: int = _MATCH_MAX_SKIP,
+    reject: Callable[[int, int, float], str | None] | None = None,
+) -> tuple[list[float | None], list[dict]]:
+    """Sequentially confirm ayah boundaries from pause decodes.
+
+    ``exp`` and ``ons`` are boundary/pause times in milliseconds. ``sim(i, j)``
+    says how well the short decode after pause ``j`` matches boundary ``i``'s
+    ayah opening. The matcher walks forward: a pause can confirm the current
+    boundary, be skipped as an internal/weak pause, or reveal that we jumped to a
+    future ayah. In the latter case, skipped boundaries are recovered from the
+    pauses before the future anchor when possible.
+    """
+    n = len(exp)
+    if n == 0:
+        return [], []
+    if not ons:
+        return [None] * n, [
+            {"boundary": i, "action": "wasl", "reason": "no_pauses"}
+            for i in range(n)
+        ]
+
+    matched: list[float | None] = [None] * n
+    events: list[dict] = []
+    j_cursor = 0
+    k = 0
+    recover_pool: list[int] = []
+    if recover_min_sim is None:
+        recover_min_sim = min_sim
+
+    def reject_reason(i: int, j: int, s: float) -> str | None:
+        if s < min_sim:
+            return "low_sim"
+        return reject(i, j, s) if reject is not None else None
+
+    def score(i: int, j: int) -> float:
+        dist_pen = min(1.0, abs(ons[j] - exp[i]) / max(1.0, prior_window_ms))
+        return sim(i, j) - 0.18 * dist_pen
+
+    def label_pause(i0: int, j: int) -> tuple[int, float]:
+        current_s = sim(i0, j)
+        best_i, best_s, best_score = i0, current_s, score(i0, j)
+        hi = min(n - 1, i0 + max(0, lookahead))
+        for i in range(i0 + 1, hi + 1):
+            s = sim(i, j)
+            reason = reject_reason(i, j, s)
+            if reason is not None:
+                continue
+            sc = score(i, j)
+            if sc > best_score:
+                best_i, best_s, best_score = i, s, sc
+        if best_i > i0 and best_s >= current_s + future_margin:
+            return best_i, best_s
+        return i0, current_s
+
+    def accept(i: int, j: int, *, action: str) -> None:
+        s = sim(i, j)
+        matched[i] = ons[j]
+        events.append({
+            "boundary": i,
+            "pause": j,
+            "action": action,
+            "sim": round(s, 3),
+            "expected_ms": round(exp[i], 1),
+            "pause_ms": round(ons[j], 1),
+            "expected_delta_ms": round(ons[j] - exp[i], 1),
+        })
+
+    def recover_missing(i0: int, i1: int, js: list[int]) -> None:
+        last_recovered = -1
+        recover_js = sorted(dict.fromkeys(js))
+        for i in range(i0, i1):
+            best_j, best_s, best_score = -1, 0.0, -1e9
+            for j in recover_js:
+                if j <= last_recovered or matched.count(ons[j]) > 0:
+                    continue
+                s = sim(i, j)
+                if s < recover_min_sim:
+                    continue
+                hard_reason = reject(i, j, s) if reject is not None else None
+                if hard_reason is not None and hard_reason != "future_better":
+                    continue
+                sc = score(i, j)
+                if sc > best_score:
+                    best_j, best_s, best_score = j, s, sc
+            if best_j >= 0:
+                accept(i, best_j, action="recovered")
+                last_recovered = best_j
+            else:
+                events.append({
+                    "boundary": i,
+                    "action": "wasl",
+                    "reason": "missing_before_future",
+                    "best_sim": round(best_s, 3),
+                    "expected_ms": round(exp[i], 1),
+                })
+
+    while k < n:
+        upper_i = min(n - 1, k + max(0, lookahead))
+        lower = exp[k] - prior_window_ms
+        upper = exp[upper_i] + prior_window_ms
+        while j_cursor < len(ons) and ons[j_cursor] < lower:
+            events.append({
+                "boundary": k,
+                "pause": j_cursor,
+                "action": "early_pool",
+                "reason": "before_expected_window",
+                "pause_ms": round(ons[j_cursor], 1),
+            })
+            recover_pool.append(j_cursor)
+            j_cursor += 1
+
+        candidates: list[int] = []
+        j = j_cursor
+        while j < len(ons) and ons[j] <= upper and len(candidates) < max_candidates:
+            candidates.append(j)
+            j += 1
+        if not candidates:
+            events.append({
+                "boundary": k,
+                "action": "wasl",
+                "reason": "no_pause_in_window",
+                "expected_ms": round(exp[k], 1),
+            })
+            k += 1
+            continue
+
+        pending: list[int] = []
+        advanced = False
+        for j in candidates:
+            heard_i, heard_s = label_pause(k, j)
+            reason = reject_reason(heard_i, j, heard_s)
+            if heard_i == k and reason is None:
+                for extra_j in recover_pool + pending:
+                    events.append({
+                        "boundary": k,
+                        "pause": extra_j,
+                        "action": "extra",
+                        "reason": "low_or_internal_before_confirmed",
+                        "sim": round(sim(k, extra_j), 3),
+                        "pause_ms": round(ons[extra_j], 1),
+                    })
+                accept(k, j, action="confirmed")
+                j_cursor = j + 1
+                recover_pool = []
+                k += 1
+                advanced = True
+                break
+            if heard_i > k and reason is None:
+                events.append({
+                    "boundary": k,
+                    "pause": j,
+                    "action": "future_gap",
+                    "heard_boundary": heard_i,
+                    "heard_sim": round(heard_s, 3),
+                    "current_sim": round(sim(k, j), 3),
+                    "pause_ms": round(ons[j], 1),
+                })
+                recover_missing(k, heard_i, recover_pool + pending)
+                accept(heard_i, j, action="future_anchor")
+                j_cursor = j + 1
+                recover_pool = []
+                k = heard_i + 1
+                advanced = True
+                break
+            pending.append(j)
+
+        if not advanced:
+            best_s = max((sim(k, j) for j in candidates), default=0.0)
+            for extra_j in pending:
+                events.append({
+                    "boundary": k,
+                    "pause": extra_j,
+                    "action": "extra",
+                    "reason": "no_confirmed_match",
+                    "sim": round(sim(k, extra_j), 3),
+                    "pause_ms": round(ons[extra_j], 1),
+                })
+                recover_pool.append(extra_j)
+            events.append({
+                "boundary": k,
+                "action": "wasl",
+                "reason": "no_confirmed_match",
+                "best_sim": round(best_s, 3),
+                "expected_ms": round(exp[k], 1),
+            })
+            j_cursor = max(j_cursor, candidates[-1] + 1)
+            k += 1
+
+    return matched, events
 
 
 def align_surah_fast(
@@ -479,9 +764,20 @@ def align_surah_fast(
     pauses = [d.pause for d in pause_decisions if d.accepted]
     pause_diag = {d.pause: d for d in pause_decisions}
     pause_onsets = sorted(p.center_ms for p in pauses)
+    ayah_boundary_count = max(0, len(ayah_list) - 1)
+    waqf_mark_count = _count_waqf_marks(words)
+    expected_pause_targets = ayah_boundary_count + waqf_mark_count
+    accepted_pause_count = len(pauses)
+    rejected_pause_count = len(pause_decisions) - accepted_pause_count
     emit(
         f"Сура {surah}: старт fast-разметки, длительность {sec(total_ms)} сек., "
         f"найдено пауз: {len(pauses)}"
+    )
+    emit(
+        f"Бюджет пауз: границ аятов {ayah_boundary_count}, "
+        f"waqf-знаков {waqf_mark_count}, ожидаемых целей ~{expected_pause_targets}; "
+        f"принято пауз {accepted_pause_count}, отклонено {rejected_pause_count}, "
+        f"отношение {accepted_pause_count / max(1, expected_pause_targets):.2f}"
     )
     for idx, p in enumerate(pauses, 1):
         d = pause_diag.get(p)
@@ -598,12 +894,16 @@ def align_surah_fast(
         "".join(word_trs[i] for i in ayah_words[a][:4] if i < len(word_trs))
         for a in inner
     ]
-    decode_win_ms = 2500.0  # long enough to reach a distinguishing word in slow melisma
-    pause_decodes: dict[int, str] = {}
+    ambiguous_opening_idx = _ambiguous_openings(openings)
+    decode_win_ms = _PAUSE_DECODE_WIN_MS
+    decode_ambig_win_ms = max(decode_win_ms, _PAUSE_DECODE_AMBIG_WIN_MS)
+    pause_decodes: dict[tuple[int, bool], str] = {}
+    pause_decode_reasons: dict[float, str] = {}
     pause_decode_starts: dict[float, float] = {}
 
-    def decode_pause(j: int) -> str:
-        heard = pause_decodes.get(j)
+    def decode_pause(j: int, *, extended: bool = False) -> str:
+        key = (j, extended)
+        heard = pause_decodes.get(key)
         if heard is not None:
             return heard
         p = pause_onsets[j]
@@ -612,27 +912,34 @@ def align_surah_fast(
             max(0.0, pause.end_ms - _PAUSE_DECODE_PRE_ROLL_MS)
             if pause is not None else max(0.0, p - 50.0)
         )
-        decode_end = min(total_ms, decode_start + decode_win_ms)
+        win_ms = decode_ambig_win_ms if extended else decode_win_ms
+        decode_end = min(total_ms, decode_start + win_ms)
         edge_delta = decode_start - pause.end_ms if pause is not None else 0.0
         pause_decode_starts[p] = decode_start
-        emissions_for(p - 1400.0, decode_end)  # populate cache for refine reuse
+        pause_decode_reasons[p] = "ambiguous-opening" if extended else "default"
+        emissions_for(max(0.0, decode_start - _PAUSE_CACHE_PRE_ROLL_MS), decode_end)
         heard = greedy_decode(decode_start, decode_end)
-        pause_decodes[j] = heard
+        pause_decodes[key] = heard
         emit(
             f"Пауза {pause_ord[p]}: чтение аудио {(decode_end - decode_start) / 1000.0:.2f} сек. "
-            f"вокруг центра {sec(p)} сек. ({sec(decode_start)}-{sec(decode_end)}), "
+            f"после паузы {sec(pause.end_ms if pause is not None else p)} сек. "
+            f"({sec(decode_start)}-{sec(decode_end)}), "
             f"старт относительно конца паузы {edge_delta:+.0f}мс, "
-            f"услышано «{short(heard)}»"
+            f"reason={pause_decode_reasons[p]}, услышано «{short(heard)}»"
         )
         return heard
 
-    sim_cache: dict[tuple[int, int], float] = {}
+    sim_cache: dict[tuple[int, int, bool], float] = {}
+
+    def needs_extended_decode(i: int, j: int) -> bool:
+        return i in ambiguous_opening_idx and prior_delta(i, j) <= _AMBIG_DECODE_PRIOR_MS
 
     def _sim_ij(i: int, j: int) -> float:
-        key = (i, j)
+        extended = needs_extended_decode(i, j)
+        key = (i, j, extended)
         s = sim_cache.get(key)
         if s is None:
-            s = _sim(decode_pause(j), openings[i])
+            s = _sim(decode_pause(j, extended=extended), openings[i])
             sim_cache[key] = s
         return s
 
@@ -641,6 +948,33 @@ def align_surah_fast(
 
     def far_weak_match(i: int, j: int, s: float) -> bool:
         return prior_delta(i, j) > _MATCH_PRIOR_WINDOW_MS and s < _FAR_MATCH_SIM
+
+    def weak_pause(j: int) -> bool:
+        pause = pause_by_center.get(pause_onsets[j])
+        diag = pause_diag.get(pause) if pause is not None else None
+        return bool(diag is not None and diag.reason == "weak-dsp")
+
+    def prefix_mismatch(i: int, j: int, s: float) -> bool:
+        heard = decode_pause(j, extended=needs_extended_decode(i, j))
+        common = _common_prefix_len(heard, openings[i])
+        if s >= _PREFIX_BYPASS_SIM:
+            return False
+        min_prefix = _PREFIX_WEAK_MIN if weak_pause(j) else _PREFIX_STRONG_MIN
+        return common < min_prefix
+
+    def reject_match(i: int, j: int, s: float) -> str | None:
+        if far_weak_match(i, j, s):
+            return "far_from_expected"
+        if prefix_mismatch(i, j, s):
+            return "prefix_mismatch"
+        # If a pause clearly opens a later ayah, do not let the current ayah take
+        # it as a weak anchor; the sequential matcher will turn it into a
+        # future-gap event and recover/skips the missing span explicitly.
+        if _GATE_PEN and s < _GATE_SMAX:
+            for kk in (i + 1, i + 2):
+                if kk < len(openings) and _sim_ij(kk, j) > s + _GATE_MARGIN:
+                    return "future_better"
+        return None
 
     def acoustic_cost(i: int, j: int) -> float:
         s = _sim_ij(i, j)
@@ -661,30 +995,43 @@ def align_surah_fast(
                     break
         return cost
 
-    matched: list[float | None] = []
-    last_j = -1
-    for k in range(len(inner)):
-        near_js = [
-            j for j, p in enumerate(pause_onsets)
-            if j > last_j and prior_delta(k, j) <= _MATCH_PRIOR_WINDOW_MS
-        ]
-        if not near_js:
-            near_js = [
-                j for j, p in enumerate(pause_onsets)
-                if j > last_j and prior_delta(k, j) <= _MATCH_PRIOR_WINDOW_MS * 2.0
-            ][:6]
-        best_j, best_score, best_sim = -1, -1e9, 0.0
-        for j in near_js:
-            sim = _sim_ij(k, j)
-            dist_pen = min(1.0, prior_delta(k, j) / max(1.0, _MATCH_PRIOR_WINDOW_MS))
-            score = sim - 0.18 * dist_pen
-            if score > best_score:
-                best_j, best_score, best_sim = j, score, sim
-        if best_j >= 0 and best_sim >= _MIN_MATCH_SIM:
-            matched.append(pause_onsets[best_j])
-            last_j = best_j
-        else:
-            matched.append(None)
+    matched, sequence_events = _sequential_pause_match(
+        exp,
+        pause_onsets,
+        _sim_ij,
+        min_sim=_MIN_MATCH_SIM,
+        prior_window_ms=_MATCH_PRIOR_WINDOW_MS,
+        recover_min_sim=_RECOVER_MATCH_SIM,
+        reject=reject_match,
+    )
+    for ev in sequence_events:
+        action = ev.get("action")
+        if action == "future_gap":
+            j = ev.get("pause")
+            bi = ev.get("boundary")
+            hi = ev.get("heard_boundary")
+            if isinstance(j, int) and isinstance(bi, int) and isinstance(hi, int):
+                emit(
+                    f"Пауза {pause_ord.get(pause_onsets[j], '?')} звучит как аят "
+                    f"{inner[hi]}, а ожидался {inner[bi]}: sim={ev.get('heard_sim')}, "
+                    f"current_sim={ev.get('current_sim')} - ищу пропущенный участок"
+                )
+        elif action == "recovered":
+            j = ev.get("pause")
+            bi = ev.get("boundary")
+            if isinstance(j, int) and isinstance(bi, int):
+                emit(
+                    f"Пропущенный аят {inner[bi]} найден на паузе "
+                    f"{pause_ord.get(pause_onsets[j], '?')}: sim={ev.get('sim')}"
+                )
+        elif action == "wasl":
+            bi = ev.get("boundary")
+            if isinstance(bi, int):
+                emit(
+                    f"Аят {inner[bi]} без подтверждённой паузы: "
+                    f"reason={ev.get('reason')}, best_sim={ev.get('best_sim')} - "
+                    "передаю в локальный wasl-align"
+                )
     # ayah -> (rough_ms, from_pause). Wasl boundaries: interpolate between the
     # matched onsets that bracket them (anchored both sides — no drift).
     # First drop matches whose pause opening barely resembles the ayah — a likely
@@ -699,15 +1046,58 @@ def align_surah_fast(
                 continue
             j = pidx[mk]
             sim = _sim_ij(k, j)
+            action = next(
+                (
+                    str(ev.get("action"))
+                    for ev in sequence_events
+                    if ev.get("boundary") == k
+                    and ev.get("action") in ("confirmed", "recovered", "future_anchor")
+                ),
+                "",
+            )
+            min_keep_sim = _RECOVER_MATCH_SIM if action == "recovered" else drop_sim
             reason = None
-            if sim < drop_sim:
+            if sim < min_keep_sim:
                 reason = "low_sim"
             elif far_weak_match(k, j, sim):
                 reason = "far_from_expected"
             if reason is not None:
                 matched[k] = None
                 dropped_match_reason[k] = reason
+    sequence_reason = {
+        int(ev["boundary"]): str(ev.get("reason") or ev.get("action"))
+        for ev in sequence_events
+        if ev.get("action") == "wasl" and ev.get("boundary") is not None
+    }
+    sequence_action = {
+        int(ev["boundary"]): str(ev.get("action"))
+        for ev in sequence_events
+        if ev.get("action") in ("confirmed", "recovered", "future_anchor")
+        and ev.get("boundary") is not None
+    }
+    matched_center_for_ayah: dict[int, float] = {}
+
+    def pause_timing_point(center_ms: float) -> float:
+        return center_ms
+
+    def strong_pause(center_ms: float) -> bool:
+        pause = pause_by_center.get(center_ms)
+        diag = pause_diag.get(pause) if pause is not None else None
+        return bool(diag is not None and diag.reason != "weak-dsp")
+
+    def nearest_pause_point(t: float, *, strong_only: bool = False) -> float | None:
+        points: list[float] = []
+        for center in pause_onsets:
+            if strong_only and not strong_pause(center):
+                continue
+            points.append(center)
+            points.append(pause_timing_point(center))
+        if not points:
+            return None
+        return min(points, key=lambda p: abs(t - p))
+
     place: dict[int, tuple[float, bool]] = {}
+    pause_match_by_ayah: dict[int, dict] = {}
     for k, a in enumerate(inner):
         near_js = [
             j for j, _p in enumerate(pause_onsets)
@@ -727,13 +1117,25 @@ def align_surah_fast(
         if matched[k] is not None:
             j = pause_onsets.index(matched[k])
             sim = _sim_ij(k, j)
-            place[a] = (matched[k], True)
+            rough = pause_timing_point(matched[k])
+            matched_center_for_ayah[a] = matched[k]
+            place[a] = (rough, True)
+            pause = pause_by_center.get(matched[k])
+            pause_match_by_ayah[a] = {
+                "pause": pause_ord.get(matched[k]),
+                "sim": sim,
+                "center_ms": matched[k],
+                "rough_ms": rough,
+                "action": sequence_action.get(k),
+            }
             pause_match_debug.append({
                 "ayah": a,
                 "expected_ms": round(expected, 1),
-                "rough_ms": round(matched[k], 1),
+                "rough_ms": round(rough, 1),
                 "from_pause": True,
                 "pause": pause_ord.get(matched[k]),
+                "pause_center_ms": round(matched[k], 1),
+                "pause_end_ms": round(pause.end_ms, 1) if pause is not None else None,
                 "pause_sim": round(sim, 3),
                 "best_pause": pause_ord.get(pause_onsets[best_j]) if best_j >= 0 else None,
                 "best_sim": round(best_sim, 3),
@@ -742,18 +1144,19 @@ def align_surah_fast(
                 ),
                 "best_near_sim": round(best_near_sim, 3),
                 "prior_window_ms": round(_MATCH_PRIOR_WINDOW_MS, 1),
-                "expected_delta_ms": round(matched[k] - expected, 1),
+                "expected_delta_ms": round(rough - expected, 1),
                 "drop_reason": None,
+                "match_action": sequence_action.get(k),
             })
             emit(
                 f"Пауза {pause_ord.get(matched[k], '?')} -> детект аята {a}, "
-                f"черновой старт {sec(matched[k])} сек., sim={sim:.3f}, "
-                f"ожидание {sec(expected)} сек., delta_prior={matched[k] - expected:+.0f}мс, "
+                f"черновой старт {sec(rough)} сек., sim={sim:.3f}, "
+                f"ожидание {sec(expected)} сек., delta_prior={rough - expected:+.0f}мс, "
                 f"best_near={pause_ord.get(pause_onsets[best_near_j], '?') if best_near_j >= 0 else '?'}"
                 f"/{best_near_sim:.3f}"
             )
         else:
-            drop_reason = dropped_match_reason.get(k)
+            drop_reason = dropped_match_reason.get(k) or sequence_reason.get(k)
             rough = _interp_wasl(k, exp, matched)
             place[a] = (_interp_wasl(k, exp, matched), False)
             pause_match_debug.append({
@@ -772,6 +1175,7 @@ def align_surah_fast(
                 "prior_window_ms": round(_MATCH_PRIOR_WINDOW_MS, 1),
                 "expected_delta_ms": round(rough - expected, 1),
                 "drop_reason": drop_reason or "dp_wasl",
+                "match_action": "wasl",
             })
             emit(
                 f"Без паузы -> детект середины/wasl аята {a}, "
@@ -869,6 +1273,10 @@ def align_surah_fast(
     # the continuous forced alignment that the full path uses locally — and read
     # off each ayah's first-word onset. Accurate and one read per run.
     wasl_onsets: dict[int, tuple[float, float]] = {}
+    wasl_pause_hints: dict[int, float] = {}
+
+    def ayah_opening(a: int) -> str:
+        return "".join(word_trs[i] for i in ayah_words[a][:4] if i < len(word_trs))
 
     def fill_wasl_run(ai: int) -> None:
         left_a = ayah_list[ai - 1]  # always an anchor (run starts after one)
@@ -901,7 +1309,16 @@ def align_surah_fast(
                 wasl_onsets[a] = (place[a][0], 0.0)
             else:
                 k = fa - i0
-                wasl_onsets[a] = (res["starts"][k], res["confs"][k])
+                onset = res["starts"][k]
+                verify = _sim(
+                    greedy_decode(onset - 50.0, onset + _VERIFY_WINDOW_MS),
+                    ayah_opening(a),
+                )
+                wasl_onsets[a] = (onset, max(res["confs"][k], verify))
+                hint = nearest_pause_point(onset, strong_only=True)
+                if hint is not None and abs(onset - hint) <= _WASL_PAUSE_HINT_MS:
+                    wasl_pause_hints[a] = hint
+                    wasl_onsets[a] = (hint, wasl_onsets[a][1])
         if res is not None:
             model_reads.append({
                 "phase": "wasl-run",
@@ -921,13 +1338,23 @@ def align_surah_fast(
 
         if from_pause:
             prev_start = starts_ms[ayah_list[ai - 1]]
-            # Pause-backed onsets are already ~200 ms accurate; a tiny window nails
-            # them. Position fixed by the global match → no cascade.
             c = min(max(c0, prev_start + 30.0), total_ms)
-            onset, conf, win_used = refine(c, fa, prev_start, 0, ayah=a)
-            reliable = onset is not None and conf >= conf_thresh
-            if not reliable:  # never locked on → trust the matched guess
-                onset = c if onset is None else onset
+            match = pause_match_by_ayah.get(a, {})
+            pause_sim = float(match.get("sim") or 0.0)
+            if pause_sim >= _PAUSE_TRUST_SIM:
+                onset, conf, win_used = c, max(conf_thresh, pause_sim), 0.0
+                reliable = True
+                emit(
+                    f"Пауза {match.get('pause', '?')} подтвердила аят {a}: "
+                    f"sim={pause_sim:.3f}, старт {sec(onset)} сек., refine не нужен"
+                )
+            else:
+                # Weak pause matches still get a tiny local forced-align window.
+                c = min(max(c0, prev_start + 30.0), total_ms)
+                onset, conf, win_used = refine(c, fa, prev_start, 0, ayah=a)
+                reliable = onset is not None and conf >= conf_thresh
+                if not reliable:  # never locked on → trust the matched guess
+                    onset = c if onset is None else onset
         else:
             if a not in wasl_onsets:
                 fill_wasl_run(ai)
@@ -939,9 +1366,16 @@ def align_surah_fast(
 
         starts_ms[a] = onset
         confs[a] = conf
-        tr_ayahs.append({"ayah": a, "rough_ms": c0, "from_pause": from_pause,
-                         "onset_ms": onset, "conf": round(conf, 3),
-                         "win_s": round(win_used, 2), "reliable": reliable})
+        tr_ayahs.append({
+            "ayah": a,
+            "rough_ms": c0,
+            "from_pause": from_pause,
+            "onset_ms": onset,
+            "conf": round(conf, 3),
+            "win_s": round(win_used, 2),
+            "reliable": reliable,
+            "refine_skipped": bool(from_pause and win_used == 0.0 and reliable),
+        })
 
     # --- Phase 2b — repair shifted runs using reliable neighbours. ----------
     # Char-prior compression can make the global match shift a run of boundaries
@@ -956,8 +1390,10 @@ def align_surah_fast(
     # spurious refine match — keep the original (sura 80 a3). Garbage-conf onsets
     # (< conf_thresh, never locked on) are exempt: geometry may move them freely
     # (sura 89 a23). ``pause_onsets`` is the detected pause grid from Phase 1c.
+    pause_grid = pause_onsets + [pause_timing_point(p) for p in pause_onsets]
+
     def _dist_pause(t: float) -> float:
-        return min((abs(t - p) for p in pause_onsets), default=1e9)
+        return min((abs(t - p) for p in pause_grid), default=1e9)
 
     # Measured tempo (ms per weighted unit) from reliable anchors — robust to the
     # basmala / trailing silence that inflates the global ``rate``; used to
@@ -1001,6 +1437,20 @@ def align_surah_fast(
             # boundary at all. Geometry between two reliable anchors beats model
             # noise, so fall back to the interpolated guess in that case.
             chosen = o2 if c2 >= conf_thresh else pred
+            old_onset = starts_ms.get(a, pred)
+            pause_hint = wasl_pause_hints.get(a)
+            if (
+                pause_hint is not None
+                and abs(old_onset - pause_hint) <= _WASL_PAUSE_HINT_MS
+                and abs(chosen - pause_hint)
+                > abs(old_onset - pause_hint) + _REPAIR_PAUSE_PULL_MS
+            ):
+                emit(
+                    f"Repair аята {a} отклонён: wasl-старт {sec(old_onset)} сек. "
+                    f"рядом с сильной паузой {sec(pause_hint)} сек., "
+                    f"новый старт {sec(chosen)} сек. уводит от неё"
+                )
+                continue
             # Don't pull a decent pause-backed onset off the pause grid (spurious).
             if (place[a][1] and confs.get(a, 0.0) >= conf_thresh
                     and _dist_pause(chosen) > 350.0):
@@ -1015,11 +1465,32 @@ def align_surah_fast(
     def write_fast_trace(extra: dict | None = None) -> None:
         if trace is None:
             return
-        pause_decode_by_ord = {
-            pause_ord[p]: heard
-            for i, heard in pause_decodes.items()
-            for p in [pause_onsets[i]]
+        pause_decode_by_ord: dict[int, str] = {}
+        for (i, extended), heard in pause_decodes.items():
+            p = pause_onsets[i]
+            if extended or pause_ord[p] not in pause_decode_by_ord:
+                pause_decode_by_ord[pause_ord[p]] = heard
+        used_pause_ord = {
+            int(item["pause"])
+            for item in pause_match_debug
+            if item.get("pause") is not None
         }
+
+        def sequence_trace_event(ev: dict) -> dict:
+            out = dict(ev)
+            boundary = out.pop("boundary", None)
+            if isinstance(boundary, int) and 0 <= boundary < len(inner):
+                out["ayah"] = inner[boundary]
+            heard_boundary = out.pop("heard_boundary", None)
+            if isinstance(heard_boundary, int) and 0 <= heard_boundary < len(inner):
+                out["heard_ayah"] = inner[heard_boundary]
+            pause_idx = out.get("pause")
+            if isinstance(pause_idx, int) and 0 <= pause_idx < len(pause_onsets):
+                out["pause_idx"] = pause_ord.get(pause_onsets[pause_idx])
+                out["pause_center_ms"] = round(pause_onsets[pause_idx], 1)
+                del out["pause"]
+            return out
+
         trace["phase1_pauses"] = [
             {
                 "idx": pause_ord.get(p.center_ms),
@@ -1028,10 +1499,16 @@ def align_surah_fast(
                 "center_ms": round(p.center_ms, 1),
                 "depth_ms": round(p.depth_ms, 1),
                 "reason": pause_diag[p].reason if p in pause_diag else None,
+                "quality": (
+                    "weak"
+                    if p in pause_diag and pause_diag[p].reason == "weak-dsp"
+                    else "strong"
+                ),
                 "rms_ratio": round(pause_diag[p].rms_ratio, 4) if p in pause_diag else None,
                 "flatness": round(pause_diag[p].flatness, 4) if p in pause_diag else None,
                 "zcr": round(pause_diag[p].zcr, 4) if p in pause_diag else None,
                 "vad_ok": pause_diag[p].vad_ok if p in pause_diag else None,
+                "decode_reason": pause_decode_reasons.get(p.center_ms),
                 "decode_start_vs_pause_end_ms": round(
                     (
                         pause_ord.get(p.center_ms)
@@ -1044,6 +1521,29 @@ def align_surah_fast(
             for p in pauses
         ]
         trace["pause_matches"] = pause_match_debug
+        trace["pause_sequence_events"] = [
+            sequence_trace_event(ev) for ev in sequence_events
+        ]
+        trace["pause_budget"] = {
+            "ayah_boundaries": ayah_boundary_count,
+            "waqf_marks": waqf_mark_count,
+            "expected_pause_targets": expected_pause_targets,
+            "candidate_pauses": len(pause_decisions),
+            "accepted_pauses": accepted_pause_count,
+            "rejected_pauses": rejected_pause_count,
+            "used_pauses": len(used_pause_ord),
+            "decoded_pauses": len({i for i, _extended in pause_decodes}),
+            "decode_reads": len(pause_decodes),
+            "ambiguous_openings": [
+                inner[i] for i in sorted(ambiguous_opening_idx)
+            ],
+            "pause_target_ratio": round(
+                accepted_pause_count / max(1, expected_pause_targets), 3
+            ),
+            "used_accept_ratio": round(
+                len(used_pause_ord) / max(1, accepted_pause_count), 3
+            ),
+        }
         trace["model_reads"] = model_reads
         trace["ayahs"] = tr_ayahs
         trace["audio_ms"] = audio_ms
@@ -1052,6 +1552,7 @@ def align_surah_fast(
         trace["n_wasl"] = sum(
             1 for t in tr_ayahs if not t["from_pause"] and t["ayah"] != ayah_list[0]
         )
+        trace["n_refine_skipped"] = sum(1 for t in tr_ayahs if t.get("refine_skipped"))
         trace["coverage"] = round(audio_ms / total_ms, 3) if total_ms else 0.0
         if extra:
             trace.update(extra)
@@ -1064,17 +1565,41 @@ def align_surah_fast(
     mean_conf = sum(inner_confs) / len(inner_confs) if inner_confs else 1.0
     # Independent check: does the audio at each placed boundary actually sound like
     # that ayah's opening? Low across the board ⇒ drift (mean-conf can miss this).
-    vsims = [
-        _sim(greedy_decode(starts_ms[a] - 50.0, starts_ms[a] + 2500.0), openings[k])
-        for k, a in enumerate(inner) if a in starts_ms
-    ]
+    pidx_by_onset = {ms: j for j, ms in enumerate(pause_onsets)}
+    verify_extra_reads = 0
+    vsims = []
+    for k, a in enumerate(inner):
+        if a not in starts_ms:
+            continue
+        heard = ""
+        rough, from_pause = place.get(a, (None, False))
+        if from_pause and rough is not None:
+            center = matched_center_for_ayah.get(a, rough)
+            j = pidx_by_onset.get(center)
+            if j is not None:
+                heard = decode_pause(j, extended=needs_extended_decode(k, j))
+        if not heard:
+            verify_extra_reads += 1
+            heard = greedy_decode(starts_ms[a] - 50.0, starts_ms[a] + _VERIFY_WINDOW_MS)
+        vsims.append(_sim(heard, openings[k]))
     verify_sim = sum(vsims) / len(vsims) if vsims else 1.0
     if trace is not None:
         trace["verify_sim"] = round(verify_sim, 3)
         trace["mean_conf"] = round(mean_conf, 3)
-    drifted = (_FALLBACK_CONF and mean_conf < _FALLBACK_CONF) or (
-        _VERIFY_SIM and verify_sim < _VERIFY_SIM
-    )
+        trace["verify_extra_reads"] = verify_extra_reads
+        trace["pause_coverage"] = round(
+            sum(1 for t in tr_ayahs if t["from_pause"]) / max(1, len(inner)),
+            3,
+        )
+    pause_coverage = sum(1 for t in tr_ayahs if t["from_pause"]) / max(1, len(inner))
+    drifted = bool(_VERIFY_SIM and verify_sim < _VERIFY_SIM)
+    if (
+        not drifted
+        and _FALLBACK_CONF
+        and mean_conf < _FALLBACK_CONF
+        and pause_coverage < _DRIFT_MIN_PAUSE_COVERAGE
+    ):
+        drifted = True
     if drifted:
         emit(
             f"Сура {surah}: fast заподозрил дрейф "

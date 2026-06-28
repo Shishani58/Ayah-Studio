@@ -667,6 +667,7 @@ def _fast_trace_summary(trace: dict[str, Any]) -> dict[str, Any]:
         "coverage": trace.get("coverage"),
         "n_pause": trace.get("n_pause"),
         "n_wasl": trace.get("n_wasl"),
+        "n_refine_skipped": trace.get("n_refine_skipped"),
         "reliable": reliable,
         "repaired": repaired,
         "ayahs": len(ayahs),
@@ -823,6 +824,15 @@ def _format_fast_log(
         "",
         f"1. Паузы: energy нашёл {total}; DSP/VAD принял {accepted}; отклонил {rejected}.",
     ]
+    budget = trace.get("pause_budget") or {}
+    if budget:
+        lines.append(
+            "   бюджет: границ аятов {ayah_boundaries}, waqf {waqf_marks}, "
+            "ожидаемых целей ~{expected_pause_targets}, использовано {used_pauses}, "
+            "прочитано пауз {decoded_pauses}, ratio={pause_target_ratio}".format(
+                **budget
+            )
+        )
     for i, d in enumerate(decisions, 1):
         status = "OK" if d.accepted else "BAD"
         vad = "—" if d.vad_ok is None else ("ok" if d.vad_ok else "bad")
@@ -835,7 +845,40 @@ def _format_fast_log(
 
     lines += [
         "",
-        "2. Нейро-чтение окон:",
+        "2. Последовательный анализ пауз:",
+    ]
+    events = trace.get("pause_sequence_events") or []
+    shown = 0
+    extra_count = sum(1 for e in events if e.get("action") == "extra")
+    for e in events:
+        if e.get("action") in ("extra", "early_pool"):
+            continue
+        shown += 1
+        pause = e.get("pause_idx", "—")
+        ayah = e.get("ayah", "—")
+        if e.get("action") == "future_gap":
+            lines.append(
+                f"   pause {pause}: слышен аят {e.get('heard_ayah')} вместо {ayah}; "
+                f"heard_sim={e.get('heard_sim')} current_sim={e.get('current_sim')}"
+            )
+        elif e.get("action") in ("confirmed", "recovered", "future_anchor"):
+            lines.append(
+                f"   pause {pause}: {e.get('action')} ayah={ayah} "
+                f"sim={e.get('sim')} delta={e.get('expected_delta_ms')}ms"
+            )
+        elif e.get("action") == "wasl":
+            lines.append(
+                f"   ayah {ayah}: wasl/local-align reason={e.get('reason')} "
+                f"best_sim={e.get('best_sim')}"
+            )
+    if extra_count:
+        lines.append(f"   internal/extra pauses skipped: {extra_count}")
+    if not shown and not extra_count:
+        lines.append("   нет событий")
+
+    lines += [
+        "",
+        "3. Нейро-чтение окон:",
     ]
     reads = trace.get("model_reads") or []
     for i, r in enumerate(reads, 1):
@@ -855,7 +898,7 @@ def _format_fast_log(
 
     lines += [
         "",
-        "3. Соотношение пауз и аятов:",
+        "4. Соотношение пауз и аятов:",
     ]
     by_ayah = {t.get("ayah"): t for t in trace.get("ayahs", [])}
     for ayah, time_ms, conf in rows:
@@ -869,11 +912,13 @@ def _format_fast_log(
 
     lines += [
         "",
-        "4. Статистика нейро-чтения:",
+        "5. Статистика нейро-чтения:",
         f"   прочитано нейронкой: {trace.get('audio_ms', 0) / 1000.0:.2f}s",
         f"   длительность суры: {trace.get('total_ms', 0) / 1000.0:.2f}s",
         f"   покрытие окнами: {trace.get('coverage')}",
         f"   чтений окон: {len(reads)}",
+        f"   refine пропущен по подтверждённым паузам: {trace.get('n_refine_skipped')}",
+        f"   verify extra reads: {trace.get('verify_extra_reads')}",
         "",
         f"coverage={trace.get('coverage')} audio_ms_read={round(trace.get('audio_ms', 0))} "
         f"total_ms={round(trace.get('total_ms', 0))} n_pause={trace.get('n_pause')} "
