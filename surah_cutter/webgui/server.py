@@ -827,11 +827,15 @@ def _format_fast_log(
     budget = trace.get("pause_budget") or {}
     if budget:
         lines.append(
-            "   бюджет: границ аятов {ayah_boundaries}, waqf {waqf_marks}, "
-            "ожидаемых целей ~{expected_pause_targets}, использовано {used_pauses}, "
-            "прочитано пауз {decoded_pauses}, ratio={pause_target_ratio}".format(
-                **budget
-            )
+            f"   бюджет: границ аятов {budget.get('ayah_boundaries')}, "
+            f"waqf {budget.get('waqf_marks')}, "
+            f"ожидаемых целей ~{budget.get('expected_pause_targets')}, "
+            f"trusted {budget.get('trusted_pauses')}, weak {budget.get('weak_pauses')}, "
+            f"active {budget.get('active_pauses')}, "
+            f"activated_low_conf {budget.get('activated_low_conf_pauses')}, "
+            f"использовано {budget.get('used_pauses')}, "
+            f"прочитано пауз {budget.get('decoded_pauses')}, "
+            f"micro {budget.get('micro_pauses')}, ratio={budget.get('pause_target_ratio')}"
         )
     for i, d in enumerate(decisions, 1):
         status = "OK" if d.accepted else "BAD"
@@ -859,12 +863,21 @@ def _format_fast_log(
         if e.get("action") == "future_gap":
             lines.append(
                 f"   pause {pause}: слышен аят {e.get('heard_ayah')} вместо {ayah}; "
-                f"heard_sim={e.get('heard_sim')} current_sim={e.get('current_sim')}"
+                f"heard_sim={e.get('heard_sim')} current_sim={e.get('current_sim')} "
+                f"tempo={e.get('tempo_score')}"
+            )
+        elif e.get("action") == "unresolved_current":
+            lines.append(
+                f"   pause {pause}: unresolved ayah={ayah}; "
+                f"лучше слышен {e.get('observed_ayah')} "
+                f"direction={e.get('direction')} sim={e.get('observed_sim')} "
+                f"best_current={e.get('best_sim')}"
             )
         elif e.get("action") in ("confirmed", "recovered", "future_anchor"):
             lines.append(
                 f"   pause {pause}: {e.get('action')} ayah={ayah} "
-                f"sim={e.get('sim')} delta={e.get('expected_delta_ms')}ms"
+                f"sim={e.get('sim')} tempo={e.get('tempo_score')} "
+                f"delta={e.get('expected_delta_ms')}ms"
             )
         elif e.get("action") == "wasl":
             lines.append(
@@ -873,6 +886,13 @@ def _format_fast_log(
             )
     if extra_count:
         lines.append(f"   internal/extra pauses skipped: {extra_count}")
+    micro = trace.get("micro_pauses") or []
+    for item in micro:
+        lines.append(
+            f"   micro ayah={item.get('ayah')} status={item.get('status')} "
+            f"expected={item.get('expected_ms')} center={item.get('center_ms')} "
+            f"rms={item.get('rms_ratio')}"
+        )
     if not shown and not extra_count:
         lines.append("   нет событий")
 
@@ -901,13 +921,17 @@ def _format_fast_log(
         "4. Соотношение пауз и аятов:",
     ]
     by_ayah = {t.get("ayah"): t for t in trace.get("ayahs", [])}
+    by_match = {m.get("ayah"): m for m in trace.get("pause_matches", [])}
     for ayah, time_ms, conf in rows:
         t = by_ayah.get(ayah, {})
+        m = by_match.get(ayah, {})
         src = "pause" if t.get("from_pause") else ("anchor" if ayah == 1 else "wasl/interp")
         lines.append(
             f"   ayah {ayah:03d}: {time_ms}ms conf={conf:.3f} src={src} "
             f"rough={t.get('rough_ms')} onset={t.get('onset_ms')} "
-            f"win={t.get('win_s')} reliable={t.get('reliable')}"
+            f"win={t.get('win_s')} reliable={t.get('reliable')} "
+            f"tempo={m.get('tempo_score')} span_prev={m.get('prev_span_ratio')} "
+            f"span_next={m.get('next_span_ratio')} waqf={m.get('waqf_before')}/{m.get('waqf_after')}"
         )
 
     lines += [

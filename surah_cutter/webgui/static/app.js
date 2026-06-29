@@ -209,9 +209,12 @@ function handleGenEvent(d) {
   }
   else if (d.type === "sura") {
     setProgress(d.index + 1, GEN.total, `${d.index + 1} / ${GEN.total}`);
-    const fast = d.fast_trace ? ` · пауз ${d.fast_trace.n_pause}, wasl ${d.fast_trace.n_wasl}, окно ${(d.fast_trace.coverage || 0).toFixed(2)}×` : "";
+    const fast = d.fast_trace
+      ? ` · пауз ${d.fast_trace.n_pause}, wasl ${d.fast_trace.n_wasl}, окно ${(d.fast_trace.coverage || 0).toFixed(2)}×${d.fast_trace.drift_detected ? " · drift" : ""}`
+      : "";
     $("genCur").textContent = `сура ${d.surah} готова${d.written != null ? ` · ${d.written} аят.` : ""}${fast}`;
     if (d.log_paths && d.log_paths.log) appendLiveLog("genLog", `Лог сохранён: ${d.log_paths.log}`);
+    if (R.surah === d.surah) reloadSura();
     refreshSuras();
   }
   else if (d.type === "done") { endGenUI("done", d.completed); }
@@ -401,7 +404,7 @@ async function correctDraftSura() {
   if (R.surah == null) return;
   const generated = R.ayahs.some((a) => a.time != null);
   if (!generated) { setStatus("Сначала поставьте метки или разметьте суру по паузам."); return; }
-  const mode = selectedSuraMode() === "fast" ? "tiled" : selectedSuraMode();
+  const mode = selectedSuraMode();
   if (!confirm(`Запустить корректировку auto-тайм-кодов в режиме «${modeLabel(mode)}»? Ручные и проверенные метки не будут затронуты.`)) return;
   const btn = $("correctDraftBtn"), st = $("suraGenStatus");
   btn.disabled = true;
