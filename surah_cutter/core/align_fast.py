@@ -53,14 +53,32 @@ _GATE_SMAX = float(os.environ.get("SC_FAST_GATE_SMAX", "0.50"))
 #: so the continuous fill (≈ local full) places it, instead of trusting a breath
 #: pause. Kept env-tunable because some reciters decode noisier than others.
 _WASL_SIM = float(os.environ.get("SC_FAST_WASL_SIM", "0.36"))
-#: Harder gate for accepting a pause as an ayah anchor. Values below this are
-#: still logged, but are treated as too weak to be a real boundary match.
-_MIN_MATCH_SIM = float(os.environ.get("SC_FAST_MIN_MATCH_SIM", "0.40"))
+#: Hard gate for accepting a pause as an ayah anchor. Short greedy decodes can
+#: be noisy on brief openings, so this matches the recovery floor; stricter
+#: confirmation still uses ``_CONFIRM_MATCH_SIM``.
+_MIN_MATCH_SIM = float(os.environ.get("SC_FAST_MIN_MATCH_SIM", "0.31"))
 _CONFIRM_MATCH_SIM = float(os.environ.get("SC_FAST_CONFIRM_MATCH_SIM", "0.50"))
 #: Recovery pass is only used after a later pause already proved we skipped over
 #: an ayah. In that narrow context we can accept a slightly weaker similarity for
 #: an intermediate pause instead of forcing the ayah into a long wasl window.
 _RECOVER_MATCH_SIM = float(os.environ.get("SC_FAST_RECOVER_MATCH_SIM", "0.34"))
+_RECOVER_ECHO_SIM_SLACK = float(os.environ.get("SC_FAST_RECOVER_ECHO_SIM_SLACK", "0.07"))
+_FINAL_WEAK_MATCH_SIM = float(os.environ.get("SC_FAST_FINAL_WEAK_MATCH_SIM", "0.18"))
+_FINAL_WEAK_TEMPO_FLOOR = float(os.environ.get("SC_FAST_FINAL_WEAK_TEMPO_FLOOR", "-0.02"))
+_CONFIRMED_EARLY_CURRENT_SLACK = float(
+    os.environ.get("SC_FAST_CONFIRMED_EARLY_CURRENT_SLACK", "0.08")
+)
+_BASMALA_MIN_CONTENT_START_MS = float(
+    os.environ.get("SC_FAST_BASMALA_MIN_CONTENT_START_MS", "6000")
+)
+_SHORT_PAUSE_RIGHT_BIAS = float(os.environ.get("SC_FAST_SHORT_PAUSE_RIGHT_BIAS", "0.25"))
+_LONG_PAUSE_CENTER_MS = float(os.environ.get("SC_FAST_LONG_PAUSE_CENTER_MS", "1300"))
+_TRUSTED_PAUSE_CENTER_MS = float(os.environ.get("SC_FAST_TRUSTED_PAUSE_CENTER_MS", "1300"))
+_COMPACT_PAUSE_CENTER_MS = float(os.environ.get("SC_FAST_COMPACT_PAUSE_CENTER_MS", "1100"))
+_MICRO_BACKTRACK_MS = float(os.environ.get("SC_FAST_MICRO_BACKTRACK_MS", "3500"))
+_FAR_WEAK_CURRENT_GRACE_MS = float(os.environ.get("SC_FAST_FAR_WEAK_CURRENT_GRACE_MS", "9000"))
+_FAR_WEAK_CURRENT_SIM = float(os.environ.get("SC_FAST_FAR_WEAK_CURRENT_SIM", "0.42"))
+_FAR_CURRENT_MAX_OVERRIDE_MS = float(os.environ.get("SC_FAST_FAR_CURRENT_MAX_OVERRIDE_MS", "30000"))
 #: If the short decode after a pause already identifies the ayah this well, the
 #: pause edge is trusted as the timing and Phase 2 does not run another
 #: forced-align window for that boundary.
@@ -98,6 +116,7 @@ _AMBIG_DECODE_PRIOR_MS = float(os.environ.get("SC_FAST_AMBIG_DECODE_PRIOR_MS", "
 # decode to actually begin like the target opening before accepting such pauses.
 _PREFIX_WEAK_MIN = int(os.environ.get("SC_FAST_PREFIX_WEAK_MIN", "2"))
 _PREFIX_STRONG_MIN = int(os.environ.get("SC_FAST_PREFIX_STRONG_MIN", "0"))
+_PREFIX_BORDERLINE_MIN = int(os.environ.get("SC_FAST_PREFIX_BORDERLINE_MIN", "4"))
 _PREFIX_BYPASS_SIM = float(os.environ.get("SC_FAST_PREFIX_BYPASS_SIM", "0.62"))
 #: Small left context around speech resumption, cached with the pause decode so a
 #: later 1s refine window can reuse the same emissions instead of rereading.
@@ -157,11 +176,34 @@ def _collapse(s: str) -> str:
 
 def _common_prefix_len(a: str, b: str) -> int:
     """Length of the common collapsed prefix of two transliteration strings."""
+    return _common_prefix_len_collapsed(_collapse(a), _collapse(b))
+
+
+def _common_prefix_len_collapsed(a: str, b: str) -> int:
     common = 0
-    for ca, cb in zip(_collapse(a), _collapse(b)):
+    for ca, cb in zip(a, b):
         if ca != cb:
             break
         common += 1
+    return common
+
+
+def _prefix_key(s: str) -> str:
+    return _collapse("".join(c for c in s if c.isalnum()))
+
+
+def _onset_prefix_len(a: str, b: str) -> int:
+    """Common prefix for onset checks, tolerant of separator/noisy article loss."""
+    ak = _prefix_key(a)
+    bk = _prefix_key(b)
+    common = _common_prefix_len_collapsed(ak, bk)
+    variants: list[tuple[str, str]] = []
+    if ak.startswith("a") and bk.startswith("l"):
+        variants.append((ak[1:], bk))
+    if bk.startswith("a") and ak.startswith("l"):
+        variants.append((ak, bk[1:]))
+    for va, vb in variants:
+        common = max(common, _common_prefix_len_collapsed(va, vb))
     return common
 
 
@@ -284,18 +326,26 @@ def _find_micro_pause_valley(
 _SIM_CHARS = 26
 _SIM_TEXT_MARGIN_CHARS = int(os.environ.get("SC_FAST_SIM_TEXT_MARGIN_CHARS", "18"))
 _SIM_TEXT_MAX_CHARS = int(os.environ.get("SC_FAST_SIM_TEXT_MAX_CHARS", "96"))
+_SIM_PREFIX_WEIGHT = float(os.environ.get("SC_FAST_SIM_PREFIX_WEIGHT", "0.35"))
+_INTERNAL_REPEAT_MATCH_MARGIN = float(os.environ.get("SC_FAST_INTERNAL_REPEAT_MATCH_MARGIN", "0.08"))
 
 
 def _sim(dec: str, opening: str, *, chars: int = _SIM_CHARS) -> float:
     """Fuzzy similarity of a greedy-decoded onset to an ayah's opening tokens.
 
-    Both are collapsed (recitation stretches vowels) and capped at
-    ``chars`` chars. Returns ``[0, 1]``.
+    Both are collapsed (recitation stretches vowels) and capped at ``chars``
+    chars. The score is intentionally onset-aware: a decode that contains the
+    target later after a previous-ayah tail is worse than one that starts with
+    the target. Returns ``[0, 1]``.
     """
     chars = max(1, int(chars))
-    return difflib.SequenceMatcher(
-        None, _collapse(dec)[:chars], _collapse(opening)[:chars]
-    ).ratio()
+    dec_c = _collapse(dec)[:chars]
+    opening_c = _collapse(opening)[:chars]
+    fuzzy = difflib.SequenceMatcher(None, dec_c, opening_c).ratio()
+    common = _common_prefix_len(dec_c, opening_c)
+    prefix = common / max(1, min(chars, len(opening_c)))
+    weight = min(1.0, max(0.0, _SIM_PREFIX_WEIGHT))
+    return fuzzy * (1.0 - weight) + prefix * weight
 
 
 def _pause_refine_confirms_pause(
@@ -516,6 +566,47 @@ def _opening_shared_prefix_chars(
     return shared
 
 
+def _opening_internal_repeats(
+    openings: list[str],
+    bodies: list[str],
+    *,
+    prefix_chars: int = _AMBIG_PREFIX_CHARS,
+    max_chars: int = _SIM_TEXT_MAX_CHARS,
+) -> dict[int, tuple[int, str]]:
+    """Find target openings repeated inside the matching previous ayah body.
+
+    ``openings[i]`` is the real opening of the ayah whose boundary is being
+    placed. ``bodies[i]`` is the text before that boundary, usually the previous
+    ayah. A returned suffix means an internal pause in that body may sound like
+    the target ayah's start and needs a longer/read stricter comparison.
+    """
+    repeats: dict[int, tuple[int, str]] = {}
+    for i, opening in enumerate(openings):
+        if i >= len(bodies):
+            break
+        target = _collapse(opening)
+        body = _collapse(bodies[i])
+        if not target or len(body) <= prefix_chars:
+            continue
+        best_common = 0
+        best_suffix = ""
+        # Offset 0 is the previous ayah's own start; inter-ayah repeated starts
+        # are handled by _opening_shared_prefix_chars. Here only internal repeats
+        # can create a false boundary inside the previous ayah.
+        for pos in range(1, len(body)):
+            common = 0
+            for a, b in zip(target, body[pos:]):
+                if a != b:
+                    break
+                common += 1
+            if common > best_common:
+                best_common = common
+                best_suffix = body[pos:pos + max_chars]
+        if best_common >= prefix_chars:
+            repeats[i] = (best_common, best_suffix)
+    return repeats
+
+
 def _sequential_pause_match(
     exp: list[float],
     ons: list[float],
@@ -619,11 +710,29 @@ def _sequential_pause_match(
 
     def label_pause(i0: int, j: int) -> tuple[int, float]:
         current_s = sim(i0, j)
+        local_future_margin = future_margin
+        if min_sim <= current_s < recover_min_sim:
+            local_future_margin = min(local_future_margin, 0.06)
         global_i, global_s = observe_pause(j)
         if global_i < i0 and global_s >= current_s + future_margin:
             return global_i, global_s
+        if min_sim <= current_s < recover_min_sim and i0 + 1 < n:
+            next_s = sim(i0 + 1, j)
+            if next_s >= current_s + 0.05:
+                return i0 + 1, next_s
         observed_i, observed_s = observe_pause_local(i0, j)
-        if observed_i > i0 and observed_s >= current_s + future_margin:
+        if (
+            observed_i > i0 + 1
+            and current_s >= min_sim
+            and observed_s <= current_s + (2.0 * local_future_margin)
+            and abs(ons[j] - expected_ms(i0)) <= min(3000.0, 0.25 * prior_window_ms)
+        ):
+            return i0, current_s
+        if (
+            observed_i > i0
+            and observed_s >= current_s + local_future_margin
+            and ons[j] >= expected_ms(observed_i) - 0.5 * prior_window_ms
+        ):
             return observed_i, observed_s
         return i0, current_s
 
@@ -657,9 +766,81 @@ def _sequential_pause_match(
             **observation_fields(j, i),
         })
 
+    def choose_current(i: int, js: list[int]) -> int:
+        best_s = max(sim(i, jj) for jj in js)
+        near_best = [jj for jj in js if sim(i, jj) >= best_s - 0.05]
+        return min(near_best)
+
+    def current_with_recover_pool(i: int, js: list[int], pool: list[int]) -> list[int]:
+        if not js:
+            return js
+        best_s = max(sim(i, jj) for jj in js)
+        early_js = [
+            jj for jj in pool
+            if matched.count(ons[jj]) == 0
+            and observe_pause_local(i, jj)[0] == i
+            and (s := sim(i, jj)) >= best_s - _CONFIRMED_EARLY_CURRENT_SLACK
+            and not far_weak_current(i, jj, s)
+        ]
+        return sorted(dict.fromkeys(early_js + js))
+
+    def pause_order_current_before_late_confirmed(i: int, j_confirmed: int, skipped: list[int]) -> int | None:
+        """Prefer the local pause-order candidate over a far repeated opening.
+
+        In repeated openings a later ayah may decode with a stronger textual
+        similarity than the real current pause.  If the strong match is far from
+        the tempo-predicted current boundary, choose an earlier skipped pause
+        that is near the expected position and locally labels as the current
+        boundary.
+        """
+        confirmed_dist = ons[j_confirmed] - expected_ms(i)
+        if confirmed_dist <= _FAR_WEAK_CURRENT_GRACE_MS:
+            return None
+        floor = max(0.0, min_sim - _RECOVER_ECHO_SIM_SLACK - 0.02)
+        near_limit = min(
+            12_000.0,
+            max(3500.0, 0.30 * confirmed_dist, 0.25 * prior_window_ms),
+        )
+        choices: list[tuple[float, int]] = []
+        for jj in sorted(dict.fromkeys(skipped)):
+            if jj >= j_confirmed or matched.count(ons[jj]) > 0:
+                continue
+            s = sim(i, jj)
+            if s < floor:
+                continue
+            observed_i, observed_s = observe_pause_local(i, jj)
+            if observed_i != i:
+                continue
+            dist = abs(ons[jj] - expected_ms(i))
+            if dist > near_limit:
+                continue
+            hard_reason = reject(i, jj, s) if reject is not None else None
+            if hard_reason is not None and hard_reason != "future_better":
+                continue
+            dist_pen = min(1.0, dist / max(1.0, near_limit))
+            sc = max(s, observed_s) + max(0.0, bonus(i, jj)) - 0.05 * dist_pen
+            choices.append((sc, jj))
+        if not choices:
+            return None
+        return max(choices, key=lambda item: (item[0], -abs(ons[item[1]] - expected_ms(i))))[1]
+
+    def far_weak_current(i: int, j: int, s: float) -> bool:
+        dist = abs(ons[j] - expected_ms(i))
+        return (
+            (
+                dist > _FAR_WEAK_CURRENT_GRACE_MS
+                and s < _FAR_WEAK_CURRENT_SIM
+            )
+            or (
+                dist > _FAR_CURRENT_MAX_OVERRIDE_MS
+                and s < confirm_min_sim
+            )
+        )
+
     def recover_one(i: int, js: list[int]) -> int | None:
         recover_js = sorted(dict.fromkeys(js))
         best_j, best_s, best_score = -1, 0.0, -1e9
+        early_observed: list[int] = []
         for j in recover_js:
             if matched.count(ons[j]) > 0:
                 continue
@@ -667,9 +848,54 @@ def _sequential_pause_match(
             global_i, global_s = observe_pause(j)
             s = sim(i, j)
             effective_s = observed_s if observed_i == i else s
-            if effective_s + max(0.0, bonus(i, j)) < recover_min_sim:
+            current_dist = abs(ons[j] - expected_ms(i))
+            future_dist = abs(ons[j] - expected_ms(global_i)) if 0 <= global_i < n else prior_window_ms
+            near_current_observed = (
+                observed_i == i
+                and effective_s >= max(0.0, min_sim - _RECOVER_ECHO_SIM_SLACK)
+                and current_dist <= min(3000.0, 0.25 * prior_window_ms)
+            )
+            if near_current_observed:
+                early_observed.append(j)
+            near_current_prior = (
+                s >= max(0.0, min_sim - _RECOVER_ECHO_SIM_SLACK)
+                and current_dist <= 1500.0
+            )
+            near_current_future_echo = (
+                global_i > i
+                and s >= max(0.0, min_sim - _RECOVER_ECHO_SIM_SLACK)
+                and global_s <= s + (2.0 * future_margin)
+                and current_dist <= min(3000.0, 0.25 * prior_window_ms)
+                and current_dist + 1500.0 < future_dist
+            )
+            if (
+                not near_current_observed
+                and not near_current_prior
+                and not near_current_future_echo
+                and (
+                    effective_s + max(0.0, bonus(i, j)) < recover_min_sim
+                    or (
+                        current_dist > _FAR_WEAK_CURRENT_GRACE_MS
+                        and effective_s < _FAR_WEAK_CURRENT_SIM
+                    )
+                )
+            ):
+                events.append({
+                    "boundary": i,
+                    "pause": j,
+                    "action": "skip_recovery_low_sim",
+                    "sim": round(s, 3),
+                    "effective_sim": round(effective_s, 3),
+                    "pause_ms": round(ons[j], 1),
+                    **observation_fields(j, i),
+                })
                 continue
-            if global_i != i and global_s > effective_s:
+            if (
+                global_i != i
+                and global_s > effective_s
+                and (observed_i != i or global_i > i)
+                and not near_current_future_echo
+            ):
                 events.append({
                     "boundary": i,
                     "pause": j,
@@ -680,13 +906,38 @@ def _sequential_pause_match(
                 })
                 continue
             hard_reason = reject(i, j, s) if reject is not None else None
-            if hard_reason is not None and hard_reason != "future_better" and observed_i != i:
+            if (
+                hard_reason is not None
+                and hard_reason != "future_better"
+                and observed_i != i
+                and not near_current_prior
+                and not near_current_future_echo
+            ):
+                events.append({
+                    "boundary": i,
+                    "pause": j,
+                    "action": "skip_recovery_reject",
+                    "reason": hard_reason,
+                    "sim": round(s, 3),
+                    "pause_ms": round(ons[j], 1),
+                    **observation_fields(j, i),
+                })
                 continue
             dist_pen = min(1.0, abs(ons[j] - expected_ms(i)) / max(1.0, prior_window_ms))
-            sc = effective_s - 0.03 * dist_pen + max(0.0, bonus(i, j))
+            sc = effective_s - 0.03 * dist_pen + min(0.03, max(0.0, bonus(i, j)))
+            if observed_i != i:
+                sc -= future_margin
             if sc > best_score:
                 best_j, best_s, best_score = j, effective_s, sc
         if best_j >= 0:
+            early_observed = [
+                j for j in early_observed
+                if ons[j] + 1500.0 < ons[best_j]
+                and abs(ons[j] - expected_ms(i)) <= abs(ons[best_j] - expected_ms(i)) + 500.0
+            ]
+            if early_observed:
+                best_j = min(early_observed)
+                best_s = sim(i, best_j)
             accept(i, best_j, action="recovered")
             return best_j
         events.append({
@@ -740,12 +991,81 @@ def _sequential_pause_match(
         for j in candidates:
             heard_i, heard_s = label_pause(k, j)
             reason = reject_reason(heard_i, j, heard_s)
-            found_current = (
-                heard_i == k
-                and reason is None
+            local_i, _local_s = observe_pause_local(k, j)
+            current_reason_ok = reason is None or (
+                reason == "far_from_expected"
+                and local_i == k
                 and heard_s >= min_sim
             )
+            found_current = (
+                heard_i == k
+                and current_reason_ok
+                and heard_s >= min_sim
+                and not far_weak_current(k, j, heard_s)
+                and (
+                    local_i == k
+                    or abs(ons[j] - expected_ms(k)) <= min(3000.0, 0.25 * prior_window_ms)
+                )
+            )
             if heard_i == k and reason is None and heard_s >= confirm_min_sim:
+                order_j = pause_order_current_before_late_confirmed(
+                    k,
+                    j,
+                    recover_pool + current_candidates + pending,
+                )
+                if order_j is not None:
+                    for extra_j in recover_pool + [
+                        jj for jj in pending + [j] if jj != order_j
+                    ]:
+                        events.append({
+                            "boundary": k,
+                            "pause": extra_j,
+                            "action": "extra",
+                            "reason": "late_confirmed_after_pause_order_current",
+                            "sim": round(sim(k, extra_j), 3),
+                            "pause_ms": round(ons[extra_j], 1),
+                            **observation_fields(extra_j, k),
+                        })
+                    accept(k, order_j, action="observed_current")
+                    j_cursor = order_j + 1
+                    recover_pool = []
+                    k += 1
+                    advanced = True
+                    break
+                early_current_js = [
+                    jj for jj in sorted(dict.fromkeys(current_candidates + pending))
+                    if observe_pause_local(k, jj)[0] == k
+                    and sim(k, jj) >= heard_s - _CONFIRMED_EARLY_CURRENT_SLACK
+                ]
+                if not early_current_js and heard_s < _PREFIX_BYPASS_SIM:
+                    early_current_js = [
+                        jj for jj in sorted(dict.fromkeys(recover_pool + current_candidates + pending))
+                        if matched.count(ons[jj]) == 0
+                        and ons[jj] < ons[j]
+                        and observe_pause_local(k, jj)[0] == k
+                        and sim(k, jj) >= min_sim
+                        and not far_weak_current(k, jj, sim(k, jj))
+                    ]
+                if early_current_js:
+                    best_current_j = min(early_current_js)
+                    for extra_j in recover_pool + [
+                        jj for jj in pending + [j] if jj != best_current_j
+                    ]:
+                        events.append({
+                            "boundary": k,
+                            "pause": extra_j,
+                            "action": "extra",
+                            "reason": "low_or_internal_before_observed_current",
+                            "sim": round(sim(k, extra_j), 3),
+                            "pause_ms": round(ons[extra_j], 1),
+                            **observation_fields(extra_j, k),
+                        })
+                    accept(k, best_current_j, action="observed_current")
+                    j_cursor = best_current_j + 1
+                    recover_pool = []
+                    k += 1
+                    advanced = True
+                    break
                 for extra_j in recover_pool + pending:
                     events.append({
                         "boundary": k,
@@ -775,6 +1095,25 @@ def _sequential_pause_match(
                 current_candidates.append(j)
                 pending.append(j)
                 continue
+            if heard_i == k and reason == "low_sim":
+                weak_floor = max(0.0, min_sim - _RECOVER_ECHO_SIM_SLACK - 0.02)
+                if (
+                    heard_s >= weak_floor
+                    and observe_pause_local(k, j)[0] == k
+                    and abs(ons[j] - expected_ms(k))
+                    <= min(3500.0, max(1800.0, 0.25 * prior_window_ms))
+                ):
+                    events.append({
+                        "boundary": k,
+                        "pause": j,
+                        "action": "pause_order_current_candidate",
+                        "sim": round(heard_s, 3),
+                        "min_confirm_sim": round(confirm_min_sim, 3),
+                        "pause_ms": round(ons[j], 1),
+                        **observation_fields(j, k),
+                    })
+                    pending.append(j)
+                    continue
             if heard_i == k and reason is None:
                 events.append({
                     "boundary": k,
@@ -787,9 +1126,30 @@ def _sequential_pause_match(
                 })
                 continue
             if heard_i < k and heard_s >= min_sim:
+                local_i, _local_s = observe_pause_local(k, j)
+                current_s = sim(k, j)
+                if (
+                    local_i == k
+                    and current_s >= max(0.0, min_sim - _RECOVER_ECHO_SIM_SLACK)
+                    and abs(ons[j] - expected_ms(k)) <= min(3000.0, 0.25 * prior_window_ms)
+                ):
+                    events.append({
+                        "boundary": k,
+                        "pause": j,
+                        "action": "observed_current_candidate",
+                        "reason": "local_current_over_global_stale",
+                        "sim": round(current_s, 3),
+                        "min_confirm_sim": round(confirm_min_sim, 3),
+                        "pause_ms": round(ons[j], 1),
+                        **observation_fields(j, k),
+                    })
+                    current_candidates.append(j)
+                    pending.append(j)
+                    continue
                 stale_candidates.append(j)
                 if current_candidates:
-                    best_current_j = max(current_candidates, key=lambda jj: score(k, jj))
+                    current_choices = current_with_recover_pool(k, current_candidates, recover_pool)
+                    best_current_j = choose_current(k, current_choices)
                     for extra_j in recover_pool + [jj for jj in pending if jj != best_current_j]:
                         events.append({
                             "boundary": k,
@@ -811,7 +1171,7 @@ def _sequential_pause_match(
                         **observation_fields(j, k),
                     })
                     accept(k, best_current_j, action="observed_current")
-                    j_cursor = j + 1
+                    j_cursor = best_current_j + 1
                     recover_pool = []
                     k += 1
                     advanced = True
@@ -848,17 +1208,27 @@ def _sequential_pause_match(
                     "pending_pauses": list(recover_pool + pending),
                     "pause_ms": round(ons[j], 1),
                 })
-                recovered_j = recover_one(k, recover_pool + pending)
+                recover_js = recover_pool + pending
+                recovered_j = None
+                recovered_until = k - 1
+                for missing_i in range(k, heard_i):
+                    next_j = recover_one(missing_i, recover_js)
+                    if next_j is None:
+                        break
+                    recovered_j = next_j
+                    recovered_until = missing_i
+                    recover_js = [jj for jj in recover_js if jj > next_j]
                 j_cursor = recovered_j + 1 if recovered_j is not None else j_cursor
                 recover_pool = []
-                k += 1
+                k = recovered_until + 1 if recovered_until >= k else k + 1
                 advanced = True
                 break
             pending.append(j)
 
         if not advanced:
             if current_candidates:
-                best_current_j = max(current_candidates, key=lambda jj: score(k, jj))
+                current_choices = current_with_recover_pool(k, current_candidates, recover_pool)
+                best_current_j = choose_current(k, current_choices)
                 for extra_j in recover_pool + [jj for jj in pending if jj < best_current_j]:
                     events.append({
                         "boundary": k,
@@ -881,6 +1251,50 @@ def _sequential_pause_match(
                 default=candidates[0],
             )
             best_obs_i, best_obs_s = observe_pause_local(k, best_obs_j)
+            weak_current_js = [
+                jj for jj in candidates
+                if observe_pause_local(k, jj)[0] == k
+                and sim(k, jj) >= max(0.0, min_sim - _RECOVER_ECHO_SIM_SLACK)
+                and abs(ons[jj] - expected_ms(k)) <= min(3000.0, 0.25 * prior_window_ms)
+            ]
+            if weak_current_js:
+                best_weak_j = choose_current(k, weak_current_js)
+                for extra_j in recover_pool + [jj for jj in pending if jj != best_weak_j]:
+                    events.append({
+                        "boundary": k,
+                        "pause": extra_j,
+                        "action": "extra",
+                        "reason": "low_or_internal_before_weak_observed_current",
+                        "sim": round(sim(k, extra_j), 3),
+                        "pause_ms": round(ons[extra_j], 1),
+                        **observation_fields(extra_j, k),
+                    })
+                accept(k, best_weak_j, action="weak_observed_current")
+                j_cursor = best_weak_j + 1
+                recover_pool = []
+                k += 1
+                continue
+            if (
+                k == n - 1
+                and best_obs_i == k
+                and best_obs_s >= _FINAL_WEAK_MATCH_SIM
+                and bonus(k, best_obs_j) >= _FINAL_WEAK_TEMPO_FLOOR
+            ):
+                for extra_j in recover_pool + [jj for jj in pending if jj != best_obs_j]:
+                    events.append({
+                        "boundary": k,
+                        "pause": extra_j,
+                        "action": "extra",
+                        "reason": "low_or_internal_before_final_weak",
+                        "sim": round(sim(k, extra_j), 3),
+                        "pause_ms": round(ons[extra_j], 1),
+                        **observation_fields(extra_j, k),
+                    })
+                accept(k, best_obs_j, action="final_weak_current")
+                j_cursor = best_obs_j + 1
+                recover_pool = []
+                k += 1
+                continue
             if best_obs_i < k and stale_candidates:
                 for extra_j in pending:
                     events.append({
@@ -904,6 +1318,54 @@ def _sequential_pause_match(
                     "pause_ms": round(ons[max(stale_candidates)], 1),
                 })
                 j_cursor = max(candidates) + 1
+                continue
+            if (
+                best_obs_i > k
+                and best_obs_i == k + 1
+                and best_obs_i == n - 1
+                and best_obs_s >= _FINAL_WEAK_MATCH_SIM
+                and bonus(best_obs_i, best_obs_j) > 0.0
+            ):
+                events.append({
+                    "boundary": k,
+                    "pause": best_obs_j,
+                    "action": "weak_future_gap",
+                    "heard_boundary": best_obs_i,
+                    "heard_sim": round(best_obs_s, 3),
+                    "current_sim": round(sim(k, best_obs_j), 3),
+                    "pause_ms": round(ons[best_obs_j], 1),
+                    **observation_fields(best_obs_j, k),
+                })
+                recovered_j = recover_one(k, recover_pool + pending)
+                j_cursor = recovered_j + 1 if recovered_j is not None else j_cursor
+                recover_pool = []
+                k += 1
+                continue
+            if best_obs_i > k and best_obs_s >= min_sim:
+                deferred_future[best_obs_i] = best_obs_j
+                events.append({
+                    "boundary": k,
+                    "pause": best_obs_j,
+                    "action": "future_gap",
+                    "heard_boundary": best_obs_i,
+                    "heard_sim": round(best_obs_s, 3),
+                    "current_sim": round(sim(k, best_obs_j), 3),
+                    "pause_ms": round(ons[best_obs_j], 1),
+                    **observation_fields(best_obs_j, k),
+                })
+                recover_js = recover_pool + pending
+                recovered_j = None
+                recovered_until = k - 1
+                for missing_i in range(k, best_obs_i):
+                    next_j = recover_one(missing_i, recover_js)
+                    if next_j is None:
+                        break
+                    recovered_j = next_j
+                    recovered_until = missing_i
+                    recover_js = [jj for jj in recover_js if jj > next_j]
+                j_cursor = recovered_j + 1 if recovered_j is not None else j_cursor
+                recover_pool = []
+                k = recovered_until + 1 if recovered_until >= k else k + 1
                 continue
             for extra_j in pending:
                 events.append({
@@ -932,7 +1394,16 @@ def _sequential_pause_match(
                 "expected_ms": round(expected_ms(k), 1),
                 "pause_ms": round(ons[best_obs_j], 1),
             })
-            break
+            events.append({
+                "boundary": k,
+                "action": "wasl",
+                "reason": "unresolved_current",
+                "best_sim": round(best_s, 3),
+                "expected_ms": round(expected_ms(k), 1),
+            })
+            j_cursor = max(candidates) + 1
+            k += 1
+            continue
 
     return matched, events
 
@@ -1259,6 +1730,28 @@ def align_surah_fast(
         return rows
     a1 = ayah_list[0]
     content_start = res["starts"][fa1]
+    raw_content_start = content_start
+    intro_pause = next(
+        (
+            d.pause for d in trusted_decisions
+            if d.reason == "intro-vad-tight"
+            and d.pause.start_ms <= content_start <= d.pause.end_ms
+        ),
+        None,
+    )
+    if intro_pause is not None:
+        content_start = intro_pause.center_ms
+        emit(
+            f"Первый аят: anchor {sec(raw_content_start)} сек. попал внутрь intro-паузы "
+            f"{sec(intro_pause.start_ms)}-{sec(intro_pause.end_ms)} сек.; "
+            f"ставлю старт {sec(content_start)} сек."
+        )
+    if basmala and content_start < _BASMALA_MIN_CONTENT_START_MS:
+        emit(
+            f"Первый аят: anchor {sec(content_start)} сек. раньше нижней границы "
+            f"басмалы {sec(_BASMALA_MIN_CONTENT_START_MS)} сек.; сдвигаю старт"
+        )
+        content_start = _BASMALA_MIN_CONTENT_START_MS
     model_reads.append({
         "phase": "anchor",
         "ayah": a1,
@@ -1266,6 +1759,7 @@ def align_surah_fast(
         "words": " ".join(w.text for w in words[0:head_end]),
         "target": words[fa1].text,
         "onset_ms": round(content_start, 1),
+        "raw_onset_ms": round(raw_content_start, 1),
         "conf": round(res["confs"][fa1], 3),
     })
     log_read(model_reads[-1])
@@ -1389,9 +1883,21 @@ def align_surah_fast(
         "".join(word_trs[i] for i in ayah_words[a] if i < len(word_trs))
         for a in inner
     ]
+    previous_bodies = [
+        "".join(word_trs[i] for i in ayah_words[ayah_list[i]] if i < len(word_trs))
+        for i in range(len(inner))
+    ]
     opening_shared_prefix = _opening_shared_prefix_chars(openings)
+    opening_internal_repeats = _opening_internal_repeats(openings, previous_bodies)
+    opening_internal_prefix = {
+        i: repeat[0] for i, repeat in opening_internal_repeats.items()
+    }
+    opening_text_risk = {
+        i: max(opening_shared_prefix.get(i, 0), opening_internal_prefix.get(i, 0))
+        for i in range(len(openings))
+    }
     ambiguous_opening_idx = {
-        i for i, n in opening_shared_prefix.items() if n >= _AMBIG_PREFIX_CHARS
+        i for i, n in opening_text_risk.items() if n >= _AMBIG_PREFIX_CHARS
     }
     decode_win_ms = _PAUSE_DECODE_WIN_MS
     decode_ambig_win_ms = max(decode_win_ms, _PAUSE_DECODE_AMBIG_WIN_MS)
@@ -1402,13 +1908,13 @@ def align_surah_fast(
     micro_pause_debug: list[dict] = []
 
     def sim_chars_for(i: int) -> int:
-        shared = opening_shared_prefix.get(i, 0)
+        shared = opening_text_risk.get(i, 0)
         if shared < _AMBIG_PREFIX_CHARS:
             return _SIM_CHARS
         return min(_SIM_TEXT_MAX_CHARS, max(_SIM_CHARS, shared + _SIM_TEXT_MARGIN_CHARS))
 
     def decode_window_for(i: int) -> float:
-        shared = opening_shared_prefix.get(i, 0)
+        shared = opening_text_risk.get(i, 0)
         if shared < _AMBIG_PREFIX_CHARS:
             return decode_win_ms
         text_win = decode_win_ms + shared * _PAUSE_DECODE_TEXT_MS_PER_CHAR
@@ -1483,17 +1989,42 @@ def align_surah_fast(
     def prefix_mismatch(i: int, j: int, s: float) -> bool:
         win_ms = decode_window_for(i) if needs_extended_decode(i, j) else decode_win_ms
         heard = decode_pause(j, win_ms=win_ms)
-        common = _common_prefix_len(heard, openings[i])
-        if s >= _PREFIX_BYPASS_SIM:
+        common = _onset_prefix_len(heard, openings[i])
+        risky_text = opening_text_risk.get(i, 0) >= _AMBIG_PREFIX_CHARS
+        if s >= _PREFIX_BYPASS_SIM and not risky_text:
             return False
         min_prefix = _PREFIX_WEAK_MIN if weak_pause(j) else _PREFIX_STRONG_MIN
+        if risky_text:
+            min_prefix = max(min_prefix, _PREFIX_WEAK_MIN)
         return common < min_prefix
+
+    def internal_repeat_mismatch(i: int, j: int, s: float) -> bool:
+        repeat = opening_internal_repeats.get(i)
+        if repeat is None:
+            return False
+        win_ms = decode_window_for(i) if needs_extended_decode(i, j) else decode_win_ms
+        heard = decode_pause(j, win_ms=win_ms)
+        _repeat_chars, repeat_suffix = repeat
+        repeat_s = _sim(heard, repeat_suffix, chars=sim_chars_for(i))
+        target_prefix = _onset_prefix_len(heard, openings[i])
+        repeat_prefix = _onset_prefix_len(heard, repeat_suffix)
+        return (
+            repeat_s >= s + _INTERNAL_REPEAT_MATCH_MARGIN
+            and repeat_prefix >= target_prefix
+        )
 
     def reject_match(i: int, j: int, s: float) -> str | None:
         if far_weak_match(i, j, s):
             return "far_from_expected"
         if prefix_mismatch(i, j, s):
             return "prefix_mismatch"
+        if s < _RECOVER_MATCH_SIM:
+            win_ms = decode_window_for(i) if needs_extended_decode(i, j) else decode_win_ms
+            heard = decode_pause(j, win_ms=win_ms)
+            if _onset_prefix_len(heard, openings[i]) < _PREFIX_BORDERLINE_MIN:
+                return "borderline_prefix_mismatch"
+        if internal_repeat_mismatch(i, j, s):
+            return "internal_repeat_mismatch"
         if (
             weak_pause(j)
             and s < _PAUSE_TRUST_SIM
@@ -1569,9 +2100,105 @@ def align_surah_fast(
         active_centers = {p.center_ms for p in pauses}
         for ev in events0:
             action = ev.get("action")
+            start_i = ev.get("boundary")
+            if (
+                action == "wasl"
+                and ev.get("reason") == "no_pause_in_window"
+                and isinstance(start_i, int)
+                and 0 <= start_i < len(inner)
+            ):
+                lo_i = start_i - 1
+                lo_t = matched0[lo_i] if lo_i >= 0 and matched0[lo_i] is not None else content_start
+                left_pause = pause_by_center.get(lo_t)
+                interval_start = left_pause.end_ms if left_pause is not None else lo_t
+                expected_t = float(ev.get("expected_ms", exp[start_i]))
+                interval_end = min(total_ms, expected_t + min(3500.0, 0.25 * _MATCH_PRIOR_WINDOW_MS))
+                for d in low_conf_decisions:
+                    p = d.pause
+                    center = p.center_ms
+                    if center in active_centers or center in active_low_conf_centers:
+                        continue
+                    if pause_tier(d) != "weak":
+                        continue
+                    if center <= content_start - 200.0:
+                        continue
+                    if not (interval_start <= center <= interval_end):
+                        continue
+                    pauses.append(p)
+                    active_centers.add(center)
+                    active_low_conf_centers.add(center)
+                    low_conf_activation_debug.append({
+                        "idx": all_pause_ord.get(center),
+                        "start_ms": round(p.start_ms, 1),
+                        "end_ms": round(p.end_ms, 1),
+                        "center_ms": round(center, 1),
+                        "tier": pause_tier(d),
+                        "reason": d.reason,
+                        "gap_ayah": inner[start_i],
+                        "heard_ayah": None,
+                        "interval_ms": [round(interval_start, 1), round(interval_end, 1)],
+                    })
+                    emit(
+                        f"Возврат к слабой паузе {all_pause_ord.get(center, '?')}: "
+                        f"{sec(p.start_ms)}-{sec(p.end_ms)} сек., tier={pause_tier(d)}, "
+                        f"reason={d.reason}, no-pause ayah {inner[start_i]}"
+                    )
+                    added = True
+                continue
+            if (
+                action == "final_weak_current"
+                and isinstance(start_i, int)
+                and 0 <= start_i < len(inner)
+                and abs(float(ev.get("expected_delta_ms", 0.0))) > 3000.0
+                and isinstance(ev.get("pause"), int)
+                and 0 <= int(ev["pause"]) < len(pause_onsets)
+            ):
+                lo_i = start_i - 1
+                lo_t = matched0[lo_i] if lo_i >= 0 and matched0[lo_i] is not None else content_start
+                hi_t = pause_onsets[int(ev["pause"])]
+                left_pause = pause_by_center.get(lo_t)
+                right_pause = pause_by_center.get(hi_t)
+                interval_start = left_pause.end_ms if left_pause is not None else lo_t
+                interval_end = right_pause.start_ms if right_pause is not None else hi_t
+                expected_t = float(ev.get("expected_ms", exp[start_i]))
+                interval_start = max(interval_start, expected_t - min(3500.0, 0.25 * _MATCH_PRIOR_WINDOW_MS))
+                interval_end = min(interval_end, expected_t + min(3500.0, 0.25 * _MATCH_PRIOR_WINDOW_MS))
+                if interval_end <= interval_start:
+                    continue
+                for d in low_conf_decisions:
+                    p = d.pause
+                    center = p.center_ms
+                    if center in active_centers or center in active_low_conf_centers:
+                        continue
+                    if pause_tier(d) != "weak":
+                        continue
+                    if center <= content_start - 200.0:
+                        continue
+                    if not (interval_start <= center <= interval_end):
+                        continue
+                    pauses.append(p)
+                    active_centers.add(center)
+                    active_low_conf_centers.add(center)
+                    low_conf_activation_debug.append({
+                        "idx": all_pause_ord.get(center),
+                        "start_ms": round(p.start_ms, 1),
+                        "end_ms": round(p.end_ms, 1),
+                        "center_ms": round(center, 1),
+                        "tier": pause_tier(d),
+                        "reason": d.reason,
+                        "gap_ayah": inner[start_i],
+                        "heard_ayah": None,
+                        "interval_ms": [round(interval_start, 1), round(interval_end, 1)],
+                    })
+                    emit(
+                        f"Возврат к слабой паузе {all_pause_ord.get(center, '?')}: "
+                        f"{sec(p.start_ms)}-{sec(p.end_ms)} сек., tier={pause_tier(d)}, "
+                        f"reason={d.reason}, before late final ayah {inner[start_i]}"
+                    )
+                    added = True
+                continue
             if action not in ("future_gap", "unresolved_current"):
                 continue
-            start_i = ev.get("boundary")
             future_i = ev.get("heard_boundary") if action == "future_gap" else ev.get("observed_boundary")
             future_j = ev.get("pause")
             if not (
@@ -1620,6 +2247,49 @@ def align_surah_fast(
                     f"reason={d.reason}, gap {inner[start_i]}->{inner[future_i]}"
                 )
                 added = True
+        tail_i = len(inner) - 1
+        if tail_i >= 0 and matched0[tail_i] is not None:
+            tail_expected = exp[tail_i]
+            tail_matched = matched0[tail_i]
+            if tail_matched - tail_expected > 3000.0:
+                right_pause = pause_by_center.get(tail_matched)
+                interval_start = max(
+                    content_start,
+                    tail_expected - min(3500.0, 0.25 * _MATCH_PRIOR_WINDOW_MS),
+                )
+                interval_end = min(
+                    right_pause.start_ms if right_pause is not None else tail_matched,
+                    tail_expected + min(3500.0, 0.25 * _MATCH_PRIOR_WINDOW_MS),
+                )
+                for d in low_conf_decisions:
+                    p = d.pause
+                    center = p.center_ms
+                    if center in active_centers or center in active_low_conf_centers:
+                        continue
+                    if pause_tier(d) != "weak":
+                        continue
+                    if not (interval_start <= center <= interval_end):
+                        continue
+                    pauses.append(p)
+                    active_centers.add(center)
+                    active_low_conf_centers.add(center)
+                    low_conf_activation_debug.append({
+                        "idx": all_pause_ord.get(center),
+                        "start_ms": round(p.start_ms, 1),
+                        "end_ms": round(p.end_ms, 1),
+                        "center_ms": round(center, 1),
+                        "tier": pause_tier(d),
+                        "reason": d.reason,
+                        "gap_ayah": inner[tail_i],
+                        "heard_ayah": None,
+                        "interval_ms": [round(interval_start, 1), round(interval_end, 1)],
+                    })
+                    emit(
+                        f"Возврат к слабой паузе {all_pause_ord.get(center, '?')}: "
+                        f"{sec(p.start_ms)}-{sec(p.end_ms)} сек., tier={pause_tier(d)}, "
+                        f"reason={d.reason}, late tail ayah {inner[tail_i]}"
+                    )
+                    added = True
         if added:
             refresh_active_pauses()
         return added
@@ -1632,9 +2302,93 @@ def align_surah_fast(
         existing = list(pause_onsets)
         for ev in events0:
             action = ev.get("action")
+            start_i = ev.get("boundary")
+            if (
+                action == "wasl"
+                and ev.get("reason") == "no_pause_in_window"
+                and isinstance(start_i, int)
+                and start_i == len(inner) - 1
+                and start_i > 0
+            ):
+                prev_i = start_i - 1
+                while prev_i >= 0 and matched0[prev_i] is None:
+                    prev_i -= 1
+                lo_t = matched0[prev_i] if prev_i >= 0 and matched0[prev_i] is not None else content_start
+                left_pause = pause_by_center.get(lo_t)
+                interval_start = left_pause.end_ms if left_pause is not None else lo_t
+                interval_end = total_ms
+                if interval_end - interval_start < 4000.0:
+                    continue
+                expected_t = interval_start + 750.0
+                valley = _find_micro_pause_valley(
+                    pcm,
+                    sr,
+                    interval_start_ms=interval_start,
+                    interval_end_ms=interval_end,
+                    expected_ms=expected_t,
+                )
+                if valley is None:
+                    micro_pause_debug.append({
+                        "ayah": inner[start_i],
+                        "expected_ms": round(expected_t, 1),
+                        "interval_ms": [round(interval_start, 1), round(interval_end, 1)],
+                        "status": "tail_not_found",
+                    })
+                    continue
+                start_ms, end_ms, ratio, seed_start_ms, seed_end_ms = valley
+                pause_start_ms = max(start_ms, seed_start_ms)
+                center = 0.5 * (pause_start_ms + end_ms)
+                if any(abs(center - p) < _MICRO_PAUSE_MIN_SEP_MS for p in existing):
+                    micro_pause_debug.append({
+                        "ayah": inner[start_i],
+                        "expected_ms": round(expected_t, 1),
+                        "center_ms": round(center, 1),
+                        "seed_start_ms": round(seed_start_ms, 1),
+                        "seed_end_ms": round(seed_end_ms, 1),
+                        "expanded_start_ms": round(start_ms, 1),
+                        "expanded_end_ms": round(end_ms, 1),
+                        "effective_start_ms": round(pause_start_ms, 1),
+                        "status": "tail_near_existing",
+                    })
+                    continue
+                pause = candidates.Pause(pause_start_ms, end_ms, end_ms - pause_start_ms)
+                pauses.append(pause)
+                decision = candidates.PauseDecision(
+                    pause=pause,
+                    dsp_ok=True,
+                    vad_ok=None,
+                    accepted=True,
+                    reason="micro-tempo",
+                    flatness=0.0,
+                    zcr=0.0,
+                    rms_ratio=ratio,
+                )
+                pause_decisions.append(decision)
+                pause_diag[pause] = decision
+                existing.append(center)
+                micro_pause_debug.append({
+                    "ayah": inner[start_i],
+                    "expected_ms": round(expected_t, 1),
+                    "center_ms": round(center, 1),
+                    "start_ms": round(pause_start_ms, 1),
+                    "end_ms": round(end_ms, 1),
+                    "seed_start_ms": round(seed_start_ms, 1),
+                    "seed_end_ms": round(seed_end_ms, 1),
+                    "expanded_start_ms": round(start_ms, 1),
+                    "expanded_end_ms": round(end_ms, 1),
+                    "effective_start_ms": round(pause_start_ms, 1),
+                    "rms_ratio": round(ratio, 3),
+                    "interval_ms": [round(interval_start, 1), round(interval_end, 1)],
+                    "status": "tail_added",
+                })
+                emit(
+                    f"Tail micro-пауза для аята {inner[start_i]}: "
+                    f"{sec(pause_start_ms)}-{sec(end_ms)} сек., ratio={ratio:.3f}"
+                )
+                added = True
+                continue
             if action not in ("future_gap", "unresolved_current"):
                 continue
-            start_i = ev.get("boundary")
             future_i = ev.get("heard_boundary") if action == "future_gap" else ev.get("observed_boundary")
             future_j = ev.get("pause")
             if not (
@@ -1680,7 +2434,12 @@ def align_surah_fast(
                     })
                     continue
                 start_ms, end_ms, ratio, seed_start_ms, seed_end_ms = valley
-                center = 0.5 * (start_ms + end_ms)
+                # The expanded shelf can include the quiet tail of the previous
+                # phrase. For the emitted boundary, keep the right edge of the
+                # shelf but start at the seed valley to avoid an early-biased
+                # center.
+                pause_start_ms = max(start_ms, seed_start_ms)
+                center = 0.5 * (pause_start_ms + end_ms)
                 if any(abs(center - p) < _MICRO_PAUSE_MIN_SEP_MS for p in existing):
                     micro_pause_debug.append({
                         "ayah": miss_a,
@@ -1690,10 +2449,11 @@ def align_surah_fast(
                         "seed_end_ms": round(seed_end_ms, 1),
                         "expanded_start_ms": round(start_ms, 1),
                         "expanded_end_ms": round(end_ms, 1),
+                        "effective_start_ms": round(pause_start_ms, 1),
                         "status": "near_existing",
                     })
                     continue
-                pause = candidates.Pause(start_ms, end_ms, end_ms - start_ms)
+                pause = candidates.Pause(pause_start_ms, end_ms, end_ms - pause_start_ms)
                 pauses.append(pause)
                 decision = candidates.PauseDecision(
                     pause=pause,
@@ -1712,12 +2472,13 @@ def align_surah_fast(
                     "ayah": miss_a,
                     "expected_ms": round(expected_t, 1),
                     "center_ms": round(center, 1),
-                    "start_ms": round(start_ms, 1),
+                    "start_ms": round(pause_start_ms, 1),
                     "end_ms": round(end_ms, 1),
                     "seed_start_ms": round(seed_start_ms, 1),
                     "seed_end_ms": round(seed_end_ms, 1),
                     "expanded_start_ms": round(start_ms, 1),
                     "expanded_end_ms": round(end_ms, 1),
+                    "effective_start_ms": round(pause_start_ms, 1),
                     "rms_ratio": round(ratio, 3),
                     "interval_ms": [round(interval_start, 1), round(interval_end, 1)],
                     "status": "added",
@@ -1726,6 +2487,7 @@ def align_surah_fast(
                     f"Micro-пауза для аята {miss_a}: ожидание {sec(expected_t)} сек., "
                     f"найдена RMS-просадка {sec(seed_start_ms)}-{sec(seed_end_ms)} сек., "
                     f"расширена до {sec(start_ms)}-{sec(end_ms)} сек., "
+                    f"эффективно {sec(pause_start_ms)}-{sec(end_ms)} сек., "
                     f"ratio={ratio:.3f}"
                 )
                 added = True
@@ -1739,6 +2501,8 @@ def align_surah_fast(
     if add_micro_pauses_from_gaps(matched, sequence_events):
         accepted_pause_count = len([d for d in pause_decisions if d.accepted])
         rejected_pause_count = len(pause_decisions) - accepted_pause_count
+        matched, sequence_events = run_sequence_match()
+    if add_low_conf_pauses_from_gaps(matched, sequence_events):
         matched, sequence_events = run_sequence_match()
     for ev in sequence_events:
         action = ev.get("action")
@@ -1802,17 +2566,29 @@ def align_surah_fast(
                     and ev.get("action") in (
                         "confirmed",
                         "observed_current",
+                        "weak_observed_current",
                         "recovered",
+                        "final_weak_current",
                         "future_anchor",
                     )
                 ),
                 "",
             )
-            min_keep_sim = _RECOVER_MATCH_SIM if action == "recovered" else drop_sim
+            if action == "recovered":
+                min_keep_sim = max(0.0, _MIN_MATCH_SIM - _RECOVER_ECHO_SIM_SLACK)
+            elif action == "final_weak_current":
+                min_keep_sim = _FINAL_WEAK_MATCH_SIM
+            elif action in {"observed_current", "weak_observed_current"}:
+                min_keep_sim = max(0.0, _MIN_MATCH_SIM - _RECOVER_ECHO_SIM_SLACK)
+            else:
+                min_keep_sim = drop_sim
             reason = None
             if sim < min_keep_sim:
                 reason = "low_sim"
-            elif far_weak_match(k, j, sim):
+            elif (
+                action not in {"recovered", "observed_current", "weak_observed_current"}
+                and far_weak_match(k, j, sim)
+            ):
                 reason = "far_from_expected"
             if reason is not None:
                 matched[k] = None
@@ -1833,6 +2609,262 @@ def align_surah_fast(
         )
         and ev.get("boundary") is not None
     }
+    used_matched = {m for m in matched if m is not None}
+    weak_micro_floor = max(0.0, _MIN_MATCH_SIM - _RECOVER_ECHO_SIM_SLACK)
+    weak_pause_floor = max(_RECOVER_MATCH_SIM, weak_micro_floor)
+    for k, mk in enumerate(matched):
+        if mk is not None or sequence_reason.get(k) != "missing_before_future":
+            continue
+        prev_t = next((matched[ii] for ii in range(k - 1, -1, -1) if matched[ii] is not None), None)
+        next_t = next((matched[ii] for ii in range(k + 1, len(matched)) if matched[ii] is not None), None)
+        if prev_t is None or next_t is None:
+            continue
+        candidates: list[tuple[float, int]] = []
+        for j, center in enumerate(pause_onsets):
+            if center in used_matched or center <= prev_t or center >= next_t:
+                continue
+            pause = pause_by_center.get(center)
+            diag = pause_diag.get(pause) if pause is not None else None
+            if diag is None:
+                continue
+            s = _sim_ij(k, j)
+            if diag.reason == "micro-tempo":
+                keep = s >= weak_micro_floor
+            else:
+                keep = s >= weak_pause_floor
+            if keep:
+                candidates.append((s, j))
+        if candidates:
+            _s, j = max(candidates, key=lambda item: item[0])
+            matched[k] = pause_onsets[j]
+            used_matched.add(pause_onsets[j])
+            sequence_action[k] = "weak_pause_recovery"
+    for k, mk in enumerate(matched):
+        if mk is not None:
+            continue
+        if sequence_reason.get(k) == "no_pause_in_window":
+            continue
+        prev_t = next((matched[ii] for ii in range(k - 1, -1, -1) if matched[ii] is not None), None)
+        next_t = next((matched[ii] for ii in range(k + 1, len(matched)) if matched[ii] is not None), None)
+        rough_t = _interp_wasl(k, exp, matched)
+        near_strong_candidates: list[int] = []
+        fallback_candidates: list[tuple[float, int]] = []
+        for j, center in enumerate(pause_onsets):
+            if center in used_matched:
+                continue
+            if prev_t is not None and center <= prev_t:
+                continue
+            if next_t is not None and center >= next_t:
+                continue
+            if (prev_t is None or next_t is None) and abs(center - rough_t) > _MATCH_PRIOR_WINDOW_MS:
+                continue
+            pause = pause_by_center.get(center)
+            diag = pause_diag.get(pause) if pause is not None else None
+            if diag is None:
+                continue
+            if diag.reason != "weak-dsp" and abs(center - rough_t) <= 2200.0:
+                near_strong_candidates.append(j)
+                continue
+            s = _sim_ij(k, j)
+            is_strong = diag.reason != "weak-dsp"
+            if not is_strong and s < weak_micro_floor:
+                continue
+            if s < _FINAL_WEAK_MATCH_SIM and abs(center - rough_t) > 2200.0:
+                continue
+            dist_pen = min(1.0, abs(center - rough_t) / max(1.0, _MATCH_PRIOR_WINDOW_MS))
+            score = s + max(0.0, tempo_score(k, j)) - 0.04 * dist_pen
+            if is_strong:
+                score += 0.03
+            fallback_candidates.append((score, j))
+        if near_strong_candidates:
+            j = min(near_strong_candidates, key=lambda jj: abs(pause_onsets[jj] - rough_t))
+            matched[k] = pause_onsets[j]
+            used_matched.add(pause_onsets[j])
+            sequence_action[k] = "pause_fallback"
+            continue
+        if fallback_candidates:
+            _score, j = max(fallback_candidates, key=lambda item: item[0])
+            matched[k] = pause_onsets[j]
+            used_matched.add(pause_onsets[j])
+            sequence_action[k] = "pause_fallback"
+    pause_index_by_center = {center: j for j, center in enumerate(pause_onsets)}
+
+    def opening_prefix_for(k: int, j: int) -> int:
+        win_ms = decode_window_for(k) if needs_extended_decode(k, j) else decode_win_ms
+        return _onset_prefix_len(decode_pause(j, win_ms=win_ms), openings[k])
+
+    def opening_repair_candidate(k: int, j: int, *, allow_fuzzy: bool) -> bool:
+        prefix = opening_prefix_for(k, j)
+        required_prefix = 6 if opening_text_risk.get(k, 0) >= _AMBIG_PREFIX_CHARS else 3
+        if prefix >= required_prefix:
+            return True
+        return allow_fuzzy and _sim_ij(k, j) >= 0.27
+
+    repaired_run_until = -1
+
+    def repair_opening_run(start_k: int, *, length: int = 4) -> None:
+        nonlocal repaired_run_until
+        end_k = min(len(matched) - 1, start_k + length)
+        if end_k <= start_k or matched[start_k] is None:
+            return
+        repaired_run_until = max(repaired_run_until, end_k)
+        run_boundaries = list(range(start_k + 1, end_k + 1))
+        run_owners = set(run_boundaries)
+        owner_by_center = {
+            center: owner
+            for owner, center in enumerate(matched)
+            if center is not None
+        }
+        start_t = float(matched[start_k])
+        old_end = max(
+            (float(matched[ii]) for ii in run_boundaries if matched[ii] is not None),
+            default=start_t,
+        )
+        block_end = max(old_end, start_t + 180_000.0)
+
+        def candidate_score(kk: int, j: int) -> float | None:
+            prefix = opening_prefix_for(kk, j)
+            sim_s = _sim_ij(kk, j)
+            if opening_text_risk.get(kk, 0) >= _AMBIG_PREFIX_CHARS:
+                if prefix < 6:
+                    return None
+                return 1.0 + min(0.5, sim_s) + 0.02 * min(prefix, 12)
+            if prefix >= 3:
+                return 0.8 + min(0.5, sim_s) + 0.02 * min(prefix, 10)
+            if sim_s >= 0.27:
+                return sim_s
+            return None
+
+        layers: list[list[tuple[int, float]]] = []
+        for kk in run_boundaries:
+            layer: list[tuple[int, float]] = []
+            for j, center in enumerate(pause_onsets):
+                owner = owner_by_center.get(center)
+                if center <= start_t + 2500.0 or center >= block_end:
+                    continue
+                if center in used_matched and owner not in run_owners:
+                    continue
+                sc = candidate_score(kk, j)
+                if sc is not None:
+                    layer.append((j, sc))
+            if not layer:
+                return
+            layers.append(layer)
+
+        states: dict[int, tuple[float, list[int]]] = {}
+        for j, sc in layers[0]:
+            gap_pen = min(0.4, max(0.0, pause_onsets[j] - start_t) / 180_000.0)
+            states[j] = (sc - gap_pen, [j])
+        for layer in layers[1:]:
+            next_states: dict[int, tuple[float, list[int]]] = {}
+            for j, sc in layer:
+                center = pause_onsets[j]
+                best: tuple[float, list[int]] | None = None
+                for prev_j, (prev_score, path) in states.items():
+                    prev_center = pause_onsets[prev_j]
+                    if center <= prev_center + 2500.0:
+                        continue
+                    gap = center - prev_center
+                    # Keep the block local, but allow long ayahs like 37:66.
+                    gap_pen = min(0.5, abs(gap - 9000.0) / 180_000.0)
+                    total = prev_score + sc - gap_pen
+                    if best is None or total > best[0]:
+                        best = (total, path + [j])
+                if best is not None:
+                    next_states[j] = best
+            states = next_states
+            if not states:
+                return
+        _score, path = max(states.values(), key=lambda item: item[0])
+        for kk, j in zip(run_boundaries, path):
+            old = matched[kk]
+            stolen_owner = owner_by_center.get(pause_onsets[j])
+            if stolen_owner is not None and stolen_owner != kk:
+                matched[stolen_owner] = None
+                sequence_action[stolen_owner] = "opening_run_repair_stolen"
+            if old is not None:
+                used_matched.discard(old)
+            matched[kk] = pause_onsets[j]
+            used_matched.add(pause_onsets[j])
+            sequence_action[kk] = "opening_run_repair"
+
+    for k, mk in enumerate(matched):
+        if mk is None:
+            continue
+        prev_t = next((matched[ii] for ii in range(k - 1, -1, -1) if matched[ii] is not None), None)
+        if prev_t is None:
+            continue
+        current_gap = mk - prev_t
+        if current_gap > 30_000.0:
+            candidates = [
+                j for j, center in enumerate(pause_onsets)
+                if center not in used_matched
+                and prev_t + 2500.0 < center < mk - 2500.0
+                and _sim_ij(k, j) >= 0.28
+                and (
+                    opening_text_risk.get(k, 0) < _AMBIG_PREFIX_CHARS
+                    or opening_prefix_for(k, j) >= 6
+                )
+            ]
+            repeated_opening_candidates = [
+                j for j, center in enumerate(pause_onsets)
+                if center not in used_matched
+                and prev_t + 2500.0 < center < mk + 45_000.0
+                and _sim_ij(k, j) >= 0.28
+                and (
+                    opening_text_risk.get(k, 0) < _AMBIG_PREFIX_CHARS
+                    or opening_prefix_for(k, j) >= 6
+                )
+            ]
+            if candidates and len(repeated_opening_candidates) >= 3:
+                j = min(candidates, key=lambda jj: pause_onsets[jj])
+                used_matched.discard(mk)
+                matched[k] = pause_onsets[j]
+                used_matched.add(pause_onsets[j])
+                sequence_action[k] = "first_opening_repair"
+                repair_opening_run(k)
+                continue
+        if k > repaired_run_until:
+            continue
+        if sequence_action.get(k) == "opening_run_repair":
+            continue
+        current_j = pause_index_by_center.get(mk)
+        if current_j is not None and opening_repair_candidate(k, current_j, allow_fuzzy=False):
+            continue
+        prev_t = next((matched[ii] for ii in range(k - 1, -1, -1) if matched[ii] is not None), None)
+        if prev_t is None:
+            continue
+        upper = prev_t + 92_000.0
+        owner_by_center = {
+            center: owner
+            for owner, center in enumerate(matched)
+            if center is not None
+        }
+        candidates = [
+            j for j, center in enumerate(pause_onsets)
+            if (
+                center not in used_matched
+                or k < owner_by_center.get(center, -1) <= repaired_run_until
+            )
+            and prev_t + 3000.0 < center < upper
+            and opening_repair_candidate(k, j, allow_fuzzy=True)
+        ]
+        if candidates:
+            j = min(
+                candidates,
+                key=lambda jj: (
+                    0 if opening_prefix_for(k, jj) >= 6 else 1,
+                    pause_onsets[jj],
+                ),
+            )
+            stolen_owner = owner_by_center.get(pause_onsets[j])
+            if stolen_owner is not None and stolen_owner != k:
+                matched[stolen_owner] = None
+                sequence_action[stolen_owner] = "opening_order_repair_stolen"
+            used_matched.discard(mk)
+            matched[k] = pause_onsets[j]
+            used_matched.add(pause_onsets[j])
+            sequence_action[k] = "opening_order_repair"
     matched_center_for_ayah: dict[int, float] = {}
 
     def rounded_wave_metrics(i: int, j: int) -> dict[str, float | int | bool | None]:
@@ -1862,8 +2894,84 @@ def align_surah_fast(
             "tempo_ms_per_unit": round(float(m["tempo_ms_per_unit"]), 3),
         }
 
-    def pause_timing_point(center_ms: float) -> float:
+    def pause_timing_point(
+        center_ms: float,
+        *,
+        sim: float | None = None,
+        reason: str | None = None,
+    ) -> float:
+        pause = pause_by_center.get(center_ms)
+        if pause is not None and reason != "micro-tempo" and pause.end_ms - pause.start_ms >= 900.0:
+            width_ms = pause.end_ms - pause.start_ms
+            if (
+                width_ms >= _LONG_PAUSE_CENTER_MS
+                or (
+                    width_ms >= _TRUSTED_PAUSE_CENTER_MS
+                    and sim is not None
+                    and sim >= _RECOVER_MATCH_SIM
+                )
+                or (
+                    width_ms <= _COMPACT_PAUSE_CENTER_MS
+                    and sim is not None
+                    and sim >= _MIN_MATCH_SIM
+                )
+            ):
+                return center_ms
+            return pause.start_ms
+        if pause is not None and sim is not None and sim < _PAUSE_TRUST_SIM and reason != "micro-tempo":
+            if pause.end_ms - pause.start_ms >= 700.0:
+                return pause.start_ms
+            return min(
+                pause.end_ms,
+                center_ms + _SHORT_PAUSE_RIGHT_BIAS * max(0.0, pause.end_ms - center_ms),
+            )
         return center_ms
+
+    if basmala and pause_onsets:
+        first_center = pause_onsets[0]
+        first_pause = pause_by_center.get(first_center)
+        if (
+            first_pause is not None
+            and first_pause.start_ms <= starts_ms[a1] + 1200.0
+            and first_pause.end_ms >= starts_ms[a1] - 100.0
+        ):
+            first_opening = " ".join(
+                word_trs[i] for i in ayah_words[a1] if i < len(word_trs)
+            )
+            pause_heard = decode_pause(0)
+            pause_sim = _sim(pause_heard, first_opening)
+            anchor_heard = greedy_decode(
+                max(0.0, starts_ms[a1] - 50.0),
+                min(total_ms, starts_ms[a1] + _VERIFY_WINDOW_MS),
+            )
+            anchor_sim = _sim(anchor_heard, first_opening)
+            first_diag = pause_diag.get(first_pause)
+            if pause_sim >= max(0.50, anchor_sim + 0.10):
+                if first_diag is not None and first_diag.reason == "weak-dsp":
+                    content_start = min(
+                        first_pause.end_ms,
+                        first_pause.center_ms
+                        + 0.5 * max(0.0, first_pause.end_ms - first_pause.center_ms),
+                    )
+                else:
+                    content_start = pause_timing_point(first_center)
+                content_start = max(starts_ms[a1], content_start)
+                starts_ms[a1] = content_start
+                confs[a1] = max(confs[a1], pause_sim)
+                for row in tr_ayahs:
+                    if row.get("ayah") == a1:
+                        row["onset_ms"] = content_start
+                        row["conf"] = confs[a1]
+                        row["intro_pause_anchor"] = True
+                        row["intro_pause_sim"] = round(pause_sim, 3)
+                        row["intro_anchor_sim"] = round(anchor_sim, 3)
+                        break
+                emit(
+                    f"Первый аят: первая пауза {sec(first_pause.start_ms)}-"
+                    f"{sec(first_pause.end_ms)} сек. звучит как начало аята "
+                    f"(sim={pause_sim:.3f} > anchor={anchor_sim:.3f}); "
+                    f"ставлю старт {sec(content_start)} сек."
+                )
 
     def strong_pause(center_ms: float) -> bool:
         pause = pause_by_center.get(center_ms)
@@ -1883,6 +2991,51 @@ def align_surah_fast(
 
     place: dict[int, tuple[float, bool]] = {}
     pause_match_by_ayah: dict[int, dict] = {}
+    snapped_wasl_hints: dict[int, float] = {}
+
+    def micro_backtrack_candidate(i: int, j: int) -> int | None:
+        pause = pause_by_center.get(pause_onsets[j])
+        diag = pause_diag.get(pause) if pause is not None else None
+        if diag is None or diag.reason != "micro-tempo":
+            return None
+        if _sim_ij(i, j) >= _CONFIRM_MATCH_SIM:
+            return None
+        for jj in range(j - 1, -1, -1):
+            if pause_onsets[j] - pause_onsets[jj] > _MICRO_BACKTRACK_MS:
+                break
+            prev = pause_by_center.get(pause_onsets[jj])
+            prev_diag = pause_diag.get(prev) if prev is not None else None
+            if prev is None or prev_diag is None or prev_diag.reason == "micro-tempo":
+                continue
+            if any(other_i != i and matched[other_i] == pause_onsets[jj] for other_i in range(len(matched))):
+                continue
+            metrics = wave_tempo_metrics(i, jj)
+            if (
+                _sim_ij(i, jj) >= _FINAL_WEAK_MATCH_SIM
+                and float(metrics["next_speech_ms"]) <= _MICRO_BACKTRACK_MS
+            ):
+                return jj
+        return None
+
+    def weak_forward_candidate(i: int, j: int) -> int | None:
+        pause = pause_by_center.get(pause_onsets[j])
+        diag = pause_diag.get(pause) if pause is not None else None
+        if diag is None or diag.reason != "weak-dsp":
+            return None
+        base_s = _sim_ij(i, j)
+        for jj in range(j + 1, len(pause_onsets)):
+            if pause_onsets[jj] - pause_onsets[j] > 3000.0:
+                break
+            if any(other_i != i and matched[other_i] == pause_onsets[jj] for other_i in range(len(matched))):
+                continue
+            next_pause = pause_by_center.get(pause_onsets[jj])
+            next_diag = pause_diag.get(next_pause) if next_pause is not None else None
+            if next_diag is None or next_diag.reason not in {"weak-dsp", "dsp"}:
+                continue
+            if _sim_ij(i, jj) >= base_s + 0.02:
+                return jj
+        return None
+
     for k, a in enumerate(inner):
         near_js = [
             j for j, _p in enumerate(pause_onsets)
@@ -1901,19 +3054,57 @@ def align_surah_fast(
         expected = exp[k]
         if matched[k] is not None:
             j = pause_onsets.index(matched[k])
+            pause = pause_by_center.get(matched[k])
+            pause_reason = pause_diag[pause].reason if pause in pause_diag else None
+            backtrack_j = micro_backtrack_candidate(k, j)
+            if backtrack_j is not None:
+                j = backtrack_j
+                matched[k] = pause_onsets[j]
+            forward_j = weak_forward_candidate(k, j)
+            if forward_j is not None:
+                j = forward_j
+                matched[k] = pause_onsets[j]
             sim = _sim_ij(k, j)
             wave_metrics = rounded_wave_metrics(k, j)
-            rough = pause_timing_point(matched[k])
+            rough = pause_timing_point(matched[k], sim=sim, reason=pause_reason)
+            timing_adjusted = False
+            if (
+                sequence_action.get(k) == "weak_pause_recovery"
+                and pause is not None
+                and pause_reason != "micro-tempo"
+                and pause.end_ms - pause.start_ms >= 700.0
+                and sim >= weak_pause_floor
+            ):
+                rough = matched[k]
+            if (
+                pause_reason == "micro-tempo"
+                and sim < _CONFIRM_MATCH_SIM
+                and (wave_metrics.get("prev_speech_ms") or 0.0) <= 1000.0
+                and (wave_metrics.get("next_speech_ms") or 0.0) >= 2500.0
+            ):
+                rough = min(
+                    total_ms,
+                    rough + 0.36 * float(wave_metrics.get("next_speech_ms") or 0.0),
+                )
+                timing_adjusted = True
+            if (
+                pause is not None
+                and pause_reason != "micro-tempo"
+                and pause.end_ms - pause.start_ms >= 1800.0
+                and (wave_metrics.get("prev_speech_ms") or 0.0) <= 1500.0
+                and (wave_metrics.get("next_speech_ms") or 0.0) >= 3000.0
+            ):
+                rough = pause.end_ms
             matched_center_for_ayah[a] = matched[k]
             place[a] = (rough, True)
-            pause = pause_by_center.get(matched[k])
             pause_match_by_ayah[a] = {
                 "pause": pause_ord.get(matched[k]),
                 "sim": sim,
                 "center_ms": matched[k],
                 "rough_ms": rough,
                 "action": sequence_action.get(k),
-                "reason": pause_diag[pause].reason if pause in pause_diag else None,
+                "reason": pause_reason,
+                "timing_adjusted": timing_adjusted,
             }
             pause_match_debug.append({
                 "ayah": a,
@@ -1934,7 +3125,7 @@ def align_surah_fast(
                 "expected_delta_ms": round(rough - expected, 1),
                 "drop_reason": None,
                 "match_action": sequence_action.get(k),
-                "pause_reason": pause_diag[pause].reason if pause in pause_diag else None,
+                "pause_reason": pause_reason,
                 **wave_metrics,
             })
             emit(
@@ -1948,9 +3139,29 @@ def align_surah_fast(
         else:
             drop_reason = dropped_match_reason.get(k) or sequence_reason.get(k)
             rough = _interp_wasl(k, exp, matched)
+            if sequence_reason.get(k) == "missing_before_future":
+                prev_t = next(
+                    (matched[ii] for ii in range(k - 1, -1, -1) if matched[ii] is not None),
+                    None,
+                )
+                next_t = next(
+                    (matched[ii] for ii in range(k + 1, len(matched)) if matched[ii] is not None),
+                    None,
+                )
+                snap_candidates = [
+                    center for center in pause_onsets
+                    if center not in used_matched
+                    and (prev_t is None or center > prev_t)
+                    and (next_t is None or center < next_t)
+                    and strong_pause(center)
+                    and abs(center - rough) <= 2200.0
+                ]
+                if snap_candidates:
+                    rough = min(snap_candidates, key=lambda center: abs(center - rough))
+                    snapped_wasl_hints[a] = rough
             wave_j = best_near_j if best_near_j >= 0 else best_j
             wave_metrics = rounded_wave_metrics(k, wave_j)
-            place[a] = (_interp_wasl(k, exp, matched), False)
+            place[a] = (rough, False)
             pause_match_debug.append({
                 "ayah": a,
                 "expected_ms": round(expected, 1),
@@ -2137,8 +3348,16 @@ def align_surah_fast(
             pause_sim = float(match.get("sim") or 0.0)
             pause = pause_by_center.get(float(match.get("center_ms") or c0))
             pause_reason = str(match.get("reason") or "")
+            timing_adjusted = bool(match.get("timing_adjusted"))
             needs_pause_refine = pause_reason == "micro-tempo"
-            if pause_sim >= _PAUSE_TRUST_SIM and not needs_pause_refine:
+            if timing_adjusted:
+                onset, conf, win_used = c, max(conf_thresh, pause_sim), 0.0
+                reliable = True
+                emit(
+                    f"Пауза {match.get('pause', '?')} дала скорректированный старт "
+                    f"аята {a}: {sec(onset)} сек., refine не нужен"
+                )
+            elif pause_sim >= _PAUSE_TRUST_SIM and not needs_pause_refine:
                 onset, conf, win_used = c, max(conf_thresh, pause_sim), 0.0
                 reliable = True
                 emit(
@@ -2151,13 +3370,28 @@ def align_surah_fast(
                 # quiet shelf center; cutting at the word onset loses the pause.
                 c = min(max(c0, prev_start + 30.0), total_ms)
                 refined_onset, refined_conf, win_used = refine(c, fa, prev_start, 0, ayah=a)
-                if _pause_refine_confirms_pause(c, refined_onset, refined_conf):
+                confirm_delta_ms = _PAUSE_REFINE_CONFIRM_MS
+                if pause is not None and pause.end_ms - pause.start_ms >= 700.0:
+                    confirm_delta_ms = max(confirm_delta_ms, pause.end_ms - pause.start_ms)
+                if _pause_refine_confirms_pause(
+                    c,
+                    refined_onset,
+                    refined_conf,
+                    max_delta_ms=confirm_delta_ms,
+                ):
                     if needs_pause_refine and pause is not None:
                         onset = _pause_center_with_refined_onset(
                             pause.start_ms,
                             c,
                             refined_onset,
                         )
+                    elif (
+                        pause_reason == "weak-dsp"
+                        and refined_onset is not None
+                        and refined_conf >= conf_reliable
+                        and 300.0 <= c - refined_onset <= confirm_delta_ms
+                    ):
+                        onset = refined_onset
                     else:
                         onset = c
                     conf = max(conf_thresh, pause_sim, refined_conf)
@@ -2249,14 +3483,23 @@ def align_surah_fast(
             ayah=a,
             phase="repair",
         )
-        if o2 is not None and c2 >= confs.get(a, 0.0):
+        repair_match = pause_match_by_ayah.get(a, {})
+        repair_pause_reason = str(repair_match.get("reason") or "")
+        micro_repair_candidate = (
+            place[a][1]
+            and repair_pause_reason == "micro-tempo"
+            and o2 is not None
+            and c2 >= conf_thresh
+            and abs(o2 - starts_ms.get(a, o2)) <= 3500.0
+        )
+        if o2 is not None and (c2 >= confs.get(a, 0.0) or micro_repair_candidate):
             # A refine that still never locks on (conf below thresh) returns a
             # noisy onset — on a long melodic ayah the model may not find the
             # boundary at all. Geometry between two reliable anchors beats model
             # noise, so fall back to the interpolated guess in that case.
             chosen = o2 if c2 >= conf_thresh else pred
             old_onset = starts_ms.get(a, pred)
-            pause_hint = wasl_pause_hints.get(a)
+            pause_hint = wasl_pause_hints.get(a) or snapped_wasl_hints.get(a)
             if (
                 pause_hint is not None
                 and abs(old_onset - pause_hint) <= _WASL_PAUSE_HINT_MS
@@ -2270,8 +3513,36 @@ def align_surah_fast(
                 )
                 continue
             # Don't pull a decent pause-backed onset off the pause grid (spurious).
-            if (place[a][1] and confs.get(a, 0.0) >= conf_thresh
-                    and _dist_pause(chosen) > 350.0):
+            pause_sim = float(repair_match.get("sim") or 0.0)
+            strong_pause_repair = (
+                place[a][1]
+                and pause_sim < _PAUSE_TRUST_SIM
+                and c2 >= conf_reliable
+                and abs(chosen - old_onset) > 500.0
+            )
+            micro_pause_repair = (
+                micro_repair_candidate
+                and abs(chosen - old_onset) <= 3500.0
+            )
+            repair_on_pause_grid = _dist_pause(chosen) <= 350.0 and old_onset - chosen > 500.0
+            off_grid_back_repair = 500.0 < old_onset - chosen <= 2500.0
+            if (
+                place[a][1]
+                and confs.get(a, 0.0) >= conf_thresh
+                and _dist_pause(chosen) > 350.0
+                and not (micro_pause_repair or (strong_pause_repair and off_grid_back_repair))
+            ):
+                continue
+            if (
+                place[a][1]
+                and confs.get(a, 0.0) >= conf_thresh
+                and abs(old_onset - place[a][0]) <= 80.0
+                and abs(chosen - old_onset) > 500.0
+                and not (
+                    micro_pause_repair
+                    or (strong_pause_repair and (repair_on_pause_grid or off_grid_back_repair))
+                )
+            ):
                 continue
             starts_ms[a] = chosen
             confs[a] = c2
@@ -2383,6 +3654,7 @@ def align_surah_fast(
                 {
                     "ayah": inner[i],
                     "shared_prefix_chars": opening_shared_prefix.get(i, 0),
+                    "internal_repeat_chars": opening_internal_prefix.get(i, 0),
                     "decode_window_ms": round(decode_window_for(i), 1),
                     "sim_chars": sim_chars_for(i),
                 }
@@ -2428,7 +3700,8 @@ def align_surah_fast(
             center = matched_center_for_ayah.get(a, rough)
             j = pidx_by_onset.get(center)
             if j is not None:
-                heard = decode_pause(j, extended=needs_extended_decode(k, j))
+                win_ms = decode_window_for(k) if needs_extended_decode(k, j) else None
+                heard = decode_pause(j, win_ms=win_ms)
         if not heard:
             verify_extra_reads += 1
             heard = greedy_decode(starts_ms[a] - 50.0, starts_ms[a] + _VERIFY_WINDOW_MS)
@@ -2443,12 +3716,24 @@ def align_surah_fast(
             3,
         )
     pause_coverage = sum(1 for t in tr_ayahs if t["from_pause"]) / max(1, len(inner))
-    drifted = bool(_VERIFY_SIM and verify_sim < _VERIFY_SIM)
+    reliable_coverage = sum(1 for t in tr_ayahs if t.get("reliable")) / max(1, len(tr_ayahs))
+    strong_pause_result = (
+        pause_coverage >= _DRIFT_MIN_PAUSE_COVERAGE
+        and (_FALLBACK_CONF <= 0.0 or mean_conf >= _FALLBACK_CONF)
+    )
+    reliable_align_result = reliable_coverage >= 0.95 and mean_conf >= 0.50
+    drifted = bool(
+        _VERIFY_SIM
+        and verify_sim < _VERIFY_SIM
+        and not strong_pause_result
+        and not reliable_align_result
+    )
     if (
         not drifted
         and _FALLBACK_CONF
         and mean_conf < _FALLBACK_CONF
         and pause_coverage < _DRIFT_MIN_PAUSE_COVERAGE
+        and not reliable_align_result
     ):
         drifted = True
     if drifted:

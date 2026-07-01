@@ -32,6 +32,9 @@
   аяты больше не останавливают текущий поиск.
 - `_find_micro_pause_valley` расширяет seed долину до quiet shelf с отдельным
   лимитом ширины и возвращает seed/expanded diagnostics.
+- Для synthetic `micro-tempo` effective-граница берёт начало от `seed_start`, а
+  конец от расширенной правой границы. Расширенный левый хвост остаётся в trace,
+  но не тянет центр метки слишком рано.
 
 ## Чек-лист
 
@@ -44,16 +47,16 @@
 ## Проверка
 
 - `python3 -m py_compile surah_cutter/core/align_fast.py`
-- `uv run pytest tests/test_align_fast.py` — 30 passed.
+- `uv run pytest tests/test_align_fast.py` — 34 passed.
 - `uv run ruff check surah_cutter/core/align_fast.py tests/test_align_fast.py`
 - Практический прогон без записи в БД на
-  `/Users/aabibulat1/Desktop/Badr_Turki/011.mp3`: trace сохранён в
-  `/tmp/sura_011_fast_local_future_micro_shelf.json`.
+  `/Users/aabibulat1/Desktop/Badr_Turki/011.mp3`: последний trace сохранён в
+  `/tmp/sura_011_fast_micro_effective_center.json`.
 
 Результат практического прогона:
 
-- аят 12 остался на `205.479s`, но micro-pause расширена с seed
-  `205.389-205.569s` до quiet shelf `205.029-205.929s`;
+- аят 12 сдвинут с `205.479s` на `205.659s`: expanded shelf
+  `205.029-205.929s`, effective pause `205.389-205.929s`;
 - аят 13 остался на исправленной ранней паузе `234.640s`;
 - аят 18 перешёл с wasl `349.786s` на подтверждённую паузу `352.220s`;
 - далёкие global observed совпадения больше не дают `future_gap`, а пишутся как

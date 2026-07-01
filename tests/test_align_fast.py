@@ -20,6 +20,8 @@ from surah_cutter.core.align_fast import (
     _find_micro_pause_valley,
     _interp_wasl,
     _match_boundaries,
+    _onset_prefix_len,
+    _opening_internal_repeats,
     _opening_shared_prefix_chars,
     _pause_center_with_refined_onset,
     _pause_refine_confirms_pause,
@@ -91,6 +93,18 @@ def test_sim_identical_and_collapsed():
     # Recitation stretches vowels; collapse makes the stretched onset match.
     assert _sim("kafaaaaruuu", "kafaru") == 1.0
     assert _sim("xyz", "kafaru") < 0.3
+
+
+def test_sim_penalizes_previous_tail_before_opening():
+    clean = _sim("innalladhīnaāmanū", "innalladhīnaāmanū", chars=24)
+    with_tail = _sim("qālainnaalladhīnaāmanū", "innalladhīnaāmanū", chars=24)
+
+    assert clean == 1.0
+    assert with_tail < clean - 0.20
+
+
+def test_onset_prefix_len_tolerates_dropped_initial_article_vowel():
+    assert _onset_prefix_len("l-ladhīkadhabawatawallā", "alladhīkadhabawatawallā") >= 6
 
 
 def test_pause_refine_confirms_pause_when_word_found_near_center():
@@ -232,6 +246,23 @@ def test_opening_shared_prefix_chars_measures_long_repeated_starts():
     assert shared[0] >= 10
     assert shared[1] == shared[0]
     assert shared[2] == 0
+
+
+def test_opening_internal_repeats_finds_previous_ayah_suffix():
+    openings = [
+        "waqālalladhīnaāmanū",
+        "innalladhīnaāmanūwaʿamilūṣāliḥāti",
+    ]
+    previous_bodies = [
+        "previousbody",
+        "qālalmalauinnalladhīnaāmanūthummaakhbarū",
+    ]
+
+    repeats = _opening_internal_repeats(openings, previous_bodies, prefix_chars=8)
+
+    assert 0 not in repeats
+    assert repeats[1][0] >= 10
+    assert repeats[1][1].startswith(_collapse("innalladhīnaāmanū"))
 
 
 def test_sim_can_compare_past_default_prefix_for_repeated_starts():
@@ -404,6 +435,539 @@ def test_sequential_pause_match_recovery_prefers_stronger_current_read():
     assert any(e["action"] == "recovered" and e["boundary"] == 1 and e["pause"] == 2 for e in events)
 
 
+def test_sequential_pause_match_recovery_prefers_early_observed_current_over_late_micro():
+    exp = [23_000.0, 29_264.0, 37_150.0]
+    ons = [23_110.0, 27_390.0, 31_556.0, 37_150.0]
+
+    def sim(i: int, j: int) -> float:
+        scores = {
+            (0, 0): 0.90,
+            (1, 1): 0.257,
+            (1, 2): 0.342,
+            (2, 3): 0.90,
+        }
+        return scores.get((i, j), 0.02)
+
+    matched, events = _sequential_pause_match(
+        exp,
+        ons,
+        sim,
+        min_sim=0.31,
+        recover_min_sim=0.34,
+        confirm_min_sim=0.50,
+        prior_window_ms=15_000.0,
+        lookahead=1,
+    )
+
+    assert matched[1] == 27_390.0
+    assert matched[1] != 31_556.0
+    assert any(e["action"] == "recovered" and e["boundary"] == 1 for e in events)
+
+
+def test_sequential_pause_match_observed_current_prefers_acoustic_sim_over_prior():
+    exp = [10_171.8, 15_112.2, 18_641.0, 23_581.5]
+    ons = [10_920.0, 14_270.0, 16_790.0, 20_400.0]
+
+    def sim(i: int, j: int) -> float:
+        scores = {
+            (0, 0): 0.90,
+            (1, 1): 0.386,
+            (1, 2): 0.352,
+            (1, 3): 0.200,
+            (2, 2): 0.430,
+            (2, 3): 0.100,
+            (3, 3): 0.532,
+        }
+        return scores.get((i, j), 0.02)
+
+    matched, events = _sequential_pause_match(
+        exp,
+        ons,
+        sim,
+        min_sim=0.34,
+        recover_min_sim=0.34,
+        confirm_min_sim=0.50,
+        prior_window_ms=15_000.0,
+        lookahead=1,
+    )
+
+    assert matched[1] == 14_270.0
+    assert matched[1] != 16_790.0
+    assert matched[2] == 16_790.0
+    assert any(
+        e["action"] in {"observed_current", "recovered"}
+        and e["boundary"] == 1
+        and e["pause"] == 1
+        for e in events
+    )
+
+
+def test_sequential_pause_match_observed_current_ignores_tiny_far_sim_gain():
+    exp = [16_402.9]
+    ons = [17_910.0, 23_490.0, 26_880.0, 33_690.0]
+
+    def sim(i: int, j: int) -> float:
+        return [0.426, 0.344, 0.364, 0.451][j]
+
+    matched, events = _sequential_pause_match(
+        exp,
+        ons,
+        sim,
+        min_sim=0.34,
+        confirm_min_sim=0.50,
+        prior_window_ms=15_000.0,
+    )
+
+    assert matched == [17_910.0]
+    assert any(
+        e["action"] == "observed_current"
+        and e["boundary"] == 0
+        and e["pause"] == 0
+        for e in events
+    )
+
+
+def test_sequential_pause_match_keeps_near_current_before_multi_ayah_future_jump():
+    exp = [22_908.3, 27_916.6, 32_014.3]
+    ons = [21_990.0]
+
+    def sim(i: int, j: int) -> float:
+        scores = {
+            (0, 0): 0.315,
+            (2, 0): 0.442,
+        }
+        return scores.get((i, j), 0.02)
+
+    matched, events = _sequential_pause_match(
+        exp,
+        ons,
+        sim,
+        min_sim=0.31,
+        recover_min_sim=0.31,
+        confirm_min_sim=0.50,
+        future_margin=0.12,
+        prior_window_ms=15_000.0,
+        lookahead=2,
+    )
+
+    assert matched[0] == 21_990.0
+    assert matched[2] is None
+    assert not any(
+        e["action"] == "future_gap" and e["boundary"] == 0
+        for e in events
+    )
+
+
+def test_sequential_pause_match_recovery_keeps_near_current_future_echo():
+    exp = [18_030.7, 22_908.3, 27_916.6, 32_014.3]
+    ons = [17_900.0, 21_990.0, 26_530.0]
+
+    def sim(i: int, j: int) -> float:
+        scores = {
+            (0, 0): 0.453,
+            (0, 1): 0.163,
+            (1, 1): 0.298,
+            (1, 2): 0.213,
+            (2, 2): 0.500,
+            (3, 1): 0.404,
+        }
+        return scores.get((i, j), 0.02)
+
+    def score_bonus(i: int, j: int) -> float:
+        if (i, j) == (1, 1):
+            return 0.063
+        return 0.0
+
+    matched, events = _sequential_pause_match(
+        exp,
+        ons,
+        sim,
+        min_sim=0.31,
+        recover_min_sim=0.34,
+        confirm_min_sim=0.50,
+        future_margin=0.12,
+        prior_window_ms=15_000.0,
+        lookahead=2,
+        score_bonus=score_bonus,
+    )
+
+    assert matched[1] == 21_990.0
+    assert any(
+        e["action"] == "recovered"
+        and e["boundary"] == 1
+        and e["pause"] == 1
+        for e in events
+    )
+    assert not any(
+        e["action"] == "skip_recovery_observed_mismatch"
+        and e["boundary"] == 1
+        and e["pause"] == 1
+        for e in events
+    )
+
+
+def test_sequential_pause_match_recovers_chain_before_future_gap():
+    exp = [1000.0, 2000.0, 3000.0]
+    ons = [980.0, 2010.0, 3005.0]
+
+    def sim(i: int, j: int) -> float:
+        scores = {
+            (0, 0): 0.35,
+            (0, 2): 0.10,
+            (1, 1): 0.36,
+            (1, 2): 0.10,
+            (2, 2): 0.80,
+        }
+        return scores.get((i, j), 0.02)
+
+    matched, events = _sequential_pause_match(
+        exp,
+        ons,
+        sim,
+        min_sim=0.31,
+        recover_min_sim=0.34,
+        confirm_min_sim=0.50,
+        prior_window_ms=1500.0,
+        lookahead=2,
+    )
+
+    assert matched == [980.0, 2010.0, 3005.0]
+    assert any(e["action"] == "recovered" and e["boundary"] == 0 for e in events)
+    assert any(e["action"] == "recovered" and e["boundary"] == 1 for e in events)
+
+
+def test_sequential_pause_match_keeps_far_observed_current_candidate():
+    exp = [1000.0]
+    ons = [1100.0, 1400.0]
+
+    def sim(_i: int, j: int) -> float:
+        return [0.39, 0.40][j]
+
+    matched, events = _sequential_pause_match(
+        exp,
+        ons,
+        sim,
+        min_sim=0.31,
+        recover_min_sim=0.34,
+        confirm_min_sim=0.50,
+        prior_window_ms=1000.0,
+        reject=lambda _i, _j, _s: "far_from_expected",
+    )
+
+    assert matched == [1100.0]
+    assert any(e["action"] == "observed_current_candidate" for e in events)
+
+
+def test_sequential_pause_match_rejects_far_weak_observed_current():
+    exp = [1000.0, 2000.0]
+    ons = [11_000.0, 12_000.0]
+
+    def sim(i: int, j: int) -> float:
+        scores = {
+            (0, 0): 0.34,
+            (1, 1): 0.80,
+        }
+        return scores.get((i, j), 0.01)
+
+    matched, events = _sequential_pause_match(
+        exp,
+        ons,
+        sim,
+        min_sim=0.31,
+        recover_min_sim=0.34,
+        confirm_min_sim=0.50,
+        prior_window_ms=15_000.0,
+    )
+
+    assert matched[0] is None
+    assert not any(e["action"] == "observed_current" for e in events)
+
+
+def test_sequential_pause_match_recovery_rejects_far_weak_tempo_bonus():
+    exp = [1000.0, 2000.0]
+    ons = [11_000.0, 12_000.0]
+
+    def sim(i: int, j: int) -> float:
+        scores = {
+            (0, 0): 0.30,
+            (1, 1): 0.80,
+        }
+        return scores.get((i, j), 0.01)
+
+    def bonus(i: int, j: int) -> float:
+        return 0.08 if (i, j) == (0, 0) else 0.0
+
+    matched, events = _sequential_pause_match(
+        exp,
+        ons,
+        sim,
+        min_sim=0.31,
+        recover_min_sim=0.34,
+        confirm_min_sim=0.50,
+        prior_window_ms=15_000.0,
+        score_bonus=bonus,
+    )
+
+    assert matched[0] is None
+    assert any(
+        e["action"] == "skip_recovery_low_sim"
+        and e["boundary"] == 0
+        and e["pause"] == 0
+        for e in events
+    )
+
+
+def test_sequential_pause_match_prefers_early_current_before_late_confirmed_repeat():
+    exp = [1000.0]
+    ons = [1000.0, 10_000.0]
+
+    def sim(_i: int, j: int) -> float:
+        return [0.475, 0.527][j]
+
+    matched, events = _sequential_pause_match(
+        exp,
+        ons,
+        sim,
+        min_sim=0.31,
+        recover_min_sim=0.34,
+        confirm_min_sim=0.50,
+        prior_window_ms=15_000.0,
+    )
+
+    assert matched == [1000.0]
+    assert any(e["action"] == "observed_current" for e in events)
+
+
+def test_sequential_pause_match_uses_pause_order_before_far_confirmed_repeat():
+    exp = [470_000.0, 480_000.0, 490_000.0]
+    ons = [470_000.0, 480_150.0, 505_000.0, 515_000.0]
+
+    def sim(i: int, j: int) -> float:
+        scores = {
+            (0, 0): 0.90,
+            (1, 1): 0.29,  # weak text, but the pause is at the current boundary
+            (1, 3): 0.55,  # stronger repeated opening far ahead
+            (2, 2): 0.20,
+        }
+        return scores.get((i, j), 0.02)
+
+    matched, events = _sequential_pause_match(
+        exp,
+        ons,
+        sim,
+        min_sim=0.31,
+        recover_min_sim=0.34,
+        confirm_min_sim=0.50,
+        prior_window_ms=15_000.0,
+    )
+
+    assert matched[1] == 480_150.0
+    assert matched[1] != 515_000.0
+    assert any(e["action"] == "pause_order_current_candidate" for e in events)
+    assert any(
+        e["action"] in {"weak_observed_current", "observed_current", "recovered"}
+        and e["boundary"] == 1
+        and e["pause"] == 1
+        for e in events
+    )
+
+
+def test_sequential_pause_match_recovery_keeps_prior_closer_immediate_future_echo():
+    exp = [90_432.8, 95_659.0, 99_051.0]
+    ons = [89_920.0, 99_210.0]
+
+    def sim(i: int, j: int) -> float:
+        scores = {
+            (0, 0): 0.287,
+            (1, 0): 0.354,
+            (2, 1): 0.850,
+        }
+        return scores.get((i, j), 0.02)
+
+    matched, events = _sequential_pause_match(
+        exp,
+        ons,
+        sim,
+        min_sim=0.31,
+        recover_min_sim=0.34,
+        confirm_min_sim=0.50,
+        future_margin=0.12,
+        prior_window_ms=15_000.0,
+        lookahead=3,
+    )
+
+    assert matched[0] == 89_920.0
+    assert any(
+        e["action"] == "recovered"
+        and e["boundary"] == 0
+        and e["pause"] == 0
+        for e in events
+    )
+
+
+def test_sequential_pause_match_accepts_final_weak_current():
+    exp = [111_622.9]
+    ons = [114_270.0]
+
+    def sim(_i: int, _j: int) -> float:
+        return 0.191
+
+    matched, events = _sequential_pause_match(
+        exp,
+        ons,
+        sim,
+        min_sim=0.31,
+        recover_min_sim=0.34,
+        confirm_min_sim=0.50,
+        prior_window_ms=15_000.0,
+    )
+
+    assert matched == [114_270.0]
+    assert any(e["action"] == "final_weak_current" for e in events)
+
+
+def test_sequential_pause_match_rejects_final_weak_current_against_tempo():
+    exp = [166_676.6]
+    ons = [164_288.0]
+
+    def sim(_i: int, _j: int) -> float:
+        return 0.191
+
+    def score_bonus(_i: int, _j: int) -> float:
+        return -0.08
+
+    matched, events = _sequential_pause_match(
+        exp,
+        ons,
+        sim,
+        min_sim=0.31,
+        recover_min_sim=0.34,
+        confirm_min_sim=0.50,
+        prior_window_ms=15_000.0,
+        score_bonus=score_bonus,
+    )
+
+    assert matched == [None]
+    assert not any(e["action"] == "final_weak_current" for e in events)
+
+
+def test_sequential_pause_match_accepts_final_weak_current_near_neutral_tempo():
+    exp = [242_465.1]
+    ons = [241_350.0]
+
+    def sim(_i: int, _j: int) -> float:
+        return 0.214
+
+    def score_bonus(_i: int, _j: int) -> float:
+        return -0.008
+
+    matched, events = _sequential_pause_match(
+        exp,
+        ons,
+        sim,
+        min_sim=0.31,
+        recover_min_sim=0.34,
+        confirm_min_sim=0.50,
+        prior_window_ms=15_000.0,
+        score_bonus=score_bonus,
+    )
+
+    assert matched == [241_350.0]
+    assert any(e["action"] == "final_weak_current" for e in events)
+
+
+def test_sequential_pause_match_accepts_near_weak_observed_current():
+    exp = [204_332.0, 208_307.0]
+    ons = [202_120.0, 207_570.0]
+
+    def sim(i: int, j: int) -> float:
+        scores = {
+            (0, 0): 0.279,
+            (1, 1): 0.300,
+        }
+        return scores.get((i, j), 0.02)
+
+    matched, events = _sequential_pause_match(
+        exp,
+        ons,
+        sim,
+        min_sim=0.31,
+        recover_min_sim=0.34,
+        confirm_min_sim=0.50,
+        prior_window_ms=15_000.0,
+    )
+
+    assert matched[0] == 202_120.0
+    assert any(e["action"] == "weak_observed_current" for e in events)
+
+
+def test_sequential_pause_match_recovery_keeps_local_current_over_global_false_match():
+    exp = [1000.0, 2000.0, 3000.0]
+    ons = [1000.0, 2000.0, 3000.0]
+
+    def sim(i: int, j: int) -> float:
+        scores = {
+            (0, 0): 0.90,
+            (0, 1): 0.53,  # stronger global false match for the recovery pause
+            (1, 1): 0.48,
+            (1, 2): 0.10,
+            (2, 2): 0.90,
+        }
+        return scores.get((i, j), 0.02)
+
+    matched, events = _sequential_pause_match(
+        exp,
+        ons,
+        sim,
+        min_sim=0.34,
+        recover_min_sim=0.34,
+        confirm_min_sim=0.50,
+        prior_window_ms=1500.0,
+        lookahead=1,
+    )
+
+    assert matched == ons
+    assert any(e["action"] == "recovered" and e["boundary"] == 1 for e in events)
+    assert not any(
+        e["action"] == "skip_recovery_observed_mismatch"
+        and e["boundary"] == 1
+        and e["pause"] == 1
+        for e in events
+    )
+
+
+def test_sequential_pause_match_keeps_local_current_over_global_stale():
+    exp = [1_000.0, 2_000.0, 3_000.0]
+    ons = [1_000.0, 2_050.0, 3_000.0]
+
+    def sim(i: int, j: int) -> float:
+        scores = {
+            (0, 0): 0.70,
+            (0, 1): 0.50,
+            (1, 1): 0.27,
+            (1, 2): 0.10,
+            (2, 2): 0.70,
+        }
+        return scores.get((i, j), 0.0)
+
+    matched, events = _sequential_pause_match(
+        exp,
+        ons,
+        sim,
+        min_sim=0.31,
+        recover_min_sim=0.34,
+        confirm_min_sim=0.50,
+        prior_window_ms=15_000.0,
+    )
+
+    assert matched == [1_000.0, 2_050.0, 3_000.0]
+    assert any(
+        e["action"] == "observed_current_candidate"
+        and e.get("reason") == "local_current_over_global_stale"
+        for e in events
+    )
+
+
 def test_sequential_pause_match_recovery_rejects_observed_wrong_pause():
     exp = [233_388.8, 253_340.0, 270_000.0]
     ons = [216_170.0, 234_640.0, 244_670.0, 253_340.0]
@@ -570,7 +1134,12 @@ def test_sequential_pause_match_stops_on_unclear_wrong_place():
         and e["direction"] == "future"
         for e in events
     )
-    assert not any(e["action"] == "wasl" and e["boundary"] == 0 for e in events)
+    assert any(
+        e["action"] == "wasl"
+        and e["boundary"] == 0
+        and e.get("reason") == "unresolved_current"
+        for e in events
+    )
     assert not any(e.get("boundary") == 1 and e["action"] == "confirmed" for e in events)
 
 
