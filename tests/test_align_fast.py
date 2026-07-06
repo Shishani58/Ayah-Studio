@@ -12,23 +12,63 @@ from types import SimpleNamespace
 import numpy as np
 
 from surah_cutter.core.align_fast import (
+    _accept_fallback_pause_candidate,
+    _accept_later_pause_grid_repair,
+    _accept_pause_backed_repair,
     _ambiguous_openings,
+    _assign_opening_block,
     _ayah_waqf_counts,
     _collapse,
     _common_prefix_len,
+    _compact_dsp_start_candidate,
+    _compact_dsp_end_candidate,
     _count_waqf_marks,
+    _dense_prior_opening_candidate,
+    _dense_later_opening_candidate,
+    _dense_later_final_opening_candidate,
+    _dsp_edge_timing_candidate,
     _find_micro_pause_valley,
+    _final_weak_current_activation_window,
+    _first_ayah_content_start,
+    _internal_stop_repair_candidate,
     _interp_wasl,
+    _left_edge_repeated_opening_candidate,
+    _late_repeated_dsp_prior_candidate,
+    _long_dsp_fractional_start_candidate,
+    _long_pause_start_after_speech_candidate,
+    _long_pause_start_balanced_speech_candidate,
+    _long_pause_start_timing_candidate,
     _match_boundaries,
+    _missing_wasl_pause_candidate,
     _onset_prefix_len,
     _opening_internal_repeats,
     _opening_shared_prefix_chars,
+    _micro_shelf_start_candidate,
+    _prefer_expected_micro_valley,
+    _pause_backed_refine_start,
     _pause_center_with_refined_onset,
+    _pause_match_min_keep_sim,
     _pause_refine_confirms_pause,
+    _preword_micro_timing_candidate,
+    _prior_pause_before_internal_stop,
+    _prior_pause_between_anchors,
+    _prior_close_dsp_before_micro_stop,
+    _rejected_micro_valley_candidate,
+    _reject_low_conf_off_grid_repair,
     _sequential_pause_match,
+    _section_repair_member,
+    _section_long_pause_start_candidate,
+    _skips_dense_pause_block,
     _sim,
+    _short_low_sim_dsp_start_candidate,
     _span_ratio_quality,
     _unit_len,
+    _weak_dsp_prior_recovery_candidate,
+    _weak_dsp_prior_trusted_recovery_candidate,
+    _weak_dsp_later_prefix_candidate,
+    _weak_dsp_expected_micro_valley_candidate,
+    _weak_dsp_post_selected_micro_valley_candidate,
+    _weak_dsp_wasl_recovery_candidate,
 )
 
 
@@ -88,6 +128,76 @@ def test_find_micro_pause_valley_detects_local_rms_dip():
     assert ratio < 0.2
 
 
+def test_prefer_expected_micro_valley_only_for_late_comparable_candidate():
+    current = (255_817.0, 255_953.0, 0.127, 255_825.0, 255_945.0)
+    expected = (254_503.0, 254_685.0, 0.166, 254_503.0, 254_683.0)
+    weak_expected = (254_503.0, 254_685.0, 0.25, 254_503.0, 254_683.0)
+
+    assert (
+        _prefer_expected_micro_valley(
+            current,
+            expected,
+            expected_ms=253_685.0,
+        )
+        is expected
+    )
+    assert (
+        _prefer_expected_micro_valley(
+            current,
+            weak_expected,
+            expected_ms=253_685.0,
+        )
+        is current
+    )
+    assert (
+        _prefer_expected_micro_valley(
+            current,
+            expected,
+            expected_ms=256_000.0,
+        )
+        is current
+    )
+
+
+def test_micro_shelf_start_candidate_requires_late_structural_micro():
+    assert (
+        _micro_shelf_start_candidate(
+            pause_reason="micro-tempo",
+            sim=0.342,
+            prev_quality=0.998,
+            next_quality=0.373,
+            center_ms=314_090.5,
+            shelf_start_ms=313_905.5,
+            confirm_match_sim=0.50,
+        )
+        == 313_905.5
+    )
+    assert (
+        _micro_shelf_start_candidate(
+            pause_reason="micro-tempo",
+            sim=0.55,
+            prev_quality=0.998,
+            next_quality=0.373,
+            center_ms=314_090.5,
+            shelf_start_ms=313_905.5,
+            confirm_match_sim=0.50,
+        )
+        is None
+    )
+    assert (
+        _micro_shelf_start_candidate(
+            pause_reason="micro-tempo",
+            sim=0.342,
+            prev_quality=0.758,
+            next_quality=0.949,
+            center_ms=524_074.1,
+            shelf_start_ms=523_444.1,
+            confirm_match_sim=0.50,
+        )
+        is None
+    )
+
+
 def test_sim_identical_and_collapsed():
     assert _sim("kafaru", "kafaru") == 1.0
     # Recitation stretches vowels; collapse makes the stretched onset match.
@@ -137,6 +247,10 @@ def test_pause_center_with_refined_onset_uses_word_as_right_edge():
     assert _pause_center_with_refined_onset(205_029.0, 205_479.0, None) == 205_479.0
 
 
+def test_pause_backed_refine_start_keeps_regular_pause_point():
+    assert _pause_backed_refine_start(82_410.0) == 82_410.0
+
+
 def test_match_perfect_one_to_one():
     exp = [1000.0, 2000.0, 3000.0]
     ons = [1000.0, 2000.0, 3000.0]
@@ -178,6 +292,1174 @@ def test_match_is_order_preserving():
     out = _match_boundaries(exp, ons, anchor=0.0, wasl_pen=2600.0, extra_pen=350.0)
     placed = [o for o in out if o is not None]
     assert placed == sorted(placed)
+
+
+def test_assign_opening_block_keeps_pause_order_over_late_repeat():
+    boundaries = [66, 67, 68]
+    candidate_ms = {
+        10: 480_150.0,
+        11: 505_000.0,
+        12: 514_730.0,
+        13: 524_000.0,
+    }
+    scores = {
+        (66, 10): 1.10,  # real pause-backed start
+        (66, 12): 1.50,  # later repeated opening sounds stronger in isolation
+        (67, 11): 1.10,
+        (67, 13): 0.90,
+        (68, 12): 1.10,
+    }
+
+    assignment = _assign_opening_block(
+        boundaries,
+        [10, 11, 12, 13],
+        candidate_time=candidate_ms.__getitem__,
+        score=lambda i, j: scores.get((i, j)),
+        after_ms=470_000.0,
+    )
+
+    assert assignment == {66: 10, 67: 11, 68: 12}
+
+
+def test_assign_opening_block_rejects_text_impossible_late_pause():
+    candidate_ms = {
+        10: 480_000.0,
+        11: 570_000.0,
+        12: 807_000.0,
+    }
+    expected_ms = {
+        66: 516_000.0,
+        67: 527_000.0,
+        68: 536_000.0,
+    }
+
+    assignment = _assign_opening_block(
+        [67, 68],
+        [11, 12],
+        candidate_time=candidate_ms.__getitem__,
+        score=lambda _i, _j: 1.0,
+        after_ms=candidate_ms[10],
+        expected_time=expected_ms.__getitem__,
+        after_expected_ms=expected_ms[66],
+    )
+
+    assert assignment == {}
+
+
+def test_assign_opening_block_prefers_stronger_later_opening_chain():
+    candidate_ms = {
+        49: 247_160.0,
+        50: 251_400.0,
+        52: 254_260.0,
+        53: 257_590.0,
+        54: 261_170.0,
+        55: 265_430.0,
+    }
+    expected_ms = {
+        32: 221_180.0,
+        33: 249_256.0,
+        34: 253_296.0,
+        35: 261_218.0,
+        36: 265_478.0,
+    }
+    scores = {
+        (33, 49): 0.284,
+        (33, 50): 0.285,
+        (33, 52): 0.571,
+        (34, 50): 0.285,
+        (34, 53): 0.342,
+        (35, 54): 0.295,
+        (36, 55): 0.800,
+    }
+
+    assignment = _assign_opening_block(
+        [33, 34, 35, 36],
+        [49, 50, 52, 53, 54, 55],
+        candidate_time=candidate_ms.__getitem__,
+        score=lambda i, j: scores.get((i, j)),
+        after_ms=candidate_ms[49] - 25_980.0,
+        expected_time=expected_ms.__getitem__,
+        after_expected_ms=expected_ms[32],
+    )
+
+    assert assignment == {33: 52, 34: 53, 35: 54, 36: 55}
+
+
+def test_skips_dense_pause_block_detects_late_jump_over_sequence():
+    candidate_ms = {
+        10: 1_050_000.0,
+        11: 1_054_500.0,
+        12: 1_105_000.0,
+    }
+    expected_ms = {
+        119: 934_000.0,
+        120: 941_000.0,
+        121: 947_000.0,
+        130: 1_013_000.0,
+    }
+
+    assert _skips_dense_pause_block(
+        120,
+        12,
+        [10, 11, 12],
+        candidate_time=candidate_ms.__getitem__,
+        expected_time=expected_ms.__getitem__,
+        previous_boundary=119,
+        previous_time=1_045_000.0,
+        next_boundary=130,
+    )
+
+
+def test_section_repair_member_is_limited_to_wasl_and_low_fallback():
+    assert _section_repair_member(
+        from_pause=False,
+        action="wasl",
+        sim=None,
+        min_sim=0.31,
+    )
+    assert _section_repair_member(
+        from_pause=True,
+        action="pause_fallback",
+        sim=0.12,
+        min_sim=0.31,
+    )
+    assert not _section_repair_member(
+        from_pause=True,
+        action="pause_fallback",
+        sim=0.45,
+        min_sim=0.31,
+    )
+    assert not _section_repair_member(
+        from_pause=True,
+        action="observed_current",
+        sim=0.12,
+        min_sim=0.31,
+    )
+
+
+def test_prior_pause_before_internal_stop_requires_internal_stop():
+    kwargs = {
+        "previous_time": 727_770.0,
+        "raw_time": 742_620.0,
+        "expected_gap_ms": 7_770.0,
+        "strong_candidate_times": [734_280.0, 741_910.0],
+    }
+
+    assert _prior_pause_before_internal_stop(**kwargs, raw_is_internal_stop=True) == 734_280.0
+    assert _prior_pause_before_internal_stop(**kwargs, raw_is_internal_stop=False) is None
+
+
+def test_prior_pause_before_internal_stop_handles_long_pause_end():
+    assert (
+        _prior_pause_before_internal_stop(
+            previous_time=853_722.0,
+            raw_time=869_680.0,
+            expected_gap_ms=7_770.0,
+            strong_candidate_times=[861_490.0, 866_050.0],
+            raw_is_internal_stop=True,
+        )
+        == 861_490.0
+    )
+
+
+def test_dense_prior_opening_candidate_recovers_earlier_opening_pause():
+    kwargs = {
+        "previous_time": 385_020.0,
+        "selected_time": 413_910.0,
+        "expected_gap_ms": 11_418.3,
+        "candidates": [(408_140.0, 0.313, 1), (396_840.0, 0.554, 0)],
+        "pause_reason": "dsp",
+        "selected_prev_quality": 0.0,
+        "selected_sim": 0.498,
+        "action": "recovered",
+    }
+
+    assert _dense_prior_opening_candidate(**kwargs) == 408_140.0
+    assert (
+        _dense_prior_opening_candidate(
+            **{**kwargs, "selected_prev_quality": 0.55}
+        )
+        is None
+    )
+    assert (
+        _dense_prior_opening_candidate(
+            **{**kwargs, "candidates": [(408_140.0, 0.20, 1)]}
+        )
+        is None
+    )
+    assert (
+        _dense_prior_opening_candidate(
+            **{**kwargs, "candidates": [(408_140.0, 0.313, 0)]}
+        )
+        is None
+    )
+
+
+def test_dense_later_opening_candidate_requires_pair_quality_and_text_gain():
+    kwargs = {
+        "previous_time": 332_800.0,
+        "selected_time": 336_710.0,
+        "next_time": 345_190.0,
+        "expected_prev_gap_ms": 8_493.9,
+        "expected_next_gap_ms": 3_893.0,
+        "candidates": [(341_390.0, 0.582, 4)],
+        "pause_reason": "dsp",
+        "selected_sim": 0.356,
+        "action": "observed_current",
+    }
+
+    assert _dense_later_opening_candidate(**kwargs) == 341_390.0
+    assert (
+        _dense_later_opening_candidate(
+            **{**kwargs, "candidates": [(341_390.0, 0.582, 0)]}
+        )
+        is None
+    )
+    assert (
+        _dense_later_opening_candidate(
+            **{**kwargs, "candidates": [(341_390.0, 0.410, 4)]}
+        )
+        is None
+    )
+
+
+def test_dense_later_final_opening_candidate_uses_previous_span_only():
+    kwargs = {
+        "previous_time": 340_260.0,
+        "selected_time": 345_470.0,
+        "expected_gap_ms": 12_350.4,
+        "candidates": [(349_990.0, 0.528, 7)],
+        "pause_reason": "dsp",
+        "selected_sim": 0.352,
+        "action": "observed_current",
+    }
+
+    assert _dense_later_final_opening_candidate(**kwargs) == 349_990.0
+    assert (
+        _dense_later_final_opening_candidate(
+            **{**kwargs, "candidates": [(349_990.0, 0.528, 0)]}
+        )
+        is None
+    )
+    assert (
+        _dense_later_final_opening_candidate(
+            **{**kwargs, "candidates": [(349_990.0, 0.40, 7)]}
+        )
+        is None
+    )
+
+
+def test_weak_dsp_later_prefix_candidate_moves_to_real_prefix_pause():
+    kwargs = {
+        "previous_time": 10_765.0,
+        "selected_time": 13_000.0,
+        "next_time": 19_020.0,
+        "expected_prev_gap_ms": 2_970.3,
+        "expected_next_gap_ms": 2_970.3,
+        "candidates": [(16_220.0, 0.520, 0)],
+        "pause_reason": "weak-dsp",
+        "selected_sim": 0.325,
+        "selected_prefix": 0,
+        "action": "observed_current",
+    }
+
+    assert _weak_dsp_later_prefix_candidate(**kwargs) == 16_220.0
+    assert (
+        _weak_dsp_later_prefix_candidate(
+            **{**kwargs, "next_time": 17_900.0}
+        )
+        is None
+    )
+
+
+def test_missing_wasl_pause_candidate_prefers_expected_pause_grid():
+    kwargs = {
+        "rough_ms": 761_630.0,
+        "expected_ms": 754_500.0,
+        "previous_time": 750_350.0,
+        "next_time": 770_840.0,
+        "candidates": [758_630.0, 771_270.0],
+    }
+
+    assert _missing_wasl_pause_candidate(**kwargs) == 758_630.0
+    assert (
+        _missing_wasl_pause_candidate(
+            **{**kwargs, "candidates": [756_000.0]}
+        )
+        is None
+    )
+    assert (
+        _missing_wasl_pause_candidate(
+            **{**kwargs, "rough_ms": 759_000.0}
+        )
+        is None
+    )
+
+
+def test_accept_later_pause_grid_repair_requires_pause_grid_and_text_span():
+    kwargs = {
+        "from_pause": True,
+        "original_reason": "micro-tempo",
+        "original_sim": 0.204,
+        "old_onset": 334_526.0,
+        "repaired_onset": 339_178.0,
+        "repaired_conf": 0.685,
+        "nearest_pause_dist_ms": 102.0,
+        "nearest_pause_reason": "weak-dsp",
+        "previous_time": 331_080.0,
+        "next_time": 347_360.0,
+        "expected_prev_gap_ms": 8_348.0,
+        "expected_next_gap_ms": 7_932.0,
+        "conf_reliable": 0.55,
+        "pause_trust_sim": 0.55,
+    }
+
+    assert _accept_later_pause_grid_repair(**kwargs)
+    assert not _accept_later_pause_grid_repair(
+        **{**kwargs, "nearest_pause_dist_ms": 700.0}
+    )
+
+
+def test_prior_pause_between_anchors_requires_internal_stop_and_pair_quality():
+    kwargs = {
+        "previous_time": 362_710.0,
+        "selected_time": 372_970.0,
+        "next_time": 381_510.0,
+        "expected_prev_gap_ms": 6_400.0,
+        "expected_next_gap_ms": 12_500.0,
+        "strong_candidate_times": [369_040.0],
+    }
+
+    assert (
+        _prior_pause_between_anchors(**kwargs, selected_is_internal_stop=True)
+        == 369_040.0
+    )
+    assert _prior_pause_between_anchors(**kwargs, selected_is_internal_stop=False) is None
+
+
+def test_internal_stop_repair_candidate_requires_micro_inside_pause():
+    kwargs = {
+        "from_pause": True,
+        "action": "observed_current",
+        "reason": "dsp",
+        "sim": 0.466,
+        "pause_duration_ms": 930.0,
+        "prev_speech_ms": 2800.0,
+        "next_speech_ms": 0.0,
+        "has_micro_stop": True,
+        "pause_trust_sim": 0.50,
+    }
+
+    assert _internal_stop_repair_candidate(**kwargs)
+    assert not _internal_stop_repair_candidate(**{**kwargs, "has_micro_stop": False})
+    assert not _internal_stop_repair_candidate(**{**kwargs, "sim": 0.55})
+
+
+def test_reject_low_conf_off_grid_repair_only_for_pause_backed_shift():
+    kwargs = {
+        "from_pause": True,
+        "repair_conf": 0.205,
+        "conf_thresh": 0.25,
+        "old_pause_dist_ms": 0.0,
+        "chosen_pause_dist_ms": 1200.0,
+        "shift_ms": 5500.0,
+    }
+
+    assert _reject_low_conf_off_grid_repair(**kwargs)
+    assert not _reject_low_conf_off_grid_repair(**{**kwargs, "repair_conf": 0.4})
+    assert not _reject_low_conf_off_grid_repair(**{**kwargs, "from_pause": False})
+
+
+def test_accept_pause_backed_repair_rejects_forward_micro_steal():
+    assert _accept_pause_backed_repair(
+        from_pause=True,
+        original_pause_reason="dsp",
+        old_onset_ms=82_410.0,
+        chosen_onset_ms=79_900.0,
+        chosen_pause_dist_ms=40.0,
+        chosen_pause_reason=None,
+    )
+    assert _accept_pause_backed_repair(
+        from_pause=True,
+        original_pause_reason="dsp",
+        old_onset_ms=82_410.0,
+        chosen_onset_ms=82_430.0,
+        chosen_pause_dist_ms=1200.0,
+        chosen_pause_reason="dsp",
+    )
+    assert _accept_pause_backed_repair(
+        from_pause=True,
+        original_pause_reason="dsp",
+        old_onset_ms=82_410.0,
+        chosen_onset_ms=85_162.0,
+        chosen_pause_dist_ms=120.0,
+        chosen_pause_reason="dsp",
+    )
+    assert _accept_pause_backed_repair(
+        from_pause=False,
+        original_pause_reason="micro-tempo",
+        old_onset_ms=82_410.0,
+        chosen_onset_ms=85_162.0,
+        chosen_pause_dist_ms=1200.0,
+        chosen_pause_reason="micro-tempo",
+    )
+    assert not _accept_pause_backed_repair(
+        from_pause=True,
+        original_pause_reason="dsp",
+        old_onset_ms=82_410.0,
+        chosen_onset_ms=85_162.0,
+        chosen_pause_dist_ms=120.0,
+        chosen_pause_reason="micro-tempo",
+    )
+    assert _accept_pause_backed_repair(
+        from_pause=True,
+        original_pause_reason="micro-tempo",
+        old_onset_ms=225_963.0,
+        chosen_onset_ms=223_373.0,
+        chosen_pause_dist_ms=1600.0,
+        chosen_pause_reason="weak-dsp",
+    )
+    assert not _accept_pause_backed_repair(
+        from_pause=True,
+        original_pause_reason="micro-tempo",
+        old_onset_ms=82_410.0,
+        chosen_onset_ms=85_162.0,
+        chosen_pause_dist_ms=120.0,
+        chosen_pause_reason="weak-dsp",
+    )
+    assert _accept_pause_backed_repair(
+        from_pause=True,
+        original_pause_reason="micro-tempo",
+        old_onset_ms=334_527.0,
+        chosen_onset_ms=339_178.0,
+        chosen_pause_dist_ms=102.0,
+        chosen_pause_reason="weak-dsp",
+        later_pause_grid_repair=True,
+    )
+    assert not _accept_pause_backed_repair(
+        from_pause=True,
+        original_pause_reason="weak-dsp",
+        old_onset_ms=181_015.0,
+        chosen_onset_ms=178_643.0,
+        chosen_pause_dist_ms=1300.0,
+        chosen_pause_reason="weak-dsp",
+    )
+
+
+def test_final_weak_current_activation_window_handles_early_and_late_match():
+    assert _final_weak_current_activation_window(
+        expected_ms=777_336.0,
+        matched_ms=761_830.0,
+        matched_pause_start_ms=761_620.0,
+        matched_pause_end_ms=762_040.0,
+        total_ms=790_000.0,
+        prior_window_ms=15_000.0,
+    ) == (773_836.0, 780_836.0)
+    assert _final_weak_current_activation_window(
+        expected_ms=777_336.0,
+        matched_ms=786_000.0,
+        matched_pause_start_ms=785_800.0,
+        matched_pause_end_ms=786_200.0,
+        total_ms=790_000.0,
+        prior_window_ms=15_000.0,
+    ) == (773_836.0, 780_836.0)
+    assert _final_weak_current_activation_window(
+        expected_ms=777_336.0,
+        matched_ms=778_000.0,
+        matched_pause_start_ms=777_800.0,
+        matched_pause_end_ms=778_200.0,
+        total_ms=790_000.0,
+        prior_window_ms=15_000.0,
+    ) is None
+
+
+def test_first_ayah_content_start_prefers_intro_pause_over_basmala_floor():
+    assert (
+        _first_ayah_content_start(
+            3726.7,
+            basmala=True,
+            intro_pause_start_ms=3292.0,
+            intro_pause_end_ms=3804.0,
+            min_content_start_ms=6000.0,
+        )
+        == 3548.0
+    )
+    assert (
+        _first_ayah_content_start(
+            5352.0,
+            basmala=True,
+            intro_pause_start_ms=4568.0,
+            intro_pause_end_ms=6136.0,
+            min_content_start_ms=6000.0,
+        )
+        == 6136.0
+    )
+    assert (
+        _first_ayah_content_start(
+            3726.7,
+            basmala=True,
+            intro_pause_start_ms=None,
+            intro_pause_end_ms=None,
+            min_content_start_ms=6000.0,
+        )
+        == 6000.0
+    )
+    assert (
+        _first_ayah_content_start(
+            3726.7,
+            basmala=False,
+            intro_pause_start_ms=None,
+            intro_pause_end_ms=None,
+            min_content_start_ms=6000.0,
+        )
+        == 3726.7
+    )
+
+
+def test_pause_match_min_keep_sim_requires_normal_floor_for_recovered_micro():
+    kwargs = {
+        "drop_sim": 0.34,
+        "min_match_sim": 0.31,
+        "recover_echo_slack": 0.12,
+        "final_weak_match_sim": 0.18,
+    }
+
+    assert _pause_match_min_keep_sim(
+        action="recovered",
+        pause_reason="micro-tempo",
+        **kwargs,
+    ) == 0.31
+    assert _pause_match_min_keep_sim(
+        action="recovered",
+        pause_reason="dsp",
+        **kwargs,
+    ) == 0.19
+    assert _pause_match_min_keep_sim(
+        action="pause_fallback",
+        pause_reason="micro-tempo",
+        **kwargs,
+    ) == 0.31
+
+
+def test_accept_fallback_pause_candidate_rejects_local_internal_micro():
+    assert not _accept_fallback_pause_candidate(
+        pause_reason="micro-tempo",
+        sim=0.24,
+        min_match_sim=0.31,
+        expected_delta_ms=-1819.2,
+        prev_quality=0.316,
+        next_quality=0.858,
+    )
+    assert not _accept_fallback_pause_candidate(
+        pause_reason="micro-tempo",
+        sim=0.26,
+        min_match_sim=0.31,
+        expected_delta_ms=518.7,
+        prev_quality=0.878,
+        next_quality=0.0,
+        next_speech_ms=1172.0,
+    )
+    assert _accept_fallback_pause_candidate(
+        pause_reason="micro-tempo",
+        sim=0.26,
+        min_match_sim=0.31,
+        expected_delta_ms=64_796.7,
+        prev_quality=0.878,
+        next_quality=0.0,
+        next_speech_ms=1172.0,
+    )
+    assert _accept_fallback_pause_candidate(
+        pause_reason="micro-tempo",
+        sim=0.24,
+        min_match_sim=0.31,
+        expected_delta_ms=-64796.7,
+        prev_quality=0.0,
+        next_quality=0.806,
+    )
+    assert _accept_fallback_pause_candidate(
+        pause_reason="micro-tempo",
+        sim=0.31,
+        min_match_sim=0.31,
+        expected_delta_ms=-1819.2,
+        prev_quality=0.316,
+        next_quality=0.858,
+    )
+    assert _accept_fallback_pause_candidate(
+        pause_reason="dsp",
+        sim=0.24,
+        min_match_sim=0.31,
+        expected_delta_ms=-1819.2,
+        prev_quality=0.316,
+        next_quality=0.858,
+    )
+
+
+def test_section_long_pause_start_candidate_requires_tail_of_long_dsp():
+    assert (
+        _section_long_pause_start_candidate(
+            708_906.0,
+            706_260.0,
+            709_080.0,
+            pause_reason="dsp",
+        )
+        == 706_260.0
+    )
+    assert (
+        _section_long_pause_start_candidate(
+            707_670.0,
+            706_260.0,
+            709_080.0,
+            pause_reason="dsp",
+        )
+        is None
+    )
+    assert (
+        _section_long_pause_start_candidate(
+            708_906.0,
+            708_400.0,
+            709_080.0,
+            pause_reason="dsp",
+        )
+        is None
+    )
+
+
+def test_long_pause_start_timing_candidate_requires_trusted_shelf_boundary():
+    assert _long_pause_start_timing_candidate(
+        pause_duration_ms=2060.0,
+        prev_speech_ms=0.0,
+        next_speech_ms=180.0,
+        sim=0.537,
+        pause_trust_sim=0.50,
+    )
+    assert not _long_pause_start_timing_candidate(
+        pause_duration_ms=2060.0,
+        prev_speech_ms=900.0,
+        next_speech_ms=180.0,
+        sim=0.537,
+        pause_trust_sim=0.50,
+    )
+    assert not _long_pause_start_timing_candidate(
+        pause_duration_ms=2060.0,
+        prev_speech_ms=0.0,
+        next_speech_ms=180.0,
+        sim=0.3,
+        pause_trust_sim=0.50,
+    )
+
+
+def test_long_pause_start_after_speech_candidate_requires_speech_then_silence():
+    assert _long_pause_start_after_speech_candidate(
+        pause_duration_ms=1840.0,
+        prev_speech_ms=7220.0,
+        next_speech_ms=0.0,
+        sim=0.509,
+        min_sim=0.34,
+    )
+    assert not _long_pause_start_after_speech_candidate(
+        pause_duration_ms=1840.0,
+        prev_speech_ms=7220.0,
+        next_speech_ms=800.0,
+        sim=0.509,
+        min_sim=0.34,
+    )
+    assert not _long_pause_start_after_speech_candidate(
+        pause_duration_ms=1200.0,
+        prev_speech_ms=7220.0,
+        next_speech_ms=0.0,
+        sim=0.509,
+        min_sim=0.34,
+    )
+
+
+def test_long_pause_start_balanced_speech_candidate_requires_text_span_quality():
+    kwargs = {
+        "pause_duration_ms": 5540.0,
+        "prev_speech_ms": 4880.0,
+        "next_speech_ms": 5140.0,
+        "prev_quality": 0.865,
+        "next_quality": 0.736,
+        "sim": 0.371,
+        "min_sim": 0.34,
+        "max_sim": 0.50,
+        "action": "pause_fallback",
+    }
+
+    assert _long_pause_start_balanced_speech_candidate(**kwargs)
+    assert not _long_pause_start_balanced_speech_candidate(
+        **{**kwargs, "next_quality": 0.245}
+    )
+    assert not _long_pause_start_balanced_speech_candidate(
+        **{**kwargs, "action": "opening_run_repair"}
+    )
+
+
+def test_compact_dsp_start_candidate_requires_balanced_recovered_pause():
+    kwargs = {
+        "pause_reason": "dsp",
+        "pause_duration_ms": 1060.0,
+        "prev_quality": 0.931,
+        "next_quality": 0.799,
+        "sim": 0.471,
+        "min_sim": 0.34,
+        "action": "recovered",
+    }
+
+    assert _compact_dsp_start_candidate(**kwargs)
+    assert not _compact_dsp_start_candidate(**{**kwargs, "next_quality": 0.45})
+    assert not _compact_dsp_start_candidate(**{**kwargs, "pause_duration_ms": 1300.0})
+    assert not _compact_dsp_start_candidate(**{**kwargs, "action": "pause_fallback"})
+
+
+def test_compact_dsp_end_candidate_requires_short_balanced_recovered_pause():
+    kwargs = {
+        "pause_reason": "dsp",
+        "pause_duration_ms": 880.0,
+        "prev_speech_ms": 3860.0,
+        "next_speech_ms": 3700.0,
+        "prev_quality": 0.909,
+        "next_quality": 0.863,
+        "sim": 0.415,
+        "action": "recovered",
+    }
+
+    assert _compact_dsp_end_candidate(**kwargs)
+    assert not _compact_dsp_end_candidate(**{**kwargs, "next_speech_ms": 4440.0})
+    assert not _compact_dsp_end_candidate(**{**kwargs, "next_quality": 0.772})
+    assert not _compact_dsp_end_candidate(**{**kwargs, "sim": 0.50})
+    assert not _compact_dsp_end_candidate(**{**kwargs, "action": "confirmed"})
+
+
+def test_dsp_edge_timing_candidate_uses_neighbor_span_balance():
+    start_kwargs = {
+        "pause_reason": "dsp",
+        "pause_duration_ms": 1320.0,
+        "prev_speech_ms": 5360.0,
+        "next_speech_ms": 4340.0,
+        "prev_quality": 0.624,
+        "next_quality": 0.454,
+        "sim": 0.576,
+        "min_sim": 0.34,
+        "action": "weak_pause_recovery",
+    }
+    end_kwargs = {
+        "pause_reason": "dsp",
+        "pause_duration_ms": 1700.0,
+        "prev_speech_ms": 2560.0,
+        "next_speech_ms": 4820.0,
+        "prev_quality": 0.462,
+        "next_quality": 0.724,
+        "sim": 0.477,
+        "min_sim": 0.34,
+        "action": "recovered",
+    }
+
+    assert _dsp_edge_timing_candidate(**start_kwargs) == "start"
+    assert _dsp_edge_timing_candidate(**end_kwargs) == "end"
+    assert _dsp_edge_timing_candidate(**{**start_kwargs, "next_quality": 0.55}) is None
+    assert _dsp_edge_timing_candidate(**{**end_kwargs, "prev_quality": 0.35}) is None
+    assert _dsp_edge_timing_candidate(**{**end_kwargs, "action": "confirmed"}) is None
+
+    medium_waqf_end = {
+        "pause_reason": "dsp",
+        "pause_duration_ms": 1420.0,
+        "prev_speech_ms": 4520.0,
+        "next_speech_ms": 5780.0,
+        "prev_quality": 0.222,
+        "next_quality": 0.436,
+        "waqf_before": 1,
+        "waqf_after": 0,
+        "sim": 0.417,
+        "min_sim": 0.34,
+        "action": "recovered",
+    }
+    assert _dsp_edge_timing_candidate(**medium_waqf_end) == "end"
+    assert _dsp_edge_timing_candidate(
+        **{**medium_waqf_end, "waqf_before": 0}
+    ) is None
+    assert _dsp_edge_timing_candidate(
+        **{**medium_waqf_end, "next_quality": 0.78}
+    ) is None
+
+
+def test_preword_micro_timing_candidate_requires_confirmed_pre_pause_word():
+    kwargs = {
+        "pause_reason": "dsp",
+        "pause_start_ms": 1_145_560.0,
+        "refined_onset_ms": 1_144_451.0,
+        "refined_conf": 0.452,
+        "conf_thresh": 0.40,
+        "sim": 0.333,
+        "min_sim": 0.31,
+    }
+
+    assert _preword_micro_timing_candidate(**kwargs)
+    assert not _preword_micro_timing_candidate(
+        **{**kwargs, "refined_onset_ms": 1_145_200.0}
+    )
+    assert not _preword_micro_timing_candidate(**{**kwargs, "refined_conf": 0.30})
+    assert not _preword_micro_timing_candidate(**{**kwargs, "pause_reason": "weak-dsp"})
+
+
+def test_weak_dsp_prior_recovery_candidate_requires_short_internal_blip():
+    kwargs = {
+        "pause_reason": "weak-dsp",
+        "action": "recovered",
+        "prev_speech_ms": 320.0,
+        "next_speech_ms": 7240.0,
+        "next_quality": 0.861,
+    }
+
+    assert _weak_dsp_prior_recovery_candidate(**kwargs)
+    assert not _weak_dsp_prior_recovery_candidate(
+        **{**kwargs, "prev_speech_ms": 900.0}
+    )
+    assert not _weak_dsp_prior_recovery_candidate(
+        **{**kwargs, "action": "confirmed"}
+    )
+    assert not _weak_dsp_prior_recovery_candidate(
+        **{**kwargs, "next_quality": 0.55}
+    )
+
+
+def test_weak_dsp_prior_trusted_recovery_candidate_requires_tail_shape_and_waqf():
+    kwargs = {
+        "pause_reason": "weak-dsp",
+        "action": "recovered",
+        "prev_speech_ms": 1080.0,
+        "next_speech_ms": 5480.0,
+        "prev_quality": 0.0,
+        "next_quality": 0.878,
+        "waqf_after": 1,
+    }
+
+    assert _weak_dsp_prior_trusted_recovery_candidate(**kwargs)
+    assert not _weak_dsp_prior_trusted_recovery_candidate(
+        **{**kwargs, "waqf_after": 0}
+    )
+    assert not _weak_dsp_prior_trusted_recovery_candidate(
+        **{**kwargs, "prev_quality": 0.20}
+    )
+    assert not _weak_dsp_prior_trusted_recovery_candidate(
+        **{**kwargs, "prev_speech_ms": 2500.0}
+    )
+
+
+def test_rejected_micro_valley_candidate_requires_quiet_valley_and_span_quality():
+    kwargs = {
+        "pause_reason": "rejected",
+        "action": "recovered",
+        "valley_ratio": 0.145,
+        "shift_ms": 981.0,
+        "selected_prev_quality": 0.954,
+        "selected_next_quality": 0.802,
+        "candidate_prev_quality": 0.804,
+        "candidate_next_quality": 0.941,
+    }
+
+    assert _rejected_micro_valley_candidate(**kwargs)
+    assert not _rejected_micro_valley_candidate(
+        **{**kwargs, "pause_reason": "weak-dsp"}
+    )
+    assert not _rejected_micro_valley_candidate(
+        **{**kwargs, "valley_ratio": 0.25}
+    )
+    assert not _rejected_micro_valley_candidate(
+        **{**kwargs, "candidate_prev_quality": 0.60}
+    )
+
+
+def test_weak_dsp_expected_micro_valley_requires_expected_gain_and_quiet_shelf():
+    accepted = {
+        "pause_reason": "weak-dsp",
+        "action": "recovered",
+        "pause_sim": 0.293,
+        "valley_ratio": 0.117,
+        "shift_ms": 1424.0,
+        "expected_gain_ms": 726.0,
+        "selected_prev_quality": 0.793,
+        "selected_next_quality": 0.967,
+        "candidate_prev_quality": 0.940,
+        "candidate_next_quality": 0.767,
+    }
+    late_wrong = {
+        **accepted,
+        "pause_sim": 0.314,
+        "valley_ratio": 0.051,
+        "shift_ms": 1979.0,
+        "expected_gain_ms": -359.0,
+        "selected_prev_quality": 0.789,
+        "selected_next_quality": 0.456,
+        "candidate_prev_quality": 0.753,
+        "candidate_next_quality": 0.774,
+    }
+
+    assert _weak_dsp_expected_micro_valley_candidate(**accepted)
+    assert not _weak_dsp_expected_micro_valley_candidate(**late_wrong)
+    assert not _weak_dsp_expected_micro_valley_candidate(
+        **{**accepted, "pause_reason": "rejected"}
+    )
+    assert not _weak_dsp_expected_micro_valley_candidate(
+        **{**accepted, "valley_ratio": 0.20}
+    )
+    assert not _weak_dsp_expected_micro_valley_candidate(
+        **{**accepted, "candidate_next_quality": 0.60}
+    )
+
+
+def test_weak_dsp_post_selected_micro_valley_requires_two_sided_span_gain():
+    accepted = {
+        "pause_reason": "weak-dsp",
+        "action": "recovered",
+        "pause_sim": 0.271,
+        "valley_ratio": 0.118,
+        "forward_shift_ms": 1532.0,
+        "selected_prev_quality": 0.629,
+        "selected_next_quality": 0.337,
+        "candidate_prev_quality": 0.776,
+        "candidate_next_quality": 0.696,
+    }
+
+    assert _weak_dsp_post_selected_micro_valley_candidate(**accepted)
+    assert not _weak_dsp_post_selected_micro_valley_candidate(
+        **{**accepted, "forward_shift_ms": 300.0}
+    )
+    assert not _weak_dsp_post_selected_micro_valley_candidate(
+        **{**accepted, "selected_next_quality": 0.90}
+    )
+    assert not _weak_dsp_post_selected_micro_valley_candidate(
+        **{**accepted, "candidate_prev_quality": 0.65}
+    )
+    assert not _weak_dsp_post_selected_micro_valley_candidate(
+        **{**accepted, "valley_ratio": 0.20}
+    )
+
+
+def test_weak_dsp_wasl_recovery_candidate_requires_mixed_tail_and_current():
+    kwargs = {
+        "pause_reason": "weak-dsp",
+        "action": "recovered",
+        "prev_speech_ms": 2520.0,
+        "next_speech_ms": 2340.0,
+        "prev_quality": 0.343,
+        "next_quality": 0.984,
+        "sim": 0.314,
+        "min_sim": 0.31,
+    }
+
+    assert _weak_dsp_wasl_recovery_candidate(**kwargs)
+    assert not _weak_dsp_wasl_recovery_candidate(
+        **{**kwargs, "prev_speech_ms": 320.0}
+    )
+    assert not _weak_dsp_wasl_recovery_candidate(
+        **{**kwargs, "sim": 0.417}
+    )
+    assert not _weak_dsp_wasl_recovery_candidate(
+        **{**kwargs, "prev_quality": 0.70}
+    )
+
+
+def test_long_dsp_fractional_start_candidate_is_narrow():
+    opening = {
+        "pause_reason": "dsp",
+        "pause_duration_ms": 3620.0,
+        "prev_quality": 0.239,
+        "next_quality": 0.245,
+        "waqf_before": 0,
+        "waqf_after": 0,
+        "sim": 0.335,
+        "min_sim": 0.34,
+        "action": "opening_run_repair",
+    }
+    balanced = {
+        "pause_reason": "dsp",
+        "pause_duration_ms": 5540.0,
+        "prev_quality": 0.865,
+        "next_quality": 0.736,
+        "waqf_before": 0,
+        "waqf_after": 0,
+        "sim": 0.371,
+        "min_sim": 0.34,
+        "action": "pause_fallback",
+    }
+
+    assert _long_dsp_fractional_start_candidate(**opening) is None
+    assert _long_dsp_fractional_start_candidate(**{**opening, "min_sim": 0.31}) == 0.30
+    assert _long_dsp_fractional_start_candidate(**balanced) == 0.12
+    assert _long_dsp_fractional_start_candidate(
+        **{**balanced, "next_quality": 0.55}
+    ) is None
+    assert (
+        _long_dsp_fractional_start_candidate(
+            **{
+                **balanced,
+                "prev_quality": 0.378,
+                "next_quality": 0.361,
+                "sim": 0.403,
+                "action": "observed_current",
+            }
+        )
+        == 0.12
+    )
+    assert (
+        _long_dsp_fractional_start_candidate(
+            **{
+                **balanced,
+                "pause_duration_ms": 3260.0,
+                "prev_quality": 0.126,
+                "next_quality": 0.853,
+                "sim": 0.466,
+                "action": "observed_current",
+            }
+        )
+        == 0.85
+    )
+    assert (
+        _long_dsp_fractional_start_candidate(
+            **{
+                **balanced,
+                "pause_duration_ms": 2440.0,
+                "prev_quality": 0.821,
+                "next_quality": 0.532,
+                "sim": 0.442,
+                "action": "recovered",
+            }
+        )
+        == 0.85
+    )
+    assert (
+        _long_dsp_fractional_start_candidate(
+            **{
+                **balanced,
+                "pause_duration_ms": 880.0,
+                "prev_quality": 0.909,
+                "next_quality": 0.863,
+                "sim": 0.415,
+                "action": "recovered",
+            }
+        )
+        is None
+    )
+    assert (
+        _long_dsp_fractional_start_candidate(
+            **{
+                **balanced,
+                "pause_duration_ms": 2640.0,
+                "prev_quality": 0.694,
+                "next_quality": 0.0,
+                "waqf_before": 1,
+                "waqf_after": 1,
+                "sim": 0.351,
+                "action": "recovered",
+            }
+        )
+        == 0.85
+    )
+    assert (
+        _long_dsp_fractional_start_candidate(
+            **{
+                **balanced,
+                "pause_duration_ms": 2640.0,
+                "prev_quality": 0.694,
+                "next_quality": 0.0,
+                "waqf_before": 1,
+                "waqf_after": 0,
+                "sim": 0.351,
+                "action": "recovered",
+            }
+        )
+        is None
+    )
+    assert (
+        _long_dsp_fractional_start_candidate(
+            **{
+                **balanced,
+                "pause_duration_ms": 1420.0,
+                "prev_quality": 0.041,
+                "next_quality": 0.777,
+                "sim": 0.342,
+                "action": "recovered",
+            }
+        )
+        is None
+    )
+
+
+def test_short_low_sim_dsp_start_candidate_requires_internal_tail_shape():
+    kwargs = {
+        "pause_reason": "dsp",
+        "pause_duration_ms": 500.0,
+        "prev_quality": 0.858,
+        "next_speech_ms": 680.0,
+        "sim": 0.048,
+        "action": "weak_pause_recovery",
+    }
+
+    assert _short_low_sim_dsp_start_candidate(**kwargs)
+    assert not _short_low_sim_dsp_start_candidate(**{**kwargs, "sim": 0.25})
+    assert not _short_low_sim_dsp_start_candidate(
+        **{**kwargs, "next_speech_ms": 1200.0}
+    )
+    assert not _short_low_sim_dsp_start_candidate(
+        **{**kwargs, "action": "confirmed"}
+    )
+
+
+def test_late_repeated_dsp_prior_candidate_requires_internal_repeat_shape():
+    kwargs = {
+        "pause_reason": "dsp",
+        "pause_duration_ms": 4920.0,
+        "prev_speech_ms": 6840.0,
+        "next_speech_ms": 1380.0,
+        "sim": 0.711,
+        "action": "observed_current",
+        "min_sim": 0.50,
+    }
+
+    assert _late_repeated_dsp_prior_candidate(**kwargs)
+    assert not _late_repeated_dsp_prior_candidate(
+        **{**kwargs, "next_speech_ms": 2500.0}
+    )
+    assert not _late_repeated_dsp_prior_candidate(
+        **{**kwargs, "prev_speech_ms": 3000.0}
+    )
+    assert not _late_repeated_dsp_prior_candidate(
+        **{**kwargs, "action": "pause_fallback"}
+    )
+
+
+def test_left_edge_repeated_opening_candidate_requires_strong_left_edge_inside_shelf():
+    assert _left_edge_repeated_opening_candidate(
+        [
+            (571_392.9, 0.127, False),
+            (569_441.2, 0.605, True),
+            (569_851.3, 0.510, True),
+            (573_268.1, 0.190, False),
+        ],
+        pause_start_ms=568_920.0,
+        pause_center_ms=571_200.0,
+        min_conf=0.45,
+    ) == (569_851.3, 0.510)
+    assert _left_edge_repeated_opening_candidate(
+        [
+            (607_012.4, 0.023, True),
+            (609_468.0, 0.055, False),
+        ],
+        pause_start_ms=606_060.0,
+        pause_center_ms=607_870.0,
+        min_conf=0.45,
+    ) is None
+
+
+def test_prior_close_dsp_before_micro_stop_picks_immediate_strong_pause():
+    assert (
+        _prior_close_dsp_before_micro_stop(
+            146_598.6,
+            [137_050.0, 146_280.0, 156_230.0],
+        )
+        == 146_280.0
+    )
+    assert _prior_close_dsp_before_micro_stop(146_598.6, [145_000.0]) is None
 
 
 def test_interp_wasl_brackets_both_sides():

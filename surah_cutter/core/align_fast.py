@@ -74,8 +74,9 @@ _BASMALA_MIN_CONTENT_START_MS = float(
 _SHORT_PAUSE_RIGHT_BIAS = float(os.environ.get("SC_FAST_SHORT_PAUSE_RIGHT_BIAS", "0.25"))
 _LONG_PAUSE_CENTER_MS = float(os.environ.get("SC_FAST_LONG_PAUSE_CENTER_MS", "1300"))
 _TRUSTED_PAUSE_CENTER_MS = float(os.environ.get("SC_FAST_TRUSTED_PAUSE_CENTER_MS", "1300"))
-_COMPACT_PAUSE_CENTER_MS = float(os.environ.get("SC_FAST_COMPACT_PAUSE_CENTER_MS", "1100"))
+_COMPACT_PAUSE_CENTER_MS = float(os.environ.get("SC_FAST_COMPACT_PAUSE_CENTER_MS", "1300"))
 _MICRO_BACKTRACK_MS = float(os.environ.get("SC_FAST_MICRO_BACKTRACK_MS", "3500"))
+_MICRO_EXPECTED_RETRY_MS = float(os.environ.get("SC_FAST_MICRO_EXPECTED_RETRY_MS", "1000"))
 _FAR_WEAK_CURRENT_GRACE_MS = float(os.environ.get("SC_FAST_FAR_WEAK_CURRENT_GRACE_MS", "9000"))
 _FAR_WEAK_CURRENT_SIM = float(os.environ.get("SC_FAST_FAR_WEAK_CURRENT_SIM", "0.42"))
 _FAR_CURRENT_MAX_OVERRIDE_MS = float(os.environ.get("SC_FAST_FAR_CURRENT_MAX_OVERRIDE_MS", "30000"))
@@ -125,6 +126,9 @@ _PAUSE_CACHE_PRE_ROLL_MS = float(os.environ.get("SC_FAST_PAUSE_CACHE_PRE_ROLL_MS
 #: whole turns fast into full-ish ONNX inference. Keep rough points and let
 #: review/repair flag them instead.
 _MAX_WASL_RUN_ALIGN_MS = float(os.environ.get("SC_FAST_MAX_WASL_RUN_ALIGN_MS", "20000"))
+_MAX_SECTION_REPAIR_ALIGN_MS = float(
+    os.environ.get("SC_FAST_MAX_SECTION_REPAIR_ALIGN_MS", "120000")
+)
 # If local wasl alignment lands next to a strong detected pause, later repair may
 # improve confidence but must not pull that boundary away from the visible pause.
 _WASL_PAUSE_HINT_MS = float(os.environ.get("SC_FAST_WASL_PAUSE_HINT_MS", "900"))
@@ -319,6 +323,160 @@ def _find_micro_pause_valley(
     return start_ms, end_ms, ratio, seed_start_ms, seed_end_ms
 
 
+def _micro_valley_center(valley: tuple[float, float, float, float, float]) -> float:
+    start_ms, end_ms, _ratio, seed_start_ms, _seed_end_ms = valley
+    return 0.5 * (max(start_ms, seed_start_ms) + end_ms)
+
+
+def _prefer_expected_micro_valley(
+    current: tuple[float, float, float, float, float],
+    expected_candidate: tuple[float, float, float, float, float] | None,
+    *,
+    expected_ms: float,
+    late_ms: float = 1500.0,
+    min_back_ms: float = 500.0,
+    ratio_slack: float = 1.35,
+) -> tuple[float, float, float, float, float]:
+    if expected_candidate is None:
+        return current
+    current_center = _micro_valley_center(current)
+    expected_center = _micro_valley_center(expected_candidate)
+    if current_center - expected_ms < late_ms:
+        return current
+    if current_center - expected_center < min_back_ms:
+        return current
+    if expected_candidate[2] > current[2] * ratio_slack:
+        return current
+    return expected_candidate
+
+
+def _micro_shelf_start_candidate(
+    *,
+    pause_reason: str | None,
+    sim: float,
+    prev_quality: float,
+    next_quality: float,
+    center_ms: float,
+    shelf_start_ms: float | None,
+    confirm_match_sim: float,
+    min_back_ms: float = 120.0,
+    max_back_ms: float = 700.0,
+    min_prev_quality: float = 0.90,
+    max_next_quality: float = 0.45,
+) -> float | None:
+    if pause_reason != "micro-tempo" or sim >= confirm_match_sim:
+        return None
+    if shelf_start_ms is None:
+        return None
+    back_ms = center_ms - shelf_start_ms
+    if not (min_back_ms <= back_ms <= max_back_ms):
+        return None
+    if prev_quality < min_prev_quality or next_quality > max_next_quality:
+        return None
+    return shelf_start_ms
+
+
+def _rejected_micro_valley_candidate(
+    *,
+    pause_reason: str | None,
+    action: str | None,
+    valley_ratio: float,
+    shift_ms: float,
+    selected_prev_quality: float,
+    selected_next_quality: float,
+    candidate_prev_quality: float,
+    candidate_next_quality: float,
+    max_ratio: float = 0.16,
+    min_shift_ms: float = 700.0,
+    max_min_quality_loss: float = 0.05,
+    max_avg_quality_loss: float = 0.08,
+) -> bool:
+    if pause_reason != "rejected" or action != "recovered":
+        return False
+    if valley_ratio > max_ratio or shift_ms < min_shift_ms:
+        return False
+    selected_min = min(selected_prev_quality, selected_next_quality)
+    candidate_min = min(candidate_prev_quality, candidate_next_quality)
+    if candidate_min < selected_min - max_min_quality_loss:
+        return False
+    selected_avg = 0.5 * (selected_prev_quality + selected_next_quality)
+    candidate_avg = 0.5 * (candidate_prev_quality + candidate_next_quality)
+    return candidate_avg >= selected_avg - max_avg_quality_loss
+
+
+def _weak_dsp_expected_micro_valley_candidate(
+    *,
+    pause_reason: str | None,
+    action: str | None,
+    pause_sim: float,
+    valley_ratio: float,
+    shift_ms: float,
+    expected_gain_ms: float,
+    selected_prev_quality: float,
+    selected_next_quality: float,
+    candidate_prev_quality: float,
+    candidate_next_quality: float,
+    max_sim: float = 0.50,
+    max_ratio: float = 0.13,
+    min_shift_ms: float = 700.0,
+    min_expected_gain_ms: float = 700.0,
+    max_min_quality_loss: float = 0.10,
+    max_avg_quality_loss: float = 0.10,
+) -> bool:
+    if pause_reason != "weak-dsp" or action != "recovered":
+        return False
+    if pause_sim > max_sim:
+        return False
+    if valley_ratio > max_ratio:
+        return False
+    if shift_ms < min_shift_ms or expected_gain_ms < min_expected_gain_ms:
+        return False
+    selected_min = min(selected_prev_quality, selected_next_quality)
+    candidate_min = min(candidate_prev_quality, candidate_next_quality)
+    if candidate_min < selected_min - max_min_quality_loss:
+        return False
+    selected_avg = 0.5 * (selected_prev_quality + selected_next_quality)
+    candidate_avg = 0.5 * (candidate_prev_quality + candidate_next_quality)
+    return candidate_avg >= selected_avg - max_avg_quality_loss
+
+
+def _weak_dsp_post_selected_micro_valley_candidate(
+    *,
+    pause_reason: str | None,
+    action: str | None,
+    pause_sim: float,
+    valley_ratio: float,
+    forward_shift_ms: float,
+    selected_prev_quality: float,
+    selected_next_quality: float,
+    candidate_prev_quality: float,
+    candidate_next_quality: float,
+    max_sim: float = 0.35,
+    max_ratio: float = 0.13,
+    min_forward_shift_ms: float = 1000.0,
+    max_selected_prev_quality: float = 0.70,
+    max_selected_next_quality: float = 0.70,
+    min_quality_gain: float = 0.10,
+    min_candidate_quality: float = 0.65,
+) -> bool:
+    if pause_reason != "weak-dsp" or action != "recovered":
+        return False
+    if pause_sim > max_sim or valley_ratio > max_ratio:
+        return False
+    if forward_shift_ms < min_forward_shift_ms:
+        return False
+    if (
+        selected_prev_quality > max_selected_prev_quality
+        or selected_next_quality > max_selected_next_quality
+    ):
+        return False
+    if candidate_prev_quality < selected_prev_quality + min_quality_gain:
+        return False
+    if candidate_next_quality < selected_next_quality + min_quality_gain:
+        return False
+    return min(candidate_prev_quality, candidate_next_quality) >= min_candidate_quality
+
+
 #: Chars of the (collapsed) decode/opening compared. Must span ~4 words so that
 #: ayahs sharing an opening phrase (e.g. al-Bayyinah 6/7 "inna lladhīna kafarū"
 #: vs "…āmanū", al-Falaq's repeated "wa-min sharri…") are told apart by a later,
@@ -373,6 +531,12 @@ def _pause_center_with_refined_onset(
     if refined_onset_ms is None or refined_onset_ms <= pause_center_ms:
         return pause_center_ms
     return 0.5 * (pause_start_ms + refined_onset_ms)
+
+
+def _pause_backed_refine_start(
+    pause_center_ms: float,
+) -> float:
+    return pause_center_ms
 
 
 def _default_bundle() -> Any:
@@ -484,6 +648,1116 @@ def _match_boundaries(
         out[i] = ons[j]
         cur = bk[i][j]
     return out
+
+
+def _assign_opening_block(
+    boundaries: list[int],
+    candidates: list[int],
+    *,
+    candidate_time: Callable[[int], float],
+    score: Callable[[int, int], float | None],
+    after_ms: float,
+    expected_time: Callable[[int], float] | None = None,
+    after_expected_ms: float | None = None,
+    min_gap_ms: float = 2500.0,
+    target_gap_ms: float = 9000.0,
+    gap_window_ms: float = 180_000.0,
+    duration_ceil: float = 12.0,
+    abs_gap_ceil_ms: float = 45_000.0,
+) -> dict[int, int]:
+    """Order-preserving local assignment of repeated-opening ayahs to pauses.
+
+    This is stricter than a per-boundary best match: every returned assignment
+    belongs to one monotonic block, so a later repeated opening cannot steal an
+    earlier ayah if that leaves the neighboring ayahs unexplained.
+    """
+    if not boundaries or not candidates:
+        return {}
+
+    def plausible_gap(observed_gap_ms: float, expected_gap_ms: float | None) -> bool:
+        if observed_gap_ms <= min_gap_ms:
+            return False
+        if expected_gap_ms is None or expected_gap_ms <= 0:
+            return True
+        return observed_gap_ms <= max(abs_gap_ceil_ms, duration_ceil * expected_gap_ms)
+
+    layers: list[list[tuple[int, float]]] = []
+    for boundary in boundaries:
+        layer: list[tuple[int, float]] = []
+        for candidate in candidates:
+            if candidate_time(candidate) <= after_ms + min_gap_ms:
+                continue
+            candidate_score = score(boundary, candidate)
+            if candidate_score is not None:
+                layer.append((candidate, candidate_score))
+        if not layer:
+            return {}
+        layers.append(layer)
+
+    def better(
+        candidate: tuple[float, list[int]],
+        current: tuple[float, list[int]] | None,
+    ) -> bool:
+        if current is None:
+            return True
+        candidate_score, candidate_path = candidate
+        current_score, current_path = current
+        if candidate_score > current_score + 1e-9:
+            return True
+        if abs(candidate_score - current_score) <= 1e-9:
+            return [candidate_time(j) for j in candidate_path] < [
+                candidate_time(j) for j in current_path
+            ]
+        return False
+
+    states: dict[int, tuple[float, list[int]]] = {}
+    first_expected_gap = None
+    if expected_time is not None and after_expected_ms is not None:
+        first_expected_gap = expected_time(boundaries[0]) - after_expected_ms
+    for candidate, candidate_score in layers[0]:
+        first_gap = candidate_time(candidate) - after_ms
+        if not plausible_gap(first_gap, first_expected_gap):
+            continue
+        gap_penalty = min(0.4, max(0.0, first_gap) / gap_window_ms)
+        states[candidate] = (candidate_score - gap_penalty, [candidate])
+
+    for layer_index, layer in enumerate(layers[1:], start=1):
+        boundary = boundaries[layer_index]
+        previous_boundary = boundaries[layer_index - 1]
+        expected_gap = (
+            expected_time(boundary) - expected_time(previous_boundary)
+            if expected_time is not None
+            else None
+        )
+        next_states: dict[int, tuple[float, list[int]]] = {}
+        for candidate, candidate_score in layer:
+            current_time = candidate_time(candidate)
+            best: tuple[float, list[int]] | None = None
+            for previous_candidate, (previous_score, path) in states.items():
+                previous_time = candidate_time(previous_candidate)
+                gap = current_time - previous_time
+                if not plausible_gap(gap, expected_gap):
+                    continue
+                gap_penalty = min(0.5, abs(gap - target_gap_ms) / gap_window_ms)
+                proposed = (previous_score + candidate_score - gap_penalty, path + [candidate])
+                if better(proposed, best):
+                    best = proposed
+            if best is not None and better(best, next_states.get(candidate)):
+                next_states[candidate] = best
+        states = next_states
+        if not states:
+            return {}
+
+    _score, path = max(
+        states.values(),
+        key=lambda item: (
+            item[0],
+            [-candidate_time(candidate) for candidate in item[1]],
+        ),
+    )
+    return dict(zip(boundaries, path, strict=True))
+
+
+def _skips_dense_pause_block(
+    boundary: int,
+    selected: int,
+    candidates: list[int],
+    *,
+    candidate_time: Callable[[int], float],
+    expected_time: Callable[[int], float],
+    previous_boundary: int,
+    previous_time: float,
+    next_boundary: int,
+    min_gap_ms: float = 2500.0,
+    min_quality: float = 0.35,
+    selected_quality_ceiling: float = 0.45,
+) -> bool:
+    """Does ``selected`` jump over a plausible local sequence of ayah starts?"""
+    if boundary + 1 >= next_boundary:
+        return False
+    expected_first = expected_time(boundary) - expected_time(previous_boundary)
+    selected_quality = _span_ratio_quality(
+        candidate_time(selected) - previous_time,
+        expected_first,
+    )
+    if selected_quality >= selected_quality_ceiling:
+        return False
+
+    selected_time = candidate_time(selected)
+    ordered = [
+        candidate
+        for candidate in sorted(candidates, key=candidate_time)
+        if previous_time + min_gap_ms < candidate_time(candidate) < selected_time - min_gap_ms
+    ]
+    for first in ordered:
+        first_time = candidate_time(first)
+        first_quality = _span_ratio_quality(first_time - previous_time, expected_first)
+        if first_quality < min_quality:
+            continue
+        expected_second = expected_time(boundary + 1) - expected_time(boundary)
+        for second in ordered:
+            second_time = candidate_time(second)
+            if second_time <= first_time + min_gap_ms:
+                continue
+            if _span_ratio_quality(second_time - first_time, expected_second) >= min_quality:
+                return True
+    return False
+
+
+def _section_repair_member(
+    *,
+    from_pause: bool,
+    action: str | None,
+    sim: float | None,
+    min_sim: float,
+) -> bool:
+    if not from_pause:
+        return True
+    return action in {"pause_fallback", "weak_pause_recovery"} and (sim or 0.0) < min_sim
+
+
+def _prior_pause_before_internal_stop(
+    previous_time: float,
+    raw_time: float,
+    expected_gap_ms: float,
+    strong_candidate_times: list[float],
+    *,
+    raw_is_internal_stop: bool,
+    min_gap_ms: float = 2500.0,
+    min_quality: float = 0.55,
+    quality_margin: float = 0.20,
+) -> float | None:
+    """Pick a strong prior pause only when raw onset is a likely internal stop."""
+    if not raw_is_internal_stop:
+        return None
+    raw_quality = _span_ratio_quality(raw_time - previous_time, expected_gap_ms)
+    best: tuple[float, float] | None = None
+    for candidate_time in strong_candidate_times:
+        if not (previous_time + min_gap_ms < candidate_time < raw_time - min_gap_ms):
+            continue
+        quality = _span_ratio_quality(candidate_time - previous_time, expected_gap_ms)
+        if quality < min_quality or quality < raw_quality + quality_margin:
+            continue
+        if best is None or quality > best[0] or (
+            abs(quality - best[0]) <= 1e-9 and candidate_time < best[1]
+        ):
+            best = (quality, candidate_time)
+    return best[1] if best is not None else None
+
+
+def _accept_later_pause_grid_repair(
+    *,
+    from_pause: bool,
+    original_reason: str,
+    original_sim: float,
+    old_onset: float,
+    repaired_onset: float,
+    repaired_conf: float,
+    nearest_pause_dist_ms: float,
+    nearest_pause_reason: str | None,
+    previous_time: float,
+    next_time: float | None,
+    expected_prev_gap_ms: float,
+    expected_next_gap_ms: float | None,
+    conf_reliable: float,
+    pause_trust_sim: float,
+    min_forward_ms: float = 500.0,
+    max_forward_ms: float = 9000.0,
+    min_span_quality: float = 0.55,
+) -> bool:
+    """Allow repair to move a weak micro pause onto a later real pause grid."""
+    if not from_pause or original_reason != "micro-tempo":
+        return False
+    if original_sim >= pause_trust_sim or repaired_conf < conf_reliable:
+        return False
+    forward_ms = repaired_onset - old_onset
+    if not (min_forward_ms < forward_ms <= max_forward_ms):
+        return False
+    if nearest_pause_dist_ms > 350.0 or nearest_pause_reason not in {"dsp", "weak-dsp"}:
+        return False
+    if _span_ratio_quality(repaired_onset - previous_time, expected_prev_gap_ms) < min_span_quality:
+        return False
+    if next_time is not None and expected_next_gap_ms is not None:
+        if _span_ratio_quality(next_time - repaired_onset, expected_next_gap_ms) < min_span_quality:
+            return False
+    return True
+
+
+def _prior_pause_between_anchors(
+    previous_time: float,
+    selected_time: float,
+    next_time: float,
+    expected_prev_gap_ms: float,
+    expected_next_gap_ms: float,
+    strong_candidate_times: list[float],
+    *,
+    selected_is_internal_stop: bool,
+    min_gap_ms: float = 2500.0,
+    min_quality: float = 0.55,
+    quality_margin: float = 0.25,
+) -> float | None:
+    """Choose a prior pause only if it better explains both neighboring spans."""
+    if not selected_is_internal_stop:
+        return None
+
+    selected_prev = _span_ratio_quality(selected_time - previous_time, expected_prev_gap_ms)
+    selected_next = _span_ratio_quality(next_time - selected_time, expected_next_gap_ms)
+    selected_pair = min(selected_prev, selected_next)
+    best: tuple[float, float, float] | None = None
+    for candidate_time in strong_candidate_times:
+        if not (previous_time + min_gap_ms < candidate_time < selected_time - min_gap_ms):
+            continue
+        candidate_prev = _span_ratio_quality(candidate_time - previous_time, expected_prev_gap_ms)
+        candidate_next = _span_ratio_quality(next_time - candidate_time, expected_next_gap_ms)
+        candidate_pair = min(candidate_prev, candidate_next)
+        candidate_avg = 0.5 * (candidate_prev + candidate_next)
+        selected_avg = 0.5 * (selected_prev + selected_next)
+        if candidate_pair < min_quality:
+            continue
+        if candidate_pair < selected_pair + quality_margin:
+            continue
+        if candidate_avg < selected_avg + quality_margin:
+            continue
+        if best is None or candidate_pair > best[0] or (
+            abs(candidate_pair - best[0]) <= 1e-9
+            and (candidate_avg > best[1] or (
+                abs(candidate_avg - best[1]) <= 1e-9 and candidate_time < best[2]
+            ))
+        ):
+            best = (candidate_pair, candidate_avg, candidate_time)
+    return best[2] if best is not None else None
+
+
+def _internal_stop_repair_candidate(
+    *,
+    from_pause: bool,
+    action: str | None,
+    reason: str | None,
+    sim: float,
+    pause_duration_ms: float,
+    prev_speech_ms: float,
+    next_speech_ms: float,
+    has_micro_stop: bool,
+    pause_trust_sim: float,
+) -> bool:
+    """A selected pause is likely an internal stop, needing local section decode."""
+    return (
+        from_pause
+        and action == "observed_current"
+        and reason != "micro-tempo"
+        and sim < pause_trust_sim
+        and pause_duration_ms >= 700.0
+        and prev_speech_ms >= 1800.0
+        and next_speech_ms <= 500.0
+        and has_micro_stop
+    )
+
+
+def _reject_low_conf_off_grid_repair(
+    *,
+    from_pause: bool,
+    repair_conf: float,
+    conf_thresh: float,
+    old_pause_dist_ms: float,
+    chosen_pause_dist_ms: float,
+    shift_ms: float,
+) -> bool:
+    return (
+        from_pause
+        and repair_conf < conf_thresh
+        and old_pause_dist_ms <= 350.0
+        and chosen_pause_dist_ms > 350.0
+        and shift_ms > 500.0
+    )
+
+
+def _accept_pause_backed_repair(
+    *,
+    from_pause: bool,
+    original_pause_reason: str | None,
+    old_onset_ms: float,
+    chosen_onset_ms: float,
+    chosen_pause_dist_ms: float,
+    chosen_pause_reason: str | None,
+    later_pause_grid_repair: bool = False,
+) -> bool:
+    if not from_pause:
+        return True
+    if original_pause_reason == "micro-tempo":
+        return later_pause_grid_repair or chosen_onset_ms <= old_onset_ms + 500.0
+    if chosen_pause_reason == "micro-tempo" and chosen_onset_ms > old_onset_ms + 500.0:
+        return False
+    return not (
+        abs(chosen_onset_ms - old_onset_ms) > 500.0
+        and chosen_pause_dist_ms > 350.0
+    )
+
+
+def _final_weak_current_activation_window(
+    *,
+    expected_ms: float,
+    matched_ms: float,
+    matched_pause_start_ms: float,
+    matched_pause_end_ms: float,
+    total_ms: float,
+    prior_window_ms: float,
+    min_delta_ms: float = 3000.0,
+) -> tuple[float, float] | None:
+    delta = matched_ms - expected_ms
+    if abs(delta) <= min_delta_ms:
+        return None
+    slack_ms = min(3500.0, 0.25 * prior_window_ms)
+    if delta > 0.0:
+        start_ms = expected_ms - slack_ms
+        end_ms = min(matched_pause_start_ms, expected_ms + slack_ms)
+    else:
+        start_ms = max(matched_pause_end_ms, expected_ms - slack_ms)
+        end_ms = min(total_ms, expected_ms + slack_ms)
+    if end_ms <= start_ms:
+        return None
+    return start_ms, end_ms
+
+
+def _first_ayah_content_start(
+    raw_content_start_ms: float,
+    *,
+    basmala: bool,
+    intro_pause_start_ms: float | None,
+    intro_pause_end_ms: float | None,
+    min_content_start_ms: float = _BASMALA_MIN_CONTENT_START_MS,
+    long_intro_pause_ms: float = 1000.0,
+) -> float:
+    if intro_pause_start_ms is not None and intro_pause_end_ms is not None:
+        if intro_pause_end_ms - intro_pause_start_ms >= long_intro_pause_ms:
+            return intro_pause_end_ms
+        return 0.5 * (intro_pause_start_ms + intro_pause_end_ms)
+    if basmala and raw_content_start_ms < min_content_start_ms:
+        return min_content_start_ms
+    return raw_content_start_ms
+
+
+def _pause_match_min_keep_sim(
+    *,
+    action: str,
+    pause_reason: str | None,
+    drop_sim: float,
+    min_match_sim: float,
+    recover_echo_slack: float,
+    final_weak_match_sim: float,
+) -> float:
+    if action in {"recovered", "pause_fallback"}:
+        floor = max(0.0, min_match_sim - recover_echo_slack)
+        if pause_reason == "micro-tempo":
+            return max(floor, min_match_sim)
+        return floor
+    if action == "final_weak_current":
+        return final_weak_match_sim
+    if action in {"observed_current", "weak_observed_current"}:
+        return max(0.0, min_match_sim - recover_echo_slack)
+    return drop_sim
+
+
+def _accept_fallback_pause_candidate(
+    *,
+    pause_reason: str | None,
+    sim: float,
+    min_match_sim: float,
+    expected_delta_ms: float,
+    prev_quality: float,
+    next_quality: float,
+    local_delta_ms: float = 5000.0,
+    weak_prev_quality: float = 0.40,
+    strong_next_quality: float = 0.70,
+    strong_prev_quality: float = 0.70,
+    weak_next_quality: float = 0.45,
+    short_next_speech_ms: float = 1500.0,
+    next_speech_ms: float | None = None,
+) -> bool:
+    if pause_reason == "micro-tempo" and sim < min_match_sim:
+        internal_before_current = (
+            abs(expected_delta_ms) <= local_delta_ms
+            and prev_quality < weak_prev_quality
+            and next_quality >= strong_next_quality
+        )
+        internal_after_current = (
+            abs(expected_delta_ms) <= local_delta_ms
+            and prev_quality >= strong_prev_quality
+            and next_quality < weak_next_quality
+            and next_speech_ms is not None
+            and next_speech_ms <= short_next_speech_ms
+        )
+        return not (internal_before_current or internal_after_current)
+    return True
+
+
+def _section_long_pause_start_candidate(
+    onset_ms: float,
+    pause_start_ms: float,
+    pause_end_ms: float,
+    *,
+    pause_reason: str | None,
+    min_pause_ms: float = 1300.0,
+    min_inside_ms: float = 600.0,
+    max_before_end_ms: float = 350.0,
+) -> float | None:
+    if pause_reason != "dsp":
+        return None
+    if pause_end_ms - pause_start_ms < min_pause_ms:
+        return None
+    if pause_start_ms + min_inside_ms <= onset_ms <= pause_end_ms - max_before_end_ms:
+        return None
+    if pause_start_ms + min_inside_ms <= onset_ms <= pause_end_ms:
+        return pause_start_ms
+    return None
+
+
+def _long_pause_start_timing_candidate(
+    *,
+    pause_duration_ms: float,
+    prev_speech_ms: float,
+    next_speech_ms: float,
+    sim: float,
+    pause_trust_sim: float,
+    min_pause_ms: float = 1800.0,
+    max_prev_speech_ms: float = 100.0,
+    max_next_speech_ms: float = 600.0,
+) -> bool:
+    return (
+        sim >= pause_trust_sim
+        and pause_duration_ms >= min_pause_ms
+        and prev_speech_ms <= max_prev_speech_ms
+        and next_speech_ms <= max_next_speech_ms
+    )
+
+
+def _long_pause_start_after_speech_candidate(
+    *,
+    pause_duration_ms: float,
+    prev_speech_ms: float,
+    next_speech_ms: float,
+    sim: float,
+    min_sim: float,
+    min_pause_ms: float = 1500.0,
+    min_prev_speech_ms: float = 1800.0,
+    max_next_speech_ms: float = 100.0,
+) -> bool:
+    return (
+        sim >= min_sim
+        and pause_duration_ms >= min_pause_ms
+        and prev_speech_ms >= min_prev_speech_ms
+        and next_speech_ms <= max_next_speech_ms
+    )
+
+
+def _long_pause_start_balanced_speech_candidate(
+    *,
+    pause_duration_ms: float,
+    prev_speech_ms: float,
+    next_speech_ms: float,
+    prev_quality: float,
+    next_quality: float,
+    sim: float,
+    min_sim: float,
+    max_sim: float,
+    action: str | None,
+    min_pause_ms: float = 1800.0,
+    min_speech_ms: float = 4000.0,
+    min_quality: float = 0.55,
+) -> bool:
+    return (
+        action == "pause_fallback"
+        and min_sim <= sim < max_sim
+        and pause_duration_ms >= min_pause_ms
+        and prev_speech_ms >= min_speech_ms
+        and next_speech_ms >= min_speech_ms
+        and prev_quality >= min_quality
+        and next_quality >= min_quality
+    )
+
+
+def _compact_dsp_start_candidate(
+    *,
+    pause_reason: str | None,
+    pause_duration_ms: float,
+    prev_quality: float,
+    next_quality: float,
+    sim: float,
+    min_sim: float,
+    action: str | None,
+    min_pause_ms: float = 800.0,
+    max_pause_ms: float = 1200.0,
+    min_prev_quality: float = 0.75,
+    min_next_quality: float = 0.60,
+) -> bool:
+    return (
+        pause_reason == "dsp"
+        and min_pause_ms <= pause_duration_ms <= max_pause_ms
+        and prev_quality >= min_prev_quality
+        and next_quality >= min_next_quality
+        and sim >= min_sim
+        and action in {"recovered", "confirmed"}
+    )
+
+
+def _compact_dsp_end_candidate(
+    *,
+    pause_reason: str | None,
+    pause_duration_ms: float,
+    prev_speech_ms: float,
+    next_speech_ms: float,
+    prev_quality: float,
+    next_quality: float,
+    sim: float,
+    action: str | None,
+    min_pause_ms: float = 800.0,
+    max_pause_ms: float = 900.0,
+    min_speech_ms: float = 3000.0,
+    max_speech_ms: float = 4200.0,
+    min_quality: float = 0.85,
+    max_sim: float = 0.45,
+) -> bool:
+    return (
+        pause_reason == "dsp"
+        and action == "recovered"
+        and min_pause_ms <= pause_duration_ms <= max_pause_ms
+        and min_speech_ms <= prev_speech_ms <= max_speech_ms
+        and min_speech_ms <= next_speech_ms <= max_speech_ms
+        and prev_quality >= min_quality
+        and next_quality >= min_quality
+        and sim <= max_sim
+    )
+
+
+def _dsp_edge_timing_candidate(
+    *,
+    pause_reason: str | None,
+    pause_duration_ms: float,
+    prev_speech_ms: float,
+    next_speech_ms: float,
+    prev_quality: float,
+    next_quality: float,
+    waqf_before: int = 0,
+    waqf_after: int = 0,
+    sim: float,
+    min_sim: float,
+    action: str | None,
+    min_pause_ms: float = 1100.0,
+    max_pause_ms: float = 2200.0,
+    min_speech_ms: float = 3000.0,
+    min_quality_gap: float = 0.15,
+    min_end_prev_quality: float = 0.40,
+    medium_end_min_pause_ms: float = 1200.0,
+    medium_end_max_pause_ms: float = 1800.0,
+    medium_end_max_sim: float = 0.50,
+) -> str | None:
+    if (
+        pause_reason != "dsp"
+        or not (min_pause_ms <= pause_duration_ms <= max_pause_ms)
+        or sim < min_sim
+    ):
+        return None
+    if (
+        prev_speech_ms >= min_speech_ms
+        and next_speech_ms >= min_speech_ms
+        and prev_quality - next_quality >= min_quality_gap
+        and action in {"confirmed", "observed_current", "weak_pause_recovery"}
+    ):
+        return "start"
+    if (
+        prev_speech_ms >= 1500.0
+        and next_speech_ms >= min_speech_ms
+        and prev_quality >= min_end_prev_quality
+        and next_quality - prev_quality >= 0.20
+        and action == "recovered"
+    ):
+        return "end"
+    if (
+        action == "recovered"
+        and medium_end_min_pause_ms <= pause_duration_ms <= medium_end_max_pause_ms
+        and sim <= medium_end_max_sim
+        and prev_quality <= 0.30
+        and 0.35 <= next_quality <= 0.60
+        and waqf_before > 0
+        and waqf_after == 0
+    ):
+        return "end"
+    return None
+
+
+def _preword_micro_timing_candidate(
+    *,
+    pause_reason: str | None,
+    pause_start_ms: float,
+    refined_onset_ms: float | None,
+    refined_conf: float,
+    conf_thresh: float,
+    sim: float,
+    min_sim: float,
+    min_before_pause_ms: float = 500.0,
+) -> bool:
+    return (
+        pause_reason == "dsp"
+        and refined_onset_ms is not None
+        and refined_conf >= conf_thresh
+        and sim >= min_sim
+        and refined_onset_ms <= pause_start_ms - min_before_pause_ms
+    )
+
+
+def _weak_dsp_prior_recovery_candidate(
+    *,
+    pause_reason: str | None,
+    action: str | None,
+    prev_speech_ms: float,
+    next_speech_ms: float,
+    next_quality: float,
+    max_prev_speech_ms: float = 500.0,
+    min_next_speech_ms: float = 3000.0,
+    min_next_quality: float = 0.70,
+) -> bool:
+    return (
+        pause_reason == "weak-dsp"
+        and action == "recovered"
+        and prev_speech_ms <= max_prev_speech_ms
+        and next_speech_ms >= min_next_speech_ms
+        and next_quality >= min_next_quality
+    )
+
+
+def _weak_dsp_prior_trusted_recovery_candidate(
+    *,
+    pause_reason: str | None,
+    action: str | None,
+    prev_speech_ms: float,
+    next_speech_ms: float,
+    prev_quality: float,
+    next_quality: float,
+    waqf_after: int,
+    max_prev_speech_ms: float = 1500.0,
+    min_next_speech_ms: float = 4000.0,
+    max_prev_quality: float = 0.05,
+    min_next_quality: float = 0.80,
+) -> bool:
+    """A weak pause right after a trusted pause is likely an internal repeat."""
+    return (
+        pause_reason == "weak-dsp"
+        and action == "recovered"
+        and prev_speech_ms <= max_prev_speech_ms
+        and next_speech_ms >= min_next_speech_ms
+        and prev_quality <= max_prev_quality
+        and next_quality >= min_next_quality
+        and waqf_after > 0
+    )
+
+
+def _weak_dsp_wasl_recovery_candidate(
+    *,
+    pause_reason: str | None,
+    action: str | None,
+    prev_speech_ms: float,
+    next_speech_ms: float,
+    prev_quality: float,
+    next_quality: float,
+    sim: float,
+    min_sim: float,
+    max_sim_slack: float = 0.02,
+) -> bool:
+    return (
+        pause_reason == "weak-dsp"
+        and action == "recovered"
+        and sim <= min_sim + max_sim_slack
+        and 1500.0 <= prev_speech_ms <= 3500.0
+        and 1500.0 <= next_speech_ms <= 3500.0
+        and prev_quality <= 0.45
+        and next_quality >= 0.85
+    )
+
+
+def _long_dsp_fractional_start_candidate(
+    *,
+    pause_reason: str | None,
+    pause_duration_ms: float,
+    prev_quality: float,
+    next_quality: float,
+    waqf_before: int,
+    waqf_after: int,
+    sim: float,
+    min_sim: float,
+    action: str | None,
+    min_pause_ms: float = 2500.0,
+    min_late_pause_ms: float = 1800.0,
+    max_late_sim: float = 0.49,
+    min_late_next_quality: float = 0.50,
+) -> float | None:
+    if pause_reason != "dsp" or sim < min_sim:
+        return None
+    if pause_duration_ms >= min_pause_ms:
+        if action == "opening_run_repair" and prev_quality <= 0.50 and next_quality <= 0.55:
+            return 0.30
+        if action == "pause_fallback" and prev_quality >= 0.70 and next_quality >= 0.70:
+            return 0.12
+        if (
+            action in {"observed_current", "recovered"}
+            and pause_duration_ms >= 4500.0
+            and 0.30 <= prev_quality <= 0.65
+            and 0.30 <= next_quality <= 0.65
+        ):
+            return 0.12
+        if (
+            action in {"recovered", "observed_current"}
+            and waqf_before > 0
+            and waqf_after > 0
+            and next_quality <= 0.10
+            and prev_quality >= 0.60
+        ):
+            return 0.85
+    if (
+        action in {"observed_current", "recovered"}
+        and pause_duration_ms >= min_late_pause_ms
+        and sim <= max_late_sim
+        and next_quality >= min_late_next_quality
+    ):
+        return 0.85
+    return None
+
+
+def _short_low_sim_dsp_start_candidate(
+    *,
+    pause_reason: str | None,
+    pause_duration_ms: float,
+    prev_quality: float,
+    next_speech_ms: float,
+    sim: float,
+    action: str | None,
+    max_pause_ms: float = 700.0,
+    min_prev_quality: float = 0.70,
+    max_next_speech_ms: float = 800.0,
+    max_sim: float = 0.12,
+) -> bool:
+    return (
+        pause_reason == "dsp"
+        and pause_duration_ms <= max_pause_ms
+        and action == "weak_pause_recovery"
+        and prev_quality >= min_prev_quality
+        and next_speech_ms <= max_next_speech_ms
+        and sim <= max_sim
+    )
+
+
+def _late_repeated_dsp_prior_candidate(
+    *,
+    pause_reason: str | None,
+    pause_duration_ms: float,
+    prev_speech_ms: float,
+    next_speech_ms: float,
+    sim: float,
+    action: str | None,
+    min_sim: float,
+    min_pause_ms: float = 1500.0,
+    min_prev_speech_ms: float = 5000.0,
+    max_next_speech_ms: float = 1800.0,
+) -> bool:
+    return (
+        pause_reason == "dsp"
+        and pause_duration_ms >= min_pause_ms
+        and prev_speech_ms >= min_prev_speech_ms
+        and next_speech_ms <= max_next_speech_ms
+        and sim >= min_sim
+        and action in {"observed_current", "recovered"}
+    )
+
+
+def _dense_prior_opening_candidate(
+    previous_time: float,
+    selected_time: float,
+    expected_gap_ms: float,
+    candidates: list[tuple[float, float, int]],
+    *,
+    pause_reason: str | None,
+    selected_prev_quality: float,
+    selected_sim: float,
+    action: str | None,
+    min_candidate_sim: float = 0.30,
+    min_selected_sim: float = 0.40,
+    max_selected_prev_quality: float = 0.12,
+    min_candidate_prev_quality: float = 0.20,
+    quality_margin: float = 0.15,
+    max_back_ms: float = 9000.0,
+    min_gap_ms: float = 2500.0,
+    max_sim_loss: float = 0.25,
+    min_prefix: int = 1,
+) -> float | None:
+    """Recover an earlier opening pause when the selected pause is internal."""
+    if (
+        pause_reason != "dsp"
+        or action not in {"confirmed", "observed_current", "recovered"}
+        or selected_sim < min_selected_sim
+        or selected_prev_quality > max_selected_prev_quality
+    ):
+        return None
+    best: tuple[float, float, float] | None = None
+    for candidate_time, candidate_sim, candidate_prefix in candidates:
+        if not (previous_time + min_gap_ms < candidate_time < selected_time - min_gap_ms):
+            continue
+        if selected_time - candidate_time > max_back_ms:
+            continue
+        if candidate_prefix < min_prefix:
+            continue
+        if candidate_sim < min_candidate_sim or candidate_sim < selected_sim - max_sim_loss:
+            continue
+        candidate_quality = _span_ratio_quality(candidate_time - previous_time, expected_gap_ms)
+        if candidate_quality < min_candidate_prev_quality:
+            continue
+        if candidate_quality < selected_prev_quality + quality_margin:
+            continue
+        if best is None or candidate_quality > best[0] or (
+            abs(candidate_quality - best[0]) <= 1e-9
+            and (candidate_sim > best[1] or (
+                abs(candidate_sim - best[1]) <= 1e-9 and candidate_time > best[2]
+            ))
+        ):
+            best = (candidate_quality, candidate_sim, candidate_time)
+    return best[2] if best is not None else None
+
+
+def _dense_later_opening_candidate(
+    previous_time: float,
+    selected_time: float,
+    next_time: float,
+    expected_prev_gap_ms: float,
+    expected_next_gap_ms: float,
+    candidates: list[tuple[float, float, int]],
+    *,
+    pause_reason: str | None,
+    selected_sim: float,
+    action: str | None,
+    min_candidate_sim: float = 0.45,
+    sim_margin: float = 0.15,
+    min_prefix: int = 3,
+    max_forward_ms: float = 9000.0,
+    min_gap_ms: float = 2500.0,
+    max_selected_pair_quality: float = 0.35,
+    min_candidate_pair_quality: float = 0.70,
+    quality_margin: float = 0.35,
+) -> float | None:
+    """Move a boundary forward when the next pause explains the local pair."""
+    if pause_reason != "dsp" or action not in {"confirmed", "observed_current", "recovered"}:
+        return None
+    selected_prev = _span_ratio_quality(selected_time - previous_time, expected_prev_gap_ms)
+    selected_next = _span_ratio_quality(next_time - selected_time, expected_next_gap_ms)
+    selected_pair = min(selected_prev, selected_next)
+    if selected_pair > max_selected_pair_quality:
+        return None
+    best: tuple[float, float, float] | None = None
+    for candidate_time, candidate_sim, candidate_prefix in candidates:
+        if not (selected_time + min_gap_ms < candidate_time < next_time - min_gap_ms):
+            continue
+        if candidate_time - selected_time > max_forward_ms:
+            continue
+        if candidate_prefix < min_prefix:
+            continue
+        if candidate_sim < min_candidate_sim or candidate_sim < selected_sim + sim_margin:
+            continue
+        candidate_prev = _span_ratio_quality(candidate_time - previous_time, expected_prev_gap_ms)
+        candidate_next = _span_ratio_quality(next_time - candidate_time, expected_next_gap_ms)
+        candidate_pair = min(candidate_prev, candidate_next)
+        candidate_avg = 0.5 * (candidate_prev + candidate_next)
+        selected_avg = 0.5 * (selected_prev + selected_next)
+        if candidate_pair < min_candidate_pair_quality:
+            continue
+        if candidate_pair < selected_pair + quality_margin:
+            continue
+        if candidate_avg < selected_avg + quality_margin:
+            continue
+        if best is None or candidate_pair > best[0] or (
+            abs(candidate_pair - best[0]) <= 1e-9
+            and (candidate_sim > best[1] or (
+                abs(candidate_sim - best[1]) <= 1e-9 and candidate_time < best[2]
+            ))
+        ):
+            best = (candidate_pair, candidate_sim, candidate_time)
+    return best[2] if best is not None else None
+
+
+def _weak_dsp_later_prefix_candidate(
+    previous_time: float,
+    selected_time: float,
+    next_time: float,
+    expected_prev_gap_ms: float,
+    expected_next_gap_ms: float,
+    candidates: list[tuple[float, float, int]],
+    *,
+    pause_reason: str | None,
+    selected_sim: float,
+    selected_prefix: int,
+    action: str | None,
+    min_candidate_sim: float = 0.50,
+    sim_margin: float = 0.15,
+    max_forward_ms: float = 5000.0,
+    min_gap_ms: float = 2500.0,
+    max_selected_pair_quality: float = 0.35,
+    min_candidate_prev_quality: float = 0.25,
+    min_candidate_next_quality: float = 0.80,
+    min_avg_gain: float = 0.15,
+) -> float | None:
+    """Move an early weak pause to a later prefix-backed real pause."""
+    if (
+        pause_reason != "weak-dsp"
+        or action not in {"confirmed", "observed_current", "recovered"}
+    ):
+        return None
+    _ = selected_prefix
+    selected_prev = _span_ratio_quality(selected_time - previous_time, expected_prev_gap_ms)
+    selected_next = _span_ratio_quality(next_time - selected_time, expected_next_gap_ms)
+    selected_pair = min(selected_prev, selected_next)
+    selected_avg = 0.5 * (selected_prev + selected_next)
+    if selected_pair > max_selected_pair_quality:
+        return None
+    best: tuple[float, float, float] | None = None
+    for candidate_time, candidate_sim, candidate_prefix in candidates:
+        if not (selected_time + min_gap_ms < candidate_time < next_time - min_gap_ms):
+            continue
+        if candidate_time - selected_time > max_forward_ms:
+            continue
+        _ = candidate_prefix
+        if candidate_sim < min_candidate_sim or candidate_sim < selected_sim + sim_margin:
+            continue
+        candidate_prev = _span_ratio_quality(candidate_time - previous_time, expected_prev_gap_ms)
+        candidate_next = _span_ratio_quality(next_time - candidate_time, expected_next_gap_ms)
+        candidate_avg = 0.5 * (candidate_prev + candidate_next)
+        if candidate_prev < min_candidate_prev_quality:
+            continue
+        if candidate_next < min_candidate_next_quality:
+            continue
+        if candidate_avg < selected_avg + min_avg_gain:
+            continue
+        if best is None or candidate_next > best[0] or (
+            abs(candidate_next - best[0]) <= 1e-9
+            and (candidate_sim > best[1] or (
+                abs(candidate_sim - best[1]) <= 1e-9 and candidate_time < best[2]
+            ))
+        ):
+            best = (candidate_next, candidate_sim, candidate_time)
+    return best[2] if best is not None else None
+
+
+def _missing_wasl_pause_candidate(
+    *,
+    rough_ms: float,
+    expected_ms: float,
+    previous_time: float | None,
+    next_time: float | None,
+    candidates: list[float],
+    max_expected_dist_ms: float = 5000.0,
+    min_expected_gain_ms: float = 1800.0,
+    max_rough_dist_ms: float = 4500.0,
+    min_gap_ms: float = 2500.0,
+) -> float | None:
+    """Recover a visible pause for a missing-before-future wasl boundary."""
+    best: tuple[float, float] | None = None
+    rough_expected_dist = abs(rough_ms - expected_ms)
+    for candidate_time in candidates:
+        if previous_time is not None and candidate_time <= previous_time + min_gap_ms:
+            continue
+        if next_time is not None and candidate_time >= next_time - min_gap_ms:
+            continue
+        if abs(candidate_time - rough_ms) > max_rough_dist_ms:
+            continue
+        candidate_expected_dist = abs(candidate_time - expected_ms)
+        if candidate_expected_dist > max_expected_dist_ms:
+            continue
+        if candidate_expected_dist > rough_expected_dist - min_expected_gain_ms:
+            continue
+        if best is None or candidate_expected_dist < best[0] or (
+            abs(candidate_expected_dist - best[0]) <= 1e-9
+            and abs(candidate_time - rough_ms) < abs(best[1] - rough_ms)
+        ):
+            best = (candidate_expected_dist, candidate_time)
+    return best[1] if best is not None else None
+
+
+def _dense_later_final_opening_candidate(
+    previous_time: float,
+    selected_time: float,
+    expected_gap_ms: float,
+    candidates: list[tuple[float, float, int]],
+    *,
+    pause_reason: str | None,
+    selected_sim: float,
+    action: str | None,
+    min_candidate_sim: float = 0.45,
+    sim_margin: float = 0.15,
+    min_prefix: int = 3,
+    max_forward_ms: float = 9000.0,
+    min_gap_ms: float = 2500.0,
+    max_selected_quality: float = 0.35,
+    min_candidate_quality: float = 0.65,
+    quality_margin: float = 0.35,
+) -> float | None:
+    """Move the final ayah forward when a later pause is the clearer opening."""
+    if pause_reason != "dsp" or action not in {"confirmed", "observed_current", "recovered"}:
+        return None
+    selected_quality = _span_ratio_quality(selected_time - previous_time, expected_gap_ms)
+    if selected_quality > max_selected_quality:
+        return None
+    best: tuple[float, float, float] | None = None
+    for candidate_time, candidate_sim, candidate_prefix in candidates:
+        if not (selected_time + min_gap_ms < candidate_time):
+            continue
+        if candidate_time - selected_time > max_forward_ms:
+            continue
+        if candidate_prefix < min_prefix:
+            continue
+        if candidate_sim < min_candidate_sim or candidate_sim < selected_sim + sim_margin:
+            continue
+        candidate_quality = _span_ratio_quality(candidate_time - previous_time, expected_gap_ms)
+        if candidate_quality < min_candidate_quality:
+            continue
+        if candidate_quality < selected_quality + quality_margin:
+            continue
+        if best is None or candidate_quality > best[0] or (
+            abs(candidate_quality - best[0]) <= 1e-9
+            and (candidate_sim > best[1] or (
+                abs(candidate_sim - best[1]) <= 1e-9 and candidate_time < best[2]
+            ))
+        ):
+            best = (candidate_quality, candidate_sim, candidate_time)
+    return best[2] if best is not None else None
+
+
+def _left_edge_repeated_opening_candidate(
+    candidates: list[tuple[float, float, bool]],
+    *,
+    pause_start_ms: float,
+    pause_center_ms: float,
+    min_conf: float,
+    min_shift_ms: float = 500.0,
+) -> tuple[float, float] | None:
+    """Use a high-confidence left-edge read only as proof inside one pause shelf."""
+    accepted = [
+        (onset_ms, conf)
+        for onset_ms, conf, is_left_edge in candidates
+        if is_left_edge
+        and conf >= min_conf
+        and pause_start_ms <= onset_ms <= pause_center_ms - min_shift_ms
+    ]
+    if not accepted:
+        return None
+    return max(accepted, key=lambda item: item[0])
+
+
+def _prior_close_dsp_before_micro_stop(
+    micro_time_ms: float,
+    strong_candidate_times: list[float],
+    *,
+    max_before_ms: float = 900.0,
+) -> float | None:
+    candidates = [
+        candidate
+        for candidate in strong_candidate_times
+        if 0.0 < micro_time_ms - candidate <= max_before_ms
+    ]
+    return max(candidates, default=None)
 
 
 def _interp_wasl(k: int, exp: list[float], matched: list[float | None]) -> float:
@@ -1733,25 +3007,29 @@ def align_surah_fast(
     raw_content_start = content_start
     intro_pause = next(
         (
-            d.pause for d in trusted_decisions
+            d.pause for d in pause_decisions
             if d.reason == "intro-vad-tight"
             and d.pause.start_ms <= content_start <= d.pause.end_ms
         ),
         None,
     )
+    content_start = _first_ayah_content_start(
+        content_start,
+        basmala=basmala,
+        intro_pause_start_ms=intro_pause.start_ms if intro_pause is not None else None,
+        intro_pause_end_ms=intro_pause.end_ms if intro_pause is not None else None,
+    )
     if intro_pause is not None:
-        content_start = intro_pause.center_ms
         emit(
             f"Первый аят: anchor {sec(raw_content_start)} сек. попал внутрь intro-паузы "
             f"{sec(intro_pause.start_ms)}-{sec(intro_pause.end_ms)} сек.; "
             f"ставлю старт {sec(content_start)} сек."
         )
-    if basmala and content_start < _BASMALA_MIN_CONTENT_START_MS:
+    elif basmala and content_start < _BASMALA_MIN_CONTENT_START_MS:
         emit(
             f"Первый аят: anchor {sec(content_start)} сек. раньше нижней границы "
             f"басмалы {sec(_BASMALA_MIN_CONTENT_START_MS)} сек.; сдвигаю старт"
         )
-        content_start = _BASMALA_MIN_CONTENT_START_MS
     model_reads.append({
         "phase": "anchor",
         "ayah": a1,
@@ -2156,15 +3434,19 @@ def align_surah_fast(
                 lo_i = start_i - 1
                 lo_t = matched0[lo_i] if lo_i >= 0 and matched0[lo_i] is not None else content_start
                 hi_t = pause_onsets[int(ev["pause"])]
-                left_pause = pause_by_center.get(lo_t)
                 right_pause = pause_by_center.get(hi_t)
-                interval_start = left_pause.end_ms if left_pause is not None else lo_t
-                interval_end = right_pause.start_ms if right_pause is not None else hi_t
                 expected_t = float(ev.get("expected_ms", exp[start_i]))
-                interval_start = max(interval_start, expected_t - min(3500.0, 0.25 * _MATCH_PRIOR_WINDOW_MS))
-                interval_end = min(interval_end, expected_t + min(3500.0, 0.25 * _MATCH_PRIOR_WINDOW_MS))
-                if interval_end <= interval_start:
+                window = _final_weak_current_activation_window(
+                    expected_ms=expected_t,
+                    matched_ms=hi_t,
+                    matched_pause_start_ms=right_pause.start_ms if right_pause is not None else hi_t,
+                    matched_pause_end_ms=right_pause.end_ms if right_pause is not None else hi_t,
+                    total_ms=total_ms,
+                    prior_window_ms=_MATCH_PRIOR_WINDOW_MS,
+                )
+                if window is None:
                     continue
+                interval_start, interval_end = window
                 for d in low_conf_decisions:
                     p = d.pause
                     center = p.center_ms
@@ -2327,6 +3609,19 @@ def align_surah_fast(
                     interval_end_ms=interval_end,
                     expected_ms=expected_t,
                 )
+                if valley is not None:
+                    valley = _prefer_expected_micro_valley(
+                        valley,
+                        _find_micro_pause_valley(
+                            pcm,
+                            sr,
+                            interval_start_ms=interval_start,
+                            interval_end_ms=interval_end,
+                            expected_ms=expected_t,
+                            search_ms=_MICRO_EXPECTED_RETRY_MS,
+                        ),
+                        expected_ms=expected_t,
+                    )
                 if valley is None:
                     micro_pause_debug.append({
                         "ayah": inner[start_i],
@@ -2425,6 +3720,19 @@ def align_surah_fast(
                     interval_end_ms=interval_end,
                     expected_ms=expected_t,
                 )
+                if valley is not None:
+                    valley = _prefer_expected_micro_valley(
+                        valley,
+                        _find_micro_pause_valley(
+                            pcm,
+                            sr,
+                            interval_start_ms=interval_start,
+                            interval_end_ms=interval_end,
+                            expected_ms=expected_t,
+                            search_ms=_MICRO_EXPECTED_RETRY_MS,
+                        ),
+                        expected_ms=expected_t,
+                    )
                 if valley is None:
                     micro_pause_debug.append({
                         "ayah": miss_a,
@@ -2574,14 +3882,20 @@ def align_surah_fast(
                 ),
                 "",
             )
-            if action == "recovered":
-                min_keep_sim = max(0.0, _MIN_MATCH_SIM - _RECOVER_ECHO_SIM_SLACK)
-            elif action == "final_weak_current":
-                min_keep_sim = _FINAL_WEAK_MATCH_SIM
-            elif action in {"observed_current", "weak_observed_current"}:
-                min_keep_sim = max(0.0, _MIN_MATCH_SIM - _RECOVER_ECHO_SIM_SLACK)
+            if action in {"recovered", "pause_fallback"}:
+                pause = pause_by_center.get(mk)
+                diag = pause_diag.get(pause) if pause is not None else None
+                pause_reason = diag.reason if diag is not None else None
             else:
-                min_keep_sim = drop_sim
+                pause_reason = None
+            min_keep_sim = _pause_match_min_keep_sim(
+                action=action,
+                pause_reason=pause_reason,
+                drop_sim=drop_sim,
+                min_match_sim=_MIN_MATCH_SIM,
+                recover_echo_slack=_RECOVER_ECHO_SIM_SLACK,
+                final_weak_match_sim=_FINAL_WEAK_MATCH_SIM,
+            )
             reason = None
             if sim < min_keep_sim:
                 reason = "low_sim"
@@ -2612,16 +3926,79 @@ def align_surah_fast(
     used_matched = {m for m in matched if m is not None}
     weak_micro_floor = max(0.0, _MIN_MATCH_SIM - _RECOVER_ECHO_SIM_SLACK)
     weak_pause_floor = max(_RECOVER_MATCH_SIM, weak_micro_floor)
+
+    def text_gap_plausible(observed_gap_ms: float, expected_gap_ms: float) -> bool:
+        if expected_gap_ms <= 0.0:
+            return True
+        return observed_gap_ms <= max(45_000.0, 12.0 * expected_gap_ms)
+
+    def preserves_neighbor_text_span(
+        k: int,
+        center: float,
+        prev_i: int | None,
+        prev_t: float | None,
+        next_i: int | None,
+        next_t: float | None,
+    ) -> bool:
+        if prev_i is not None and prev_t is not None:
+            if not text_gap_plausible(center - prev_t, exp[k] - exp[prev_i]):
+                return False
+        if next_i is not None and next_t is not None:
+            if not text_gap_plausible(next_t - center, exp[next_i] - exp[k]):
+                return False
+        return True
+
+    def dense_pause_block_before(
+        k: int,
+        j: int,
+        prev_i: int | None,
+        prev_t: float | None,
+        next_i: int | None,
+    ) -> bool:
+        if prev_i is None or prev_t is None or next_i is None:
+            return False
+        if not (k + 1 < next_i):
+            return False
+        selected_center = pause_onsets[j]
+        block_candidates: list[int] = []
+        for jj, center in enumerate(pause_onsets):
+            if jj == j:
+                block_candidates.append(jj)
+                continue
+            if center in used_matched or center <= prev_t or center >= selected_center:
+                continue
+            pause = pause_by_center.get(center)
+            diag = pause_diag.get(pause) if pause is not None else None
+            if diag is None or diag.reason not in {"dsp", "weak-dsp"}:
+                continue
+            block_candidates.append(jj)
+        return _skips_dense_pause_block(
+            k,
+            j,
+            block_candidates,
+            candidate_time=lambda jj: pause_onsets[jj],
+            expected_time=lambda kk: exp[kk],
+            previous_boundary=prev_i,
+            previous_time=prev_t,
+            next_boundary=next_i,
+        )
+
     for k, mk in enumerate(matched):
         if mk is not None or sequence_reason.get(k) != "missing_before_future":
             continue
-        prev_t = next((matched[ii] for ii in range(k - 1, -1, -1) if matched[ii] is not None), None)
-        next_t = next((matched[ii] for ii in range(k + 1, len(matched)) if matched[ii] is not None), None)
+        prev_i = next((ii for ii in range(k - 1, -1, -1) if matched[ii] is not None), None)
+        next_i = next((ii for ii in range(k + 1, len(matched)) if matched[ii] is not None), None)
+        prev_t = matched[prev_i] if prev_i is not None else None
+        next_t = matched[next_i] if next_i is not None else None
         if prev_t is None or next_t is None:
             continue
         candidates: list[tuple[float, int]] = []
         for j, center in enumerate(pause_onsets):
             if center in used_matched or center <= prev_t or center >= next_t:
+                continue
+            if not preserves_neighbor_text_span(k, center, prev_i, prev_t, next_i, next_t):
+                continue
+            if dense_pause_block_before(k, j, prev_i, prev_t, next_i):
                 continue
             pause = pause_by_center.get(center)
             diag = pause_diag.get(pause) if pause is not None else None
@@ -2644,8 +4021,10 @@ def align_surah_fast(
             continue
         if sequence_reason.get(k) == "no_pause_in_window":
             continue
-        prev_t = next((matched[ii] for ii in range(k - 1, -1, -1) if matched[ii] is not None), None)
-        next_t = next((matched[ii] for ii in range(k + 1, len(matched)) if matched[ii] is not None), None)
+        prev_i = next((ii for ii in range(k - 1, -1, -1) if matched[ii] is not None), None)
+        next_i = next((ii for ii in range(k + 1, len(matched)) if matched[ii] is not None), None)
+        prev_t = matched[prev_i] if prev_i is not None else None
+        next_t = matched[next_i] if next_i is not None else None
         rough_t = _interp_wasl(k, exp, matched)
         near_strong_candidates: list[int] = []
         fallback_candidates: list[tuple[float, int]] = []
@@ -2658,14 +4037,29 @@ def align_surah_fast(
                 continue
             if (prev_t is None or next_t is None) and abs(center - rough_t) > _MATCH_PRIOR_WINDOW_MS:
                 continue
+            if not preserves_neighbor_text_span(k, center, prev_i, prev_t, next_i, next_t):
+                continue
+            if dense_pause_block_before(k, j, prev_i, prev_t, next_i):
+                continue
             pause = pause_by_center.get(center)
             diag = pause_diag.get(pause) if pause is not None else None
             if diag is None:
                 continue
+            s = _sim_ij(k, j)
+            wave_metrics = wave_tempo_metrics(k, j)
+            if not _accept_fallback_pause_candidate(
+                pause_reason=diag.reason,
+                sim=s,
+                min_match_sim=_MIN_MATCH_SIM,
+                expected_delta_ms=center - exp[k],
+                prev_quality=float(wave_metrics["prev_quality"]),
+                next_quality=float(wave_metrics["next_quality"]),
+                next_speech_ms=float(wave_metrics["next_speech_ms"]),
+            ):
+                continue
             if diag.reason != "weak-dsp" and abs(center - rough_t) <= 2200.0:
                 near_strong_candidates.append(j)
                 continue
-            s = _sim_ij(k, j)
             is_strong = diag.reason != "weak-dsp"
             if not is_strong and s < weak_micro_floor:
                 continue
@@ -2700,83 +4094,89 @@ def align_surah_fast(
             return True
         return allow_fuzzy and _sim_ij(k, j) >= 0.27
 
+    def opening_run_candidate_score(kk: int, j: int) -> float | None:
+        prefix = opening_prefix_for(kk, j)
+        sim_s = _sim_ij(kk, j)
+        if opening_text_risk.get(kk, 0) >= _AMBIG_PREFIX_CHARS:
+            if prefix < 6:
+                return None
+            return 1.0 + min(0.5, sim_s) + 0.02 * min(prefix, 12)
+        if prefix >= 3:
+            return 0.8 + min(0.5, sim_s) + 0.02 * min(prefix, 10)
+        if sim_s >= 0.27:
+            return sim_s
+        return None
+
     repaired_run_until = -1
 
-    def repair_opening_run(start_k: int, *, length: int = 4) -> None:
+    def repair_opening_run(
+        start_k: int,
+        *,
+        include_start: bool = False,
+        after_k: int | None = None,
+        after_ms_override: float | None = None,
+        max_length: int = 9,
+        min_length: int = 4,
+    ) -> bool:
         nonlocal repaired_run_until
-        end_k = min(len(matched) - 1, start_k + length)
-        if end_k <= start_k or matched[start_k] is None:
-            return
-        repaired_run_until = max(repaired_run_until, end_k)
-        run_boundaries = list(range(start_k + 1, end_k + 1))
-        run_owners = set(run_boundaries)
+        max_end_k = min(len(matched) - 1, start_k + max_length)
+        if max_end_k <= start_k or matched[start_k] is None:
+            return False
         owner_by_center = {
             center: owner
             for owner, center in enumerate(matched)
             if center is not None
         }
         start_t = float(matched[start_k])
+        first_k = start_k if include_start else start_k + 1
+        if first_k > max_end_k:
+            return False
+        anchor_t = float(after_ms_override) if after_ms_override is not None else start_t
+        anchor_expected = exp[after_k] if after_k is not None else exp[start_k]
+        min_end_k = min(max_end_k, first_k + min_length - 1)
         old_end = max(
-            (float(matched[ii]) for ii in run_boundaries if matched[ii] is not None),
+            (
+                float(matched[ii])
+                for ii in range(first_k, max_end_k + 1)
+                if matched[ii] is not None
+            ),
             default=start_t,
         )
-        block_end = max(old_end, start_t + 180_000.0)
+        block_end = max(old_end, anchor_t + 180_000.0)
 
-        def candidate_score(kk: int, j: int) -> float | None:
-            prefix = opening_prefix_for(kk, j)
-            sim_s = _sim_ij(kk, j)
-            if opening_text_risk.get(kk, 0) >= _AMBIG_PREFIX_CHARS:
-                if prefix < 6:
-                    return None
-                return 1.0 + min(0.5, sim_s) + 0.02 * min(prefix, 12)
-            if prefix >= 3:
-                return 0.8 + min(0.5, sim_s) + 0.02 * min(prefix, 10)
-            if sim_s >= 0.27:
-                return sim_s
-            return None
+        assignment: dict[int, int] = {}
+        run_boundaries: list[int] = []
+        for end_k in range(max_end_k, min_end_k - 1, -1):
+            current_boundaries = list(range(first_k, end_k + 1))
+            run_owners = set(current_boundaries)
+            candidate_pool = [
+                j
+                for j, center in enumerate(pause_onsets)
+                if center < block_end
+                and (
+                    center not in used_matched
+                    or owner_by_center.get(center) in run_owners
+                )
+            ]
+            current_assignment = _assign_opening_block(
+                current_boundaries,
+                candidate_pool,
+                candidate_time=lambda j: pause_onsets[j],
+                score=opening_run_candidate_score,
+                after_ms=anchor_t,
+                expected_time=lambda kk: exp[kk],
+                after_expected_ms=anchor_expected,
+            )
+            if set(current_assignment) == set(current_boundaries):
+                assignment = current_assignment
+                run_boundaries = current_boundaries
+                break
+        if not assignment:
+            return False
 
-        layers: list[list[tuple[int, float]]] = []
+        repaired_run_until = max(repaired_run_until, run_boundaries[-1])
         for kk in run_boundaries:
-            layer: list[tuple[int, float]] = []
-            for j, center in enumerate(pause_onsets):
-                owner = owner_by_center.get(center)
-                if center <= start_t + 2500.0 or center >= block_end:
-                    continue
-                if center in used_matched and owner not in run_owners:
-                    continue
-                sc = candidate_score(kk, j)
-                if sc is not None:
-                    layer.append((j, sc))
-            if not layer:
-                return
-            layers.append(layer)
-
-        states: dict[int, tuple[float, list[int]]] = {}
-        for j, sc in layers[0]:
-            gap_pen = min(0.4, max(0.0, pause_onsets[j] - start_t) / 180_000.0)
-            states[j] = (sc - gap_pen, [j])
-        for layer in layers[1:]:
-            next_states: dict[int, tuple[float, list[int]]] = {}
-            for j, sc in layer:
-                center = pause_onsets[j]
-                best: tuple[float, list[int]] | None = None
-                for prev_j, (prev_score, path) in states.items():
-                    prev_center = pause_onsets[prev_j]
-                    if center <= prev_center + 2500.0:
-                        continue
-                    gap = center - prev_center
-                    # Keep the block local, but allow long ayahs like 37:66.
-                    gap_pen = min(0.5, abs(gap - 9000.0) / 180_000.0)
-                    total = prev_score + sc - gap_pen
-                    if best is None or total > best[0]:
-                        best = (total, path + [j])
-                if best is not None:
-                    next_states[j] = best
-            states = next_states
-            if not states:
-                return
-        _score, path = max(states.values(), key=lambda item: item[0])
-        for kk, j in zip(run_boundaries, path):
+            j = assignment[kk]
             old = matched[kk]
             stolen_owner = owner_by_center.get(pause_onsets[j])
             if stolen_owner is not None and stolen_owner != kk:
@@ -2787,13 +4187,18 @@ def align_surah_fast(
             matched[kk] = pause_onsets[j]
             used_matched.add(pause_onsets[j])
             sequence_action[kk] = "opening_run_repair"
+        return True
 
     for k, mk in enumerate(matched):
         if mk is None:
             continue
-        prev_t = next((matched[ii] for ii in range(k - 1, -1, -1) if matched[ii] is not None), None)
-        if prev_t is None:
+        prev_pair = next(
+            ((ii, matched[ii]) for ii in range(k - 1, -1, -1) if matched[ii] is not None),
+            None,
+        )
+        if prev_pair is None:
             continue
+        prev_i, prev_t = prev_pair
         current_gap = mk - prev_t
         if current_gap > 30_000.0:
             candidates = [
@@ -2817,6 +4222,19 @@ def align_surah_fast(
                 )
             ]
             if candidates and len(repeated_opening_candidates) >= 3:
+                has_strong_current_candidate = any(
+                    (opening_run_candidate_score(k, j) or 0.0) >= 0.8 for j in candidates
+                )
+                if (
+                    not has_strong_current_candidate
+                    and repair_opening_run(
+                        k,
+                        include_start=True,
+                        after_k=prev_i,
+                        after_ms_override=float(prev_t),
+                    )
+                ):
+                    continue
                 j = min(candidates, key=lambda jj: pause_onsets[jj])
                 used_matched.discard(mk)
                 matched[k] = pause_onsets[j]
@@ -3036,6 +4454,14 @@ def align_surah_fast(
                 return jj
         return None
 
+    micro_shelf_start_by_center = {
+        float(item["center_ms"]): float(item["expanded_start_ms"])
+        for item in micro_pause_debug
+        if item.get("status") in {"added", "tail_added"}
+        and item.get("center_ms") is not None
+        and item.get("expanded_start_ms") is not None
+    }
+
     for k, a in enumerate(inner):
         near_js = [
             j for j, _p in enumerate(pause_onsets)
@@ -3068,6 +4494,280 @@ def align_surah_fast(
             wave_metrics = rounded_wave_metrics(k, j)
             rough = pause_timing_point(matched[k], sim=sim, reason=pause_reason)
             timing_adjusted = False
+            if pause is not None:
+                previous_a = ayah_list[k]
+                previous_place = place.get(previous_a)
+                previous_time = (
+                    previous_place[0]
+                    if previous_place is not None
+                    else starts_ms.get(previous_a, content_start)
+                )
+                expected_gap = (
+                    (cum_u[a] - cum_u[previous_a]) / total_w * content_dur
+                    if total_w > 0.0
+                    else 0.0
+                )
+                prior_pause = _dense_prior_opening_candidate(
+                    previous_time,
+                    matched[k],
+                    expected_gap,
+                    [
+                        (
+                            center,
+                            _sim_ij(k, candidate_j),
+                            _onset_prefix_len(decode_pause(candidate_j), openings[k]),
+                        )
+                        for candidate_j, center in enumerate(pause_onsets)
+                        if center not in used_matched
+                        and (candidate := pause_by_center.get(center)) is not None
+                        and (diag := pause_diag.get(candidate)) is not None
+                        and diag.reason == "dsp"
+                    ],
+                    pause_reason=pause_reason,
+                    selected_prev_quality=float(wave_metrics.get("prev_quality") or 0.0),
+                    selected_sim=sim,
+                    action=sequence_action.get(k),
+                )
+                if prior_pause is not None:
+                    old_matched = matched[k]
+                    matched[k] = prior_pause
+                    used_matched.discard(old_matched)
+                    used_matched.add(prior_pause)
+                    j = pause_onsets.index(prior_pause)
+                    pause = pause_by_center.get(prior_pause)
+                    pause_reason = pause_diag[pause].reason if pause in pause_diag else None
+                    sim = _sim_ij(k, j)
+                    wave_metrics = rounded_wave_metrics(k, j)
+                    rough = pause_timing_point(prior_pause, sim=sim, reason=pause_reason)
+                    timing_adjusted = True
+            if pause is not None:
+                next_i = next(
+                    (ii for ii in range(k + 1, len(matched)) if matched[ii] is not None),
+                    None,
+                )
+                previous_a = ayah_list[k]
+                previous_place = place.get(previous_a)
+                previous_time = (
+                    previous_place[0]
+                    if previous_place is not None
+                    else starts_ms.get(previous_a, content_start)
+                )
+                if next_i is not None:
+                    next_a = inner[next_i]
+                    next_time = float(matched[next_i])
+                    later_pause = _weak_dsp_later_prefix_candidate(
+                        previous_time,
+                        matched[k],
+                        next_time,
+                        (cum_u[a] - cum_u[previous_a]) / total_w * content_dur
+                        if total_w > 0.0 else 0.0,
+                        (cum_u[next_a] - cum_u[a]) / total_w * content_dur
+                        if total_w > 0.0 else 0.0,
+                        [
+                            (
+                                center,
+                                _sim_ij(k, candidate_j),
+                                _onset_prefix_len(decode_pause(candidate_j), openings[k]),
+                            )
+                            for candidate_j, center in enumerate(pause_onsets)
+                            if not any(
+                                other_i != k and matched[other_i] == center
+                                for other_i in range(len(matched))
+                            )
+                            and (candidate := pause_by_center.get(center)) is not None
+                            and (diag := pause_diag.get(candidate)) is not None
+                            and diag.reason == "dsp"
+                        ],
+                        pause_reason=pause_reason,
+                        selected_sim=sim,
+                        selected_prefix=_onset_prefix_len(decode_pause(j), openings[k]),
+                        action=sequence_action.get(k),
+                    )
+                    if later_pause is not None:
+                        old_matched = matched[k]
+                        matched[k] = later_pause
+                        used_matched.discard(old_matched)
+                        used_matched.add(later_pause)
+                        j = pause_onsets.index(later_pause)
+                        pause = pause_by_center.get(later_pause)
+                        pause_reason = pause_diag[pause].reason if pause in pause_diag else None
+                        sim = _sim_ij(k, j)
+                        wave_metrics = rounded_wave_metrics(k, j)
+                        rough = pause_timing_point(later_pause, sim=sim, reason=pause_reason)
+                        timing_adjusted = True
+                    later_pause = _dense_later_opening_candidate(
+                        previous_time,
+                        matched[k],
+                        next_time,
+                        (cum_u[a] - cum_u[previous_a]) / total_w * content_dur
+                        if total_w > 0.0 else 0.0,
+                        (cum_u[next_a] - cum_u[a]) / total_w * content_dur
+                        if total_w > 0.0 else 0.0,
+                        [
+                            (
+                                center,
+                                _sim_ij(k, candidate_j),
+                                _onset_prefix_len(decode_pause(candidate_j), openings[k]),
+                            )
+                            for candidate_j, center in enumerate(pause_onsets)
+                            if center not in used_matched
+                            and (candidate := pause_by_center.get(center)) is not None
+                            and (diag := pause_diag.get(candidate)) is not None
+                            and diag.reason == "dsp"
+                        ],
+                        pause_reason=pause_reason,
+                        selected_sim=sim,
+                        action=sequence_action.get(k),
+                    )
+                    if later_pause is not None:
+                        old_matched = matched[k]
+                        matched[k] = later_pause
+                        used_matched.discard(old_matched)
+                        used_matched.add(later_pause)
+                        j = pause_onsets.index(later_pause)
+                        pause = pause_by_center.get(later_pause)
+                        pause_reason = pause_diag[pause].reason if pause in pause_diag else None
+                        sim = _sim_ij(k, j)
+                        wave_metrics = rounded_wave_metrics(k, j)
+                        rough = pause_timing_point(later_pause, sim=sim, reason=pause_reason)
+                        timing_adjusted = True
+                else:
+                    later_pause = _dense_later_final_opening_candidate(
+                        previous_time,
+                        matched[k],
+                        (cum_u[a] - cum_u[previous_a]) / total_w * content_dur
+                        if total_w > 0.0 else 0.0,
+                        [
+                            (
+                                center,
+                                _sim_ij(k, candidate_j),
+                                _onset_prefix_len(decode_pause(candidate_j), openings[k]),
+                            )
+                            for candidate_j, center in enumerate(pause_onsets)
+                            if center not in used_matched
+                            and (candidate := pause_by_center.get(center)) is not None
+                            and (diag := pause_diag.get(candidate)) is not None
+                            and diag.reason == "dsp"
+                        ],
+                        pause_reason=pause_reason,
+                        selected_sim=sim,
+                        action=sequence_action.get(k),
+                    )
+                    if later_pause is not None:
+                        old_matched = matched[k]
+                        matched[k] = later_pause
+                        used_matched.discard(old_matched)
+                        used_matched.add(later_pause)
+                        j = pause_onsets.index(later_pause)
+                        pause = pause_by_center.get(later_pause)
+                        pause_reason = pause_diag[pause].reason if pause in pause_diag else None
+                        sim = _sim_ij(k, j)
+                        wave_metrics = rounded_wave_metrics(k, j)
+                        rough = pause_timing_point(later_pause, sim=sim, reason=pause_reason)
+                        timing_adjusted = True
+            if (
+                pause is not None
+                and _late_repeated_dsp_prior_candidate(
+                    pause_reason=pause_reason,
+                    pause_duration_ms=pause.end_ms - pause.start_ms,
+                    prev_speech_ms=float(wave_metrics.get("prev_speech_ms") or 0.0),
+                    next_speech_ms=float(wave_metrics.get("next_speech_ms") or 0.0),
+                    sim=sim,
+                    action=sequence_action.get(k),
+                    min_sim=_PAUSE_TRUST_SIM,
+                )
+            ):
+                previous_a = ayah_list[k]
+                previous_place = place.get(previous_a)
+                previous_time = (
+                    previous_place[0]
+                    if previous_place is not None
+                    else starts_ms.get(previous_a, content_start)
+                )
+                expected_gap = (
+                    (cum_u[a] - cum_u[previous_a]) / total_w * content_dur
+                    if total_w > 0.0
+                    else 0.0
+                )
+                prior_pause = _prior_pause_before_internal_stop(
+                    previous_time,
+                    pause.end_ms,
+                    expected_gap,
+                    [
+                        center
+                        for center in pause_onsets
+                        if center not in used_matched
+                        and (candidate := pause_by_center.get(center)) is not None
+                        and (diag := pause_diag.get(candidate)) is not None
+                        and diag.reason == "dsp"
+                    ],
+                    raw_is_internal_stop=True,
+                )
+                if prior_pause is not None:
+                    old_matched = matched[k]
+                    matched[k] = prior_pause
+                    used_matched.discard(old_matched)
+                    used_matched.add(prior_pause)
+                    j = pause_onsets.index(prior_pause)
+                    pause = pause_by_center.get(prior_pause)
+                    pause_reason = pause_diag[pause].reason if pause in pause_diag else None
+                    sim = _sim_ij(k, j)
+                    wave_metrics = rounded_wave_metrics(k, j)
+                    rough = pause_timing_point(prior_pause, sim=sim, reason=pause_reason)
+                    timing_adjusted = True
+            if _weak_dsp_wasl_recovery_candidate(
+                pause_reason=pause_reason,
+                action=sequence_action.get(k),
+                prev_speech_ms=float(wave_metrics.get("prev_speech_ms") or 0.0),
+                next_speech_ms=float(wave_metrics.get("next_speech_ms") or 0.0),
+                prev_quality=float(wave_metrics.get("prev_quality") or 0.0),
+                next_quality=float(wave_metrics.get("next_quality") or 0.0),
+                sim=sim,
+                min_sim=_MIN_MATCH_SIM,
+            ):
+                used_matched.discard(matched[k])
+                matched[k] = None
+                rough = _interp_wasl(k, exp, matched)
+                place[a] = (rough, False)
+                pause_match_debug.append({
+                    "ayah": a,
+                    "expected_ms": round(expected, 1),
+                    "rough_ms": round(rough, 1),
+                    "from_pause": False,
+                    "pause": pause_ord.get(pause_onsets[j]),
+                    "pause_center_ms": round(pause_onsets[j], 1),
+                    "pause_end_ms": round(pause.end_ms, 1) if pause is not None else None,
+                    "pause_sim": round(sim, 3),
+                    "drop_reason": "weak_dsp_wasl_recovery",
+                    "match_action": sequence_action.get(k),
+                    "pause_reason": pause_reason,
+                    **wave_metrics,
+                })
+                continue
+            if pause_reason == "micro-tempo" and sim < _CONFIRM_MATCH_SIM:
+                prior_dsp = _prior_close_dsp_before_micro_stop(
+                    matched[k],
+                    [
+                        center
+                        for center in pause_onsets
+                        if center not in used_matched
+                        and (candidate := pause_by_center.get(center)) is not None
+                        and (diag := pause_diag.get(candidate)) is not None
+                        and diag.reason == "dsp"
+                    ],
+                )
+                if prior_dsp is not None:
+                    old_matched = matched[k]
+                    matched[k] = prior_dsp
+                    used_matched.discard(old_matched)
+                    used_matched.add(prior_dsp)
+                    j = pause_onsets.index(prior_dsp)
+                    pause = pause_by_center.get(prior_dsp)
+                    pause_reason = pause_diag[pause].reason if pause in pause_diag else None
+                    sim = _sim_ij(k, j)
+                    wave_metrics = rounded_wave_metrics(k, j)
+                    rough = pause_timing_point(prior_dsp, sim=sim, reason=pause_reason)
+                    timing_adjusted = True
             if (
                 sequence_action.get(k) == "weak_pause_recovery"
                 and pause is not None
@@ -3087,6 +4787,326 @@ def align_surah_fast(
                     rough + 0.36 * float(wave_metrics.get("next_speech_ms") or 0.0),
                 )
                 timing_adjusted = True
+            micro_shelf_start = _micro_shelf_start_candidate(
+                pause_reason=pause_reason,
+                sim=sim,
+                prev_quality=float(wave_metrics.get("prev_quality") or 0.0),
+                next_quality=float(wave_metrics.get("next_quality") or 0.0),
+                center_ms=matched[k],
+                shelf_start_ms=micro_shelf_start_by_center.get(round(matched[k], 1)),
+                confirm_match_sim=_CONFIRM_MATCH_SIM,
+            )
+            if micro_shelf_start is not None:
+                rough = micro_shelf_start
+                timing_adjusted = True
+            if (
+                pause_reason in {"rejected", "weak-dsp"}
+                and sequence_action.get(k) == "recovered"
+            ):
+                previous_a = ayah_list[k]
+                previous_place = place.get(previous_a)
+                previous_time = (
+                    previous_place[0]
+                    if previous_place is not None
+                    else starts_ms.get(previous_a, content_start)
+                )
+                next_i = next(
+                    (ii for ii in range(k + 1, len(matched)) if matched[ii] is not None),
+                    None,
+                )
+                if next_i is not None:
+                    next_a = inner[next_i]
+                    next_time = float(matched[next_i])
+                    expected_prev_gap = (
+                        (cum_u[a] - cum_u[previous_a]) / total_w * content_dur
+                        if total_w > 0.0 else 0.0
+                    )
+                    expected_next_gap = (
+                        (cum_u[next_a] - cum_u[a]) / total_w * content_dur
+                        if total_w > 0.0 else 0.0
+                    )
+                    interval_start = max(previous_time + 300.0, rough - 3500.0)
+                    interval_end = min(next_time - 300.0, rough + 3500.0)
+                    valley = (
+                        _find_micro_pause_valley(
+                            pcm,
+                            sr,
+                            interval_start_ms=interval_start,
+                            interval_end_ms=interval_end,
+                            expected_ms=previous_time + expected_prev_gap,
+                        )
+                        if interval_end - interval_start >= 700.0
+                        else None
+                    )
+                    if valley is not None:
+                        valley_center = _micro_valley_center(valley)
+                        selected_prev_quality = _span_ratio_quality(
+                            rough - previous_time,
+                            expected_prev_gap,
+                        )
+                        selected_next_quality = _span_ratio_quality(
+                            next_time - rough,
+                            expected_next_gap,
+                        )
+                        candidate_prev_quality = _span_ratio_quality(
+                            valley_center - previous_time,
+                            expected_prev_gap,
+                        )
+                        candidate_next_quality = _span_ratio_quality(
+                            next_time - valley_center,
+                            expected_next_gap,
+                        )
+                        local_expected = previous_time + expected_prev_gap
+                        if _rejected_micro_valley_candidate(
+                            pause_reason=pause_reason,
+                            action=sequence_action.get(k),
+                            valley_ratio=valley[2],
+                            shift_ms=abs(valley_center - rough),
+                            selected_prev_quality=selected_prev_quality,
+                            selected_next_quality=selected_next_quality,
+                            candidate_prev_quality=candidate_prev_quality,
+                            candidate_next_quality=candidate_next_quality,
+                        ):
+                            rough = valley_center
+                            timing_adjusted = True
+                        elif _weak_dsp_expected_micro_valley_candidate(
+                            pause_reason=pause_reason,
+                            action=sequence_action.get(k),
+                            pause_sim=sim,
+                            valley_ratio=valley[2],
+                            shift_ms=abs(valley_center - rough),
+                            expected_gain_ms=abs(rough - local_expected)
+                            - abs(valley_center - local_expected),
+                            selected_prev_quality=selected_prev_quality,
+                            selected_next_quality=selected_next_quality,
+                            candidate_prev_quality=candidate_prev_quality,
+                            candidate_next_quality=candidate_next_quality,
+                        ):
+                            rough = valley_center
+                            timing_adjusted = True
+                        elif (
+                            pause is not None
+                            and pause_reason == "weak-dsp"
+                            and sequence_action.get(k) == "recovered"
+                        ):
+                            post_interval_start = max(
+                                pause.end_ms + 80.0,
+                                rough + 120.0,
+                                previous_time + 300.0,
+                            )
+                            post_interval_end = min(next_time - 300.0, rough + 3500.0)
+                            post_valley = (
+                                _find_micro_pause_valley(
+                                    pcm,
+                                    sr,
+                                    interval_start_ms=post_interval_start,
+                                    interval_end_ms=post_interval_end,
+                                    expected_ms=local_expected,
+                                    search_ms=2500.0,
+                                )
+                                if post_interval_end - post_interval_start >= 700.0
+                                else None
+                            )
+                            if post_valley is not None:
+                                post_valley_center = _micro_valley_center(post_valley)
+                                post_candidate_prev_quality = _span_ratio_quality(
+                                    post_valley_center - previous_time,
+                                    expected_prev_gap,
+                                )
+                                post_candidate_next_quality = _span_ratio_quality(
+                                    next_time - post_valley_center,
+                                    expected_next_gap,
+                                )
+                                if _weak_dsp_post_selected_micro_valley_candidate(
+                                    pause_reason=pause_reason,
+                                    action=sequence_action.get(k),
+                                    pause_sim=sim,
+                                    valley_ratio=post_valley[2],
+                                    forward_shift_ms=post_valley_center - rough,
+                                    selected_prev_quality=selected_prev_quality,
+                                    selected_next_quality=selected_next_quality,
+                                    candidate_prev_quality=post_candidate_prev_quality,
+                                    candidate_next_quality=post_candidate_next_quality,
+                                ):
+                                    rough = post_valley_center
+                                    timing_adjusted = True
+            if (
+                pause is not None
+                and _weak_dsp_prior_recovery_candidate(
+                    pause_reason=pause_reason,
+                    action=sequence_action.get(k),
+                    prev_speech_ms=float(wave_metrics.get("prev_speech_ms") or 0.0),
+                    next_speech_ms=float(wave_metrics.get("next_speech_ms") or 0.0),
+                    next_quality=float(wave_metrics.get("next_quality") or 0.0),
+                )
+            ):
+                prior_dsp = _prior_close_dsp_before_micro_stop(
+                    matched[k],
+                    [
+                        center
+                        for center in pause_onsets
+                        if center not in used_matched
+                        and (candidate := pause_by_center.get(center)) is not None
+                        and (diag := pause_diag.get(candidate)) is not None
+                        and diag.reason == "dsp"
+                    ],
+                )
+                if prior_dsp is not None:
+                    old_matched = matched[k]
+                    matched[k] = prior_dsp
+                    used_matched.discard(old_matched)
+                    used_matched.add(prior_dsp)
+                    j = pause_onsets.index(prior_dsp)
+                    pause = pause_by_center.get(prior_dsp)
+                    pause_reason = pause_diag[pause].reason if pause in pause_diag else None
+                    sim = _sim_ij(k, j)
+                    wave_metrics = rounded_wave_metrics(k, j)
+                    rough = pause_timing_point(prior_dsp, sim=sim, reason=pause_reason)
+                    timing_adjusted = True
+            if (
+                pause is not None
+                and _weak_dsp_prior_trusted_recovery_candidate(
+                    pause_reason=pause_reason,
+                    action=sequence_action.get(k),
+                    prev_speech_ms=float(wave_metrics.get("prev_speech_ms") or 0.0),
+                    next_speech_ms=float(wave_metrics.get("next_speech_ms") or 0.0),
+                    prev_quality=float(wave_metrics.get("prev_quality") or 0.0),
+                    next_quality=float(wave_metrics.get("next_quality") or 0.0),
+                    waqf_after=int(wave_metrics.get("waqf_after") or 0),
+                )
+            ):
+                prior_dsp = _prior_close_dsp_before_micro_stop(
+                    matched[k],
+                    [
+                        center
+                        for center in pause_onsets
+                        if center not in used_matched
+                        and (candidate := pause_by_center.get(center)) is not None
+                        and (diag := pause_diag.get(candidate)) is not None
+                        and diag.reason == "dsp"
+                    ],
+                    max_before_ms=1800.0,
+                )
+                if prior_dsp is not None:
+                    old_matched = matched[k]
+                    matched[k] = prior_dsp
+                    used_matched.discard(old_matched)
+                    used_matched.add(prior_dsp)
+                    j = pause_onsets.index(prior_dsp)
+                    pause = pause_by_center.get(prior_dsp)
+                    pause_reason = pause_diag[pause].reason if pause in pause_diag else None
+                    sim = _sim_ij(k, j)
+                    wave_metrics = rounded_wave_metrics(k, j)
+                    rough = pause_timing_point(prior_dsp, sim=sim, reason=pause_reason)
+                    timing_adjusted = True
+            if (
+                pause is not None
+                and pause_reason == "dsp"
+            ):
+                compact_pause_start = _compact_dsp_start_candidate(
+                    pause_reason=pause_reason,
+                    pause_duration_ms=pause.end_ms - pause.start_ms,
+                    prev_quality=float(wave_metrics.get("prev_quality") or 0.0),
+                    next_quality=float(wave_metrics.get("next_quality") or 0.0),
+                    sim=sim,
+                    min_sim=_MIN_MATCH_SIM,
+                    action=sequence_action.get(k),
+                )
+                compact_pause_end = _compact_dsp_end_candidate(
+                    pause_reason=pause_reason,
+                    pause_duration_ms=pause.end_ms - pause.start_ms,
+                    prev_speech_ms=float(wave_metrics.get("prev_speech_ms") or 0.0),
+                    next_speech_ms=float(wave_metrics.get("next_speech_ms") or 0.0),
+                    prev_quality=float(wave_metrics.get("prev_quality") or 0.0),
+                    next_quality=float(wave_metrics.get("next_quality") or 0.0),
+                    sim=sim,
+                    action=sequence_action.get(k),
+                )
+                long_pause_start_timing = _long_pause_start_timing_candidate(
+                    pause_duration_ms=pause.end_ms - pause.start_ms,
+                    prev_speech_ms=float(wave_metrics.get("prev_speech_ms") or 0.0),
+                    next_speech_ms=float(wave_metrics.get("next_speech_ms") or 0.0),
+                    sim=sim,
+                    pause_trust_sim=_PAUSE_TRUST_SIM,
+                ) or _long_pause_start_after_speech_candidate(
+                    pause_duration_ms=pause.end_ms - pause.start_ms,
+                    prev_speech_ms=float(wave_metrics.get("prev_speech_ms") or 0.0),
+                    next_speech_ms=float(wave_metrics.get("next_speech_ms") or 0.0),
+                    sim=sim,
+                    min_sim=_RECOVER_MATCH_SIM,
+                )
+                long_pause_balanced_speech = _long_pause_start_balanced_speech_candidate(
+                    pause_duration_ms=pause.end_ms - pause.start_ms,
+                    prev_speech_ms=float(wave_metrics.get("prev_speech_ms") or 0.0),
+                    next_speech_ms=float(wave_metrics.get("next_speech_ms") or 0.0),
+                    prev_quality=float(wave_metrics.get("prev_quality") or 0.0),
+                    next_quality=float(wave_metrics.get("next_quality") or 0.0),
+                    sim=sim,
+                    min_sim=_RECOVER_MATCH_SIM,
+                    max_sim=_PAUSE_TRUST_SIM,
+                    action=sequence_action.get(k),
+                )
+                dsp_edge_timing = _dsp_edge_timing_candidate(
+                    pause_reason=pause_reason,
+                    pause_duration_ms=pause.end_ms - pause.start_ms,
+                    prev_speech_ms=float(wave_metrics.get("prev_speech_ms") or 0.0),
+                    next_speech_ms=float(wave_metrics.get("next_speech_ms") or 0.0),
+                    prev_quality=float(wave_metrics.get("prev_quality") or 0.0),
+                    next_quality=float(wave_metrics.get("next_quality") or 0.0),
+                    waqf_before=int(wave_metrics.get("waqf_before") or 0),
+                    waqf_after=int(wave_metrics.get("waqf_after") or 0),
+                    sim=sim,
+                    min_sim=_RECOVER_MATCH_SIM,
+                    action=sequence_action.get(k),
+                )
+                long_dsp_fraction = _long_dsp_fractional_start_candidate(
+                    pause_reason=pause_reason,
+                    pause_duration_ms=pause.end_ms - pause.start_ms,
+                    prev_quality=float(wave_metrics.get("prev_quality") or 0.0),
+                    next_quality=float(wave_metrics.get("next_quality") or 0.0),
+                    waqf_before=int(wave_metrics.get("waqf_before") or 0),
+                    waqf_after=int(wave_metrics.get("waqf_after") or 0),
+                    sim=sim,
+                    min_sim=_MIN_MATCH_SIM,
+                    action=sequence_action.get(k),
+                )
+                short_low_sim_start = _short_low_sim_dsp_start_candidate(
+                    pause_reason=pause_reason,
+                    pause_duration_ms=pause.end_ms - pause.start_ms,
+                    prev_quality=float(wave_metrics.get("prev_quality") or 0.0),
+                    next_speech_ms=float(wave_metrics.get("next_speech_ms") or 0.0),
+                    sim=sim,
+                    action=sequence_action.get(k),
+                )
+                if compact_pause_start or long_pause_start_timing or long_pause_balanced_speech:
+                    rough = pause.start_ms
+                    timing_adjusted = True
+                if compact_pause_end:
+                    rough = pause.end_ms
+                    timing_adjusted = True
+                if long_dsp_fraction is not None:
+                    rough = pause.start_ms + long_dsp_fraction * (pause.end_ms - pause.start_ms)
+                    timing_adjusted = True
+                if short_low_sim_start:
+                    rough = pause.start_ms
+                    timing_adjusted = True
+                if dsp_edge_timing == "start":
+                    rough = pause.start_ms
+                    timing_adjusted = True
+                elif dsp_edge_timing == "end":
+                    rough = pause.end_ms
+                    timing_adjusted = True
+            short_low_sim_lock = (
+                pause is not None
+                and pause_reason == "dsp"
+                and pause.end_ms - pause.start_ms <= 700.0
+                and float(wave_metrics.get("prev_quality") or 0.0) >= 0.70
+                and float(wave_metrics.get("next_speech_ms") or 0.0) <= 800.0
+                and sim <= 0.12
+            )
+            if short_low_sim_lock:
+                rough = pause.start_ms
+                timing_adjusted = True
             if (
                 pause is not None
                 and pause_reason != "micro-tempo"
@@ -3094,7 +5114,118 @@ def align_surah_fast(
                 and (wave_metrics.get("prev_speech_ms") or 0.0) <= 1500.0
                 and (wave_metrics.get("next_speech_ms") or 0.0) >= 3000.0
             ):
-                rough = pause.end_ms
+                previous_a = ayah_list[k]
+                previous_place = place.get(previous_a)
+                previous_time = (
+                    previous_place[0]
+                    if previous_place is not None
+                    else starts_ms.get(previous_a, content_start)
+                )
+                expected_gap = (
+                    (cum_u[a] - cum_u[previous_a]) / total_w * content_dur
+                    if total_w > 0.0
+                    else 0.0
+                )
+                prior_pause = _prior_pause_before_internal_stop(
+                    previous_time,
+                    pause.end_ms,
+                    expected_gap,
+                    [
+                        center
+                        for center in pause_onsets
+                        if (center == matched[k] or center not in used_matched)
+                        and (candidate := pause_by_center.get(center)) is not None
+                        and (diag := pause_diag.get(candidate)) is not None
+                        and diag.reason == "dsp"
+                    ],
+                    raw_is_internal_stop=True,
+                )
+                if prior_pause is not None and prior_pause != matched[k]:
+                    old_matched = matched[k]
+                    matched[k] = prior_pause
+                    used_matched.discard(old_matched)
+                    used_matched.add(prior_pause)
+                    j = pause_onsets.index(prior_pause)
+                    pause = pause_by_center.get(prior_pause)
+                    pause_reason = pause_diag[pause].reason if pause in pause_diag else None
+                    sim = _sim_ij(k, j)
+                    wave_metrics = rounded_wave_metrics(k, j)
+                    rough = pause_timing_point(prior_pause, sim=sim, reason=pause_reason)
+                    timing_adjusted = True
+                else:
+                    rough = pause.end_ms
+            if pause is not None and not timing_adjusted:
+                next_i = next(
+                    (ii for ii in range(k + 1, len(matched)) if matched[ii] is not None),
+                    None,
+                )
+                selected_has_micro_stop = any(
+                    (micro_pause := pause_by_center.get(center)) is not None
+                    and (micro_diag := pause_diag.get(micro_pause)) is not None
+                    and micro_diag.reason == "micro-tempo"
+                    and pause.start_ms <= center <= pause.end_ms + 300.0
+                    for center in pause_onsets
+                )
+                if next_i is not None:
+                    previous_a = ayah_list[k]
+                    next_a = inner[next_i]
+                    previous_place = place.get(previous_a)
+                    previous_time = (
+                        previous_place[0]
+                        if previous_place is not None
+                        else starts_ms.get(previous_a, content_start)
+                    )
+                    next_time = float(matched[next_i])
+                    prior_pause = _prior_pause_between_anchors(
+                        previous_time,
+                        rough,
+                        next_time,
+                        (cum_u[a] - cum_u[previous_a]) / total_w * content_dur
+                        if total_w > 0.0 else 0.0,
+                        (cum_u[next_a] - cum_u[a]) / total_w * content_dur
+                        if total_w > 0.0 else 0.0,
+                        [
+                            center
+                            for center in pause_onsets
+                            if center not in used_matched
+                            and (candidate := pause_by_center.get(center)) is not None
+                            and (diag := pause_diag.get(candidate)) is not None
+                            and diag.reason == "dsp"
+                        ],
+                        selected_is_internal_stop=(
+                            pause_reason != "micro-tempo"
+                            and sim < _PAUSE_TRUST_SIM
+                            and pause.end_ms - pause.start_ms >= 700.0
+                            and float(wave_metrics.get("prev_speech_ms") or 0.0) >= 1800.0
+                            and float(wave_metrics.get("next_speech_ms") or 0.0) <= 500.0
+                            and selected_has_micro_stop
+                        ),
+                    )
+                    if prior_pause is not None:
+                        old_matched = matched[k]
+                        matched[k] = prior_pause
+                        used_matched.discard(old_matched)
+                        used_matched.add(prior_pause)
+                        j = pause_onsets.index(prior_pause)
+                        pause = pause_by_center.get(prior_pause)
+                        pause_reason = pause_diag[pause].reason if pause in pause_diag else None
+                        sim = _sim_ij(k, j)
+                        wave_metrics = rounded_wave_metrics(k, j)
+                        rough = pause_timing_point(prior_pause, sim=sim, reason=pause_reason)
+                        timing_adjusted = True
+            final_short_low_sim_lock = (
+                pause is not None
+                and pause_reason == "dsp"
+                and sequence_action.get(k) == "weak_pause_recovery"
+                and pause.end_ms - pause.start_ms <= 700.0
+                and sim <= 0.12
+                and float(wave_metrics.get("prev_speech_ms") or 0.0) >= 5000.0
+                and float(wave_metrics.get("next_speech_ms") or 0.0) <= 800.0
+            )
+            if final_short_low_sim_lock:
+                rough = pause.start_ms
+                timing_adjusted = True
+                short_low_sim_lock = True
             matched_center_for_ayah[a] = matched[k]
             place[a] = (rough, True)
             pause_match_by_ayah[a] = {
@@ -3105,6 +5236,9 @@ def align_surah_fast(
                 "action": sequence_action.get(k),
                 "reason": pause_reason,
                 "timing_adjusted": timing_adjusted,
+                "timing_lock": "short_low_sim_start" if short_low_sim_lock else None,
+                "prev_speech_ms": wave_metrics.get("prev_speech_ms"),
+                "next_speech_ms": wave_metrics.get("next_speech_ms"),
             }
             pause_match_debug.append({
                 "ayah": a,
@@ -3112,6 +5246,7 @@ def align_surah_fast(
                 "rough_ms": round(rough, 1),
                 "from_pause": True,
                 "pause": pause_ord.get(matched[k]),
+                "pause_start_ms": round(pause.start_ms, 1) if pause is not None else None,
                 "pause_center_ms": round(matched[k], 1),
                 "pause_end_ms": round(pause.end_ms, 1) if pause is not None else None,
                 "pause_sim": round(sim, 3),
@@ -3126,6 +5261,8 @@ def align_surah_fast(
                 "drop_reason": None,
                 "match_action": sequence_action.get(k),
                 "pause_reason": pause_reason,
+                "timing_adjusted": timing_adjusted,
+                "timing_lock": "short_low_sim_start" if short_low_sim_lock else None,
                 **wave_metrics,
             })
             emit(
@@ -3139,6 +5276,9 @@ def align_surah_fast(
         else:
             drop_reason = dropped_match_reason.get(k) or sequence_reason.get(k)
             rough = _interp_wasl(k, exp, matched)
+            recovered_wasl_pause: float | None = None
+            recovered_wasl_pause_reason: str | None = None
+            recovered_wasl_sim: float | None = None
             if sequence_reason.get(k) == "missing_before_future":
                 prev_t = next(
                     (matched[ii] for ii in range(k - 1, -1, -1) if matched[ii] is not None),
@@ -3159,8 +5299,73 @@ def align_surah_fast(
                 if snap_candidates:
                     rough = min(snap_candidates, key=lambda center: abs(center - rough))
                     snapped_wasl_hints[a] = rough
-            wave_j = best_near_j if best_near_j >= 0 else best_j
+                pause_candidate = _missing_wasl_pause_candidate(
+                    rough_ms=rough,
+                    expected_ms=expected,
+                    previous_time=prev_t,
+                    next_time=next_t,
+                    candidates=[
+                        center for center in pause_onsets
+                        if center not in used_matched and strong_pause(center)
+                    ],
+                )
+                if pause_candidate is not None:
+                    recovered_wasl_pause = pause_candidate
+                    j = pause_onsets.index(pause_candidate)
+                    pause = pause_by_center.get(pause_candidate)
+                    recovered_wasl_pause_reason = (
+                        pause_diag[pause].reason if pause in pause_diag else None
+                    )
+                    recovered_wasl_sim = _sim_ij(k, j)
+                    matched[k] = pause_candidate
+                    used_matched.add(pause_candidate)
+                    rough = pause_candidate
+            wave_j = (
+                pause_onsets.index(recovered_wasl_pause)
+                if recovered_wasl_pause is not None
+                else best_near_j if best_near_j >= 0 else best_j
+            )
             wave_metrics = rounded_wave_metrics(k, wave_j)
+            if recovered_wasl_pause is not None:
+                place[a] = (rough, True)
+                pause_match_by_ayah[a] = {
+                    "pause": pause_ord.get(recovered_wasl_pause),
+                    "sim": recovered_wasl_sim,
+                    "center_ms": recovered_wasl_pause,
+                    "rough_ms": rough,
+                    "action": "missing_wasl_pause_recovery",
+                    "reason": recovered_wasl_pause_reason,
+                    "timing_adjusted": True,
+                    "timing_lock": None,
+                    "prev_speech_ms": wave_metrics.get("prev_speech_ms"),
+                    "next_speech_ms": wave_metrics.get("next_speech_ms"),
+                }
+                pause_match_debug.append({
+                    "ayah": a,
+                    "expected_ms": round(expected, 1),
+                    "rough_ms": round(rough, 1),
+                    "from_pause": True,
+                    "pause": pause_ord.get(recovered_wasl_pause),
+                    "pause_start_ms": round(pause.start_ms, 1) if pause is not None else None,
+                    "pause_center_ms": round(recovered_wasl_pause, 1),
+                    "pause_end_ms": round(pause.end_ms, 1) if pause is not None else None,
+                    "pause_sim": round(recovered_wasl_sim or 0.0, 3),
+                    "best_pause": pause_ord.get(pause_onsets[best_j]) if best_j >= 0 else None,
+                    "best_sim": round(best_sim, 3),
+                    "best_near_pause": (
+                        pause_ord.get(pause_onsets[best_near_j]) if best_near_j >= 0 else None
+                    ),
+                    "best_near_sim": round(best_near_sim, 3),
+                    "prior_window_ms": round(_MATCH_PRIOR_WINDOW_MS, 1),
+                    "expected_delta_ms": round(rough - expected, 1),
+                    "drop_reason": drop_reason or "missing_before_future",
+                    "match_action": "missing_wasl_pause_recovery",
+                    "pause_reason": recovered_wasl_pause_reason,
+                    "timing_adjusted": True,
+                    "timing_lock": None,
+                    **wave_metrics,
+                })
+                continue
             place[a] = (rough, False)
             pause_match_debug.append({
                 "ayah": a,
@@ -3212,6 +5417,7 @@ def align_surah_fast(
         *,
         ayah: int | None = None,
         phase: str = "probe",
+        edge_candidates: list[tuple[float, float, bool]] | None = None,
     ):
         """Grow a window around ``c`` until the onset of word ``fa`` locks on.
 
@@ -3246,7 +5452,10 @@ def align_surah_fast(
             cand = res["starts"][fa - i0]
             cconf = res["confs"][fa - i0]
             guard = min(edge_guard_ms, 0.2 * res["win_ms"])
-            near_edge = (cand - res["base"] < guard) or (res["end"] - cand < guard)
+            left_edge = cand - res["base"] < guard
+            near_edge = left_edge or (res["end"] - cand < guard)
+            if edge_candidates is not None:
+                edge_candidates.append((cand, cconf, left_edge))
             # Keep the genuinely best window seen, not merely the last one: a
             # comfortably-inside onset is preferred over a near-edge one (its
             # boundary may lie outside that window), then higher confidence.
@@ -3279,9 +5488,183 @@ def align_surah_fast(
     # off each ayah's first-word onset. Accurate and one read per run.
     wasl_onsets: dict[int, tuple[float, float]] = {}
     wasl_pause_hints: dict[int, float] = {}
+    section_onsets: dict[int, tuple[float, float]] = {}
+    internal_stop_onsets: dict[int, tuple[float, float]] = {}
 
     def ayah_opening(a: int) -> str:
         return "".join(word_trs[i] for i in ayah_words[a][:4] if i < len(word_trs))
+
+    def section_repair_member(ai: int) -> bool:
+        a = ayah_list[ai]
+        from_pause = place[a][1]
+        match = pause_match_by_ayah.get(a, {})
+        return _section_repair_member(
+            from_pause=from_pause,
+            action=str(match.get("action") or ""),
+            sim=float(match.get("sim") or 0.0) if from_pause else None,
+            min_sim=_MIN_MATCH_SIM,
+        )
+
+    def fill_section_repair(ai: int) -> None:
+        left_a = ayah_list[ai - 1]
+        i0 = ayah_words[left_a][0]
+        t0 = starts_ms[left_a]
+        j = ai
+        run: list[int] = []
+        while j < len(ayah_list) and section_repair_member(j):
+            run.append(ayah_list[j])
+            j += 1
+        if len(run) < 2 or j >= len(ayah_list):
+            return
+        right_a = ayah_list[j]
+        i1 = ayah_words[right_a][0] + 1
+        t1 = place[right_a][0]
+        if t1 - t0 > _MAX_SECTION_REPAIR_ALIGN_MS:
+            emit(
+                f"Section-repair {run[0]}-{run[-1]}: окно {(t1 - t0) / 1000.0:.2f} сек. "
+                "слишком длинное для fast"
+            )
+            return
+        res = align_slice(i0, i1, t0 - 60.0, t1 + 60.0, basmala=False)
+        if res is None:
+            return
+        previous_a = left_a
+        previous_onset = t0
+        for a in run:
+            fa = ayah_words[a][0]
+            k = fa - i0
+            onset = res["starts"][k]
+            conf = res["confs"][k]
+            raw_hint = nearest_pause_point(onset, strong_only=False)
+            raw_pause = pause_by_center.get(raw_hint) if raw_hint is not None else None
+            raw_diag = pause_diag.get(raw_pause) if raw_pause is not None else None
+            expected_gap = (
+                (cum_u[a] - cum_u[previous_a]) / total_w * content_dur
+                if total_w > 0
+                else 0.0
+            )
+            prior_pause = _prior_pause_before_internal_stop(
+                previous_onset,
+                onset,
+                expected_gap,
+                [
+                    center for center in pause_onsets
+                    if (pause := pause_by_center.get(center)) is not None
+                    and (diag := pause_diag.get(pause)) is not None
+                    and diag.reason == "dsp"
+                ],
+                raw_is_internal_stop=(
+                    raw_hint is not None
+                    and abs(onset - raw_hint) <= _WASL_PAUSE_HINT_MS
+                    and raw_diag is not None
+                    and raw_diag.reason == "micro-tempo"
+                ),
+            )
+            if prior_pause is not None:
+                onset = prior_pause
+            else:
+                for center in pause_onsets:
+                    pause = pause_by_center.get(center)
+                    diag = pause_diag.get(pause) if pause is not None else None
+                    if pause is None or diag is None:
+                        continue
+                    candidate = _section_long_pause_start_candidate(
+                        onset,
+                        pause.start_ms,
+                        pause.end_ms,
+                        pause_reason=diag.reason,
+                        min_pause_ms=_LONG_PAUSE_CENTER_MS,
+                    )
+                    if candidate is not None:
+                        onset = candidate
+                        break
+            hint = nearest_pause_point(onset, strong_only=False)
+            if hint is not None and abs(onset - hint) <= _WASL_PAUSE_HINT_MS:
+                onset = hint
+            section_onsets[a] = (onset, conf)
+            previous_a = a
+            previous_onset = onset
+        model_reads.append({
+            "phase": "section-repair",
+            "ayah": run[0],
+            "window_ms": [round(res["base"], 1), round(res["end"], 1)],
+            "words": " ".join(w.text for w in words[i0:i1]),
+            "target": " ".join(words[ayah_words[a][0]].text for a in run),
+            "onset_ms": round(section_onsets[run[0]][0], 1),
+            "conf": round(section_onsets[run[0]][1], 3),
+        })
+        log_read(model_reads[-1])
+
+    def fill_internal_stop_repair(ai: int) -> None:
+        a = ayah_list[ai]
+        if ai + 1 >= len(ayah_list):
+            return
+        from_pause = place[a][1]
+        match = pause_match_by_ayah.get(a, {})
+        center = float(match.get("center_ms") or place[a][0])
+        pause = pause_by_center.get(center)
+        diag = pause_diag.get(pause) if pause is not None else None
+        if pause is None or diag is None:
+            return
+        has_micro_stop = any(
+            (micro_pause := pause_by_center.get(candidate)) is not None
+            and (micro_diag := pause_diag.get(micro_pause)) is not None
+            and micro_diag.reason == "micro-tempo"
+            and pause.start_ms <= candidate <= pause.end_ms + 300.0
+            for candidate in pause_onsets
+        )
+        if not _internal_stop_repair_candidate(
+            from_pause=from_pause,
+            action=str(match.get("action") or ""),
+            reason=str(match.get("reason") or ""),
+            sim=float(match.get("sim") or 0.0),
+            pause_duration_ms=pause.end_ms - pause.start_ms,
+            prev_speech_ms=float(match.get("prev_speech_ms") or 0.0),
+            next_speech_ms=float(match.get("next_speech_ms") or 0.0),
+            has_micro_stop=has_micro_stop,
+            pause_trust_sim=_PAUSE_TRUST_SIM,
+        ):
+            return
+        prev_a = ayah_list[ai - 1]
+        next_a = ayah_list[ai + 1]
+        prior_candidates = [
+            candidate
+            for candidate in pause_onsets
+            if starts_ms[prev_a] + 2500.0 < candidate < center - 500.0
+            and (candidate_pause := pause_by_center.get(candidate)) is not None
+            and (candidate_diag := pause_diag.get(candidate_pause)) is not None
+            and candidate_diag.reason == "dsp"
+        ]
+        if not prior_candidates:
+            return
+        i0 = ayah_words[prev_a][0]
+        i1 = ayah_words[next_a][0] + 1
+        t0 = starts_ms[prev_a] - 60.0
+        t1 = place[next_a][0] + 60.0
+        if t1 - t0 > 30_000.0:
+            return
+        res = align_slice(i0, i1, t0, t1, basmala=False)
+        if res is None:
+            return
+        fa = ayah_words[a][0]
+        onset = res["starts"][fa - i0]
+        conf = res["confs"][fa - i0]
+        if conf < conf_reliable:
+            return
+        hint = min(prior_candidates, key=lambda candidate: abs(candidate - onset))
+        if abs(hint - onset) > _WASL_PAUSE_HINT_MS:
+            return
+        internal_stop_onsets[a] = (hint, conf)
+        model_reads.append({
+            "phase": "internal-stop-repair",
+            "ayah": a,
+            "window_ms": [round(res["base"], 1), round(res["end"], 1)],
+            "words": " ".join(w.text for w in words[i0:i1]),
+            "target": words[fa].text,
+            "onset_ms": round(hint, 1),
+            "conf": round(conf, 3),
+        })
+        log_read(model_reads[-1])
 
     def fill_wasl_run(ai: int) -> None:
         left_a = ayah_list[ai - 1]  # always an anchor (run starts after one)
@@ -3340,8 +5723,31 @@ def align_surah_fast(
         a = ayah_list[ai]
         fa = ayah_words[a][0]
         c0, from_pause = place[a]
+        timing_locked = pause_match_by_ayah.get(a, {}).get("timing_lock") == "short_low_sim_start"
 
-        if from_pause:
+        internal_stop_repaired = False
+        if from_pause and not timing_locked:
+            if a not in internal_stop_onsets:
+                fill_internal_stop_repair(ai)
+            if a in internal_stop_onsets:
+                onset, conf = internal_stop_onsets[a]
+                win_used = 0.0
+                reliable = conf >= conf_thresh
+                internal_stop_repaired = True
+
+        section_repaired = False
+        if not timing_locked and not internal_stop_repaired and section_repair_member(ai):
+            if a not in section_onsets:
+                fill_section_repair(ai)
+            if a in section_onsets:
+                onset, conf = section_onsets[a]
+                win_used = 0.0
+                reliable = conf >= conf_thresh
+                section_repaired = True
+
+        if internal_stop_repaired or section_repaired:
+            pass
+        elif from_pause:
             prev_start = starts_ms[ayah_list[ai - 1]]
             c = min(max(c0, prev_start + 30.0), total_ms)
             match = pause_match_by_ayah.get(a, {})
@@ -3369,31 +5775,52 @@ def align_surah_fast(
                 # starts next to this pause. The emitted boundary remains the
                 # quiet shelf center; cutting at the word onset loses the pause.
                 c = min(max(c0, prev_start + 30.0), total_ms)
-                refined_onset, refined_conf, win_used = refine(c, fa, prev_start, 0, ayah=a)
+                edge_candidates: list[tuple[float, float, bool]] = []
+                refined_onset, refined_conf, win_used = refine(
+                    c,
+                    fa,
+                    prev_start,
+                    0,
+                    ayah=a,
+                    edge_candidates=edge_candidates,
+                )
                 confirm_delta_ms = _PAUSE_REFINE_CONFIRM_MS
                 if pause is not None and pause.end_ms - pause.start_ms >= 700.0:
                     confirm_delta_ms = max(confirm_delta_ms, pause.end_ms - pause.start_ms)
-                if _pause_refine_confirms_pause(
+                actual_reason = (
+                    pause_diag[pause].reason
+                    if pause is not None and pause in pause_diag
+                    else pause_reason
+                )
+                left_edge_candidate = (
+                    _left_edge_repeated_opening_candidate(
+                        edge_candidates,
+                        pause_start_ms=pause.start_ms,
+                        pause_center_ms=c,
+                        min_conf=conf_reliable,
+                    )
+                    if pause is not None
+                    and actual_reason == "dsp"
+                    and pause.end_ms - pause.start_ms >= _LONG_PAUSE_CENTER_MS
+                    and str(match.get("action") or "") == "opening_run_repair"
+                    and pause_sim >= _MIN_MATCH_SIM
+                    else None
+                )
+                if left_edge_candidate is not None:
+                    onset, edge_conf = left_edge_candidate
+                    conf = max(conf_thresh, pause_sim, edge_conf)
+                    reliable = True
+                    emit(
+                        f"Пауза {match.get('pause', '?')} подтверждена left-edge "
+                        f"decode для repeated opening аята {a}: старт {sec(onset)} сек."
+                    )
+                elif _pause_refine_confirms_pause(
                     c,
                     refined_onset,
                     refined_conf,
                     max_delta_ms=confirm_delta_ms,
                 ):
-                    if needs_pause_refine and pause is not None:
-                        onset = _pause_center_with_refined_onset(
-                            pause.start_ms,
-                            c,
-                            refined_onset,
-                        )
-                    elif (
-                        pause_reason == "weak-dsp"
-                        and refined_onset is not None
-                        and refined_conf >= conf_reliable
-                        and 300.0 <= c - refined_onset <= confirm_delta_ms
-                    ):
-                        onset = refined_onset
-                    else:
-                        onset = c
+                    onset = _pause_backed_refine_start(c)
                     conf = max(conf_thresh, pause_sim, refined_conf)
                     reliable = True
                     emit(
@@ -3402,11 +5829,47 @@ def align_surah_fast(
                         f"оставляю старт в центре паузы {sec(onset)} сек."
                     )
                 else:
-                    onset = refined_onset
-                    conf = refined_conf
-                    reliable = onset is not None and conf >= conf_thresh
+                    preword_valley = None
+                    if (
+                        pause is not None
+                        and _preword_micro_timing_candidate(
+                            pause_reason=actual_reason,
+                            pause_start_ms=pause.start_ms,
+                            refined_onset_ms=refined_onset,
+                            refined_conf=refined_conf,
+                            conf_thresh=conf_thresh,
+                            sim=pause_sim,
+                            min_sim=_MIN_MATCH_SIM,
+                        )
+                    ):
+                        interval_start = max(prev_start + 300.0, refined_onset - 3500.0)
+                        interval_end = min(pause.start_ms, refined_onset - 120.0)
+                        if interval_end - interval_start >= 300.0:
+                            preword_valley = _find_micro_pause_valley(
+                                pcm,
+                                sr,
+                                interval_start_ms=interval_start,
+                                interval_end_ms=interval_end,
+                                expected_ms=refined_onset - 700.0,
+                            )
+                    if preword_valley is not None:
+                        _start_ms, end_ms, ratio, seed_start_ms, seed_end_ms = preword_valley
+                        onset = end_ms
+                        conf = max(conf_thresh, pause_sim, refined_conf)
+                        reliable = True
+                        emit(
+                            f"Пауза {match.get('pause', '?')} поздняя для аята {a}; "
+                            f"refine нашёл слово {sec(refined_onset)} сек., "
+                            f"ставлю старт на pre-word micro-паузу "
+                            f"{sec(seed_start_ms)}-{sec(seed_end_ms)} сек. "
+                            f"(rms={ratio:.3f})"
+                        )
+                    else:
+                        onset = c
+                        conf = max(pause_sim, refined_conf)
+                        reliable = False
                 if not reliable:  # never locked on → trust the matched guess
-                    onset = c if onset is None else onset
+                    onset = c
         else:
             if a not in wasl_onsets:
                 fill_wasl_run(ai)
@@ -3429,6 +5892,95 @@ def align_surah_fast(
             "refine_skipped": bool(from_pause and win_used == 0.0 and reliable),
         })
 
+    for ai in range(1, len(ayah_list) - 1):
+        a = ayah_list[ai]
+        if not place.get(a, (0.0, False))[1]:
+            continue
+        match = pause_match_by_ayah.get(a, {})
+        if match.get("reason") != "weak-dsp" or match.get("action") != "recovered":
+            continue
+        pause = pause_by_center.get(float(match.get("center_ms") or place[a][0]))
+        if pause is None:
+            continue
+        previous_a = ayah_list[ai - 1]
+        next_a = ayah_list[ai + 1]
+        if previous_a not in starts_ms or next_a not in starts_ms or a not in starts_ms:
+            continue
+        current_time = starts_ms[a]
+        previous_time = starts_ms[previous_a]
+        next_time = starts_ms[next_a]
+        expected_prev_gap = (
+            (cum_u[a] - cum_u[previous_a]) / total_w * content_dur
+            if total_w > 0.0 else 0.0
+        )
+        expected_next_gap = (
+            (cum_u[next_a] - cum_u[a]) / total_w * content_dur
+            if total_w > 0.0 else 0.0
+        )
+        interval_start = max(
+            pause.end_ms + 80.0,
+            current_time + 120.0,
+            previous_time + 300.0,
+        )
+        interval_end = min(next_time - 300.0, current_time + 3500.0)
+        if interval_end - interval_start < 700.0:
+            continue
+        valley = _find_micro_pause_valley(
+            pcm,
+            sr,
+            interval_start_ms=interval_start,
+            interval_end_ms=interval_end,
+            expected_ms=previous_time + expected_prev_gap,
+            search_ms=2500.0,
+        )
+        if valley is None:
+            continue
+        valley_center = _micro_valley_center(valley)
+        selected_prev_quality = _span_ratio_quality(
+            current_time - previous_time,
+            expected_prev_gap,
+        )
+        selected_next_quality = _span_ratio_quality(
+            next_time - current_time,
+            expected_next_gap,
+        )
+        candidate_prev_quality = _span_ratio_quality(
+            valley_center - previous_time,
+            expected_prev_gap,
+        )
+        candidate_next_quality = _span_ratio_quality(
+            next_time - valley_center,
+            expected_next_gap,
+        )
+        pause_sim = float(match.get("sim") or 0.0)
+        if not _weak_dsp_post_selected_micro_valley_candidate(
+            pause_reason=str(match.get("reason") or ""),
+            action=str(match.get("action") or ""),
+            pause_sim=pause_sim,
+            valley_ratio=valley[2],
+            forward_shift_ms=valley_center - current_time,
+            selected_prev_quality=selected_prev_quality,
+            selected_next_quality=selected_next_quality,
+            candidate_prev_quality=candidate_prev_quality,
+            candidate_next_quality=candidate_next_quality,
+        ):
+            continue
+        starts_ms[a] = valley_center
+        confs[a] = max(conf_thresh, confs.get(a, 0.0), pause_sim)
+        for t in tr_ayahs:
+            if t["ayah"] == a:
+                t.update(
+                    onset_ms=valley_center,
+                    conf=round(confs[a], 3),
+                    reliable=True,
+                    refine_skipped=True,
+                    post_selected_micro_repair=True,
+                )
+                break
+        match["rough_ms"] = valley_center
+        match["timing_adjusted"] = True
+        match["post_selected_micro_repair"] = True
+
     # --- Phase 2b — repair shifted runs using reliable neighbours. ----------
     # Char-prior compression can make the global match shift a run of boundaries
     # onto earlier pauses (detectable as low neural confidence). Re-anchor such
@@ -3446,6 +5998,18 @@ def align_surah_fast(
 
     def _dist_pause(t: float) -> float:
         return min((abs(t - p) for p in pause_grid), default=1e9)
+
+    def _nearest_pause_grid(t: float) -> tuple[float, str | None]:
+        best: tuple[float, str | None] = (1e9, None)
+        for center in pause_onsets:
+            pause = pause_by_center.get(center)
+            diag = pause_diag.get(pause) if pause is not None else None
+            reason = diag.reason if diag is not None else None
+            for point in (center, pause_timing_point(center, reason=reason)):
+                dist = abs(t - point)
+                if dist < best[0]:
+                    best = (dist, reason)
+        return best
 
     # Measured tempo (ms per weighted unit) from reliable anchors — robust to the
     # basmala / trailing silence that inflates the global ``rate``; used to
@@ -3485,6 +6049,8 @@ def align_surah_fast(
         )
         repair_match = pause_match_by_ayah.get(a, {})
         repair_pause_reason = str(repair_match.get("reason") or "")
+        if place[a][1] and repair_match.get("timing_lock") == "short_low_sim_start":
+            continue
         micro_repair_candidate = (
             place[a][1]
             and repair_pause_reason == "micro-tempo"
@@ -3499,6 +6065,15 @@ def align_surah_fast(
             # noise, so fall back to the interpolated guess in that case.
             chosen = o2 if c2 >= conf_thresh else pred
             old_onset = starts_ms.get(a, pred)
+            if _reject_low_conf_off_grid_repair(
+                from_pause=place[a][1],
+                repair_conf=c2,
+                conf_thresh=conf_thresh,
+                old_pause_dist_ms=_dist_pause(old_onset),
+                chosen_pause_dist_ms=_dist_pause(chosen),
+                shift_ms=abs(chosen - old_onset),
+            ):
+                continue
             pause_hint = wasl_pause_hints.get(a) or snapped_wasl_hints.get(a)
             if (
                 pause_hint is not None
@@ -3526,11 +6101,50 @@ def align_surah_fast(
             )
             repair_on_pause_grid = _dist_pause(chosen) <= 350.0 and old_onset - chosen > 500.0
             off_grid_back_repair = 500.0 < old_onset - chosen <= 2500.0
+            nearest_repair_pause_dist, nearest_repair_pause_reason = _nearest_pause_grid(chosen)
+            if hi is not None and cum[hi] > cum[lo]:
+                expected_prev_gap = pred - starts_ms[lo]
+                expected_next_gap: float | None = starts_ms[hi] - pred
+                next_anchor_time: float | None = starts_ms[hi]
+            else:
+                expected_prev_gap = pred - starts_ms[lo]
+                expected_next_gap = None
+                next_anchor_time = None
+            later_pause_grid_repair = _accept_later_pause_grid_repair(
+                from_pause=place[a][1],
+                original_reason=repair_pause_reason,
+                original_sim=pause_sim,
+                old_onset=old_onset,
+                repaired_onset=chosen,
+                repaired_conf=c2,
+                nearest_pause_dist_ms=nearest_repair_pause_dist,
+                nearest_pause_reason=nearest_repair_pause_reason,
+                previous_time=starts_ms[lo],
+                next_time=next_anchor_time,
+                expected_prev_gap_ms=expected_prev_gap,
+                expected_next_gap_ms=expected_next_gap,
+                conf_reliable=conf_reliable,
+                pause_trust_sim=_PAUSE_TRUST_SIM,
+            )
+            if not _accept_pause_backed_repair(
+                from_pause=place[a][1],
+                original_pause_reason=repair_pause_reason,
+                old_onset_ms=old_onset,
+                chosen_onset_ms=chosen,
+                chosen_pause_dist_ms=nearest_repair_pause_dist,
+                chosen_pause_reason=nearest_repair_pause_reason,
+                later_pause_grid_repair=later_pause_grid_repair,
+            ):
+                continue
             if (
                 place[a][1]
                 and confs.get(a, 0.0) >= conf_thresh
                 and _dist_pause(chosen) > 350.0
-                and not (micro_pause_repair or (strong_pause_repair and off_grid_back_repair))
+                and not (
+                    micro_pause_repair
+                    or later_pause_grid_repair
+                    or (strong_pause_repair and off_grid_back_repair)
+                )
             ):
                 continue
             if (
@@ -3540,6 +6154,7 @@ def align_surah_fast(
                 and abs(chosen - old_onset) > 500.0
                 and not (
                     micro_pause_repair
+                    or later_pause_grid_repair
                     or (strong_pause_repair and (repair_on_pause_grid or off_grid_back_repair))
                 )
             ):
