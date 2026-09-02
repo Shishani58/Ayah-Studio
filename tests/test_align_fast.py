@@ -12,63 +12,142 @@ from types import SimpleNamespace
 import numpy as np
 
 from surah_cutter.core.align_fast import (
+    PauseReadPlan,
+    TempoEstimate,
+    TempoObservation,
+    TextDisambiguation,
+    _accept_anchored_full_span_onset,
     _accept_fallback_pause_candidate,
     _accept_later_pause_grid_repair,
     _accept_pause_backed_repair,
+    _adjacent_repeated_owners_start_shifted_section,
+    _ambiguous_multiscale_owner_requires_full_span,
+    _ambiguous_wasl_run_requires_bracket_extension,
+    _confirmed_weak_pause_repair_candidate,
+    _pre_owner_ctc_overrides_weak_micro_pause,
+    _confirmed_trusted_pause_repair_candidate,
+    _confirmed_trusted_pause_refine_candidate,
     _ambiguous_openings,
+    _ambiguous_observed_pause_starts_shifted_section,
     _assign_opening_block,
     _ayah_waqf_counts,
     _collapse,
+    _build_pause_read_plan,
+    _build_text_disambiguation,
+    _bounded_local_repair_spans,
+    _ctc_prior_pause_replaces_weak_future_owner,
     _common_prefix_len,
     _compact_dsp_start_candidate,
     _compact_dsp_end_candidate,
+    _context_block_pause_onset_candidate,
     _count_waqf_marks,
+    _competing_prior_pause_requires_full_span,
     _dense_prior_opening_candidate,
+    _direct_owner_conflicts_with_anchor_geometry,
     _dense_later_opening_candidate,
     _dense_later_final_opening_candidate,
     _dsp_edge_timing_candidate,
     _find_micro_pause_valley,
     _final_weak_current_activation_window,
     _first_ayah_content_start,
+    _full_span_pause_agrees_with_local_read,
+    _full_span_following_support_is_eligible,
+    _full_span_opening_support_confidence,
+    _full_span_right_bracket_ms,
+    _full_wasl_read_classification,
+    _insufficient_audio_ayahs,
+    _requires_low_verify_ctc_fallback,
+    _full_span_pause_candidate_is_supported,
+    _full_span_pause_owner_is_consistent,
+    _full_span_unique_next_pause_candidate,
+    _full_span_weak_pause_is_jointly_supported,
+    _first_opening_owner_conflicts_with_anchor_geometry,
+    _multiscale_ctc_in_owner_candidate,
+    _multiscale_pause_repair_is_eligible,
+    _owner_interval_snap_is_allowed,
+    _preserve_multiscale_ctc_owner_timing,
+    _stable_multiscale_pause_onset,
+    _stable_multiscale_onset_cluster,
+    _geometry_invalidated_owner_requires_full_span,
+    _geometry_invalidated_full_span_weak_pause_is_supported,
+    _geometry_invalidated_repair_can_compete,
+    _geometry_repair_is_already_consistent,
+    _recovered_owner_conflicts_with_anchor_geometry,
+    _repeated_low_trust_left_anchor_extends_atomic_block,
+    _recovered_later_best_pause_candidate,
     _internal_stop_repair_candidate,
+    _insufficient_wasl_read_invalidates_right_anchor,
     _interp_wasl,
     _left_edge_repeated_opening_candidate,
     _late_repeated_dsp_prior_candidate,
     _long_dsp_fractional_start_candidate,
+    _late_long_dsp_fallback_start_candidate,
+    _overlapping_dsp_replaces_micro_owner,
+    _long_pause_context_read_candidate,
     _long_pause_start_after_speech_candidate,
     _long_pause_start_balanced_speech_candidate,
     _long_pause_start_timing_candidate,
+    _shifted_geometry_long_pause_start_candidate,
     _match_boundaries,
     _missing_wasl_pause_candidate,
     _onset_prefix_len,
     _opening_internal_repeats,
     _opening_shared_prefix_chars,
     _micro_shelf_start_candidate,
+    _micro_owner_prior_prefix_candidate,
     _prefer_expected_micro_valley,
     _pause_backed_refine_start,
+    _pause_center_start,
     _pause_center_with_refined_onset,
     _pause_match_min_keep_sim,
+    _pause_owner_geometry_is_unreliable,
+    _pause_owner_geometry_needs_full_span,
     _pause_refine_confirms_pause,
+    _post_pause_repair_confirms_prior_dsp,
+    _post_selected_micro_context_read_candidate,
     _preword_micro_timing_candidate,
+    _allow_prior_internal_stop_replacement,
     _prior_pause_before_internal_stop,
     _prior_pause_between_anchors,
+    _prefer_competing_prior_pause_extended_decode,
+    _prefer_competing_prior_pause_pre_context,
     _prior_close_dsp_before_micro_stop,
+    _repeated_opening_pause_anchor_is_ambiguous,
+    _repeated_wasl_prior_pause_candidate,
+    _single_wasl_prior_pause_candidate,
+    _revised_wasl_right_anchor_requires_predecessor_reread,
+    _restore_owner_timing_from_internal_repair,
+    _restore_trusted_owner_after_predecessor_repair,
     _rejected_micro_valley_candidate,
     _reject_low_conf_off_grid_repair,
     _sequential_pause_match,
     _section_repair_member,
+    _follows_unresolved_cascade,
     _section_long_pause_start_candidate,
+    _enforce_strictly_increasing_starts,
+    _estimate_tempo,
+    _fast_boundary_diagnostics,
     _skips_dense_pause_block,
     _sim,
+    _snap_pause_backed_start_to_owner,
     _short_low_sim_dsp_start_candidate,
     _span_ratio_quality,
+    _speech_ms_excluding_pauses,
+    _text_disambiguation_requires_atomic,
     _unit_len,
+    _unclassified_owner_requires_full_span,
+    _unclassified_repeated_pause_run_requires_atomic_block,
+    _very_long_pause_repair_context_candidate,
+    _very_long_context_owner_still_valid,
     _weak_dsp_prior_recovery_candidate,
     _weak_dsp_prior_trusted_recovery_candidate,
     _weak_dsp_later_prefix_candidate,
     _weak_dsp_expected_micro_valley_candidate,
     _weak_dsp_post_selected_micro_valley_candidate,
+    _wasl_revision_invalidates_fallback_right_anchor,
     _weak_dsp_wasl_recovery_candidate,
+    _weak_recovered_compact_pause_center_candidate,
+    _weak_recovered_long_pause_start_candidate,
 )
 
 
@@ -91,10 +170,190 @@ def test_unit_len_long_vowels_double():
     assert _unit_len("") == 0.0
 
 
+def test_text_disambiguation_reads_through_first_different_word():
+    plan = _build_text_disambiguation(
+        2,
+        {
+            2: ["innā", "aʿṭaynāka", "alkawthar"],
+            3: ["innā", "anzalnāhu"],
+            4: ["qul", "huwa"],
+        },
+        competitor_ayahs=[3, 4],
+    )
+
+    assert isinstance(plan, TextDisambiguation)
+    assert plan.reason == "shared_opening"
+    assert plan.required_words == 2
+    assert plan.distinguishing_word == "aʿṭaynāka"
+    assert plan.required_text_units == _unit_len("innā") + _unit_len("aʿṭaynāka")
+    assert plan.competitors == (3, 4)
+
+
+def test_text_disambiguation_marks_internal_repeat_and_unresolved_text():
+    repeated = _build_text_disambiguation(
+        5,
+        {5: ["fa-bi-ayyi", "ālāʾi", "rabbikumā"]},
+        internal_sequences=[["fa-bi-ayyi", "ālāʾi", "qabla"]],
+    )
+    unresolved = _build_text_disambiguation(
+        5,
+        {5: ["qul"], 6: ["qul", "aʿūdhu"]},
+        competitor_ayahs=[6],
+    )
+
+    assert repeated.reason == "internal_repeat"
+    assert repeated.required_words == 3
+    assert unresolved.reason == "unresolved"
+    assert unresolved.distinguishing_word is None
+    assert _text_disambiguation_requires_atomic(unresolved)
+    assert not _text_disambiguation_requires_atomic(repeated)
+
+
+def test_speech_duration_subtracts_and_merges_internal_pauses():
+    assert _speech_ms_excluding_pauses(
+        1000.0,
+        5000.0,
+        [
+            (500.0, 1200.0),
+            (2000.0, 2500.0),
+            (2400.0, 2800.0),
+            (4900.0, 5200.0),
+        ],
+    ) == 2900.0
+
+
+def test_tempo_estimate_ignores_weak_and_extreme_observations():
+    estimate = _estimate_tempo(
+        [
+            TempoObservation(10.0, 1000.0, pause_ms=400.0, confidence=0.9),
+            TempoObservation(20.0, 2000.0, pause_ms=600.0, confidence=0.8),
+            TempoObservation(12.0, 1200.0, pause_ms=500.0, confidence=0.95),
+            TempoObservation(100.0, 1000.0, pause_ms=9000.0, confidence=0.9),
+            TempoObservation(1.0, 5000.0, confidence=0.2),
+        ],
+        fallback_rate_units_per_ms=0.02,
+    )
+
+    assert isinstance(estimate, TempoEstimate)
+    assert estimate.rate_units_per_ms == 0.01
+    assert estimate.conservative_rate < estimate.rate_units_per_ms
+    assert estimate.observation_count == 3
+    assert estimate.pause_median_ms == 500.0
+    assert not estimate.fallback_used
+
+
+def test_tempo_estimate_blends_small_history_with_fallback():
+    estimate = _estimate_tempo(
+        [TempoObservation(10.0, 1000.0, confidence=1.0)],
+        fallback_rate_units_per_ms=0.02,
+        minimum_observations=3,
+    )
+
+    assert 0.01 < estimate.rate_units_per_ms < 0.02
+    assert estimate.fallback_used
+    assert estimate.confidence == 1 / 3
+
+
+def test_pause_read_plan_keeps_marker_center_and_speech_after_long_pause():
+    disambiguation = TextDisambiguation(
+        required_text_units=20.0,
+        required_words=2,
+        competitors=(3,),
+        reason="shared_opening",
+        target_text="innāaʿṭaynāka",
+        distinguishing_word="aʿṭaynāka",
+    )
+    tempo = TempoEstimate(
+        rate_units_per_ms=0.01,
+        conservative_rate=0.008,
+        spread_units_per_ms=0.001,
+        pause_median_ms=500.0,
+        pause_iqr_ms=200.0,
+        confidence=1.0,
+        observation_count=4,
+        fallback_used=False,
+    )
+
+    plan = _build_pause_read_plan(
+        pause_start_ms=1000.0,
+        pause_end_ms=3000.0,
+        total_ms=20_000.0,
+        disambiguation=disambiguation,
+        tempo=tempo,
+        minimum_window_ms=2500.0,
+        maximum_window_ms=8500.0,
+        safety_margin_ms=500.0,
+    )
+
+    assert isinstance(plan, PauseReadPlan)
+    assert plan.marker_ms == 2000.0
+    assert plan.decode_start_ms == 1000.0
+    assert plan.decode_end_ms == 6000.0
+    assert plan.speech_read_ms == 3000.0
+    assert plan.reason == "shared_opening:local-tempo"
+
+    long_pause_plan = _build_pause_read_plan(
+        pause_start_ms=1000.0,
+        pause_end_ms=12_000.0,
+        total_ms=30_000.0,
+        disambiguation=disambiguation,
+        tempo=tempo,
+        minimum_window_ms=2500.0,
+        maximum_window_ms=8500.0,
+        safety_margin_ms=500.0,
+    )
+    assert long_pause_plan.decode_end_ms == 15_000.0
+    assert long_pause_plan.speech_read_ms == 3000.0
+
+
 def test_span_ratio_quality_prefers_matching_duration():
     assert _span_ratio_quality(1000.0, 1000.0) == 1.0
     assert _span_ratio_quality(1000.0, 2500.0) == 0.0
     assert _span_ratio_quality(0.0, 1000.0) == 0.0
+
+
+def test_weak_recovered_long_pause_start_requires_local_plausibility():
+    kwargs = dict(
+        pause_reason="dsp",
+        pause_duration_ms=960.0,
+        sim=0.37,
+        action="recovered",
+        expected_delta_ms=-2477.0,
+        next_quality=0.95,
+    )
+    assert _weak_recovered_long_pause_start_candidate(**kwargs)
+    assert not _weak_recovered_long_pause_start_candidate(
+        **{**kwargs, "expected_delta_ms": -3001.0}
+    )
+    assert not _weak_recovered_long_pause_start_candidate(
+        **{**kwargs, "expected_delta_ms": 3001.0}
+    )
+    assert not _weak_recovered_long_pause_start_candidate(
+        **{**kwargs, "pause_duration_ms": 599.0}
+    )
+    assert not _weak_recovered_long_pause_start_candidate(
+        **{**kwargs, "action": "observed_current"}
+    )
+    assert not _weak_recovered_long_pause_start_candidate(
+        **{**kwargs, "next_quality": 0.49}
+    )
+
+
+def test_weak_recovered_compact_pause_center_requires_unclear_next_span():
+    kwargs = dict(
+        pause_reason="dsp",
+        pause_duration_ms=840.0,
+        sim=0.39,
+        action="recovered",
+        next_quality=0.435,
+    )
+    assert _weak_recovered_compact_pause_center_candidate(**kwargs)
+    assert not _weak_recovered_compact_pause_center_candidate(
+        **{**kwargs, "next_quality": 0.50}
+    )
+    assert not _weak_recovered_compact_pause_center_candidate(
+        **{**kwargs, "pause_duration_ms": 900.0}
+    )
 
 
 def test_find_micro_pause_valley_detects_local_rms_dip():
@@ -249,6 +508,31 @@ def test_pause_center_with_refined_onset_uses_word_as_right_edge():
 
 def test_pause_backed_refine_start_keeps_regular_pause_point():
     assert _pause_backed_refine_start(82_410.0) == 82_410.0
+
+
+def test_pause_center_start_is_independent_of_ctc_word_onset():
+    assert _pause_center_start(253_700.0, 256_700.0) == 255_200.0
+
+
+def test_ctc_rolls_back_a_weak_future_pause_to_the_preceding_dsp_pause():
+    kwargs = dict(
+        original_pause_reason="weak-dsp",
+        original_pause_sim=0.289,
+        repair_onset_ms=254_002.9,
+        repair_conf=0.501,
+        candidate_pause_end_ms=253_900.0,
+        candidate_pause_reason="dsp",
+        opening_shared_prefix_chars=0,
+        conf_reliable=0.45,
+        pause_trust_sim=0.42,
+    )
+    assert _ctc_prior_pause_replaces_weak_future_owner(**kwargs)
+    assert not _ctc_prior_pause_replaces_weak_future_owner(
+        **{**kwargs, "candidate_pause_end_ms": 253_500.0}
+    )
+    assert not _ctc_prior_pause_replaces_weak_future_owner(
+        **{**kwargs, "original_pause_reason": "dsp"}
+    )
 
 
 def test_match_perfect_one_to_one():
@@ -437,6 +721,33 @@ def test_section_repair_member_is_limited_to_wasl_and_low_fallback():
     )
 
 
+def test_follows_unresolved_cascade_requires_all_predecessors():
+    unresolved = {70, 71, 72, 73}
+    assert _follows_unresolved_cascade(74, unresolved)
+    assert not _follows_unresolved_cascade(75, unresolved)
+    assert not _follows_unresolved_cascade(73, unresolved)
+    assert not _follows_unresolved_cascade(74, {70, 71, 73})
+
+
+def test_single_wasl_prior_pause_requires_unique_opening_and_ctc_evidence():
+    candidates = [(734_280.0, 0.310, 0.186)]
+    kwargs = {
+        "previous_time": 727_812.0,
+        "full_read_onset": 742_622.0,
+        "candidates": candidates,
+        "opening_shared_prefix_chars": 0,
+        "full_read_confidence": 0.744,
+        "reliable_confidence": 0.45,
+    }
+    assert _single_wasl_prior_pause_candidate(**kwargs) == 734_280.0
+    assert _single_wasl_prior_pause_candidate(
+        **{**kwargs, "opening_shared_prefix_chars": 1}
+    ) is None
+    assert _single_wasl_prior_pause_candidate(
+        **{**kwargs, "full_read_confidence": 0.20}
+    ) is None
+
+
 def test_prior_pause_before_internal_stop_requires_internal_stop():
     kwargs = {
         "previous_time": 727_770.0,
@@ -460,6 +771,128 @@ def test_prior_pause_before_internal_stop_handles_long_pause_end():
         )
         == 861_490.0
     )
+
+
+def test_prior_internal_stop_replacement_requires_heard_opening_when_compact():
+    assert _allow_prior_internal_stop_replacement(
+        0.327,
+        selected_pause_duration_ms=2140.0,
+    )
+    assert not _allow_prior_internal_stop_replacement(
+        0.116,
+        selected_pause_duration_ms=2140.0,
+    )
+    assert _allow_prior_internal_stop_replacement(
+        0.116,
+        selected_pause_duration_ms=7260.0,
+    )
+
+
+def test_post_pause_repair_confirms_prior_dsp_not_late_micro_owner():
+    kwargs = {
+        "original_pause_reason": "micro-tempo",
+        "original_pause_sim": 0.339,
+        "repair_onset_ms": 689_072.8,
+        "repair_conf": 0.579,
+        "candidate_pause_end_ms": 688_860.0,
+        "candidate_pause_reason": "dsp",
+        "candidate_prefix": 4,
+        "selected_prefix": 0,
+        "conf_reliable": 0.45,
+        "pause_trust_sim": 0.50,
+    }
+
+    assert _post_pause_repair_confirms_prior_dsp(**kwargs)
+    assert not _post_pause_repair_confirms_prior_dsp(
+        **{**kwargs, "repair_onset_ms": 689_260.0}
+    )
+    assert not _post_pause_repair_confirms_prior_dsp(
+        **{**kwargs, "selected_prefix": 3}
+    )
+
+
+def test_confirmed_trusted_pause_refine_replaces_weak_owner():
+    kwargs = {
+        "from_pause": True,
+        "original_pause_sim": 0.367,
+        "refined_conf": 0.706,
+        "refined_inside_different_trusted_pause": True,
+        "conf_reliable": 0.45,
+        "pause_trust_sim": 0.50,
+    }
+
+    assert _confirmed_trusted_pause_refine_candidate(**kwargs)
+    assert not _confirmed_trusted_pause_refine_candidate(
+        **{**kwargs, "refined_conf": 0.40}
+    )
+    assert not _confirmed_trusted_pause_refine_candidate(
+        **{**kwargs, "refined_inside_different_trusted_pause": False}
+    )
+
+
+def test_anchored_repair_can_replace_a_geometry_invalidated_owner():
+    kwargs = {
+        "from_pause": True,
+        "original_pause_sim": 0.384,
+        "geometry_invalidated_owner": True,
+        "repair_conf": 0.831,
+        "repaired_inside_different_trusted_pause": True,
+        "conf_reliable": 0.45,
+        "pause_trust_sim": 0.50,
+    }
+    assert _confirmed_trusted_pause_repair_candidate(**kwargs)
+    assert not _confirmed_trusted_pause_repair_candidate(
+        **{**kwargs, "geometry_invalidated_owner": False}
+    )
+    assert not _confirmed_trusted_pause_repair_candidate(
+        **{**kwargs, "repaired_inside_different_trusted_pause": False}
+    )
+    assert not _confirmed_trusted_pause_repair_candidate(
+        **{**kwargs, "repair_conf": 0.449}
+    )
+
+
+def test_micro_owner_prior_prefix_candidate_requires_text_and_pair_geometry():
+    kwargs = {
+        "previous_time": 1_376_702.5,
+        "selected_time": 1_387_282.8,
+        "next_time": 1_406_470.0,
+        "expected_prev_gap_ms": 7203.6,
+        "expected_next_gap_ms": 19_433.0,
+        "candidates": [(1_383_660.0, 0.237, 2)],
+        "pause_reason": "micro-tempo",
+        "action": "weak_pause_recovery",
+        "selected_sim": 0.325,
+        "selected_prefix": 0,
+    }
+
+    assert _micro_owner_prior_prefix_candidate(**kwargs) == 1_383_660.0
+    assert _micro_owner_prior_prefix_candidate(
+        **{**kwargs, "candidates": [(1_383_660.0, 0.237, 1)]}
+    ) is None
+    assert _micro_owner_prior_prefix_candidate(
+        **{**kwargs, "selected_prefix": 2}
+    ) is None
+
+
+def test_repeated_wasl_prior_pause_candidate_requires_text_and_spacing():
+    kwargs = {
+        "previous_time": 1_232_617.5,
+        "full_read_onset": 1_258_970.6,
+        "expected_gap_ms": 18_047.8,
+        "candidates": [(1_251_110.0, 0.413, 0.338)],
+        "opening_shared_prefix_chars": 19,
+        "full_read_confidence": 0.672,
+        "reliable_confidence": 0.45,
+    }
+
+    assert _repeated_wasl_prior_pause_candidate(**kwargs) == 1_251_110.0
+    assert _repeated_wasl_prior_pause_candidate(
+        **{**kwargs, "candidates": [(1_251_110.0, 0.36, 0.20)]}
+    ) is None
+    assert _repeated_wasl_prior_pause_candidate(
+        **{**kwargs, "opening_shared_prefix_chars": 3}
+    ) is None
 
 
 def test_dense_prior_opening_candidate_recovers_earlier_opening_pause():
@@ -711,6 +1144,30 @@ def test_accept_pause_backed_repair_rejects_forward_micro_steal():
         chosen_pause_dist_ms=120.0,
         chosen_pause_reason="micro-tempo",
     )
+
+
+def test_confirmed_weak_pause_repair_requires_strong_local_evidence():
+    kwargs = {
+        "from_pause": True,
+        "original_pause_sim": 0.325,
+        "repair_conf": 0.688,
+        "conf_reliable": 0.45,
+        "repaired_inside_weak_pause": True,
+        "pause_trust_sim": 0.50,
+    }
+    assert _confirmed_weak_pause_repair_candidate(**kwargs)
+    assert not _confirmed_weak_pause_repair_candidate(
+        **{**kwargs, "repaired_inside_weak_pause": False}
+    )
+    assert not _confirmed_weak_pause_repair_candidate(
+        **{**kwargs, "repair_conf": 0.44}
+    )
+    assert not _confirmed_weak_pause_repair_candidate(
+        **{**kwargs, "original_pause_sim": 0.56}
+    )
+    assert _confirmed_weak_pause_repair_candidate(
+        **{**kwargs, "from_pause": False, "original_pause_sim": 0.0}
+    )
     assert _accept_pause_backed_repair(
         from_pause=True,
         original_pause_reason="micro-tempo",
@@ -792,7 +1249,31 @@ def test_first_ayah_content_start_prefers_intro_pause_over_basmala_floor():
             intro_pause_end_ms=6136.0,
             min_content_start_ms=6000.0,
         )
-        == 6136.0
+        == 5352.0
+    )
+    assert (
+        _first_ayah_content_start(
+            5600.0,
+            basmala=True,
+            intro_pause_start_ms=4568.0,
+            intro_pause_end_ms=6136.0,
+            raw_confidence=0.60,
+            reliable_confidence=0.45,
+            min_content_start_ms=6000.0,
+        )
+        == 5352.0
+    )
+    assert (
+        _first_ayah_content_start(
+            5200.0,
+            basmala=True,
+            intro_pause_start_ms=4568.0,
+            intro_pause_end_ms=6136.0,
+            raw_confidence=0.60,
+            reliable_confidence=0.45,
+            min_content_start_ms=6000.0,
+        )
+        == 5352.0
     )
     assert (
         _first_ayah_content_start(
@@ -859,16 +1340,16 @@ def test_accept_fallback_pause_candidate_rejects_local_internal_micro():
         next_quality=0.0,
         next_speech_ms=1172.0,
     )
-    assert _accept_fallback_pause_candidate(
+    assert not _accept_fallback_pause_candidate(
         pause_reason="micro-tempo",
         sim=0.26,
         min_match_sim=0.31,
-        expected_delta_ms=64_796.7,
+        expected_delta_ms=1799.7,
         prev_quality=0.878,
         next_quality=0.0,
         next_speech_ms=1172.0,
     )
-    assert _accept_fallback_pause_candidate(
+    assert not _accept_fallback_pause_candidate(
         pause_reason="micro-tempo",
         sim=0.24,
         min_match_sim=0.31,
@@ -884,7 +1365,7 @@ def test_accept_fallback_pause_candidate_rejects_local_internal_micro():
         prev_quality=0.316,
         next_quality=0.858,
     )
-    assert _accept_fallback_pause_candidate(
+    assert not _accept_fallback_pause_candidate(
         pause_reason="dsp",
         sim=0.24,
         min_match_sim=0.31,
@@ -924,6 +1405,1370 @@ def test_section_long_pause_start_candidate_requires_tail_of_long_dsp():
     )
 
 
+def test_long_pause_context_read_requires_contradictory_windows():
+    candidates = [
+        (156_695.5, 0.0, False),
+        (156_500.3, 0.159, False),
+        (155_463.0, 0.433, True),
+        (155_454.4, 0.391, False),
+    ]
+    assert _long_pause_context_read_candidate(
+        candidates,
+        pause_reason="dsp",
+        pause_start_ms=155_780.0,
+        pause_end_ms=157_360.0,
+        refined_onset_ms=155_454.4,
+        refined_conf=0.391,
+        conf_thresh=0.25,
+    )
+    assert not _long_pause_context_read_candidate(
+        [(155_454.4, 0.391, False)],
+        pause_reason="dsp",
+        pause_start_ms=155_780.0,
+        pause_end_ms=157_360.0,
+        refined_onset_ms=155_454.4,
+        refined_conf=0.391,
+        conf_thresh=0.25,
+    )
+    assert not _long_pause_context_read_candidate(
+        candidates,
+        pause_reason="dsp",
+        pause_start_ms=155_780.0,
+        pause_end_ms=157_360.0,
+        refined_onset_ms=155_454.4,
+        refined_conf=0.20,
+        conf_thresh=0.25,
+    )
+    assert not _long_pause_context_read_candidate(
+        [
+            (751_143.0, 0.60, False),
+            (748_600.0, 0.50, False),
+        ],
+        pause_reason="dsp",
+        pause_start_ms=748_560.0,
+        pause_end_ms=751_180.0,
+        refined_onset_ms=748_300.0,
+        refined_conf=0.50,
+        conf_thresh=0.25,
+    )
+
+
+def test_pause_backed_start_snaps_only_near_its_owner_interval():
+    assert (
+        _snap_pause_backed_start_to_owner(
+            313_905.5,
+            pause_start_ms=313_979.5,
+            pause_end_ms=314_201.5,
+        )
+        == 313_979.5
+    )
+    assert (
+        _snap_pause_backed_start_to_owner(
+            314_100.0,
+            pause_start_ms=313_979.5,
+            pause_end_ms=314_201.5,
+        )
+        == 314_100.0
+    )
+    assert (
+        _snap_pause_backed_start_to_owner(
+            369_040.0,
+            pause_start_ms=372_040.0,
+            pause_end_ms=373_900.0,
+        )
+        is None
+    )
+
+
+def test_predecessor_repair_restores_strong_owner_after_provisional_push():
+    params = {
+        "current_start_ms": 822_190.0,
+        "owner_timing_ms": 812_780.0,
+        "pause_start_ms": 812_580.0,
+        "pause_end_ms": 812_980.0,
+        "repaired_predecessor_ms": 794_030.0,
+        "from_pause": True,
+        "pause_similarity": 0.635,
+        "pause_trust_similarity": 0.50,
+    }
+    assert _restore_trusted_owner_after_predecessor_repair(**params) == 812_780.0
+    assert _restore_trusted_owner_after_predecessor_repair(
+        **{**params, "pause_similarity": 0.49},
+    ) is None
+    assert _restore_trusted_owner_after_predecessor_repair(
+        **{**params, "repaired_predecessor_ms": 812_770.0},
+    ) is None
+
+
+def test_internal_repair_restores_owner_after_stale_monotonic_push():
+    params = {
+        "current_start_ms": 445_950.0,
+        "owner_timing_ms": 438_220.0,
+        "pause_start_ms": 437_220.0,
+        "pause_end_ms": 439_220.0,
+        "repaired_onset_ms": 439_180.0,
+        "repaired_confidence": 0.560,
+        "repaired_predecessor_ms": 423_790.0,
+        "from_pause": True,
+        "acceptance_confidence": 0.55,
+    }
+    assert _restore_owner_timing_from_internal_repair(**params) == 438_220.0
+    assert _restore_owner_timing_from_internal_repair(
+        **{**params, "repaired_confidence": 0.549},
+    ) is None
+    assert _restore_owner_timing_from_internal_repair(
+        **{**params, "repaired_onset_ms": 439_221.0},
+    ) is None
+    assert _restore_owner_timing_from_internal_repair(
+        **{**params, "current_start_ms": 438_220.0},
+    ) is None
+    assert _restore_owner_timing_from_internal_repair(
+        **{**params, "repaired_predecessor_ms": 438_200.0},
+    ) is None
+
+
+def test_context_block_onset_must_be_confident_and_inside_owned_pause():
+    assert (
+        _context_block_pause_onset_candidate(
+            157_222.0,
+            0.573,
+            pause_start_ms=155_780.0,
+            pause_end_ms=157_360.0,
+            left_anchor_ms=140_208.0,
+            right_anchor_ms=190_350.0,
+            min_confidence=0.45,
+        )
+        == 157_222.0
+    )
+    assert (
+        _context_block_pause_onset_candidate(
+            157_500.0,
+            0.80,
+            pause_start_ms=155_780.0,
+            pause_end_ms=157_360.0,
+            left_anchor_ms=140_208.0,
+            right_anchor_ms=190_350.0,
+            min_confidence=0.45,
+        )
+        is None
+    )
+    assert (
+        _context_block_pause_onset_candidate(
+            157_222.0,
+            0.30,
+            pause_start_ms=155_780.0,
+            pause_end_ms=157_360.0,
+            left_anchor_ms=140_208.0,
+            right_anchor_ms=190_350.0,
+            min_confidence=0.45,
+        )
+        is None
+    )
+
+
+def test_very_long_pause_opposite_edge_retry_requires_context_block():
+    params = {
+        "pause_reason": "dsp",
+        "pause_start_ms": 777_140.0,
+        "pause_end_ms": 784_780.0,
+        "selected_onset_ms": 780_960.0,
+        "repaired_onset_ms": 784_983.5,
+        "repaired_confidence": 0.340,
+        "acceptance_confidence": 0.25,
+    }
+    assert _very_long_pause_repair_context_candidate(**params)
+    assert not _very_long_pause_repair_context_candidate(
+        **{**params, "repaired_onset_ms": 784_700.0},
+    )
+    assert not _very_long_pause_repair_context_candidate(
+        **{**params, "repaired_confidence": 0.24},
+    )
+    assert not _very_long_pause_repair_context_candidate(
+        **{**params, "selected_onset_ms": 783_500.0},
+    )
+    assert _very_long_context_owner_still_valid(
+        pause_start_ms=777_140.0,
+        pause_end_ms=784_780.0,
+    )
+    assert not _very_long_context_owner_still_valid(
+        pause_start_ms=885_240.0,
+        pause_end_ms=886_380.0,
+    )
+
+
+def test_full_span_onset_uses_the_actual_fallback_right_anchor():
+    assert _accept_anchored_full_span_onset(
+        8450.0,
+        0.10,
+        left_anchor_ms=1000.0,
+        right_anchor_ms=9000.0,
+    )
+    assert not _accept_anchored_full_span_onset(
+        8990.0,
+        0.80,
+        left_anchor_ms=1000.0,
+        right_anchor_ms=9000.0,
+    )
+
+
+def test_full_span_pause_must_agree_with_the_independent_local_read():
+    assert _full_span_pause_agrees_with_local_read(176_596.9, 178_556.7)
+    assert not _full_span_pause_agrees_with_local_read(546_316.0, 558_315.4)
+    assert _full_span_pause_owner_is_consistent(
+        2_877_063.1,
+        2_883_072.3,
+        pause_duration_ms=680.0,
+    )
+    assert not _full_span_pause_owner_is_consistent(
+        546_316.0,
+        558_315.4,
+        pause_duration_ms=6760.0,
+    )
+
+
+def test_full_span_unique_next_pause_requires_no_intervening_trusted_pause():
+    assert _full_span_unique_next_pause_candidate(
+        local_onset_ms=2_877_063.1,
+        full_pause_start_ms=2_880_740.0,
+        target_occurrences=1,
+        full_confidence=0.899,
+        confidence_threshold=0.45,
+        intervening_trusted_pauses=0,
+    )
+    assert not _full_span_unique_next_pause_candidate(
+        local_onset_ms=497_109.2,
+        full_pause_start_ms=502_720.0,
+        target_occurrences=1,
+        full_confidence=0.872,
+        confidence_threshold=0.45,
+        intervening_trusted_pauses=1,
+    )
+    assert not _full_span_unique_next_pause_candidate(
+        local_onset_ms=546_316.0,
+        full_pause_start_ms=551_780.0,
+        target_occurrences=2,
+        full_confidence=0.663,
+        confidence_threshold=0.45,
+        intervening_trusted_pauses=0,
+    )
+
+
+def test_impossible_owner_geometry_requires_a_full_span_read():
+    assert _pause_owner_geometry_needs_full_span(
+        from_pause=True,
+        old_onset_ms=3_015_525.0,
+        local_onset_ms=3_068_223.9,
+        previous_quality=0.0,
+        next_quality=0.0,
+    )
+    assert not _pause_owner_geometry_needs_full_span(
+        from_pause=True,
+        old_onset_ms=156_570.0,
+        local_onset_ms=157_222.0,
+        previous_quality=0.90,
+        next_quality=0.75,
+    )
+
+
+def test_geometry_invalidated_owner_cannot_be_revalidated_by_local_read():
+    assert _geometry_invalidated_owner_requires_full_span(
+        geometry_unreliable=True,
+        action="weak_pause_recovery",
+    )
+    assert _geometry_invalidated_owner_requires_full_span(
+        geometry_unreliable=True,
+        action="observed_current",
+    )
+    assert _geometry_invalidated_owner_requires_full_span(
+        geometry_unreliable=True,
+        action="post_selected_micro_recovery",
+        pause_similarity=0.186,
+        min_match_similarity=0.25,
+    )
+    assert not _geometry_invalidated_owner_requires_full_span(
+        geometry_unreliable=True,
+        action="post_selected_micro_recovery",
+        pause_similarity=0.335,
+        min_match_similarity=0.25,
+    )
+    assert not _geometry_invalidated_owner_requires_full_span(
+        geometry_unreliable=False,
+        action="weak_pause_recovery",
+    )
+    assert not _geometry_repair_is_already_consistent(
+        current_ms=6_445_610.8,
+        predicted_ms=6_445_941.3,
+        geometry_invalidated_owner=True,
+    )
+
+
+def test_low_similarity_unclassified_pause_requires_full_context():
+    params = {
+        "from_pause": True,
+        "action": "",
+        "pause_similarity": 0.24,
+        "min_match_similarity": 0.31,
+    }
+    assert _unclassified_owner_requires_full_span(**params)
+    assert not _unclassified_owner_requires_full_span(
+        **{**params, "action": "observed_current"},
+    )
+    assert not _unclassified_owner_requires_full_span(
+        **{**params, "pause_similarity": 0.0},
+    )
+    assert not _unclassified_owner_requires_full_span(
+        **{**params, "pause_similarity": 0.40},
+    )
+    assert _geometry_repair_is_already_consistent(
+        current_ms=6_445_610.8,
+        predicted_ms=6_445_941.3,
+        geometry_invalidated_owner=False,
+    )
+    assert not _geometry_repair_is_already_consistent(
+        current_ms=6_440_316.0,
+        predicted_ms=6_445_941.3,
+        geometry_invalidated_owner=False,
+    )
+
+
+def test_unsupported_recovered_owner_defers_to_distant_anchor_geometry():
+    params = {
+        "from_pause": True,
+        "action": "recovered",
+        "pause_similarity": 0.254,
+        "previous_quality": 0.0,
+        "next_quality": 0.0,
+        "current_ms": 2_960_035.0,
+        "predicted_ms": 2_971_775.0,
+        "pause_trust_similarity": 0.50,
+    }
+    assert _recovered_owner_conflicts_with_anchor_geometry(**params)
+    assert not _recovered_owner_conflicts_with_anchor_geometry(
+        **{**params, "action": "observed_current"},
+    )
+    assert not _recovered_owner_conflicts_with_anchor_geometry(
+        **{**params, "next_quality": 0.20},
+    )
+    assert not _recovered_owner_conflicts_with_anchor_geometry(
+        **{**params, "predicted_ms": 2_969_000.0},
+    )
+
+
+def test_unsupported_first_opening_owner_defers_to_anchor_geometry():
+    params = {
+        "from_pause": True,
+        "action": "first_opening_repair",
+        "pause_similarity": 0.289,
+        "previous_quality": 0.0,
+        "next_quality": 0.0,
+        "current_ms": 669_600.0,
+        "predicted_ms": 730_128.1,
+        "pause_trust_similarity": 0.50,
+    }
+    assert _first_opening_owner_conflicts_with_anchor_geometry(**params)
+    assert not _first_opening_owner_conflicts_with_anchor_geometry(
+        **{**params, "previous_quality": 0.959},
+    )
+    assert not _first_opening_owner_conflicts_with_anchor_geometry(
+        **{**params, "predicted_ms": 685_000.0},
+    )
+    assert _first_opening_owner_conflicts_with_anchor_geometry(
+        **{
+            **params,
+            "current_ms": 3_156_145.0,
+            "predicted_ms": 3_180_203.5,
+        },
+    )
+
+
+def test_unsupported_direct_owner_defers_to_leave_one_out_anchor_geometry():
+    params = {
+        "from_pause": True,
+        "action": "observed_current",
+        "pause_similarity": 0.463,
+        "previous_quality": 0.0,
+        "next_quality": 0.043,
+        "current_ms": 576_160.0,
+        "predicted_ms": 568_604.0,
+        "pause_trust_similarity": 0.50,
+    }
+    assert _direct_owner_conflicts_with_anchor_geometry(**params)
+    assert not _direct_owner_conflicts_with_anchor_geometry(
+        **{**params, "next_quality": 0.20},
+    )
+    assert not _direct_owner_conflicts_with_anchor_geometry(
+        **{**params, "predicted_ms": 572_000.0},
+    )
+    assert not _direct_owner_conflicts_with_anchor_geometry(
+        **{**params, "action": "first_opening_repair"},
+    )
+
+
+def test_recovered_later_best_pause_needs_sim_and_prefix_gains():
+    params = {
+        "selected_time": 1_997_890.0,
+        "next_time": 2_015_670.0,
+        "candidates": [(2_004_720.0, 0.389, 5)],
+        "pause_reason": "dsp",
+        "selected_sim": 0.340,
+        "selected_prefix": 3,
+        "action": "recovered",
+    }
+    assert _recovered_later_best_pause_candidate(**params) == 2_004_720.0
+    assert _recovered_later_best_pause_candidate(
+        **{**params, "candidates": [(2_004_720.0, 0.37, 5)]},
+    ) is None
+    assert _recovered_later_best_pause_candidate(
+        **{**params, "candidates": [(2_004_720.0, 0.389, 4)]},
+    ) is None
+    assert _recovered_later_best_pause_candidate(
+        **{**params, "action": "observed_current"},
+    ) is None
+    assert _recovered_later_best_pause_candidate(
+        **{**params, "candidates": [(2_008_000.0, 0.50, 8)]},
+    ) is None
+
+
+def test_competing_prior_pause_requires_full_span_read():
+    params = {
+        "from_pause": True,
+        "action": "observed_current",
+        "pause_reason": "dsp",
+        "selected_similarity": 0.489,
+        "selected_time_ms": 367_420.0,
+        "previous_anchor_ms": 335_430.0,
+        "candidates": [(356_230.0, "weak-dsp", 0.413)],
+        "pause_trust_similarity": 0.50,
+    }
+    assert _competing_prior_pause_requires_full_span(**params)
+    assert not _competing_prior_pause_requires_full_span(
+        **{**params, "candidates": [(356_230.0, "weak-dsp", 0.38)]},
+    )
+    assert not _competing_prior_pause_requires_full_span(
+        **{**params, "candidates": [(350_000.0, "weak-dsp", 0.45)]},
+    )
+    assert not _competing_prior_pause_requires_full_span(
+        **{**params, "selected_similarity": 0.51},
+    )
+    assert not _competing_prior_pause_requires_full_span(
+        **{**params, "action": "recovered"},
+    )
+
+
+def test_extended_decode_must_clearly_prefer_competing_prior_pause():
+    params = {
+        "candidate_reason": "weak-dsp",
+        "candidate_similarity": 0.488,
+        "selected_similarity": 0.463,
+    }
+    assert _prefer_competing_prior_pause_extended_decode(**params)
+    assert not _prefer_competing_prior_pause_extended_decode(
+        **{**params, "candidate_similarity": 0.47},
+    )
+    assert not _prefer_competing_prior_pause_extended_decode(
+        **{**params, "selected_similarity": 0.475},
+    )
+    assert not _prefer_competing_prior_pause_extended_decode(
+        **{**params, "candidate_reason": "rejected"},
+    )
+
+
+def test_pre_context_must_show_selected_pause_is_inside_current_ayah():
+    params = {
+        "candidate_previous_tail_similarity": 0.634,
+        "selected_previous_tail_similarity": 0.216,
+        "candidate_current_opening_similarity": 0.190,
+        "selected_current_opening_similarity": 0.281,
+    }
+    assert _prefer_competing_prior_pause_pre_context(**params)
+    assert not _prefer_competing_prior_pause_pre_context(
+        **{**params, "candidate_previous_tail_similarity": 0.54},
+    )
+    assert not _prefer_competing_prior_pause_pre_context(
+        **{**params, "selected_previous_tail_similarity": 0.40},
+    )
+    assert not _prefer_competing_prior_pause_pre_context(
+        **{**params, "selected_current_opening_similarity": 0.23},
+    )
+
+
+def test_following_word_can_confirm_short_full_span_opening():
+    params = {
+        "opening_confidence": 0.0,
+        "following_confidence": 0.470,
+        "opening_onset_ms": 2_975_970.0,
+        "following_onset_ms": 2_976_210.0,
+        "same_ayah": True,
+    }
+    assert _full_span_opening_support_confidence(**params) == 0.470
+    assert _full_span_opening_support_confidence(
+        **{**params, "same_ayah": False},
+    ) == 0.0
+    assert _full_span_opening_support_confidence(
+        **{**params, "following_onset_ms": 2_977_210.0},
+    ) == 0.0
+    assert _full_span_opening_support_confidence(
+        **{**params, "opening_confidence": 0.80},
+    ) == 0.80
+
+
+def test_geometry_invalidated_full_span_can_use_following_word_without_pause():
+    assert _full_span_following_support_is_eligible(
+        geometry_invalidated_owner=True,
+        multiscale_full_span_required=False,
+        impossible_owner_geometry=False,
+    )
+    assert not _full_span_following_support_is_eligible(
+        geometry_invalidated_owner=False,
+        multiscale_full_span_required=False,
+        impossible_owner_geometry=False,
+    )
+
+
+def test_weak_full_wasl_read_is_insufficient_and_rejects_weak_closer():
+    assert _full_wasl_read_classification(
+        0.168,
+        acceptance_confidence=0.25,
+        audio_bracket_proven=False,
+    ) == "insufficient_audio"
+    assert _full_wasl_read_classification(
+        0.25,
+        acceptance_confidence=0.25,
+        audio_bracket_proven=False,
+    ) == "wasl"
+    assert _full_wasl_read_classification(
+        0.168,
+        acceptance_confidence=0.25,
+        audio_bracket_proven=True,
+    ) == "wasl"
+    params = {
+        "classification": "insufficient_audio",
+        "bracketed_on_right": True,
+        "right_anchor_from_pause": True,
+        "right_anchor_similarity": 0.351,
+        "pause_trust_similarity": 0.50,
+        "opening_shared_prefix_chars": 8,
+    }
+    assert _insufficient_wasl_read_invalidates_right_anchor(**params)
+    assert not _insufficient_wasl_read_invalidates_right_anchor(
+        **{**params, "right_anchor_similarity": 0.50},
+    )
+    assert not _insufficient_wasl_read_invalidates_right_anchor(
+        **{**params, "classification": "wasl"},
+    )
+    assert not _insufficient_wasl_read_invalidates_right_anchor(
+        **{**params, "opening_shared_prefix_chars": 3},
+    )
+
+
+def test_recording_end_brackets_only_a_trailing_full_span_read():
+    assert _full_span_right_bracket_ms(
+        right_anchor_ms=None,
+        total_ms=1_053_700.0,
+        final_ayah=True,
+    ) == 1_053_700.0
+    assert _full_span_right_bracket_ms(
+        right_anchor_ms=1_025_860.0,
+        total_ms=1_053_700.0,
+        final_ayah=False,
+    ) == 1_025_860.0
+    assert _full_span_right_bracket_ms(
+        right_anchor_ms=None,
+        total_ms=1_053_700.0,
+        final_ayah=False,
+    ) is None
+
+
+def test_repeated_weak_wasl_run_requires_reliable_bracket_extension():
+    params = {
+        "run_length": 2,
+        "opening_shared_prefix_chars": 4,
+        "minimum_confidence": 0.216,
+        "acceptance_confidence": 0.25,
+        "right_anchor_from_pause": True,
+        "right_anchor_similarity": 0.314,
+        "pause_trust_similarity": 0.50,
+    }
+    assert _ambiguous_wasl_run_requires_bracket_extension(**params)
+    assert not _ambiguous_wasl_run_requires_bracket_extension(
+        **{**params, "run_length": 1},
+    )
+    assert not _ambiguous_wasl_run_requires_bracket_extension(
+        **{**params, "minimum_confidence": 0.25},
+    )
+    assert not _ambiguous_wasl_run_requires_bracket_extension(
+        **{**params, "right_anchor_similarity": 0.50},
+    )
+
+
+def test_unclassified_repeated_pause_run_requires_atomic_block():
+    params = {
+        "from_pause": True,
+        "action": "",
+        "pause_similarity": 0.333,
+        "previous_quality": 0.038,
+        "next_quality": 0.0,
+        "opening_shared_prefix_chars": 6,
+        "previous_from_pause": True,
+        "previous_similarity": 0.371,
+        "next_from_pause": True,
+        "next_similarity": 0.381,
+        "pause_trust_similarity": 0.50,
+    }
+    assert _unclassified_repeated_pause_run_requires_atomic_block(**params)
+    assert not _unclassified_repeated_pause_run_requires_atomic_block(
+        **{**params, "action": "observed_current"},
+    )
+    assert not _unclassified_repeated_pause_run_requires_atomic_block(
+        **{**params, "opening_shared_prefix_chars": 3},
+    )
+    assert not _unclassified_repeated_pause_run_requires_atomic_block(
+        **{**params, "next_similarity": 0.50},
+    )
+    assert _repeated_low_trust_left_anchor_extends_atomic_block(
+        pause_similarity=0.371,
+        previous_quality=0.0,
+        opening_shared_prefix_chars=3,
+        pause_trust_similarity=0.50,
+    )
+    assert not _repeated_low_trust_left_anchor_extends_atomic_block(
+        pause_similarity=0.371,
+        previous_quality=0.0,
+        opening_shared_prefix_chars=2,
+        pause_trust_similarity=0.50,
+    )
+    assert not _repeated_low_trust_left_anchor_extends_atomic_block(
+        pause_similarity=0.50,
+        previous_quality=0.0,
+        opening_shared_prefix_chars=3,
+        pause_trust_similarity=0.50,
+    )
+
+
+def test_reliable_full_read_can_confirm_exact_weak_pause_edge():
+    params = {
+        "onset_ms": 1_951_020.0,
+        "pause_start_ms": 1_950_780.0,
+        "pause_end_ms": 1_951_000.0,
+        "pause_tier_name": "weak",
+        "pause_reason": "weak-dsp",
+        "confidence": 0.577,
+        "reliable_confidence": 0.45,
+    }
+    assert _full_span_pause_candidate_is_supported(**params)
+    assert not _full_span_pause_candidate_is_supported(
+        **{**params, "onset_ms": 1_951_100.0},
+    )
+    assert not _full_span_pause_candidate_is_supported(
+        **{**params, "confidence": 0.44},
+    )
+    assert _full_span_pause_candidate_is_supported(
+        **{
+            **params,
+            "onset_ms": 1_950_900.0,
+            "pause_tier_name": "trusted",
+            "pause_reason": "dsp",
+            "confidence": 0.0,
+        },
+    )
+
+
+def test_local_and_full_reads_can_jointly_confirm_a_weak_pause_edge():
+    params = {
+        "full_onset_ms": 3_385_012.7,
+        "full_confidence": 0.169,
+        "local_onset_ms": 3_384_288.2,
+        "local_confidence": 0.375,
+        "pause_start_ms": 3_384_540.0,
+        "pause_end_ms": 3_385_000.0,
+        "pause_reason": "weak-dsp",
+        "acceptance_confidence": 0.25,
+    }
+    assert _full_span_weak_pause_is_jointly_supported(**params)
+    assert not _full_span_weak_pause_is_jointly_supported(
+        **{**params, "full_confidence": 0.09},
+    )
+    assert not _full_span_weak_pause_is_jointly_supported(
+        **{**params, "local_confidence": 0.24},
+    )
+    assert not _full_span_weak_pause_is_jointly_supported(
+        **{**params, "local_onset_ms": 3_384_100.0},
+    )
+    assert not _full_span_weak_pause_is_jointly_supported(
+        **{**params, "pause_reason": "dsp"},
+    )
+
+
+def test_unique_anchored_full_read_can_confirm_invalidated_weak_pause():
+    params = {
+        "geometry_invalidated_owner": True,
+        "full_onset_ms": 45_741.9,
+        "full_confidence": 0.337,
+        "target_occurrences": 1,
+        "pause_start_ms": 45_620.0,
+        "pause_end_ms": 45_880.0,
+        "pause_reason": "weak-dsp",
+        "acceptance_confidence": 0.25,
+    }
+    assert _geometry_invalidated_full_span_weak_pause_is_supported(**params)
+    assert not _geometry_invalidated_full_span_weak_pause_is_supported(
+        **{**params, "target_occurrences": 2}
+    )
+    assert not _geometry_invalidated_full_span_weak_pause_is_supported(
+        **{**params, "geometry_invalidated_owner": False}
+    )
+    assert not _geometry_invalidated_full_span_weak_pause_is_supported(
+        **{**params, "full_onset_ms": 45_881.0}
+    )
+
+
+def test_multiscale_consensus_requires_direct_non_repeated_pause_claim():
+    params = {
+        "action": "observed_current",
+        "pause_similarity": 0.309,
+        "pause_trust_similarity": 0.50,
+        "opening_shared_prefix_chars": 2,
+        "owner_prediction_shift_ms": 7788.5,
+    }
+    assert _multiscale_pause_repair_is_eligible(**params)
+    assert _multiscale_pause_repair_is_eligible(
+        **{**params, "opening_shared_prefix_chars": 5},
+    )
+    assert not _multiscale_pause_repair_is_eligible(
+        **{**params, "action": "first_opening_repair"},
+    )
+    assert not _multiscale_pause_repair_is_eligible(
+        **{**params, "opening_shared_prefix_chars": 6},
+    )
+    assert not _multiscale_pause_repair_is_eligible(
+        **{**params, "owner_prediction_shift_ms": 2999.0},
+    )
+
+
+def test_eligible_multiscale_reads_must_cluster_inside_one_pause():
+    candidates = [
+        (3_377_399.6, 0.027, False),
+        (3_377_388.8, 0.103, False),
+        (3_377_398.6, 0.153, False),
+        (3_377_408.4, 0.055, False),
+        (3_377_398.2, 0.098, False),
+    ]
+    assert _stable_multiscale_pause_onset(
+        candidates,
+        pause_start_ms=3_377_240.0,
+        pause_end_ms=3_377_560.0,
+    ) == 3_377_398.6
+    assert _stable_multiscale_pause_onset(
+        [*candidates[:2], (3_377_520.0, 0.20, False)],
+        pause_start_ms=3_377_240.0,
+        pause_end_ms=3_377_560.0,
+    ) is None
+
+
+def test_multiscale_ctc_in_owner_requires_unique_text_and_two_sided_tempo():
+    params = {
+        "from_pause": True,
+        "action": "observed_current",
+        "pause_reason": "dsp",
+        "pause_similarity": 0.357,
+        "pause_trust_similarity": 0.50,
+        "opening_shared_prefix_chars": 0,
+        "prev_quality": 0.995,
+        "next_quality": 0.956,
+        "clustered_onset_ms": 510_428.0,
+        "owner_onset_ms": 509_880.0,
+        "pause_start_ms": 509_880.0,
+        "pause_end_ms": 510_620.0,
+        "previous_start_ms": 503_320.0,
+        "next_start_ms": 516_860.0,
+    }
+    assert _multiscale_ctc_in_owner_candidate(**params)
+    assert not _multiscale_ctc_in_owner_candidate(
+        **{**params, "opening_shared_prefix_chars": 6}
+    )
+    assert not _multiscale_ctc_in_owner_candidate(
+        **{**params, "next_quality": 0.79}
+    )
+    assert not _multiscale_ctc_in_owner_candidate(
+        **{**params, "clustered_onset_ms": 510_615.0}
+    )
+
+
+def test_multiscale_ctc_consensus_is_not_replaced_by_owner_edge_snap():
+    assert not _owner_interval_snap_is_allowed("multiscale_ctc_in_owner")
+    assert _owner_interval_snap_is_allowed("post_micro_context_ctc")
+    assert _owner_interval_snap_is_allowed(None)
+
+
+def test_late_section_read_keeps_same_owner_multiscale_ctc_onset():
+    params = {
+        "timing_strategy": "multiscale_ctc_in_owner",
+        "current_owner_center_ms": 509_880.0,
+        "proposed_owner_center_ms": 509_880.0,
+        "current_start_ms": 510_428.0,
+        "pause_start_ms": 509_880.0,
+        "pause_end_ms": 510_620.0,
+    }
+    assert _preserve_multiscale_ctc_owner_timing(**params)
+    assert not _preserve_multiscale_ctc_owner_timing(
+        **{**params, "proposed_owner_center_ms": 509_900.0}
+    )
+    assert not _preserve_multiscale_ctc_owner_timing(
+        **{**params, "current_start_ms": 510_700.0}
+    )
+
+
+def test_repeated_opening_multiscale_conflict_requires_full_context():
+    candidates = [
+        (1_950_656.0, 0.004, False),
+        (1_950_665.0, 0.005, False),
+        (1_950_654.0, 0.110, False),
+        (1_950_302.0, 0.119, False),
+        (1_951_195.0, 0.150, False),
+    ]
+    cluster = _stable_multiscale_onset_cluster(candidates)
+    assert cluster == 1_950_656.0
+    params = {
+        "action": "observed_current",
+        "pause_similarity": 0.370,
+        "pause_trust_similarity": 0.50,
+        "opening_shared_prefix_chars": 9,
+        "owner_onset_ms": 1_959_078.0,
+        "predicted_onset_ms": 1_950_423.0,
+        "clustered_onset_ms": cluster,
+    }
+    assert _ambiguous_multiscale_owner_requires_full_span(**params)
+    assert not _ambiguous_multiscale_owner_requires_full_span(
+        **{**params, "opening_shared_prefix_chars": 5},
+    )
+    assert not _ambiguous_multiscale_owner_requires_full_span(
+        **{**params, "clustered_onset_ms": 1_952_000.0},
+    )
+    assert not _ambiguous_multiscale_owner_requires_full_span(
+        **{**params, "action": "first_opening_repair"},
+    )
+
+
+def test_multiscale_cluster_rejects_edge_and_spread_out_candidates():
+    assert _stable_multiscale_onset_cluster([
+        (1000.0, 0.30, True),
+        (1010.0, 0.20, False),
+        (1020.0, 0.20, False),
+    ]) is None
+
+
+def test_large_wasl_revision_invalidates_low_trust_fallback_right_anchor():
+    params = {
+        "full_wasl_repair": True,
+        "full_onset_ms": 1_373_435.2,
+        "local_onset_ms": 1_384_616.0,
+        "right_anchor_from_pause": True,
+        "right_anchor_action": "pause_fallback",
+        "right_anchor_similarity": 0.317,
+        "pause_trust_similarity": 0.50,
+    }
+    assert _wasl_revision_invalidates_fallback_right_anchor(**params)
+    assert not _wasl_revision_invalidates_fallback_right_anchor(
+        **{**params, "right_anchor_action": "observed_current"},
+    )
+    assert not _wasl_revision_invalidates_fallback_right_anchor(
+        **{**params, "right_anchor_similarity": 0.55},
+    )
+    assert not _wasl_revision_invalidates_fallback_right_anchor(
+        **{**params, "local_onset_ms": 1_375_000.0},
+    )
+    assert _stable_multiscale_onset_cluster([
+        (1000.0, 0.20, False),
+        (1100.0, 0.20, False),
+        (1200.0, 0.20, False),
+    ]) is None
+
+
+def test_forward_right_anchor_revision_rereads_weak_predecessor_wasl():
+    params = {
+        "old_anchor_ms": 1_286_597.5,
+        "new_anchor_ms": 1_325_599.0,
+        "run_confidence": 0.15,
+        "acceptance_confidence": 0.25,
+    }
+    assert _revised_wasl_right_anchor_requires_predecessor_reread(**params)
+    assert not _revised_wasl_right_anchor_requires_predecessor_reread(
+        **{**params, "run_confidence": 0.25},
+    )
+    assert not _revised_wasl_right_anchor_requires_predecessor_reread(
+        **{**params, "new_anchor_ms": 1_288_000.0},
+    )
+
+
+def test_invalidated_owner_cannot_block_reliable_repair_by_stale_confidence():
+    assert _geometry_invalidated_repair_can_compete(
+        geometry_invalidated_owner=True,
+        repair_confidence=0.831,
+        reliable_confidence=0.45,
+    )
+    assert not _geometry_invalidated_repair_can_compete(
+        geometry_invalidated_owner=False,
+        repair_confidence=0.831,
+        reliable_confidence=0.45,
+    )
+    assert not _geometry_invalidated_repair_can_compete(
+        geometry_invalidated_owner=True,
+        repair_confidence=0.449,
+        reliable_confidence=0.45,
+    )
+
+
+def test_low_similarity_owner_with_impossible_spans_is_not_an_anchor():
+    assert _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="recovered",
+        pause_reason="micro-tempo",
+        pause_similarity=0.423,
+        previous_quality=0.0,
+        next_quality=0.0,
+        expected_delta_ms=-16_229.7,
+        previous_expected_delta_ms=-15_000.0,
+        pause_trust_similarity=0.50,
+    )
+    assert _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="observed_current",
+        pause_reason="weak-dsp",
+        pause_similarity=0.311,
+        previous_quality=0.0,
+        next_quality=0.0,
+        expected_delta_ms=-38_130.8,
+        previous_expected_delta_ms=-35_000.0,
+        pause_trust_similarity=0.50,
+    )
+    assert not _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="observed_current",
+        pause_reason="weak-dsp",
+        pause_similarity=0.35,
+        previous_quality=0.0,
+        next_quality=0.0,
+        expected_delta_ms=-38_130.8,
+        previous_expected_delta_ms=-35_000.0,
+        pause_trust_similarity=0.50,
+    )
+    assert _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="recovered",
+        pause_similarity=0.274,
+        previous_quality=0.287,
+        next_quality=0.0,
+        expected_delta_ms=7_451.0,
+        best_pause_is_later=True,
+        best_pause_similarity=0.433,
+        pause_trust_similarity=0.50,
+    )
+    assert not _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="recovered",
+        pause_similarity=0.274,
+        previous_quality=0.287,
+        next_quality=0.0,
+        expected_delta_ms=7_451.0,
+        best_pause_is_later=True,
+        best_pause_similarity=0.373,
+        pause_trust_similarity=0.50,
+    )
+    assert _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="observed_current",
+        pause_similarity=0.401,
+        previous_quality=0.0,
+        next_quality=0.018,
+        expected_delta_ms=-7_775.6,
+        best_pause_is_later=True,
+        best_pause_similarity=0.502,
+        pause_trust_similarity=0.50,
+    )
+    assert _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="observed_current",
+        pause_reason="micro-tempo",
+        pause_similarity=0.406,
+        previous_quality=0.0,
+        next_quality=0.0,
+        expected_delta_ms=-21_814.5,
+        previous_expected_delta_ms=-20_000.0,
+        pause_trust_similarity=0.50,
+    )
+    assert not _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="observed_current",
+        pause_reason="dsp",
+        pause_similarity=0.406,
+        previous_quality=0.0,
+        next_quality=0.0,
+        expected_delta_ms=-21_814.5,
+        previous_expected_delta_ms=-20_000.0,
+        pause_trust_similarity=0.50,
+    )
+    assert _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="observed_current",
+        pause_similarity=0.469,
+        previous_quality=0.511,
+        next_quality=0.0,
+        expected_delta_ms=-34_038.3,
+        opening_self_repeat_chars=8,
+        pause_trust_similarity=0.50,
+    )
+    assert not _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="observed_current",
+        pause_similarity=0.469,
+        previous_quality=0.511,
+        next_quality=0.0,
+        expected_delta_ms=-34_038.3,
+        opening_self_repeat_chars=0,
+        pause_trust_similarity=0.50,
+    )
+    assert not _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="observed_current",
+        pause_similarity=0.483,
+        previous_quality=0.0,
+        next_quality=0.489,
+        expected_delta_ms=25_971.8,
+        opening_self_repeat_chars=6,
+        pause_trust_similarity=0.50,
+    )
+    assert _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="recovered",
+        pause_similarity=0.242,
+        previous_quality=0.199,
+        next_quality=0.0,
+        expected_delta_ms=5_642.8,
+        pause_trust_similarity=0.50,
+    )
+    assert _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="observed_current",
+        pause_similarity=0.384,
+        previous_quality=0.0,
+        next_quality=0.0,
+        expected_delta_ms=-9_438.2,
+        best_pause_is_later=True,
+        best_pause_similarity=0.517,
+        pause_trust_similarity=0.50,
+    )
+    assert not _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="observed_current",
+        pause_similarity=0.384,
+        previous_quality=0.0,
+        next_quality=0.0,
+        expected_delta_ms=-9_438.2,
+        best_pause_is_later=False,
+        best_pause_similarity=0.517,
+        pause_trust_similarity=0.50,
+    )
+    assert not _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="recovered",
+        pause_similarity=0.26,
+        previous_quality=0.199,
+        next_quality=0.0,
+        expected_delta_ms=5_642.8,
+        pause_trust_similarity=0.50,
+    )
+    assert _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="first_opening_repair",
+        pause_similarity=0.315,
+        previous_quality=0.0,
+        next_quality=0.0,
+        expected_delta_ms=-81_597.0,
+        pause_trust_similarity=0.50,
+    )
+    assert not _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="first_opening_repair",
+        pause_similarity=0.58,
+        previous_quality=0.0,
+        next_quality=0.0,
+        expected_delta_ms=-81_597.0,
+        pause_trust_similarity=0.50,
+    )
+    assert _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="first_opening_repair",
+        pause_similarity=0.409,
+        previous_quality=0.0,
+        next_quality=0.0,
+        expected_delta_ms=-24_058.5,
+        previous_expected_delta_ms=11_388.6,
+        pause_trust_similarity=0.50,
+    )
+    assert not _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="first_opening_repair",
+        pause_similarity=0.409,
+        previous_quality=0.0,
+        next_quality=0.0,
+        expected_delta_ms=-5_000.0,
+        previous_expected_delta_ms=11_388.6,
+        pause_trust_similarity=0.50,
+    )
+    assert _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="weak_pause_recovery",
+        pause_similarity=0.393,
+        previous_quality=0.692,
+        next_quality=0.0,
+        expected_delta_ms=60_262.3,
+        previous_expected_delta_ms=49_254.0,
+        opening_shared_prefix_chars=5,
+        pause_trust_similarity=0.50,
+    )
+    assert _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="recovered",
+        pause_similarity=0.283,
+        previous_quality=0.0,
+        next_quality=0.06,
+        expected_delta_ms=-52_619.2,
+        previous_expected_delta_ms=-34_830.4,
+        opening_shared_prefix_chars=13,
+        pause_trust_similarity=0.50,
+    )
+    assert _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="weak_pause_recovery",
+        pause_similarity=0.253,
+        previous_quality=0.0,
+        next_quality=0.0,
+        expected_delta_ms=-9_466.4,
+        previous_expected_delta_ms=-20_425.9,
+        opening_shared_prefix_chars=0,
+        pause_trust_similarity=0.50,
+    )
+    assert not _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="weak_pause_recovery",
+        pause_similarity=0.253,
+        previous_quality=0.0,
+        next_quality=0.0,
+        expected_delta_ms=-11_000.0,
+        previous_expected_delta_ms=-20_000.0,
+        opening_shared_prefix_chars=0,
+        pause_trust_similarity=0.50,
+    )
+    assert _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="weak_pause_recovery",
+        pause_similarity=0.362,
+        previous_quality=0.0,
+        next_quality=0.0,
+        expected_delta_ms=34_914.8,
+        previous_expected_delta_ms=3_372.4,
+        opening_shared_prefix_chars=0,
+        pause_trust_similarity=0.50,
+    )
+    assert not _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="weak_pause_recovery",
+        pause_similarity=0.362,
+        previous_quality=0.20,
+        next_quality=0.0,
+        expected_delta_ms=34_914.8,
+        previous_expected_delta_ms=3_372.4,
+        opening_shared_prefix_chars=0,
+        pause_trust_similarity=0.50,
+    )
+    assert _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="observed_current",
+        pause_similarity=0.460,
+        previous_quality=0.0,
+        next_quality=0.0,
+        expected_delta_ms=42_315.8,
+        previous_expected_delta_ms=57_614.3,
+        opening_shared_prefix_chars=3,
+        pause_trust_similarity=0.50,
+    )
+    assert _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="observed_current",
+        pause_similarity=0.553,
+        previous_quality=0.0,
+        next_quality=0.022,
+        expected_delta_ms=-23_637.0,
+        previous_expected_delta_ms=-7_390.4,
+        opening_shared_prefix_chars=0,
+        opening_internal_repeat_chars=12,
+        pause_trust_similarity=0.50,
+    )
+    assert not _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="observed_current",
+        pause_similarity=0.553,
+        previous_quality=0.0,
+        next_quality=0.022,
+        expected_delta_ms=-23_637.0,
+        previous_expected_delta_ms=-7_390.4,
+        opening_shared_prefix_chars=0,
+        opening_internal_repeat_chars=0,
+        pause_trust_similarity=0.50,
+    )
+    assert _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="weak_pause_recovery",
+        pause_similarity=0.256,
+        previous_quality=0.0,
+        next_quality=0.0,
+        expected_delta_ms=-1_771.9,
+        previous_expected_delta_ms=-114_469.8,
+        opening_shared_prefix_chars=20,
+        pause_trust_similarity=0.50,
+    )
+    assert _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="post_selected_micro_recovery",
+        pause_similarity=0.542,
+        previous_quality=0.0,
+        next_quality=0.0,
+        expected_delta_ms=3_753.5,
+        previous_expected_delta_ms=-34.3,
+        opening_shared_prefix_chars=6,
+        pause_trust_similarity=0.50,
+    )
+    assert _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="preword_micro_recovery",
+        pause_similarity=0.313,
+        previous_quality=0.0,
+        next_quality=0.0,
+        expected_delta_ms=-38_704.1,
+        previous_expected_delta_ms=-45_678.1,
+        pause_trust_similarity=0.50,
+    )
+    assert not _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="first_opening_repair",
+        pause_similarity=0.315,
+        previous_quality=0.0,
+        next_quality=0.20,
+        expected_delta_ms=74_000.0,
+        pause_trust_similarity=0.50,
+    )
+    assert not _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="opening_run_repair",
+        pause_similarity=0.315,
+        previous_quality=0.0,
+        next_quality=0.0,
+        expected_delta_ms=-81_597.0,
+        pause_trust_similarity=0.50,
+    )
+    assert _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="opening_run_repair",
+        pause_similarity=0.352,
+        previous_quality=0.0,
+        next_quality=0.276,
+        expected_delta_ms=41_589.4,
+        previous_expected_delta_ms=24_918.1,
+        pause_trust_similarity=0.50,
+    )
+    assert not _pause_owner_geometry_is_unreliable(
+        from_pause=True,
+        action="opening_run_repair",
+        pause_similarity=0.352,
+        previous_quality=0.20,
+        next_quality=0.276,
+        expected_delta_ms=41_589.4,
+        previous_expected_delta_ms=24_918.1,
+        pause_trust_similarity=0.50,
+    )
+    assert not _accept_anchored_full_span_onset(
+        8450.0,
+        0.09,
+        left_anchor_ms=1000.0,
+        right_anchor_ms=9000.0,
+    )
+
+
+def test_repeated_opening_with_impossible_previous_span_is_not_an_anchor():
+    assert _repeated_opening_pause_anchor_is_ambiguous(
+        from_pause=True,
+        pause_similarity=0.380,
+        previous_quality=0.042,
+        current_opening="وَلَقَدۡ",
+        next_opening="وَلَقَدۡ",
+        pause_trust_similarity=0.50,
+    )
+    assert not _repeated_opening_pause_anchor_is_ambiguous(
+        from_pause=True,
+        pause_similarity=0.380,
+        previous_quality=0.042,
+        current_opening="وَلَقَدۡ",
+        next_opening="فَٱنظُرۡ",
+        pause_trust_similarity=0.50,
+    )
+
+
+def test_ambiguous_observed_pause_detects_shifted_section_start():
+    assert _ambiguous_observed_pause_starts_shifted_section(
+        from_pause=True,
+        action="observed_current",
+        pause_similarity=0.461,
+        opening_shared_prefix_chars=6,
+        current_expected_delta_ms=44_244.3,
+        previous_expected_delta_ms=19_558.1,
+        pause_trust_similarity=0.50,
+    )
+    assert not _ambiguous_observed_pause_starts_shifted_section(
+        from_pause=True,
+        action="repair_pause_recovery",
+        pause_similarity=0.315,
+        opening_shared_prefix_chars=8,
+        current_expected_delta_ms=-81_597.3,
+        previous_expected_delta_ms=-46_567.5,
+        pause_trust_similarity=0.50,
+    )
+    assert not _repeated_opening_pause_anchor_is_ambiguous(
+        from_pause=True,
+        pause_similarity=0.580,
+        previous_quality=0.042,
+        current_opening="وَلَقَدۡ",
+        next_opening="وَلَقَدۡ",
+        pause_trust_similarity=0.50,
+    )
+
+
+def test_adjacent_repeated_direct_owners_trigger_atomic_section_read():
+    kwargs = {
+        "current_from_pause": True,
+        "current_action": "observed_current",
+        "current_similarity": 0.358,
+        "current_previous_quality": 0.0,
+        "current_expected_delta_ms": 6_158.9,
+        "previous_from_pause": True,
+        "previous_action": "observed_current",
+        "previous_similarity": 0.456,
+        "previous_previous_quality": 0.0,
+        "previous_expected_delta_ms": 215.5,
+        "opening_shared_prefix_chars": 8,
+        "pause_trust_similarity": 0.50,
+    }
+    assert _adjacent_repeated_owners_start_shifted_section(**kwargs)
+    assert not _adjacent_repeated_owners_start_shifted_section(
+        **{**kwargs, "opening_shared_prefix_chars": 5}
+    )
+    assert not _adjacent_repeated_owners_start_shifted_section(
+        **{**kwargs, "previous_previous_quality": 0.11}
+    )
+    assert not _adjacent_repeated_owners_start_shifted_section(
+        **{**kwargs, "current_expected_delta_ms": 5_000.0}
+    )
+
+
 def test_long_pause_start_timing_candidate_requires_trusted_shelf_boundary():
     assert _long_pause_start_timing_candidate(
         pause_duration_ms=2060.0,
@@ -945,6 +2790,37 @@ def test_long_pause_start_timing_candidate_requires_trusted_shelf_boundary():
         next_speech_ms=180.0,
         sim=0.3,
         pause_trust_sim=0.50,
+    )
+
+
+def test_shifted_geometry_long_pause_start_requires_untouched_impossible_prior():
+    kwargs = {
+        "from_pause": True,
+        "action": "recovered",
+        "pause_reason": "dsp",
+        "pause_duration_ms": 2000.0,
+        "current_start_ms": 318860.0,
+        "pause_center_ms": 318860.0,
+        "expected_delta_ms": -17397.7,
+        "prev_quality": 0.0,
+        "next_quality": 0.0,
+        "timing_adjusted": False,
+    }
+    assert _shifted_geometry_long_pause_start_candidate(**kwargs)
+    assert not _shifted_geometry_long_pause_start_candidate(
+        **{**kwargs, "expected_delta_ms": -4376.1}
+    )
+    assert not _shifted_geometry_long_pause_start_candidate(
+        **{**kwargs, "prev_quality": 0.11}
+    )
+    assert not _shifted_geometry_long_pause_start_candidate(
+        **{**kwargs, "next_quality": 0.11}
+    )
+    assert not _shifted_geometry_long_pause_start_candidate(
+        **{**kwargs, "current_start_ms": 319737.0}
+    )
+    assert not _shifted_geometry_long_pause_start_candidate(
+        **{**kwargs, "timing_adjusted": True}
     )
 
 
@@ -1235,6 +3111,32 @@ def test_weak_dsp_post_selected_micro_valley_requires_two_sided_span_gain():
     )
 
 
+def test_post_selected_micro_context_read_requires_strong_in_owner_ctc():
+    accepted = {
+        "pause_reason": "dsp",
+        "action": "post_selected_micro_recovery",
+        "pause_duration_ms": 2720.0,
+        "pause_sim": 0.467,
+        "prev_quality": 0.0,
+        "next_quality": 0.564,
+        "candidate_ms": 457180.0,
+        "candidate_conf": 0.82,
+        "pause_start_ms": 454760.0,
+        "pause_end_ms": 457480.0,
+        "conf_reliable": 0.70,
+    }
+    assert _post_selected_micro_context_read_candidate(**accepted)
+    assert not _post_selected_micro_context_read_candidate(
+        **{**accepted, "candidate_conf": 0.69}
+    )
+    assert not _post_selected_micro_context_read_candidate(
+        **{**accepted, "candidate_ms": 454800.0}
+    )
+    assert not _post_selected_micro_context_read_candidate(
+        **{**accepted, "next_quality": 0.49}
+    )
+
+
 def test_weak_dsp_wasl_recovery_candidate_requires_mixed_tail_and_current():
     kwargs = {
         "pause_reason": "weak-dsp",
@@ -1286,6 +3188,23 @@ def test_long_dsp_fractional_start_candidate_is_narrow():
     assert _long_dsp_fractional_start_candidate(**opening) is None
     assert _long_dsp_fractional_start_candidate(**{**opening, "min_sim": 0.31}) == 0.30
     assert _long_dsp_fractional_start_candidate(**balanced) == 0.12
+    assert _late_long_dsp_fallback_start_candidate(
+        pause_reason="dsp",
+        pause_duration_ms=2820.0,
+        action="pause_fallback",
+        sim=0.559,
+        prev_speech_ms=0.0,
+        next_quality=0.756,
+    )
+    assert not _late_long_dsp_fallback_start_candidate(
+        pause_reason="dsp",
+        pause_duration_ms=2820.0,
+        action="pause_fallback",
+        sim=0.559,
+        prev_speech_ms=600.0,
+        next_quality=0.756,
+    )
+
     assert _long_dsp_fractional_start_candidate(
         **{**balanced, "next_quality": 0.55}
     ) is None
@@ -1382,6 +3301,24 @@ def test_long_dsp_fractional_start_candidate_is_narrow():
             }
         )
         is None
+    )
+
+
+def test_overlapping_dsp_replaces_only_impossible_micro_owner():
+    kwargs = {
+        "action": "observed_current",
+        "pause_reason": "micro-tempo",
+        "expected_delta_ms": -57_495.0,
+        "prev_speech_ms": 0.0,
+        "next_quality": 0.744,
+        "overlap_ms": 140.0,
+    }
+    assert _overlapping_dsp_replaces_micro_owner(**kwargs)
+    assert not _overlapping_dsp_replaces_micro_owner(
+        **{**kwargs, "prev_speech_ms": 200.0}
+    )
+    assert not _overlapping_dsp_replaces_micro_owner(
+        **{**kwargs, "overlap_ms": 50.0}
     )
 
 
@@ -1575,15 +3512,21 @@ def test_sequential_pause_match_stops_on_future_ayah_gap():
     assert matched == [1000.0, None, 3000.0]
     assert any(e["action"] == "future_gap" and e["heard_boundary"] == 2 for e in events)
     assert not any(e["action"] == "future_anchor" for e in events)
-    assert any(e["action"] == "confirmed" and e["boundary"] == 2 for e in events)
+    assert not any(e["action"] == "confirmed" and e["boundary"] == 2 for e in events)
+    assert any(e["action"] == "deferred_future_anchor" and e["boundary"] == 2 for e in events)
     assert any(
         e["action"] == "wasl" and e["boundary"] == 1
         and e["reason"] == "missing_before_future"
         for e in events
     )
+    assert any(
+        e["action"] == "unresolved_current" and e["boundary"] == 1
+        and e["reason"] == "missing_before_future"
+        for e in events
+    )
 
 
-def test_sequential_pause_match_recovers_early_pause_before_future_anchor():
+def test_sequential_pause_match_marks_future_anchor_deferred_after_unrecovered_gap():
     exp = [2000.0, 4000.0, 6000.0]
     ons = [1500.0, 6000.0]
 
@@ -1606,9 +3549,14 @@ def test_sequential_pause_match_recovers_early_pause_before_future_anchor():
     )
 
     assert matched == [1500.0, None, 6000.0]
-    assert any(e["action"] == "recovered" and e["boundary"] == 0 for e in events)
     assert not any(e["action"] == "future_anchor" for e in events)
-    assert any(e["action"] == "confirmed" and e["boundary"] == 2 for e in events)
+    assert not any(e["action"] == "confirmed" and e["boundary"] == 2 for e in events)
+    assert any(e["action"] == "deferred_future_anchor" and e["boundary"] == 2 for e in events)
+    assert any(
+        e["action"] == "unresolved_current" and e["boundary"] == 1
+        and e["reason"] == "missing_before_future"
+        for e in events
+    )
 
 
 def test_sequential_pause_match_keeps_near_early_pause_inside_grace():
@@ -2455,6 +4403,77 @@ def test_sequential_pause_match_goes_forward_after_stale_pause():
     )
 
 
+def test_final_start_guard_keeps_first_and_last_ayah_strictly_ordered():
+    rows, repairs = _enforce_strictly_increasing_starts([
+        (1, 0, 0.9),
+        (2, 0, 0.8),
+        (3, -20, 0.7),
+        (4, 4, 0.6),
+    ])
+
+    assert [row[1] for row in rows] == [0, 1, 2, 4]
+    assert [row[2] for row in rows] == [0.9, 0.0, 0.0, 0.6]
+    assert repairs == [
+        {
+            "ayah": 2,
+            "reason": "non_increasing_timestamp",
+            "requested_ms": 0,
+            "corrected_ms": 1,
+        },
+        {
+            "ayah": 3,
+            "reason": "non_increasing_timestamp",
+            "requested_ms": 0,
+            "corrected_ms": 2,
+        },
+    ]
+
+
+def test_boundary_diagnostics_marks_rollback_merge_and_review_reason():
+    diagnostics = _fast_boundary_diagnostics(
+        [
+            {
+                "ayah": 11,
+                "action": "backtrack_before_future",
+                "heard_ayah": 13,
+            },
+            {"ayah": 11, "action": "future_gap", "reason": "future_match"},
+        ],
+        [
+            {"ayah": 12, "from_pause": False, "match_action": "wasl"},
+            {
+                "ayah": 13,
+                "from_pause": True,
+                "timing_adjusted": True,
+                "timing_strategy": "context_block_edge_recovery",
+            },
+        ],
+        [{"ayah": 14, "kind": "owner-anchor-conflict"}],
+        [
+            {
+                "ayah": 15,
+                "reason": "non_increasing_timestamp",
+                "requested_ms": 500,
+                "corrected_ms": 501,
+            }
+        ],
+    )
+
+    assert diagnostics["counts"] == {
+        "rollback": 1,
+        "merged": 1,
+        "suspicious": 3,
+        "corrections": 1,
+        "monotonic_repairs": 1,
+    }
+    assert diagnostics["rollbacks"] == [
+        {"ayah": 11, "reason": "future_gap_local_rollback", "heard_ayah": 13}
+    ]
+    assert diagnostics["merged_intervals"] == [
+        {"ayah": 12, "reason": "wasl_interval"}
+    ]
+
+
 def test_count_waqf_marks_from_mushaf_words():
     words = [
         SimpleNamespace(text="عَلَيۡهِۚ"),
@@ -2473,3 +4492,78 @@ def test_ayah_waqf_counts_from_mushaf_words():
     ]
 
     assert _ayah_waqf_counts(words) == {1: 1, 2: 1}
+
+
+def test_strong_unique_ctc_can_reject_weak_internal_micro_pause():
+    assert _pre_owner_ctc_overrides_weak_micro_pause(
+        pause_reason="micro-tempo",
+        pause_similarity=0.34,
+        pause_trust_similarity=0.45,
+        refined_onset_ms=313_432.0,
+        refined_confidence=0.74,
+        confidence_reliable=0.45,
+        pause_start_ms=313_980.0,
+        previous_start_ms=302_000.0,
+        next_start_ms=323_000.0,
+        opening_shared_prefix_chars=0,
+    )
+    assert not _pre_owner_ctc_overrides_weak_micro_pause(
+        pause_reason="micro-tempo",
+        pause_similarity=0.34,
+        pause_trust_similarity=0.45,
+        refined_onset_ms=313_432.0,
+        refined_confidence=0.74,
+        confidence_reliable=0.45,
+        pause_start_ms=313_980.0,
+        previous_start_ms=302_000.0,
+        next_start_ms=323_000.0,
+        opening_shared_prefix_chars=8,
+    )
+
+
+def test_only_explicit_insufficient_audio_is_selected_for_local_repair():
+    assert _insufficient_audio_ayahs([
+        {"ayah": 42, "match_action": "wasl"},
+        {"ayah": 45, "match_action": "insufficient_audio"},
+        {"ayah": 46, "match_action": "recovered", "pause_sim": 0.29},
+        {"ayah": 47, "match_action": "wasl", "pause_sim": 0.29},
+    ]) == [45]
+
+
+def test_bounded_local_repair_spans_include_shifted_run_and_tail():
+    ayahs = [67, 68, 69, 70, 71, 72, 73, 74, 75, 76]
+    starts = {
+        67: 1_270_000.0,
+        68: 1_306_233.0,
+        69: 1_350_905.0,
+        70: 1_350_906.0,
+        71: 1_373_010.0,
+        72: 1_416_330.0,
+        73: 1_393_650.0,
+        74: 1_422_266.0,
+        75: 1_447_815.0,
+        76: 1_470_000.0,
+    }
+
+    assert _bounded_local_repair_spans(
+        ayahs,
+        [70],
+        {67, 72, 76},
+        starts,
+    ) == [(0, 6), (6, 9)]
+
+
+def test_bounded_local_repair_spans_need_two_anchors():
+    ayahs = [67, 68, 69, 70]
+    starts = {67: 100.0, 68: 200.0, 69: 300.0, 70: 400.0}
+
+    assert _bounded_local_repair_spans(ayahs, [67], {69}, starts) == []
+    assert _bounded_local_repair_spans(ayahs, [70], {67}, starts) == []
+    assert _bounded_local_repair_spans(ayahs, [99], {67, 70}, starts) == []
+
+
+def test_low_verify_fallback_requires_both_independent_failure_signals():
+    assert _requires_low_verify_ctc_fallback(0.35, 0.65, False)
+    assert not _requires_low_verify_ctc_fallback(0.44, 0.65, False)
+    assert not _requires_low_verify_ctc_fallback(0.35, 0.92, False)
+    assert not _requires_low_verify_ctc_fallback(0.35, 0.65, True)

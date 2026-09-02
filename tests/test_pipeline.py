@@ -59,3 +59,25 @@ def test_fast_align_ignores_legacy_drift_fallback_env(monkeypatch):
 
     assert rows == [(11, 1, 111)]
     assert trace["drift_detected"] is True
+
+
+def test_fast_align_forwards_optional_fingerprint_clips(monkeypatch):
+    monkeypatch.setattr(decode, "DEFAULT_SR", 1000)
+    monkeypatch.setattr(decode, "decode", lambda _path: np.zeros(2000, dtype=np.float32))
+    received: dict[str, object] = {}
+
+    def fake_fast(_pcm, _sr, _words, *, surah, trace, log_event, ayah_audio_dir):
+        received.update(surah=surah, ayah_audio_dir=ayah_audio_dir)
+        return [(1, 111, 0.2)]
+
+    monkeypatch.setattr(align_fast, "align_surah_fast", fake_fast)
+
+    rows = pipeline._fast_align(
+        "dummy.mp3",
+        11,
+        [SimpleNamespace(ayah=1)],
+        ayah_audio_dir="/clips",
+    )
+
+    assert rows == [(11, 1, 111)]
+    assert received == {"surah": 11, "ayah_audio_dir": "/clips"}

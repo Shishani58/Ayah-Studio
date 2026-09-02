@@ -80,6 +80,10 @@ def process_surah(
             path to one) for resumption. Ayahs whose review status is
             ``edited``/``verified`` keep their stored start and are not
             recomputed.
+        ayah_audio_dir: Optional directory of per-ayah clips from the same
+            recording. In ``fast`` mode, available clips can locally verify
+            high-correlation starts; ``fingerprint`` mode still requires every
+            ayah clip.
         log_event: Optional realtime logger for human-readable per-sura
             diagnostics.
 
@@ -124,7 +128,14 @@ def process_surah(
     if mode == "full":
         rows = _full_align(audio_path, surah, words, log_event=log_event)
     elif mode == "fast":
-        rows = _fast_align(audio_path, surah, words, trace=trace, log_event=log_event)
+        rows = _fast_align(
+            audio_path,
+            surah,
+            words,
+            trace=trace,
+            log_event=log_event,
+            ayah_audio_dir=ayah_audio_dir,
+        )
     elif mode == "tiled":
         rows = _tiled_align(audio_path, surah, words, trace=trace, log_event=log_event)
     elif mode == "auto":
@@ -257,14 +268,18 @@ def _fast_align(
     *,
     trace: dict | None = None,
     log_event: LogEvent | None = None,
+    ayah_audio_dir: str | None = None,
 ) -> list[tuple[int, int, int]]:
     """Decode + two-phase fast alignment; one row per ayah."""
     from surah_cutter.core import align_fast, decode
 
     pcm = decode.decode(audio_path)
+    kwargs = {}
+    if ayah_audio_dir:
+        kwargs["ayah_audio_dir"] = ayah_audio_dir
     rows = align_fast.align_surah_fast(
         pcm, decode.DEFAULT_SR, words, surah=surah, trace=trace,
-        log_event=log_event,
+        log_event=log_event, **kwargs,
     )
     return [(surah, ayah, start_ms) for ayah, start_ms, _conf in rows]
 

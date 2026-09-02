@@ -36,6 +36,7 @@ import difflib
 import math
 import os
 from collections import OrderedDict
+from dataclasses import dataclass
 from typing import Any, Callable
 
 #: Lookahead "don't steal the next ayah's pause" gate (Phase 1c). If a near-next
@@ -103,10 +104,9 @@ _FUTURE_MATCH_MARGIN = float(os.environ.get("SC_FAST_FUTURE_MATCH_MARGIN", "0.12
 #: characters with a nearby ayah get a longer greedy decode; unique ayahs stay on
 #: the short default read.
 _AMBIG_PREFIX_CHARS = int(os.environ.get("SC_FAST_AMBIG_PREFIX_CHARS", "6"))
-#: Greedy pause verification should start near speech resumption, not at the
-#: centre of a long silence segment. This is only for reading; the emitted
-#: pause-backed ayah start remains the pause centre.
-_PAUSE_DECODE_PRE_ROLL_MS = float(os.environ.get("SC_FAST_PAUSE_DECODE_PRE_ROLL_MS", "50"))
+#: Pause verification begins at the beginning of the quiet interval.  The
+#: boundary marker itself stays at its centre; expanding an uncertain read adds
+#: context around this start instead of moving the marker toward speech.
 _PAUSE_DECODE_WIN_MS = float(os.environ.get("SC_FAST_PAUSE_DECODE_WIN_MS", "2500"))
 _PAUSE_DECODE_AMBIG_WIN_MS = float(os.environ.get("SC_FAST_PAUSE_DECODE_AMBIG_WIN_MS", "4500"))
 _PAUSE_DECODE_TEXT_MAX_WIN_MS = float(os.environ.get("SC_FAST_PAUSE_DECODE_TEXT_MAX_WIN_MS", "8500"))
@@ -122,12 +122,11 @@ _PREFIX_BYPASS_SIM = float(os.environ.get("SC_FAST_PREFIX_BYPASS_SIM", "0.62"))
 #: Small left context around speech resumption, cached with the pause decode so a
 #: later 1s refine window can reuse the same emissions instead of rereading.
 _PAUSE_CACHE_PRE_ROLL_MS = float(os.environ.get("SC_FAST_PAUSE_CACHE_PRE_ROLL_MS", "650"))
-#: A wasl run longer than this is no longer a "short local fill"; aligning it
-#: whole turns fast into full-ish ONNX inference. Keep rough points and let
-#: review/repair flag them instead.
-_MAX_WASL_RUN_ALIGN_MS = float(os.environ.get("SC_FAST_MAX_WASL_RUN_ALIGN_MS", "20000"))
 _MAX_SECTION_REPAIR_ALIGN_MS = float(
     os.environ.get("SC_FAST_MAX_SECTION_REPAIR_ALIGN_MS", "120000")
+)
+_MAX_FINAL_LOCAL_REPAIR_ALIGN_MS = float(
+    os.environ.get("SC_FAST_MAX_FINAL_LOCAL_REPAIR_ALIGN_MS", "180000")
 )
 # If local wasl alignment lands next to a strong detected pause, later repair may
 # improve confidence but must not pull that boundary away from the visible pause.
@@ -165,8 +164,306 @@ _MICRO_PAUSE_MAX_MS = float(os.environ.get("SC_FAST_MICRO_PAUSE_MAX_MS", "180"))
 _MICRO_PAUSE_SHELF_MAX_MS = float(os.environ.get("SC_FAST_MICRO_PAUSE_SHELF_MAX_MS", "900"))
 _MICRO_PAUSE_SHELF_RATIO = float(os.environ.get("SC_FAST_MICRO_PAUSE_SHELF_RATIO", "1.65"))
 _MICRO_PAUSE_RMS_RATIO = float(os.environ.get("SC_FAST_MICRO_PAUSE_RMS_RATIO", "0.72"))
+# The output contract is stricter than the old final monotonic clamp: two ayahs
+# must never share a start, even when a failed local read leaves both on the
+# same rough point.  This is an emergency ordering guard, not an acoustic
+# correction; every use is exposed in the trace for review.
+_MIN_BOUNDARY_GAP_MS = int(os.environ.get("SC_FAST_MIN_BOUNDARY_GAP_MS", "1"))
 
 _WAQF_STOP_SIGNS = frozenset("ۖۗۘۙۚۛۜ")
+
+
+@dataclass(frozen=True, slots=True)
+class TempoObservation:
+    """One reliable, pause-free speech interval used for local tempo."""
+
+    text_units: float
+    speech_ms: float
+    pause_ms: float = 0.0
+    confidence: float = 1.0
+
+    @property
+    def rate_units_per_ms(self) -> float:
+        if self.text_units <= 0.0 or self.speech_ms <= 0.0:
+            return 0.0
+        return self.text_units / self.speech_ms
+
+
+@dataclass(frozen=True, slots=True)
+class TempoEstimate:
+    """Robust local recitation rate; all values are soft priors."""
+
+    rate_units_per_ms: float
+    conservative_rate: float
+    spread_units_per_ms: float
+    pause_median_ms: float
+    pause_iqr_ms: float
+    confidence: float
+    observation_count: int
+    fallback_used: bool
+
+
+@dataclass(frozen=True, slots=True)
+class TextDisambiguation:
+    """Minimum target prefix that separates an ayah from real competitors."""
+
+    required_text_units: float
+    required_words: int
+    competitors: tuple[int, ...]
+    reason: str
+    target_text: str
+    distinguishing_word: str | None
+
+
+@dataclass(frozen=True, slots=True)
+class PauseReadPlan:
+    """Coordinates and evidence behind one pause-verification read."""
+
+    owner_pause_start_ms: float
+    owner_pause_end_ms: float
+    marker_ms: float
+    decode_start_ms: float
+    decode_end_ms: float
+    speech_read_ms: float
+    required_text_units: float
+    conservative_rate: float
+    minimum_window_ms: float
+    maximum_window_ms: float
+    reason: str
+    expansion_count: int = 0
+
+
+def _weighted_median(values: list[tuple[float, float]]) -> float:
+    """Return the deterministic weighted median of positive finite pairs."""
+    clean = sorted(
+        (float(value), float(weight))
+        for value, weight in values
+        if math.isfinite(value) and math.isfinite(weight) and weight > 0.0
+    )
+    if not clean:
+        return 0.0
+    threshold = sum(weight for _value, weight in clean) / 2.0
+    cumulative = 0.0
+    for value, weight in clean:
+        cumulative += weight
+        if cumulative >= threshold:
+            return value
+    return clean[-1][0]
+
+
+def _quantile(values: list[float], q: float) -> float:
+    clean = sorted(float(value) for value in values if math.isfinite(value))
+    if not clean:
+        return 0.0
+    if len(clean) == 1:
+        return clean[0]
+    pos = min(1.0, max(0.0, q)) * (len(clean) - 1)
+    lo = int(math.floor(pos))
+    hi = int(math.ceil(pos))
+    if lo == hi:
+        return clean[lo]
+    fraction = pos - lo
+    return clean[lo] * (1.0 - fraction) + clean[hi] * fraction
+
+
+def _estimate_tempo(
+    observations: list[TempoObservation],
+    *,
+    fallback_rate_units_per_ms: float,
+    minimum_observations: int = 3,
+    local_window: int = 8,
+    minimum_confidence: float = 0.50,
+) -> TempoEstimate:
+    """Estimate local rate without allowing weak or extreme spans to steer it."""
+    fallback = max(1e-9, float(fallback_rate_units_per_ms))
+    eligible = [
+        observation
+        for observation in observations[-max(1, int(local_window)):]
+        if observation.rate_units_per_ms > 0.0
+        and math.isfinite(observation.rate_units_per_ms)
+        and observation.confidence >= minimum_confidence
+    ]
+    raw_rates = [observation.rate_units_per_ms for observation in eligible]
+    median = _quantile(raw_rates, 0.5)
+    if median > 0.0:
+        eligible = [
+            observation
+            for observation in eligible
+            if median / 2.5
+            <= observation.rate_units_per_ms
+            <= median * 2.5
+        ]
+    rates = [observation.rate_units_per_ms for observation in eligible]
+    weights = [max(0.0, min(1.0, observation.confidence)) for observation in eligible]
+    local_rate = _weighted_median(list(zip(rates, weights)))
+    q1 = _quantile(rates, 0.25)
+    q3 = _quantile(rates, 0.75)
+    spread = max(0.0, q3 - q1)
+    count = len(eligible)
+    blend = min(1.0, count / max(1, int(minimum_observations)))
+    rate = fallback * (1.0 - blend) + (local_rate or fallback) * blend
+    # A lower rate means slower recitation and therefore a longer safe read.
+    conservative = max(rate * 0.55, rate - max(spread, rate * 0.18))
+    pauses = [
+        observation.pause_ms
+        for observation in eligible
+        if observation.pause_ms > 0.0 and math.isfinite(observation.pause_ms)
+    ]
+    pause_q1 = _quantile(pauses, 0.25)
+    pause_q3 = _quantile(pauses, 0.75)
+    return TempoEstimate(
+        rate_units_per_ms=rate,
+        conservative_rate=conservative,
+        spread_units_per_ms=spread,
+        pause_median_ms=_quantile(pauses, 0.5),
+        pause_iqr_ms=max(0.0, pause_q3 - pause_q1),
+        confidence=blend,
+        observation_count=count,
+        fallback_used=count < minimum_observations,
+    )
+
+
+def _normalised_word(token: str) -> str:
+    return _prefix_key(token)
+
+
+def _shared_word_prefix(a: list[str], b: list[str]) -> int:
+    shared = 0
+    for left, right in zip(a, b):
+        if _normalised_word(left) != _normalised_word(right):
+            break
+        shared += 1
+    return shared
+
+
+def _build_text_disambiguation(
+    current_ayah: int,
+    ayah_word_trs: dict[int, list[str]],
+    *,
+    competitor_ayahs: list[int] | tuple[int, ...] | None = None,
+    internal_sequences: list[list[str]] | None = None,
+) -> TextDisambiguation:
+    """Build the shortest whole-word prefix that proves ``current_ayah``."""
+    target = list(ayah_word_trs.get(current_ayah, ()))
+    if not target:
+        return TextDisambiguation(0.0, 0, (), "unresolved", "", None)
+    if competitor_ayahs is None:
+        competitor_ayahs = [ayah for ayah in ayah_word_trs if ayah > current_ayah]
+    competitors = tuple(
+        ayah for ayah in competitor_ayahs
+        if ayah in ayah_word_trs and ayah_word_trs[ayah]
+    )
+    comparisons = [list(ayah_word_trs[ayah]) for ayah in competitors]
+    internal = [list(sequence) for sequence in (internal_sequences or ()) if sequence]
+    all_comparisons = comparisons + internal
+    max_shared = max((_shared_word_prefix(target, other) for other in all_comparisons), default=0)
+    unresolved = any(
+        _shared_word_prefix(target, other) >= len(target)
+        for other in all_comparisons
+    )
+    required_words = len(target) if unresolved else min(len(target), max_shared + 1)
+    required = target[:required_words]
+    if unresolved:
+        reason = "unresolved"
+    elif any(_shared_word_prefix(target, other) > 0 for other in internal):
+        reason = "internal_repeat"
+    elif max_shared > 0:
+        reason = "shared_opening"
+    else:
+        reason = "unique"
+    return TextDisambiguation(
+        required_text_units=sum(_unit_len(token) for token in required),
+        required_words=required_words,
+        competitors=competitors,
+        reason=reason,
+        target_text="".join(required),
+        distinguishing_word=None if unresolved else required[-1],
+    )
+
+
+def _text_disambiguation_requires_atomic(plan: TextDisambiguation) -> bool:
+    """Whether no local opening read can uniquely prove this ayah."""
+    return plan.reason == "unresolved" or plan.distinguishing_word is None
+
+
+def _speech_ms_excluding_pauses(
+    start_ms: float,
+    end_ms: float,
+    pause_intervals: list[tuple[float, float]],
+) -> float:
+    """Measure speech duration while subtracting overlapping quiet intervals."""
+    start = float(start_ms)
+    end = float(end_ms)
+    if end <= start:
+        return 0.0
+    clipped = sorted(
+        (max(start, float(lo)), min(end, float(hi)))
+        for lo, hi in pause_intervals
+        if math.isfinite(lo) and math.isfinite(hi) and hi > start and lo < end
+    )
+    quiet_ms = 0.0
+    merged_start: float | None = None
+    merged_end: float | None = None
+    for lo, hi in clipped:
+        if hi <= lo:
+            continue
+        if merged_start is None:
+            merged_start, merged_end = lo, hi
+        elif lo <= merged_end:
+            merged_end = max(merged_end, hi)
+        else:
+            quiet_ms += merged_end - merged_start
+            merged_start, merged_end = lo, hi
+    if merged_start is not None and merged_end is not None:
+        quiet_ms += merged_end - merged_start
+    return max(0.0, end - start - quiet_ms)
+
+
+def _build_pause_read_plan(
+    *,
+    pause_start_ms: float,
+    pause_end_ms: float,
+    total_ms: float,
+    disambiguation: TextDisambiguation,
+    tempo: TempoEstimate,
+    minimum_window_ms: float = _PAUSE_DECODE_WIN_MS,
+    maximum_window_ms: float = _PAUSE_DECODE_TEXT_MAX_WIN_MS,
+    safety_margin_ms: float = 450.0,
+    fallback_speech_ms: float = _PAUSE_DECODE_WIN_MS,
+    expansion_count: int = 0,
+) -> PauseReadPlan:
+    """Plan a read from pause start with enough speech after its end."""
+    start = max(0.0, float(pause_start_ms))
+    end = max(start, float(pause_end_ms))
+    min_window = max(0.0, float(minimum_window_ms))
+    max_window = max(min_window, float(maximum_window_ms))
+    if tempo.fallback_used or tempo.conservative_rate <= 0.0:
+        speech_read = max(0.0, float(fallback_speech_ms))
+        reason = f"{disambiguation.reason}:fallback-tempo"
+    else:
+        speech_read = (
+            disambiguation.required_text_units / tempo.conservative_rate
+            + max(0.0, float(safety_margin_ms))
+        )
+        reason = f"{disambiguation.reason}:local-tempo"
+    speech_read *= 1.5 ** max(0, int(expansion_count))
+    capped_speech_read = min(max_window, speech_read)
+    desired_end = max(start + min_window, end + capped_speech_read)
+    decode_end = min(max(0.0, float(total_ms)), desired_end)
+    return PauseReadPlan(
+        owner_pause_start_ms=start,
+        owner_pause_end_ms=end,
+        marker_ms=(start + end) / 2.0,
+        decode_start_ms=start,
+        decode_end_ms=decode_end,
+        speech_read_ms=max(0.0, decode_end - end),
+        required_text_units=disambiguation.required_text_units,
+        conservative_rate=tempo.conservative_rate,
+        minimum_window_ms=min_window,
+        maximum_window_ms=max_window,
+        reason=reason,
+        expansion_count=max(0, int(expansion_count)),
+    )
 
 
 def _collapse(s: str) -> str:
@@ -232,6 +529,102 @@ def _span_ratio_quality(actual_ms: float, expected_ms: float) -> float:
     # melodic recitation; clamp softly so this remains a prior, not a hard rule.
     quality = max(0.0, 1.0 - abs(math.log(ratio)) / math.log(2.5))
     return 0.0 if quality < 1e-9 else quality
+
+
+def _enforce_strictly_increasing_starts(
+    rows: list[tuple[int, int, float]],
+    *,
+    min_gap_ms: int = _MIN_BOUNDARY_GAP_MS,
+) -> tuple[list[tuple[int, int, float]], list[dict[str, int | str]]]:
+    """Keep output starts ordered without inventing an acoustic boundary.
+
+    Alignment and local repair must establish the real timestamp.  This final
+    guard only makes an otherwise invalid auto result representable for review:
+    a duplicate/regression is advanced by the configured minimum tick, its
+    confidence becomes zero, and the exact reason is retained in the trace.
+    """
+    gap = max(1, int(min_gap_ms))
+    fixed: list[tuple[int, int, float]] = []
+    repairs: list[dict[str, int | str]] = []
+    previous: int | None = None
+    for ayah, raw_ms, confidence in rows:
+        requested = max(0, int(raw_ms))
+        accepted = requested if previous is None else max(requested, previous + gap)
+        if accepted != requested:
+            repairs.append({
+                "ayah": int(ayah),
+                "reason": "non_increasing_timestamp",
+                "requested_ms": requested,
+                "corrected_ms": accepted,
+            })
+            confidence = 0.0
+        fixed.append((ayah, accepted, confidence))
+        previous = accepted
+    return fixed, repairs
+
+
+def _fast_boundary_diagnostics(
+    sequence_events: list[dict],
+    pause_matches: list[dict],
+    geometry_unreliable: list[dict],
+    monotonic_repairs: list[dict[str, int | str]],
+) -> dict[str, object]:
+    """Summarise review-worthy FAST decisions without altering their evidence."""
+    rollbacks = [
+        {
+            "ayah": event.get("ayah"),
+            "reason": "future_gap_local_rollback",
+            "heard_ayah": event.get("heard_ayah"),
+        }
+        for event in sequence_events
+        if event.get("action") == "backtrack_before_future"
+    ]
+    merged = [
+        {
+            "ayah": match.get("ayah"),
+            "reason": match.get("wasl_reason") or "wasl_interval",
+        }
+        for match in pause_matches
+        if not match.get("from_pause") and match.get("match_action") == "wasl"
+    ]
+    suspicious = [
+        {
+            "ayah": event.get("ayah"),
+            "reason": event.get("reason") or event.get("action"),
+        }
+        for event in sequence_events
+        if event.get("action") in {"unresolved_current", "future_gap", "weak_future_gap"}
+    ] + [
+        {
+            "ayah": event.get("ayah"),
+            "reason": event.get("kind", "unreliable_owner_geometry"),
+        }
+        for event in geometry_unreliable
+    ] + [
+        {"ayah": repair["ayah"], "reason": repair["reason"]}
+        for repair in monotonic_repairs
+    ]
+    corrections = [
+        {
+            "ayah": match.get("ayah"),
+            "reason": match.get("timing_strategy") or "owner_repair",
+        }
+        for match in pause_matches
+        if match.get("timing_adjusted")
+    ]
+    return {
+        "rollbacks": rollbacks,
+        "merged_intervals": merged,
+        "suspicious_boundaries": suspicious,
+        "corrections": corrections,
+        "counts": {
+            "rollback": len(rollbacks),
+            "merged": len(merged),
+            "suspicious": len(suspicious),
+            "corrections": len(corrections),
+            "monotonic_repairs": len(monotonic_repairs),
+        },
+    }
 
 
 def _find_micro_pause_valley(
@@ -477,6 +870,43 @@ def _weak_dsp_post_selected_micro_valley_candidate(
     return min(candidate_prev_quality, candidate_next_quality) >= min_candidate_quality
 
 
+def _post_selected_micro_context_read_candidate(
+    *,
+    pause_reason: str | None,
+    action: str | None,
+    pause_duration_ms: float,
+    pause_sim: float,
+    prev_quality: float,
+    next_quality: float,
+    candidate_ms: float,
+    candidate_conf: float,
+    pause_start_ms: float,
+    pause_end_ms: float,
+    conf_reliable: float,
+    min_pause_ms: float = 1800.0,
+    min_sim: float = 0.40,
+    max_prev_quality: float = 0.10,
+    min_next_quality: float = 0.50,
+    edge_margin_ms: float = 80.0,
+) -> bool:
+    """Accept a strong local CTC read for a post-micro DSP owner only.
+
+    The micro recovery has already proved the pause owner. A content read may
+    refine its position but must not select a different pause or replace a
+    weakly supported edge by a duration-prior guess.
+    """
+    return (
+        pause_reason == "dsp"
+        and action == "post_selected_micro_recovery"
+        and pause_duration_ms >= min_pause_ms
+        and pause_sim >= min_sim
+        and prev_quality <= max_prev_quality
+        and next_quality >= min_next_quality
+        and candidate_conf >= conf_reliable
+        and pause_start_ms + edge_margin_ms <= candidate_ms <= pause_end_ms - edge_margin_ms
+    )
+
+
 #: Chars of the (collapsed) decode/opening compared. Must span ~4 words so that
 #: ayahs sharing an opening phrase (e.g. al-Bayyinah 6/7 "inna lladhīna kafarū"
 #: vs "…āmanū", al-Falaq's repeated "wa-min sharri…") are told apart by a later,
@@ -504,6 +934,16 @@ def _sim(dec: str, opening: str, *, chars: int = _SIM_CHARS) -> float:
     prefix = common / max(1, min(chars, len(opening_c)))
     weight = min(1.0, max(0.0, _SIM_PREFIX_WEIGHT))
     return fuzzy * (1.0 - weight) + prefix * weight
+
+
+def _tail_sim(dec: str, body: str, *, chars: int = _SIM_CHARS) -> float:
+    """Fuzzy similarity between a pre-pause decode and the previous text tail."""
+    chars = max(1, int(chars))
+    return difflib.SequenceMatcher(
+        None,
+        _collapse(dec)[-chars:],
+        _collapse(body)[-chars:],
+    ).ratio()
 
 
 def _pause_refine_confirms_pause(
@@ -537,6 +977,11 @@ def _pause_backed_refine_start(
     pause_center_ms: float,
 ) -> float:
     return pause_center_ms
+
+
+def _pause_center_start(pause_start_ms: float, pause_end_ms: float) -> float:
+    """Canonical timestamp for a boundary owned by a real pause."""
+    return (pause_start_ms + pause_end_ms) / 2.0
 
 
 def _default_bundle() -> Any:
@@ -813,7 +1258,26 @@ def _section_repair_member(
 ) -> bool:
     if not from_pause:
         return True
-    return action in {"pause_fallback", "weak_pause_recovery"} and (sim or 0.0) < min_sim
+    return action in {
+        "pause_fallback",
+        "weak_pause_recovery",
+        "missing_wasl_pause_recovery",
+    } and (sim or 0.0) < min_sim
+
+
+def _follows_unresolved_cascade(
+    boundary: int,
+    unresolved_boundaries: set[int],
+    *,
+    min_length: int = 4,
+) -> bool:
+    """Whether ``boundary`` is the first pause-backed exit from a failed run."""
+    if boundary < min_length:
+        return False
+    return all(
+        previous in unresolved_boundaries
+        for previous in range(boundary - min_length, boundary)
+    )
 
 
 def _prior_pause_before_internal_stop(
@@ -843,6 +1307,20 @@ def _prior_pause_before_internal_stop(
         ):
             best = (quality, candidate_time)
     return best[1] if best is not None else None
+
+
+def _allow_prior_internal_stop_replacement(
+    candidate_sim: float,
+    *,
+    selected_pause_duration_ms: float,
+    min_candidate_sim: float = _FINAL_WEAK_MATCH_SIM,
+    max_compact_pause_ms: float = 2500.0,
+) -> bool:
+    """Let a compact owner resist geometry; very long stops stay ambiguous."""
+    return (
+        selected_pause_duration_ms > max_compact_pause_ms
+        or candidate_sim >= min_candidate_sim
+    )
 
 
 def _accept_later_pause_grid_repair(
@@ -993,6 +1471,124 @@ def _accept_pause_backed_repair(
     )
 
 
+def _confirmed_weak_pause_repair_candidate(
+    *,
+    from_pause: bool,
+    original_pause_sim: float,
+    repair_conf: float,
+    conf_reliable: float,
+    repaired_inside_weak_pause: bool,
+    pause_trust_sim: float,
+) -> bool:
+    """Allow a confident repair to promote the exact weak pause it found.
+
+    A weak DSP candidate is deliberately left out of the first DP pass.  If a
+    later local forced read lands *inside* that candidate with high confidence,
+    it is enough to promote the candidate to the ayah's actual pause.  This can
+    replace a weak distant pause or prove that a provisional wasl was in fact a
+    missed pause; a complete wasl-span repair is handled separately.
+    """
+    return (
+        (not from_pause or original_pause_sim < pause_trust_sim)
+        and repair_conf >= conf_reliable
+        and repaired_inside_weak_pause
+    )
+
+
+def _confirmed_trusted_pause_refine_candidate(
+    *,
+    from_pause: bool,
+    original_pause_sim: float,
+    refined_conf: float,
+    refined_inside_different_trusted_pause: bool,
+    conf_reliable: float,
+    pause_trust_sim: float,
+) -> bool:
+    """Replace a weak owner when refine lands inside a different trusted pause."""
+    return (
+        from_pause
+        and original_pause_sim < pause_trust_sim
+        and refined_conf >= conf_reliable
+        and refined_inside_different_trusted_pause
+    )
+
+
+def _confirmed_trusted_pause_repair_candidate(
+    *,
+    from_pause: bool,
+    original_pause_sim: float,
+    geometry_invalidated_owner: bool,
+    repair_conf: float,
+    repaired_inside_different_trusted_pause: bool,
+    conf_reliable: float,
+    pause_trust_sim: float,
+) -> bool:
+    """Replace a disproved owner when anchored repair finds another real pause."""
+    return (
+        from_pause
+        and original_pause_sim < pause_trust_sim
+        and geometry_invalidated_owner
+        and repair_conf >= conf_reliable
+        and repaired_inside_different_trusted_pause
+    )
+
+
+def _post_pause_repair_confirms_prior_dsp(
+    *,
+    original_pause_reason: str,
+    original_pause_sim: float,
+    repair_onset_ms: float,
+    repair_conf: float,
+    candidate_pause_end_ms: float,
+    candidate_pause_reason: str,
+    candidate_prefix: int,
+    selected_prefix: int,
+    conf_reliable: float,
+    pause_trust_sim: float,
+    max_after_pause_ms: float = 350.0,
+    min_candidate_prefix: int = 3,
+) -> bool:
+    """Promote a DSP stop proved by a confident onset immediately after it."""
+    return (
+        original_pause_reason == "micro-tempo"
+        and original_pause_sim < pause_trust_sim
+        and repair_conf >= conf_reliable
+        and candidate_pause_reason == "dsp"
+        and 0.0 <= repair_onset_ms - candidate_pause_end_ms <= max_after_pause_ms
+        and candidate_prefix >= min_candidate_prefix
+        and selected_prefix == 0
+    )
+
+
+def _ctc_prior_pause_replaces_weak_future_owner(
+    *,
+    original_pause_reason: str,
+    original_pause_sim: float,
+    repair_onset_ms: float,
+    repair_conf: float,
+    candidate_pause_end_ms: float,
+    candidate_pause_reason: str,
+    opening_shared_prefix_chars: int,
+    conf_reliable: float,
+    pause_trust_sim: float,
+    max_after_pause_ms: float = 350.0,
+) -> bool:
+    """Rollback a weak future pause when CTC proves the preceding DSP stop.
+
+    This is intentionally one-way: CTC may only move the owner backwards to a
+    pause ending immediately before the recognised first word. It cannot use a
+    later pause and therefore cannot introduce a future-skip cascade.
+    """
+    return (
+        original_pause_reason == "weak-dsp"
+        and original_pause_sim < pause_trust_sim
+        and repair_conf >= conf_reliable
+        and candidate_pause_reason == "dsp"
+        and opening_shared_prefix_chars == 0
+        and 0.0 <= repair_onset_ms - candidate_pause_end_ms <= max_after_pause_ms
+    )
+
+
 def _final_weak_current_activation_window(
     *,
     expected_ms: float,
@@ -1024,12 +1620,13 @@ def _first_ayah_content_start(
     basmala: bool,
     intro_pause_start_ms: float | None,
     intro_pause_end_ms: float | None,
+    raw_confidence: float | None = None,
+    reliable_confidence: float | None = None,
     min_content_start_ms: float = _BASMALA_MIN_CONTENT_START_MS,
     long_intro_pause_ms: float = 1000.0,
 ) -> float:
+    """Return the first ayah marker, preserving the pause-centre contract."""
     if intro_pause_start_ms is not None and intro_pause_end_ms is not None:
-        if intro_pause_end_ms - intro_pause_start_ms >= long_intro_pause_ms:
-            return intro_pause_end_ms
         return 0.5 * (intro_pause_start_ms + intro_pause_end_ms)
     if basmala and raw_content_start_ms < min_content_start_ms:
         return min_content_start_ms
@@ -1073,20 +1670,13 @@ def _accept_fallback_pause_candidate(
     short_next_speech_ms: float = 1500.0,
     next_speech_ms: float | None = None,
 ) -> bool:
-    if pause_reason == "micro-tempo" and sim < min_match_sim:
-        internal_before_current = (
-            abs(expected_delta_ms) <= local_delta_ms
-            and prev_quality < weak_prev_quality
-            and next_quality >= strong_next_quality
-        )
-        internal_after_current = (
-            abs(expected_delta_ms) <= local_delta_ms
-            and prev_quality >= strong_prev_quality
-            and next_quality < weak_next_quality
-            and next_speech_ms is not None
-            and next_speech_ms <= short_next_speech_ms
-        )
-        return not (internal_before_current or internal_after_current)
+    # A fallback pause is still a claimed ayah boundary.  It must therefore
+    # hear the current ayah at least as well as every ordinary pause match.
+    # Tempo and DSP can rank *recognized* pauses, but cannot turn a breath,
+    # intro, or internal valley into a boundary.  Leaving it unmatched sends
+    # the complete interval through wasl alignment instead.
+    if sim < min_match_sim:
+        return False
     return True
 
 
@@ -1111,6 +1701,1255 @@ def _section_long_pause_start_candidate(
     return None
 
 
+def _long_pause_context_read_candidate(
+    candidates: list[tuple[float, float, bool]],
+    *,
+    pause_reason: str | None,
+    pause_start_ms: float,
+    pause_end_ms: float,
+    refined_onset_ms: float | None,
+    refined_conf: float,
+    conf_thresh: float,
+    min_pause_ms: float = _LONG_PAUSE_CENTER_MS,
+    max_pause_ms: float = 1800.0,
+    min_outside_ms: float = 120.0,
+    min_spread_ratio: float = 0.50,
+) -> bool:
+    """Require a full-text context read only for contradictory long-pause probes."""
+    pause_duration_ms = pause_end_ms - pause_start_ms
+    if (
+        pause_reason != "dsp"
+        or pause_duration_ms < min_pause_ms
+        or pause_duration_ms > max_pause_ms
+        or refined_onset_ms is None
+        or refined_conf < conf_thresh
+    ):
+        return False
+    outside_ms = max(
+        pause_start_ms - refined_onset_ms,
+        refined_onset_ms - pause_end_ms,
+        0.0,
+    )
+    onsets = [onset_ms for onset_ms, _conf, _left_edge in candidates]
+    return (
+        outside_ms >= min_outside_ms
+        and any(pause_start_ms <= onset_ms <= pause_end_ms for onset_ms in onsets)
+        and bool(onsets)
+        and max(onsets) - min(onsets) >= min_spread_ratio * pause_duration_ms
+    )
+
+
+def _very_long_pause_repair_context_candidate(
+    *,
+    pause_reason: str | None,
+    pause_start_ms: float,
+    pause_end_ms: float,
+    selected_onset_ms: float,
+    repaired_onset_ms: float | None,
+    repaired_confidence: float,
+    acceptance_confidence: float,
+    min_pause_ms: float = 1800.0,
+    min_outside_ms: float = 120.0,
+    min_shift_ratio: float = 0.50,
+) -> bool:
+    """Escalate an opposite-edge retry on a very long pause to full context."""
+    duration_ms = pause_end_ms - pause_start_ms
+    if (
+        pause_reason != "dsp"
+        or duration_ms < min_pause_ms
+        or repaired_onset_ms is None
+        or repaired_confidence < acceptance_confidence
+    ):
+        return False
+    outside_ms = max(
+        pause_start_ms - repaired_onset_ms,
+        repaired_onset_ms - pause_end_ms,
+        0.0,
+    )
+    return (
+        outside_ms >= min_outside_ms
+        and abs(repaired_onset_ms - selected_onset_ms)
+        >= min_shift_ratio * duration_ms
+    )
+
+
+def _very_long_context_owner_still_valid(
+    *,
+    pause_start_ms: float | None,
+    pause_end_ms: float | None,
+    min_pause_ms: float = 1800.0,
+) -> bool:
+    """Cancel a very-long timing request after ownership changed to a short pause."""
+    return (
+        pause_start_ms is not None
+        and pause_end_ms is not None
+        and pause_end_ms - pause_start_ms >= min_pause_ms
+    )
+
+
+def _snap_pause_backed_start_to_owner(
+    onset_ms: float,
+    *,
+    pause_start_ms: float,
+    pause_end_ms: float,
+    max_outside_ms: float = 700.0,
+) -> float | None:
+    """Keep a pause-backed start inside its owner or reject a distant move."""
+    if pause_start_ms <= onset_ms <= pause_end_ms:
+        return onset_ms
+    if onset_ms < pause_start_ms and pause_start_ms - onset_ms <= max_outside_ms:
+        return pause_start_ms
+    if onset_ms > pause_end_ms and onset_ms - pause_end_ms <= max_outside_ms:
+        return pause_end_ms
+    return None
+
+
+def _pre_owner_ctc_overrides_weak_micro_pause(
+    *,
+    pause_reason: str,
+    pause_similarity: float,
+    pause_trust_similarity: float,
+    refined_onset_ms: float | None,
+    refined_confidence: float,
+    confidence_reliable: float,
+    pause_start_ms: float,
+    previous_start_ms: float,
+    next_start_ms: float,
+    opening_shared_prefix_chars: int,
+    max_pre_owner_ms: float = 700.0,
+) -> bool:
+    """Accept a strong text onset before a weak internal micro-pause only."""
+    return (
+        pause_reason == "micro-tempo"
+        and pause_similarity < pause_trust_similarity
+        and refined_onset_ms is not None
+        and refined_confidence >= confidence_reliable
+        and opening_shared_prefix_chars == 0
+        and previous_start_ms + 2500.0 <= refined_onset_ms < pause_start_ms
+        and pause_start_ms - refined_onset_ms <= max_pre_owner_ms
+        and refined_onset_ms < next_start_ms - 30.0
+    )
+
+
+def _owner_interval_snap_is_allowed(timing_strategy: str | None) -> bool:
+    """Do not replace a validated in-owner CTC consensus with a DSP edge."""
+    return timing_strategy != "multiscale_ctc_in_owner"
+
+
+def _preserve_multiscale_ctc_owner_timing(
+    *,
+    timing_strategy: str | None,
+    current_owner_center_ms: float | None,
+    proposed_owner_center_ms: float | None,
+    current_start_ms: float,
+    pause_start_ms: float,
+    pause_end_ms: float,
+) -> bool:
+    """Keep a stable in-owner CTC onset when a late read finds the same pause."""
+    return (
+        timing_strategy == "multiscale_ctc_in_owner"
+        and current_owner_center_ms is not None
+        and proposed_owner_center_ms is not None
+        and math.isclose(current_owner_center_ms, proposed_owner_center_ms, abs_tol=1.0)
+        and pause_start_ms <= current_start_ms <= pause_end_ms
+    )
+
+
+def _restore_trusted_owner_after_predecessor_repair(
+    *,
+    current_start_ms: float,
+    owner_timing_ms: float,
+    pause_start_ms: float,
+    pause_end_ms: float,
+    repaired_predecessor_ms: float,
+    from_pause: bool,
+    pause_similarity: float,
+    pause_trust_similarity: float,
+    min_gap_ms: float = 30.0,
+) -> float | None:
+    """Undo a provisional monotonic push once the predecessor moves earlier."""
+    if not from_pause or pause_similarity < pause_trust_similarity:
+        return None
+    if pause_start_ms <= current_start_ms <= pause_end_ms:
+        return None
+    if not pause_start_ms <= owner_timing_ms <= pause_end_ms:
+        return None
+    if owner_timing_ms <= repaired_predecessor_ms + min_gap_ms:
+        return None
+    return owner_timing_ms
+
+
+def _restore_owner_timing_from_internal_repair(
+    *,
+    current_start_ms: float,
+    owner_timing_ms: float,
+    pause_start_ms: float,
+    pause_end_ms: float,
+    repaired_onset_ms: float | None,
+    repaired_confidence: float,
+    repaired_predecessor_ms: float,
+    from_pause: bool,
+    acceptance_confidence: float,
+    min_gap_ms: float = 30.0,
+) -> float | None:
+    """Undo a stale monotonic push once a repair confirms the old owner."""
+    if (
+        not from_pause
+        or repaired_onset_ms is None
+        or repaired_confidence < acceptance_confidence
+    ):
+        return None
+    if pause_start_ms <= current_start_ms <= pause_end_ms:
+        return None
+    if not pause_start_ms <= repaired_onset_ms <= pause_end_ms:
+        return None
+    if not pause_start_ms <= owner_timing_ms <= pause_end_ms:
+        return None
+    if owner_timing_ms <= repaired_predecessor_ms + min_gap_ms:
+        return None
+    return owner_timing_ms
+
+
+def _context_block_pause_onset_candidate(
+    onset_ms: float,
+    confidence: float,
+    *,
+    pause_start_ms: float,
+    pause_end_ms: float,
+    left_anchor_ms: float,
+    right_anchor_ms: float,
+    min_confidence: float,
+) -> float | None:
+    """Accept a block onset only while its existing pause remains the owner."""
+    if confidence < min_confidence:
+        return None
+    if not pause_start_ms <= onset_ms <= pause_end_ms:
+        return None
+    if not left_anchor_ms + 30.0 <= onset_ms <= right_anchor_ms - 30.0:
+        return None
+    return onset_ms
+
+
+def _accept_anchored_full_span_onset(
+    onset_ms: float,
+    confidence: float,
+    *,
+    left_anchor_ms: float,
+    right_anchor_ms: float,
+    min_confidence: float = 0.10,
+) -> bool:
+    """Validate a full-span onset against the anchors actually used for its read."""
+    return (
+        confidence >= min_confidence
+        and left_anchor_ms + 30.0 <= onset_ms <= right_anchor_ms - 30.0
+    )
+
+
+def _full_span_pause_agrees_with_local_read(
+    local_onset_ms: float | None,
+    full_onset_ms: float,
+    *,
+    max_delta_ms: float = 3000.0,
+) -> bool:
+    """Reject a repeated-word pause owner contradicted by the independent local read."""
+    return local_onset_ms is None or abs(full_onset_ms - local_onset_ms) <= max_delta_ms
+
+
+def _full_span_pause_owner_is_consistent(
+    local_onset_ms: float | None,
+    full_onset_ms: float,
+    *,
+    pause_duration_ms: float,
+    max_uncontested_pause_ms: float = 1800.0,
+) -> bool:
+    """Only a very long, internally ambiguous pause needs local-read agreement."""
+    return (
+        pause_duration_ms <= max_uncontested_pause_ms
+        or _full_span_pause_agrees_with_local_read(local_onset_ms, full_onset_ms)
+    )
+
+
+def _full_span_unique_next_pause_candidate(
+    *,
+    local_onset_ms: float | None,
+    full_pause_start_ms: float,
+    target_occurrences: int,
+    full_confidence: float,
+    confidence_threshold: float,
+    intervening_trusted_pauses: int,
+) -> bool:
+    """Accept a wide read only when it selects the next unambiguous pause."""
+    return (
+        local_onset_ms is not None
+        and local_onset_ms < full_pause_start_ms
+        and target_occurrences == 1
+        and full_confidence >= confidence_threshold
+        and intervening_trusted_pauses == 0
+    )
+
+
+def _pause_owner_geometry_needs_full_span(
+    *,
+    from_pause: bool,
+    old_onset_ms: float,
+    local_onset_ms: float | None,
+    previous_quality: float,
+    next_quality: float,
+    max_quality: float = 0.10,
+    min_shift_ms: float = 3000.0,
+) -> bool:
+    """Detect an owner contradicted by both neighbouring content spans."""
+    return (
+        from_pause
+        and local_onset_ms is not None
+        and previous_quality <= max_quality
+        and next_quality <= max_quality
+        and abs(local_onset_ms - old_onset_ms) >= min_shift_ms
+    )
+
+
+def _geometry_invalidated_owner_requires_full_span(
+    *,
+    geometry_unreliable: bool,
+    action: str,
+    pause_similarity: float = 1.0,
+    min_match_similarity: float = 0.25,
+) -> bool:
+    """Do not let a one-word retry revalidate an already impossible owner."""
+    return geometry_unreliable and (
+        action != "post_selected_micro_recovery"
+        or pause_similarity < min_match_similarity
+    )
+
+
+def _full_wasl_read_classification(
+    confidence: float,
+    *,
+    acceptance_confidence: float,
+    audio_bracket_proven: bool,
+) -> str:
+    """A forced non-pause onset is wasl only after an acoustically supported read."""
+    if confidence >= acceptance_confidence:
+        return "wasl"
+    if audio_bracket_proven and confidence > 0.0:
+        return "wasl"
+    return "insufficient_audio"
+
+
+def _insufficient_audio_ayahs(pause_matches: list[dict]) -> list[int]:
+    """Return starts whose FAST structural read explicitly lost context."""
+    return [
+        int(match["ayah"])
+        for match in pause_matches
+        if match.get("match_action") == "insufficient_audio"
+    ]
+
+
+def _bounded_local_repair_spans(
+    ayah_list: list[int],
+    target_ayahs: list[int],
+    reliable_anchor_ayahs: set[int],
+    starts_ms: dict[int, float],
+) -> list[tuple[int, int]]:
+    """Bracket structural failures without widening them to the whole surah.
+
+    An ``insufficient_audio`` row is often only the first visible symptom of a
+    shifted run.  A later pause owner that falls before its predecessor proves
+    the actual right edge of that run.  Repair through that owner, then one
+    following anchored interval so a trailing wasl row is not left shifted.
+    """
+    index_by_ayah = {ayah: index for index, ayah in enumerate(ayah_list)}
+    signal_indexes = {
+        index_by_ayah[ayah]
+        for ayah in target_ayahs
+        if ayah in index_by_ayah
+    }
+    inverted_right_indexes: set[int] = set()
+    for index in range(1, len(ayah_list)):
+        previous = ayah_list[index - 1]
+        current = ayah_list[index]
+        if starts_ms.get(current, float("inf")) <= starts_ms.get(previous, 0.0) + 30.0:
+            signal_indexes.add(index - 1)
+            inverted_right_indexes.add(index)
+    if not signal_indexes:
+        return []
+
+    ordered_signals = sorted(signal_indexes)
+    groups: list[list[int]] = []
+    for signal_index in ordered_signals:
+        if not groups or signal_index > groups[-1][-1] + 3:
+            groups.append([signal_index])
+        else:
+            groups[-1].append(signal_index)
+
+    spans: list[tuple[int, int]] = []
+    for group in groups:
+        first_signal = group[0]
+        last_signal = group[-1]
+        left_index = next(
+            (
+                index
+                for index in range(first_signal - 1, -1, -1)
+                if ayah_list[index] in reliable_anchor_ayahs
+            ),
+            None,
+        )
+        inversion_rights = [
+            index
+            for index in inverted_right_indexes
+            if first_signal < index <= last_signal + 1
+        ]
+        if inversion_rights:
+            right_index = max(inversion_rights)
+        else:
+            right_index = next(
+                (
+                    index
+                    for index in range(last_signal + 1, len(ayah_list))
+                    if ayah_list[index] in reliable_anchor_ayahs
+                ),
+                None,
+            )
+        if left_index is None or right_index is None or right_index <= left_index + 1:
+            continue
+        spans.append((left_index, right_index))
+
+        if inversion_rights:
+            tail_right = next(
+                (
+                    index
+                    for index in range(right_index + 1, len(ayah_list))
+                    if ayah_list[index] in reliable_anchor_ayahs
+                    and starts_ms.get(ayah_list[index], 0.0)
+                    > starts_ms.get(ayah_list[right_index], 0.0) + 30.0
+                ),
+                None,
+            )
+            if tail_right is not None and tail_right > right_index + 1:
+                spans.append((right_index, tail_right))
+    return spans
+
+
+def _requires_low_verify_ctc_fallback(
+    verify_sim: float,
+    pause_coverage: float,
+    reliable_align_result: bool,
+) -> bool:
+    """Escalate only when text verification and pause support fail together."""
+    return verify_sim < 0.38 and pause_coverage < 0.70 and not reliable_align_result
+
+
+def _full_span_right_bracket_ms(
+    *,
+    right_anchor_ms: float | None,
+    total_ms: float,
+    final_ayah: bool,
+) -> float | None:
+    """The recording end is the reliable right bracket for a trailing read."""
+    if right_anchor_ms is not None:
+        return right_anchor_ms
+    return total_ms if final_ayah else None
+
+
+def _insufficient_wasl_read_invalidates_right_anchor(
+    *,
+    classification: str,
+    bracketed_on_right: bool,
+    right_anchor_from_pause: bool,
+    right_anchor_similarity: float,
+    pause_trust_similarity: float,
+    opening_shared_prefix_chars: int,
+    ambiguous_prefix_chars: int = 6,
+) -> bool:
+    """A weak closer cannot prove that a truncated full-span read had enough audio."""
+    return (
+        classification == "insufficient_audio"
+        and bracketed_on_right
+        and right_anchor_from_pause
+        and right_anchor_similarity < pause_trust_similarity
+        and opening_shared_prefix_chars >= ambiguous_prefix_chars
+    )
+
+
+def _ambiguous_wasl_run_requires_bracket_extension(
+    *,
+    run_length: int,
+    opening_shared_prefix_chars: int,
+    minimum_confidence: float,
+    acceptance_confidence: float,
+    right_anchor_from_pause: bool,
+    right_anchor_similarity: float,
+    pause_trust_similarity: float,
+    ambiguous_prefix_chars: int = 4,
+) -> bool:
+    """A repeated wasl run needs a reliable closer before it is classified."""
+    return (
+        run_length >= 2
+        and opening_shared_prefix_chars >= ambiguous_prefix_chars
+        and minimum_confidence < acceptance_confidence
+        and right_anchor_from_pause
+        and right_anchor_similarity < pause_trust_similarity
+    )
+
+
+def _unclassified_repeated_pause_run_requires_atomic_block(
+    *,
+    from_pause: bool,
+    action: str,
+    pause_similarity: float,
+    previous_quality: float,
+    next_quality: float,
+    opening_shared_prefix_chars: int,
+    previous_from_pause: bool,
+    previous_similarity: float,
+    next_from_pause: bool,
+    next_similarity: float,
+    pause_trust_similarity: float,
+    max_quality: float = 0.10,
+    ambiguous_prefix_chars: int = _AMBIG_PREFIX_CHARS,
+) -> bool:
+    """A repeated unclassified pause between weak owners needs one atomic read."""
+    return (
+        from_pause
+        and not action
+        and pause_similarity < pause_trust_similarity
+        and previous_quality <= max_quality
+        and next_quality <= max_quality
+        and opening_shared_prefix_chars >= ambiguous_prefix_chars
+        and previous_from_pause
+        and previous_similarity < pause_trust_similarity
+        and next_from_pause
+        and next_similarity < pause_trust_similarity
+    )
+
+
+def _repeated_low_trust_left_anchor_extends_atomic_block(
+    *,
+    pause_similarity: float,
+    previous_quality: float,
+    opening_shared_prefix_chars: int,
+    pause_trust_similarity: float,
+    max_quality: float = 0.10,
+    min_prefix_chars: int = 3,
+) -> bool:
+    """Do not bracket a repeated block with its acoustically similar weak neighbour."""
+    return (
+        pause_similarity < pause_trust_similarity
+        and previous_quality <= max_quality
+        and opening_shared_prefix_chars >= min_prefix_chars
+    )
+
+
+def _unclassified_owner_requires_full_span(
+    *,
+    from_pause: bool,
+    action: str,
+    pause_similarity: float,
+    min_match_similarity: float,
+) -> bool:
+    """Do not treat an acoustically observed but unclassified pause as an anchor."""
+    return (
+        from_pause
+        and not action
+        and 0.0 < pause_similarity < min_match_similarity
+    )
+
+
+def _geometry_repair_is_already_consistent(
+    *,
+    current_ms: float,
+    predicted_ms: float,
+    geometry_invalidated_owner: bool,
+    tolerance_ms: float = 1200.0,
+) -> bool:
+    """A rejected owner cannot validate itself through the same drifting prior."""
+    return (
+        not geometry_invalidated_owner
+        and abs(current_ms - predicted_ms) < tolerance_ms
+    )
+
+
+def _geometry_invalidated_repair_can_compete(
+    *,
+    geometry_invalidated_owner: bool,
+    repair_confidence: float,
+    reliable_confidence: float,
+) -> bool:
+    """Do not let a disproved owner's stale probe confidence block repair."""
+    return geometry_invalidated_owner and repair_confidence >= reliable_confidence
+
+
+def _recovered_owner_conflicts_with_anchor_geometry(
+    *,
+    from_pause: bool,
+    action: str,
+    pause_similarity: float,
+    previous_quality: float,
+    next_quality: float,
+    current_ms: float,
+    predicted_ms: float,
+    pause_trust_similarity: float,
+    max_quality: float = 0.10,
+    min_conflict_ms: float = 10_000.0,
+) -> bool:
+    """A failed recovery cannot keep a weak owner far from anchored geometry."""
+    return (
+        from_pause
+        and action == "recovered"
+        and pause_similarity < pause_trust_similarity
+        and previous_quality <= max_quality
+        and next_quality <= max_quality
+        and abs(current_ms - predicted_ms) >= min_conflict_ms
+    )
+
+
+def _first_opening_owner_conflicts_with_anchor_geometry(
+    *,
+    from_pause: bool,
+    action: str,
+    pause_similarity: float,
+    previous_quality: float,
+    next_quality: float,
+    current_ms: float,
+    predicted_ms: float,
+    pause_trust_similarity: float,
+    max_quality: float = 0.10,
+    min_conflict_ms: float = 20_000.0,
+) -> bool:
+    """Reject a first-opening owner unsupported by either surrounding span."""
+    return (
+        from_pause
+        and action == "first_opening_repair"
+        and pause_similarity < pause_trust_similarity
+        and previous_quality <= max_quality
+        and next_quality <= max_quality
+        and abs(current_ms - predicted_ms) >= min_conflict_ms
+    )
+
+
+def _direct_owner_conflicts_with_anchor_geometry(
+    *,
+    from_pause: bool,
+    action: str,
+    pause_similarity: float,
+    previous_quality: float,
+    next_quality: float,
+    current_ms: float,
+    predicted_ms: float,
+    pause_trust_similarity: float,
+    max_quality: float = 0.10,
+    min_conflict_ms: float = 5000.0,
+) -> bool:
+    """Reject a direct low-trust owner contradicted by leave-one-out anchors."""
+    conflict_ms = abs(current_ms - predicted_ms)
+    return (
+        from_pause
+        and action == "observed_current"
+        and pause_similarity < pause_trust_similarity
+        and previous_quality <= max_quality
+        and next_quality <= max_quality
+        and conflict_ms >= min_conflict_ms
+    )
+
+
+def _competing_prior_pause_requires_full_span(
+    *,
+    from_pause: bool,
+    action: str,
+    pause_reason: str,
+    selected_similarity: float,
+    selected_time_ms: float,
+    previous_anchor_ms: float,
+    candidates: list[tuple[float, str, float]],
+    pause_trust_similarity: float,
+    min_similarity: float = 0.39,
+    max_similarity_loss: float = 0.10,
+    min_back_ms: float = 2500.0,
+    max_back_ms: float = 15_000.0,
+) -> bool:
+    """Require context when two nearby pauses plausibly own one opening."""
+    if (
+        not from_pause
+        or action != "observed_current"
+        or pause_reason != "dsp"
+        or not min_similarity <= selected_similarity < pause_trust_similarity
+    ):
+        return False
+    return any(
+        reason in {"dsp", "weak-dsp"}
+        and previous_anchor_ms + min_back_ms < candidate_ms
+        and min_back_ms <= selected_time_ms - candidate_ms <= max_back_ms
+        and candidate_similarity >= min_similarity
+        and candidate_similarity >= selected_similarity - max_similarity_loss
+        for candidate_ms, reason, candidate_similarity in candidates
+    )
+
+
+def _prefer_competing_prior_pause_extended_decode(
+    *,
+    candidate_reason: str,
+    candidate_similarity: float,
+    selected_similarity: float,
+    min_similarity: float = 0.48,
+    min_gain: float = 0.02,
+) -> bool:
+    """Prefer an earlier pause only when wider decode separates the openings."""
+    return (
+        candidate_reason in {"dsp", "weak-dsp"}
+        and candidate_similarity >= min_similarity
+        and candidate_similarity >= selected_similarity + min_gain
+    )
+
+
+def _prefer_competing_prior_pause_pre_context(
+    *,
+    candidate_previous_tail_similarity: float,
+    selected_previous_tail_similarity: float,
+    candidate_current_opening_similarity: float,
+    selected_current_opening_similarity: float,
+    min_previous_tail_similarity: float = 0.55,
+    min_previous_tail_gain: float = 0.25,
+    min_current_opening_gain: float = 0.05,
+) -> bool:
+    """Detect when the selected pause is internal to the current ayah."""
+    return (
+        candidate_previous_tail_similarity >= min_previous_tail_similarity
+        and candidate_previous_tail_similarity
+        >= selected_previous_tail_similarity + min_previous_tail_gain
+        and selected_current_opening_similarity
+        >= candidate_current_opening_similarity + min_current_opening_gain
+    )
+
+
+def _full_span_opening_support_confidence(
+    *,
+    opening_confidence: float,
+    following_confidence: float,
+    opening_onset_ms: float,
+    following_onset_ms: float,
+    same_ayah: bool,
+    max_gap_ms: float = 1000.0,
+) -> float:
+    """Let the next word confirm a short opening in one joint full-span read."""
+    if (
+        same_ayah
+        and opening_onset_ms <= following_onset_ms
+        and following_onset_ms - opening_onset_ms <= max_gap_ms
+    ):
+        return max(opening_confidence, following_confidence)
+    return opening_confidence
+
+
+def _full_span_following_support_is_eligible(
+    *,
+    geometry_invalidated_owner: bool,
+    multiscale_full_span_required: bool,
+    impossible_owner_geometry: bool,
+) -> bool:
+    """A mandatory full read may use its next same-ayah word as joint proof."""
+    return (
+        geometry_invalidated_owner
+        or multiscale_full_span_required
+        or impossible_owner_geometry
+    )
+
+
+def _full_span_pause_candidate_is_supported(
+    *,
+    onset_ms: float,
+    pause_start_ms: float,
+    pause_end_ms: float,
+    pause_tier_name: str,
+    pause_reason: str,
+    confidence: float,
+    reliable_confidence: float,
+    weak_edge_tolerance_ms: float = 80.0,
+) -> bool:
+    """A weak pause needs a reliable full read at its exact acoustic edge."""
+    if pause_tier_name == "trusted":
+        return pause_start_ms <= onset_ms <= pause_end_ms
+    return (
+        pause_reason == "weak-dsp"
+        and confidence >= reliable_confidence
+        and _snap_pause_backed_start_to_owner(
+            onset_ms,
+            pause_start_ms=pause_start_ms,
+            pause_end_ms=pause_end_ms,
+            max_outside_ms=weak_edge_tolerance_ms,
+        )
+        is not None
+    )
+
+
+def _full_span_weak_pause_is_jointly_supported(
+    *,
+    full_onset_ms: float,
+    full_confidence: float,
+    local_onset_ms: float | None,
+    local_confidence: float,
+    pause_start_ms: float,
+    pause_end_ms: float,
+    pause_reason: str,
+    acceptance_confidence: float,
+    min_full_confidence: float = 0.10,
+    full_edge_tolerance_ms: float = 80.0,
+    local_edge_tolerance_ms: float = 350.0,
+    max_read_disagreement_ms: float = 3000.0,
+) -> bool:
+    """Promote a weak pause only when independent local/full reads straddle it."""
+    return (
+        pause_reason == "weak-dsp"
+        and full_confidence >= min_full_confidence
+        and local_onset_ms is not None
+        and local_confidence >= acceptance_confidence
+        and abs(full_onset_ms - local_onset_ms) <= max_read_disagreement_ms
+        and _snap_pause_backed_start_to_owner(
+            full_onset_ms,
+            pause_start_ms=pause_start_ms,
+            pause_end_ms=pause_end_ms,
+            max_outside_ms=full_edge_tolerance_ms,
+        )
+        is not None
+        and _snap_pause_backed_start_to_owner(
+            local_onset_ms,
+            pause_start_ms=pause_start_ms,
+            pause_end_ms=pause_end_ms,
+            max_outside_ms=local_edge_tolerance_ms,
+        )
+        is not None
+    )
+
+
+def _geometry_invalidated_full_span_weak_pause_is_supported(
+    *,
+    geometry_invalidated_owner: bool,
+    full_onset_ms: float,
+    full_confidence: float,
+    target_occurrences: int,
+    pause_start_ms: float,
+    pause_end_ms: float,
+    pause_reason: str,
+    acceptance_confidence: float,
+) -> bool:
+    """Let a unique anchored full read prove the exact weak pause it enters."""
+    return (
+        geometry_invalidated_owner
+        and pause_reason == "weak-dsp"
+        and target_occurrences == 1
+        and full_confidence >= acceptance_confidence
+        and pause_start_ms <= full_onset_ms <= pause_end_ms
+    )
+
+
+def _multiscale_pause_repair_is_eligible(
+    *,
+    action: str,
+    pause_similarity: float,
+    pause_trust_similarity: float,
+    opening_shared_prefix_chars: int,
+    owner_prediction_shift_ms: float,
+    min_shift_ms: float = 3000.0,
+    max_shared_prefix_chars: int = _AMBIG_PREFIX_CHARS - 1,
+) -> bool:
+    """Limit multiscale consensus to a non-repeated direct pause claim."""
+    return (
+        action == "observed_current"
+        and pause_similarity < pause_trust_similarity
+        and opening_shared_prefix_chars <= max_shared_prefix_chars
+        and owner_prediction_shift_ms >= min_shift_ms
+    )
+
+
+def _stable_multiscale_onset_cluster(
+    candidates: list[tuple[float, float, bool]],
+    *,
+    min_candidates: int = 3,
+    max_spread_ms: float = 80.0,
+    min_peak_confidence: float = 0.10,
+) -> float | None:
+    """Return the median onset of the strongest tight multi-window cluster."""
+    usable = sorted(
+        (onset, confidence)
+        for onset, confidence, near_left_edge in candidates
+        if not near_left_edge
+    )
+    clusters: list[list[tuple[float, float]]] = []
+    for left in range(len(usable)):
+        cluster = [
+            candidate
+            for candidate in usable[left:]
+            if candidate[0] - usable[left][0] <= max_spread_ms
+        ]
+        if (
+            len(cluster) >= min_candidates
+            and max(confidence for _, confidence in cluster) >= min_peak_confidence
+        ):
+            clusters.append(cluster)
+    if not clusters:
+        return None
+    best = max(
+        clusters,
+        key=lambda cluster: (
+            len(cluster),
+            max(confidence for _, confidence in cluster),
+            -(cluster[-1][0] - cluster[0][0]),
+        ),
+    )
+    return best[len(best) // 2][0]
+
+
+def _stable_multiscale_pause_onset(
+    candidates: list[tuple[float, float, bool]],
+    *,
+    pause_start_ms: float,
+    pause_end_ms: float,
+    min_candidates: int = 3,
+    max_spread_ms: float = 80.0,
+    min_peak_confidence: float = 0.10,
+) -> float | None:
+    """Return the median onset when several window scales agree in one pause."""
+    inside = [
+        (onset, confidence, near_left_edge)
+        for onset, confidence, near_left_edge in candidates
+        if pause_start_ms <= onset <= pause_end_ms
+    ]
+    return _stable_multiscale_onset_cluster(
+        inside,
+        min_candidates=min_candidates,
+        max_spread_ms=max_spread_ms,
+        min_peak_confidence=min_peak_confidence,
+    )
+
+
+def _multiscale_ctc_in_owner_candidate(
+    *,
+    from_pause: bool,
+    action: str | None,
+    pause_reason: str | None,
+    pause_similarity: float,
+    pause_trust_similarity: float,
+    opening_shared_prefix_chars: int,
+    prev_quality: float,
+    next_quality: float,
+    clustered_onset_ms: float | None,
+    owner_onset_ms: float,
+    pause_start_ms: float,
+    pause_end_ms: float,
+    previous_start_ms: float,
+    next_start_ms: float,
+    min_span_quality: float = 0.80,
+    min_shift_ms: float = 160.0,
+    max_shared_prefix_chars: int = _AMBIG_PREFIX_CHARS - 1,
+    guard_ms: float = 30.0,
+) -> bool:
+    """Let a stable multi-window CTC cluster refine one proven pause owner.
+
+    The rule is deliberately about position, never classification: the pause
+    owner is retained and the CTC onset must remain strictly between the already
+    placed neighbours.  Two good duration spans and a non-repeated opening
+    prevent an internal pause from masquerading as the next ayah.
+    """
+    return (
+        from_pause
+        and action == "observed_current"
+        and pause_reason == "dsp"
+        and pause_similarity < pause_trust_similarity
+        and opening_shared_prefix_chars <= max_shared_prefix_chars
+        and min(prev_quality, next_quality) >= min_span_quality
+        and clustered_onset_ms is not None
+        and pause_start_ms + guard_ms <= clustered_onset_ms <= pause_end_ms - guard_ms
+        and clustered_onset_ms >= previous_start_ms + guard_ms
+        and clustered_onset_ms <= next_start_ms - guard_ms
+        and abs(clustered_onset_ms - owner_onset_ms) >= min_shift_ms
+    )
+
+
+def _ambiguous_multiscale_owner_requires_full_span(
+    *,
+    action: str,
+    pause_similarity: float,
+    pause_trust_similarity: float,
+    opening_shared_prefix_chars: int,
+    owner_onset_ms: float,
+    predicted_onset_ms: float,
+    clustered_onset_ms: float | None,
+    min_shift_ms: float = 3000.0,
+    max_prediction_delta_ms: float = 1200.0,
+    min_shared_prefix_chars: int = _AMBIG_PREFIX_CHARS,
+) -> bool:
+    """Require context when repeated text makes a local onset non-identifying."""
+    return (
+        action == "observed_current"
+        and pause_similarity < pause_trust_similarity
+        and opening_shared_prefix_chars >= min_shared_prefix_chars
+        and clustered_onset_ms is not None
+        and abs(owner_onset_ms - predicted_onset_ms) >= min_shift_ms
+        and abs(clustered_onset_ms - predicted_onset_ms) <= max_prediction_delta_ms
+        and abs(clustered_onset_ms - owner_onset_ms) >= min_shift_ms
+    )
+
+
+def _wasl_revision_invalidates_fallback_right_anchor(
+    *,
+    full_wasl_repair: bool,
+    full_onset_ms: float,
+    local_onset_ms: float | None,
+    right_anchor_from_pause: bool,
+    right_anchor_action: str,
+    right_anchor_similarity: float,
+    pause_trust_similarity: float,
+    min_revision_ms: float = 3000.0,
+) -> bool:
+    """A large wasl correction invalidates its low-trust fallback right anchor."""
+    return (
+        full_wasl_repair
+        and local_onset_ms is not None
+        and abs(full_onset_ms - local_onset_ms) >= min_revision_ms
+        and right_anchor_from_pause
+        and right_anchor_action == "pause_fallback"
+        and right_anchor_similarity < pause_trust_similarity
+    )
+
+
+def _revised_wasl_right_anchor_requires_predecessor_reread(
+    *,
+    old_anchor_ms: float,
+    new_anchor_ms: float,
+    run_confidence: float,
+    acceptance_confidence: float,
+    min_forward_revision_ms: float = 3000.0,
+) -> bool:
+    """A weak wasl read truncated by an anchor later moved forward is incomplete."""
+    return (
+        new_anchor_ms - old_anchor_ms >= min_forward_revision_ms
+        and run_confidence < acceptance_confidence
+    )
+
+
+def _pause_owner_geometry_is_unreliable(
+    *,
+    from_pause: bool,
+    action: str,
+    pause_similarity: float,
+    previous_quality: float,
+    next_quality: float,
+    expected_delta_ms: float,
+    pause_trust_similarity: float,
+    pause_reason: str = "",
+    previous_expected_delta_ms: float = 0.0,
+    opening_shared_prefix_chars: int = 0,
+    opening_internal_repeat_chars: int = 0,
+    opening_self_repeat_chars: int = 0,
+    best_pause_is_later: bool = False,
+    best_pause_similarity: float = 0.0,
+    max_quality: float = 0.10,
+    min_expected_delta_ms: float = 80_000.0,
+) -> bool:
+    """A confident word probe cannot rescue an owner with impossible spans."""
+    delta_jump_ms = abs(expected_delta_ms - previous_expected_delta_ms)
+    legacy_impossible_owner = (
+        action in {"weak_pause_recovery", "first_opening_repair"}
+        and previous_quality <= max_quality
+        and next_quality <= max_quality
+        and abs(expected_delta_ms) >= min_expected_delta_ms
+    )
+    ambiguous_jump = (
+        action in {"weak_pause_recovery", "recovered"}
+        and opening_shared_prefix_chars >= 5
+        and min(previous_quality, next_quality) <= max_quality
+        and delta_jump_ms >= 10_000.0
+    )
+    unsupported_weak_jump = (
+        action == "weak_pause_recovery"
+        and previous_quality <= max_quality
+        and next_quality <= max_quality
+        and delta_jump_ms >= 10_000.0
+    )
+    direct_impossible_jump = (
+        action == "observed_current"
+        and previous_quality <= max_quality
+        and next_quality <= max_quality
+        and delta_jump_ms >= 15_000.0
+    )
+    internally_repeated_direct_jump = (
+        direct_impossible_jump
+        and opening_internal_repeat_chars >= _AMBIG_PREFIX_CHARS
+    )
+    first_opening_impossible_jump = (
+        action == "first_opening_repair"
+        and previous_quality <= max_quality
+        and next_quality <= max_quality
+        and delta_jump_ms >= 20_000.0
+    )
+    opening_run_forward_skip = (
+        action == "opening_run_repair"
+        and min(previous_quality, next_quality) <= max_quality
+        and expected_delta_ms >= 30_000.0
+        and delta_jump_ms >= 15_000.0
+    )
+    post_selected_without_span_support = (
+        action == "post_selected_micro_recovery"
+        and previous_quality <= max_quality
+        and next_quality <= max_quality
+    )
+    preword_micro_jump = (
+        action == "preword_micro_recovery"
+        and previous_quality <= max_quality
+        and next_quality <= max_quality
+        and delta_jump_ms >= 5000.0
+    )
+    compact_recovered_span_conflict = (
+        action == "recovered"
+        and pause_similarity < 0.25
+        and previous_quality <= 0.20
+        and next_quality <= max_quality
+        and abs(expected_delta_ms) >= 5000.0
+    )
+    stronger_future_direct_conflict = (
+        action == "observed_current"
+        and pause_similarity < 0.42
+        and previous_quality <= max_quality
+        and next_quality <= max_quality
+        and expected_delta_ms <= -5000.0
+        and best_pause_is_later
+        and best_pause_similarity >= 0.50
+        and best_pause_similarity >= pause_similarity + 0.10
+    )
+    stronger_future_recovered_conflict = (
+        action == "recovered"
+        and pause_similarity < 0.30
+        and next_quality <= max_quality
+        and abs(expected_delta_ms) >= 5000.0
+        and best_pause_is_later
+        and best_pause_similarity >= 0.40
+        and best_pause_similarity >= pause_similarity + 0.10
+    )
+    self_repeated_direct_conflict = (
+        action == "observed_current"
+        and pause_similarity < pause_trust_similarity
+        and opening_self_repeat_chars >= _AMBIG_PREFIX_CHARS
+        and next_quality <= max_quality
+        and expected_delta_ms <= -15_000.0
+    )
+    impossible_direct_micro_owner = (
+        action in {"observed_current", "recovered"}
+        and pause_reason == "micro-tempo"
+        and previous_quality <= max_quality
+        and next_quality <= max_quality
+        and abs(expected_delta_ms) >= 15_000.0
+    )
+    impossible_direct_weak_owner = (
+        action == "observed_current"
+        and pause_reason == "weak-dsp"
+        and pause_similarity < 0.34
+        and previous_quality <= max_quality
+        and next_quality <= max_quality
+        and abs(expected_delta_ms) >= 20_000.0
+    )
+    return (
+        from_pause
+        and (
+            (
+                pause_similarity < pause_trust_similarity
+                and (
+                    legacy_impossible_owner
+                    or ambiguous_jump
+                    or unsupported_weak_jump
+                    or direct_impossible_jump
+                    or first_opening_impossible_jump
+                    or opening_run_forward_skip
+                    or preword_micro_jump
+                    or compact_recovered_span_conflict
+                    or stronger_future_direct_conflict
+                    or stronger_future_recovered_conflict
+                    or self_repeated_direct_conflict
+                    or impossible_direct_micro_owner
+                    or impossible_direct_weak_owner
+                )
+            )
+            or post_selected_without_span_support
+            or internally_repeated_direct_jump
+        )
+    )
+
+
+def _repeated_opening_pause_anchor_is_ambiguous(
+    *,
+    from_pause: bool,
+    pause_similarity: float,
+    previous_quality: float,
+    current_opening: str,
+    next_opening: str | None,
+    pause_trust_similarity: float,
+    max_previous_quality: float = 0.10,
+) -> bool:
+    """Reject a one-word anchor that can equally be the next ayah opening."""
+    return (
+        from_pause
+        and next_opening is not None
+        and current_opening == next_opening
+        and pause_similarity < pause_trust_similarity
+        and previous_quality <= max_previous_quality
+    )
+
+
+def _ambiguous_observed_pause_starts_shifted_section(
+    *,
+    from_pause: bool,
+    action: str,
+    pause_similarity: float,
+    opening_shared_prefix_chars: int,
+    current_expected_delta_ms: float,
+    previous_expected_delta_ms: float,
+    pause_trust_similarity: float,
+    ambiguous_prefix_chars: int = 6,
+    min_delta_jump_ms: float = 15_000.0,
+) -> bool:
+    """Detect a direct pause claim that skips into a repeated-opening section."""
+    return (
+        from_pause
+        and action == "observed_current"
+        and pause_similarity < pause_trust_similarity
+        and opening_shared_prefix_chars >= ambiguous_prefix_chars
+        and abs(current_expected_delta_ms - previous_expected_delta_ms)
+        >= min_delta_jump_ms
+    )
+
+
+def _adjacent_repeated_owners_start_shifted_section(
+    *,
+    current_from_pause: bool,
+    current_action: str,
+    current_similarity: float,
+    current_previous_quality: float,
+    current_expected_delta_ms: float,
+    previous_from_pause: bool,
+    previous_action: str,
+    previous_similarity: float,
+    previous_previous_quality: float,
+    previous_expected_delta_ms: float,
+    opening_shared_prefix_chars: int,
+    pause_trust_similarity: float,
+    ambiguous_prefix_chars: int = 6,
+    max_previous_quality: float = 0.10,
+    min_delta_growth_ms: float = 5000.0,
+) -> bool:
+    """Detect two repeated direct owners shifted onto later occurrences."""
+    return (
+        current_from_pause
+        and previous_from_pause
+        and current_action == "observed_current"
+        and previous_action == "observed_current"
+        and current_similarity < pause_trust_similarity
+        and previous_similarity < pause_trust_similarity
+        and current_previous_quality <= max_previous_quality
+        and previous_previous_quality <= max_previous_quality
+        and opening_shared_prefix_chars >= ambiguous_prefix_chars
+        and current_expected_delta_ms - previous_expected_delta_ms
+        >= min_delta_growth_ms
+    )
+
+
 def _long_pause_start_timing_candidate(
     *,
     pause_duration_ms: float,
@@ -1127,6 +2966,44 @@ def _long_pause_start_timing_candidate(
         and pause_duration_ms >= min_pause_ms
         and prev_speech_ms <= max_prev_speech_ms
         and next_speech_ms <= max_next_speech_ms
+    )
+
+
+def _shifted_geometry_long_pause_start_candidate(
+    *,
+    from_pause: bool,
+    action: str | None,
+    pause_reason: str | None,
+    pause_duration_ms: float,
+    current_start_ms: float,
+    pause_center_ms: float,
+    expected_delta_ms: float,
+    prev_quality: float,
+    next_quality: float,
+    timing_adjusted: bool,
+    min_pause_ms: float = 1200.0,
+    max_expected_delta_ms: float = -7000.0,
+    max_prev_quality: float = 0.10,
+    max_next_quality: float = 0.10,
+    max_center_offset_ms: float = 1.0,
+) -> bool:
+    """Use a proved pause's leading edge when the duration prior has drifted.
+
+    This is deliberately timing-only.  The owner must survive every repair at
+    its untouched centre; a large accumulated prior error and an impossible
+    left span then make that centre an arbitrary cut point, not acoustic onset
+    evidence.  The already-observed DSP start remains inside the same owner.
+    """
+    return (
+        from_pause
+        and action in {"confirmed", "recovered", "observed_current"}
+        and pause_reason == "dsp"
+        and pause_duration_ms >= min_pause_ms
+        and abs(current_start_ms - pause_center_ms) <= max_center_offset_ms
+        and expected_delta_ms <= max_expected_delta_ms
+        and prev_quality <= max_prev_quality
+        and next_quality <= max_next_quality
+        and not timing_adjusted
     )
 
 
@@ -1172,6 +3049,59 @@ def _long_pause_start_balanced_speech_candidate(
         and next_speech_ms >= min_speech_ms
         and prev_quality >= min_quality
         and next_quality >= min_quality
+    )
+
+
+def _weak_recovered_long_pause_start_candidate(
+    *,
+    pause_reason: str | None,
+    pause_duration_ms: float,
+    sim: float,
+    action: str | None,
+    expected_delta_ms: float,
+    next_quality: float,
+    min_pause_ms: float = 600.0,
+    max_sim: float = 0.45,
+    min_expected_delta_ms: float = -3000.0,
+    max_expected_delta_ms: float = 3000.0,
+    min_next_quality: float = 0.50,
+) -> bool:
+    """Use the leading edge only for a locally plausible weak recovery.
+
+    A recovered pause with weak text evidence cannot justify its centre as a
+    word onset.  This rule is intentionally limited to pauses close enough to
+    the duration prior; far-off weak recoveries are a different, order-level
+    problem and retain their existing handling.
+    """
+    return (
+        pause_reason == "dsp"
+        and action == "recovered"
+        and pause_duration_ms >= min_pause_ms
+        and sim < max_sim
+        and min_expected_delta_ms <= expected_delta_ms <= max_expected_delta_ms
+        and next_quality >= min_next_quality
+    )
+
+
+def _weak_recovered_compact_pause_center_candidate(
+    *,
+    pause_reason: str | None,
+    pause_duration_ms: float,
+    sim: float,
+    action: str | None,
+    next_quality: float,
+    min_pause_ms: float = 700.0,
+    max_pause_ms: float = 900.0,
+    max_sim: float = 0.45,
+    max_next_quality: float = 0.50,
+) -> bool:
+    """Keep a weak compact recovery at centre when its following span is unclear."""
+    return (
+        pause_reason == "dsp"
+        and action == "recovered"
+        and min_pause_ms <= pause_duration_ms < max_pause_ms
+        and sim < max_sim
+        and next_quality < max_next_quality
     )
 
 
@@ -1421,6 +3351,54 @@ def _long_dsp_fractional_start_candidate(
     return None
 
 
+def _late_long_dsp_fallback_start_candidate(
+    *,
+    pause_reason: str | None,
+    pause_duration_ms: float,
+    action: str | None,
+    sim: float,
+    prev_speech_ms: float,
+    next_quality: float,
+    min_pause_ms: float = 2500.0,
+    min_sim: float = 0.52,
+    max_prev_speech_ms: float = 500.0,
+    min_next_quality: float = 0.70,
+) -> bool:
+    """Apply the long-pause start edge after final owner reconciliation."""
+    return (
+        pause_reason == "dsp"
+        and action == "pause_fallback"
+        and pause_duration_ms >= min_pause_ms
+        and sim >= min_sim
+        and prev_speech_ms <= max_prev_speech_ms
+        and next_quality >= min_next_quality
+    )
+
+
+def _overlapping_dsp_replaces_micro_owner(
+    *,
+    action: str | None,
+    pause_reason: str | None,
+    expected_delta_ms: float,
+    prev_speech_ms: float,
+    next_quality: float,
+    overlap_ms: float,
+    min_expected_delta_ms: float = 30000.0,
+    max_prev_speech_ms: float = 100.0,
+    min_next_quality: float = 0.70,
+    min_overlap_ms: float = 100.0,
+) -> bool:
+    """Reject a confident micro owner embedded in its parent DSP silence."""
+    return (
+        action == "observed_current"
+        and pause_reason == "micro-tempo"
+        and abs(expected_delta_ms) >= min_expected_delta_ms
+        and prev_speech_ms <= max_prev_speech_ms
+        and next_quality >= min_next_quality
+        and overlap_ms >= min_overlap_ms
+    )
+
+
 def _short_low_sim_dsp_start_candidate(
     *,
     pause_reason: str | None,
@@ -1520,6 +3498,161 @@ def _dense_prior_opening_candidate(
     return best[2] if best is not None else None
 
 
+def _micro_owner_prior_prefix_candidate(
+    previous_time: float,
+    selected_time: float,
+    next_time: float,
+    expected_prev_gap_ms: float,
+    expected_next_gap_ms: float,
+    candidates: list[tuple[float, float, int]],
+    *,
+    pause_reason: str | None,
+    action: str | None,
+    selected_sim: float,
+    selected_prefix: int,
+    min_candidate_sim: float = 0.22,
+    min_candidate_prefix: int = 2,
+    max_back_ms: float = 5000.0,
+    min_prev_quality: float = 0.85,
+    min_prev_gain: float = 0.30,
+    min_next_quality: float = 0.75,
+    min_pair_gain: float = 0.10,
+) -> float | None:
+    """Replace an internal micro stop only with a text-and-geometry DSP proof."""
+    if (
+        pause_reason != "micro-tempo"
+        or action != "weak_pause_recovery"
+        or selected_sim >= _PAUSE_TRUST_SIM
+        or selected_prefix != 0
+    ):
+        return None
+    selected_prev_quality = _span_ratio_quality(
+        selected_time - previous_time,
+        expected_prev_gap_ms,
+    )
+    selected_next_quality = _span_ratio_quality(
+        next_time - selected_time,
+        expected_next_gap_ms,
+    )
+    selected_pair_quality = 0.5 * (
+        selected_prev_quality + selected_next_quality
+    )
+    best: tuple[float, float, float] | None = None
+    for candidate_time, candidate_sim, candidate_prefix in candidates:
+        if not (previous_time < candidate_time < selected_time):
+            continue
+        if selected_time - candidate_time > max_back_ms:
+            continue
+        if candidate_sim < min_candidate_sim or candidate_prefix < min_candidate_prefix:
+            continue
+        candidate_prev_quality = _span_ratio_quality(
+            candidate_time - previous_time,
+            expected_prev_gap_ms,
+        )
+        candidate_next_quality = _span_ratio_quality(
+            next_time - candidate_time,
+            expected_next_gap_ms,
+        )
+        candidate_pair_quality = 0.5 * (
+            candidate_prev_quality + candidate_next_quality
+        )
+        if (
+            candidate_prev_quality < min_prev_quality
+            or candidate_prev_quality < selected_prev_quality + min_prev_gain
+            or candidate_next_quality < min_next_quality
+            or candidate_pair_quality < selected_pair_quality + min_pair_gain
+        ):
+            continue
+        score = (candidate_pair_quality, candidate_sim, candidate_time)
+        if best is None or score > best:
+            best = score
+    return best[2] if best is not None else None
+
+
+def _repeated_wasl_prior_pause_candidate(
+    previous_time: float,
+    full_read_onset: float,
+    expected_gap_ms: float,
+    candidates: list[tuple[float, float, float]],
+    *,
+    opening_shared_prefix_chars: int,
+    full_read_confidence: float,
+    reliable_confidence: float,
+    min_shared_prefix_chars: int = _AMBIG_PREFIX_CHARS,
+    min_candidate_sim: float = 0.38,
+    min_acoustic_gain: float = 0.05,
+    min_candidate_quality: float = 0.85,
+    min_quality_gain: float = 0.30,
+    min_back_ms: float = 2500.0,
+    max_back_ms: float = 12_000.0,
+) -> float | None:
+    """Anchor a repeated-opening wasl read only when text and spacing agree."""
+    if (
+        opening_shared_prefix_chars < min_shared_prefix_chars
+        or full_read_confidence < reliable_confidence
+    ):
+        return None
+    full_quality = _span_ratio_quality(
+        full_read_onset - previous_time,
+        expected_gap_ms,
+    )
+    best: tuple[float, float, float] | None = None
+    for candidate_time, current_sim, previous_sim in candidates:
+        back_ms = full_read_onset - candidate_time
+        if not (min_back_ms <= back_ms <= max_back_ms):
+            continue
+        if current_sim < min_candidate_sim:
+            continue
+        if current_sim < previous_sim + min_acoustic_gain:
+            continue
+        quality = _span_ratio_quality(
+            candidate_time - previous_time,
+            expected_gap_ms,
+        )
+        if quality < min_candidate_quality or quality < full_quality + min_quality_gain:
+            continue
+        score = (quality, current_sim - previous_sim, candidate_time)
+        if best is None or score > best:
+            best = score
+    return best[2] if best is not None else None
+
+
+def _single_wasl_prior_pause_candidate(
+    previous_time: float,
+    full_read_onset: float,
+    candidates: list[tuple[float, float, float]],
+    *,
+    opening_shared_prefix_chars: int,
+    full_read_confidence: float,
+    reliable_confidence: float,
+    max_shared_prefix_chars: int = 0,
+    min_candidate_sim: float = 0.30,
+    min_acoustic_gain: float = 0.10,
+    min_back_ms: float = 2500.0,
+    max_back_ms: float = 12000.0,
+) -> float | None:
+    """Recover a missed pause for a unique-opening single-wasl ayah.
+
+    This deliberately excludes repeated openings: only there a prior pause can
+    be treated as the start when its post-pause decode favors the current ayah
+    over the preceding one and a full local CTC read is independently strong.
+    """
+    if (
+        opening_shared_prefix_chars > max_shared_prefix_chars
+        or full_read_confidence < reliable_confidence
+    ):
+        return None
+    valid = [
+        (time, current_sim)
+        for time, current_sim, previous_sim in candidates
+        if previous_time + min_back_ms < time
+        and min_back_ms <= full_read_onset - time <= max_back_ms
+        and current_sim >= min_candidate_sim
+        and current_sim >= previous_sim + min_acoustic_gain
+    ]
+    return max(valid)[0] if valid else None
+
+
 def _dense_later_opening_candidate(
     previous_time: float,
     selected_time: float,
@@ -1577,6 +3710,49 @@ def _dense_later_opening_candidate(
         ):
             best = (candidate_pair, candidate_sim, candidate_time)
     return best[2] if best is not None else None
+
+
+def _recovered_later_best_pause_candidate(
+    selected_time: float,
+    next_time: float,
+    candidates: list[tuple[float, float, int]],
+    *,
+    pause_reason: str | None,
+    selected_sim: float,
+    selected_prefix: int,
+    action: str | None,
+    max_selected_sim: float = 0.40,
+    min_candidate_sim: float = 0.38,
+    min_sim_gain: float = 0.04,
+    min_candidate_prefix: int = 5,
+    min_prefix_gain: int = 2,
+    max_forward_ms: float = 9000.0,
+    min_gap_ms: float = 2500.0,
+) -> float | None:
+    """Replace a weak recovered owner with its clearly better later pause."""
+    if (
+        pause_reason != "dsp"
+        or action != "recovered"
+        or selected_sim >= max_selected_sim
+    ):
+        return None
+    eligible = [
+        (candidate_sim, candidate_prefix, candidate_time)
+        for candidate_time, candidate_sim, candidate_prefix in candidates
+        if selected_time + min_gap_ms < candidate_time < next_time - min_gap_ms
+        and candidate_time - selected_time <= max_forward_ms
+    ]
+    if not eligible:
+        return None
+    candidate_sim, candidate_prefix, candidate_time = max(eligible)
+    if (
+        candidate_sim < min_candidate_sim
+        or candidate_sim < selected_sim + min_sim_gain
+        or candidate_prefix < min_candidate_prefix
+        or candidate_prefix < selected_prefix + min_prefix_gain
+    ):
+        return None
+    return candidate_time
 
 
 def _weak_dsp_later_prefix_candidate(
@@ -2350,7 +4526,12 @@ def _sequential_pause_match(
                         "pause_ms": round(ons[extra_j], 1),
                         **observation_fields(extra_j, k),
                     })
-                accept(k, j, action="confirmed")
+                action = (
+                    "deferred_future_anchor"
+                    if deferred_future.get(k) == j
+                    else "confirmed"
+                )
+                accept(k, j, action=action)
                 j_cursor = j + 1
                 recover_pool = []
                 k += 1
@@ -2492,6 +4673,26 @@ def _sequential_pause_match(
                     recovered_j = next_j
                     recovered_until = missing_i
                     recover_js = [jj for jj in recover_js if jj > next_j]
+                if recovered_until < heard_i - 1:
+                    # Keep the future anchor only as a provisional right bracket
+                    # for bounded local CTC/wasl recovery.  Dropping every later
+                    # anchor would turn one local gap into a whole-tail drift.
+                    blocked_i = recovered_until + 1
+                    events.append({
+                        "boundary": blocked_i,
+                        "pause": j,
+                        "action": "unresolved_current",
+                        "reason": "missing_before_future",
+                        "observed_boundary": heard_i,
+                        "observed_sim": round(heard_s, 3),
+                        "direction": "future",
+                        "expected_ms": round(expected_ms(blocked_i), 1),
+                        "pause_ms": round(ons[j], 1),
+                    })
+                else:
+                    # Every skipped boundary was recovered, so this is again a
+                    # normal confirmed anchor rather than a deferred bracket.
+                    deferred_future.pop(heard_i, None)
                 j_cursor = recovered_j + 1 if recovered_j is not None else j_cursor
                 recover_pool = []
                 k = recovered_until + 1 if recovered_until >= k else k + 1
@@ -2637,6 +4838,23 @@ def _sequential_pause_match(
                     recovered_j = next_j
                     recovered_until = missing_i
                     recover_js = [jj for jj in recover_js if jj > next_j]
+                if recovered_until < best_obs_i - 1:
+                    # Keep a later pause only as a provisional right bracket
+                    # while the intermediate ayahs use bounded local recovery.
+                    blocked_i = recovered_until + 1
+                    events.append({
+                        "boundary": blocked_i,
+                        "pause": best_obs_j,
+                        "action": "unresolved_current",
+                        "reason": "missing_before_future",
+                        "observed_boundary": best_obs_i,
+                        "observed_sim": round(best_obs_s, 3),
+                        "direction": "future",
+                        "expected_ms": round(expected_ms(blocked_i), 1),
+                        "pause_ms": round(ons[best_obs_j], 1),
+                    })
+                else:
+                    deferred_future.pop(best_obs_i, None)
                 j_cursor = recovered_j + 1 if recovered_j is not None else j_cursor
                 recover_pool = []
                 k = recovered_until + 1 if recovered_until >= k else k + 1
@@ -2697,6 +4915,7 @@ def align_surah_fast(
     edge_guard_ms: float = 280.0,
     trace: dict | None = None,
     log_event: Callable[[str], None] | None = None,
+    ayah_audio_dir: str | None = None,
 ) -> list[tuple[int, int, float]]:
     """Two-phase windowed forced alignment; see module docstring.
 
@@ -2714,6 +4933,11 @@ def align_surah_fast(
             totals (used by the UI's explicit-phase view and by benchmarks).
         log_event: optional callback that receives human-readable realtime
             diagnostics while the sura is being processed.
+        ayah_audio_dir: optional directory of per-ayah clips from the exact
+        same recording. High-correlation local fingerprint matches may
+            refine rows within a bounded local shift and strict neighbour
+            order. This is independent evidence: a clip may begin just after
+            its owner pause. Ordinary FAST never downloads or requires clips.
 
     Returns:
         ``[(ayah, start_ms, conf)]`` for every ayah, ``start_ms`` monotonic.
@@ -2748,7 +4972,7 @@ def align_surah_fast(
         phase = read.get("phase")
         ayah = read.get("ayah")
         target = short(str(read.get("target") or ""))
-        if phase == "wasl-run":
+        if phase in {"wasl-run", "wasl-tiled-fallback"}:
             detect = f"детект wasl-серии с аята {ayah}"
         else:
             detect = f"детект аята {ayah}"
@@ -3018,6 +5242,8 @@ def align_surah_fast(
         basmala=basmala,
         intro_pause_start_ms=intro_pause.start_ms if intro_pause is not None else None,
         intro_pause_end_ms=intro_pause.end_ms if intro_pause is not None else None,
+        raw_confidence=float(res["confs"][fa1]),
+        reliable_confidence=conf_reliable,
     )
     if intro_pause is not None:
         emit(
@@ -3039,11 +5265,34 @@ def align_surah_fast(
         "onset_ms": round(content_start, 1),
         "raw_onset_ms": round(raw_content_start, 1),
         "conf": round(res["confs"][fa1], 3),
+        "owner_pause_start_ms": (
+            round(intro_pause.start_ms, 1) if intro_pause is not None else None
+        ),
+        "owner_pause_end_ms": (
+            round(intro_pause.end_ms, 1) if intro_pause is not None else None
+        ),
+        "decode_start_ms": 0.0,
+        "marker_ms": round(content_start, 1),
     })
     log_read(model_reads[-1])
     starts_ms[a1] = content_start
     confs[a1] = res["confs"][fa1]
-    tr_ayahs.append({"ayah": a1, "rough_ms": 0.0, "from_pause": False,
+    if intro_pause is not None:
+        pause_match_debug.append({
+            "ayah": a1,
+            "from_pause": True,
+            "pause": all_pause_ord.get(intro_pause.center_ms),
+            "pause_start_ms": round(intro_pause.start_ms, 1),
+            "pause_center_ms": round(intro_pause.center_ms, 1),
+            "pause_end_ms": round(intro_pause.end_ms, 1),
+            "rough_ms": round(content_start, 1),
+            "pause_sim": round(float(res["confs"][fa1]), 3),
+            "pause_reason": "intro-vad-tight",
+            "match_action": "first_ayah_pause_owner",
+            "timing_strategy": "pause_center_invariant",
+        })
+    tr_ayahs.append({"ayah": a1, "rough_ms": content_start,
+                     "from_pause": intro_pause is not None,
                      "onset_ms": content_start, "conf": confs[a1],
                      "win_s": round(res["win_ms"] / 1000.0, 2), "reliable": True})
 
@@ -3079,6 +5328,13 @@ def align_surah_fast(
     pause_ord = {p: i + 1 for i, p in enumerate(pause_onsets)}
     pause_by_center = {p.center_ms: p for p in pauses}
     tempo_ms_per_unit = content_dur / total_w
+    fallback_rate_units_per_ms = total_w / content_dur
+    tempo_observations: list[TempoObservation] = []
+    active_tempo_estimate = _estimate_tempo(
+        tempo_observations,
+        fallback_rate_units_per_ms=fallback_rate_units_per_ms,
+    )
+    predicted_pause_regions: dict[int, tuple[float, float, float]] = {}
 
     def expected_ayah_ms(a: int) -> float:
         return wunit.get(a, 1.0) * tempo_ms_per_unit
@@ -3150,6 +5406,16 @@ def align_surah_fast(
         score = tempo_score_cache.get(key)
         if score is None:
             score = float(wave_tempo_metrics(i, j)["tempo_score"])
+            region = predicted_pause_regions.get(i)
+            if region is not None:
+                lo_ms, center_ms, hi_ms = region
+                pause_ms = pause_onsets[j]
+                if lo_ms <= pause_ms <= hi_ms:
+                    score += _TEMPO_SCORE_WEIGHT
+                else:
+                    corridor = max(1.0, hi_ms - lo_ms)
+                    distance = min(abs(pause_ms - lo_ms), abs(pause_ms - hi_ms))
+                    score -= _TEMPO_SCORE_WEIGHT * min(1.0, distance / corridor)
             tempo_score_cache[key] = score
         return score
 
@@ -3161,6 +5427,26 @@ def align_surah_fast(
         "".join(word_trs[i] for i in ayah_words[a] if i < len(word_trs))
         for a in inner
     ]
+    ayah_word_trs = {
+        a: [word_trs[i] for i in ayah_words[a] if i < len(word_trs)]
+        for a in ayah_list
+    }
+    text_disambiguations: dict[int, TextDisambiguation] = {}
+    for i, a in enumerate(inner):
+        target_words = ayah_word_trs[a]
+        previous_words = ayah_word_trs[ayah_list[i]]
+        internal_sequences = [
+            previous_words[start:]
+            for start in range(1, len(previous_words))
+            if target_words
+            and _normalised_word(previous_words[start]) == _normalised_word(target_words[0])
+        ]
+        text_disambiguations[i] = _build_text_disambiguation(
+            a,
+            ayah_word_trs,
+            competitor_ayahs=inner[i + 1:i + 1 + _MATCH_LOOKAHEAD],
+            internal_sequences=internal_sequences,
+        )
     previous_bodies = [
         "".join(word_trs[i] for i in ayah_words[ayah_list[i]] if i < len(word_trs))
         for i in range(len(inner))
@@ -3169,6 +5455,10 @@ def align_surah_fast(
     opening_internal_repeats = _opening_internal_repeats(openings, previous_bodies)
     opening_internal_prefix = {
         i: repeat[0] for i, repeat in opening_internal_repeats.items()
+    }
+    opening_self_repeat_prefix = {
+        i: repeat[0]
+        for i, repeat in _opening_internal_repeats(openings, openings).items()
     }
     opening_text_risk = {
         i: max(opening_shared_prefix.get(i, 0), opening_internal_prefix.get(i, 0))
@@ -3183,48 +5473,87 @@ def align_surah_fast(
     pause_decode_reasons: dict[float, str] = {}
     pause_decode_starts: dict[float, float] = {}
     pause_decode_windows: dict[float, float] = {}
+    pause_read_plans: dict[tuple[int, float], PauseReadPlan] = {}
+    pause_match_decodes: dict[tuple[int, int], str] = {}
     micro_pause_debug: list[dict] = []
 
     def sim_chars_for(i: int) -> int:
+        disambiguation = text_disambiguations[i]
+        if disambiguation.reason != "unique":
+            required_chars = len(_collapse(disambiguation.target_text))
+            return min(
+                _SIM_TEXT_MAX_CHARS,
+                max(_SIM_CHARS, required_chars + _SIM_TEXT_MARGIN_CHARS),
+            )
         shared = opening_text_risk.get(i, 0)
         if shared < _AMBIG_PREFIX_CHARS:
             return _SIM_CHARS
         return min(_SIM_TEXT_MAX_CHARS, max(_SIM_CHARS, shared + _SIM_TEXT_MARGIN_CHARS))
 
     def decode_window_for(i: int) -> float:
-        shared = opening_text_risk.get(i, 0)
-        if shared < _AMBIG_PREFIX_CHARS:
-            return decode_win_ms
-        text_win = decode_win_ms + shared * _PAUSE_DECODE_TEXT_MS_PER_CHAR
-        return min(_PAUSE_DECODE_TEXT_MAX_WIN_MS, max(decode_ambig_win_ms, text_win))
+        disambiguation = text_disambiguations[i]
+        if active_tempo_estimate.fallback_used:
+            text_win = decode_win_ms
+        else:
+            text_win = (
+                disambiguation.required_text_units
+                / max(1e-9, active_tempo_estimate.conservative_rate)
+                + 450.0
+            )
+        if disambiguation.reason in {"shared_opening", "internal_repeat", "unresolved"}:
+            text_win = max(text_win, decode_ambig_win_ms)
+        return min(_PAUSE_DECODE_TEXT_MAX_WIN_MS, max(decode_win_ms, text_win))
 
-    def decode_pause(j: int, *, win_ms: float | None = None) -> str:
+    def decode_pause(
+        j: int,
+        *,
+        win_ms: float | None = None,
+        plan: PauseReadPlan | None = None,
+    ) -> str:
         if win_ms is None:
             win_ms = decode_win_ms
-        win_key = int(round(win_ms))
+        win_key = int(round(
+            plan.decode_end_ms - plan.decode_start_ms
+            if plan is not None else win_ms
+        ))
         key = (j, win_key)
         heard = pause_decodes.get(key)
         if heard is not None:
             return heard
         p = pause_onsets[j]
         pause = pause_by_center.get(p)
-        decode_start = (
-            max(0.0, pause.end_ms - _PAUSE_DECODE_PRE_ROLL_MS)
-            if pause is not None else max(0.0, p - 50.0)
-        )
-        decode_end = min(total_ms, decode_start + win_ms)
-        edge_delta = decode_start - pause.end_ms if pause is not None else 0.0
+        if plan is not None:
+            decode_start = plan.decode_start_ms
+            decode_end = plan.decode_end_ms
+        else:
+            decode_start = pause.start_ms if pause is not None else max(0.0, p - 50.0)
+            # ``win_ms`` is speech required after the pause; the total read also
+            # keeps a fixed minimum measured from pause start.
+            decode_end = min(
+                total_ms,
+                max(
+                    decode_start + decode_win_ms,
+                    (
+                        pause.end_ms + min(win_ms, _PAUSE_DECODE_TEXT_MAX_WIN_MS)
+                        if pause is not None else decode_start + win_ms
+                    ),
+                ),
+            )
+        edge_delta = decode_start - pause.start_ms if pause is not None else 0.0
         pause_decode_starts[p] = decode_start
         prev_win = pause_decode_windows.get(p, 0.0)
-        if win_ms >= prev_win:
-            pause_decode_windows[p] = win_ms
-            pause_decode_reasons[p] = "text-aware-opening" if win_ms > decode_win_ms else "default"
+        actual_win_ms = decode_end - decode_start
+        if actual_win_ms >= prev_win:
+            pause_decode_windows[p] = actual_win_ms
+            pause_decode_reasons[p] = plan.reason if plan is not None else (
+                "text-aware-opening" if win_ms > decode_win_ms else "default"
+            )
         emissions_for(max(0.0, decode_start - _PAUSE_CACHE_PRE_ROLL_MS), decode_end)
         heard = greedy_decode(decode_start, decode_end)
         pause_decodes[key] = heard
         emit(
             f"Пауза {pause_ord[p]}: чтение аудио {(decode_end - decode_start) / 1000.0:.2f} сек. "
-            f"после паузы {sec(pause.end_ms if pause is not None else p)} сек. "
+            f"с начала паузы {sec(pause.start_ms if pause is not None else p)} сек. "
             f"({sec(decode_start)}-{sec(decode_end)}), "
             f"старт относительно конца паузы {edge_delta:+.0f}мс, "
             f"reason={pause_decode_reasons[p]}, услышано «{short(heard)}»"
@@ -3234,20 +5563,66 @@ def align_surah_fast(
     sim_cache: dict[tuple[int, int, int], float] = {}
 
     def needs_extended_decode(i: int, j: int) -> bool:
-        return i in ambiguous_opening_idx and prior_delta(i, j) <= _AMBIG_DECODE_PRIOR_MS
+        return (
+            text_disambiguations[i].reason != "unique"
+            or (
+                i in ambiguous_opening_idx
+                and prior_delta(i, j) <= _AMBIG_DECODE_PRIOR_MS
+            )
+        )
 
     def _sim_ij(i: int, j: int) -> float:
         win_ms = decode_window_for(i) if needs_extended_decode(i, j) else decode_win_ms
-        win_key = int(round(win_ms))
+        pause = pause_by_center.get(pause_onsets[j])
+        plan = None
+        if pause is not None:
+            plan = _build_pause_read_plan(
+                pause_start_ms=pause.start_ms,
+                pause_end_ms=pause.end_ms,
+                total_ms=total_ms,
+                disambiguation=text_disambiguations[i],
+                tempo=active_tempo_estimate,
+                minimum_window_ms=decode_win_ms,
+                maximum_window_ms=_PAUSE_DECODE_TEXT_MAX_WIN_MS,
+                fallback_speech_ms=win_ms,
+            )
+        win_key = int(round(
+            plan.decode_end_ms - plan.decode_start_ms
+            if plan is not None else win_ms
+        ))
         key = (i, j, win_key)
         s = sim_cache.get(key)
         if s is None:
-            s = _sim(
-                decode_pause(j, win_ms=win_ms),
-                openings[i],
-                chars=sim_chars_for(i),
-            )
+            heard = decode_pause(j, win_ms=win_ms, plan=plan)
+            s = _sim(heard, openings[i], chars=sim_chars_for(i))
+            disambiguation = text_disambiguations[i]
+            for expansion_count in (1, 2):
+                if (
+                    disambiguation.reason == "unique"
+                    or s >= _CONFIRM_MATCH_SIM
+                    or pause is None
+                ):
+                    break
+                expanded_plan = _build_pause_read_plan(
+                    pause_start_ms=pause.start_ms,
+                    pause_end_ms=pause.end_ms,
+                    total_ms=total_ms,
+                    disambiguation=disambiguation,
+                    tempo=active_tempo_estimate,
+                    minimum_window_ms=decode_win_ms,
+                    maximum_window_ms=_PAUSE_DECODE_TEXT_MAX_WIN_MS,
+                    fallback_speech_ms=win_ms,
+                    expansion_count=expansion_count,
+                )
+                if plan is not None and expanded_plan.decode_end_ms <= plan.decode_end_ms + 1.0:
+                    break
+                plan = expanded_plan
+                heard = decode_pause(j, win_ms=win_ms, plan=plan)
+                s = _sim(heard, openings[i], chars=sim_chars_for(i))
             sim_cache[key] = s
+            pause_match_decodes[(i, j)] = heard
+            if plan is not None:
+                pause_read_plans[(i, pause_onsets[j])] = plan
         return s
 
     def prior_delta(i: int, j: int) -> float:
@@ -3266,7 +5641,9 @@ def align_surah_fast(
 
     def prefix_mismatch(i: int, j: int, s: float) -> bool:
         win_ms = decode_window_for(i) if needs_extended_decode(i, j) else decode_win_ms
-        heard = decode_pause(j, win_ms=win_ms)
+        heard = pause_match_decodes.get((i, j))
+        if heard is None:
+            heard = decode_pause(j, win_ms=win_ms)
         common = _onset_prefix_len(heard, openings[i])
         risky_text = opening_text_risk.get(i, 0) >= _AMBIG_PREFIX_CHARS
         if s >= _PREFIX_BYPASS_SIM and not risky_text:
@@ -3281,7 +5658,9 @@ def align_surah_fast(
         if repeat is None:
             return False
         win_ms = decode_window_for(i) if needs_extended_decode(i, j) else decode_win_ms
-        heard = decode_pause(j, win_ms=win_ms)
+        heard = pause_match_decodes.get((i, j))
+        if heard is None:
+            heard = decode_pause(j, win_ms=win_ms)
         _repeat_chars, repeat_suffix = repeat
         repeat_s = _sim(heard, repeat_suffix, chars=sim_chars_for(i))
         target_prefix = _onset_prefix_len(heard, openings[i])
@@ -3292,6 +5671,8 @@ def align_surah_fast(
         )
 
     def reject_match(i: int, j: int, s: float) -> str | None:
+        if _text_disambiguation_requires_atomic(text_disambiguations[i]):
+            return "unresolved_text"
         if far_weak_match(i, j, s):
             return "far_from_expected"
         if prefix_mismatch(i, j, s):
@@ -3355,6 +5736,8 @@ def align_surah_fast(
         pause_decode_reasons.clear()
         pause_decode_starts.clear()
         pause_decode_windows.clear()
+        pause_read_plans.clear()
+        pause_match_decodes.clear()
         sim_cache.clear()
         tempo_score_cache.clear()
 
@@ -3812,6 +6195,111 @@ def align_surah_fast(
         matched, sequence_events = run_sequence_match()
     if add_low_conf_pauses_from_gaps(matched, sequence_events):
         matched, sequence_events = run_sequence_match()
+
+    reliable_tempo_boundaries: set[int] = set()
+
+    def collect_confirmed_tempo_observations(
+        matched0: list[float | None],
+    ) -> list[TempoObservation]:
+        reliable_tempo_boundaries.clear()
+        observations: list[TempoObservation] = []
+        accepted_pause_intervals = [
+            (decision.pause.start_ms, decision.pause.end_ms)
+            for decision in pause_decisions
+            if decision.accepted
+        ]
+        left_boundary = -1
+        left_pause = None
+        for boundary, center in enumerate(matched0):
+            if center is None:
+                continue
+            pause = pause_by_center.get(center)
+            if pause is None:
+                continue
+            diag = pause_diag.get(pause)
+            if diag is not None and pause_tier(diag) == "weak":
+                continue
+            pause_j = pause_onsets.index(center)
+            similarity = _sim_ij(boundary, pause_j)
+            if similarity < _PAUSE_TRUST_SIM:
+                continue
+            speech_start = left_pause.end_ms if left_pause is not None else content_start
+            speech_ms = _speech_ms_excluding_pauses(
+                speech_start,
+                pause.start_ms,
+                accepted_pause_intervals,
+            )
+            text_units = sum(
+                wunit[ayah_list[ayah_i]]
+                for ayah_i in range(left_boundary + 1, boundary + 1)
+            )
+            if speech_ms > 0.0 and text_units > 0.0:
+                observations.append(TempoObservation(
+                    text_units=text_units,
+                    speech_ms=speech_ms,
+                    pause_ms=max(0.0, pause.end_ms - pause.start_ms),
+                    confidence=similarity,
+                ))
+            left_boundary = boundary
+            left_pause = pause
+            reliable_tempo_boundaries.add(boundary)
+        return observations
+
+    tempo_observations = collect_confirmed_tempo_observations(matched)
+    learned_tempo = _estimate_tempo(
+        tempo_observations,
+        fallback_rate_units_per_ms=fallback_rate_units_per_ms,
+    )
+    if not learned_tempo.fallback_used:
+        active_tempo_estimate = learned_tempo
+        left_boundary = -1
+        left_pause = None
+        for boundary, center in enumerate(matched):
+            speech_start = left_pause.end_ms if left_pause is not None else content_start
+            text_units = sum(
+                wunit[ayah_list[ayah_i]]
+                for ayah_i in range(left_boundary + 1, boundary + 1)
+            )
+            predicted_center = (
+                speech_start
+                + text_units / max(1e-9, active_tempo_estimate.rate_units_per_ms)
+            )
+            rate_uncertainty_ms = (
+                text_units
+                * active_tempo_estimate.spread_units_per_ms
+                / max(1e-9, active_tempo_estimate.rate_units_per_ms ** 2)
+            )
+            corridor_half_width = max(
+                3000.0,
+                rate_uncertainty_ms
+                + active_tempo_estimate.pause_median_ms
+                + active_tempo_estimate.pause_iqr_ms,
+            )
+            predicted_pause_regions[boundary] = (
+                predicted_center - corridor_half_width,
+                predicted_center,
+                predicted_center + corridor_half_width,
+            )
+            pause = pause_by_center.get(center) if center is not None else None
+            if pause is not None and boundary in reliable_tempo_boundaries:
+                left_boundary = boundary
+                left_pause = pause
+        # The first pass establishes reliable observations. Re-evaluate the same
+        # real pauses with local read lengths and a soft forecast, reusing cached
+        # emissions so the forecast never becomes acoustic evidence by itself.
+        reset_pause_caches()
+        matched, sequence_events = run_sequence_match()
+        tempo_observations = collect_confirmed_tempo_observations(matched)
+        active_tempo_estimate = _estimate_tempo(
+            tempo_observations,
+            fallback_rate_units_per_ms=fallback_rate_units_per_ms,
+        )
+    unresolved_sequence_boundaries = {
+        int(event["boundary"])
+        for event in sequence_events
+        if event.get("action") == "unresolved_current"
+        and isinstance(event.get("boundary"), int)
+    }
     for ev in sequence_events:
         action = ev.get("action")
         if action == "future_gap":
@@ -4283,7 +6771,9 @@ def align_surah_fast(
             matched[k] = pause_onsets[j]
             used_matched.add(pause_onsets[j])
             sequence_action[k] = "opening_order_repair"
-    matched_center_for_ayah: dict[int, float] = {}
+    matched_center_for_ayah: dict[int, float] = (
+        {a1: intro_pause.center_ms} if intro_pause is not None else {}
+    )
 
     def rounded_wave_metrics(i: int, j: int) -> dict[str, float | int | bool | None]:
         if j < 0:
@@ -4493,6 +6983,8 @@ def align_surah_fast(
             sim = _sim_ij(k, j)
             wave_metrics = rounded_wave_metrics(k, j)
             rough = pause_timing_point(matched[k], sim=sim, reason=pause_reason)
+            timing_strategy = "pause_timing_point"
+            derived_micro_pause: tuple[float, float, str] | None = None
             timing_adjusted = False
             if pause is not None:
                 previous_a = ayah_list[k]
@@ -4619,6 +7111,33 @@ def align_surah_fast(
                         selected_sim=sim,
                         action=sequence_action.get(k),
                     )
+                    if later_pause is None:
+                        later_pause = _recovered_later_best_pause_candidate(
+                            matched[k],
+                            next_time,
+                            [
+                                (
+                                    center,
+                                    _sim_ij(k, candidate_j),
+                                    _onset_prefix_len(
+                                        decode_pause(candidate_j),
+                                        openings[k],
+                                    ),
+                                )
+                                for candidate_j, center in enumerate(pause_onsets)
+                                if center not in used_matched
+                                and (candidate := pause_by_center.get(center)) is not None
+                                and (diag := pause_diag.get(candidate)) is not None
+                                and diag.reason == "dsp"
+                            ],
+                            pause_reason=pause_reason,
+                            selected_sim=sim,
+                            selected_prefix=_onset_prefix_len(
+                                decode_pause(j),
+                                openings[k],
+                            ),
+                            action=sequence_action.get(k),
+                        )
                     if later_pause is not None:
                         old_matched = matched[k]
                         matched[k] = later_pause
@@ -4769,6 +7288,69 @@ def align_surah_fast(
                     rough = pause_timing_point(prior_dsp, sim=sim, reason=pause_reason)
                     timing_adjusted = True
             if (
+                pause_reason == "micro-tempo"
+                and sim < _CONFIRM_MATCH_SIM
+                and (next_i := next(
+                    (
+                        ii
+                        for ii in range(k + 1, len(matched))
+                        if matched[ii] is not None
+                    ),
+                    None,
+                ))
+                is not None
+            ):
+                previous_a = ayah_list[k]
+                previous_place = place.get(previous_a)
+                previous_time = (
+                    previous_place[0]
+                    if previous_place is not None
+                    else starts_ms.get(previous_a, content_start)
+                )
+                next_a = inner[next_i]
+                next_time = float(matched[next_i])
+                prior_dsp = _micro_owner_prior_prefix_candidate(
+                    previous_time,
+                    matched[k],
+                    next_time,
+                    (cum_u[a] - cum_u[previous_a]) / total_w * content_dur,
+                    (cum_u[next_a] - cum_u[a]) / total_w * content_dur,
+                    [
+                        (
+                            center,
+                            _sim_ij(k, candidate_j),
+                            _onset_prefix_len(
+                                decode_pause(candidate_j),
+                                openings[k],
+                            ),
+                        )
+                        for candidate_j, center in enumerate(pause_onsets)
+                        if center not in used_matched
+                        and (candidate := pause_by_center.get(center)) is not None
+                        and (diag := pause_diag.get(candidate)) is not None
+                        and diag.reason == "dsp"
+                    ],
+                    pause_reason=pause_reason,
+                    action=sequence_action.get(k),
+                    selected_sim=sim,
+                    selected_prefix=_onset_prefix_len(
+                        decode_pause(j),
+                        openings[k],
+                    ),
+                )
+                if prior_dsp is not None:
+                    old_matched = matched[k]
+                    matched[k] = prior_dsp
+                    used_matched.discard(old_matched)
+                    used_matched.add(prior_dsp)
+                    j = pause_onsets.index(prior_dsp)
+                    pause = pause_by_center.get(prior_dsp)
+                    pause_reason = pause_diag[pause].reason if pause in pause_diag else None
+                    sim = _sim_ij(k, j)
+                    wave_metrics = rounded_wave_metrics(k, j)
+                    rough = pause_timing_point(prior_dsp, sim=sim, reason=pause_reason)
+                    timing_adjusted = True
+            if (
                 sequence_action.get(k) == "weak_pause_recovery"
                 and pause is not None
                 and pause_reason != "micro-tempo"
@@ -4782,11 +7364,27 @@ def align_surah_fast(
                 and (wave_metrics.get("prev_speech_ms") or 0.0) <= 1000.0
                 and (wave_metrics.get("next_speech_ms") or 0.0) >= 2500.0
             ):
-                rough = min(
+                micro_expected = min(
                     total_ms,
                     rough + 0.36 * float(wave_metrics.get("next_speech_ms") or 0.0),
                 )
-                timing_adjusted = True
+                micro_valley = _find_micro_pause_valley(
+                    pcm,
+                    sr,
+                    interval_start_ms=rough + 100.0,
+                    interval_end_ms=min(total_ms, micro_expected + 700.0),
+                    expected_ms=micro_expected,
+                    search_ms=1800.0,
+                )
+                if micro_valley is not None:
+                    rough = _micro_valley_center(micro_valley)
+                    derived_micro_pause = (
+                        micro_valley[0],
+                        micro_valley[1],
+                        "micro_tempo_valley_recovery",
+                    )
+                    timing_adjusted = True
+                    timing_strategy = "micro_tempo_valley_recovery"
             micro_shelf_start = _micro_shelf_start_candidate(
                 pause_reason=pause_reason,
                 sim=sim,
@@ -4869,6 +7467,10 @@ def align_surah_fast(
                         ):
                             rough = valley_center
                             timing_adjusted = True
+                            derived_micro_pause = (
+                                valley[0], valley[1], "rejected_micro_valley_recovery"
+                            )
+                            timing_strategy = "rejected_micro_valley_recovery"
                         elif _weak_dsp_expected_micro_valley_candidate(
                             pause_reason=pause_reason,
                             action=sequence_action.get(k),
@@ -4884,6 +7486,10 @@ def align_surah_fast(
                         ):
                             rough = valley_center
                             timing_adjusted = True
+                            derived_micro_pause = (
+                                valley[0], valley[1], "weak_dsp_micro_valley_recovery"
+                            )
+                            timing_strategy = "weak_dsp_micro_valley_recovery"
                         elif (
                             pause is not None
                             and pause_reason == "weak-dsp"
@@ -4930,6 +7536,12 @@ def align_surah_fast(
                                 ):
                                     rough = post_valley_center
                                     timing_adjusted = True
+                                    derived_micro_pause = (
+                                        post_valley[0],
+                                        post_valley[1],
+                                        "post_selected_micro_valley_recovery",
+                                    )
+                                    timing_strategy = "post_selected_micro_valley_recovery"
             if (
                 pause is not None
                 and _weak_dsp_prior_recovery_candidate(
@@ -5090,6 +7702,28 @@ def align_surah_fast(
                 if short_low_sim_start:
                     rough = pause.start_ms
                     timing_adjusted = True
+                weak_recovered_long_pause_start = _weak_recovered_long_pause_start_candidate(
+                    pause_reason=pause_reason,
+                    pause_duration_ms=pause.end_ms - pause.start_ms,
+                    sim=sim,
+                    action=sequence_action.get(k),
+                    expected_delta_ms=rough - expected,
+                    next_quality=float(wave_metrics.get("next_quality") or 0.0),
+                )
+                if weak_recovered_long_pause_start:
+                    rough = pause.start_ms
+                    timing_adjusted = True
+                    timing_strategy = "weak_recovered_long_pause_start"
+                if _weak_recovered_compact_pause_center_candidate(
+                    pause_reason=pause_reason,
+                    pause_duration_ms=pause.end_ms - pause.start_ms,
+                    sim=sim,
+                    action=sequence_action.get(k),
+                    next_quality=float(wave_metrics.get("next_quality") or 0.0),
+                ):
+                    rough = matched[k]
+                    timing_adjusted = True
+                    timing_strategy = "weak_recovered_compact_pause_center"
                 if dsp_edge_timing == "start":
                     rough = pause.start_ms
                     timing_adjusted = True
@@ -5140,7 +7774,19 @@ def align_surah_fast(
                     ],
                     raw_is_internal_stop=True,
                 )
-                if prior_pause is not None and prior_pause != matched[k]:
+                prior_pause_sim = (
+                    _sim_ij(k, pause_onsets.index(prior_pause))
+                    if prior_pause is not None
+                    else 0.0
+                )
+                if (
+                    prior_pause is not None
+                    and prior_pause != matched[k]
+                    and _allow_prior_internal_stop_replacement(
+                        prior_pause_sim,
+                        selected_pause_duration_ms=pause.end_ms - pause.start_ms,
+                    )
+                ):
                     old_matched = matched[k]
                     matched[k] = prior_pause
                     used_matched.discard(old_matched)
@@ -5226,29 +7872,113 @@ def align_surah_fast(
                 rough = pause.start_ms
                 timing_adjusted = True
                 short_low_sim_lock = True
-            matched_center_for_ayah[a] = matched[k]
+            # Timing recovery may move a selected boundary onto another detected
+            # pause (for example from a weak internal stop to the actual short
+            # pause immediately before the next ayah).  The pause identity is a
+            # correctness claim, not merely diagnostics: keep it in sync with
+            # the final rough onset before refinement and never leave the old
+            # pause attached to a marker that no longer belongs to it.
+            actual_pause = next(
+                (
+                    candidate
+                    for decision in pause_decisions
+                    for candidate in (decision.pause,)
+                    if candidate.start_ms <= rough <= candidate.end_ms
+                    and candidate.center_ms in pause_onsets
+                ),
+                None,
+            )
+            replaced_pause: int | None = None
+            replaced_pause_reason: str | None = None
+            recovered_pause_action: str | None = None
+            if (
+                actual_pause is not None
+                and actual_pause.center_ms == matched[k]
+                and pause != actual_pause
+            ):
+                # An earlier recovery already changed ``matched[k]``.  Keep the
+                # accompanying Pause object coherent before writing the match.
+                replaced_pause = (
+                    pause_ord.get(pause.center_ms) if pause is not None else None
+                )
+                replaced_pause_reason = pause_reason
+                pause = actual_pause
+                j = pause_onsets.index(actual_pause.center_ms)
+                pause_reason = pause_diag[pause].reason if pause in pause_diag else None
+                sim = _sim_ij(k, j)
+                wave_metrics = rounded_wave_metrics(k, j)
+                timing_adjusted = True
+                recovered_pause_action = "post_selected_micro_recovery"
+            elif (
+                actual_pause is not None
+                and actual_pause.center_ms != matched[k]
+                and not any(
+                    center == actual_pause.center_ms
+                    for index, center in enumerate(matched)
+                    if index != k
+                )
+            ):
+                old_matched = matched[k]
+                replaced_pause = pause_ord.get(old_matched)
+                replaced_pause_reason = pause_reason
+                matched[k] = actual_pause.center_ms
+                used_matched.discard(old_matched)
+                used_matched.add(actual_pause.center_ms)
+                j = pause_onsets.index(actual_pause.center_ms)
+                pause = actual_pause
+                pause_reason = pause_diag[pause].reason if pause in pause_diag else None
+                sim = _sim_ij(k, j)
+                wave_metrics = rounded_wave_metrics(k, j)
+                timing_adjusted = True
+                recovered_pause_action = "post_selected_micro_recovery"
+            derived_micro_active = (
+                derived_micro_pause is not None
+                and actual_pause is None
+                and derived_micro_pause[0] <= rough <= derived_micro_pause[1]
+            )
+            final_match_action = (
+                derived_micro_pause[2]
+                if derived_micro_active
+                else recovered_pause_action or sequence_action.get(k)
+            )
+            final_pause_center = rough if derived_micro_active else matched[k]
+            final_pause_start = derived_micro_pause[0] if derived_micro_active else pause.start_ms
+            final_pause_end = derived_micro_pause[1] if derived_micro_active else pause.end_ms
+            final_pause_ordinal = None if derived_micro_active else pause_ord.get(matched[k])
+            final_pause_reason = "micro-valley" if derived_micro_active else pause_reason
+            matched_center_for_ayah[a] = final_pause_center
             place[a] = (rough, True)
             pause_match_by_ayah[a] = {
-                "pause": pause_ord.get(matched[k]),
+                "pause": final_pause_ordinal,
                 "sim": sim,
-                "center_ms": matched[k],
+                "center_ms": final_pause_center,
                 "rough_ms": rough,
-                "action": sequence_action.get(k),
-                "reason": pause_reason,
+                "action": final_match_action,
+                "reason": final_pause_reason,
                 "timing_adjusted": timing_adjusted,
+                "timing_strategy": timing_strategy,
                 "timing_lock": "short_low_sim_start" if short_low_sim_lock else None,
                 "prev_speech_ms": wave_metrics.get("prev_speech_ms"),
                 "next_speech_ms": wave_metrics.get("next_speech_ms"),
+                "prev_quality": wave_metrics.get("prev_quality"),
+                "next_quality": wave_metrics.get("next_quality"),
+                "expected_delta_ms": rough - expected,
+                "best_pause_is_later": (
+                    best_j >= 0 and pause_onsets[best_j] > final_pause_center
+                ),
+                "best_pause_similarity": best_sim,
+                "replaced_pause": replaced_pause,
+                "replaced_pause_reason": replaced_pause_reason,
             }
             pause_match_debug.append({
                 "ayah": a,
                 "expected_ms": round(expected, 1),
                 "rough_ms": round(rough, 1),
                 "from_pause": True,
-                "pause": pause_ord.get(matched[k]),
-                "pause_start_ms": round(pause.start_ms, 1) if pause is not None else None,
-                "pause_center_ms": round(matched[k], 1),
-                "pause_end_ms": round(pause.end_ms, 1) if pause is not None else None,
+                "pause": final_pause_ordinal,
+                "pause_start_ms": round(final_pause_start, 1),
+                "pause_center_ms": round(final_pause_center, 1),
+                "pause_end_ms": round(final_pause_end, 1),
                 "pause_sim": round(sim, 3),
                 "best_pause": pause_ord.get(pause_onsets[best_j]) if best_j >= 0 else None,
                 "best_sim": round(best_sim, 3),
@@ -5259,10 +7989,13 @@ def align_surah_fast(
                 "prior_window_ms": round(_MATCH_PRIOR_WINDOW_MS, 1),
                 "expected_delta_ms": round(rough - expected, 1),
                 "drop_reason": None,
-                "match_action": sequence_action.get(k),
-                "pause_reason": pause_reason,
+                "match_action": final_match_action,
+                "pause_reason": final_pause_reason,
                 "timing_adjusted": timing_adjusted,
+                "timing_strategy": timing_strategy,
                 "timing_lock": "short_low_sim_start" if short_low_sim_lock else None,
+                "replaced_pause": replaced_pause,
+                "replaced_pause_reason": replaced_pause_reason,
                 **wave_metrics,
             })
             emit(
@@ -5280,6 +8013,7 @@ def align_surah_fast(
             recovered_wasl_pause_reason: str | None = None
             recovered_wasl_sim: float | None = None
             if sequence_reason.get(k) == "missing_before_future":
+                wasl_rough = rough
                 prev_t = next(
                     (matched[ii] for ii in range(k - 1, -1, -1) if matched[ii] is not None),
                     None,
@@ -5310,16 +8044,24 @@ def align_surah_fast(
                     ],
                 )
                 if pause_candidate is not None:
-                    recovered_wasl_pause = pause_candidate
                     j = pause_onsets.index(pause_candidate)
                     pause = pause_by_center.get(pause_candidate)
-                    recovered_wasl_pause_reason = (
-                        pause_diag[pause].reason if pause in pause_diag else None
-                    )
-                    recovered_wasl_sim = _sim_ij(k, j)
-                    matched[k] = pause_candidate
-                    used_matched.add(pause_candidate)
-                    rough = pause_candidate
+                    candidate_sim = _sim_ij(k, j)
+                    # A future pause can only resolve a missing current ayah
+                    # when its opening actually reads as that ayah.  Otherwise
+                    # preserve the wasl interval for full anchored alignment.
+                    if candidate_sim >= _RECOVER_MATCH_SIM:
+                        recovered_wasl_pause = pause_candidate
+                        recovered_wasl_pause_reason = (
+                            pause_diag[pause].reason if pause in pause_diag else None
+                        )
+                        recovered_wasl_sim = candidate_sim
+                        matched[k] = pause_candidate
+                        used_matched.add(pause_candidate)
+                        rough = pause_candidate
+                    else:
+                        rough = wasl_rough
+                        snapped_wasl_hints.pop(a, None)
             wave_j = (
                 pause_onsets.index(recovered_wasl_pause)
                 if recovered_wasl_pause is not None
@@ -5339,6 +8081,9 @@ def align_surah_fast(
                     "timing_lock": None,
                     "prev_speech_ms": wave_metrics.get("prev_speech_ms"),
                     "next_speech_ms": wave_metrics.get("next_speech_ms"),
+                    "prev_quality": wave_metrics.get("prev_quality"),
+                    "next_quality": wave_metrics.get("next_quality"),
+                    "expected_delta_ms": rough - expected,
                 }
                 pause_match_debug.append({
                     "ayah": a,
@@ -5418,6 +8163,7 @@ def align_surah_fast(
         ayah: int | None = None,
         phase: str = "probe",
         edge_candidates: list[tuple[float, float, bool]] | None = None,
+        pause_start_ms: float | None = None,
     ):
         """Grow a window around ``c`` until the onset of word ``fa`` locks on.
 
@@ -5429,8 +8175,16 @@ def align_surah_fast(
         best_score: tuple[int, float] | None = None  # (inside_window, conf)
         for w in range(start_step, n_steps):
             win_ms = (min_win_s + w * grow_s) * 1000.0
-            t0 = max(prev_start + 30.0, c - win_ms * 0.45)
-            t1 = min(total_ms, c + win_ms * 0.55)
+            if pause_start_ms is None:
+                t0 = max(prev_start + 30.0, c - win_ms * 0.45)
+                t1 = min(total_ms, c + win_ms * 0.55)
+            else:
+                # First probe starts exactly at pause start.  Wider retries add
+                # both earlier context and a longer speech tail, never moving
+                # the boundary candidate away from the pause centre.
+                grown_ms = max(0.0, win_ms - min_win_s * 1000.0)
+                t0 = max(prev_start + 30.0, pause_start_ms - grown_ms * 0.35)
+                t1 = min(total_ms, pause_start_ms + min_win_s * 1000.0 + grown_ms * 0.65)
             # words filling [t0, c] (prev-ayah tail) and [c, t1] (this-ayah head),
             # sized to the audio so CTC never stretches a few words over a gap.
             i0 = fa
@@ -5487,9 +8241,14 @@ def align_surah_fast(
     # the continuous forced alignment that the full path uses locally — and read
     # off each ayah's first-word onset. Accurate and one read per run.
     wasl_onsets: dict[int, tuple[float, float]] = {}
-    wasl_pause_hints: dict[int, float] = {}
+    wasl_audio_bracket_proven: dict[int, bool] = {}
+    insufficient_wasl_right_anchors: set[int] = set()
+    wasl_run_by_right_anchor: dict[int, tuple[int, list[int]]] = {}
+    wasl_run_extension_right_anchor: dict[int, int] = {}
     section_onsets: dict[int, tuple[float, float]] = {}
     internal_stop_onsets: dict[int, tuple[float, float]] = {}
+    long_pause_context_requests: list[int] = []
+    very_long_pause_context_requests: set[int] = set()
 
     def ayah_opening(a: int) -> str:
         return "".join(word_trs[i] for i in ayah_words[a][:4] if i < len(word_trs))
@@ -5655,6 +8414,40 @@ def align_surah_fast(
         if abs(hint - onset) > _WASL_PAUSE_HINT_MS:
             return
         internal_stop_onsets[a] = (hint, conf)
+        replacement_pause = pause_by_center[hint]
+        replacement_diag = pause_diag.get(replacement_pause)
+        replaced_pause = match.get("pause")
+        place[a] = (hint, True)
+        matched_center_for_ayah[a] = hint
+        match.update({
+            "pause": pause_ord.get(hint, all_pause_ord.get(hint)),
+            "center_ms": hint,
+            "rough_ms": hint,
+            "action": "internal_stop_pause_recovery",
+            "reason": replacement_diag.reason if replacement_diag is not None else "dsp",
+            "timing_adjusted": True,
+            "replaced_pause": replaced_pause,
+            "replaced_pause_reason": diag.reason,
+        })
+        for debug_match in pause_match_debug:
+            if debug_match.get("ayah") != a:
+                continue
+            debug_match.update({
+                "from_pause": True,
+                "pause": pause_ord.get(hint, all_pause_ord.get(hint)),
+                "pause_start_ms": round(replacement_pause.start_ms, 1),
+                "pause_center_ms": round(hint, 1),
+                "pause_end_ms": round(replacement_pause.end_ms, 1),
+                "rough_ms": round(hint, 1),
+                "pause_reason": (
+                    replacement_diag.reason if replacement_diag is not None else "dsp"
+                ),
+                "match_action": "internal_stop_pause_recovery",
+                "timing_adjusted": True,
+                "replaced_pause": replaced_pause,
+                "replaced_pause_reason": diag.reason,
+            })
+            break
         model_reads.append({
             "phase": "internal-stop-repair",
             "ayah": a,
@@ -5666,58 +8459,298 @@ def align_surah_fast(
         })
         log_read(model_reads[-1])
 
+    tiled_fallback_rows: dict[int, tuple[float, float]] | None = None
+    tiled_fallback_trace: dict = {}
+    tiled_fallback_reasons: list[str] = []
+
+    def bounded_surah_fallback(reason: str) -> dict[int, tuple[float, float]]:
+        """Run whole-sura recovery with bounded tiled CTC, at most once."""
+        nonlocal tiled_fallback_rows
+        if tiled_fallback_rows is None:
+            from surah_cutter.core import align_tiled
+
+            emit(
+                f"Сура {surah}: bounded tiled CTC fallback ({reason}); "
+                "whole-sura Viterbi запрещён по памяти"
+            )
+            fallback_rows = align_tiled.align_surah_tiled(
+                pcm,
+                sr,
+                words,
+                surah=surah,
+                bundle=bundle,
+                trace=tiled_fallback_trace,
+                log_event=log_event,
+            )
+            tiled_fallback_rows = {
+                int(ayah): (float(start_ms), float(confidence))
+                for ayah, start_ms, confidence in fallback_rows
+            }
+            missing = [ayah for ayah in ayah_list if ayah not in tiled_fallback_rows]
+            if missing:
+                raise RuntimeError(
+                    f"tiled CTC fallback omitted ayahs {missing[:8]}"
+                )
+            emit(
+                f"Сура {surah}: bounded tiled CTC fallback завершён, "
+                f"chunks={tiled_fallback_trace.get('n_chunks')}"
+            )
+        if reason not in tiled_fallback_reasons:
+            tiled_fallback_reasons.append(reason)
+        return tiled_fallback_rows
+
     def fill_wasl_run(ai: int) -> None:
         left_a = ayah_list[ai - 1]  # always an anchor (run starts after one)
         i0 = ayah_words[left_a][0]
-        t0 = starts_ms[left_a]
+        left_center = matched_center_for_ayah.get(left_a)
+        left_owner = pause_by_center.get(left_center) if left_center is not None else None
+        t0 = left_owner.start_ms if left_owner is not None else starts_ms[left_a]
         j = ai
         run: list[int] = []
         while j < len(ayah_list) and not place[ayah_list[j]][1]:
             run.append(ayah_list[j])
             j += 1
+        right_a: int | None = None
+        right_owner = None
         if j < len(ayah_list):  # bracketed on the right by the next anchor
             right_a = ayah_list[j]
-            i1 = ayah_words[right_a][0] + 1  # include its first word as the closer
-            t1 = place[right_a][0]
+            wasl_run_by_right_anchor[right_a] = (left_a, list(run))
+            # The right owner was already proved by a separate post-pause read.
+            # The atomic block itself contains exactly the speech between the
+            # external owners, ending at the right pause rather than borrowing
+            # the first word of the next anchored ayah.
+            i1 = ayah_words[right_a][0]
+            right_center = matched_center_for_ayah.get(right_a, place[right_a][0])
+            right_owner = pause_by_center.get(right_center)
+            t1 = right_owner.end_ms if right_owner is not None else place[right_a][0]
         else:  # trailing wasl run: to the end of the sura
             i1 = n_words
             t1 = total_ms
-        if t1 - t0 > _MAX_WASL_RUN_ALIGN_MS:
-            for a in run:
-                wasl_onsets[a] = (place[a][0], 0.0)
-            emit(
-                f"Wasl-серия {run[0]}-{run[-1]}: окно {(t1 - t0) / 1000.0:.2f} сек. "
-                f"слишком длинное для fast, оставляю rough без цельного align"
+
+        res = align_slice(i0, i1, t0, t1, basmala=False)
+        result_i0 = i0
+        tiled_fallback = False
+        if res is None:
+            fallback = bounded_surah_fallback(
+                f"atomic_wasl_{run[0]}_{run[-1]}"
             )
-            return
-        res = align_slice(i0, i1, t0 - 60.0, t1 + 60.0, basmala=False)
-        for a in run:
-            fa = ayah_words[a][0]
-            if res is None:
-                wasl_onsets[a] = (place[a][0], 0.0)
-            else:
-                k = fa - i0
+            tiled_fallback = True
+            for a in run:
+                wasl_onsets[a] = fallback[a]
+        else:
+            for a in run:
+                fa = ayah_words[a][0]
+                k = fa - result_i0
                 onset = res["starts"][k]
                 verify = _sim(
                     greedy_decode(onset - 50.0, onset + _VERIFY_WINDOW_MS),
                     ayah_opening(a),
                 )
                 wasl_onsets[a] = (onset, max(res["confs"][k], verify))
-                hint = nearest_pause_point(onset, strong_only=True)
-                if hint is not None and abs(onset - hint) <= _WASL_PAUSE_HINT_MS:
-                    wasl_pause_hints[a] = hint
-                    wasl_onsets[a] = (hint, wasl_onsets[a][1])
-        if res is not None:
-            model_reads.append({
-                "phase": "wasl-run",
-                "ayah": run[0],
-                "window_ms": [round(res["base"], 1), round(res["end"], 1)],
-                "words": " ".join(w.text for w in words[i0:i1]),
-                "target": " ".join(words[ayah_words[a][0]].text for a in run),
-                "onset_ms": round(wasl_onsets[run[0]][0], 1),
-                "conf": round(wasl_onsets[run[0]][1], 3),
-            })
-            log_read(model_reads[-1])
+        if len(run) == 1:
+            a = run[0]
+            run_ai = ayah_list.index(a)
+            previous_a = ayah_list[run_ai - 1]
+            current_opening = openings[run_ai - 1]
+            previous_opening = "".join(
+                word_trs[word_i]
+                for word_i in ayah_words[previous_a]
+                if word_i < len(word_trs)
+            )
+            full_onset, full_conf = wasl_onsets[a]
+            repeated_candidates: list[tuple[float, float, float]] = []
+            repeated_decode_windows: dict[float, float] = {}
+            for candidate_j, center in enumerate(pause_onsets):
+                if center in matched_center_for_ayah.values():
+                    continue
+                if not starts_ms[previous_a] < center < full_onset:
+                    continue
+                candidate = pause_by_center.get(center)
+                diag = pause_diag.get(candidate) if candidate is not None else None
+                if diag is None or diag.reason != "dsp":
+                    continue
+                candidate_window = max(
+                    decode_ambig_win_ms,
+                    pause_decode_windows.get(center, decode_win_ms),
+                )
+                heard = decode_pause(candidate_j, win_ms=candidate_window)
+                repeated_decode_windows[center] = candidate_window
+                repeated_candidates.append(
+                    (
+                        center,
+                        _sim(heard, current_opening),
+                        _sim(heard, previous_opening),
+                    )
+                )
+            shared_prefix_chars = _common_prefix_len(
+                current_opening,
+                previous_opening,
+            )
+            candidate_center = _repeated_wasl_prior_pause_candidate(
+                starts_ms[previous_a],
+                full_onset,
+                (cum_u[a] - cum_u[previous_a]) / total_w * content_dur,
+                repeated_candidates,
+                opening_shared_prefix_chars=shared_prefix_chars,
+                full_read_confidence=full_conf,
+                reliable_confidence=conf_reliable,
+            )
+            recovery_action = "repeated_wasl_pause_recovery"
+            if candidate_center is None:
+                candidate_center = _single_wasl_prior_pause_candidate(
+                    starts_ms[previous_a],
+                    full_onset,
+                    repeated_candidates,
+                    opening_shared_prefix_chars=shared_prefix_chars,
+                    full_read_confidence=full_conf,
+                    reliable_confidence=conf_reliable,
+                )
+                recovery_action = "single_wasl_pause_recovery"
+            if candidate_center is not None:
+                candidate_pause = pause_by_center[candidate_center]
+                candidate_diag = pause_diag[candidate_pause]
+                candidate_j = pause_onsets.index(candidate_center)
+                repeated_decode_window = repeated_decode_windows[candidate_center]
+                candidate_sim = _sim(
+                    decode_pause(candidate_j, win_ms=repeated_decode_window),
+                    current_opening,
+                )
+                chosen = pause_timing_point(
+                    candidate_center,
+                    sim=max(candidate_sim, conf_thresh),
+                    reason=candidate_diag.reason,
+                )
+                wasl_onsets[a] = (chosen, max(full_conf, candidate_sim))
+                place[a] = (candidate_center, True)
+                matched_center_for_ayah[a] = candidate_center
+                match = pause_match_by_ayah.get(a, {})
+                match.update({
+                    "pause": pause_ord.get(
+                        candidate_center,
+                        all_pause_ord.get(candidate_center),
+                    ),
+                    "center_ms": candidate_center,
+                    "rough_ms": chosen,
+                    "action": recovery_action,
+                    "reason": candidate_diag.reason,
+                    "sim": candidate_sim,
+                    "timing_adjusted": True,
+                })
+                for debug_match in pause_match_debug:
+                    if debug_match.get("ayah") != a:
+                        continue
+                    debug_match.update({
+                        "from_pause": True,
+                        "pause": pause_ord.get(
+                            candidate_center,
+                            all_pause_ord.get(candidate_center),
+                        ),
+                        "pause_start_ms": round(candidate_pause.start_ms, 1),
+                        "pause_center_ms": round(candidate_center, 1),
+                        "pause_end_ms": round(candidate_pause.end_ms, 1),
+                        "rough_ms": round(chosen, 1),
+                        "pause_sim": round(candidate_sim, 3),
+                        "pause_reason": candidate_diag.reason,
+                        "match_action": recovery_action,
+                        "timing_adjusted": True,
+                    })
+                    break
+                model_reads.append({
+                    "phase": recovery_action.replace("_", "-"),
+                    "ayah": a,
+                    "window_ms": [
+                        round(candidate_pause.start_ms, 1),
+                        round(candidate_pause.end_ms, 1),
+                    ],
+                    "onset_ms": round(chosen, 1),
+                    "conf": round(max(full_conf, candidate_sim), 3),
+                })
+                emit(
+                    f"Wasl-recovery аята {a}: полный onset {sec(full_onset)} сек. "
+                    f"заменён подтверждённой паузой {sec(candidate_center)} сек."
+                )
+        right_anchor_trusted = right_a is None
+        if right_a is not None:
+            right_match = pause_match_by_ayah.get(right_a, {})
+            right_anchor_trusted = (
+                place[right_a][1]
+                and float(right_match.get("sim") or 0.0) >= _PAUSE_TRUST_SIM
+            )
+            classifications = {
+                a: _full_wasl_read_classification(
+                    wasl_onsets[a][1],
+                    acceptance_confidence=conf_thresh,
+                    audio_bracket_proven=(
+                        right_anchor_trusted
+                        or opening_text_risk.get(ayah_list.index(a) - 1, 0)
+                        < _AMBIG_PREFIX_CHARS
+                    ),
+                )
+                for a in run
+            }
+            if any(
+                _insufficient_wasl_read_invalidates_right_anchor(
+                    classification=classifications[a],
+                    bracketed_on_right=True,
+                    right_anchor_from_pause=place[right_a][1],
+                    right_anchor_similarity=float(right_match.get("sim") or 0.0),
+                    pause_trust_similarity=_PAUSE_TRUST_SIM,
+                    opening_shared_prefix_chars=opening_text_risk.get(
+                        ayah_list.index(a) - 1,
+                        0,
+                    ),
+                    ambiguous_prefix_chars=_AMBIG_PREFIX_CHARS,
+                )
+                for a in run
+            ):
+                insufficient_wasl_right_anchors.add(right_a)
+            if _ambiguous_wasl_run_requires_bracket_extension(
+                run_length=len(run),
+                opening_shared_prefix_chars=max(
+                    (
+                        opening_text_risk.get(ayah_list.index(run_a) - 1, 0)
+                        for run_a in run
+                    ),
+                    default=0,
+                ),
+                minimum_confidence=min(
+                    (wasl_onsets[run_a][1] for run_a in run),
+                    default=1.0,
+                ),
+                acceptance_confidence=conf_thresh,
+                right_anchor_from_pause=place[right_a][1],
+                right_anchor_similarity=float(right_match.get("sim") or 0.0),
+                pause_trust_similarity=_PAUSE_TRUST_SIM,
+            ):
+                wasl_run_extension_right_anchor[run[0]] = right_a
+        for run_a in run:
+            wasl_audio_bracket_proven[run_a] = (
+                right_anchor_trusted
+                or opening_text_risk.get(ayah_list.index(run_a) - 1, 0)
+                < _AMBIG_PREFIX_CHARS
+            )
+        model_reads.append({
+            "phase": "wasl-tiled-fallback" if tiled_fallback else "wasl-run",
+            "ayah": run[0],
+            "window_ms": (
+                [0.0, round(total_ms, 1)]
+                if tiled_fallback else [round(res["base"], 1), round(res["end"], 1)]
+            ),
+            "left_owner_pause_ms": (
+                [round(left_owner.start_ms, 1), round(left_owner.end_ms, 1)]
+                if left_owner is not None else None
+            ),
+            "right_owner_pause_ms": (
+                [round(right_owner.start_ms, 1), round(right_owner.end_ms, 1)]
+                if right_a is not None and right_owner is not None else None
+            ),
+            "atomic": True,
+            "words": " ".join(w.text for w in words[i0:i1]),
+            "target": " ".join(words[ayah_words[a][0]].text for a in run),
+            "onset_ms": round(wasl_onsets[run[0]][0], 1),
+            "conf": round(wasl_onsets[run[0]][1], 3),
+        })
+        log_read(model_reads[-1])
 
     for ai in range(1, len(ayah_list)):
         a = ayah_list[ai]
@@ -5735,8 +8768,150 @@ def align_surah_fast(
                 reliable = conf >= conf_thresh
                 internal_stop_repaired = True
 
+        context_ctc_repaired = False
+        match = pause_match_by_ayah.get(a, {})
+        context_pause = pause_by_center.get(float(match.get("center_ms") or c0))
+        context_metrics = (
+            rounded_wave_metrics(
+                ai - 1,
+                pause_onsets.index(context_pause.center_ms),
+            )
+            if context_pause is not None
+            else {}
+        )
+        post_micro_context = (
+            str(match.get("action") or "") == "post_selected_micro_recovery"
+            and str(match.get("reason") or "") == "dsp"
+            and context_pause is not None
+            and context_pause.end_ms - context_pause.start_ms >= 1800.0
+            and float(match.get("sim") or 0.0) >= 0.40
+            and float(context_metrics.get("prev_quality") or 0.0) <= 0.10
+            and float(context_metrics.get("next_quality") or 0.0) >= 0.50
+        )
+        if (
+            from_pause
+            and not timing_locked
+            and not internal_stop_repaired
+            and ai + 1 < len(ayah_list)
+            and context_pause is not None
+            and post_micro_context
+        ):
+            previous_a = ayah_list[ai - 1]
+            next_a = ayah_list[ai + 1]
+            i0 = ayah_words[previous_a][0]
+            i1 = ayah_words[next_a][0] + 1
+            res = align_slice(
+                i0,
+                i1,
+                max(0.0, starts_ms[previous_a] - 200.0),
+                min(total_ms, max(place[next_a][0] + 700.0, c0 + 700.0)),
+                basmala=False,
+            )
+            k = fa - i0
+            if res is not None and 0 <= k < len(res["starts"]):
+                candidate = float(res["starts"][k])
+                candidate_conf = float(res["confs"][k])
+                accepted = _post_selected_micro_context_read_candidate(
+                    pause_reason=str(match.get("reason") or ""),
+                    action=str(match.get("action") or ""),
+                    pause_duration_ms=context_pause.end_ms - context_pause.start_ms,
+                    pause_sim=float(match.get("sim") or 0.0),
+                    prev_quality=float(context_metrics.get("prev_quality") or 0.0),
+                    next_quality=float(context_metrics.get("next_quality") or 0.0),
+                    candidate_ms=candidate,
+                    candidate_conf=candidate_conf,
+                    pause_start_ms=context_pause.start_ms,
+                    pause_end_ms=context_pause.end_ms,
+                    conf_reliable=conf_reliable,
+                )
+                if accepted:
+                    onset, conf, win_used = candidate, candidate_conf, 0.0
+                    reliable = True
+                    context_ctc_repaired = True
+                    context_strategy = "post_micro_context_ctc"
+                    context_phase = "post-micro-context-read"
+                    place[a] = (candidate, True)
+                    match.update({
+                        "rough_ms": candidate,
+                        "timing_adjusted": True,
+                        "timing_strategy": context_strategy,
+                    })
+                    for debug_match in pause_match_debug:
+                        if debug_match.get("ayah") == a:
+                            debug_match.update({
+                                "rough_ms": round(candidate, 1),
+                                "timing_adjusted": True,
+                                "timing_strategy": context_strategy,
+                            })
+                            break
+                    model_reads.append({
+                        "phase": context_phase,
+                        "ayah": a,
+                        "window_ms": [round(res["base"], 1), round(res["end"], 1)],
+                        "words": " ".join(w.text for w in words[i0:i1]),
+                        "target": words[fa].text,
+                        "onset_ms": round(candidate, 1),
+                        "delta_ms": round(candidate - c0, 1),
+                        "conf": round(candidate_conf, 3),
+                    })
+                    log_read(model_reads[-1])
+
         section_repaired = False
-        if not timing_locked and not internal_stop_repaired and section_repair_member(ai):
+        cascade_repaired = False
+        # Do not let the first pause after a run of unresolved ayahs inherit a
+        # stale structural prior.  Read the previous/current/next text together
+        # and only replace the owner when CTC finds a strong, strictly earlier
+        # onset.  This is deliberately one boundary: a later block repair still
+        # owns the rest of a merged wasl run.
+        if (
+            not context_ctc_repaired
+            and not timing_locked
+            and not internal_stop_repaired
+            and from_pause
+            and ai + 1 < len(ayah_list)
+            and _follows_unresolved_cascade(ai - 1, unresolved_sequence_boundaries)
+        ):
+            previous_a = ayah_list[ai - 1]
+            next_a = ayah_list[ai + 1]
+            i0 = ayah_words[previous_a][0]
+            i1 = ayah_words[next_a][0] + 1
+            res = align_slice(
+                i0,
+                i1,
+                max(0.0, starts_ms[previous_a] - 200.0),
+                min(total_ms, max(place[next_a][0] + 700.0, c0 + 700.0)),
+                basmala=False,
+            )
+            k = fa - i0
+            if res is not None and 0 <= k < len(res["starts"]):
+                candidate = float(res["starts"][k])
+                candidate_conf = float(res["confs"][k])
+                if (
+                    candidate_conf >= conf_reliable
+                    and starts_ms[previous_a] + 2500.0 <= candidate
+                    < min(c0 - 1000.0, place[next_a][0] - 30.0)
+                ):
+                    section_onsets[a] = (candidate, candidate_conf)
+                    section_repaired = True
+                    cascade_repaired = True
+                    model_reads.append({
+                        "phase": "unresolved-cascade-local-read",
+                        "ayah": a,
+                        "window_ms": [round(res["base"], 1), round(res["end"], 1)],
+                        "words": " ".join(w.text for w in words[i0:i1]),
+                        "target": words[fa].text,
+                        "onset_ms": round(candidate, 1),
+                        "delta_ms": round(candidate - c0, 1),
+                        "conf": round(candidate_conf, 3),
+                    })
+                    log_read(model_reads[-1])
+        if (
+            not context_ctc_repaired
+            and not section_repaired
+            and not timing_locked
+            and not internal_stop_repaired
+            and section_repair_member(ai)
+        ):
             if a not in section_onsets:
                 fill_section_repair(ai)
             if a in section_onsets:
@@ -5745,18 +8920,109 @@ def align_surah_fast(
                 reliable = conf >= conf_thresh
                 section_repaired = True
 
-        if internal_stop_repaired or section_repaired:
+        if section_repaired:
+            section_owner = next(
+                (
+                    decision
+                    for decision in pause_decisions
+                    if decision.pause.start_ms <= onset <= decision.pause.end_ms
+                    and (
+                        pause_tier(decision) == "trusted"
+                        or (decision.reason == "weak-dsp" and conf >= conf_reliable)
+                    )
+                ),
+                None,
+            )
+            match = pause_match_by_ayah.get(a, {})
+            debug_match = next(
+                (
+                    item for item in pause_match_debug
+                    if item.get("ayah") == a
+                ),
+                None,
+            )
+            if section_owner is None and not reliable:
+                section_repaired = False
+            elif section_owner is None:
+                classification = "wasl"
+                place[a] = (onset, False)
+                matched_center_for_ayah.pop(a, None)
+                match.update({
+                    "pause": None,
+                    "center_ms": onset,
+                    "rough_ms": onset,
+                    "action": classification,
+                    "reason": f"{classification}-section-full-read",
+                    "timing_adjusted": True,
+                })
+                if debug_match is not None:
+                    debug_match.update({
+                        "from_pause": False,
+                        "pause": None,
+                        "pause_start_ms": None,
+                        "pause_center_ms": None,
+                        "pause_end_ms": None,
+                        "rough_ms": round(onset, 1),
+                        "pause_reason": f"{classification}-section-full-read",
+                        "match_action": classification,
+                        "timing_adjusted": True,
+                    })
+                from_pause = False
+            else:
+                center = section_owner.pause.center_ms
+                onset = pause_timing_point(
+                    center,
+                    sim=max(conf, conf_thresh),
+                    reason=section_owner.reason,
+                )
+                place[a] = (center, True)
+                matched_center_for_ayah[a] = center
+                match.update({
+                    "pause": all_pause_ord.get(center, pause_ord.get(center)),
+                    "center_ms": center,
+                    "rough_ms": onset,
+                    "action": "section_pause_recovery",
+                    "reason": section_owner.reason,
+                    "timing_adjusted": True,
+                })
+                if debug_match is not None:
+                    debug_match.update({
+                        "from_pause": True,
+                        "pause": all_pause_ord.get(center, pause_ord.get(center)),
+                        "pause_start_ms": round(section_owner.pause.start_ms, 1),
+                        "pause_center_ms": round(center, 1),
+                        "pause_end_ms": round(section_owner.pause.end_ms, 1),
+                        "rough_ms": round(onset, 1),
+                        "pause_reason": section_owner.reason,
+                        "match_action": "section_pause_recovery",
+                        "timing_adjusted": True,
+                    })
+                from_pause = True
+
+        if cascade_repaired:
+            pause_match_by_ayah[a]["cascade_local_repair"] = True
+
+        if internal_stop_repaired or section_repaired or context_ctc_repaired:
             pass
         elif from_pause:
             prev_start = starts_ms[ayah_list[ai - 1]]
             c = min(max(c0, prev_start + 30.0), total_ms)
             match = pause_match_by_ayah.get(a, {})
+            debug_match = next(
+                (item for item in pause_match_debug if item.get("ayah") == a),
+                None,
+            )
             pause_sim = float(match.get("sim") or 0.0)
             pause = pause_by_center.get(float(match.get("center_ms") or c0))
             pause_reason = str(match.get("reason") or "")
             timing_adjusted = bool(match.get("timing_adjusted"))
             needs_pause_refine = pause_reason == "micro-tempo"
-            if timing_adjusted:
+            # A weak micro-tempo pause may be an internal stop of the current
+            # ayah. Its structural adjustment is not proof of the next ayah,
+            # so it still needs a local text read before becoming a boundary.
+            if timing_adjusted and not (
+                needs_pause_refine and pause_sim < _PAUSE_TRUST_SIM
+            ):
                 onset, conf, win_used = c, max(conf_thresh, pause_sim), 0.0
                 reliable = True
                 emit(
@@ -5783,6 +9049,37 @@ def align_surah_fast(
                     0,
                     ayah=a,
                     edge_candidates=edge_candidates,
+                    pause_start_ms=pause.start_ms if pause is not None else None,
+                )
+                # Keep the local CTC evidence in the trace.  A later decision
+                # can then distinguish a reliable word onset at the right edge
+                # of a pause from a merely plausible pause-centre placement.
+                match["refined_onset_ms"] = (
+                    round(refined_onset, 1) if refined_onset is not None else None
+                )
+                match["refined_confidence"] = round(refined_conf, 4)
+                if debug_match is not None:
+                    debug_match.update({
+                        "refined_onset_ms": match["refined_onset_ms"],
+                        "refined_confidence": match["refined_confidence"],
+                    })
+                refined_trusted_owner = next(
+                    (
+                        decision
+                        for decision in trusted_decisions
+                        if refined_onset is not None
+                        and decision.pause.start_ms
+                        <= refined_onset
+                        <= decision.pause.end_ms
+                        and decision.pause.center_ms
+                        != float(match.get("center_ms") or c0)
+                        and not any(
+                            other_a != a
+                            and center == decision.pause.center_ms
+                            for other_a, center in matched_center_for_ayah.items()
+                        )
+                    ),
+                    None,
                 )
                 confirm_delta_ms = _PAUSE_REFINE_CONFIRM_MS
                 if pause is not None and pause.end_ms - pause.start_ms >= 700.0:
@@ -5792,6 +9089,136 @@ def align_surah_fast(
                     if pause is not None and pause in pause_diag
                     else pause_reason
                 )
+                clustered_owner_onset = (
+                    _stable_multiscale_pause_onset(
+                        edge_candidates,
+                        pause_start_ms=pause.start_ms,
+                        pause_end_ms=pause.end_ms,
+                    )
+                    if pause is not None
+                    else None
+                )
+                next_start = (
+                    place[ayah_list[ai + 1]][0]
+                    if ai + 1 < len(ayah_list)
+                    else total_ms
+                )
+                multiscale_owner_refined = (
+                    pause is not None
+                    and _multiscale_ctc_in_owner_candidate(
+                        from_pause=from_pause,
+                        action=str(match.get("action") or ""),
+                        pause_reason=actual_reason,
+                        pause_similarity=pause_sim,
+                        pause_trust_similarity=_PAUSE_TRUST_SIM,
+                        opening_shared_prefix_chars=opening_text_risk.get(ai - 1, 0),
+                        prev_quality=float(match.get("prev_quality") or 0.0),
+                        next_quality=float(match.get("next_quality") or 0.0),
+                        clustered_onset_ms=clustered_owner_onset,
+                        owner_onset_ms=c,
+                        pause_start_ms=pause.start_ms,
+                        pause_end_ms=pause.end_ms,
+                        previous_start_ms=prev_start,
+                        next_start_ms=next_start,
+                    )
+                )
+                pre_owner_ctc = max(
+                    (
+                        (candidate_onset, candidate_conf)
+                        for candidate_onset, candidate_conf, left_edge in edge_candidates
+                        if not left_edge
+                        and pause is not None
+                        and candidate_onset < pause.start_ms
+                    ),
+                    key=lambda candidate: candidate[1],
+                    default=(None, 0.0),
+                )
+                if multiscale_owner_refined:
+                    assert clustered_owner_onset is not None
+                    onset = clustered_owner_onset
+                    conf = max(conf_thresh, pause_sim, refined_conf)
+                    reliable = True
+                    match.update({
+                        "rough_ms": onset,
+                        "timing_adjusted": True,
+                        "timing_strategy": "multiscale_ctc_in_owner",
+                    })
+                    for debug_match in pause_match_debug:
+                        if debug_match.get("ayah") == a:
+                            debug_match.update({
+                                "rough_ms": round(onset, 1),
+                                "timing_adjusted": True,
+                                "timing_strategy": "multiscale_ctc_in_owner",
+                            })
+                            break
+                    emit(
+                        f"Пауза {match.get('pause', '?')} аята {a}: несколько CTC-окон "
+                        f"согласовали onset {sec(onset)} сек. внутри того же owner"
+                    )
+                elif pause is not None and _pre_owner_ctc_overrides_weak_micro_pause(
+                    pause_reason=actual_reason,
+                    pause_similarity=pause_sim,
+                    pause_trust_similarity=_PAUSE_TRUST_SIM,
+                    refined_onset_ms=pre_owner_ctc[0],
+                    refined_confidence=pre_owner_ctc[1],
+                    confidence_reliable=conf_reliable,
+                    pause_start_ms=pause.start_ms,
+                    previous_start_ms=prev_start,
+                    next_start_ms=next_start,
+                    opening_shared_prefix_chars=opening_text_risk.get(ai - 1, 0),
+                ):
+                    assert pre_owner_ctc[0] is not None
+                    onset, conf = pre_owner_ctc
+                    reliable = True
+                    from_pause = False
+                    place[a] = (onset, False)
+                    matched_center_for_ayah.pop(a, None)
+                    match.update({
+                        "pause": None,
+                        "center_ms": onset,
+                        "rough_ms": onset,
+                        "action": "ctc_pre_owner",
+                        "reason": "ctc-pre-weak-micro",
+                        "timing_adjusted": True,
+                        "boundary_evidence": "ctc_pre_owner",
+                    })
+                    for debug_match in pause_match_debug:
+                        if debug_match.get("ayah") == a:
+                            debug_match.update({
+                                "from_pause": False,
+                                "pause": None,
+                                "pause_start_ms": None,
+                                "pause_center_ms": None,
+                                "pause_end_ms": None,
+                                "rough_ms": round(onset, 1),
+                                "pause_reason": "ctc-pre-weak-micro",
+                                "match_action": "ctc_pre_owner",
+                                "timing_adjusted": True,
+                                "boundary_evidence": "ctc_pre_owner",
+                            })
+                            break
+                    emit(
+                        f"Слабая micro-пауза аята {a} отвергнута: CTC нашёл "
+                        f"уникальное начало {sec(onset)} сек. до неё"
+                    )
+                elif (
+                    pause is not None
+                    and _long_pause_context_read_candidate(
+                        edge_candidates,
+                        pause_reason=actual_reason,
+                        pause_start_ms=pause.start_ms,
+                        pause_end_ms=pause.end_ms,
+                        refined_onset_ms=refined_onset,
+                        refined_conf=refined_conf,
+                        conf_thresh=conf_thresh,
+                    )
+                ):
+                    long_pause_context_requests.append(ai)
+                    emit(
+                        f"Длинная пауза {match.get('pause', '?')} аята {a}: "
+                        "локальные CTC-окна противоречат друг другу; "
+                        "нужен полный контекстный блок"
+                    )
                 left_edge_candidate = (
                     _left_edge_repeated_opening_candidate(
                         edge_candidates,
@@ -5806,7 +9233,12 @@ def align_surah_fast(
                     and pause_sim >= _MIN_MATCH_SIM
                     else None
                 )
-                if left_edge_candidate is not None:
+                if multiscale_owner_refined:
+                    # The consensus is a positional result inside the selected
+                    # owner.  Do not immediately overwrite it with the generic
+                    # single-read pause-centre fallback below.
+                    pass
+                elif left_edge_candidate is not None:
                     onset, edge_conf = left_edge_candidate
                     conf = max(conf_thresh, pause_sim, edge_conf)
                     reliable = True
@@ -5853,12 +9285,49 @@ def align_surah_fast(
                                 expected_ms=refined_onset - 700.0,
                             )
                     if preword_valley is not None:
-                        _start_ms, end_ms, ratio, seed_start_ms, seed_end_ms = preword_valley
+                        start_ms, end_ms, ratio, seed_start_ms, seed_end_ms = preword_valley
+                        pause_start_ms = max(start_ms, seed_start_ms)
                         onset = end_ms
                         conf = max(conf_thresh, pause_sim, refined_conf)
                         reliable = True
+                        replaced_pause = match.get("pause")
+                        # The original recovered pause was disproved by refine.
+                        # This valley is the real, directly observed pause before
+                        # the first word, so replace the claimed anchor rather
+                        # than emitting a marker outside the pause recorded in
+                        # the trace.
+                        match.update({
+                            "pause": None,
+                            "center_ms": onset,
+                            "rough_ms": onset,
+                            "action": "preword_micro_recovery",
+                            "reason": "preword-micro",
+                            "pause_start_ms": math.floor(pause_start_ms),
+                            "pause_center_ms": round(onset, 1),
+                            "pause_end_ms": math.ceil(end_ms),
+                            "timing_adjusted": True,
+                            "replaced_pause": replaced_pause,
+                            "replaced_pause_reason": actual_reason,
+                            "preword_rms_ratio": round(ratio, 3),
+                        })
+                        for debug_match in pause_match_debug:
+                            if debug_match.get("ayah") != a:
+                                continue
+                            debug_match.update({
+                                "pause": None,
+                                "pause_start_ms": math.floor(pause_start_ms),
+                                "pause_center_ms": round(onset, 1),
+                                "pause_end_ms": math.ceil(end_ms),
+                                "pause_reason": "preword-micro",
+                                "match_action": "preword_micro_recovery",
+                                "timing_adjusted": True,
+                                "replaced_pause": replaced_pause,
+                                "replaced_pause_reason": actual_reason,
+                                "preword_rms_ratio": round(ratio, 3),
+                            })
+                            break
                         emit(
-                            f"Пауза {match.get('pause', '?')} поздняя для аята {a}; "
+                            f"Пауза {replaced_pause if replaced_pause is not None else '?'} поздняя для аята {a}; "
                             f"refine нашёл слово {sec(refined_onset)} сек., "
                             f"ставлю старт на pre-word micro-паузу "
                             f"{sec(seed_start_ms)}-{sec(seed_end_ms)} сек. "
@@ -5870,6 +9339,68 @@ def align_surah_fast(
                         reliable = False
                 if not reliable:  # never locked on → trust the matched guess
                     onset = c
+                if _confirmed_trusted_pause_refine_candidate(
+                    from_pause=from_pause,
+                    original_pause_sim=pause_sim,
+                    refined_conf=refined_conf,
+                    refined_inside_different_trusted_pause=(
+                        refined_trusted_owner is not None
+                    ),
+                    conf_reliable=conf_reliable,
+                    pause_trust_sim=_PAUSE_TRUST_SIM,
+                ):
+                    assert refined_trusted_owner is not None
+                    old_center = float(match.get("center_ms") or c0)
+                    new_pause = refined_trusted_owner.pause
+                    new_center = new_pause.center_ms
+                    onset = pause_timing_point(
+                        new_center,
+                        sim=max(refined_conf, conf_thresh),
+                        reason=refined_trusted_owner.reason,
+                    )
+                    conf = max(refined_conf, pause_sim, conf_thresh)
+                    reliable = True
+                    place[a] = (new_center, True)
+                    matched_center_for_ayah[a] = new_center
+                    c0 = onset
+                    match.update({
+                        "pause": pause_ord.get(
+                            new_center,
+                            all_pause_ord.get(new_center),
+                        ),
+                        "center_ms": new_center,
+                        "rough_ms": onset,
+                        "action": "refine_trusted_pause_recovery",
+                        "reason": refined_trusted_owner.reason,
+                        "sim": _sim_ij(ai - 1, pause_onsets.index(new_center)),
+                        "timing_adjusted": True,
+                        "replaced_pause": pause_ord.get(old_center),
+                        "replaced_pause_reason": pause_reason,
+                    })
+                    for debug_match in pause_match_debug:
+                        if debug_match.get("ayah") != a:
+                            continue
+                        debug_match.update({
+                            "from_pause": True,
+                            "pause": pause_ord.get(
+                                new_center,
+                                all_pause_ord.get(new_center),
+                            ),
+                            "pause_start_ms": round(new_pause.start_ms, 1),
+                            "pause_center_ms": round(new_center, 1),
+                            "pause_end_ms": round(new_pause.end_ms, 1),
+                            "rough_ms": round(onset, 1),
+                            "pause_sim": round(
+                                _sim_ij(ai - 1, pause_onsets.index(new_center)),
+                                3,
+                            ),
+                            "pause_reason": refined_trusted_owner.reason,
+                            "match_action": "refine_trusted_pause_recovery",
+                            "timing_adjusted": True,
+                            "replaced_pause": pause_ord.get(old_center),
+                            "replaced_pause_reason": pause_reason,
+                        })
+                        break
         else:
             if a not in wasl_onsets:
                 fill_wasl_run(ai)
@@ -5878,6 +9409,40 @@ def align_surah_fast(
             reliable = conf >= conf_thresh
             if onset is None:
                 onset = c0
+            if place[a][1]:
+                from_pause = True
+                c0 = place[a][0]
+                reliable = True
+            else:
+                classification = _full_wasl_read_classification(
+                    conf,
+                    acceptance_confidence=conf_thresh,
+                    audio_bracket_proven=wasl_audio_bracket_proven.get(a, False),
+                )
+                match = pause_match_by_ayah.get(a, {})
+                match.update({
+                    "pause": None,
+                    "center_ms": onset,
+                    "rough_ms": onset,
+                    "action": classification,
+                    "reason": f"{classification}-full-read",
+                    "timing_adjusted": True,
+                })
+                for debug_match in pause_match_debug:
+                    if debug_match.get("ayah") != a:
+                        continue
+                    debug_match.update({
+                        "from_pause": False,
+                        "pause": None,
+                        "pause_start_ms": None,
+                        "pause_center_ms": None,
+                        "pause_end_ms": None,
+                        "rough_ms": round(onset, 1),
+                        "pause_reason": f"{classification}-full-read",
+                        "match_action": classification,
+                        "timing_adjusted": True,
+                    })
+                    break
 
         starts_ms[a] = onset
         confs[a] = conf
@@ -5980,6 +9545,44 @@ def align_surah_fast(
         match["rough_ms"] = valley_center
         match["timing_adjusted"] = True
         match["post_selected_micro_repair"] = True
+        replacement_pause = pause_by_center.get(valley_center)
+        replacement_diag = pause_diag.get(replacement_pause) if replacement_pause is not None else None
+        replaced_pause = match.get("pause")
+        replaced_pause_reason = str(match.get("reason") or "")
+        replacement_reason = replacement_diag.reason if replacement_diag is not None else "post-selected-micro"
+        match.update({
+            "pause": pause_ord.get(valley_center),
+            "center_ms": valley_center,
+            "pause_start_ms": valley[0],
+            "pause_end_ms": valley[1],
+            "action": "post_selected_micro_recovery",
+            "reason": replacement_reason,
+            "replaced_pause": replaced_pause,
+            "replaced_pause_reason": replaced_pause_reason,
+        })
+        for debug_match in pause_match_debug:
+            if debug_match.get("ayah") != a:
+                continue
+            debug_match.update({
+                "pause": pause_ord.get(valley_center),
+                "pause_start_ms": round(
+                    replacement_pause.start_ms if replacement_pause is not None else valley[0],
+                    1,
+                ),
+                "pause_center_ms": round(valley_center, 1),
+                "pause_end_ms": round(
+                    replacement_pause.end_ms if replacement_pause is not None else valley[1],
+                    1,
+                ),
+                "rough_ms": round(valley_center, 1),
+                "pause_reason": replacement_reason,
+                "match_action": "post_selected_micro_recovery",
+                "timing_adjusted": True,
+                "post_selected_micro_repair": True,
+                "replaced_pause": replaced_pause,
+                "replaced_pause_reason": replaced_pause_reason,
+            })
+            break
 
     # --- Phase 2b — repair shifted runs using reliable neighbours. ----------
     # Char-prior compression can make the global match shift a run of boundaries
@@ -5989,6 +9592,384 @@ def align_surah_fast(
     cum = cum_u  # cumulative weighted units (already built for the prior above)
     rel = {a: confs.get(a, 0.0) >= conf_reliable for a in ayah_list}
     rel[ayah_list[0]] = True
+    geometry_unreliable_debug: list[dict] = []
+    geometry_invalidated_owners: set[int] = set()
+    for right_anchor in insufficient_wasl_right_anchors:
+        rel[right_anchor] = False
+        geometry_invalidated_owners.add(right_anchor)
+        right_match = pause_match_by_ayah.get(right_anchor, {})
+        geometry_unreliable_debug.append({
+            "ayah": right_anchor,
+            "kind": "insufficient-wasl-right-anchor",
+            "start_ms": round(starts_ms[right_anchor], 1),
+            "pause_sim": round(float(right_match.get("sim") or 0.0), 3),
+        })
+    for ayah_index, a in enumerate(ayah_list[1:], start=1):
+        match = pause_match_by_ayah.get(a, {})
+        previous_match = pause_match_by_ayah.get(ayah_list[ayah_index - 1], {})
+        geometry_unreliable = (
+            _pause_owner_geometry_is_unreliable(
+                from_pause=place.get(a, (0.0, False))[1],
+                action=str(match.get("action") or ""),
+                pause_reason=str(match.get("reason") or ""),
+                pause_similarity=float(match.get("sim") or 0.0),
+                previous_quality=float(match.get("prev_quality") or 0.0),
+                next_quality=float(match.get("next_quality") or 0.0),
+                expected_delta_ms=float(match.get("expected_delta_ms") or 0.0),
+                previous_expected_delta_ms=float(
+                    previous_match.get("expected_delta_ms") or 0.0
+                ),
+                opening_shared_prefix_chars=opening_text_risk.get(
+                    ayah_index - 1,
+                    0,
+                ),
+                opening_internal_repeat_chars=opening_internal_prefix.get(
+                    ayah_index - 1,
+                    0,
+                ),
+                opening_self_repeat_chars=opening_self_repeat_prefix.get(
+                    ayah_index - 1,
+                    0,
+                ),
+                best_pause_is_later=bool(match.get("best_pause_is_later")),
+                best_pause_similarity=float(
+                    match.get("best_pause_similarity") or 0.0
+                ),
+                pause_trust_similarity=_PAUSE_TRUST_SIM,
+            )
+            or _unclassified_owner_requires_full_span(
+                from_pause=place.get(a, (0.0, False))[1],
+                action=str(match.get("action") or ""),
+                pause_similarity=float(match.get("sim") or 0.0),
+                min_match_similarity=_MIN_MATCH_SIM,
+            )
+        )
+        if geometry_unreliable:
+            rel[a] = False
+            if _geometry_invalidated_owner_requires_full_span(
+                geometry_unreliable=True,
+                action=str(match.get("action") or ""),
+                pause_similarity=float(match.get("sim") or 0.0),
+                min_match_similarity=_MIN_MATCH_SIM,
+            ):
+                geometry_invalidated_owners.add(a)
+            geometry_unreliable_debug.append({
+                "ayah": a,
+                "start_ms": round(starts_ms.get(a, place[a][0]), 1),
+                "pause_sim": round(float(match.get("sim") or 0.0), 3),
+                "previous_quality": round(float(match.get("prev_quality") or 0.0), 3),
+                "next_quality": round(float(match.get("next_quality") or 0.0), 3),
+                "expected_delta_ms": round(float(match.get("expected_delta_ms") or 0.0), 1),
+            })
+    # A high-confidence one-word probe can still make the wrong direct pause
+    # look reliable.  Recompute each surviving low-trust direct owner from its
+    # nearest *other* reliable anchors before it is allowed to anchor repairs.
+    initial_rel = dict(rel)
+    extended_decode_pause_repaired: set[int] = set()
+
+    for idx in range(1, len(ayah_list)):
+        a = ayah_list[idx]
+        if not initial_rel.get(a, False):
+            continue
+        lo = next(
+            (
+                ayah_list[k]
+                for k in range(idx - 1, -1, -1)
+                if initial_rel.get(ayah_list[k], False)
+            ),
+            None,
+        )
+        if lo is None:
+            continue
+        match = pause_match_by_ayah.get(a, {})
+        selected_center = float(match.get("center_ms") or place[a][0])
+        boundary_i = idx - 1
+        candidates = [
+            (center, diag.reason, _sim_ij(boundary_i, candidate_j))
+            for candidate_j, center in enumerate(pause_onsets)
+            if center not in used_matched
+            and starts_ms[lo] < center < selected_center
+            and (candidate := pause_by_center.get(center)) is not None
+            and (diag := pause_diag.get(candidate)) is not None
+        ]
+        qualifying_candidates = [
+            center
+            for center, reason, similarity in candidates
+            if _competing_prior_pause_requires_full_span(
+                from_pause=place.get(a, (0.0, False))[1],
+                action=str(match.get("action") or ""),
+                pause_reason=str(match.get("reason") or ""),
+                selected_similarity=float(match.get("sim") or 0.0),
+                selected_time_ms=selected_center,
+                previous_anchor_ms=starts_ms[lo],
+                candidates=[(center, reason, similarity)],
+                pause_trust_similarity=_PAUSE_TRUST_SIM,
+            )
+        ]
+        if not qualifying_candidates:
+            continue
+        if not _competing_prior_pause_requires_full_span(
+            from_pause=place.get(a, (0.0, False))[1],
+            action=str(match.get("action") or ""),
+            pause_reason=str(match.get("reason") or ""),
+            selected_similarity=float(match.get("sim") or 0.0),
+            selected_time_ms=selected_center,
+            previous_anchor_ms=starts_ms[lo],
+            candidates=candidates,
+            pause_trust_similarity=_PAUSE_TRUST_SIM,
+        ):
+            continue
+        selected_j = pause_onsets.index(selected_center)
+        selected_decode = decode_pause(selected_j, win_ms=8000.0)
+        selected_extended_sim = _sim(selected_decode, openings[boundary_i])
+        extended_candidates = []
+        for candidate_center in qualifying_candidates:
+            candidate_j = pause_onsets.index(candidate_center)
+            candidate_decode = decode_pause(candidate_j, win_ms=8000.0)
+            candidate_extended_sim = _sim(
+                candidate_decode,
+                openings[boundary_i],
+            )
+            candidate_pause = pause_by_center[candidate_center]
+            candidate_diag = pause_diag[candidate_pause]
+            read = {
+                "phase": "competing-pause-extended-decode",
+                "ayah": a,
+                "candidate_pause_ms": round(candidate_center, 1),
+                "selected_pause_ms": round(selected_center, 1),
+                "candidate_sim": round(candidate_extended_sim, 3),
+                "selected_sim": round(selected_extended_sim, 3),
+                "candidate_decode": candidate_decode,
+                "selected_decode": selected_decode,
+            }
+            model_reads.append(read)
+            if _prefer_competing_prior_pause_extended_decode(
+                candidate_reason=candidate_diag.reason,
+                candidate_similarity=candidate_extended_sim,
+                selected_similarity=selected_extended_sim,
+            ):
+                extended_candidates.append((
+                    candidate_extended_sim,
+                    candidate_center,
+                    candidate_pause,
+                    candidate_diag,
+                    read,
+                    "extended_decode_pause_recovery",
+                ))
+        if not extended_candidates:
+            candidate_center = qualifying_candidates[0]
+            candidate_pause = pause_by_center.get(candidate_center)
+            selected_pause = pause_by_center.get(selected_center)
+            if candidate_pause is not None and selected_pause is not None:
+                candidate_pre_decode = greedy_decode(
+                    max(0.0, candidate_pause.start_ms - 4000.0),
+                    candidate_pause.start_ms,
+                )
+                selected_pre_decode = greedy_decode(
+                    max(0.0, selected_pause.start_ms - 4000.0),
+                    selected_pause.start_ms,
+                )
+                candidate_previous_sim = _tail_sim(
+                    candidate_pre_decode,
+                    previous_bodies[boundary_i],
+                )
+                selected_previous_sim = _tail_sim(
+                    selected_pre_decode,
+                    previous_bodies[boundary_i],
+                )
+                candidate_current_sim = _sim(
+                    candidate_pre_decode,
+                    openings[boundary_i],
+                )
+                selected_current_sim = _sim(
+                    selected_pre_decode,
+                    openings[boundary_i],
+                )
+                read = {
+                    "phase": "competing-pause-pre-context",
+                    "ayah": a,
+                    "candidate_pause_ms": round(candidate_center, 1),
+                    "selected_pause_ms": round(selected_center, 1),
+                    "candidate_pre_decode": candidate_pre_decode,
+                    "selected_pre_decode": selected_pre_decode,
+                    "candidate_previous_sim": round(candidate_previous_sim, 3),
+                    "selected_previous_sim": round(selected_previous_sim, 3),
+                    "candidate_current_sim": round(candidate_current_sim, 3),
+                    "selected_current_sim": round(selected_current_sim, 3),
+                }
+                model_reads.append(read)
+                if _prefer_competing_prior_pause_pre_context(
+                    candidate_previous_tail_similarity=candidate_previous_sim,
+                    selected_previous_tail_similarity=selected_previous_sim,
+                    candidate_current_opening_similarity=candidate_current_sim,
+                    selected_current_opening_similarity=selected_current_sim,
+                ):
+                    candidate_j = pause_onsets.index(candidate_center)
+                    candidate_diag = pause_diag[candidate_pause]
+                    extended_candidates.append((
+                        _sim_ij(boundary_i, candidate_j),
+                        candidate_center,
+                        candidate_pause,
+                        candidate_diag,
+                        read,
+                        "pre_context_pause_recovery",
+                    ))
+            if not extended_candidates:
+                geometry_unreliable_debug.append({
+                    "ayah": a,
+                    "kind": "unresolved-competing-prior-pause",
+                    "start_ms": round(starts_ms[a], 1),
+                    "pause_sim": round(float(match.get("sim") or 0.0), 3),
+                    "left_anchor": lo,
+                })
+                continue
+        (
+            chosen_sim,
+            chosen_center,
+            chosen_pause,
+            chosen_diag,
+            chosen_read,
+            chosen_action,
+        ) = max(extended_candidates)
+        chosen = pause_timing_point(
+            chosen_center,
+            sim=chosen_sim,
+            reason=chosen_diag.reason,
+        )
+        old_center = selected_center
+        starts_ms[a] = chosen
+        confs[a] = chosen_sim
+        rel[a] = False
+        initial_rel[a] = False
+        extended_decode_pause_repaired.add(a)
+        matched[boundary_i] = chosen_center
+        used_matched.discard(old_center)
+        used_matched.add(chosen_center)
+        place[a] = (chosen_center, True)
+        matched_center_for_ayah[a] = chosen_center
+        active_low_conf_centers.add(chosen_center)
+        match.update({
+            "pause": pause_ord.get(chosen_center, all_pause_ord.get(chosen_center)),
+            "center_ms": chosen_center,
+            "rough_ms": chosen,
+            "sim": chosen_sim,
+            "action": chosen_action,
+            "reason": chosen_diag.reason,
+            "timing_adjusted": True,
+            "replaced_pause": match.get("pause"),
+            "replaced_pause_reason": match.get("reason"),
+        })
+        chosen_read["selected"] = True
+        for debug_match in pause_match_debug:
+            if debug_match.get("ayah") != a:
+                continue
+            debug_match.update({
+                "from_pause": True,
+                "pause": pause_ord.get(
+                    chosen_center,
+                    all_pause_ord.get(chosen_center),
+                ),
+                "pause_start_ms": round(chosen_pause.start_ms, 1),
+                "pause_center_ms": round(chosen_center, 1),
+                "pause_end_ms": round(chosen_pause.end_ms, 1),
+                "pause_sim": round(chosen_sim, 3),
+                "rough_ms": round(chosen, 1),
+                "pause_reason": chosen_diag.reason,
+                "match_action": chosen_action,
+                "timing_adjusted": True,
+            })
+            break
+        for item in tr_ayahs:
+            if item["ayah"] == a:
+                item.update(
+                    onset_ms=chosen,
+                    conf=round(chosen_sim, 3),
+                    reliable=False,
+                    from_pause=True,
+                    competing_pause_recovery=chosen_action,
+                )
+                break
+
+    def starts_shifted_section(candidate_idx: int) -> bool:
+        if candidate_idx <= 0:
+            return False
+        candidate = ayah_list[candidate_idx]
+        candidate_match = pause_match_by_ayah.get(candidate, {})
+        preceding_match = pause_match_by_ayah.get(
+            ayah_list[candidate_idx - 1],
+            {},
+        )
+        return _ambiguous_observed_pause_starts_shifted_section(
+            from_pause=place.get(candidate, (0.0, False))[1],
+            action=str(candidate_match.get("action") or ""),
+            pause_similarity=float(candidate_match.get("sim") or 0.0),
+            opening_shared_prefix_chars=opening_text_risk.get(
+                candidate_idx - 1,
+                0,
+            ),
+            current_expected_delta_ms=float(
+                candidate_match.get("expected_delta_ms") or 0.0,
+            ),
+            previous_expected_delta_ms=float(
+                preceding_match.get("expected_delta_ms") or 0.0,
+            ),
+            pause_trust_similarity=_PAUSE_TRUST_SIM,
+        )
+
+    for idx in range(1, len(ayah_list) - 1):
+        a = ayah_list[idx]
+        if not initial_rel.get(a, False):
+            continue
+        lo = next(
+            (
+                ayah_list[k]
+                for k in range(idx - 1, -1, -1)
+                if initial_rel.get(ayah_list[k], False)
+            ),
+            None,
+        )
+        hi = next(
+            (
+                ayah_list[k]
+                for k in range(idx + 1, len(ayah_list))
+                if initial_rel.get(ayah_list[k], False)
+            ),
+            None,
+        )
+        if lo is None or hi is None or cum[hi] <= cum[lo]:
+            continue
+        frac = (cum[a] - cum[lo]) / (cum[hi] - cum[lo])
+        predicted_ms = starts_ms[lo] + (starts_ms[hi] - starts_ms[lo]) * frac
+        match = pause_match_by_ayah.get(a, {})
+        if starts_shifted_section(idx) or starts_shifted_section(ayah_list.index(hi)):
+            # The later atomic section repair needs this provisional boundary
+            # and its predecessor intact to find where displacement returns.
+            continue
+        if not _direct_owner_conflicts_with_anchor_geometry(
+            from_pause=place.get(a, (0.0, False))[1],
+            action=str(match.get("action") or ""),
+            pause_similarity=float(match.get("sim") or 0.0),
+            previous_quality=float(match.get("prev_quality") or 0.0),
+            next_quality=float(match.get("next_quality") or 0.0),
+            current_ms=starts_ms[a],
+            predicted_ms=predicted_ms,
+            pause_trust_similarity=_PAUSE_TRUST_SIM,
+        ):
+            continue
+        rel[a] = False
+        geometry_invalidated_owners.add(a)
+        geometry_unreliable_debug.append({
+            "ayah": a,
+            "kind": "direct-owner-anchor-conflict",
+            "start_ms": round(starts_ms[a], 1),
+            "predicted_ms": round(predicted_ms, 1),
+            "prediction_delta_ms": round(starts_ms[a] - predicted_ms, 1),
+            "pause_sim": round(float(match.get("sim") or 0.0), 3),
+            "previous_quality": round(float(match.get("prev_quality") or 0.0), 3),
+            "next_quality": round(float(match.get("next_quality") or 0.0), 3),
+            "left_anchor": lo,
+            "right_anchor": hi,
+        })
     # A real boundary sits at a pause; a repair that moves a pause-backed onset
     # (which the model was at least somewhat sure of) to a non-pause spot is a
     # spurious refine match — keep the original (sura 80 a3). Garbage-conf onsets
@@ -6020,9 +10001,210 @@ def align_surah_fast(
         for (u0, t0), (u1, t1) in zip(_pts, _pts[1:]) if u1 > u0
     )
     tempo_meas = _slopes[len(_slopes) // 2] if _slopes else rate
+
+    def restore_next_trusted_owner(repaired_idx: int) -> None:
+        if repaired_idx + 1 >= len(ayah_list):
+            return
+        repaired_a = ayah_list[repaired_idx]
+        next_a = ayah_list[repaired_idx + 1]
+        next_match = pause_match_by_ayah.get(next_a, {})
+        owner_center = float(next_match.get("center_ms") or place[next_a][0])
+        owner_pause = pause_by_center.get(owner_center)
+        if owner_pause is None:
+            return
+        owner_timing = float(next_match.get("rough_ms") or owner_center)
+        restored = _restore_trusted_owner_after_predecessor_repair(
+            current_start_ms=starts_ms[next_a],
+            owner_timing_ms=owner_timing,
+            pause_start_ms=owner_pause.start_ms,
+            pause_end_ms=owner_pause.end_ms,
+            repaired_predecessor_ms=starts_ms[repaired_a],
+            from_pause=place[next_a][1],
+            pause_similarity=float(next_match.get("sim") or 0.0),
+            pause_trust_similarity=_PAUSE_TRUST_SIM,
+        )
+        if restored is None:
+            return
+        starts_ms[next_a] = restored
+        confs[next_a] = max(
+            confs.get(next_a, 0.0),
+            float(next_match.get("sim") or 0.0),
+        )
+        next_match.update({
+            "rough_ms": restored,
+            "timing_adjusted": True,
+            "timing_strategy": "predecessor_repair_owner_restore",
+        })
+        for debug_match in pause_match_debug:
+            if debug_match.get("ayah") != next_a:
+                continue
+            debug_match.update({
+                "rough_ms": round(restored, 1),
+                "timing_adjusted": True,
+                "timing_strategy": "predecessor_repair_owner_restore",
+            })
+            break
+        for t in tr_ayahs:
+            if t["ayah"] == next_a:
+                t.update(
+                    onset_ms=restored,
+                    conf=round(confs[next_a], 3),
+                    predecessor_repair_owner_restore=True,
+                )
+                break
+
+    def reread_predecessor_wasl_after_right_anchor_revision(
+        repaired_idx: int,
+        old_anchor_ms: float,
+    ) -> None:
+        repaired_a = ayah_list[repaired_idx]
+        run_info = wasl_run_by_right_anchor.get(repaired_a)
+        if run_info is None:
+            return
+        left_a, run = run_info
+        run_confidence = min((confs.get(run_a, 0.0) for run_a in run), default=1.0)
+        new_anchor_ms = starts_ms[repaired_a]
+        if not _revised_wasl_right_anchor_requires_predecessor_reread(
+            old_anchor_ms=old_anchor_ms,
+            new_anchor_ms=new_anchor_ms,
+            run_confidence=run_confidence,
+            acceptance_confidence=conf_thresh,
+        ):
+            return
+        span_start_word = ayah_words[left_a][0]
+        span_end_word = ayah_words[repaired_a][0] + 1
+        span_start_ms = max(0.0, starts_ms[left_a] - 200.0)
+        span_end_ms = min(total_ms, new_anchor_ms + 700.0)
+        if span_end_ms - span_start_ms > _MAX_SECTION_REPAIR_ALIGN_MS:
+            return
+        full = align_slice(
+            span_start_word,
+            span_end_word,
+            span_start_ms,
+            span_end_ms,
+            False,
+        )
+        if full is None:
+            return
+        proposals: list[tuple[int, float, float, Any | None]] = []
+        previous_onset = starts_ms[left_a]
+        for run_a in run:
+            target_index = ayah_words[run_a][0] - span_start_word
+            if not 0 <= target_index < len(full["starts"]):
+                return
+            onset = float(full["starts"][target_index])
+            confidence = float(full["confs"][target_index])
+            if not _accept_anchored_full_span_onset(
+                onset,
+                confidence,
+                left_anchor_ms=previous_onset,
+                right_anchor_ms=new_anchor_ms,
+            ):
+                return
+            owner = next(
+                (
+                    decision
+                    for decision in pause_decisions
+                    if decision.pause.start_ms <= onset <= decision.pause.end_ms
+                    and (
+                        pause_tier(decision) == "trusted"
+                        or (decision.reason == "weak-dsp" and confidence >= conf_reliable)
+                    )
+                ),
+                None,
+            )
+            chosen = (
+                pause_timing_point(
+                    owner.pause.center_ms,
+                    sim=max(confidence, conf_thresh),
+                    reason=owner.reason,
+                )
+                if owner is not None
+                else onset
+            )
+            if chosen <= previous_onset + 30.0 or chosen >= new_anchor_ms - 30.0:
+                return
+            proposals.append((run_a, chosen, confidence, owner))
+            previous_onset = chosen
+        for run_a, chosen, confidence, owner in proposals:
+            match = pause_match_by_ayah.get(run_a, {})
+            debug_match = next(
+                (item for item in pause_match_debug if item.get("ayah") == run_a),
+                None,
+            )
+            starts_ms[run_a] = chosen
+            confs[run_a] = confidence
+            rel[run_a] = confidence >= conf_reliable
+            if owner is None:
+                place[run_a] = (chosen, False)
+                matched_center_for_ayah.pop(run_a, None)
+                match.update({
+                    "pause": None,
+                    "center_ms": chosen,
+                    "rough_ms": chosen,
+                    "action": "wasl",
+                    "reason": "wasl-right-anchor-revision-full-read",
+                    "timing_adjusted": True,
+                })
+                debug_update = {
+                    "from_pause": False,
+                    "pause": None,
+                    "pause_start_ms": None,
+                    "pause_center_ms": None,
+                    "pause_end_ms": None,
+                    "rough_ms": round(chosen, 1),
+                    "pause_reason": "wasl-right-anchor-revision-full-read",
+                    "match_action": "wasl",
+                    "timing_adjusted": True,
+                }
+            else:
+                center = owner.pause.center_ms
+                place[run_a] = (center, True)
+                matched_center_for_ayah[run_a] = center
+                match.update({
+                    "pause": all_pause_ord.get(center, pause_ord.get(center)),
+                    "center_ms": center,
+                    "rough_ms": chosen,
+                    "action": "right_anchor_revision_pause_recovery",
+                    "reason": owner.reason,
+                    "timing_adjusted": True,
+                })
+                debug_update = {
+                    "from_pause": True,
+                    "pause": all_pause_ord.get(center, pause_ord.get(center)),
+                    "pause_start_ms": round(owner.pause.start_ms, 1),
+                    "pause_center_ms": round(center, 1),
+                    "pause_end_ms": round(owner.pause.end_ms, 1),
+                    "rough_ms": round(chosen, 1),
+                    "pause_reason": owner.reason,
+                    "match_action": "right_anchor_revision_pause_recovery",
+                    "timing_adjusted": True,
+                }
+            if debug_match is not None:
+                debug_match.update(debug_update)
+            for t in tr_ayahs:
+                if t["ayah"] == run_a:
+                    t.update(
+                        onset_ms=chosen,
+                        conf=round(confidence, 3),
+                        reliable=rel[run_a],
+                        from_pause=owner is not None,
+                        right_anchor_revision_reread=True,
+                    )
+                    break
+        if proposals:
+            model_reads.append({
+                "phase": "wasl-right-anchor-revision",
+                "ayah": proposals[0][0],
+                "window_ms": [round(full["base"], 1), round(full["end"], 1)],
+                "target": " ".join(words[ayah_words[item[0]][0]].text for item in proposals),
+                "onset_ms": round(proposals[0][1], 1),
+                "conf": round(proposals[0][2], 3),
+            })
+
     for idx in range(1, len(ayah_list)):
         a = ayah_list[idx]
-        if rel[a]:
+        if rel[a] or a in extended_decode_pause_repaired:
             continue
         lo = next((ayah_list[k] for k in range(idx - 1, -1, -1) if rel[ayah_list[k]]), None)
         hi = next(
@@ -6036,9 +10218,44 @@ def align_surah_fast(
             pred = starts_ms[lo] + (starts_ms[hi] - starts_ms[lo]) * frac
         else:
             pred = starts_ms[lo] + (cum[a] - cum[lo]) * tempo_meas
-        if abs(starts_ms.get(a, pred) - pred) < 1200.0:
+        for item in geometry_unreliable_debug:
+            if item["ayah"] == a:
+                item["predicted_ms"] = round(pred, 1)
+                item["prediction_delta_ms"] = round(starts_ms.get(a, pred) - pred, 1)
+                break
+        repair_match = pause_match_by_ayah.get(a, {})
+        current_start_ms = starts_ms.get(a, pred)
+        geometry_invalidated_owner = (
+            a in geometry_invalidated_owners
+            or _recovered_owner_conflicts_with_anchor_geometry(
+                from_pause=place[a][1],
+                action=str(repair_match.get("action") or ""),
+                pause_similarity=float(repair_match.get("sim") or 0.0),
+                previous_quality=float(repair_match.get("prev_quality") or 0.0),
+                next_quality=float(repair_match.get("next_quality") or 0.0),
+                current_ms=current_start_ms,
+                predicted_ms=pred,
+                pause_trust_similarity=_PAUSE_TRUST_SIM,
+            )
+            or _first_opening_owner_conflicts_with_anchor_geometry(
+                from_pause=place[a][1],
+                action=str(repair_match.get("action") or ""),
+                pause_similarity=float(repair_match.get("sim") or 0.0),
+                previous_quality=float(repair_match.get("prev_quality") or 0.0),
+                next_quality=float(repair_match.get("next_quality") or 0.0),
+                current_ms=current_start_ms,
+                predicted_ms=pred,
+                pause_trust_similarity=_PAUSE_TRUST_SIM,
+            )
+        )
+        if _geometry_repair_is_already_consistent(
+            current_ms=current_start_ms,
+            predicted_ms=pred,
+            geometry_invalidated_owner=geometry_invalidated_owner,
+        ):
             continue  # already consistent with the reliable anchors → leave it
         fa = ayah_words[a][0]
+        repair_edge_candidates: list[tuple[float, float, bool]] = []
         o2, c2, _w = refine(
             min(max(pred, starts_ms[lo] + 30.0), total_ms),
             fa,
@@ -6046,8 +10263,516 @@ def align_surah_fast(
             1,
             ayah=a,
             phase="repair",
+            edge_candidates=repair_edge_candidates,
         )
-        repair_match = pause_match_by_ayah.get(a, {})
+        local_repair_onset = o2
+        local_repair_confidence = c2
+        full_wasl_repair = False
+        full_pause_repair = False
+        multiscale_pause_repair = False
+        repair_owner_center = float(repair_match.get("center_ms") or place[a][0])
+        repair_owner_pause = pause_by_center.get(repair_owner_center)
+        repair_owner_reason = (
+            pause_diag[repair_owner_pause].reason
+            if repair_owner_pause is not None and repair_owner_pause in pause_diag
+            else str(repair_match.get("reason") or "")
+        )
+        if (
+            repair_owner_pause is not None
+            and _very_long_pause_repair_context_candidate(
+                pause_reason=repair_owner_reason,
+                pause_start_ms=repair_owner_pause.start_ms,
+                pause_end_ms=repair_owner_pause.end_ms,
+                selected_onset_ms=current_start_ms,
+                repaired_onset_ms=o2,
+                repaired_confidence=c2,
+                acceptance_confidence=conf_thresh,
+            )
+            and idx not in long_pause_context_requests
+        ):
+            long_pause_context_requests.append(idx)
+            very_long_pause_context_requests.add(idx)
+        if _multiscale_pause_repair_is_eligible(
+            action=str(repair_match.get("action") or ""),
+            pause_similarity=float(repair_match.get("sim") or 0.0),
+            pause_trust_similarity=_PAUSE_TRUST_SIM,
+            opening_shared_prefix_chars=opening_text_risk.get(idx - 1, 0),
+            owner_prediction_shift_ms=abs(place[a][0] - pred),
+        ):
+            stable_repair = next(
+                (
+                    onset
+                    for decision in trusted_decisions
+                    if (
+                        onset := _stable_multiscale_pause_onset(
+                            repair_edge_candidates,
+                            pause_start_ms=decision.pause.start_ms,
+                            pause_end_ms=decision.pause.end_ms,
+                        )
+                    )
+                    is not None
+                ),
+                None,
+            )
+            if stable_repair is not None:
+                o2 = stable_repair
+                c2 = max(conf_thresh, c2)
+                multiscale_pause_repair = True
+        multiscale_context_onset = _stable_multiscale_onset_cluster(
+            repair_edge_candidates,
+        )
+        multiscale_full_span_required = (
+            not multiscale_pause_repair
+            and _ambiguous_multiscale_owner_requires_full_span(
+                action=str(repair_match.get("action") or ""),
+                pause_similarity=float(repair_match.get("sim") or 0.0),
+                pause_trust_similarity=_PAUSE_TRUST_SIM,
+                opening_shared_prefix_chars=opening_text_risk.get(idx - 1, 0),
+                owner_onset_ms=place[a][0],
+                predicted_onset_ms=pred,
+                clustered_onset_ms=multiscale_context_onset,
+            )
+        )
+        impossible_owner_geometry = _pause_owner_geometry_needs_full_span(
+            from_pause=place[a][1],
+            old_onset_ms=starts_ms.get(a, place[a][0]),
+            local_onset_ms=o2,
+            previous_quality=float(repair_match.get("prev_quality") or 0.0),
+            next_quality=float(repair_match.get("next_quality") or 0.0),
+        )
+        locally_promoted_weak_pause = next(
+            (
+                decision
+                for decision in low_conf_decisions
+                if decision.reason == "weak-dsp"
+                and o2 is not None
+                and decision.pause.start_ms <= o2 <= decision.pause.end_ms
+            ),
+            None,
+        )
+        local_weak_pause_is_classified = (
+            _confirmed_weak_pause_repair_candidate(
+                from_pause=place[a][1],
+                original_pause_sim=float(repair_match.get("sim") or 0.0),
+                repair_conf=c2,
+                conf_reliable=conf_reliable,
+                repaired_inside_weak_pause=locally_promoted_weak_pause is not None,
+                pause_trust_sim=_PAUSE_TRUST_SIM,
+            )
+            and not multiscale_full_span_required
+        )
+        pause_backed_full_span_candidate = (
+            place[a][1]
+            and not multiscale_pause_repair
+            and not local_weak_pause_is_classified
+            and (
+                geometry_invalidated_owner
+                or multiscale_full_span_required
+                or (
+                    repair_owner_pause is not None
+                    and
+                    o2 is not None
+                    and (c2 >= conf_thresh or impossible_owner_geometry)
+                    and _snap_pause_backed_start_to_owner(
+                        o2,
+                        pause_start_ms=repair_owner_pause.start_ms,
+                        pause_end_ms=repair_owner_pause.end_ms,
+                    )
+                    is None
+                )
+            )
+        )
+        wasl_right_anchor = hi or next(
+            (
+                candidate
+                for candidate in ayah_list[idx + 1:]
+                if place.get(candidate, (0.0, False))[1]
+            ),
+            None,
+        )
+        right_bracket_ms = _full_span_right_bracket_ms(
+            right_anchor_ms=(
+                starts_ms.get(wasl_right_anchor, place[wasl_right_anchor][0])
+                if wasl_right_anchor is not None
+                else None
+            ),
+            total_ms=total_ms,
+            final_ayah=idx == len(ayah_list) - 1,
+        )
+        if (
+            (geometry_invalidated_owner and a not in geometry_invalidated_owners)
+            or multiscale_full_span_required
+        ):
+            geometry_unreliable_debug.append({
+                "ayah": a,
+                "kind": (
+                    "ambiguous-multiscale-owner-conflict"
+                    if multiscale_full_span_required
+                    else "owner-anchor-conflict"
+                ),
+                "start_ms": round(current_start_ms, 1),
+                "predicted_ms": round(pred, 1),
+                "prediction_delta_ms": round(current_start_ms - pred, 1),
+                "owner_pause_resolved": repair_owner_pause is not None,
+                "local_onset_ms": round(o2, 1) if o2 is not None else None,
+                "local_confidence": round(c2, 3),
+                "multiscale_context_onset_ms": (
+                    round(multiscale_context_onset, 1)
+                    if multiscale_context_onset is not None
+                    else None
+                ),
+                "left_anchor": lo,
+                "right_anchor": wasl_right_anchor,
+                "full_span_candidate": pause_backed_full_span_candidate,
+            })
+        if (
+            (
+                (not place[a][1] and (o2 is None or c2 < conf_reliable))
+                or pause_backed_full_span_candidate
+            )
+            and right_bracket_ms is not None
+        ):
+            # A no-pause boundary cannot be repaired by nudging a one-word
+            # window around a drifting prior.  Read the complete span from the
+            # previous reliable ayah through the next anchor instead: the
+            # surrounding known text prevents the current ayah from being
+            # silently skipped or absorbed into the next one.
+            span_start_word = ayah_words[lo][0]
+            span_end_word = (
+                ayah_words[wasl_right_anchor][0] + 1
+                if wasl_right_anchor is not None
+                else n_words
+            )
+            span_start_ms = max(0.0, starts_ms[lo] - 200.0)
+            right_anchor_ms = right_bracket_ms
+            span_end_ms = min(total_ms, right_anchor_ms + 700.0)
+            full = align_slice(
+                span_start_word,
+                span_end_word,
+                span_start_ms,
+                span_end_ms,
+                False,
+            )
+            target_index = fa - span_start_word
+            if full is not None and 0 <= target_index < len(full["starts"]):
+                full_onset = float(full["starts"][target_index])
+                full_conf = float(full["confs"][target_index])
+                full_accept_conf = full_conf
+                following_index = target_index + 1
+                following_word_index = fa + 1
+                if (
+                    _full_span_following_support_is_eligible(
+                        geometry_invalidated_owner=geometry_invalidated_owner,
+                        multiscale_full_span_required=multiscale_full_span_required,
+                        impossible_owner_geometry=impossible_owner_geometry,
+                    )
+                    and following_index < len(full["starts"])
+                    and following_word_index < span_end_word
+                ):
+                    full_accept_conf = _full_span_opening_support_confidence(
+                        opening_confidence=full_conf,
+                        following_confidence=float(full["confs"][following_index]),
+                        opening_onset_ms=full_onset,
+                        following_onset_ms=float(full["starts"][following_index]),
+                        same_ayah=(
+                            words[following_word_index].ayah == words[fa].ayah
+                        ),
+                    )
+                anchored_full_onset = _accept_anchored_full_span_onset(
+                    full_onset,
+                    full_accept_conf,
+                    left_anchor_ms=starts_ms[lo],
+                    right_anchor_ms=right_anchor_ms,
+                )
+                model_reads.append({
+                    "phase": "wasl-full-repair",
+                    "ayah": a,
+                    "window_ms": [round(span_start_ms, 1), round(span_end_ms, 1)],
+                    "words": " ".join(
+                        word.text for word in words[span_start_word:span_end_word]
+                    ),
+                    "target": words[fa].text,
+                    "onset_ms": round(full_onset, 1),
+                    "conf": round(full_conf, 3),
+                    "support_conf": round(full_accept_conf, 3),
+                    "anchored_accept": anchored_full_onset,
+                })
+                if anchored_full_onset:
+                    o2, c2 = full_onset, full_accept_conf
+                    full_pause_decision = next(
+                        (
+                            decision
+                            for decision in pause_decisions
+                            if (
+                                _full_span_pause_candidate_is_supported(
+                                    onset_ms=full_onset,
+                                    pause_start_ms=decision.pause.start_ms,
+                                    pause_end_ms=decision.pause.end_ms,
+                                    pause_tier_name=pause_tier(decision),
+                                    pause_reason=decision.reason,
+                                    confidence=full_accept_conf,
+                                    reliable_confidence=conf_reliable,
+                                )
+                                or _geometry_invalidated_full_span_weak_pause_is_supported(
+                                    geometry_invalidated_owner=(
+                                        geometry_invalidated_owner
+                                    ),
+                                    full_onset_ms=full_onset,
+                                    full_confidence=full_accept_conf,
+                                    target_occurrences=sum(
+                                        word.text == words[fa].text
+                                        for word in words[
+                                            span_start_word:span_end_word
+                                        ]
+                                    ),
+                                    pause_start_ms=decision.pause.start_ms,
+                                    pause_end_ms=decision.pause.end_ms,
+                                    pause_reason=decision.reason,
+                                    acceptance_confidence=conf_thresh,
+                                )
+                                or (
+                                    impossible_owner_geometry
+                                    and _full_span_weak_pause_is_jointly_supported(
+                                        full_onset_ms=full_onset,
+                                        full_confidence=full_accept_conf,
+                                        local_onset_ms=local_repair_onset,
+                                        local_confidence=local_repair_confidence,
+                                        pause_start_ms=decision.pause.start_ms,
+                                        pause_end_ms=decision.pause.end_ms,
+                                        pause_reason=decision.reason,
+                                        acceptance_confidence=conf_thresh,
+                                    )
+                                )
+                            )
+                        ),
+                        None,
+                    )
+                    full_pause_agrees = (
+                        full_pause_decision is None
+                        or (
+                            geometry_invalidated_owner
+                            and full_accept_conf >= conf_reliable
+                        )
+                        or _full_span_pause_owner_is_consistent(
+                            local_repair_onset,
+                            full_onset,
+                            pause_duration_ms=(
+                                full_pause_decision.pause.end_ms
+                                - full_pause_decision.pause.start_ms
+                            ),
+                        )
+                        or _full_span_unique_next_pause_candidate(
+                            local_onset_ms=local_repair_onset,
+                            full_pause_start_ms=full_pause_decision.pause.start_ms,
+                            target_occurrences=sum(
+                                word.text == words[fa].text
+                                for word in words[span_start_word:span_end_word]
+                            ),
+                            full_confidence=full_accept_conf,
+                            confidence_threshold=conf_thresh,
+                            intervening_trusted_pauses=sum(
+                                local_repair_onset is not None
+                                and local_repair_onset < decision.pause.start_ms
+                                < full_pause_decision.pause.start_ms
+                                for decision in trusted_decisions
+                            ),
+                        )
+                    )
+                    full_wasl_repair = full_pause_decision is None
+                    if full_pause_decision is not None and full_pause_agrees:
+                        full_pause_repair = True
+                        full_pause = full_pause_decision.pause
+                        full_pause_j = pause_onsets.index(full_pause.center_ms)
+                        full_pause_i = inner.index(a)
+                        full_pause_wave = rounded_wave_metrics(full_pause_i, full_pause_j)
+                        full_pause_edge = _dsp_edge_timing_candidate(
+                            pause_reason=full_pause_decision.reason,
+                            pause_duration_ms=full_pause.end_ms - full_pause.start_ms,
+                            prev_speech_ms=float(full_pause_wave.get("prev_speech_ms") or 0.0),
+                            next_speech_ms=float(full_pause_wave.get("next_speech_ms") or 0.0),
+                            prev_quality=float(full_pause_wave.get("prev_quality") or 0.0),
+                            next_quality=float(full_pause_wave.get("next_quality") or 0.0),
+                            waqf_before=int(full_pause_wave.get("waqf_before") or 0),
+                            waqf_after=int(full_pause_wave.get("waqf_after") or 0),
+                            sim=max(full_accept_conf, conf_thresh),
+                            min_sim=conf_thresh,
+                            action=sequence_action.get(full_pause_i),
+                        )
+                        if full_pause_edge == "start":
+                            o2 = full_pause.start_ms
+                        elif full_pause_edge == "end":
+                            o2 = full_pause.end_ms
+                        else:
+                            o2 = pause_timing_point(
+                                full_pause.center_ms,
+                                sim=max(full_accept_conf, conf_thresh),
+                                reason=full_pause_decision.reason,
+                            )
+                        c2 = max(full_accept_conf, conf_thresh)
+                    elif full_pause_decision is not None:
+                        o2, c2 = None, 0.0
+                        full_wasl_repair = False
+        post_pause_repair_decision = None
+        # A local CTC word onset can disprove a later weak pause even if it is
+        # comfortably inside its read window (and therefore not a ``left_edge``
+        # candidate). Look only backwards: the first eligible DSP pause must
+        # end immediately before the recognised word. This prevents 2:18 from
+        # being owned by its next internal breath instead of the visible pause.
+        confident_pre_owner = max(
+            (
+                (candidate_conf, candidate_onset)
+                for candidate_onset, candidate_conf, _left_edge in repair_edge_candidates
+                if (
+                    candidate_conf >= conf_reliable
+                    and repair_owner_pause is not None
+                    and candidate_onset < repair_owner_pause.start_ms
+                )
+            ),
+            default=None,
+        )
+        if confident_pre_owner is not None and repair_owner_pause is not None:
+            pre_owner_conf, pre_owner_onset = confident_pre_owner
+            boundary_k = idx - 1
+            for decision in sorted(
+                (
+                    decision
+                    for decision in pause_decisions
+                    if 0.0 <= pre_owner_onset - decision.pause.end_ms <= 350.0
+                ),
+                key=lambda decision: decision.pause.end_ms,
+                reverse=True,
+            ):
+                candidate = decision.pause
+                if candidate.center_ms not in pause_onsets or any(
+                    other_a != a and center == candidate.center_ms
+                    for other_a, center in matched_center_for_ayah.items()
+                ):
+                    continue
+                if not _ctc_prior_pause_replaces_weak_future_owner(
+                    original_pause_reason=str(repair_match.get("reason") or ""),
+                    original_pause_sim=float(repair_match.get("sim") or 0.0),
+                    repair_onset_ms=pre_owner_onset,
+                    repair_conf=pre_owner_conf,
+                    candidate_pause_end_ms=candidate.end_ms,
+                    candidate_pause_reason=decision.reason,
+                    opening_shared_prefix_chars=opening_text_risk.get(boundary_k, 0),
+                    conf_reliable=conf_reliable,
+                    pause_trust_sim=_PAUSE_TRUST_SIM,
+                ):
+                    continue
+                post_pause_repair_decision = decision
+                o2 = pause_timing_point(
+                    candidate.center_ms,
+                    sim=pre_owner_conf,
+                    reason=decision.reason,
+                )
+                c2 = pre_owner_conf
+                emit(
+                    f"Rollback аята {a}: CTC {sec(pre_owner_onset)} сек. "
+                    f"после паузы {sec(candidate.start_ms)}-{sec(candidate.end_ms)}; "
+                    "слабая будущая пауза отвергнута"
+                )
+                break
+        confident_left_edge = max(
+            (
+                (candidate_conf, candidate_onset)
+                for candidate_onset, candidate_conf, left_edge
+                in repair_edge_candidates
+                if left_edge and candidate_conf >= conf_reliable
+            ),
+            default=None,
+        )
+        if post_pause_repair_decision is None and confident_left_edge is not None and idx > 0:
+            edge_conf, edge_onset = confident_left_edge
+            boundary_k = idx - 1
+            owner_center = float(repair_match.get("center_ms") or place[a][0])
+            owner_j = (
+                pause_onsets.index(owner_center)
+                if owner_center in pause_onsets
+                else None
+            )
+            selected_prefix = (
+                _onset_prefix_len(decode_pause(owner_j), openings[boundary_k])
+                if owner_j is not None
+                else 0
+            )
+            nearby_decisions = sorted(
+                (
+                    decision
+                    for decision in pause_decisions
+                    if 0.0 <= edge_onset - decision.pause.end_ms <= 350.0
+                ),
+                key=lambda decision: decision.pause.end_ms,
+                reverse=True,
+            )
+            for decision in nearby_decisions:
+                candidate = decision.pause
+                if candidate.center_ms not in pause_onsets:
+                    continue
+                if any(
+                    other_a != a and center == candidate.center_ms
+                    for other_a, center in matched_center_for_ayah.items()
+                ):
+                    continue
+                candidate_j = pause_onsets.index(candidate.center_ms)
+                candidate_prefix = _onset_prefix_len(
+                    decode_pause(candidate_j),
+                    openings[boundary_k],
+                )
+                post_pause_supported = _post_pause_repair_confirms_prior_dsp(
+                    original_pause_reason=str(repair_match.get("reason") or ""),
+                    original_pause_sim=float(repair_match.get("sim") or 0.0),
+                    repair_onset_ms=edge_onset,
+                    repair_conf=edge_conf,
+                    candidate_pause_end_ms=candidate.end_ms,
+                    candidate_pause_reason=decision.reason,
+                    candidate_prefix=candidate_prefix,
+                    selected_prefix=selected_prefix,
+                    conf_reliable=conf_reliable,
+                    pause_trust_sim=_PAUSE_TRUST_SIM,
+                )
+                emit(
+                    f"Post-pause repair аята {a}: edge={edge_onset:.1f}/"
+                    f"{edge_conf:.3f}, candidate={candidate.start_ms:.1f}-"
+                    f"{candidate.end_ms:.1f}/{decision.reason}, prefix="
+                    f"{candidate_prefix}, selected_prefix={selected_prefix}, "
+                    f"accepted={post_pause_supported}"
+                )
+                if post_pause_supported:
+                    post_pause_repair_decision = decision
+                    o2 = pause_timing_point(
+                        candidate.center_ms,
+                        sim=edge_conf,
+                        reason=decision.reason,
+                    )
+                    c2 = edge_conf
+                break
+        stale_owner_restore = None
+        if repair_owner_pause is not None:
+            stale_owner_restore = _restore_owner_timing_from_internal_repair(
+                current_start_ms=current_start_ms,
+                owner_timing_ms=float(
+                    repair_match.get("rough_ms") or repair_owner_center
+                ),
+                pause_start_ms=repair_owner_pause.start_ms,
+                pause_end_ms=repair_owner_pause.end_ms,
+                repaired_onset_ms=local_repair_onset,
+                repaired_confidence=local_repair_confidence,
+                repaired_predecessor_ms=starts_ms[lo],
+                from_pause=place[a][1],
+                acceptance_confidence=conf_reliable,
+            )
+        if (
+            stale_owner_restore is not None
+            and not (
+                full_wasl_repair
+                or full_pause_repair
+                or multiscale_pause_repair
+                or post_pause_repair_decision is not None
+            )
+        ):
+            o2 = stale_owner_restore
+            c2 = max(c2, local_repair_confidence)
         repair_pause_reason = str(repair_match.get("reason") or "")
         if place[a][1] and repair_match.get("timing_lock") == "short_low_sim_start":
             continue
@@ -6058,12 +10783,23 @@ def align_surah_fast(
             and c2 >= conf_thresh
             and abs(o2 - starts_ms.get(a, o2)) <= 3500.0
         )
-        if o2 is not None and (c2 >= confs.get(a, 0.0) or micro_repair_candidate):
+        if o2 is not None and (
+            c2 >= confs.get(a, 0.0)
+            or _geometry_invalidated_repair_can_compete(
+                geometry_invalidated_owner=geometry_invalidated_owner,
+                repair_confidence=c2,
+                reliable_confidence=conf_reliable,
+            )
+            or micro_repair_candidate
+            or full_pause_repair
+            or multiscale_pause_repair
+            or full_wasl_repair
+        ):
             # A refine that still never locks on (conf below thresh) returns a
             # noisy onset — on a long melodic ayah the model may not find the
             # boundary at all. Geometry between two reliable anchors beats model
             # noise, so fall back to the interpolated guess in that case.
-            chosen = o2 if c2 >= conf_thresh else pred
+            chosen = o2 if c2 >= conf_thresh or full_wasl_repair else pred
             old_onset = starts_ms.get(a, pred)
             if _reject_low_conf_off_grid_repair(
                 from_pause=place[a][1],
@@ -6074,7 +10810,7 @@ def align_surah_fast(
                 shift_ms=abs(chosen - old_onset),
             ):
                 continue
-            pause_hint = wasl_pause_hints.get(a) or snapped_wasl_hints.get(a)
+            pause_hint = snapped_wasl_hints.get(a)
             if (
                 pause_hint is not None
                 and abs(old_onset - pause_hint) <= _WASL_PAUSE_HINT_MS
@@ -6089,6 +10825,47 @@ def align_surah_fast(
                 continue
             # Don't pull a decent pause-backed onset off the pause grid (spurious).
             pause_sim = float(repair_match.get("sim") or 0.0)
+            promoted_weak_decision = next(
+                (
+                    decision
+                    for decision in low_conf_decisions
+                    if decision.reason == "weak-dsp"
+                    and decision.pause.start_ms <= chosen <= decision.pause.end_ms
+                ),
+                None,
+            )
+            confirmed_weak_pause_repair = _confirmed_weak_pause_repair_candidate(
+                from_pause=place[a][1],
+                original_pause_sim=pause_sim,
+                repair_conf=c2,
+                conf_reliable=conf_reliable,
+                repaired_inside_weak_pause=promoted_weak_decision is not None,
+                pause_trust_sim=_PAUSE_TRUST_SIM,
+            ) and not full_wasl_repair
+            promoted_trusted_decision = next(
+                (
+                    decision
+                    for decision in trusted_decisions
+                    if decision.pause.center_ms != repair_owner_center
+                    and decision.pause.start_ms <= chosen <= decision.pause.end_ms
+                ),
+                None,
+            )
+            confirmed_trusted_pause_repair = (
+                _confirmed_trusted_pause_repair_candidate(
+                    from_pause=place[a][1],
+                    original_pause_sim=pause_sim,
+                    geometry_invalidated_owner=geometry_invalidated_owner,
+                    repair_conf=c2,
+                    repaired_inside_different_trusted_pause=(
+                        promoted_trusted_decision is not None
+                    ),
+                    conf_reliable=conf_reliable,
+                    pause_trust_sim=_PAUSE_TRUST_SIM,
+                )
+                and not full_wasl_repair
+                and not full_pause_repair
+            )
             strong_pause_repair = (
                 place[a][1]
                 and pause_sim < _PAUSE_TRUST_SIM
@@ -6134,6 +10911,12 @@ def align_surah_fast(
                 chosen_pause_dist_ms=nearest_repair_pause_dist,
                 chosen_pause_reason=nearest_repair_pause_reason,
                 later_pause_grid_repair=later_pause_grid_repair,
+            ) and not (
+                confirmed_weak_pause_repair
+                or confirmed_trusted_pause_repair
+                or full_wasl_repair
+                or full_pause_repair
+                or multiscale_pause_repair
             ):
                 continue
             if (
@@ -6143,6 +10926,11 @@ def align_surah_fast(
                 and not (
                     micro_pause_repair
                     or later_pause_grid_repair
+                    or confirmed_weak_pause_repair
+                    or confirmed_trusted_pause_repair
+                    or full_wasl_repair
+                    or full_pause_repair
+                    or multiscale_pause_repair
                     or (strong_pause_repair and off_grid_back_repair)
                 )
             ):
@@ -6155,16 +10943,922 @@ def align_surah_fast(
                 and not (
                     micro_pause_repair
                     or later_pause_grid_repair
+                    or confirmed_weak_pause_repair
+                    or confirmed_trusted_pause_repair
+                    or full_wasl_repair
+                    or full_pause_repair
+                    or multiscale_pause_repair
                     or (strong_pause_repair and (repair_on_pause_grid or off_grid_back_repair))
                 )
             ):
                 continue
+            replacement_center = next(
+                (
+                    center for center in pause_onsets
+                    if (replacement_pause := pause_by_center.get(center)) is not None
+                    and replacement_pause.start_ms <= chosen <= replacement_pause.end_ms
+                ),
+                None,
+            )
+            if replacement_center is None and promoted_weak_decision is not None:
+                replacement_center = promoted_weak_decision.pause.center_ms
+                replacement_pause = promoted_weak_decision.pause
+                replacement_diag = promoted_weak_decision
+            else:
+                replacement_pause = (
+                    pause_by_center[replacement_center]
+                    if replacement_center is not None
+                    else None
+                )
+                replacement_diag = (
+                    pause_diag.get(replacement_pause)
+                    if replacement_pause is not None
+                    else None
+                )
+            if replacement_center is not None:
+                replaced_pause = repair_match.get("pause")
+                replacement_reason = replacement_diag.reason if replacement_diag is not None else None
+                repair_action = (
+                    "repair_post_pause_recovery"
+                    if post_pause_repair_decision is not None
+                    else (
+                        "repair_stale_owner_restore"
+                        if stale_owner_restore is not None
+                        else (
+                            "repair_trusted_pause_recovery"
+                            if confirmed_trusted_pause_repair
+                            else (
+                                "repair_weak_pause_recovery"
+                                if confirmed_weak_pause_repair
+                                else "repair_pause_recovery"
+                            )
+                        )
+                    )
+                )
+                repair_match.update({
+                    "pause": pause_ord.get(
+                        replacement_center,
+                        all_pause_ord.get(replacement_center),
+                    ),
+                    "center_ms": replacement_center,
+                    "rough_ms": chosen,
+                    "action": repair_action,
+                    "reason": replacement_reason,
+                    "timing_adjusted": True,
+                    "replaced_pause": replaced_pause,
+                    "replaced_pause_reason": repair_pause_reason,
+                })
+                # The final owner is the pause containing the repaired onset,
+                # not the provisional Phase-1 pause (or provisional wasl).
+                place[a] = (replacement_center, True)
+                matched_center_for_ayah[a] = replacement_center
+                if confirmed_weak_pause_repair:
+                    active_low_conf_centers.add(replacement_center)
+                for debug_match in pause_match_debug:
+                    if debug_match.get("ayah") != a:
+                        continue
+                    debug_match.update({
+                        "from_pause": True,
+                        "pause": pause_ord.get(
+                            replacement_center,
+                            all_pause_ord.get(replacement_center),
+                        ),
+                        "pause_start_ms": round(replacement_pause.start_ms, 1),
+                        "pause_center_ms": round(replacement_center, 1),
+                        "pause_end_ms": round(replacement_pause.end_ms, 1),
+                        "rough_ms": round(chosen, 1),
+                        "pause_reason": replacement_reason,
+                        "match_action": repair_action,
+                        "timing_adjusted": True,
+                        "replaced_pause": replaced_pause,
+                        "replaced_pause_reason": repair_pause_reason,
+                    })
+                    break
+            if full_wasl_repair:
+                place[a] = (chosen, False)
+                matched_center_for_ayah.pop(a, None)
+                repair_match.update({
+                    "pause": None,
+                    "center_ms": chosen,
+                    "rough_ms": chosen,
+                    "action": "wasl",
+                    "reason": "wasl-full-repair",
+                    "timing_adjusted": True,
+                    "wasl_full_repair": True,
+                })
+                for debug_match in pause_match_debug:
+                    if debug_match.get("ayah") != a:
+                        continue
+                    debug_match.update({
+                        "from_pause": False,
+                        "pause": None,
+                        "pause_start_ms": None,
+                        "pause_center_ms": None,
+                        "pause_end_ms": None,
+                        "rough_ms": round(chosen, 1),
+                        "pause_reason": "wasl-full-repair",
+                        "match_action": "wasl",
+                        "timing_adjusted": True,
+                        "wasl_full_repair": True,
+                    })
+                    break
+                right_anchor_match = pause_match_by_ayah.get(
+                    wasl_right_anchor,
+                    {},
+                )
+                if _wasl_revision_invalidates_fallback_right_anchor(
+                    full_wasl_repair=full_wasl_repair,
+                    full_onset_ms=chosen,
+                    local_onset_ms=local_repair_onset,
+                    right_anchor_from_pause=place.get(
+                        wasl_right_anchor,
+                        (0.0, False),
+                    )[1],
+                    right_anchor_action=str(
+                        right_anchor_match.get("action") or "",
+                    ),
+                    right_anchor_similarity=float(
+                        right_anchor_match.get("sim") or 0.0,
+                    ),
+                    pause_trust_similarity=_PAUSE_TRUST_SIM,
+                ):
+                    rel[wasl_right_anchor] = False
+                    geometry_unreliable_debug.append({
+                        "ayah": wasl_right_anchor,
+                        "kind": "fallback-right-anchor-after-wasl-revision",
+                        "previous_wasl_ayah": a,
+                        "previous_local_onset_ms": round(local_repair_onset, 1),
+                        "previous_full_onset_ms": round(chosen, 1),
+                        "revision_ms": round(chosen - local_repair_onset, 1),
+                        "pause_sim": round(
+                            float(right_anchor_match.get("sim") or 0.0),
+                            3,
+                        ),
+                    })
             starts_ms[a] = chosen
             confs[a] = c2
             for t in tr_ayahs:
                 if t["ayah"] == a:
-                    t.update(onset_ms=chosen, conf=round(c2, 3), repaired=True)
+                    t.update(
+                        onset_ms=chosen,
+                        conf=round(c2, 3),
+                        repaired=True,
+                        wasl_full_repair=full_wasl_repair,
+                    )
+                    if confirmed_weak_pause_repair:
+                        t["from_pause"] = True
+                    elif full_wasl_repair:
+                        t["from_pause"] = False
                     break
+            reread_predecessor_wasl_after_right_anchor_revision(idx, old_onset)
+            restore_next_trusted_owner(idx)
+
+    # A later repair may expose that two adjacent owners are in reverse time
+    # order.  Such a block cannot be made valid by monotonic clamping: read the
+    # complete text between reliable pause anchors and replace the whole block
+    # atomically with pause owners or proven wasl boundaries.
+    def reliable_pause_anchor(a: int) -> bool:
+        if a == ayah_list[0]:
+            return a in starts_ms
+        if not place.get(a, (0.0, False))[1] or a not in starts_ms:
+            return False
+        match = pause_match_by_ayah.get(a, {})
+        center = float(match.get("center_ms") or place[a][0])
+        pause = pause_by_center.get(center)
+        if pause is None or not pause.start_ms <= starts_ms[a] <= pause.end_ms:
+            return False
+        ai = ayah_list.index(a)
+        current_opening = words[ayah_words[a][0]].text
+        next_opening = (
+            words[ayah_words[ayah_list[ai + 1]][0]].text
+            if ai + 1 < len(ayah_list)
+            else None
+        )
+        if _repeated_opening_pause_anchor_is_ambiguous(
+            from_pause=True,
+            pause_similarity=float(match.get("sim") or 0.0),
+            previous_quality=float(match.get("prev_quality") or 0.0),
+            current_opening=current_opening,
+            next_opening=next_opening,
+            pause_trust_similarity=_PAUSE_TRUST_SIM,
+        ):
+            return False
+        return (
+            confs.get(a, 0.0) >= conf_reliable
+            or float(match.get("sim") or 0.0) >= _PAUSE_TRUST_SIM
+        )
+
+    owner_order_repaired: set[int] = set()
+    for invalid_ai in range(1, len(ayah_list)):
+        previous_a = ayah_list[invalid_ai - 1]
+        a = ayah_list[invalid_ai]
+        current_match = pause_match_by_ayah.get(a, {})
+        previous_match = pause_match_by_ayah.get(previous_a, {})
+        next_a = (
+            ayah_list[invalid_ai + 1]
+            if invalid_ai + 1 < len(ayah_list)
+            else None
+        )
+        next_match = pause_match_by_ayah.get(next_a, {})
+        observed_shifted_section = _ambiguous_observed_pause_starts_shifted_section(
+            from_pause=place.get(a, (0.0, False))[1],
+            action=str(current_match.get("action") or ""),
+            pause_similarity=float(current_match.get("sim") or 0.0),
+            opening_shared_prefix_chars=opening_text_risk.get(invalid_ai - 1, 0),
+            current_expected_delta_ms=float(
+                current_match.get("expected_delta_ms") or 0.0
+            ),
+            previous_expected_delta_ms=float(
+                previous_match.get("expected_delta_ms") or 0.0
+            ),
+            pause_trust_similarity=_PAUSE_TRUST_SIM,
+            ambiguous_prefix_chars=_AMBIG_PREFIX_CHARS,
+        )
+        adjacent_repeated_section = _adjacent_repeated_owners_start_shifted_section(
+            current_from_pause=place.get(a, (0.0, False))[1],
+            current_action=str(current_match.get("action") or ""),
+            current_similarity=float(current_match.get("sim") or 0.0),
+            current_previous_quality=float(current_match.get("prev_quality") or 0.0),
+            current_expected_delta_ms=float(
+                current_match.get("expected_delta_ms") or 0.0
+            ),
+            previous_from_pause=place.get(previous_a, (0.0, False))[1],
+            previous_action=str(previous_match.get("action") or ""),
+            previous_similarity=float(previous_match.get("sim") or 0.0),
+            previous_previous_quality=float(
+                previous_match.get("prev_quality") or 0.0
+            ),
+            previous_expected_delta_ms=float(
+                previous_match.get("expected_delta_ms") or 0.0
+            ),
+            opening_shared_prefix_chars=opening_text_risk.get(invalid_ai - 1, 0),
+            pause_trust_similarity=_PAUSE_TRUST_SIM,
+            ambiguous_prefix_chars=_AMBIG_PREFIX_CHARS,
+        )
+        observed_shifted_section = observed_shifted_section or adjacent_repeated_section
+        bracket_extended_wasl = a in wasl_run_extension_right_anchor
+        ambiguous_pause_section = (
+            next_a is not None
+            and _unclassified_repeated_pause_run_requires_atomic_block(
+                from_pause=place.get(a, (0.0, False))[1],
+                action=str(current_match.get("action") or ""),
+                pause_similarity=float(current_match.get("sim") or 0.0),
+                previous_quality=float(current_match.get("prev_quality") or 0.0),
+                next_quality=float(current_match.get("next_quality") or 0.0),
+                opening_shared_prefix_chars=opening_shared_prefix.get(
+                    invalid_ai - 1,
+                    0,
+                ),
+                previous_from_pause=place.get(previous_a, (0.0, False))[1],
+                previous_similarity=float(previous_match.get("sim") or 0.0),
+                next_from_pause=place.get(next_a, (0.0, False))[1],
+                next_similarity=float(next_match.get("sim") or 0.0),
+                pause_trust_similarity=_PAUSE_TRUST_SIM,
+            )
+        )
+        bracket_proven_section = bracket_extended_wasl or ambiguous_pause_section
+        shifted_section = observed_shifted_section or bracket_proven_section
+        if (
+            a in owner_order_repaired
+            or (
+                not shifted_section
+                and starts_ms.get(a, total_ms)
+                > starts_ms.get(previous_a, 0.0) + 30.0
+            )
+        ):
+            continue
+        def usable_left_anchor(candidate_ai: int) -> bool:
+            candidate_a = ayah_list[candidate_ai]
+            if not reliable_pause_anchor(candidate_a):
+                return False
+            if not ambiguous_pause_section or candidate_ai != invalid_ai - 1:
+                return True
+            candidate_match = pause_match_by_ayah.get(candidate_a, {})
+            return not _repeated_low_trust_left_anchor_extends_atomic_block(
+                pause_similarity=float(candidate_match.get("sim") or 0.0),
+                previous_quality=float(candidate_match.get("prev_quality") or 0.0),
+                opening_shared_prefix_chars=_common_prefix_len(
+                    ayah_opening(candidate_a),
+                    ayah_opening(a),
+                ),
+                pause_trust_similarity=_PAUSE_TRUST_SIM,
+            )
+
+        left_ai = next(
+            (
+                candidate_ai
+                for candidate_ai in range(invalid_ai - 1, -1, -1)
+                if usable_left_anchor(candidate_ai)
+            ),
+            None,
+        )
+        if left_ai is None:
+            continue
+        left_a = ayah_list[left_ai]
+        if bracket_proven_section or adjacent_repeated_section:
+            provisional_right_ai = (
+                ayah_list.index(wasl_run_extension_right_anchor[a])
+                if bracket_extended_wasl
+                else invalid_ai + 1
+            )
+            right_ai = next(
+                (
+                    candidate_ai
+                    for candidate_ai in range(
+                        provisional_right_ai + 1,
+                        len(ayah_list),
+                    )
+                    if reliable_pause_anchor(ayah_list[candidate_ai])
+                    and starts_ms[ayah_list[candidate_ai]]
+                    > starts_ms[left_a] + 30.0
+                ),
+                None,
+            )
+        elif shifted_section:
+            baseline_delta_ms = float(
+                previous_match.get("expected_delta_ms") or 0.0
+            )
+            right_ai = next(
+                (
+                    candidate_ai
+                    for candidate_ai in range(invalid_ai + 1, len(ayah_list))
+                    if reliable_pause_anchor(ayah_list[candidate_ai])
+                    and starts_ms[ayah_list[candidate_ai]]
+                    > starts_ms[left_a] + 30.0
+                    and abs(
+                        float(
+                            pause_match_by_ayah.get(
+                                ayah_list[candidate_ai], {}
+                            ).get("expected_delta_ms")
+                            or 0.0
+                        )
+                        - baseline_delta_ms
+                    )
+                    <= 5000.0
+                ),
+                None,
+            )
+            if right_ai is None and len(ayah_list) > invalid_ai + 1:
+                right_ai = len(ayah_list) - 1
+        else:
+            right_ai = next(
+                (
+                    candidate_ai
+                    for candidate_ai in range(invalid_ai + 1, len(ayah_list))
+                    if reliable_pause_anchor(ayah_list[candidate_ai])
+                    and starts_ms[ayah_list[candidate_ai]]
+                    > starts_ms[left_a] + 30.0
+                ),
+                None,
+            )
+        if right_ai is None or right_ai <= left_ai + 1:
+            continue
+        right_a = ayah_list[right_ai]
+        i0 = ayah_words[left_a][0]
+        i1 = ayah_words[right_a][0] + 1
+        left_anchor_ms = starts_ms[left_a]
+        right_anchor_ms = starts_ms[right_a]
+        res = align_slice(
+            i0,
+            i1,
+            max(0.0, left_anchor_ms - 200.0),
+            min(total_ms, right_anchor_ms + 700.0),
+            False,
+        )
+        if res is None:
+            continue
+        proposals: list[tuple[int, float, float, Any | None]] = []
+        previous_onset = left_anchor_ms
+        for block_ai in range(left_ai + 1, right_ai):
+            block_a = ayah_list[block_ai]
+            k = ayah_words[block_a][0] - i0
+            if not 0 <= k < len(res["starts"]):
+                proposals = []
+                break
+            onset = float(res["starts"][k])
+            conf = float(res["confs"][k])
+            if bracket_proven_section:
+                accepted = (
+                    previous_onset + 30.0 <= onset <= right_anchor_ms - 30.0
+                    and _full_wasl_read_classification(
+                        conf,
+                        acceptance_confidence=conf_thresh,
+                        audio_bracket_proven=True,
+                    )
+                    == "wasl"
+                )
+            else:
+                accepted = _accept_anchored_full_span_onset(
+                    onset,
+                    conf,
+                    left_anchor_ms=previous_onset,
+                    right_anchor_ms=right_anchor_ms,
+                )
+            if not accepted:
+                proposals = []
+                break
+            owner = next(
+                (
+                    decision
+                    for decision in pause_decisions
+                    if decision.pause.start_ms <= onset <= decision.pause.end_ms
+                    and (
+                        pause_tier(decision) == "trusted"
+                        or (decision.reason == "weak-dsp" and conf >= conf_reliable)
+                    )
+                ),
+                None,
+            )
+            current_match = pause_match_by_ayah.get(block_a, {})
+            preserve_multiscale_onset = (
+                owner is not None
+                and _preserve_multiscale_ctc_owner_timing(
+                    timing_strategy=current_match.get("timing_strategy"),
+                    current_owner_center_ms=current_match.get("center_ms"),
+                    proposed_owner_center_ms=owner.pause.center_ms,
+                    current_start_ms=starts_ms[block_a],
+                    pause_start_ms=owner.pause.start_ms,
+                    pause_end_ms=owner.pause.end_ms,
+                )
+            )
+            chosen = (
+                starts_ms[block_a]
+                if preserve_multiscale_onset
+                else pause_timing_point(
+                    owner.pause.center_ms,
+                    sim=max(conf, conf_thresh),
+                    reason=owner.reason,
+                )
+                if owner is not None
+                else onset
+            )
+            if chosen <= previous_onset + 30.0 or chosen >= right_anchor_ms - 30.0:
+                proposals = []
+                break
+            proposals.append((block_a, chosen, conf, owner))
+            previous_onset = chosen
+        if not proposals:
+            continue
+        for block_a, chosen, conf, owner in proposals:
+            match = pause_match_by_ayah.get(block_a, {})
+            debug_match = next(
+                (
+                    item for item in pause_match_debug
+                    if item.get("ayah") == block_a
+                ),
+                None,
+            )
+            starts_ms[block_a] = chosen
+            confs[block_a] = conf
+            if owner is None:
+                place[block_a] = (chosen, False)
+                matched_center_for_ayah.pop(block_a, None)
+                match.update({
+                    "pause": None,
+                    "center_ms": chosen,
+                    "rough_ms": chosen,
+                    "action": "wasl",
+                    "reason": "wasl-owner-order-full-read",
+                    "timing_adjusted": True,
+                })
+                if debug_match is not None:
+                    debug_match.update({
+                        "from_pause": False,
+                        "pause": None,
+                        "pause_start_ms": None,
+                        "pause_center_ms": None,
+                        "pause_end_ms": None,
+                        "rough_ms": round(chosen, 1),
+                        "pause_reason": "wasl-owner-order-full-read",
+                        "match_action": "wasl",
+                        "timing_adjusted": True,
+                    })
+            else:
+                center = owner.pause.center_ms
+                place[block_a] = (center, True)
+                matched_center_for_ayah[block_a] = center
+                match.update({
+                    "pause": all_pause_ord.get(center, pause_ord.get(center)),
+                    "center_ms": center,
+                    "rough_ms": chosen,
+                    "action": "owner_order_pause_recovery",
+                    "reason": owner.reason,
+                    "timing_adjusted": True,
+                })
+                if debug_match is not None:
+                    debug_match.update({
+                        "from_pause": True,
+                        "pause": all_pause_ord.get(center, pause_ord.get(center)),
+                        "pause_start_ms": round(owner.pause.start_ms, 1),
+                        "pause_center_ms": round(center, 1),
+                        "pause_end_ms": round(owner.pause.end_ms, 1),
+                        "rough_ms": round(chosen, 1),
+                        "pause_reason": owner.reason,
+                        "match_action": "owner_order_pause_recovery",
+                        "timing_adjusted": True,
+                    })
+            for t in tr_ayahs:
+                if t["ayah"] == block_a:
+                    t.update(
+                        onset_ms=chosen,
+                        conf=round(conf, 3),
+                        reliable=True,
+                        from_pause=owner is not None,
+                        owner_order_repair=True,
+                    )
+                    break
+            owner_order_repaired.add(block_a)
+        model_reads.append({
+            "phase": "owner-order-full-repair",
+            "reason": "shifted-section" if shifted_section else "owner-order",
+            "ayah": proposals[0][0],
+            "window_ms": [round(res["base"], 1), round(res["end"], 1)],
+            "words": " ".join(word.text for word in words[i0:i1]),
+            "target": " ".join(
+                words[ayah_words[block_a][0]].text
+                for block_a, _chosen, _conf, _owner in proposals
+            ),
+            "onset_ms": round(proposals[0][1], 1),
+            "conf": round(proposals[0][2], 3),
+        })
+        emit(
+            f"Owner-order block {left_a}-{right_a}: полный текст атомарно "
+            f"переклассифицировал аяты {[item[0] for item in proposals]}"
+        )
+
+    # Timing-only edge recovery runs after every ownership/classification repair
+    # so a better long-pause timestamp cannot change how later ayahs are labeled.
+    context_block_repaired: set[int] = set()
+    for request_ai in long_pause_context_requests:
+        a = ayah_list[request_ai]
+        if (
+            a in context_block_repaired
+            or request_ai < 1
+            or request_ai + 2 >= len(ayah_list)
+        ):
+            continue
+        if request_ai in very_long_pause_context_requests:
+            final_match = pause_match_by_ayah.get(a, {})
+            final_owner = pause_by_center.get(
+                float(final_match.get("center_ms") or place[a][0])
+            )
+            if not _very_long_context_owner_still_valid(
+                pause_start_ms=(final_owner.start_ms if final_owner is not None else None),
+                pause_end_ms=(final_owner.end_ms if final_owner is not None else None),
+            ):
+                continue
+        left_a = ayah_list[request_ai - 1]
+        right_a = ayah_list[request_ai + 2]
+        left_anchor = starts_ms[left_a]
+        right_anchor = starts_ms[right_a]
+        if (
+            right_anchor <= left_anchor
+            or right_anchor - left_anchor > _MAX_SECTION_REPAIR_ALIGN_MS
+        ):
+            emit(
+                f"Context-block {a}: окно "
+                f"{(right_anchor - left_anchor) / 1000.0:.2f} сек. "
+                "непригодно для fast"
+            )
+            continue
+        i0 = ayah_words[left_a][0]
+        i1 = ayah_words[right_a][0] + 1
+        res = align_slice(
+            i0,
+            i1,
+            left_anchor - 60.0,
+            right_anchor + 60.0,
+            basmala=False,
+        )
+        if res is None:
+            continue
+        repaired: list[int] = []
+        for block_a in ayah_list[request_ai:request_ai + 2]:
+            if not place.get(block_a, (0.0, False))[1]:
+                continue
+            match = pause_match_by_ayah.get(block_a, {})
+            pause = pause_by_center.get(
+                float(match.get("center_ms") or place[block_a][0])
+            )
+            if pause is None:
+                continue
+            fa = ayah_words[block_a][0]
+            k = fa - i0
+            if not 0 <= k < len(res["starts"]):
+                continue
+            block_onset = res["starts"][k]
+            block_conf = res["confs"][k]
+            candidate = _context_block_pause_onset_candidate(
+                block_onset,
+                block_conf,
+                pause_start_ms=pause.start_ms,
+                pause_end_ms=pause.end_ms,
+                left_anchor_ms=left_anchor,
+                right_anchor_ms=right_anchor,
+                min_confidence=conf_reliable,
+            )
+            if candidate is None:
+                continue
+            starts_ms[block_a] = candidate
+            confs[block_a] = block_conf
+            place[block_a] = (candidate, True)
+            match.update({
+                "rough_ms": candidate,
+                "action": "context_block_edge_recovery",
+                "timing_adjusted": True,
+                "timing_strategy": "context_block_onset",
+                "context_block_ms": [left_anchor, right_anchor],
+                "context_block_conf": block_conf,
+            })
+            for debug_match in pause_match_debug:
+                if debug_match.get("ayah") != block_a:
+                    continue
+                debug_match.update({
+                    "rough_ms": round(candidate, 1),
+                    "match_action": "context_block_edge_recovery",
+                    "timing_adjusted": True,
+                    "timing_strategy": "context_block_onset",
+                    "context_block_ms": [
+                        round(left_anchor, 1),
+                        round(right_anchor, 1),
+                    ],
+                    "context_block_conf": round(block_conf, 3),
+                })
+                break
+            for t in tr_ayahs:
+                if t["ayah"] != block_a:
+                    continue
+                t.update(
+                    onset_ms=candidate,
+                    conf=round(block_conf, 3),
+                    reliable=True,
+                    context_block_repair=True,
+                )
+                break
+            context_block_repaired.add(block_a)
+            repaired.append(block_a)
+        if repaired:
+            emit(
+                f"Context-block {left_a}-{right_a}: полный текст подтвердил "
+                f"края пауз для аятов {repaired}"
+            )
+
+    # A section-wide duration-prior drift can leave a correct long DSP owner at
+    # its arbitrary geometric centre.  Apply this timing-only correction after
+    # all ownership and context repairs so it cannot affect classification.
+    for debug_match in pause_match_debug:
+        a = int(debug_match["ayah"])
+        pause_start_ms = debug_match.get("pause_start_ms")
+        pause_center_ms = debug_match.get("pause_center_ms")
+        pause_end_ms = debug_match.get("pause_end_ms")
+        expected_delta_ms = debug_match.get("expected_delta_ms")
+        prev_quality = debug_match.get("prev_quality")
+        if (
+            a not in starts_ms
+            or pause_start_ms is None
+            or pause_center_ms is None
+            or pause_end_ms is None
+            or expected_delta_ms is None
+            or prev_quality is None
+            or not _shifted_geometry_long_pause_start_candidate(
+                from_pause=bool(debug_match.get("from_pause")),
+                action=debug_match.get("match_action"),
+                pause_reason=debug_match.get("pause_reason"),
+                pause_duration_ms=float(pause_end_ms) - float(pause_start_ms),
+                current_start_ms=float(starts_ms[a]),
+                pause_center_ms=float(pause_center_ms),
+                expected_delta_ms=float(expected_delta_ms),
+                prev_quality=float(prev_quality),
+                next_quality=float(debug_match.get("next_quality") or 0.0),
+                timing_adjusted=bool(debug_match.get("timing_adjusted")),
+            )
+        ):
+            continue
+        chosen = float(pause_start_ms)
+        starts_ms[a] = chosen
+        place[a] = (chosen, True)
+        match = pause_match_by_ayah.get(a, {})
+        match.update({
+            "rough_ms": chosen,
+            "timing_adjusted": True,
+            "timing_strategy": "shifted_geometry_long_pause_start",
+        })
+        debug_match.update({
+            "rough_ms": round(chosen, 1),
+            "timing_adjusted": True,
+            "timing_strategy": "shifted_geometry_long_pause_start",
+        })
+        for t in tr_ayahs:
+            if t["ayah"] == a:
+                t.update(
+                    onset_ms=chosen,
+                    shifted_geometry_long_pause_start=True,
+                )
+                break
+
+    # Final state reconciliation: a pause-backed timestamp and its owner are one
+    # atomic fact.  Small DSP-edge disagreements are snapped into the claimed
+    # interval; distant moves remain visible to the pause-contract audit.
+    for debug_match in pause_match_debug:
+        if not debug_match.get("from_pause"):
+            continue
+        # This timestamp is a consensus of several local CTC windows already
+        # proven to lie inside this owner pause.  It must not be collapsed back
+        # to the DSP pause edge by the generic one-window reconciliation below.
+        if not _owner_interval_snap_is_allowed(debug_match.get("timing_strategy")):
+            continue
+        a = int(debug_match["ayah"])
+        pause_start_ms = debug_match.get("pause_start_ms")
+        pause_end_ms = debug_match.get("pause_end_ms")
+        if pause_start_ms is None or pause_end_ms is None or a not in starts_ms:
+            continue
+        reconciled = _snap_pause_backed_start_to_owner(
+            starts_ms[a],
+            pause_start_ms=float(pause_start_ms),
+            pause_end_ms=float(pause_end_ms),
+        )
+        if reconciled is None or reconciled == starts_ms[a]:
+            continue
+        starts_ms[a] = reconciled
+        match = pause_match_by_ayah.get(a, {})
+        match.update({
+            "rough_ms": reconciled,
+            "timing_adjusted": True,
+            "timing_strategy": "owner_interval_snap",
+        })
+        debug_match.update({
+            "rough_ms": round(reconciled, 1),
+            "timing_adjusted": True,
+            "timing_strategy": "owner_interval_snap",
+        })
+        for t in tr_ayahs:
+            if t["ayah"] == a:
+                t.update(onset_ms=reconciled, owner_interval_snap=True)
+                break
+
+    # A micro valley overlapping a larger trusted DSP silence is an internal
+    # stop, not a distinct ayah boundary, when its local tempo is impossible.
+    for debug_match in pause_match_debug:
+        if not debug_match.get("from_pause"):
+            continue
+        a = int(debug_match["ayah"])
+        micro_start_ms = debug_match.get("pause_start_ms")
+        micro_end_ms = debug_match.get("pause_end_ms")
+        if micro_start_ms is None or micro_end_ms is None or a not in starts_ms:
+            continue
+        match = pause_match_by_ayah.get(a, {})
+        if str(match.get("reason") or debug_match.get("pause_reason") or "") != "micro-tempo":
+            continue
+        parent = next(
+            (
+                decision.pause
+                for decision in pause_decisions
+                if decision.reason == "dsp"
+                and decision.pause.start_ms < float(micro_start_ms)
+                and decision.pause.end_ms > float(micro_start_ms)
+                and not any(
+                    other_a != a
+                    and float(other_match.get("center_ms") or -1.0)
+                    == decision.pause.center_ms
+                    for other_a, other_match in pause_match_by_ayah.items()
+                )
+            ),
+            None,
+        )
+        if parent is None:
+            continue
+        overlap = min(float(micro_end_ms), parent.end_ms) - max(
+            float(micro_start_ms), parent.start_ms
+        )
+        if not _overlapping_dsp_replaces_micro_owner(
+            action=str(match.get("action") or debug_match.get("match_action") or ""),
+            pause_reason=str(match.get("reason") or debug_match.get("pause_reason") or ""),
+            expected_delta_ms=float(match.get("expected_delta_ms") or 0.0),
+            prev_speech_ms=float(match.get("prev_speech_ms") or 0.0),
+            next_quality=float(match.get("next_quality") or 0.0),
+            overlap_ms=overlap,
+        ):
+            continue
+        chosen = parent.start_ms + 0.15 * (parent.end_ms - parent.start_ms)
+        starts_ms[a] = chosen
+        place[a] = (parent.center_ms, True)
+        match.update({
+            "pause": all_pause_ord.get(parent.center_ms, pause_ord.get(parent.center_ms)),
+            "center_ms": parent.center_ms,
+            "rough_ms": chosen,
+            "action": "overlapping_dsp_micro_recovery",
+            "reason": "dsp",
+            "timing_adjusted": True,
+            "timing_strategy": "overlapping_dsp_start_fraction",
+        })
+        debug_match.update({
+            "pause": all_pause_ord.get(parent.center_ms, pause_ord.get(parent.center_ms)),
+            "pause_start_ms": round(parent.start_ms, 1),
+            "pause_center_ms": round(parent.center_ms, 1),
+            "pause_end_ms": round(parent.end_ms, 1),
+            "rough_ms": round(chosen, 1),
+            "pause_reason": "dsp",
+            "match_action": "overlapping_dsp_micro_recovery",
+            "timing_adjusted": True,
+            "timing_strategy": "overlapping_dsp_start_fraction",
+        })
+        for t in tr_ayahs:
+            if t["ayah"] == a:
+                t.update(onset_ms=chosen, overlapping_dsp_micro_recovery=True)
+                break
+
+    # A final owner recovery can replace the timestamp after the first DSP pass.
+    # Apply this narrow edge choice only now, when owner/action/tempo are final.
+    for debug_match in pause_match_debug:
+        if not debug_match.get("from_pause"):
+            continue
+        a = int(debug_match["ayah"])
+        pause_start_ms = debug_match.get("pause_start_ms")
+        pause_end_ms = debug_match.get("pause_end_ms")
+        if pause_start_ms is None or pause_end_ms is None or a not in starts_ms:
+            continue
+        match = pause_match_by_ayah.get(a, {})
+        if not _late_long_dsp_fallback_start_candidate(
+            pause_reason=str(match.get("reason") or debug_match.get("pause_reason") or ""),
+            pause_duration_ms=float(pause_end_ms) - float(pause_start_ms),
+            action=str(match.get("action") or debug_match.get("match_action") or ""),
+            sim=float(match.get("sim") or debug_match.get("pause_sim") or 0.0),
+            prev_speech_ms=float(match.get("prev_speech_ms") or 0.0),
+            next_quality=float(match.get("next_quality") or 0.0),
+        ):
+            continue
+        chosen = float(pause_start_ms) + 0.12 * (
+            float(pause_end_ms) - float(pause_start_ms)
+        )
+        starts_ms[a] = chosen
+        place[a] = (chosen, True)
+        match.update({
+            "rough_ms": chosen,
+            "timing_adjusted": True,
+            "timing_strategy": "late_long_dsp_fallback_start",
+        })
+        debug_match.update({
+            "rough_ms": round(chosen, 1),
+            "timing_adjusted": True,
+            "timing_strategy": "late_long_dsp_fallback_start",
+        })
+        for t in tr_ayahs:
+            if t["ayah"] == a:
+                t.update(onset_ms=chosen, late_long_dsp_fallback_start=True)
+                break
+
+    # This is a UI and data invariant: if a real pause owns a boundary, the
+    # visible marker is its centre.  Earlier repair stages may use CTC onsets
+    # to decide *which* pause owns the ayah, but must never place the marker
+    # after that pause (or on an arbitrary DSP edge).
+    for debug_match in pause_match_debug:
+        if not debug_match.get("from_pause"):
+            continue
+        a = int(debug_match["ayah"])
+        pause_start_ms = debug_match.get("pause_start_ms")
+        pause_end_ms = debug_match.get("pause_end_ms")
+        if pause_start_ms is None or pause_end_ms is None or a not in starts_ms:
+            continue
+        chosen = _pause_center_start(float(pause_start_ms), float(pause_end_ms))
+        starts_ms[a] = chosen
+        place[a] = (chosen, True)
+        matched_center_for_ayah[a] = chosen
+        match = pause_match_by_ayah.get(a, {})
+        match.update({
+            "center_ms": chosen,
+            "rough_ms": chosen,
+            "owner_pause_start_ms": float(pause_start_ms),
+            "owner_pause_end_ms": float(pause_end_ms),
+            "marker_ms": chosen,
+            "decode_start_ms": pause_decode_starts.get(chosen, float(pause_start_ms)),
+            "timing_adjusted": True,
+            "timing_strategy": "pause_center_invariant",
+        })
+        debug_match.update({
+            "pause_center_ms": round(chosen, 1),
+            "rough_ms": round(chosen, 1),
+            "owner_pause_start_ms": round(float(pause_start_ms), 1),
+            "owner_pause_end_ms": round(float(pause_end_ms), 1),
+            "marker_ms": round(chosen, 1),
+            "decode_start_ms": round(
+                pause_decode_starts.get(chosen, float(pause_start_ms)), 1
+            ),
+            "timing_adjusted": True,
+            "timing_strategy": "pause_center_invariant",
+        })
+        for t in tr_ayahs:
+            if t["ayah"] == a:
+                t.update(
+                    onset_ms=chosen,
+                    owner_pause_start_ms=float(pause_start_ms),
+                    owner_pause_end_ms=float(pause_end_ms),
+                    marker_ms=chosen,
+                    decode_start_ms=pause_decode_starts.get(
+                        chosen, float(pause_start_ms)
+                    ),
+                    pause_center_invariant=True,
+                )
+                break
 
     def write_fast_trace(extra: dict | None = None) -> None:
         if trace is None:
@@ -6181,6 +11875,13 @@ def align_surah_fast(
             int(item["pause"])
             for item in pause_match_debug
             if item.get("pause") is not None
+        }
+        owner_ayah_by_center = {
+            round(float(item["pause_center_ms"]), 1): int(item["ayah"])
+            for item in pause_match_debug
+            if item.get("from_pause")
+            and item.get("pause_center_ms") is not None
+            and item.get("ayah") is not None
         }
 
         def sequence_trace_event(ev: dict) -> dict:
@@ -6208,8 +11909,15 @@ def align_surah_fast(
             wave_metrics = rounded_wave_metrics(0, -1)
             if j is not None and p.center_ms in pause_onsets and exp:
                 pj = pause_onsets.index(p.center_ms)
-                boundary_i = min(range(len(exp)), key=lambda i: abs(exp[i] - p.center_ms))
+                owner_ayah = owner_ayah_by_center.get(round(float(p.center_ms), 1))
+                boundary_i = (
+                    inner.index(owner_ayah)
+                    if owner_ayah in inner
+                    else min(range(len(exp)), key=lambda i: abs(exp[i] - p.center_ms))
+                )
                 wave_metrics = rounded_wave_metrics(boundary_i, pj)
+            read_plan = pause_read_plans.get((boundary_i, p.center_ms))
+            disambiguation = text_disambiguations.get(boundary_i)
             return {
                 "idx": all_pause_ord.get(p.center_ms, pause_ord.get(p.center_ms)),
                 "active_idx": pause_ord.get(p.center_ms),
@@ -6227,6 +11935,27 @@ def align_surah_fast(
                 "vad_ok": d.vad_ok if d is not None else None,
                 "decode_reason": pause_decode_reasons.get(p.center_ms),
                 "decode_window_ms": round(pause_decode_windows.get(p.center_ms, 0.0), 1),
+                "decode_start_ms": round(
+                    pause_decode_starts.get(p.center_ms, p.start_ms), 1
+                ),
+                "marker_ms": round(p.center_ms, 1),
+                "speech_read_ms": (
+                    round(read_plan.speech_read_ms, 1) if read_plan is not None else None
+                ),
+                "required_text_units": (
+                    round(disambiguation.required_text_units, 3)
+                    if disambiguation is not None else None
+                ),
+                "text_competitors": (
+                    list(disambiguation.competitors)
+                    if disambiguation is not None else []
+                ),
+                "text_disambiguation_reason": (
+                    disambiguation.reason if disambiguation is not None else None
+                ),
+                "read_expansions": (
+                    read_plan.expansion_count if read_plan is not None else 0
+                ),
                 "decode_start_vs_pause_end_ms": round(
                     (
                         pause_ord.get(p.center_ms)
@@ -6247,8 +11976,52 @@ def align_surah_fast(
         trace["pause_matches"] = pause_match_debug
         trace["micro_pauses"] = micro_pause_debug
         trace["low_conf_activations"] = low_conf_activation_debug
+        trace["geometry_unreliable_anchors"] = geometry_unreliable_debug
         trace["pause_sequence_events"] = [
             sequence_trace_event(ev) for ev in sequence_events
+        ]
+        trace["tempo_forecast"] = {
+            "rate_units_per_ms": round(active_tempo_estimate.rate_units_per_ms, 8),
+            "conservative_rate": round(active_tempo_estimate.conservative_rate, 8),
+            "spread_units_per_ms": round(
+                active_tempo_estimate.spread_units_per_ms, 8
+            ),
+            "pause_median_ms": round(active_tempo_estimate.pause_median_ms, 1),
+            "pause_iqr_ms": round(active_tempo_estimate.pause_iqr_ms, 1),
+            "confidence": round(active_tempo_estimate.confidence, 3),
+            "observation_count": active_tempo_estimate.observation_count,
+            "fallback_used": active_tempo_estimate.fallback_used,
+            "observations": [
+                {
+                    "text_units": round(observation.text_units, 3),
+                    "speech_ms": round(observation.speech_ms, 1),
+                    "pause_ms": round(observation.pause_ms, 1),
+                    "confidence": round(observation.confidence, 3),
+                }
+                for observation in tempo_observations
+            ],
+            "pause_regions": [
+                {
+                    "ayah": inner[boundary],
+                    "start_ms": round(region[0], 1),
+                    "center_ms": round(region[1], 1),
+                    "end_ms": round(region[2], 1),
+                }
+                for boundary, region in sorted(predicted_pause_regions.items())
+                if 0 <= boundary < len(inner)
+            ],
+        }
+        trace["text_disambiguation"] = [
+            {
+                "ayah": inner[boundary],
+                "required_words": plan.required_words,
+                "required_text_units": round(plan.required_text_units, 3),
+                "competitors": list(plan.competitors),
+                "reason": plan.reason,
+                "target_text": plan.target_text,
+                "distinguishing_word": plan.distinguishing_word,
+            }
+            for boundary, plan in sorted(text_disambiguations.items())
         ]
         trace["pause_budget"] = {
             "ayah_boundaries": ayah_boundary_count,
@@ -6292,6 +12065,21 @@ def align_surah_fast(
         )
         trace["n_refine_skipped"] = sum(1 for t in tr_ayahs if t.get("refine_skipped"))
         trace["coverage"] = round(audio_ms / total_ms, 3) if total_ms else 0.0
+        trace["bounded_ctc_fallback"] = (
+            {
+                "backend": "tiled",
+                "reasons": list(tiled_fallback_reasons),
+                "n_chunks": tiled_fallback_trace.get("n_chunks"),
+                "emissions_frames": tiled_fallback_trace.get("emissions_frames"),
+            }
+            if tiled_fallback_rows is not None else None
+        )
+        trace["boundary_diagnostics"] = _fast_boundary_diagnostics(
+            trace["pause_sequence_events"],
+            pause_match_debug,
+            geometry_unreliable_debug,
+            monotonic_repairs,
+        )
         if extra:
             trace.update(extra)
 
@@ -6358,18 +12146,358 @@ def align_surah_fast(
             "оставляю fast и помечаю слабые места"
         )
 
-    # --- shape: monotonic non-decreasing starts, per-ayah rows. ------------
-    rows: list[tuple[int, int, float]] = []
-    last = 0
+    def repair_insufficient_audio_locally(target_ayahs: list[int]) -> list[int]:
+        """Atomically re-read only structurally damaged anchored intervals."""
+        repaired_targets: set[int] = set()
+        reliable_anchors = {
+            ayah for ayah in ayah_list if reliable_pause_anchor(ayah)
+        }
+        spans = _bounded_local_repair_spans(
+            ayah_list,
+            target_ayahs,
+            reliable_anchors,
+            starts_ms,
+        )
+        for left_index, right_index in spans:
+            left_ayah = ayah_list[left_index]
+            right_ayah = ayah_list[right_index]
+            left_center = matched_center_for_ayah.get(left_ayah)
+            right_center = matched_center_for_ayah.get(right_ayah)
+            left_owner = (
+                pause_by_center.get(left_center) if left_center is not None else None
+            )
+            right_owner = (
+                pause_by_center.get(right_center) if right_center is not None else None
+            )
+            window_start = (
+                left_owner.start_ms
+                if left_owner is not None else max(0.0, starts_ms[left_ayah] - 200.0)
+            )
+            window_end = (
+                min(total_ms, right_owner.end_ms + 4000.0)
+                if right_owner is not None
+                else min(total_ms, starts_ms[right_ayah] + 4000.0)
+            )
+            if (
+                window_end <= window_start
+                or window_end - window_start > _MAX_FINAL_LOCAL_REPAIR_ALIGN_MS
+            ):
+                continue
+            first_word = ayah_words[left_ayah][0]
+            end_word = ayah_words[right_ayah][0] + 1
+            local = align_slice(
+                first_word,
+                end_word,
+                window_start,
+                window_end,
+                False,
+            )
+            if local is None:
+                continue
+
+            proposals: list[tuple[int, float, float, Any | None]] = []
+            previous_onset = starts_ms[left_ayah]
+            right_anchor_ms = starts_ms[right_ayah]
+            for block_index in range(left_index + 1, right_index):
+                block_ayah = ayah_list[block_index]
+                block_word = ayah_words[block_ayah][0]
+                offset = block_word - first_word
+                if not 0 <= offset < len(local["starts"]):
+                    proposals = []
+                    break
+                onset = float(local["starts"][offset])
+                confidence = float(local["confs"][offset])
+                if (
+                    not previous_onset + 30.0 < onset < right_anchor_ms - 30.0
+                    or _full_wasl_read_classification(
+                        confidence,
+                        acceptance_confidence=conf_thresh,
+                        audio_bracket_proven=True,
+                    )
+                    != "wasl"
+                ):
+                    proposals = []
+                    break
+                owner = next(
+                    (
+                        decision
+                        for decision in pause_decisions
+                        if decision.pause.start_ms <= onset <= decision.pause.end_ms
+                        and (
+                            pause_tier(decision) == "trusted"
+                            or (
+                                decision.reason == "weak-dsp"
+                                and confidence >= conf_reliable
+                            )
+                        )
+                    ),
+                    None,
+                )
+                chosen = owner.pause.center_ms if owner is not None else onset
+                if not previous_onset + 30.0 < chosen < right_anchor_ms - 30.0:
+                    proposals = []
+                    break
+                proposals.append((block_ayah, chosen, confidence, owner))
+                previous_onset = chosen
+            if not proposals:
+                continue
+
+            for block_ayah, chosen, confidence, owner in proposals:
+                starts_ms[block_ayah] = chosen
+                confs[block_ayah] = confidence
+                match = pause_match_by_ayah.get(block_ayah, {})
+                debug_match = next(
+                    (
+                        item
+                        for item in pause_match_debug
+                        if item.get("ayah") == block_ayah
+                    ),
+                    None,
+                )
+                if owner is None:
+                    place[block_ayah] = (chosen, False)
+                    matched_center_for_ayah.pop(block_ayah, None)
+                    match.update({
+                        "pause": None,
+                        "center_ms": chosen,
+                        "rough_ms": chosen,
+                        "action": "wasl",
+                        "reason": "bounded-local-full-read",
+                        "timing_adjusted": True,
+                        "bounded_local_repair": True,
+                    })
+                    if debug_match is not None:
+                        debug_match.update({
+                            "from_pause": False,
+                            "pause": None,
+                            "pause_start_ms": None,
+                            "pause_center_ms": None,
+                            "pause_end_ms": None,
+                            "rough_ms": round(chosen, 1),
+                            "pause_reason": "bounded-local-full-read",
+                            "match_action": "wasl",
+                            "timing_adjusted": True,
+                            "bounded_local_repair": True,
+                        })
+                else:
+                    center = owner.pause.center_ms
+                    place[block_ayah] = (center, True)
+                    matched_center_for_ayah[block_ayah] = center
+                    match.update({
+                        "pause": all_pause_ord.get(center, pause_ord.get(center)),
+                        "center_ms": center,
+                        "rough_ms": center,
+                        "action": "bounded_local_pause_recovery",
+                        "reason": owner.reason,
+                        "timing_adjusted": True,
+                        "bounded_local_repair": True,
+                    })
+                    if debug_match is not None:
+                        debug_match.update({
+                            "from_pause": True,
+                            "pause": all_pause_ord.get(center, pause_ord.get(center)),
+                            "pause_start_ms": round(owner.pause.start_ms, 1),
+                            "pause_center_ms": round(center, 1),
+                            "pause_end_ms": round(owner.pause.end_ms, 1),
+                            "rough_ms": round(center, 1),
+                            "pause_reason": owner.reason,
+                            "match_action": "bounded_local_pause_recovery",
+                            "timing_adjusted": True,
+                            "bounded_local_repair": True,
+                        })
+                for item in tr_ayahs:
+                    if item.get("ayah") != block_ayah:
+                        continue
+                    item.update({
+                        "rough_ms": chosen,
+                        "from_pause": owner is not None,
+                        "onset_ms": chosen,
+                        "conf": round(confidence, 3),
+                        "reliable": confidence >= conf_thresh,
+                        "bounded_local_repair": True,
+                    })
+                    break
+                if block_ayah in target_ayahs:
+                    repaired_targets.add(block_ayah)
+
+            model_reads.append({
+                "phase": "insufficient-audio-local-repair",
+                "ayah": proposals[0][0],
+                "window_ms": [round(local["base"], 1), round(local["end"], 1)],
+                "left_anchor_ayah": left_ayah,
+                "right_anchor_ayah": right_ayah,
+                "atomic": True,
+                "words": " ".join(w.text for w in words[first_word:end_word]),
+                "target": " ".join(
+                    words[ayah_words[block_ayah][0]].text
+                    for block_ayah, _chosen, _confidence, _owner in proposals
+                ),
+                "onset_ms": round(proposals[0][1], 1),
+                "conf": round(proposals[0][2], 3),
+            })
+            log_read(model_reads[-1])
+            emit(
+                f"Локальный structural repair {left_ayah}-{right_ayah}: "
+                f"атомарно закрыты {[item[0] for item in proposals]}"
+            )
+        return sorted(repaired_targets)
+
+    # Explicitly insufficient context is repaired only inside the nearest
+    # trusted pause-owner bracket. One weak ayah must not discard hundreds of
+    # already-proved pause centres or trigger a second whole-sura pass.
+    insufficient_audio_ayahs = _insufficient_audio_ayahs(pause_match_debug)
+    locally_repaired_ayahs = repair_insufficient_audio_locally(
+        insufficient_audio_ayahs
+    )
+    unresolved_insufficient_audio_ayahs = _insufficient_audio_ayahs(
+        pause_match_debug
+    )
+    unresolved_structural_pairs = [
+        [previous_ayah, ayah]
+        for previous_ayah, ayah in zip(ayah_list, ayah_list[1:])
+        if starts_ms.get(ayah, total_ms)
+        <= starts_ms.get(previous_ayah, 0.0) + 30.0
+    ]
+
+    # --- shape: strictly increasing starts, per-ayah rows. -----------------
+    candidate_rows: list[tuple[int, int, float]] = []
     for a in ayah_list:
-        ms = int(round(starts_ms.get(a, last)))
-        ms = max(ms, last)
-        rows.append((a, ms, float(confs.get(a, 0.0))))
-        last = ms
+        candidate_rows.append(
+            (a, int(round(starts_ms.get(a, 0.0))), float(confs.get(a, 0.0)))
+        )
+    rows, monotonic_repairs = _enforce_strictly_increasing_starts(candidate_rows)
+
+    verification_cascade = _requires_low_verify_ctc_fallback(
+        verify_sim,
+        pause_coverage,
+        reliable_align_result,
+    )
+    if unresolved_insufficient_audio_ayahs:
+        emit(
+            f"Сура {surah}: локально не закрыты insufficient_audio аяты "
+            f"{unresolved_insufficient_audio_ayahs}; оставляю их слабыми для review"
+        )
+    if verification_cascade or unresolved_structural_pairs:
+        reason = (
+            "low_verify_coverage"
+            if verification_cascade
+            else "unresolved_local_structure"
+        )
+        emit(
+            f"Сура {surah}: FAST fallback к bounded tiled CTC ({reason}), "
+            f"аяты {unresolved_insufficient_audio_ayahs}, "
+            f"обратные пары {unresolved_structural_pairs}"
+        )
+        fallback = bounded_surah_fallback(reason)
+        full_rows = [
+            (ayah, int(round(fallback[ayah][0])), float(fallback[ayah][1]))
+            for ayah in ayah_list
+        ]
+        # Tiled CTC keeps timestamps non-decreasing, whereas FAST's
+        # output contract is strict: two neighbouring ayahs must never share a
+        # start.  Preserve that invariant across the stronger fallback too, so
+        # an emergency CTC escalation cannot reintroduce a duplicate boundary.
+        full_rows, full_ctc_monotonic_repairs = _enforce_strictly_increasing_starts(
+            full_rows
+        )
+        if trace is not None:
+            fallback_meta = {
+                "reason": reason,
+                "ayahs": unresolved_insufficient_audio_ayahs,
+                "structural_pairs": unresolved_structural_pairs,
+                "backend": "tiled",
+                "monotonic_repairs": full_ctc_monotonic_repairs,
+                "locally_repaired_ayahs": locally_repaired_ayahs,
+            }
+            write_fast_trace({
+                "drift_detected": bool(drifted),
+                "mean_conf": round(mean_conf, 3),
+                "verify_sim": round(verify_sim, 3),
+                "full_ctc_fallback": fallback_meta,
+            })
+            # FAST pause owners do not apply to CTC-produced starts.
+            trace["pause_matches"] = []
+        return full_rows
+
+    fingerprint_repairs: list[dict[str, int | float]] = []
+    if ayah_audio_dir:
+        from surah_cutter.core import fingerprint
+
+        original_rows = {a: (ms, conf) for a, ms, conf in rows}
+        fingerprint_owner_intervals = {
+            int(match["ayah"]): (
+                float(match["pause_start_ms"]),
+                float(match["pause_end_ms"]),
+            )
+            for match in pause_match_debug
+            if match.get("from_pause")
+            and match.get("pause_start_ms") is not None
+            and match.get("pause_end_ms") is not None
+        }
+        proposed_rows, proposed_repairs = fingerprint.refine_fast_rows_by_fingerprint(
+            pcm,
+            sr,
+            rows,
+            surah,
+            ayah_audio_dir=ayah_audio_dir,
+            owner_intervals=fingerprint_owner_intervals,
+        )
+        accepted_repairs: dict[int, dict[str, int | float]] = {}
+        for repair in proposed_repairs:
+            a = int(repair["ayah"])
+            # The refiner already requires same-recording correlation, local
+            # distance and strict neighbour order. Unlike a DSP pause, the
+            # clip's first speech frame may naturally fall just after silence.
+            accepted_repairs[a] = repair
+        if accepted_repairs:
+            rows = []
+            for a, _ms, _conf in proposed_rows:
+                if a in accepted_repairs:
+                    repair = accepted_repairs[a]
+                    rows.append(
+                        (
+                            a,
+                            int(repair["matched_ms"]),
+                            max(original_rows[a][1], float(repair["correlation"])),
+                        )
+                    )
+                else:
+                    rows.append((a, *original_rows[a]))
+            rows, fingerprint_monotonic_repairs = _enforce_strictly_increasing_starts(rows)
+            monotonic_repairs.extend(fingerprint_monotonic_repairs)
+            fingerprint_repairs = list(accepted_repairs.values())
+            for repair in fingerprint_repairs:
+                a = int(repair["ayah"])
+                matched_ms = int(repair["matched_ms"])
+                for item in tr_ayahs:
+                    if item["ayah"] == a:
+                        item.update(
+                            onset_ms=matched_ms,
+                            fingerprint_correlation=repair["correlation"],
+                            boundary_evidence="exact_fingerprint",
+                        )
+                        break
+                for match in pause_match_debug:
+                    if match.get("ayah") == a:
+                        match.update(
+                            boundary_evidence="exact_fingerprint",
+                            fingerprint_correlation=repair["correlation"],
+                        )
+                emit(
+                    f"Аят {a}: fingerprint той же записи подтвердил старт "
+                    f"{sec(matched_ms)} сек. (corr={float(repair['correlation']):.3f})"
+                )
 
     write_fast_trace({
         "drift_detected": bool(drifted),
         "mean_conf": round(mean_conf, 3),
         "verify_sim": round(verify_sim, 3),
+        "fingerprint_repairs": fingerprint_repairs,
+        "insufficient_audio": {
+            "detected_ayahs": insufficient_audio_ayahs,
+            "locally_repaired_ayahs": locally_repaired_ayahs,
+            "unresolved_ayahs": unresolved_insufficient_audio_ayahs,
+            "unresolved_structural_pairs": unresolved_structural_pairs,
+        },
     })
     return rows

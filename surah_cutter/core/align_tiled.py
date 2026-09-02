@@ -281,13 +281,13 @@ def align_surah_tiled(
             res = align_slice(w_lc, w_rc, t0, t1, basmala)
             grow += 1
         if res is None:
-            # Degenerate window (too short / no tokens) — widen once to the end.
-            res = align_slice(w_lc, w_rc, t0, total_ms, basmala)
-        if res is None:
-            # Give up on tiling: the whole-sura exact path is the safety net. Rare
-            # (only truly degenerate audio); on a long sura it is the slow path,
-            # but correctness wins over speed (project non-negotiable).
-            return A.align_surah(pcm, sr, words, surah=surah, model=bundle)
+            # A whole-sura retry defeats the tile memory bound and can allocate
+            # hundreds of GiB on long recordings.  Fail explicitly instead of
+            # publishing guessed starts or recursively entering unbounded CTC.
+            raise RuntimeError(
+                "tiled CTC could not align bounded ayah chunk "
+                f"{ayah_list[i]}-{ayah_list[j - 1]}"
+            )
 
         slice_starts, slice_confs = res
         for k in range(i, j):  # trust [i, j) only; context onsets discarded

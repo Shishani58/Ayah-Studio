@@ -46,11 +46,11 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           cd dist
-          zip -r -y ../${{ matrix.artifact }}.zip surah-cutter.app
+          zip -r -y ../${{ matrix.artifact }}.zip "Surah Cutter.app"
 
       - name: Archive (Windows)
         if: runner.os == 'Windows'
-        run: Compress-Archive -Path dist/surah-cutter -DestinationPath ${{ matrix.artifact }}.zip
+        run: Compress-Archive -Path "dist/Surah Cutter" -DestinationPath ${{ matrix.artifact }}.zip
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

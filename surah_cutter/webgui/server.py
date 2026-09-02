@@ -663,6 +663,12 @@ def _fast_trace_summary(trace: dict[str, Any]) -> dict[str, Any]:
     ayahs = trace.get("ayahs") or []
     repaired = sum(1 for a in ayahs if a.get("repaired"))
     reliable = sum(1 for a in ayahs if a.get("reliable"))
+    tempo = trace.get("tempo_forecast") or {}
+    unresolved = {
+        event.get("ayah")
+        for event in trace.get("pause_sequence_events") or []
+        if event.get("action") == "unresolved_current"
+    }
     return {
         "coverage": trace.get("coverage"),
         "n_pause": trace.get("n_pause"),
@@ -674,6 +680,20 @@ def _fast_trace_summary(trace: dict[str, Any]) -> dict[str, Any]:
         "drift_detected": trace.get("drift_detected"),
         "mean_conf": trace.get("mean_conf"),
         "verify_sim": trace.get("verify_sim"),
+        "tempo_rate": tempo.get("rate_units_per_ms"),
+        "tempo_confidence": tempo.get("confidence"),
+        "tempo_observations": tempo.get("observation_count", 0),
+        "unresolved": len(unresolved),
+        "atomic_wasl_reads": sum(
+            1
+            for read in trace.get("model_reads") or []
+            if read.get("phase") in {
+                "wasl-run",
+                "wasl-tiled-fallback",
+                "wasl-full-fallback",
+            }
+            and read.get("atomic")
+        ),
     }
 
 
@@ -836,6 +856,23 @@ def _format_fast_log(
             f"использовано {budget.get('used_pauses')}, "
             f"прочитано пауз {budget.get('decoded_pauses')}, "
             f"micro {budget.get('micro_pauses')}, ratio={budget.get('pause_target_ratio')}"
+        )
+    tempo = trace.get("tempo_forecast") or {}
+    if tempo:
+        lines.append(
+            f"   local tempo: rate={tempo.get('rate_units_per_ms')} "
+            f"conservative={tempo.get('conservative_rate')} "
+            f"spread={tempo.get('spread_units_per_ms')} "
+            f"confidence={tempo.get('confidence')} "
+            f"observations={tempo.get('observation_count')} "
+            f"pause={tempo.get('pause_median_ms')}±{tempo.get('pause_iqr_ms')}ms"
+        )
+    text_plans = trace.get("text_disambiguation") or []
+    unresolved_plans = [plan for plan in text_plans if plan.get("reason") == "unresolved"]
+    if unresolved_plans:
+        lines.append(
+            "   unresolved text → atomic wasl: "
+            + ", ".join(str(plan.get("ayah")) for plan in unresolved_plans)
         )
     for i, d in enumerate(decisions, 1):
         status = "OK" if d.accepted else "BAD"

@@ -51,7 +51,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--ayah-audio-dir",
         default=None,
-        help="folder with per-ayah clips for --mode fingerprint",
+        help="folder with same-recording per-ayah clips for fingerprint mode or fast refinement",
     )
     return p
 

@@ -1,17 +1,19 @@
 # Packaging / distribution
 
-Frozen desktop builds of the GUI app (`surah-cutter-gui`) via **PyInstaller**.
+Frozen desktop builds of the current GUI app (`surah-cutter-gui`) via
+**PyInstaller**.
 Config lives in [`surah_cutter.spec`](../../surah_cutter.spec); CI in
 [`.github/workflows/build.yml`](../../.github/workflows/build.yml).
 
 ## What gets bundled
 
-- `surah_cutter` package (entry: `surah_cutter/gui/app.py`).
+- `surah_cutter` package (entry: `surah_cutter/webgui/launch.py`).
+- `surah_cutter/webgui/static/` — the current dashboard and review UI.
 - `data/quran_mushaf.db` and `data/references/*.db` — Quran text + reciter
   reference timecodes.
 - `assets/fonts/qpc_hafs.ttf` — QPC Hafs font.
-- `models/` — ONNX alignment model dir, **only if present and non-empty**
-  (graceful: the spec skips it otherwise; ship it for an offline-ready build).
+- Required ONNX runtime models: the quantised CTC model, its vocabulary and
+  Silero VAD. The large FP32 export is intentionally excluded.
 - `LICENSE`.
 
 ### Bundle layout matters
@@ -28,8 +30,13 @@ the shipped app aligns through `onnxruntime` only.
 ## Local build
 
 ```bash
-pip install -e .
-pip install pyinstaller
+uv run --with pyinstaller pyinstaller surah_cutter.spec --noconfirm --clean
+```
+
+Without `uv`:
+
+```bash
+python -m pip install -e . pyinstaller
 pyinstaller surah_cutter.spec --noconfirm --clean
 ```
 
@@ -37,9 +44,9 @@ Outputs in `dist/`:
 
 | Platform | Output                                       |
 | -------- | -------------------------------------------- |
-| macOS    | `dist/surah-cutter.app` (windowed `.app`)    |
-| Windows  | `dist/surah-cutter/surah-cutter-gui.exe`     |
-| Linux    | `dist/surah-cutter/surah-cutter-gui`         |
+| macOS    | `dist/Surah Cutter.app` (windowed `.app`)    |
+| Windows  | `dist/Surah Cutter/Surah Cutter.exe`         |
+| Linux    | `dist/Surah Cutter/Surah Cutter`             |
 
 Build on the target OS — PyInstaller does not cross-compile.
 

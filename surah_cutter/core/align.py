@@ -36,6 +36,12 @@ leading audio; the prefix is not reported as a word/ayah. al-Fatiha's basmala
 Heavy deps (``torch``, ``transformers``, ``ctc_forced_aligner``) are imported
 lazily inside :func:`align_surah`; ``core`` stays importable without them. The
 loaded model/processor bundle is cached across calls.
+
+For long inputs, :func:`align_surah` estimates the exact Viterbi backtrace size
+before running the acoustic model.  Jobs above the configured memory budget are
+transparently routed through bounded exact tiles; explicit ``full`` mode and
+automatic fallbacks therefore cannot allocate a whole-sura ``T × (2L+1)``
+matrix.
 """
 
 from __future__ import annotations
@@ -71,6 +77,15 @@ WORD_DELIMITER = "|"
 #: identical either way — only the emission source differs. Overridable per call
 #: via ``align_surah(..., backend=...)`` or the ``SURAH_CUTTER_ALIGN_BACKEND`` env.
 DEFAULT_BACKEND = os.environ.get("SURAH_CUTTER_ALIGN_BACKEND", "onnx").strip().lower()
+
+#: The exact Viterbi stores one int64 predecessor for every frame/state pair.
+#: Above this budget the same exact text is aligned through bounded tiles instead
+#: of allocating a whole-sura backtrace matrix.  The estimate uses wav2vec2's
+#: stable ~20 ms frame stride and is deliberately conservative.
+_MAX_FULL_CTC_BACKTRACE_BYTES = int(
+    float(os.environ.get("SC_MAX_FULL_CTC_BACKTRACE_MB", "1024")) * 1024 * 1024
+)
+_CTC_FRAME_STRIDE_MS_ESTIMATE = 20.0
 
 #: Default path to the int8 ONNX model (the artefact written by
 #: :mod:`surah_cutter.tools.export_onnx`). Overridable via the
@@ -128,6 +143,37 @@ class _OnnxBundle:
         self.vocab = emitter.vocab
         self.blank_id = emitter.blank_id
         self.delim_id = emitter.vocab.get(WORD_DELIMITER)
+
+
+def _estimated_ctc_backtrace_bytes(
+    n_samples: int,
+    sr: int,
+    n_targets: int,
+) -> int:
+    """Conservatively estimate the exact CTC Viterbi backtrace allocation."""
+    if n_samples <= 0 or sr <= 0 or n_targets <= 0:
+        return 0
+    samples_per_frame = max(
+        1,
+        int(round(sr * _CTC_FRAME_STRIDE_MS_ESTIMATE / 1000.0)),
+    )
+    n_frames = (int(n_samples) + samples_per_frame - 1) // samples_per_frame
+    n_states = 2 * int(n_targets) + 1
+    return n_frames * n_states * 8
+
+
+def _full_ctc_requires_tiling(
+    n_samples: int,
+    sr: int,
+    n_targets: int,
+    *,
+    max_backtrace_bytes: int = _MAX_FULL_CTC_BACKTRACE_BYTES,
+) -> bool:
+    """Whether exact whole-sura CTC exceeds the configured memory budget."""
+    return (
+        _estimated_ctc_backtrace_bytes(n_samples, sr, n_targets)
+        > max(0, int(max_backtrace_bytes))
+    )
 
 
 def align_surah(
@@ -197,18 +243,33 @@ def align_surah(
     else:
         bundle = model if isinstance(model, _Bundle) else _get_bundle(DEFAULT_MODEL_ID)
 
-    # --- 1. emissions: log-probs over the vocab, shape (T, V) ---------------
-    emissions = _emissions(bundle, pcm, np)  # float32 (T, V)
-    n_frames = emissions.shape[0]
-    stride_ms = _stride_ms(len(pcm), sr, n_frames)
-
-    # --- 2. build the fixed target id sequence ------------------------------
+    # --- 1. build the fixed target id sequence ------------------------------
     word_trs = transliteration.surah_word_tr(surah)
     # Every sura except al-Fatiha (1, whose basmala IS ayah 1) and at-Tawba (9,
     # which has no basmala) opens with an intro-basmala in the audio that is not
     # in ``words``. Prepend its tokens so word 1 isn't dragged back over it.
     basmala_trs = _basmala_trs(transliteration) if surah not in (1, 9) else None
     targets, word_token_spans = _build_targets(words, word_trs, bundle, basmala_trs)
+
+    # Whole-sura Viterbi is O(frames × target states) in both time and memory.
+    # Route oversized exact jobs through bounded exact tiles before computing
+    # emissions, so a long sura cannot allocate hundreds of GiB merely because
+    # a caller explicitly selected the full path or a fallback escalated here.
+    if targets and _full_ctc_requires_tiling(len(pcm), sr, len(targets)):
+        from surah_cutter.core import align_tiled
+
+        return align_tiled.align_surah_tiled(
+            pcm,
+            sr,
+            words,
+            surah=surah,
+            bundle=bundle,
+        )
+
+    # --- 2. emissions: log-probs over the vocab, shape (T, V) ---------------
+    emissions = _emissions(bundle, pcm, np)  # float32 (T, V)
+    n_frames = emissions.shape[0]
+    stride_ms = _stride_ms(len(pcm), sr, n_frames)
 
     if not targets:
         # No usable transliteration tokens (e.g. cache empty). Degrade to a
