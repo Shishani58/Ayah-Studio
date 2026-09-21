@@ -12,6 +12,7 @@ from types import SimpleNamespace
 import numpy as np
 
 from surah_cutter.core.align_fast import (
+    AnchorHypothesis,
     PauseReadPlan,
     TempoEstimate,
     TempoObservation,
@@ -25,6 +26,7 @@ from surah_cutter.core.align_fast import (
     _ambiguous_wasl_run_requires_bracket_extension,
     _confirmed_weak_pause_repair_candidate,
     _pre_owner_ctc_overrides_weak_micro_pause,
+    _prefix_key,
     _confirmed_trusted_pause_repair_candidate,
     _confirmed_trusted_pause_refine_candidate,
     _ambiguous_openings,
@@ -33,20 +35,28 @@ from surah_cutter.core.align_fast import (
     _ayah_waqf_counts,
     _collapse,
     _build_pause_read_plan,
+    _build_anchor_hypotheses,
     _build_text_disambiguation,
+    _joint_boundary_read_is_supported,
+    _first_supported_joint_read,
+    _post_pause_is_previous_tail,
+    _joint_boundary_can_replace,
     _bounded_local_repair_spans,
     _ctc_prior_pause_replaces_weak_future_owner,
     _common_prefix_len,
+    _confirmed_anchor_skeleton,
     _compact_dsp_start_candidate,
     _compact_dsp_end_candidate,
     _context_block_pause_onset_candidate,
     _count_waqf_marks,
     _competing_prior_pause_requires_full_span,
     _dense_prior_opening_candidate,
+    _duplicate_supported_anchor_candidates,
     _direct_owner_conflicts_with_anchor_geometry,
     _dense_later_opening_candidate,
     _dense_later_final_opening_candidate,
     _dsp_edge_timing_candidate,
+    _emission_frame_bounds,
     _find_micro_pause_valley,
     _final_weak_current_activation_window,
     _first_ayah_content_start,
@@ -87,7 +97,9 @@ from surah_cutter.core.align_fast import (
     _long_pause_start_after_speech_candidate,
     _long_pause_start_balanced_speech_candidate,
     _long_pause_start_timing_candidate,
+    _match_anchor_gap,
     _shifted_geometry_long_pause_start_candidate,
+    _select_monotonic_anchor_skeleton,
     _match_boundaries,
     _missing_wasl_pause_candidate,
     _onset_prefix_len,
@@ -209,6 +221,354 @@ def test_text_disambiguation_marks_internal_repeat_and_unresolved_text():
     assert not _text_disambiguation_requires_atomic(repeated)
 
 
+def test_text_disambiguation_extends_short_unique_opening_to_letter_budget():
+    plan = _build_text_disambiguation(
+        2,
+        {
+            2: ["wa", "idhā", "qīla"],
+            3: ["qul", "huwa"],
+        },
+        competitor_ayahs=[3],
+        minimum_chars=8,
+    )
+
+    assert plan.reason == "unique"
+    assert plan.required_words == 3
+    assert plan.target_text == "waidhāqīla"
+    assert len(_prefix_key(plan.target_text)) >= 8
+
+
+def test_text_disambiguation_distinguishes_current_ayah_internal_restart():
+    plan = _build_text_disambiguation(
+        7,
+        {7: ["walain", "atayta", "alladhina", "other", "walain", "ittabata"]},
+    )
+
+    assert plan.reason == "unique"  # The ordinary letter budget already distinguishes it.
+    assert plan.required_words == 2
+    assert plan.target_text == "walainatayta"
+    assert plan.distinguishing_word == "atayta"
+
+
+def test_text_disambiguation_keeps_full_shared_phrase_before_internal_difference():
+    plan = _build_text_disambiguation(
+        9,
+        {9: ["alpha", "beta", "gamma", "delta", "alpha", "beta", "theta"]},
+    )
+
+    assert plan.required_words == 3
+    assert plan.target_text == "alphabetagamma"
+
+
+def test_joint_boundary_requires_previous_tail_and_complete_opening():
+    def supported(previous, opening, **changes):
+        timings = dict(previous_end_ms=1000, opening_start_ms=1700,
+                       opening_end_ms=4500, window_end_ms=5000)
+        timings.update(changes)
+        return _joint_boundary_read_is_supported(previous, opening, **timings)
+
+    assert supported([0.65, 0.55, 0.70], [0.48, 0.39, 0.66])
+    assert not supported([0.65, 0.15, 0.70], [0.80, 0.80, 0.80])
+    assert not supported([0.65, 0.55, 0.70], [0.80, 0.80, 0.02])
+    assert not supported([0.65, 0.55, 0.70], [0.80, 0.80])
+    assert not supported([0.65, 0.55, 0.70], [0.80, 0.80, 0.80],
+                         opening_start_ms=4000)
+    assert not supported([0.65, 0.55, 0.70], [0.80, 0.80, 0.80],
+                         opening_end_ms=4990)
+
+
+def test_joint_read_stops_before_a_more_confident_second_repetition():
+    windows = []
+    diagnostics = []
+
+    def read(end):
+        windows.append(end)
+        # The first bracket clips the phrase. The next contains its first
+        # pronunciation; reading any farther would allow CTC to choose a repeat.
+        assert end <= 8000
+        return [{
+            "base": 0, "starts": [0, 1000, 2000, 3500, 5000],
+            "ends": [900, 1600, 3000, 4500, min(end - 200, 6000)],
+            "confs": [0.60, 0.70, 0.48, 0.39, 0.02 if end == 5000 else 0.70],
+        }]
+
+    result = _first_supported_joint_read([12000, 8000, 5000, 8000], read, 2, diagnostics)
+
+    assert result is not None
+    assert result[1]["onset_ms"] == 2000
+    assert windows == [5000, 8000]
+    assert [d["supported"] for d in diagnostics] == [False, True]
+
+
+def test_joint_read_checks_window_edge_before_emission_lag_compensation():
+    diagnostics = []
+    result = _first_supported_joint_read(
+        [5000],
+        lambda end: [{
+            "base": 0, "lag_ms": 200,
+            "starts": [0, 1000, 2000, 3000, 4000],
+            "ends": [900, 1600, 2800, 3800, end - 220],
+            "confs": [0.60, 0.70, 0.70, 0.70, 0.70],
+        }],
+        2,
+        diagnostics,
+    )
+
+    assert result is None
+    assert diagnostics[0]["supported"] is False
+
+
+def test_joint_phrase_keeps_short_particles_without_vetoing_content_evidence():
+    kwargs = dict(previous_end_ms=1000, opening_start_ms=1700,
+                  opening_end_ms=7000, window_end_ms=8000,
+                  opening_word_lengths=[8, 8, 8, 2, 6, 5, 6])
+    phrase = [0.70, 0.75, 0.50, 0.05, 0.60, 0.55, 0.60]
+    assert _joint_boundary_read_is_supported([0.60, 0.42, 0.65], phrase, **kwargs)
+    # Even with a very confident common opening, a missing distinguishing
+    # final word cannot confirm which ayah is being read.
+    assert not _joint_boundary_read_is_supported(
+        [0.60, 0.42, 0.65], phrase[:-1] + [0.05], **kwargs,
+    )
+
+
+def test_joint_read_prefers_first_supported_pause_over_stronger_later_repeat():
+    earlier = {
+        "base": 0, "starts": [0, 1000, 2000, 3000, 4000],
+        "ends": [900, 1500, 2800, 3800, 4800],
+        "confs": [0.65, 0.70, 0.48, 0.39, 0.70], "split_pause_ms": 1800,
+    }
+    later = {
+        "base": 0, "starts": [0, 1000, 5000, 6000, 7000],
+        "ends": [900, 4500, 5800, 6800, 7800],
+        "confs": [0.85] * 5, "split_pause_ms": 4700,
+    }
+    result = _first_supported_joint_read([9000], lambda _: [later, earlier], 2, [])
+
+    assert result is not None
+    assert result[1]["split_pause_ms"] == 1800
+
+
+def test_joint_read_rejects_padded_incomplete_ctc_path_even_with_high_scores():
+    result = _first_supported_joint_read(
+        [5000],
+        lambda _: [{
+            "base": 0, "starts": [0, 500, 1000, 2000, 3000],
+            "ends": [400, 900, 1800, 2800, 4000],
+            "confs": [0.999] * 5, "complete": False,
+        }],
+        2,
+        [],
+    )
+    assert result is None
+
+
+def test_joint_read_needs_pause_evidence_to_tolerate_a_melodic_first_word():
+    kwargs = dict(previous_end_ms=1000, opening_start_ms=2000,
+                  opening_end_ms=6500, window_end_ms=8000,
+                  opening_word_lengths=[8, 5, 6])
+    assert not _joint_boundary_read_is_supported(
+        [0.65, 0.60], [0.01, 0.94, 0.64], **kwargs,
+    )
+    assert _joint_boundary_read_is_supported(
+        [0.65, 0.60], [0.01, 0.94, 0.64], allow_weak_onset=True, **kwargs,
+    )
+    assert not _joint_boundary_read_is_supported(
+        [0.65, 0.10], [0.01, 0.94, 0.64], allow_weak_onset=True, **kwargs,
+    )
+
+
+def test_joint_context_rejects_previous_tail_before_a_later_real_opening():
+    previous = ["wallahu", "bima", "tamaluna", "khabir"]
+    opening = "walajunahalaykumfimaarradtum"
+    assert _post_pause_is_previous_tail(
+        "wallahubimatamalunakhabirwalajunahalaykum", opening, previous,
+    )
+    assert not _post_pause_is_previous_tail(opening, opening, previous)
+    assert not _post_pause_is_previous_tail("", opening, previous)
+
+
+def test_joint_forward_move_requires_proven_previous_speech_across_old_boundary():
+    kwargs = dict(left_ms=0, right_ms=20000, previous_tail_start_ms=4000,
+                  previous_end_ms=8000, previous_tail_confidences=[0.7, 0.7],
+                  current_heard_as_previous=False)
+    assert not _joint_boundary_can_replace(9000, 5000, **kwargs)
+    kwargs["current_heard_as_previous"] = True
+    assert _joint_boundary_can_replace(9000, 5000, **kwargs)
+    # An existing pause before a late melodic onset is not predecessor speech.
+    assert not _joint_boundary_can_replace(11000, 8500, **kwargs)
+    assert not _joint_boundary_can_replace(21000, 5000, **kwargs)
+    kwargs["previous_tail_confidences"] = [0.4, 0.5]
+    kwargs["current_heard_as_previous"] = False
+    assert not _joint_boundary_can_replace(9000, 5000, **kwargs)
+    kwargs["current_heard_as_previous"] = True
+    assert _joint_boundary_can_replace(9000, 5000, **kwargs)
+
+
+def test_previous_tail_continuation_compares_the_same_short_prefix():
+    heard = "ābijahinla-tabānkayamū"
+    opening = "walantardāʿankal-yahūdu"
+    previous = ["ʿan", "aṣḥābi", "l-jaḥīmi"]
+    assert not _post_pause_is_previous_tail(heard, opening, previous)
+    assert _post_pause_is_previous_tail(
+        heard, opening, previous, allow_partial_tail=True,
+    )
+    assert not _post_pause_is_previous_tail(
+        opening, opening, previous, allow_partial_tail=True,
+    )
+
+
+def test_joint_read_can_confirm_a_weak_short_phrase_with_one_more_word():
+    short = {
+        "base": 0, "starts": [0, 1000, 2000, 3000, 4000],
+        "ends": [900, 1500, 2800, 3800, 4800],
+        "confs": [0.73, 0.70, 0.48, 0.61, 0.336],
+    }
+    longer = {
+        "base": 0, "starts": short["starts"] + [5000],
+        "ends": short["ends"] + [6000],
+        "confs": [0.73, 0.70, 0.48, 0.61, 0.45, 0.75],
+        "opening_word_lengths": [5, 5, 4, 7],
+    }
+    result = _first_supported_joint_read(
+        [7000], lambda _: [short, longer], 2, [], [5, 5, 4],
+    )
+    assert result is not None
+    assert result[0] is longer
+
+
+def test_anchor_hypotheses_classify_each_pause_once_with_margin():
+    hypotheses = _build_anchor_hypotheses(
+        ["waidhāqīlalahlum", "innāaʿṭaynākaalkawthar"],
+        [10_000.0, 30_000.0],
+        [2, 3, 4],
+        ["waidhāqīla", "qulhuwa", "innāaʿṭaynāka"],
+        min_similarity=0.60,
+        min_margin=0.12,
+        min_prefix_chars=4,
+    )
+
+    assert [(item.pause_index, item.ayah) for item in hypotheses] == [(0, 2), (1, 4)]
+    assert all(item.margin >= 0.12 for item in hypotheses)
+
+
+def test_anchor_hypotheses_reject_text_match_outside_prior_corridor():
+    diagnostics = []
+    hypotheses = _build_anchor_hypotheses(
+        ["waidhāqīlalahlum"],
+        [30_000.0],
+        [2, 3],
+        ["waidhāqīla", "qulhuwa"],
+        expected_times_ms=[1_000.0, 40_000.0],
+        min_similarity=0.60,
+        min_margin=0.12,
+        min_prefix_chars=4,
+        max_prior_delta_ms=15_000.0,
+        diagnostics=diagnostics,
+    )
+
+    assert hypotheses == []
+    assert diagnostics == [{
+        "pause_index": 0,
+        "pause_ms": 30_000.0,
+        "accepted": False,
+        "rejection_reasons": ["outside_prior"],
+        "winner_margin": 0.827,
+        "candidates": [
+            {
+                "boundary_index": 0,
+                "ayah": 2,
+                "similarity": 1.0,
+                "prefix_chars": 10,
+                "expected_delta_ms": 29_000.0,
+            },
+            {
+                "boundary_index": 1,
+                "ayah": 3,
+                "similarity": 0.173,
+                "prefix_chars": 0,
+                "expected_delta_ms": -10_000.0,
+            },
+        ],
+    }]
+
+
+def test_anchor_skeleton_keeps_maximum_evidence_monotonic_chain():
+    hypotheses = [
+        AnchorHypothesis(0, 2, 0, 10_000.0, 0.90, 0.40, 0.50, 8, 0.0),
+        AnchorHypothesis(2, 4, 1, 20_000.0, 0.92, 0.30, 0.62, 8, 0.0),
+        AnchorHypothesis(1, 3, 2, 30_000.0, 0.70, 0.50, 0.20, 8, 0.0),
+        AnchorHypothesis(3, 5, 3, 40_000.0, 0.88, 0.40, 0.48, 8, 0.0),
+    ]
+
+    skeleton = _select_monotonic_anchor_skeleton(hypotheses)
+
+    assert [(item.pause_index, item.ayah) for item in skeleton] == [
+        (0, 2),
+        (1, 4),
+        (3, 5),
+    ]
+
+
+def test_duplicate_anchor_support_finds_split_pause_region():
+    candidate = AnchorHypothesis(
+        23,
+        25,
+        71,
+        437_050.0,
+        0.811,
+        0.494,
+        0.317,
+        6,
+        83_080.6,
+    )
+    duplicate = AnchorHypothesis(
+        23,
+        25,
+        72,
+        437_772.6,
+        0.811,
+        0.494,
+        0.317,
+        6,
+        83_803.3,
+    )
+    assert _duplicate_supported_anchor_candidates(
+        [candidate],
+        [],
+        [candidate, duplicate],
+    ) == [candidate]
+    assert _duplicate_supported_anchor_candidates(
+        [candidate],
+        [],
+        [candidate, duplicate],
+        support_ms=500.0,
+    ) == []
+    coarse = [None] * 24
+    coarse[23] = candidate.pause_ms
+    assert _confirmed_anchor_skeleton([candidate], coarse) == [candidate]
+
+
+def test_anchor_gap_uses_order_and_position_between_fixed_ends():
+    exp = [1000.0, 2000.0, 3000.0, 4000.0]
+    ons = [1000.0, 2000.0, 3000.0, 4000.0]
+    scores = {
+        (1, 1): 0.60,
+        (1, 2): 0.90,
+        (2, 2): 0.80,
+    }
+
+    assert _match_anchor_gap(
+        exp,
+        ons,
+        lambda i, j: scores.get((i, j), 0.0),
+        left_boundary=0,
+        left_pause=0,
+        right_boundary=3,
+        right_pause=3,
+        min_sim=0.34,
+    ) == {0: 0, 1: 1, 2: 2, 3: 3}
+
+
 def test_speech_duration_subtracts_and_merges_internal_pauses():
     assert _speech_ms_excluding_pauses(
         1000.0,
@@ -220,6 +580,22 @@ def test_speech_duration_subtracts_and_merges_internal_pauses():
             (4900.0, 5200.0),
         ],
     ) == 2900.0
+
+
+def test_emission_frame_bounds_slice_one_full_pass():
+    assert _emission_frame_bounds(
+        16_000,
+        48_000,
+        total_samples=160_000,
+        total_frames=500,
+    ) == (50, 150)
+    assert _emission_frame_bounds(
+        -100,
+        200_000,
+        total_samples=160_000,
+        total_frames=500,
+    ) == (0, 500)
+    assert _emission_frame_bounds(10, 20, total_samples=0, total_frames=0) == (0, 0)
 
 
 def test_tempo_estimate_ignores_weak_and_extreme_observations():
@@ -3441,6 +3817,56 @@ def test_sequential_pause_match_confirms_in_order():
     ]
 
 
+def test_sequential_pause_match_reserves_anchor_and_fills_its_left_gap():
+    exp = [1000.0, 2000.0, 3000.0]
+    ons = [1000.0, 2000.0, 3000.0]
+
+    def sim(i: int, j: int) -> float:
+        scores = {
+            (0, 0): 0.90,
+            (1, 1): 0.55,
+            (1, 2): 0.95,
+            (2, 2): 0.96,
+        }
+        return scores.get((i, j), 0.02)
+
+    matched, events = _sequential_pause_match(
+        exp,
+        ons,
+        sim,
+        min_sim=0.4,
+        prior_window_ms=1500.0,
+        fixed_anchors={2: 2},
+    )
+
+    assert matched == ons
+    assert any(
+        event.get("action") == "anchor_first"
+        and event.get("boundary") == 2
+        and event.get("pause") == 2
+        for event in events
+    )
+
+
+def test_future_fixed_anchor_does_not_distort_left_gap_time_prior():
+    exp = [1000.0, 2000.0, 3000.0]
+    ons = [1000.0, 2000.0, 10_000.0]
+
+    def sim(i: int, j: int) -> float:
+        return 0.90 if i == j else 0.02
+
+    matched, _events = _sequential_pause_match(
+        exp,
+        ons,
+        sim,
+        min_sim=0.4,
+        prior_window_ms=1500.0,
+        fixed_anchors={2: 2},
+    )
+
+    assert matched == ons
+
+
 def test_ambiguous_openings_marks_near_repeated_openings_only():
     openings = [
         "wawajadakaḍāllanfahadā",
@@ -4551,6 +4977,26 @@ def test_bounded_local_repair_spans_include_shifted_run_and_tail():
         {67, 72, 76},
         starts,
     ) == [(0, 6), (6, 9)]
+
+
+def test_bounded_local_repair_extends_immediate_right_owner_for_text_context():
+    ayahs = [67, 68, 69, 70, 71, 72, 73]
+    starts = {
+        67: 1_270_000.0,
+        68: 1_294_550.0,
+        69: 1_314_120.0,
+        70: 1_314_121.0,
+        71: 1_355_750.0,
+        72: 1_381_320.0,
+        73: 1_393_650.0,
+    }
+
+    assert _bounded_local_repair_spans(
+        ayahs,
+        [70],
+        {67, 71, 72, 73},
+        starts,
+    ) == [(0, 6)]
 
 
 def test_bounded_local_repair_spans_need_two_anchors():
