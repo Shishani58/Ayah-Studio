@@ -95,12 +95,15 @@ ONNX между ОС не гарантируется; CI передаёт оди
 `tools/fetch_runtime_models.py` извлекает только эти имена после проверки checksum.
 Для пути по умолчанию настройка внешнего архива не требуется.
 
-Текущий remote — GitLab: GitHub Actions заработает только в GitHub-зеркале.
-`.gitlab-ci.yml` запускает pytest/Ruff и создаёт artifact моделей для tag/manual
-pipeline. Для нативной упаковки в GitLab нужны отдельно настроенные macOS и
-Windows runners; они и публикация релиза здесь не настраивались. Для локального
-DMG CI не нужен. Публичные релизы не создавались; удалённые CI и Windows-сборка
-в исправлениях ревью не запускались.
+Основной публичный репозиторий: [Shishani58/Ayah-Studio](https://github.com/Shishani58/Ayah-Studio).
+GitHub Actions запускает проверки на main/PR и сборку на теге `v*`.
+Release получает DMG, SHA-256, Windows ZIP и короткое описание из
+`.github/release-notes.md`. Перед новым релизом обновите версию в
+`pyproject.toml`, `surah_cutter/__init__.py`, `surah_cutter.spec`, README и release notes.
+
+Старый GitLab remote сохранён как `gitlab`. Его `.gitlab-ci.yml` запускает
+pytest/Ruff и создаёт artifact моделей для tag/manual pipeline, но нативные
+macOS/Windows runners там не настроены. Для локального DMG CI не нужен.
 
 ## Лицензии
 
