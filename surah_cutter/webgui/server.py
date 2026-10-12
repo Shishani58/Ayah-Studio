@@ -11,6 +11,7 @@ import json
 import queue
 import threading
 from pathlib import Path
+from types import MappingProxyType
 from typing import Any
 
 from fastapi import Body, FastAPI, HTTPException
@@ -24,6 +25,7 @@ from surah_cutter.webgui.state import (
     DB_VERSION,
     STATE,
     classify_status,
+    discover_audio,
     waveform_peaks,
 )
 
@@ -39,7 +41,9 @@ _GEN_MODES = {"auto", "full", "fast", "hybrid", "tiled"}
 class _GenJob:
     """A running generation pass; streams events to any number of SSE clients."""
 
-    def __init__(self) -> None:
+    def __init__(self, db_path: Path, audio_map: dict[int, Path]) -> None:
+        self.db_path = db_path.resolve()
+        self.audio_map = MappingProxyType({s: p.resolve() for s, p in audio_map.items()})
         self.q: queue.Queue[dict[str, Any] | None] = queue.Queue()
         self.thread: threading.Thread | None = None
         self.running = False
@@ -67,7 +71,7 @@ class _GenJob:
         completed = 0
         try:
             self._emit({"type": "start", "total": len(suras)})
-            db = ProjectDB.open(str(STATE.db_path), DB_CODE, DB_VERSION)
+            db = ProjectDB.open(str(self.db_path), DB_CODE, DB_VERSION)
             try:
                 for i, surah in enumerate(suras):
                     # Cancellation is checked between suras (a sura's alignment
@@ -76,7 +80,7 @@ class _GenJob:
                         cancelled = True
                         break
                     self._emit({"type": "sura_start", "surah": surah, "index": i})
-                    audio = STATE.audio_for(surah)
+                    audio = self.audio_map.get(surah)
                     if audio is None:
                         self._emit(
                             {"type": "sura", "surah": surah, "index": i,
@@ -105,7 +109,9 @@ class _GenJob:
                     )
                     written = db.write_timings(rows, source="auto")
                     _write_trace_confidences(db, surah, trace)
-                    log_paths = _save_sura_log(surah, mode, trace, log_lines, rows)
+                    log_paths = _save_sura_log(
+                        surah, mode, trace, log_lines, rows, self.db_path
+                    )
                     completed = i + 1
                     event = {
                         "type": "sura", "surah": surah, "index": i,
@@ -130,10 +136,11 @@ class _GenJob:
 
 
 _JOB: _GenJob | None = None
+_PROJECT_LOCK = threading.RLock()
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="surah-cutter")
+    app = FastAPI(title="Ayah Studio")
     _restore_from_settings()
 
     # -- project ----------------------------------------------------------
@@ -150,23 +157,34 @@ def create_app() -> FastAPI:
 
     @app.post("/api/project/open")
     def open_project(payload: dict[str, str] = Body(...)) -> dict[str, Any]:
-        audio_dir = payload.get("audio_dir")
-        db_path = payload.get("db_path")
-        if audio_dir:
-            if not Path(audio_dir).is_dir():
-                raise HTTPException(400, f"not a folder: {audio_dir}")
-            STATE.set_audio_dir(audio_dir)
-        if db_path:
-            STATE.set_db_path(db_path)
-            from surah_cutter.data.project_db import ProjectDB
+        with _PROJECT_LOCK:
+            if _JOB is not None and _JOB.running:
+                raise HTTPException(409, "generation already running")
+            audio_dir = payload.get("audio_dir")
+            db_path = payload.get("db_path")
+            new_audio_dir = STATE.audio_dir
+            new_audio_map = STATE.audio_map
+            new_db_path = STATE.db_path
+            if audio_dir:
+                new_audio_dir = Path(audio_dir)
+                if not new_audio_dir.is_dir():
+                    raise HTTPException(400, f"not a folder: {audio_dir}")
+                new_audio_map = discover_audio(new_audio_dir)
+            if db_path:
+                from surah_cutter.data.project_db import ProjectDB
 
-            ProjectDB.open(db_path, DB_CODE, DB_VERSION).close()  # ensure schema
-        # Remember the project so the app reopens here next launch.
-        settings.update(
-            audio_dir=str(STATE.audio_dir) if STATE.audio_dir else None,
-            db_path=str(STATE.db_path) if STATE.db_path else None,
-        )
-        return get_project()
+                ProjectDB.open(db_path, DB_CODE, DB_VERSION).close()  # ensure schema
+                new_db_path = Path(db_path)
+            # Publish the complete selection only after every input is ready.
+            STATE.audio_dir = new_audio_dir
+            STATE.audio_map = new_audio_map
+            STATE.db_path = new_db_path
+            # Remember the project so the app reopens here next launch.
+            settings.update(
+                audio_dir=str(STATE.audio_dir) if STATE.audio_dir else None,
+                db_path=str(STATE.db_path) if STATE.db_path else None,
+            )
+            return get_project()
 
     @app.post("/api/settings")
     def set_settings(payload: dict[str, Any] = Body(default={})) -> dict[str, Any]:
@@ -180,6 +198,7 @@ def create_app() -> FastAPI:
     def list_suras() -> list[dict[str, Any]]:
         counts = quran_text.surah_ayah_counts()
         reviews = _reviews_by_sura()
+        complete = _processed_suras()
         out = []
         for s in range(1, 115):
             ac = counts.get(s, 0)
@@ -187,7 +206,10 @@ def create_app() -> FastAPI:
                 "surah": s,
                 "ayah_count": ac,
                 "has_audio": s in STATE.audio_map,
-                "status": classify_status(reviews.get(s), ac),
+                "status": (
+                    "partial" if reviews.get(s) and s not in complete
+                    else classify_status(reviews.get(s), ac)
+                ),
             })
         return out
 
@@ -195,28 +217,27 @@ def create_app() -> FastAPI:
     @app.post("/api/generate")
     def generate(payload: dict[str, Any] = Body(default={})) -> dict[str, Any]:
         global _JOB
-        if STATE.db_path is None:
-            raise HTTPException(400, "open a project DB first")
-        if _JOB is not None and _JOB.running:
-            raise HTTPException(409, "generation already running")
-        suras = payload.get("suras") or sorted(STATE.audio_map)
-        suras = [s for s in suras if s in STATE.audio_map]
-        # Resume support: skip suras already generated (per-sura atomic write →
-        # any timings for a sura means it finished). Lets a cancelled/crashed run
-        # be continued after restart without redoing completed suras.
-        if payload.get("only_missing"):
-            done = _processed_suras()
-            suras = [s for s in suras if s not in done]
-        if not suras:
-            raise HTTPException(400, "no suras to process (all done or no audio)")
-        mode = payload.get("mode", "auto")
-        if mode not in _GEN_MODES:
-            raise HTTPException(400, f"unknown mode: {mode}")
-        reciter = payload.get("reciter")
-        settings.update(mode=mode)  # remember last-used mode
-        _JOB = _GenJob()
-        _JOB.start(suras, mode, reciter)
-        return {"started": True, "suras": suras, "mode": mode}
+        with _PROJECT_LOCK:
+            if STATE.db_path is None:
+                raise HTTPException(400, "open a project DB first")
+            if _JOB is not None and _JOB.running:
+                raise HTTPException(409, "generation already running")
+            suras = payload.get("suras") or sorted(STATE.audio_map)
+            suras = [s for s in suras if s in STATE.audio_map]
+            # Resume only skips suras containing every canonical ayah.
+            if payload.get("only_missing"):
+                done = _processed_suras()
+                suras = [s for s in suras if s not in done]
+            if not suras:
+                raise HTTPException(400, "no suras to process (all done or no audio)")
+            mode = payload.get("mode", "auto")
+            if mode not in _GEN_MODES:
+                raise HTTPException(400, f"unknown mode: {mode}")
+            reciter = payload.get("reciter")
+            settings.update(mode=mode)  # remember last-used mode
+            _JOB = _GenJob(STATE.db_path, STATE.audio_map)
+            _JOB.start(suras, mode, reciter)
+            return {"started": True, "suras": suras, "mode": mode}
 
     @app.get("/api/generate/stream")
     def generate_stream() -> StreamingResponse:
@@ -312,14 +333,16 @@ def create_app() -> FastAPI:
         ``verified`` rows are treated as anchors and are not overwritten.
         """
         _check_surah(surah)
-        _require_db()
-        audio = STATE.audio_for(surah)
+        with _PROJECT_LOCK:
+            _require_db()
+            db_path = STATE.db_path
+            audio = STATE.audio_for(surah)
         if audio is None:
             raise HTTPException(404, f"no audio for sura {surah}")
         from surah_cutter.core import decode, draft
         from surah_cutter.data.project_db import ProjectDB
 
-        timings, reviews = _sura_timings_reviews(surah)
+        timings, reviews = _sura_timings_reviews(surah, db_path)
         anchors = {
             ayah: timings[ayah]
             for ayah, review in reviews.items()
@@ -332,7 +355,7 @@ def create_app() -> FastAPI:
             surah,
             anchors=anchors,
         )
-        with ProjectDB.open(str(STATE.db_path), DB_CODE, DB_VERSION) as db:
+        with ProjectDB.open(str(db_path), DB_CODE, DB_VERSION) as db:
             written = db.write_timings(result.rows, source="pause-draft")
         return {
             "ok": True,
@@ -358,8 +381,10 @@ def create_app() -> FastAPI:
         audio/text model instead of trusting the pause sequence.
         """
         _check_surah(surah)
-        _require_db()
-        audio = STATE.audio_for(surah)
+        with _PROJECT_LOCK:
+            _require_db()
+            db_path = STATE.db_path
+            audio = STATE.audio_for(surah)
         if audio is None:
             raise HTTPException(404, f"no audio for sura {surah}")
         mode = payload.get("mode", "tiled")
@@ -368,7 +393,7 @@ def create_app() -> FastAPI:
         from surah_cutter.core.pipeline import process_surah
         from surah_cutter.data.project_db import ProjectDB
 
-        with ProjectDB.open(str(STATE.db_path), DB_CODE, DB_VERSION) as db:
+        with ProjectDB.open(str(db_path), DB_CODE, DB_VERSION) as db:
             rows = process_surah(str(audio), surah, mode=mode, project_db=db)
             written = db.write_timings(rows, source=f"correct-{mode}")
         return {
@@ -717,11 +742,11 @@ def _save_sura_log(
     trace: dict[str, Any],
     log_lines: list[str],
     rows: list[tuple[int, int, int]],
+    db_path: Path,
 ) -> dict[str, str] | None:
     """Persist per-sura realtime logs next to the project DB."""
-    if STATE.db_path is None or not log_lines:
+    if not log_lines:
         return None
-    db_path = Path(STATE.db_path)
     log_dir = db_path.with_name(f"{db_path.stem}.logs")
     log_dir.mkdir(parents=True, exist_ok=True)
     base = f"sura_{surah:03d}_{mode}"
@@ -769,19 +794,26 @@ def _restore_from_settings() -> None:
 
 
 def _processed_suras() -> set[int]:
-    """Suras that already have any timings in the open DB (i.e. finished)."""
+    """Suras containing exactly the canonical set of ayahs."""
     if STATE.db_path is None or not Path(STATE.db_path).exists():
         return set()
     import sqlite3
 
     conn = sqlite3.connect(str(STATE.db_path))
     try:
-        rows = conn.execute("SELECT DISTINCT sura FROM timings").fetchall()
+        rows = conn.execute("SELECT sura, ayah FROM timings").fetchall()
     except sqlite3.OperationalError:
         return set()
     finally:
         conn.close()
-    return {r[0] for r in rows}
+    ayahs: dict[int, list[int]] = {}
+    for surah, ayah in rows:
+        ayahs.setdefault(surah, []).append(ayah)
+    return {
+        surah for surah, count in quran_text.surah_ayah_counts().items()
+        if len(ayahs.get(surah, [])) == count
+        and set(ayahs[surah]) == set(range(1, count + 1))
+    }
 
 
 def _reviews_by_sura() -> dict[int, list[str]]:
@@ -793,7 +825,10 @@ def _reviews_by_sura() -> dict[int, list[str]]:
     out: dict[int, list[str]] = {}
     conn = sqlite3.connect(str(STATE.db_path))
     try:
-        rows = conn.execute("SELECT sura, status FROM review_meta").fetchall()
+        rows = conn.execute(
+            "SELECT t.sura, COALESCE(r.status, 'auto') FROM timings t "
+            "LEFT JOIN review_meta r ON r.sura = t.sura AND r.ayah = t.ayah"
+        ).fetchall()
     except sqlite3.OperationalError:
         return {}
     finally:
@@ -803,15 +838,18 @@ def _reviews_by_sura() -> dict[int, list[str]]:
     return out
 
 
-def _sura_timings_reviews(surah: int) -> tuple[dict[int, int], dict[int, dict]]:
+def _sura_timings_reviews(
+    surah: int, db_path: Path | None = None,
+) -> tuple[dict[int, int], dict[int, dict]]:
     """Return (ayah→time, ayah→review-meta) for one sura from the open DB."""
     timings: dict[int, int] = {}
     reviews: dict[int, dict] = {}
-    if STATE.db_path is None or not Path(STATE.db_path).exists():
+    db_path = db_path if db_path is not None else STATE.db_path
+    if db_path is None or not db_path.exists():
         return timings, reviews
     import sqlite3
 
-    conn = sqlite3.connect(str(STATE.db_path))
+    conn = sqlite3.connect(str(db_path))
     try:
         for ayah, t in conn.execute(
             "SELECT ayah, time FROM timings WHERE sura = ?", (surah,)

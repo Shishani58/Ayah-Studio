@@ -26,7 +26,7 @@ _DB_VERSION = 1
 
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
-        prog="surah-cutter",
+        prog="ayah-studio-cli",
         description="Generate per-ayah timecodes for Qur'an recitation audio.",
     )
     p.add_argument("audio_dir", help="folder with surah audio files (001.mp3 … 114.mp3)")
@@ -89,13 +89,13 @@ def main(argv: list[str] | None = None) -> int:
 
     audio_dir = Path(args.audio_dir)
     if not audio_dir.is_dir():
-        print(f"surah-cutter: not a directory: {audio_dir}", file=sys.stderr)
+        print(f"Ayah Studio: not a directory: {audio_dir}", file=sys.stderr)
         return 2
 
     jobs = _discover(audio_dir)
     if not jobs:
         print(
-            f"surah-cutter: no NNN.{{mp3,m4a,ogg,flac,wav}} files in {audio_dir}",
+            f"Ayah Studio: no NNN.{{mp3,m4a,ogg,flac,wav}} files in {audio_dir}",
             file=sys.stderr,
         )
         return 1
@@ -130,7 +130,7 @@ def main(argv: list[str] | None = None) -> int:
     finally:
         db.close()
 
-    print(f"surah-cutter: done ({total - failures}/{total} suras ok) -> {args.output}")
+    print(f"Ayah Studio: done ({total - failures}/{total} suras ok) -> {args.output}")
     return 1 if failures else 0
 
 

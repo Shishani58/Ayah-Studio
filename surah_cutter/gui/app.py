@@ -50,7 +50,7 @@ def main(argv: list[str] | None = None) -> int:
 
     dashboard.review_requested.connect(open_review)
 
-    stack.setWindowTitle("surah-cutter")
+    stack.setWindowTitle("Ayah Studio")
     stack.resize(900, 760)
     stack.show()
     return app.exec()

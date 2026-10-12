@@ -3,7 +3,9 @@ name: build
 # Build the windowed GUI app on macOS + Windows.
 # Trigger: push a tag like v0.1.0, or run manually from the Actions tab.
 on:
+  pull_request:
   push:
+    branches: [main]
     tags:
       - "v*"
   workflow_dispatch:
@@ -12,7 +14,44 @@ permissions:
   contents: write  # the release job needs this to attach assets
 
 jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev]"
+      - run: ruff check .
+      - run: pytest -q
+
+  models:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
+    needs: checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r tools/model-export-requirements.txt
+      - name: Prepare runtime models from pinned sources
+        if: vars.AYAH_MODELS_URL == ''
+        run: python -m tools.prepare_models
+      - name: Fetch optional prebuilt runtime models
+        if: vars.AYAH_MODELS_URL != ''
+        env:
+          AYAH_MODELS_URL: ${{ vars.AYAH_MODELS_URL }}
+          AYAH_MODELS_SHA256: ${{ vars.AYAH_MODELS_SHA256 }}
+        run: python tools/fetch_runtime_models.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: runtime-models
+          path: models/*
+          if-no-files-found: error
+
   build:
+    needs: models
     name: build (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
@@ -20,9 +59,9 @@ jobs:
       matrix:
         include:
           - os: macos-latest
-            artifact: surah-cutter-macos
+            artifact: ayah-studio-macos
           - os: windows-latest
-            artifact: surah-cutter-windows
+            artifact: ayah-studio-windows
 
     steps:
       - uses: actions/checkout@v4
@@ -34,29 +73,36 @@ jobs:
       - name: Install project + build deps
         run: |
           python -m pip install --upgrade pip
-          pip install -e .
-          pip install pyinstaller
+          pip install uv
+          uv sync --locked --extra build
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: runtime-models
+          path: models
 
       - name: Build with PyInstaller
-        run: pyinstaller surah_cutter.spec --noconfirm --clean
+        if: runner.os == 'Windows'
+        run: uv run --locked --extra build pyinstaller surah_cutter.spec --noconfirm --clean
 
       # Package dist/ into a single archive per platform so the artifact
       # keeps the bundle structure (the app reads data/ siblings at runtime).
-      - name: Archive (macOS)
+      - name: Build DMG (macOS)
         if: runner.os == 'macOS'
-        run: |
-          cd dist
-          zip -r -y ../${{ matrix.artifact }}.zip "Surah Cutter.app"
+        run: uv run --locked --extra build python tools/build_macos.py
 
       - name: Archive (Windows)
         if: runner.os == 'Windows'
-        run: Compress-Archive -Path "dist/Surah Cutter" -DestinationPath ${{ matrix.artifact }}.zip
+        run: Compress-Archive -Path "dist/Ayah Studio" -DestinationPath "dist/${{ matrix.artifact }}.zip"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
-          path: ${{ matrix.artifact }}.zip
+          path: |
+            dist/*.dmg
+            dist/*.sha256
+            dist/*.zip
           if-no-files-found: error
 
   release:
@@ -65,6 +111,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
@@ -73,5 +120,8 @@ jobs:
       - name: Create / update release
         uses: softprops/action-gh-release@v2
         with:
-          files: artifacts/**/*.zip
-          generate_release_notes: true
+          files: |
+            artifacts/**/*.dmg
+            artifacts/**/*.sha256
+            artifacts/**/*.zip
+          body_path: .github/release-notes.md

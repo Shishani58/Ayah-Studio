@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>surah-cutter</title>
+  <title>Ayah Studio</title>
+  <link rel="icon" href="/mark.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
@@ -11,20 +12,21 @@
   <section id="dashboard" class="view">
     <header class="topbar">
       <div class="brand-row">
-        <h1>surah-cutter</h1>
-        <span class="tagline">тайм-коды аятов из аудио Корана</span>
-        <button id="helpBtn" class="ghost" title="Как это работает">? Как это работает</button>
+        <img class="brand-mark" src="/mark.svg" width="40" height="40" alt="" />
+        <div class="brand-title"><h1>Ayah Studio</h1>
+        <span class="tagline">Разметка аудио Корана</span></div>
+        <button id="helpBtn" class="ghost" aria-expanded="false" aria-controls="help">Как это работает</button>
       </div>
 
       <!-- onboarding / how it works -->
-      <div id="help" class="help-card">
+      <div id="help" class="help-card collapsed">
         <ol>
           <li><b>Папка аудио</b> — выберите папку, где файлы названы по номеру суры
             (<code>001.mp3 … 114.mp3</code>). Один файл = одна сура.</li>
           <li><b>Проект</b> — выберите/создайте файл <code>.db</code>: в нём копится
             разметка. Можно вернуться и продолжить позже.</li>
           <li><b>Сгенерировать</b> — программа сама расставит начало каждого аята
-            (forced alignment). Это <b>черновик</b>.</li>
+            — это <b>черновик для проверки на слух</b>.</li>
           <li><b>Проверить</b> — откройте суру: слушайте, смотрите на волну,
             при необходимости двигайте границы и отмечайте «проверено».</li>
           <li><b>Экспорт</b> — когда все 114 сур готовы, выгрузите чистую <code>.db</code>.</li>
@@ -32,27 +34,29 @@
       </div>
 
       <!-- project setup -->
-      <div class="setup">
+      <div class="section-heading"><h2>Ваш проект</h2><span>Аудио → разметка → проверка</span></div>
+      <form id="projectForm" class="setup">
         <div class="field">
-          <label>1 · Папка аудио</label>
+          <label for="audioDir">Папка с аудио</label>
           <div class="input-row">
-            <input id="audioDir" type="text" placeholder="например ~/Desktop/Reciter" />
-            <button id="browseAudio" class="browse hidden">Обзор…</button>
+            <input id="audioDir" type="text" placeholder="Папка с файлами 001.mp3 … 114.mp3" />
+            <button id="browseAudio" type="button" class="browse hidden">Выбрать…</button>
           </div>
         </div>
         <div class="field">
-          <label>2 · Файл проекта (.db)</label>
+          <label for="dbPath">Файл разметки (.db)</label>
           <div class="input-row">
-            <input id="dbPath" type="text" placeholder="например reciter.db" />
-            <button id="browseDb" class="browse hidden">Обзор…</button>
+            <input id="dbPath" type="text" placeholder="Создайте или откройте проект" />
+            <button id="browseDb" type="button" class="browse hidden">Открыть…</button>
+            <button id="newDb" type="button" class="browse hidden">Создать…</button>
           </div>
         </div>
-        <button id="openBtn" class="primary">Открыть проект</button>
-      </div>
+        <button id="openBtn" type="submit">Открыть проект</button>
+      </form>
 
       <!-- generation -->
       <div class="genbar">
-        <label class="inline">режим
+        <label class="inline">Разметка
           <select id="genMode">
             <option value="auto">авто</option>
             <option value="full">точно</option>
@@ -62,7 +66,7 @@
         </label>
         <button id="genBtn" class="primary" disabled>▶ Сгенерировать всё</button>
         <button id="regenBtn" class="ghost hidden" title="Перегенерировать все суры с нуля (кроме размеченных вручную)">↻ Заново всё</button>
-        <span id="modeHint" class="hint-inline">точное нейровыравнивание (~57 мс)</span>
+        <span id="modeHint" class="hint-inline"></span>
       </div>
 
       <!-- explicit generation panel: progress + elapsed + start time + cancel -->
@@ -90,7 +94,7 @@
       </div>
 
       <div class="statusbar">
-        <p id="status" class="status">Шаг 1: выберите папку аудио и файл проекта.</p>
+        <p id="status" class="status" role="status">Выберите папку с аудио и файл разметки, чтобы начать.</p>
         <div class="legend">
           <span><i class="dot blue"></i>есть аудио</span>
           <span><i class="sw not-processed"></i>не обработана</span>
@@ -99,7 +103,29 @@
         </div>
       </div>
     </header>
-    <div id="grid" class="grid"></div>
+    <main class="library">
+      <div class="library-heading">
+        <div><h2>Суры</h2><p id="librarySummary" class="status">Откройте проект для начала работы</p></div>
+        <button id="dashboardExportBtn" class="ghost" disabled>Экспорт разметки</button>
+      </div>
+      <div class="library-filters">
+        <label class="search-field" for="suraSearch">Номер суры
+          <input id="suraSearch" type="search" inputmode="numeric" placeholder="Найти, например 114" />
+        </label>
+        <label class="inline">Показать
+          <select id="suraFilter">
+            <option value="audio">С аудио</option>
+            <option value="all">Все суры</option>
+            <option value="not-processed">Без разметки</option>
+            <option value="partial">Неполная разметка</option>
+            <option value="processed">Черновики</option>
+            <option value="verified">Проверенные</option>
+          </select>
+        </label>
+      </div>
+      <div id="grid" class="grid" aria-label="Список сур"></div>
+      <div id="gridEmpty" class="empty-state hidden" role="status"><h3>Здесь появятся ваши суры</h3><p>Выберите папку с аудио выше и откройте проект.</p></div>
+    </main>
   </section>
 
   <!-- ===== Review ===== -->
@@ -107,17 +133,17 @@
     <header class="topbar review-top">
       <div class="review-mainbar">
         <div class="review-heading">
-          <button id="backBtn" class="ghost back-btn">← Дашборд</button>
+          <button id="backBtn" class="ghost back-btn">← Все суры</button>
           <div class="review-title-block">
-            <h2 id="reviewTitle">Сура</h2>
+            <h2 id="reviewTitle" tabindex="-1">Сура</h2>
             <span id="suraGenStatus" class="sura-gen-status" aria-live="polite"></span>
           </div>
         </div>
         <div class="player-controls">
-          <button id="playBtn" class="primary icon-btn play-btn" title="Пробел">▶</button>
+          <button id="playBtn" class="primary icon-btn play-btn" title="Воспроизвести / пауза (Пробел)" aria-label="Воспроизвести">▶</button>
           <button id="prevBtn" class="icon-btn" title="Предыдущий аят (←)">⏮</button>
           <button id="nextBtn" class="icon-btn" title="Следующий аят (→)">⏭</button>
-          <button id="loopBtn" class="toggle" title="Повторять текущий аят">↻ луп</button>
+          <button id="loopBtn" class="toggle" aria-pressed="false" title="Повторять текущий аят">↻ Повтор</button>
           <button id="markCurrentBtn" title="Записать текущую позицию как старт выбранного аята">Поставить старт</button>
           <label class="inline">скорость
             <select id="rate">
@@ -138,7 +164,7 @@
         </div>
       </div>
 
-      <div class="review-actions">
+      <details class="review-tools"><summary>Инструменты разметки</summary><div class="review-actions">
         <label class="inline mode-control">режим
           <select id="suraMode">
             <option value="auto">авто</option>
@@ -148,7 +174,7 @@
           </select>
         </label>
         <div class="action-group">
-          <button id="regenSuraBtn" class="primary" title="Рассчитать тайм-коды этой суры выбранным режимом">↻ Пересчитать суру</button>
+          <button id="regenSuraBtn" title="Рассчитать тайм-коды этой суры выбранным режимом">↻ Пересчитать суру</button>
           <button id="draftPausesBtn" class="ghost" title="Черновая разметка по паузам и волне, без перезаписи ручных меток">Разметить по паузам</button>
           <button id="correctDraftBtn" class="ghost" title="Исправить auto-тайм-коды точным проходом, не трогая ручные метки">Корректировка</button>
         </div>
@@ -156,7 +182,7 @@
           <button id="recheckBtn" class="ghost" title="Перепроверить готовые тайм-коды: что реально слышно в каждой точке (ничего не меняет)">🔍 Перепроверить</button>
           <button id="exportBtn" class="ghost" title="Экспорт чистой .db">⇩ Экспорт</button>
         </div>
-      </div>
+      </div></details>
     </header>
 
     <div id="suraProgress" class="sura-progress">
@@ -178,7 +204,7 @@
         <button id="pauseOverlayBtn" class="ghost toggle" title="Показать паузы, найденные алгоритмом">паузы</button>
         <span id="pauseLegend" class="pause-legend hidden">
           <span><i class="pause-key strong"></i>строгие</span>
-          <span><i class="pause-key weak"></i>weak</span>
+          <span><i class="pause-key weak"></i>слабые</span>
           <span><i class="pause-key rejected"></i>откл.</span>
         </span>
       </div>

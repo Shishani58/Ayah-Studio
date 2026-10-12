@@ -55,12 +55,15 @@ def discover_audio(audio_dir: str | Path) -> dict[int, Path]:
 def classify_status(statuses: list[str] | None, ayah_count: int) -> str:
     """Classify a sura from its per-ayah review statuses.
 
-    ``statuses`` is the list of ``review_meta.status`` rows present for the sura.
-    Returns one of ``not-processed`` / ``processed`` / ``verified``.
+    ``statuses`` contains one status for each timing row (missing metadata
+    defaults to ``auto``).
+    Returns one of ``not-processed`` / ``partial`` / ``processed`` / ``verified``.
     """
     if not statuses:
         return "not-processed"
-    if len(statuses) == ayah_count and all(s == "verified" for s in statuses):
+    if len(statuses) != ayah_count:
+        return "partial"
+    if all(s == "verified" for s in statuses):
         return "verified"
     return "processed"
 

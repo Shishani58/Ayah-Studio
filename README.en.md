@@ -1,0 +1,47 @@
+<div align="center">
+  <img src="surah_cutter/webgui/static/mark.svg" width="80" alt="Ayah Studio">
+  <h1>Ayah Studio</h1>
+  <p>Turn Qur’an recitation audio into ayah timings.</p>
+  <p><a href="README.md">Русский</a> · <a href="https://github.com/Shishani58/Ayah-Studio/releases">Releases</a> · <a href="LICENSE">MIT</a></p>
+  <img src="docs/images/review.jpg" width="900" alt="Ayah review with waveform, timing markers and Arabic text">
+</div>
+
+A local macOS app for aligning, listening to and reviewing Qur’an recitation.
+Your audio stays on your Mac. The app interface is in Russian.
+
+## Install
+
+[**Download Ayah Studio 0.1.0 (.dmg)**](https://github.com/Shishani58/Ayah-Studio/releases/download/v0.1.0/Ayah-Studio-0.1.0-macOS-arm64.dmg)
+
+For **Apple Silicon Macs** (M1 or newer). Open the DMG, drag **Ayah Studio**
+to **Applications**, eject the disk and launch the app. Python, source code and
+separate model downloads are not needed.
+
+This build is not Apple-notarized. If macOS blocks the first launch, see
+[Apple’s guidance](https://support.apple.com/en-us/102445).
+Intel and Windows are not included in the verified build.
+
+## Features
+
+- Automatic alignment against the known Qur’an text.
+- Waveform, Arabic text, ayah loop and playback speed controls.
+- Drag timing markers; manual edits survive regeneration.
+- Search and filter 114 surahs, resume incomplete work.
+- Export a SQLite timing database for Qur’an apps.
+
+## Quick start
+
+1. Select your audio folder: one file per surah, named `001.mp3` … `114.mp3`.
+2. Create a `.db` project and generate timings.
+3. Open a surah, listen, adjust and mark ayahs as verified.
+4. Export when all 114 surahs are ready.
+
+Automatic timings are a draft. Review boundaries by ear before publishing.
+
+## Development
+
+[Build the app and DMG](docs/development/packaging.md) ·
+[Architecture](docs/project.md) · [Project status](docs/STATUS.md)
+
+Code is MIT-licensed. Bundled data, fonts and models retain their upstream
+licenses: [acknowledgements](docs/attributions.md).

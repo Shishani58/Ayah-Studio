@@ -7,6 +7,8 @@ actually exercise the windowed path; ``all`` → 78-114; ``corpus`` → 1-114.
 Add ``fast-only`` to skip the full reference (it never changes — only the fast
 path is under iteration), roughly halving wall time. Audio dir via $SHATRI_DIR.
 Use ``--ayah-audio-dir PATH`` to audit opt-in exact-recording clips too.
+Use ``--diagnose-candidates`` to print the ranked pause/ayah alternatives near
+each reference error of at least one second.
 """
 from __future__ import annotations
 
@@ -61,6 +63,7 @@ def pause_contract_violations(rows, trace: dict) -> list[str]:
         float(pause["center_ms"])
         for pause in trace.get("phase1_pauses", [])
         if pause.get("center_ms") is not None
+        and pause.get("quality") != "rejected"
     }
     violations: list[str] = []
     for match in trace.get("pause_matches", []):
@@ -166,6 +169,42 @@ def outlier_diagnoses(
     return diagnoses
 
 
+def candidate_diagnoses(
+    rows,
+    trace: dict,
+    surah: int,
+    *,
+    min_error_ms: float = 1000.0,
+) -> list[str]:
+    """Summarise the pause candidates nearest each large benchmark error."""
+    rankings = trace.get("anchor_first", {}).get("pause_rankings", [])
+    if not rankings:
+        return []
+    diagnoses: list[str] = []
+    for ayah, actual_ms, _confidence in rows:
+        reference_ms = REF.get((surah, ayah))
+        if reference_ms is None or abs(actual_ms - reference_ms) < min_error_ms:
+            continue
+        nearby = sorted(
+            rankings,
+            key=lambda item: abs(float(item.get("pause_ms", 0.0)) - reference_ms),
+        )[:3]
+        for item in nearby:
+            candidates = ",".join(
+                f"{candidate['ayah']}:{candidate['similarity']:.3f}"
+                f"/p{candidate['prefix_chars']}"
+                for candidate in item.get("candidates", [])
+            )
+            diagnoses.append(
+                f"ayah {ayah}: result/ref={round(actual_ms)}/{round(reference_ms)} "
+                f"pause={round(float(item.get('pause_ms', 0.0)))} "
+                f"accepted={bool(item.get('accepted'))} "
+                f"reasons={','.join(item.get('rejection_reasons', [])) or '-'} "
+                f"top=[{candidates}]"
+            )
+    return diagnoses
+
+
 def select_suras(argv: list[str]) -> list[str]:
     if argv == ["first77"]:
         return [f"{n:03d}" for n in range(1, 78)]
@@ -206,10 +245,17 @@ def main(argv):
     audit_pauses = "--audit-pauses" in argv
     audit_sequence = "--audit-sequence" in argv
     diagnose_outliers = "--diagnose-outliers" in argv
+    diagnose_candidates = "--diagnose-candidates" in argv
     surah_args = [
         a
         for a in argv
-        if a not in {"fast-only", "--audit-pauses", "--audit-sequence", "--diagnose-outliers"}
+        if a not in {
+            "fast-only",
+            "--audit-pauses",
+            "--audit-sequence",
+            "--diagnose-outliers",
+            "--diagnose-candidates",
+        }
     ]
     suras = select_suras(surah_args)
     bundle = align._get_onnx_bundle()  # warm + reuse
@@ -262,6 +308,9 @@ def main(argv):
         if diagnose_outliers:
             for diagnosis in outlier_diagnoses(fast, trace, surah):
                 print(f"   OUTLIER {diagnosis}")
+        if diagnose_candidates:
+            for diagnosis in candidate_diagnoses(fast, trace, surah):
+                print(f"   CANDIDATE {diagnosis}")
         print(
             f"sura {surah:>3} ({trace.get('total_ms',0)/1000:5.1f}s, {len(words)}w, "
             f"pause={trace.get('n_pause')}/wasl={trace.get('n_wasl')}, "

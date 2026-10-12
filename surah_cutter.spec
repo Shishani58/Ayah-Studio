@@ -1,5 +1,5 @@
 # -*- mode: python ; coding: utf-8 -*-
-"""PyInstaller spec for the current Surah Cutter desktop app.
+"""PyInstaller spec for the current Ayah Studio desktop app.
 
 Builds a windowed application from ``surah_cutter/webgui/launch.py``.
 
@@ -13,14 +13,15 @@ Bundle layout (critical):
     ``surah_cutter`` package — otherwise the Quran DB and font are not found.
 
 Platform outputs:
-    * macOS   -> ``dist/Surah Cutter.app`` (BUNDLE, windowed .app)
-    * Windows -> ``dist/Surah Cutter/Surah Cutter.exe`` (windowed .exe)
-    * Linux   -> ``dist/Surah Cutter/Surah Cutter``
+    * macOS   -> ``dist/Ayah Studio.app`` (BUNDLE, windowed .app)
+    * Windows -> ``dist/Ayah Studio/Ayah Studio.exe`` (windowed .exe)
+    * Linux   -> ``dist/Ayah Studio/Ayah Studio``
 
 Build:  pyinstaller surah_cutter.spec --noconfirm
 Do not edit generated bundles by hand.
 """
 
+import os
 import sys
 from pathlib import Path
 
@@ -104,7 +105,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name="Surah Cutter",
+    name="Ayah Studio",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -113,7 +114,7 @@ exe = EXE(
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
-    codesign_identity=None,
+    codesign_identity=os.environ.get("AYAH_CODESIGN_IDENTITY"),
     entitlements_file=None,
 )
 
@@ -125,20 +126,21 @@ coll = COLLECT(
     strip=False,
     upx=False,
     upx_exclude=[],
-    name="Surah Cutter",
+    name="Ayah Studio",
 )
 
 # macOS: wrap the COLLECT tree into a proper .app bundle.
 if sys.platform == "darwin":
     app = BUNDLE(
         coll,
-        name="Surah Cutter.app",
-        icon=None,  # macOS generic app icon until a branded .icns is supplied.
-        bundle_identifier="org.surah-cutter.gui",
+        name="Ayah Studio.app",
+        icon=str(ROOT / "assets" / "AyahStudio.icns"),
+        bundle_identifier="org.quranacademy.ayahstudio",
         info_plist={
-            "CFBundleName": "Surah Cutter",
-            "CFBundleDisplayName": "Surah Cutter",
+            "CFBundleName": "Ayah Studio",
+            "CFBundleDisplayName": "Ayah Studio",
             "CFBundleShortVersionString": "0.1.0",
             "NSHighResolutionCapable": True,
+            "LSApplicationCategoryType": "public.app-category.music",
         },
     )

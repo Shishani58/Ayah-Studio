@@ -98,40 +98,60 @@ function setMode(mode) {
 function updateModeHint() {
   const mode = selectedMode();
   $("modeHint").textContent = mode === "auto"
-    ? "сам выбирает режим, калибрует лаг и ремонтирует подозрительные авто-метки"
+    ? "Автоматический выбор режима. После генерации проверьте результат на слух."
     : mode === "fast"
-    ? "паузы → растущее окно; трудные суры проверять внимательнее"
+    ? "Быстрый черновик по паузам. Сложные участки требуют внимательной проверки."
     : mode === "tiled"
-    ? "точное выравнивание тайлами — для длинных сур (Бакъара и т.п.) без перегрузки памяти"
-    : "полное нейровыравнивание (~57 мс)";
+    ? "Для длинных сур: обработка частями с ограничением памяти."
+    : "Полное выравнивание аудио с текстом аятов.";
 }
 
 // ===========================================================================
 //  Dashboard
 // ===========================================================================
+let dashboardSuras = [];
 async function refreshSuras() {
-  const suras = await api.get("/api/suras");
+  dashboardSuras = await api.get("/api/suras");
+  renderSuras();
+  updateGenControls(dashboardSuras);
+  const available = dashboardSuras.filter(s => s.has_audio).length;
+  const verified = dashboardSuras.filter(s => s.status === "verified").length;
+  $("librarySummary").textContent = `${available} с аудио · ${verified} проверено · ${dashboardSuras.length} всего`;
+  $("dashboardExportBtn").disabled = !$("dbPath").value.trim();
+}
+function renderSuras() {
+  const query = $("suraSearch").value.trim();
+  const filter = $("suraFilter").value;
+  const suras = dashboardSuras.filter(s => (!query || String(s.surah).includes(query))
+    && (filter === "all" || (filter === "audio" ? s.has_audio : s.has_audio && s.status === filter)));
   const grid = $("grid");
   grid.innerHTML = "";
   for (const s of suras) {
-    const tile = document.createElement("div");
+    const tile = document.createElement("button");
+    tile.type = "button";
+    tile.disabled = !s.has_audio;
     tile.className = "tile" + (s.has_audio ? "" : " no-audio");
+    tile.setAttribute("aria-label", `Сура ${s.surah}, ${s.ayah_count} аятов, ${s.has_audio ? badgeLabel(s.status) : "нет аудио"}`);
     tile.innerHTML = `
       <div class="audio-dot ${s.has_audio ? "on" : ""}" title="${s.has_audio ? "есть аудио" : "нет аудио"}"></div>
-      <div class="num">${s.surah}</div>
-      <div class="meta">${s.ayah_count} аят.</div>
+      <span class="num">Сура ${s.surah}</span>
+      <span class="meta">${s.ayah_count} аят.</span>
       <span class="badge ${s.status}">${badgeLabel(s.status)}</span>`;
     if (s.has_audio) tile.onclick = () => openReview(s.surah, true);
     grid.appendChild(tile);
   }
-  updateGenControls(suras);
+  $("gridEmpty").classList.toggle("hidden", suras.length > 0);
+  const hasAudio = dashboardSuras.some(s => s.has_audio);
+  $("gridEmpty").innerHTML = hasAudio
+    ? "<h3>Суры не найдены</h3><p>Измените номер суры или выберите другой фильтр.</p>"
+    : "<h3>Здесь появятся ваши суры</h3><p>Выберите папку с аудио выше и откройте проект.<br>Файлы должны называться 001.mp3 … 114.mp3.</p>";
 }
-const badgeLabel = (st) => ({ "not-processed": "—", "processed": "черновик", "verified": "✓ проверена" }[st] || st);
+const badgeLabel = (st) => ({ "not-processed": "без разметки", "partial": "неполная разметка", "processed": "черновик", "verified": "✓ проверена" }[st] || st);
 
 // reflect progress on the generate buttons (resume-aware)
 function updateGenControls(suras) {
   const withAudio = suras.filter((s) => s.has_audio);
-  const remaining = withAudio.filter((s) => s.status === "not-processed").length;
+  const remaining = withAudio.filter((s) => ["not-processed", "partial"].includes(s.status)).length;
   const done = withAudio.length - remaining;
   const ready = withAudio.length > 0 && !!$("dbPath").value.trim();
   const gen = $("genBtn"), regen = $("regenBtn");
@@ -153,7 +173,7 @@ async function openProject() {
       ? `Готово: ${p.audio_count} сур с аудио. Нажмите «Сгенерировать всё» или откройте суру.`
       : `Аудио: ${p.audio_count} сур · Проект: ${p.db_path ? "✓" : "не выбран"}. ${p.db_path ? "" : "Выберите .db."}`);
     $("genBtn").disabled = !ready;
-    if (ready) $("help").classList.add("collapsed");
+    if (ready) { $("help").classList.add("collapsed"); $("helpBtn").setAttribute("aria-expanded", "false"); }
     await refreshSuras();
   } catch (e) { setStatus("Ошибка: " + e.message); }
 }
@@ -294,6 +314,7 @@ async function openReview(surah) {
   $("reviewTitle").textContent = `Сура ${surah} · ${sura.ayah_count} аят.`;
   const audio = $("audio");
   audio.src = `/api/audio/${surah}`;
+  $("clock").textContent = `${fmt(0)} / ${fmt(R.duration)}`;
   audio.playbackRate = parseFloat($("rate").value);
   R.audio = audio;
   $("suraGenStatus").textContent = "";
@@ -302,6 +323,7 @@ async function openReview(surah) {
   renderAyahList();
   updateGenHint();
   updateSuraProgress();
+  setStatus("Проект открыт. Выберите суру для проверки или продолжите разметку.");
   showView("review");
   requestAnimationFrame(() => { resizeWave(); drawWave(); });
 }
@@ -492,11 +514,11 @@ function renderAyahList() {
     if (rc && rc.verdict === "shift") li.classList.add("rc-suspect");
     li.innerHTML = `
       <span class="a-conf" style="background:${confColor(a.confidence, a.status)}"></span>
-      <span class="a-num">${a.ayah}</span>
+      <button class="a-num" aria-label="Выбрать аят ${a.ayah}">${a.ayah}</button>
       <span class="a-time">${fmt(a.time)}</span>
       <span class="a-mark">${marked ? "разм." : "нет"}</span>
       ${recheckBadge(rc)}
-      <button class="a-verify" ${marked ? "" : "disabled"}>${a.status === "verified" ? "✓ пров." : "пров."}</button>
+      <button class="a-verify" aria-label="Аят ${a.ayah}: ${a.status === "verified" ? "снять отметку проверки" : "отметить проверенным"}" ${marked ? "" : "disabled"}>${a.status === "verified" ? "✓ Проверен" : "Проверить"}</button>
       <span class="a-text" dir="rtl" lang="ar">${escapeHtml(a.text || "")}</span>`;
     li.onclick = (e) => {
       if (e.target.classList.contains("a-verify")) { toggleVerify(i); e.stopPropagation(); }
@@ -846,12 +868,15 @@ async function exportProject() {
 function showView(name) {
   $("dashboard").classList.toggle("hidden", name !== "dashboard");
   $("review").classList.toggle("hidden", name !== "review");
+  document.title = name === "review" ? `${$("reviewTitle").textContent} — Ayah Studio` : "Ayah Studio";
+  (name === "review" ? $("reviewTitle") : $("suraSearch")).focus();
 }
 const baseName = (p) => p.replace(/[/\\]+$/, "").split(/[/\\]/).pop() || "reciter";
 
 function enableNativePickers() {
   $("browseAudio").classList.remove("hidden");
   $("browseDb").classList.remove("hidden");
+  $("newDb").classList.remove("hidden");
   $("browseAudio").onclick = async () => {
     const p = await window.pywebview.api.pick_folder();
     if (!p) return;
@@ -859,15 +884,25 @@ function enableNativePickers() {
     if (!$("dbPath").value.trim()) $("dbPath").value = `${p}/${baseName(p)}.db`;
   };
   $("browseDb").onclick = async () => {
+    const p = await window.pywebview.api.pick_db();
+    if (p) $("dbPath").value = p;
+  };
+  $("newDb").onclick = async () => {
     const suggested = $("audioDir").value.trim() ? `${baseName($("audioDir").value.trim())}.db` : "reciter.db";
-    const p = (await window.pywebview.api.pick_db()) || (await window.pywebview.api.save_db(suggested));
+    const p = await window.pywebview.api.save_db(suggested);
     if (p) $("dbPath").value = p;
   };
 }
 
 function wire() {
-  $("helpBtn").onclick = () => $("help").classList.toggle("collapsed");
-  $("openBtn").onclick = openProject;
+  $("helpBtn").onclick = () => {
+    const collapsed = $("help").classList.toggle("collapsed");
+    $("helpBtn").setAttribute("aria-expanded", String(!collapsed));
+  };
+  $("projectForm").onsubmit = e => { e.preventDefault(); openProject(); };
+  $("suraSearch").oninput = renderSuras;
+  $("suraFilter").onchange = renderSuras;
+  $("dashboardExportBtn").onclick = exportProject;
   $("genBtn").onclick = () => runGeneration(true);
   $("regenBtn").onclick = () => runGeneration(false);
   $("cancelBtn").onclick = cancelGeneration;
@@ -898,7 +933,7 @@ function wire() {
   $("playBtn").onclick = togglePlay;
   $("prevBtn").onclick = seekPrevUnit;
   $("nextBtn").onclick = seekNextUnit;
-  $("loopBtn").onclick = () => { R.loop = !R.loop; $("loopBtn").classList.toggle("active", R.loop); };
+  $("loopBtn").onclick = () => { R.loop = !R.loop; $("loopBtn").classList.toggle("active", R.loop); $("loopBtn").setAttribute("aria-pressed", String(R.loop)); };
   $("rate").onchange = () => { if (R.audio) R.audio.playbackRate = parseFloat($("rate").value); };
   $("exportBtn").onclick = exportProject;
   for (const btn of document.querySelectorAll("[data-copy-log]")) {
@@ -907,8 +942,8 @@ function wire() {
   }
 
   const audio = $("audio");
-  audio.addEventListener("play", () => ($("playBtn").textContent = "⏸"));
-  audio.addEventListener("pause", () => ($("playBtn").textContent = "▶"));
+  audio.addEventListener("play", () => { $("playBtn").textContent = "⏸"; $("playBtn").setAttribute("aria-label", "Пауза"); });
+  audio.addEventListener("pause", () => { $("playBtn").textContent = "▶"; $("playBtn").setAttribute("aria-label", "Воспроизвести"); });
   audio.addEventListener("timeupdate", () => {
     const ms = audio.currentTime * 1000;
     $("clock").textContent = `${fmt(ms)} / ${fmt(R.duration)}`;
@@ -993,7 +1028,7 @@ function wire() {
   });
 
   window.addEventListener("keydown", (e) => {
-    if ($("review").classList.contains("hidden") || e.target.tagName === "INPUT") return;
+    if ($("review").classList.contains("hidden") || e.target.closest("input, select, textarea, button, summary, [contenteditable]")) return;
     if (e.code === "Space") { e.preventDefault(); togglePlay(); }
     else if (e.code === "ArrowDown" || e.code === "ArrowRight") { e.preventDefault(); $("nextBtn").click(); }
     else if (e.code === "ArrowUp" || e.code === "ArrowLeft") { e.preventDefault(); $("prevBtn").click(); }
@@ -1014,7 +1049,11 @@ function wire() {
     if (p.audio_dir) $("audioDir").value = p.audio_dir;
     if (p.db_path) $("dbPath").value = p.db_path;
     setMode(p.mode);
-    if (p.db_path && p.audio_count) { $("genBtn").disabled = false; $("help").classList.add("collapsed"); }
+    if (p.db_path && p.audio_count) {
+      $("genBtn").disabled = false;
+      $("help").classList.add("collapsed");
+      setStatus(`Проект восстановлен · ${p.audio_count} сур с аудио. Выберите суру для проверки.`);
+    }
   } catch {}
-  await refreshSuras();
+  try { await refreshSuras(); } catch (e) { setStatus("Не удалось загрузить суры: " + e.message); }
 })();

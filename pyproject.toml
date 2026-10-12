@@ -3,13 +3,13 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "surah-cutter"
+name = "ayah-studio"
 version = "0.1.0"
 description = "Generate per-ayah timecodes for Qur'an recitation audio, with visual/audio verification."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
-authors = [{ name = "surah-cutter contributors" }]
+authors = [{ name = "Ayah Studio contributors" }]
 keywords = ["quran", "forced-alignment", "timecodes", "ayah", "recitation"]
 
 # Core is the full shipped runtime: GUI (dashboard + review), DB I/O, decode,
@@ -44,7 +44,7 @@ align = [
 ]
 # Back-compat alias for the old extra name.
 oracle = [
-    "surah-cutter[align]",
+    "ayah-studio[align]",
 ]
 # Legacy PySide6/Qt desktop GUI (surah_cutter.gui). The shipped GUI is now the
 # lightweight web UI (surah_cutter.webgui); Qt is optional and heavy (~1.2 GB).
@@ -59,8 +59,13 @@ dev = [
     "pytest>=8.0",
     "ruff>=0.4",
 ]
+build = [
+    "pyinstaller>=6.16,<7",
+]
 
 [project.scripts]
+ayah-studio = "surah_cutter.webgui.launch:main"
+ayah-studio-cli = "surah_cutter.cli:main"
 surah-cutter = "surah_cutter.cli:main"
 surah-cutter-gui = "surah_cutter.webgui.launch:main"
 surah-cutter-gui-qt = "surah_cutter.gui.app:main"

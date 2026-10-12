@@ -1,0 +1,29 @@
+# The canonical remote is GitLab. Native macOS/Windows packaging remains in
+# .github/workflows/build.yml until suitable GitLab runners are configured.
+image: python:3.12
+
+stages:
+  - test
+  - models
+
+checks:
+  stage: test
+  script:
+    - pip install -e ".[dev]"
+    - ruff check .
+    - pytest -q
+
+runtime-models:
+  stage: models
+  rules:
+    - if: '$CI_COMMIT_TAG'
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+  script:
+    - pip install -r tools/model-export-requirements.txt
+    - python -m tools.prepare_models
+  artifacts:
+    name: runtime-models
+    paths:
+      - models/*.onnx
+      - models/*.json
+    expire_in: 7 days

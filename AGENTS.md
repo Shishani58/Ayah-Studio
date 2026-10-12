@@ -12,10 +12,10 @@
 
 ## Что это за проект
 
-Desktop-инструмент (Python, PySide6) для генерации пер-аятных тайм-кодов аудио
+Desktop-инструмент (Python, pywebview + FastAPI) для генерации пер-аятных тайм-кодов аудио
 Корана и их визуально-слуховой проверки. Ядро — `forced alignment` известного
 текста к аудио (не транскрибация). Выход — SQLite со схемой
-`timings(sura, ayah, time_ms)` + `db_version`. Подробности — `docs/project.md`.
+`timings(sura, ayah, time)` (миллисекунды) + `db_version`. Подробности — `docs/project.md`.
 
 ## Non-Negotiables
 
@@ -34,9 +34,11 @@ Desktop-инструмент (Python, PySide6) для генерации пер-
 
 ## Стек и инструменты
 
-- Python ≥3.10. GUI — PySide6 + pyqtgraph. Аудио-декод — bundled ffmpeg
+- Python ≥3.10. Основной GUI — pywebview + FastAPI + HTML/JS;
+  прежний PySide6 + pyqtgraph доступен через extra `qt`. Аудио-декод — bundled ffmpeg
   (`imageio-ffmpeg`). Рантайм выравнивания — `onnxruntime` (int8) +
-  `ctc-segmentation`; VAD — Silero (ONNX). Torch — только dev-оракул (`[oracle]`).
+  вендоренный CTC Viterbi (`core/_ctc.py`); VAD — Silero (ONNX).
+  Torch — только dev-экспорт/оракул (`[align]`, алиас `[oracle]`).
 - Зависимости и точки входа — `pyproject.toml`. Линтер/тесты: `ruff`, `pytest`.
 - Запуск GUI: `surah-cutter-gui`. CLI-батч: `surah-cutter`.
 

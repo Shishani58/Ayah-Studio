@@ -9,6 +9,7 @@ display. This is the ``surah-cutter-gui`` entry point.
 from __future__ import annotations
 
 import socket
+import sys
 import threading
 import time
 
@@ -79,6 +80,11 @@ class _NativeApi:
 
 
 def main(argv: list[str] | None = None) -> int:
+    args = sys.argv[1:] if argv is None else argv
+    if "--self-check" in args:
+        from surah_cutter.selfcheck import main as self_check
+
+        return self_check()
     port = _free_port()
     url = f"http://127.0.0.1:{port}/"
 
@@ -94,7 +100,7 @@ def main(argv: list[str] | None = None) -> int:
 
         api = _NativeApi()
         window = webview.create_window(
-            "surah-cutter", url, js_api=api, width=1100, height=820, min_size=(820, 600)
+            "Ayah Studio", url, js_api=api, width=1180, height=840, min_size=(820, 600)
         )
         api.window = window
         webview.start()

@@ -85,6 +85,18 @@ def test_pause_contract_rejects_off_center_owner_and_disguised_wasl_pause():
     ]
 
 
+def test_pause_contract_ignores_rejected_non_owner_pause_center():
+    rows = [(2, 2400, 0.7)]
+    trace = {
+        "phase1_pauses": [{"center_ms": 2400, "quality": "rejected"}],
+        "pause_matches": [
+            {"ayah": 2, "from_pause": False, "match_action": "wasl"},
+        ],
+    }
+
+    assert pause_contract_violations(rows, trace) == []
+
+
 def test_pause_contract_accepts_exact_fingerprint_after_owner_pause():
     rows = [(2, 1_350, 0.95)]
     trace = {
@@ -149,4 +161,27 @@ def test_outlier_diagnoses_classifies_weak_recovered_pause(monkeypatch):
     assert bench_fast.outlier_diagnoses(rows, trace, 84) == [
         "ayah 10: error=903ms cause=weak-recovered-pause-needs-edge-analysis "
         "action=recovered sim=0.37 timing=None pause=53840-54800 start/ref=54320/53417"
+    ]
+
+
+def test_candidate_diagnoses_reports_ranked_pauses_near_reference(monkeypatch):
+    monkeypatch.setattr(bench_fast, "REF", {(2, 30): 581_328})
+    rows = [(30, 570_300, 0.3)]
+    trace = {
+        "anchor_first": {
+            "pause_rankings": [{
+                "pause_ms": 581_250.0,
+                "accepted": False,
+                "rejection_reasons": ["low_margin"],
+                "candidates": [
+                    {"ayah": 30, "similarity": 0.61, "prefix_chars": 5},
+                    {"ayah": 31, "similarity": 0.58, "prefix_chars": 2},
+                ],
+            }]
+        }
+    }
+
+    assert bench_fast.candidate_diagnoses(rows, trace, 2) == [
+        "ayah 30: result/ref=570300/581328 pause=581250 accepted=False "
+        "reasons=low_margin top=[30:0.610/p5,31:0.580/p2]"
     ]

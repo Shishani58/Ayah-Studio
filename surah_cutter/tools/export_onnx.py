@@ -61,6 +61,7 @@ def export(
     out: str | Path = DEFAULT_OUT,
     *,
     opset: int = OPSET,
+    revision: str | None = None,
 ) -> Path:
     """Export ``model_id`` to fp32 ONNX, quantise to int8, write sidecars.
 
@@ -77,8 +78,8 @@ def export(
     vocab_path = int8_path.with_suffix(int8_path.suffix + ".vocab.json")
     meta_path = int8_path.with_suffix(int8_path.suffix + ".meta.json")
 
-    processor = Wav2Vec2Processor.from_pretrained(model_id)
-    model = Wav2Vec2ForCTC.from_pretrained(model_id)
+    processor = Wav2Vec2Processor.from_pretrained(model_id, revision=revision)
+    model = Wav2Vec2ForCTC.from_pretrained(model_id, revision=revision)
     model.eval()
     torch.set_grad_enabled(False)
 
@@ -133,7 +134,8 @@ def export(
     do_normalize = bool(getattr(feat, "do_normalize", True))
     with meta_path.open("w", encoding="utf-8") as fh:
         json.dump(
-            {"model_id": model_id, "do_normalize": do_normalize, "opset": opset},
+            {"model_id": model_id, "revision": revision,
+             "do_normalize": do_normalize, "opset": opset},
             fh,
             ensure_ascii=False,
         )
@@ -198,9 +200,10 @@ def main(argv: list[str] | None = None) -> int:
         default=OPSET,
         help=f"ONNX opset version (default: {OPSET}).",
     )
+    parser.add_argument("--revision", help="Immutable Hugging Face model commit.")
     args = parser.parse_args(argv)
 
-    int8_path = export(args.model_id, args.out, opset=args.opset)
+    int8_path = export(args.model_id, args.out, opset=args.opset, revision=args.revision)
     print(int8_path)
     return 0
 
