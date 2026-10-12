@@ -377,6 +377,16 @@ def _build_text_disambiguation(
     )
     comparisons = [list(ayah_word_trs[ayah]) for ayah in competitors]
     internal = [list(sequence) for sequence in (internal_sequences or ()) if sequence]
+    # A pause inside this ayah can repeat its opening too. Read through the
+    # differing word before allowing that pause to compete with the real start.
+    internal.extend(
+        target[start:]
+        for start in range(1, len(target))
+        if _normalised_word(target[start]) == _normalised_word(target[0])
+        and len(_prefix_key("".join(
+            target[:_shared_word_prefix(target, target[start:])]
+        ))) >= max(1, int(minimum_chars))
+    )
     all_comparisons = comparisons + internal
     max_shared = max((_shared_word_prefix(target, other) for other in all_comparisons), default=0)
     unresolved = any(
@@ -412,6 +422,120 @@ def _build_text_disambiguation(
 def _text_disambiguation_requires_atomic(plan: TextDisambiguation) -> bool:
     """Whether no local opening read can uniquely prove this ayah."""
     return plan.reason == "unresolved" or plan.distinguishing_word is None
+
+
+def _joint_boundary_read_is_supported(
+    previous_confidences: list[float],
+    opening_confidences: list[float],
+    *,
+    previous_end_ms: float,
+    opening_start_ms: float,
+    opening_end_ms: float,
+    window_end_ms: float,
+    opening_word_lengths: list[int] | None = None,
+    allow_weak_onset: bool = False,
+) -> bool:
+    """Require both sides of a boundary, not just a forced first-word match.
+
+    The complete previous ayah constrains order; its final words and the whole
+    distinguishing opening must actually be present in the cached frames.
+    A clipped final word or an unexplained gap cannot prove an early restart.
+    """
+    if not previous_confidences or len(opening_confidences) < 3:
+        return False
+    if not all(math.isfinite(c) for c in previous_confidences + opening_confidences):
+        return False
+    lengths = opening_word_lengths or [1] * len(opening_confidences)
+    if len(lengths) != len(opening_confidences) or sum(lengths) <= 0:
+        return False
+    # Short particles have few acoustic frames. They must stay in the CTC
+    # target, but should not outweigh the content words or the distinguishing
+    # final word when judging the complete phrase.
+    content = [
+        c for i, c in enumerate(opening_confidences)
+        if (not allow_weak_onset or i > 0)
+        and (opening_word_lengths is None or lengths[i] >= 4
+             or i == len(opening_confidences) - 1)
+    ]
+    evidence_start = 1 if allow_weak_onset else 0
+    evidence = list(zip(opening_confidences[evidence_start:], lengths[evidence_start:]))
+    tail = previous_confidences[-2:]
+    return (
+        sum(previous_confidences) / len(previous_confidences) >= 0.40
+        and min(tail) >= 0.30
+        and tail[-1] >= 0.50
+        and sum(tail) / len(tail) >= 0.50
+        and bool(content)
+        and min(content) >= 0.30
+        and sum(c * n for c, n in evidence) / max(1, sum(n for _, n in evidence)) >= 0.50
+        and 0.0 <= opening_start_ms - previous_end_ms <= 2500.0
+        and opening_start_ms < opening_end_ms <= window_end_ms - 100.0
+    )
+
+
+def _first_supported_joint_read(
+    window_ends: list[float],
+    read: Callable[[float], list[dict]],
+    previous_word_count: int,
+    diagnostics: list[dict],
+    opening_word_lengths: list[int] | None = None,
+) -> tuple[dict, dict] | None:
+    """Stop at the first complete two-sided read, before a later repetition."""
+    offset = previous_word_count
+    for window_end in sorted(set(window_ends)):
+        for result in sorted(read(window_end), key=lambda r: r["starts"][offset]):
+            supported = (
+                result.get("complete", True)
+                and not result.get("previous_tail_competes", False)
+                and _joint_boundary_read_is_supported(
+                    result["confs"][:offset], result["confs"][offset:],
+                    previous_end_ms=float(result["ends"][offset - 1]),
+                    opening_start_ms=float(result["starts"][offset]),
+                    opening_end_ms=float(result["ends"][-1]),
+                    window_end_ms=window_end - float(result.get("lag_ms", 0.0)),
+                    opening_word_lengths=result.get("opening_word_lengths", opening_word_lengths),
+                    allow_weak_onset=bool(result.get("allow_weak_onset")),
+                )
+            )
+            record = {
+                "window_ms": [result["base"], window_end],
+                "onset_ms": float(result["starts"][offset]),
+                "previous_end_ms": float(result["ends"][offset - 1]),
+                "previous_tail_conf": result["confs"][max(0, offset - 2):offset],
+                "opening_conf": result["confs"][offset:], "supported": supported,
+                "split_pause_ms": result.get("split_pause_ms"),
+                "allow_weak_onset": bool(result.get("allow_weak_onset")),
+                "previous_tail_competes": bool(result.get("previous_tail_competes")),
+            }
+            diagnostics.append(record)
+            if supported:
+                return result, record
+    return None
+
+
+def _joint_boundary_can_replace(
+    onset_ms: float,
+    current_ms: float,
+    *,
+    left_ms: float,
+    right_ms: float,
+    previous_tail_start_ms: float,
+    previous_end_ms: float,
+    previous_tail_confidences: list[float],
+    current_heard_as_previous: bool,
+) -> bool:
+    """Move forward only when the old boundary cuts proven predecessor speech."""
+    if not left_ms + 30.0 < onset_ms < right_ms - 30.0:
+        return False
+    if abs(onset_ms - current_ms) < 1500.0:
+        return False
+    if onset_ms < current_ms:
+        return True
+    return (
+        previous_tail_start_ms <= current_ms < previous_end_ms - 200.0
+        and bool(previous_tail_confidences)
+        and current_heard_as_previous
+    )
 
 
 def _speech_ms_excluding_pauses(
@@ -992,6 +1116,46 @@ def _tail_sim(dec: str, body: str, *, chars: int = _SIM_CHARS) -> float:
         _collapse(dec)[-chars:],
         _collapse(body)[-chars:],
     ).ratio()
+
+
+def _post_pause_is_previous_tail(
+    heard: str,
+    opening: str,
+    previous_words: list[str],
+    *,
+    allow_partial_tail: bool = False,
+) -> bool:
+    """Reject a forced onset when greedy audio still says the predecessor.
+
+    CTC can compress the previous tail before an internal pause and stretch
+    the opening across it. An independent prefix comparison must not prefer
+    that still-unfinished tail to the proposed current opening.
+    """
+    opening_score = _sim(heard, opening)
+    tails = ["".join(previous_words[-count:])
+             for count in range(2, min(5, len(previous_words)) + 1)]
+    if allow_partial_tail:
+        # An old erroneous boundary can cut through a word. Keep enough of
+        # the remaining phrase to distinguish a continuation from a new ayah.
+        for tail in tails:
+            for skip in range(5):
+                suffix = _collapse(tail)[skip:]
+                chars = min(_SIM_CHARS, len(suffix))
+                if chars < _MIN_DISAMBIG_CHARS:
+                    continue
+                # Compare equal early prefixes: speech from the new ayah
+                # later in the window must not hide the unfinished old word.
+                score = _sim(heard, suffix, chars=chars)
+                if (
+                    score >= _MIN_MATCH_SIM
+                    and score >= _sim(heard, opening, chars=chars) + _INTERNAL_REPEAT_MATCH_MARGIN
+                ):
+                    return True
+    tail_score = max((_sim(heard, tail) for tail in tails), default=0.0)
+    return (
+        tail_score >= _MIN_MATCH_SIM
+        and tail_score >= opening_score + _INTERNAL_REPEAT_MATCH_MARGIN
+    )
 
 
 def _build_anchor_hypotheses(
@@ -5551,14 +5715,16 @@ def align_surah_fast(
             tspans.append(tspans[-1] if tspans else (nf - 1, nf - 1))
         # CTC emission-lag compensation, same as the full path.
         lag = A.ALIGN_LAG_MS
-        starts, confs = [], []
+        starts, ends, confs = [], [], []
         for (ts, te) in spans:
             sf = tspans[ts][0] if ts < len(tspans) else nf - 1
             ef = tspans[te - 1][1] if te > ts and te - 1 < len(tspans) else sf
             starts.append(max(0.0, base + sf * stride - lag))
+            ends.append(max(0.0, base + ef * stride - lag))
             seg = fscores[sf:max(sf + 1, ef + 1)]
             confs.append(float(np.exp(seg.mean())) if seg.size else 0.0)
-        return {"starts": starts, "confs": confs,
+        return {"starts": starts, "ends": ends, "confs": confs, "lag_ms": lag,
+                "complete": len(segs) == len(targets),
                 "base": base, "end": end, "win_ms": end - base}
 
     # --- low-level: greedy CTC decode of [t0_ms, t1_ms] -> transliteration. ---
@@ -12480,6 +12646,201 @@ def align_surah_fast(
                 t.update(onset_ms=chosen, late_long_dsp_fallback_start=True)
                 break
 
+    # Resolve uncertain owners using the complete predecessor followed by
+    # a distinguishing opening. Increasing right brackets matter: a long CTC
+    # read can absorb a recited restart and pick its second occurrence.
+    joint_context_debug: list[dict] = []
+    for ai in range(1, len(ayah_list) - 1):
+        a = ayah_list[ai]
+        match = pause_match_by_ayah.get(a, {})
+        debug_match = next((d for d in pause_match_debug if d["ayah"] == a), None)
+        if debug_match is None or a not in starts_ms:
+            continue
+        if debug_match.get("match_action") in {
+            "confirmed", "anchor_first", "anchor_gap_sequence", "observed_current",
+        }:
+            continue
+        plan = text_disambiguations[ai - 1]
+        if _text_disambiguation_requires_atomic(plan):
+            continue
+        previous_a, next_a = ayah_list[ai - 1], ayah_list[ai + 1]
+        left_ms, right_ms = starts_ms[previous_a], starts_ms[next_a]
+        old_ms = starts_ms[a]
+        if not left_ms < old_ms < right_ms:
+            continue
+        first_word = ayah_words[previous_a][0]
+        boundary_word = ayah_words[a][0]
+        opening_words = max(3, plan.required_words)
+        # A weak/melodic first word may be rescued only if the following
+        # phrase itself distinguishes the ayah from neighboring/internal text.
+        following_words = ayah_word_trs[a][1:]
+        if not following_words:
+            continue
+        suffix_plan = _build_text_disambiguation(
+            a, {key: value[1:] for key, value in ayah_word_trs.items()},
+            competitor_ayahs=inner[ai:ai + _MATCH_LOOKAHEAD],
+            internal_sequences=[
+                body[start:]
+                for body in (ayah_word_trs[previous_a], ayah_word_trs[a])
+                for start in range(len(body))
+                if not (body is ayah_word_trs[a] and start == 1)
+                and _normalised_word(body[start]) == _normalised_word(following_words[0])
+            ],
+        )
+        if _text_disambiguation_requires_atomic(suffix_plan):
+            continue
+        opening_words = max(opening_words, 1 + suffix_plan.required_words)
+        if len(ayah_words[a]) < opening_words:
+            continue
+        end_word = boundary_word + opening_words
+        offset = boundary_word - first_word
+        left_owner = pause_by_center.get(matched_center_for_ayah.get(previous_a))
+        window_start = left_owner.start_ms if left_owner is not None else max(0, left_ms - 200)
+        previous_owner_end = left_owner.end_ms if left_owner is not None else left_ms
+        candidate_pauses = [
+            d.pause for d in pause_decisions
+            if d.reason == "dsp" and pause_tier(d) == "trusted"
+            and max(left_ms, previous_owner_end) < d.pause.center_ms < old_ms - 1500.0
+        ]
+        # The left anchor also seeds a bracket for a continuous (wasl) start.
+        seeds = [left_ms, old_ms] + [p.end_ms for p in candidate_pauses]
+        window_ends = sorted({
+            min(right_ms, seed + duration)
+            for seed in seeds for duration in (5000.0, 8000.0, 12000.0)
+            if window_start + 1000.0 < seed + duration <= old_ms + 12000.0
+            and seed + duration - window_start <= _MAX_FINAL_LOCAL_REPAIR_ALIGN_MS
+        } | {
+            p.end_ms for p in candidate_pauses
+            if window_start + 1000.0 < p.end_ms
+            and p.end_ms - window_start <= _MAX_FINAL_LOCAL_REPAIR_ALIGN_MS
+        })
+        reads: list[dict] = []
+        previous_reads: dict[float, dict | None] = {}
+
+        def read_joint_window(end: float) -> list[dict]:
+            full = align_slice(first_word, end_word, window_start, end, False)
+            alternatives = [full] if full is not None else []
+            # A short grammatical opening can remain weak even after its
+            # predecessor is certain. Add one whole word rather than lowering
+            # the confidence needed to accept the phrase.
+            if (
+                full is not None and full["complete"]
+                and min(full["confs"][max(0, offset - 2):offset]) >= 0.50
+                and end_word < ayah_words[a][-1] + 1
+            ):
+                extended = align_slice(first_word, end_word + 1, window_start, end, False)
+                if extended is not None:
+                    extended["opening_word_lengths"] = [
+                        len(_prefix_key(token)) for token in word_trs[boundary_word:end_word + 1]
+                    ]
+                    extended["opening_target"] = "".join(word_trs[boundary_word:end_word + 1])
+                    alternatives.append(extended)
+            for pause in candidate_pauses:
+                if not pause.end_ms + 1000.0 <= end <= pause.end_ms + 12000.0:
+                    continue
+                if pause.center_ms not in previous_reads:
+                    previous_reads[pause.center_ms] = align_slice(
+                        first_word, boundary_word, window_start, pause.start_ms, False,
+                    )
+                previous = previous_reads[pause.center_ms]
+                if previous is None or not previous["complete"]:
+                    continue
+                opening = align_slice(boundary_word, end_word, pause.start_ms, end, False)
+                if opening is None or not opening["complete"]:
+                    continue
+                # Constrain the already-detected silence to separate the two
+                # texts. Otherwise CTC can assign the first repetition to the
+                # final word of the previous ayah and erase its weak onset.
+                alternatives.append({
+                    **{key: previous[key] + opening[key]
+                       for key in ("starts", "ends", "confs")},
+                    "base": previous["base"], "lag_ms": opening["lag_ms"],
+                    "split_pause_ms": pause.center_ms,
+                    "allow_weak_onset": (
+                        pause.start_ms - 200.0 <= opening["starts"][0]
+                        <= pause.end_ms + 1000.0
+                    ),
+                })
+            for alternative in alternatives:
+                onset = float(alternative["starts"][offset])
+                heard = greedy_decode(onset, min(end, onset + 8000.0))
+                alternative["previous_tail_competes"] = _post_pause_is_previous_tail(
+                    heard,
+                    alternative.get("opening_target", "".join(word_trs[boundary_word:end_word])),
+                    ayah_word_trs[previous_a],
+                )
+            return alternatives
+
+        result = _first_supported_joint_read(
+            window_ends,
+            read_joint_window,
+            offset,
+            reads,
+            [len(_prefix_key(token)) for token in word_trs[boundary_word:end_word]],
+        )
+        joint_context_debug.extend(dict(read, ayah=a) for read in reads)
+        if result is None:
+            continue
+        res, record = result
+        onset = float(record["onset_ms"])
+        previous_end = float(record["previous_end_ms"])
+        old_heard_as_previous = onset > old_ms and _post_pause_is_previous_tail(
+            greedy_decode(old_ms, min(right_ms, old_ms + 8000.0)),
+            "".join(word_trs[boundary_word:end_word]), ayah_word_trs[previous_a],
+            allow_partial_tail=True,
+        )
+        if not _joint_boundary_can_replace(
+            onset, old_ms, left_ms=left_ms, right_ms=right_ms,
+            previous_tail_start_ms=float(res["starts"][max(0, offset - 2)]),
+            previous_end_ms=previous_end,
+            previous_tail_confidences=res["confs"][max(0, offset - 2):offset],
+            current_heard_as_previous=bool(old_heard_as_previous),
+        ):
+            continue
+        owner = min((
+            d.pause for d in pause_decisions
+            if d.reason == "dsp" and pause_tier(d) == "trusted"
+            for p in [d.pause]
+            if previous_end - 100.0 <= p.start_ms <= onset + 200.0
+            and p.start_ms - previous_end <= 1500.0
+            and onset <= p.end_ms + 1000.0
+        ), key=lambda p: p.center_ms, default=None)
+        chosen = owner.center_ms if owner is not None else onset
+        confidence = sum(res["confs"][offset:]) / len(res["confs"][offset:])
+        starts_ms[a] = chosen
+        confs[a] = confidence
+        place[a] = (chosen, owner is not None)
+        if owner is not None:
+            matched_center_for_ayah[a] = chosen
+        else:
+            matched_center_for_ayah.pop(a, None)
+        action = "joint_context_pause" if owner is not None else "wasl"
+        reason = "dsp" if owner is not None else "joint-context-wasl"
+        pause_number = all_pause_ord.get(chosen, pause_ord.get(chosen)) if owner else None
+        match.update(
+            center_ms=chosen, rough_ms=chosen, action=action, reason=reason,
+            pause=pause_number, sim=None, timing_adjusted=True, joint_context=True,
+            boundary_evidence="joint_context",
+        )
+        debug_match.update(
+            from_pause=owner is not None, rough_ms=chosen, pause=pause_number,
+            pause_start_ms=owner.start_ms if owner else None,
+            pause_center_ms=chosen if owner else None,
+            pause_end_ms=owner.end_ms if owner else None,
+            match_action=action, pause_reason=reason,
+            timing_adjusted=True, joint_context=True,
+            timing_strategy="joint_context", marker_ms=chosen,
+            pause_sim=None, refined_onset_ms=onset, refined_confidence=confidence,
+            boundary_evidence="joint_context",
+        )
+        for item in tr_ayahs:
+            if item["ayah"] == a:
+                item.update(onset_ms=chosen, from_pause=owner is not None,
+                            conf=confidence, reliable=True, joint_context=True)
+                break
+        joint_context_debug[-1].update(accepted=True, chosen_ms=chosen, replaced_ms=old_ms)
+        emit(f"Аят {a}: joint context {old_ms:.0f} → {chosen:.0f} мс ({reason})")
+
     # This is a UI and data invariant: if a real pause owns a boundary, the
     # visible marker is its centre.  Earlier repair stages may use CTC onsets
     # to decide *which* pause owns the ayah, but must never place the marker
@@ -12536,6 +12897,7 @@ def align_surah_fast(
     def write_fast_trace(extra: dict | None = None) -> None:
         if trace is None:
             return
+        trace["joint_boundary_reads"] = joint_context_debug
         pause_decode_by_ord: dict[int, str] = {}
         pause_decode_len_by_ord: dict[int, int] = {}
         for (i, win_key), heard in pause_decodes.items():

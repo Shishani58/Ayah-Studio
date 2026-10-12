@@ -38,6 +38,10 @@ from surah_cutter.core.align_fast import (
     _build_pause_read_plan,
     _build_anchor_hypotheses,
     _build_text_disambiguation,
+    _joint_boundary_read_is_supported,
+    _first_supported_joint_read,
+    _post_pause_is_previous_tail,
+    _joint_boundary_can_replace,
     _bounded_local_repair_spans,
     _ctc_prior_pause_replaces_weak_future_owner,
     _common_prefix_len,
@@ -233,6 +237,204 @@ def test_text_disambiguation_extends_short_unique_opening_to_letter_budget():
     assert plan.required_words == 3
     assert plan.target_text == "waidhāqīla"
     assert len(_prefix_key(plan.target_text)) >= 8
+
+
+def test_text_disambiguation_distinguishes_current_ayah_internal_restart():
+    plan = _build_text_disambiguation(
+        7,
+        {7: ["walain", "atayta", "alladhina", "other", "walain", "ittabata"]},
+    )
+
+    assert plan.reason == "unique"  # The ordinary letter budget already distinguishes it.
+    assert plan.required_words == 2
+    assert plan.target_text == "walainatayta"
+    assert plan.distinguishing_word == "atayta"
+
+
+def test_text_disambiguation_keeps_full_shared_phrase_before_internal_difference():
+    plan = _build_text_disambiguation(
+        9,
+        {9: ["alpha", "beta", "gamma", "delta", "alpha", "beta", "theta"]},
+    )
+
+    assert plan.required_words == 3
+    assert plan.target_text == "alphabetagamma"
+
+
+def test_joint_boundary_requires_previous_tail_and_complete_opening():
+    def supported(previous, opening, **changes):
+        timings = dict(previous_end_ms=1000, opening_start_ms=1700,
+                       opening_end_ms=4500, window_end_ms=5000)
+        timings.update(changes)
+        return _joint_boundary_read_is_supported(previous, opening, **timings)
+
+    assert supported([0.65, 0.55, 0.70], [0.48, 0.39, 0.66])
+    assert not supported([0.65, 0.15, 0.70], [0.80, 0.80, 0.80])
+    assert not supported([0.65, 0.55, 0.70], [0.80, 0.80, 0.02])
+    assert not supported([0.65, 0.55, 0.70], [0.80, 0.80])
+    assert not supported([0.65, 0.55, 0.70], [0.80, 0.80, 0.80],
+                         opening_start_ms=4000)
+    assert not supported([0.65, 0.55, 0.70], [0.80, 0.80, 0.80],
+                         opening_end_ms=4990)
+
+
+def test_joint_read_stops_before_a_more_confident_second_repetition():
+    windows = []
+    diagnostics = []
+
+    def read(end):
+        windows.append(end)
+        # The first bracket clips the phrase. The next contains its first
+        # pronunciation; reading any farther would allow CTC to choose a repeat.
+        assert end <= 8000
+        return [{
+            "base": 0, "starts": [0, 1000, 2000, 3500, 5000],
+            "ends": [900, 1600, 3000, 4500, min(end - 200, 6000)],
+            "confs": [0.60, 0.70, 0.48, 0.39, 0.02 if end == 5000 else 0.70],
+        }]
+
+    result = _first_supported_joint_read([12000, 8000, 5000, 8000], read, 2, diagnostics)
+
+    assert result is not None
+    assert result[1]["onset_ms"] == 2000
+    assert windows == [5000, 8000]
+    assert [d["supported"] for d in diagnostics] == [False, True]
+
+
+def test_joint_read_checks_window_edge_before_emission_lag_compensation():
+    diagnostics = []
+    result = _first_supported_joint_read(
+        [5000],
+        lambda end: [{
+            "base": 0, "lag_ms": 200,
+            "starts": [0, 1000, 2000, 3000, 4000],
+            "ends": [900, 1600, 2800, 3800, end - 220],
+            "confs": [0.60, 0.70, 0.70, 0.70, 0.70],
+        }],
+        2,
+        diagnostics,
+    )
+
+    assert result is None
+    assert diagnostics[0]["supported"] is False
+
+
+def test_joint_phrase_keeps_short_particles_without_vetoing_content_evidence():
+    kwargs = dict(previous_end_ms=1000, opening_start_ms=1700,
+                  opening_end_ms=7000, window_end_ms=8000,
+                  opening_word_lengths=[8, 8, 8, 2, 6, 5, 6])
+    phrase = [0.70, 0.75, 0.50, 0.05, 0.60, 0.55, 0.60]
+    assert _joint_boundary_read_is_supported([0.60, 0.42, 0.65], phrase, **kwargs)
+    # Even with a very confident common opening, a missing distinguishing
+    # final word cannot confirm which ayah is being read.
+    assert not _joint_boundary_read_is_supported(
+        [0.60, 0.42, 0.65], phrase[:-1] + [0.05], **kwargs,
+    )
+
+
+def test_joint_read_prefers_first_supported_pause_over_stronger_later_repeat():
+    earlier = {
+        "base": 0, "starts": [0, 1000, 2000, 3000, 4000],
+        "ends": [900, 1500, 2800, 3800, 4800],
+        "confs": [0.65, 0.70, 0.48, 0.39, 0.70], "split_pause_ms": 1800,
+    }
+    later = {
+        "base": 0, "starts": [0, 1000, 5000, 6000, 7000],
+        "ends": [900, 4500, 5800, 6800, 7800],
+        "confs": [0.85] * 5, "split_pause_ms": 4700,
+    }
+    result = _first_supported_joint_read([9000], lambda _: [later, earlier], 2, [])
+
+    assert result is not None
+    assert result[1]["split_pause_ms"] == 1800
+
+
+def test_joint_read_rejects_padded_incomplete_ctc_path_even_with_high_scores():
+    result = _first_supported_joint_read(
+        [5000],
+        lambda _: [{
+            "base": 0, "starts": [0, 500, 1000, 2000, 3000],
+            "ends": [400, 900, 1800, 2800, 4000],
+            "confs": [0.999] * 5, "complete": False,
+        }],
+        2,
+        [],
+    )
+    assert result is None
+
+
+def test_joint_read_needs_pause_evidence_to_tolerate_a_melodic_first_word():
+    kwargs = dict(previous_end_ms=1000, opening_start_ms=2000,
+                  opening_end_ms=6500, window_end_ms=8000,
+                  opening_word_lengths=[8, 5, 6])
+    assert not _joint_boundary_read_is_supported(
+        [0.65, 0.60], [0.01, 0.94, 0.64], **kwargs,
+    )
+    assert _joint_boundary_read_is_supported(
+        [0.65, 0.60], [0.01, 0.94, 0.64], allow_weak_onset=True, **kwargs,
+    )
+    assert not _joint_boundary_read_is_supported(
+        [0.65, 0.10], [0.01, 0.94, 0.64], allow_weak_onset=True, **kwargs,
+    )
+
+
+def test_joint_context_rejects_previous_tail_before_a_later_real_opening():
+    previous = ["wallahu", "bima", "tamaluna", "khabir"]
+    opening = "walajunahalaykumfimaarradtum"
+    assert _post_pause_is_previous_tail(
+        "wallahubimatamalunakhabirwalajunahalaykum", opening, previous,
+    )
+    assert not _post_pause_is_previous_tail(opening, opening, previous)
+    assert not _post_pause_is_previous_tail("", opening, previous)
+
+
+def test_joint_forward_move_requires_proven_previous_speech_across_old_boundary():
+    kwargs = dict(left_ms=0, right_ms=20000, previous_tail_start_ms=4000,
+                  previous_end_ms=8000, previous_tail_confidences=[0.7, 0.7],
+                  current_heard_as_previous=False)
+    assert not _joint_boundary_can_replace(9000, 5000, **kwargs)
+    kwargs["current_heard_as_previous"] = True
+    assert _joint_boundary_can_replace(9000, 5000, **kwargs)
+    # An existing pause before a late melodic onset is not predecessor speech.
+    assert not _joint_boundary_can_replace(11000, 8500, **kwargs)
+    assert not _joint_boundary_can_replace(21000, 5000, **kwargs)
+    kwargs["previous_tail_confidences"] = [0.4, 0.5]
+    kwargs["current_heard_as_previous"] = False
+    assert not _joint_boundary_can_replace(9000, 5000, **kwargs)
+    kwargs["current_heard_as_previous"] = True
+    assert _joint_boundary_can_replace(9000, 5000, **kwargs)
+
+
+def test_previous_tail_continuation_compares_the_same_short_prefix():
+    heard = "ābijahinla-tabānkayamū"
+    opening = "walantardāʿankal-yahūdu"
+    previous = ["ʿan", "aṣḥābi", "l-jaḥīmi"]
+    assert not _post_pause_is_previous_tail(heard, opening, previous)
+    assert _post_pause_is_previous_tail(
+        heard, opening, previous, allow_partial_tail=True,
+    )
+    assert not _post_pause_is_previous_tail(
+        opening, opening, previous, allow_partial_tail=True,
+    )
+
+
+def test_joint_read_can_confirm_a_weak_short_phrase_with_one_more_word():
+    short = {
+        "base": 0, "starts": [0, 1000, 2000, 3000, 4000],
+        "ends": [900, 1500, 2800, 3800, 4800],
+        "confs": [0.73, 0.70, 0.48, 0.61, 0.336],
+    }
+    longer = {
+        "base": 0, "starts": short["starts"] + [5000],
+        "ends": short["ends"] + [6000],
+        "confs": [0.73, 0.70, 0.48, 0.61, 0.45, 0.75],
+        "opening_word_lengths": [5, 5, 4, 7],
+    }
+    result = _first_supported_joint_read(
+        [7000], lambda _: [short, longer], 2, [], [5, 5, 4],
+    )
+    assert result is not None
+    assert result[0] is longer
 
 
 def test_anchor_hypotheses_classify_each_pause_once_with_margin():
