@@ -7,6 +7,31 @@
 Python, исходники, терминал и скачивание моделей пользователю не нужны.
 Все вычисления выполняются локально. Проекты сохраняются вне .app.
 
+## Windows x64
+
+Готовый ZIP нужно распаковать целиком, затем запустить `Ayah Studio.exe`.
+Папка `_internal` должна оставаться рядом с EXE. Python и модели уже включены.
+Для нативного окна нужен [Microsoft WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/).
+Сборка не подписана сертификатом Windows Authenticode.
+
+Сборка на Windows после подготовки `models/`:
+
+```powershell
+uv sync --locked --extra build
+uv run --locked --extra build pyinstaller surah_cutter.spec --noconfirm --clean
+./tools/package_windows.ps1
+```
+
+Скрипт проверяет frozen `--self-check` (ONNX inference, FFmpeg, 114/6236,
+ресурсы), ждёт появления отвечающего нативного окна, закрывает тестовый процесс
+и создаёт `Ayah-Studio-0.1.0-Windows-x64.zip` с SHA-256.
+Запуск требует интерактивной Windows-сессии; CI использует `windows-latest`.
+
+В GitHub Actions → build → Run workflow можно выбрать `windows_only` и указать
+существующий `release_tag`, например `v0.1.0`. Публикация сохраняет описание
+релиза и его macOS assets. Для ручной сборки берётся выбранная ветка workflow;
+точный commit записывается в запуске Actions.
+
 ## Сборка разработчиком (macOS)
 
 ```bash

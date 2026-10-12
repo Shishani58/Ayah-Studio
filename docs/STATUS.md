@@ -5,6 +5,16 @@
 ## Легенда
 ✅ готово · 🚧 в работе · ⬜ не начато
 
+## Windows x64 — 2026-10-12
+
+Опубликован portable ZIP с готовым `Ayah Studio.exe` в GitHub Release v0.1.0.
+Windows runner проверил frozen self-check (114 сур / 6236 аятов, ONNX inference,
+FFmpeg, ресурсы) и появление отвечающего нативного окна.
+Исправлен старт Uvicorn без stdout в windowed EXE; добавлен регрессионный тест.
+Проверки: 266 pytest, Ruff; полный CI build #5 — success.
+Нужен WebView2 Runtime; EXE без Authenticode. Подробности:
+[задача](tasks/2026-10-12-windows-release/task.md).
+
 ## Ревью и исправления — 2026-10-12
 
 Исправлены пять находок ревью:

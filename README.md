@@ -6,20 +6,27 @@
   <img src="docs/images/review.jpg" width="900" alt="Проверка суры: аудиоволна, границы аятов и арабский текст">
 </div>
 
-Приложение для macOS: расставляйте тайм-коды аятов, проверяйте их на слух
+Приложение для macOS и Windows: расставляйте тайм-коды аятов, проверяйте их на слух
 и сохраняйте готовую разметку. Всё работает локально, без загрузки аудио в облако.
 
 ## Установка
 
-[**Скачать Ayah Studio 0.1.0 (.dmg)**](https://github.com/Shishani58/Ayah-Studio/releases/download/v0.1.0/Ayah-Studio-0.1.0-macOS-arm64.dmg)
+| Платформа | Скачать 0.1.0 |
+| --- | --- |
+| macOS · Apple Silicon | [DMG](https://github.com/Shishani58/Ayah-Studio/releases/download/v0.1.0/Ayah-Studio-0.1.0-macOS-arm64.dmg) |
+| Windows · x64 | [ZIP с готовым EXE](https://github.com/Shishani58/Ayah-Studio/releases/download/v0.1.0/Ayah-Studio-0.1.0-Windows-x64.zip) |
 
 Для **Mac с Apple Silicon** (M1 и новее). Откройте DMG, перетащите
 **Ayah Studio** в **Applications / Программы** и запустите приложение.
+**Windows:** распакуйте ZIP целиком и запустите **Ayah Studio.exe**.
+Папку `_internal` оставьте рядом с EXE. Для окна приложения нужен
+[Microsoft WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/).
+
 Python, исходники и отдельная загрузка моделей не нужны.
 
 Сборка не нотарифицирована Apple. Если macOS блокирует первый запуск,
 см. [инструкцию Apple](https://support.apple.com/ru-ru/102445).
-Intel и Windows пока не входят в проверенную сборку.
+Windows EXE пока без цифровой подписи. Mac Intel не проверялся.
 
 ## Главное
 

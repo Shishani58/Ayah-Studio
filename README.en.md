@@ -6,12 +6,15 @@
   <img src="docs/images/review.jpg" width="900" alt="Ayah review with waveform, timing markers and Arabic text">
 </div>
 
-A local macOS app for aligning, listening to and reviewing Qur’an recitation.
-Your audio stays on your Mac. The app interface is in Russian.
+A local macOS and Windows app for aligning, listening to and reviewing Qur’an recitation.
+Your audio stays on your computer. The app interface is in Russian.
 
 ## Install
 
-[**Download Ayah Studio 0.1.0 (.dmg)**](https://github.com/Shishani58/Ayah-Studio/releases/download/v0.1.0/Ayah-Studio-0.1.0-macOS-arm64.dmg)
+| Platform | Download 0.1.0 |
+| --- | --- |
+| macOS · Apple Silicon | [DMG](https://github.com/Shishani58/Ayah-Studio/releases/download/v0.1.0/Ayah-Studio-0.1.0-macOS-arm64.dmg) |
+| Windows · x64 | [ZIP with ready-to-run EXE](https://github.com/Shishani58/Ayah-Studio/releases/download/v0.1.0/Ayah-Studio-0.1.0-Windows-x64.zip) |
 
 For **Apple Silicon Macs** (M1 or newer). Open the DMG, drag **Ayah Studio**
 to **Applications**, eject the disk and launch the app. Python, source code and
@@ -19,7 +22,10 @@ separate model downloads are not needed.
 
 This build is not Apple-notarized. If macOS blocks the first launch, see
 [Apple’s guidance](https://support.apple.com/en-us/102445).
-Intel and Windows are not included in the verified build.
+**Windows:** extract the entire ZIP and launch **Ayah Studio.exe**. Keep
+`_internal` next to the EXE. The native window requires
+[Microsoft WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/).
+The EXE is not code-signed. Intel Macs have not been verified.
 
 ## Features
 
