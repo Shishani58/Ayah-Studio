@@ -63,7 +63,6 @@ for _name in (
 # Imports are dynamic in the local web server and in pywebview's platform
 # selector, so make the macOS backend and Uvicorn's auto-selected pieces explicit.
 hiddenimports = collect_submodules("onnxruntime") + [
-    "webview.platforms.cocoa",
     "uvicorn.logging",
     "uvicorn.loops.auto",
     "uvicorn.protocols.http.auto",
@@ -71,6 +70,11 @@ hiddenimports = collect_submodules("onnxruntime") + [
     "soundfile",
     "imageio_ffmpeg",
 ]
+
+if sys.platform == "darwin":
+    hiddenimports.append("webview.platforms.cocoa")
+elif sys.platform == "win32":
+    hiddenimports.extend(["webview.platforms.winforms", "webview.platforms.edgechromium"])
 
 # Keep the dev oracle (torch/transformers) out of the shipped app.
 excludes = [

@@ -27,7 +27,9 @@ def _serve(port: int) -> None:
 
     from surah_cutter.webgui.server import app
 
-    uvicorn.run(app, host="127.0.0.1", port=port, log_level="warning")
+    # Windows windowed executables have no stdout; automatic color detection
+    # calls stdout.isatty() and prevents the local server from starting.
+    uvicorn.run(app, host="127.0.0.1", port=port, log_level="warning", use_colors=False)
 
 
 def _wait_until_up(port: int, timeout: float = 10.0) -> bool:
