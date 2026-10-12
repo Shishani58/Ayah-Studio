@@ -21,9 +21,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install -e ".[dev]"
-      - run: ruff check .
-      - run: pytest -q
+      - run: pip install uv
+      - run: uv sync --locked --extra dev
+      - run: uv run --locked --extra dev ruff check .
+      - run: uv run --locked --extra dev pytest -q
 
   models:
     if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
