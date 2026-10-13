@@ -319,7 +319,8 @@ def pause_pipeline_decisions(
             ten, vad = _local_vad_pauses(pcm, sr, p, min_pause_ms=min_pause_ms)
             tighter = _best_overlapping(p, ten + vad)
             vad_ok = _vad_confirms_pause(p, ten, vad)
-            if tighter is not None:
+            if (tighter is not None
+                    and p.start_ms <= tighter.start_ms < tighter.end_ms <= p.end_ms):
                 pause = Pause(tighter.start_ms, tighter.end_ms, p.depth_ms)
                 reason = "intro-vad-tight"
             else:

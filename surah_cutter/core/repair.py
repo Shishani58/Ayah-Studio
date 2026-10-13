@@ -88,11 +88,14 @@ def repair_surah_timings(
             return {}
         stride = A._stride_ms(s1 - s0, sr, nf)
         base = s0 * 1000.0 / sr
-        path, fscores = forced_align(
-            np.ascontiguousarray(emis[None, :, :], dtype=np.float32),
-            np.asarray(targets, dtype=np.int64)[None, :],
-            blank=bundle.blank_id,
-        )
+        try:
+            path, fscores = forced_align(
+                np.ascontiguousarray(emis[None, :, :], dtype=np.float32),
+                np.asarray(targets, dtype=np.int64)[None, :],
+                blank=bundle.blank_id,
+            )
+        except ValueError:
+            return {}  # A too-short local window cannot justify moving a mark.
         path = np.asarray(path).reshape(-1)
         fscores = np.asarray(fscores).reshape(-1)
         segs = [

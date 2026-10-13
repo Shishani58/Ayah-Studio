@@ -1,0 +1,710 @@
+[
+  {
+    "id": "quran-phonetics",
+    "name": "Quran Phonetics",
+    "repo": "TBOGamer22/wav2vec2-quran-phonetics",
+    "revision": "65c3ab93446f2f1041a18082433a911e5e154a9d",
+    "license": "Apache-2.0",
+    "license_url": "https://www.apache.org/licenses/LICENSE-2.0",
+    "files": [
+      {
+        "path": "model.safetensors",
+        "size": 377635736,
+        "sha256": "b50fc3c79c3d95d15da9cdbc01c336bcc4c125281108f6742d3b0586cbcae268",
+        "git_oid": "39991b491a770780bb88d0a0c979970ba3cb4837"
+      },
+      {
+        "path": "config.json",
+        "size": 2434,
+        "sha256": "24f3fc905e505126bc777bb3f2784f06de3c625f8850b52240418f8ded38f32e",
+        "git_oid": "6ac392bb139630f1dd9b959f869ddeecb813770f"
+      },
+      {
+        "path": "preprocessor_config.json",
+        "size": 266,
+        "sha256": "cabc254be8fb60f02a911e26f731e9221c4de7c6949fcfea31ab9119bfd073a6",
+        "git_oid": "77f5a722d318efa4ffb91895e4de662c4a2ab031"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "size": 1175,
+        "sha256": "55dc6e80f66455bf1040e8026f5f25a60f8136a88ab0dde7a16c85dd6b71276b",
+        "git_oid": "b84dbfa4b804f3cee4b975944d7a343c52d36fdc"
+      },
+      {
+        "path": "special_tokens_map.json",
+        "size": 102,
+        "sha256": "a9c1b734190481233481c8e58fa27e5122bbe641967f272e5ca92618e93349ea",
+        "git_oid": "b4328dbda5f7112e6baea100ec1d398672c42568"
+      },
+      {
+        "path": "added_tokens.json",
+        "size": 34,
+        "sha256": "aa14ee8de048bdab50cae445583ab6d5d33d94911bdb954f11156fe62e953a7d",
+        "git_oid": "15721d29a9ef9d724c0162d28946c53e9a978dd5"
+      },
+      {
+        "path": "vocab.json",
+        "size": 473,
+        "sha256": "f19c04ae4f949a7a67b6b5ae6e5236aa403ef11890d1326a7a435d89148a95c3",
+        "git_oid": "986f994f275790e416ccd0b77d6e55117811ddf2"
+      },
+      {
+        "path": "README.md",
+        "size": 4843,
+        "sha256": "18ce565c024d80f40b0819c1e277e0a707679e987fd284105f879852332c4e4c",
+        "git_oid": "17ddceb659c5a8faa4bb40c6bf06654f046411aa"
+      }
+    ],
+    "text_kind": "phonetic",
+    "note": "Текущая фонетическая модель. Загружается оригинал; ONNX собирается инструментом экспорта.",
+    "gated": false
+  },
+  {
+    "id": "arabic-ctc",
+    "name": "Arabic Wav2Vec2 · ONNX int8",
+    "repo": "Synthesium/quran-recitation-v2-onnx",
+    "revision": "a57907844f7c72969b40bc526a57e9c9dbc8bf3f",
+    "license": "Apache-2.0",
+    "license_url": "https://www.apache.org/licenses/LICENSE-2.0",
+    "files": [
+      {
+        "path": "wav2vec2-ar-ctc-aligner/model.int8.onnx",
+        "size": 356178537,
+        "sha256": "c0104e63bdaca9bc897d39a805552d9cca0a7ed09d46e96ef328619e6b14b3ed",
+        "git_oid": "c7a760d535f220d7a1db713b9711d271715a5a8e"
+      },
+      {
+        "path": "wav2vec2-ar-ctc-aligner/vocab.json",
+        "size": 797,
+        "sha256": "300acc5a9bad15cfcfac399a61023745e7015210bbe8982c0971e20d74283a56",
+        "git_oid": "21cbe511c9df3c0faffafea109bfa8355d867067"
+      },
+      {
+        "path": "README.md",
+        "size": 3251,
+        "sha256": "9bd45a67d9f45e19814a6fdc82d1625ff8546e0e5a46c3cfd1823b4728de3e39",
+        "git_oid": "9277b77138e529715b03c959a4420dcca51a160a"
+      }
+    ],
+    "text_kind": "arabic",
+    "note": "Экспериментальная разметка аятов и слов. Поддерживаются полный и пословный режимы.",
+    "gated": false
+  },
+  {
+    "id": "mms-fa",
+    "name": "Meta MMS_FA",
+    "repo": "fulmo/mms-fa-safetensors",
+    "revision": "985c77a85742e764a3440969193b52c18b518d4f",
+    "license": "CC-BY-NC-4.0",
+    "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "files": [
+      {
+        "path": "README.md",
+        "size": 999,
+        "sha256": "2718adb200c2c3976cdc3239b9650ac722b376f1e1e5d6f178501b23a7b3acd3",
+        "git_oid": "2dcac318db42da573c9f7c9e084ef094e8ddbbd4"
+      },
+      {
+        "path": "config.json",
+        "size": 1022,
+        "sha256": "d5cb4f99df4297f8653900ad53a3c4463d40aaa6024d25f27c42acc371021b04",
+        "git_oid": "3bcd9639aaa7a91a6e2e829088ac5dba2b3aa5a5"
+      },
+      {
+        "path": "model-fp16.safetensors",
+        "size": 630987120,
+        "sha256": "4ab8aa367c1339d1908ef89582f4b4a672e560d958e759cd7501bf5dfb4e2f2a",
+        "git_oid": "8243252b2391770a74c86af57877085f633437ba"
+      }
+    ],
+    "text_kind": "mms-fa",
+    "note": "",
+    "gated": false
+  },
+  {
+    "id": "muaalem",
+    "name": "Muaalem v3.2 · ONNX FP32",
+    "repo": "Synthesium/quran-recitation-v2-onnx",
+    "revision": "a57907844f7c72969b40bc526a57e9c9dbc8bf3f",
+    "license": "MIT",
+    "license_url": "https://huggingface.co/obadx/muaalem-model-v3_2",
+    "files": [
+      {
+        "path": "muaalem/model.fp32.onnx",
+        "size": 413102,
+        "sha256": "4e5a66668d85d99bb4c26f7bc9403719b0456bdde90d09c74cb1a832db9442fb",
+        "git_oid": "ff72f6abd59d23d5aa64189d29fa720de3d16c5c"
+      },
+      {
+        "path": "muaalem/model.fp32.onnx.data",
+        "size": 2423015424,
+        "sha256": "738dc9c134ce23369a447bb28298b1b083601e9129890f5605975354701b0d41",
+        "git_oid": "1d1056f7b2328b4828299b90de2af26f6928d765"
+      },
+      {
+        "path": "muaalem/tokens.json",
+        "size": 7255,
+        "sha256": "12eceb91992a81299d63f2eeab75711b6660b974d1c89f3ea0e286e6fb4d56e0",
+        "git_oid": "21027fc5091b694ba4724fcd1cf344c91e8ab26c"
+      },
+      {
+        "path": "muaalem/LICENSE",
+        "size": 1065,
+        "sha256": "8f49ece2d24856e1bc0300702f34c020935f60f16ade2631e9fbbcf006485a09",
+        "git_oid": "19154adb0d62ebc824feb47f48c616671e3f82d3"
+      },
+      {
+        "path": "README.md",
+        "size": 3251,
+        "sha256": "9bd45a67d9f45e19814a6fdc82d1625ff8546e0e5a46c3cfd1823b4728de3e39",
+        "git_oid": "9277b77138e529715b03c959a4420dcca51a160a"
+      }
+    ],
+    "text_kind": "muaalem",
+    "note": "",
+    "gated": false
+  },
+  {
+    "id": "fastconformer",
+    "name": "FastConformer Quran Arabic",
+    "repo": "mohammed/fastconformer-quran-ar",
+    "revision": "60973918b40c5fcdc0e93310c13a4a4661525142",
+    "license": "CC-BY-4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "files": [
+      {
+        "path": "phase3_full/phase3_full_wer0.0014.nemo",
+        "size": 459243520,
+        "sha256": "dc3557eea22b25ab5c7af2d8cf01636efd415c4ed417418156e5895056c705d5",
+        "git_oid": "492fb39e15ca0a76a1b014e63e6958dce7c48fe2"
+      },
+      {
+        "path": "README.md",
+        "size": 9153,
+        "sha256": "53ecbd77c029c904188104601cf6988303d08c5df1b1f711efa154058549bace",
+        "git_oid": "b870395506b793f5785d5c2563245bd68a0bf345"
+      }
+    ],
+    "text_kind": "fastconformer",
+    "note": "",
+    "gated": false
+  },
+  {
+    "id": "whisper-quran",
+    "name": "Whisper Turbo Quran",
+    "repo": "baristiran/whisper-turbo-quran",
+    "revision": "7412bf5f898ac89dd22e88a088c69c26d98783a0",
+    "license": "Apache-2.0",
+    "license_url": "https://www.apache.org/licenses/LICENSE-2.0",
+    "files": [
+      {
+        "path": "model.safetensors",
+        "size": 3235581408,
+        "sha256": "c682f0b3fd0317eb454401e1c43c4c8f1ab688b2aedf79d032b039a1916d20a7",
+        "git_oid": "18e280d57cd61e3d30d91b05b1aecc2c908b3356"
+      },
+      {
+        "path": "config.json",
+        "size": 1252,
+        "sha256": "c8fb2ddd140a4ec9886df45038ee69449dcae592486002f1ca3a575e930afe18",
+        "git_oid": "324af38e405c8f6aba21310a0bfc3b2c90585344"
+      },
+      {
+        "path": "generation_config.json",
+        "size": 3747,
+        "sha256": "ac395f8dc4167142d0021fef48ca1ba05a5e00ce16a25f4588700ebf66fb4e66",
+        "git_oid": "354dd3f9e5eb178dcd3e3ed82126f58b509fdc44"
+      },
+      {
+        "path": "preprocessor_config.json",
+        "size": 340,
+        "sha256": "7ccc62c6f2765af1f3b46c00c9b5894426835a05021c8b9c01eecb6dfb542711",
+        "git_oid": "931c77a740890c46365c7ae0c9d350ba3cca908f"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "size": 282873,
+        "sha256": "3c75940dfce3a294fca7041a5faff011677f1b68fa85e47511bb8cf6dccaded6",
+        "git_oid": "5bff1ae6346582c59a1999bb0e1784b6642540b4"
+      },
+      {
+        "path": "special_tokens_map.json",
+        "size": 2186,
+        "sha256": "baea4ea09372eb4fca86b4e4346139fd73cb807d5087e9de0948e971739c3e74",
+        "git_oid": "312bc106291bb51bf2cc1648df070bef963a0639"
+      },
+      {
+        "path": "added_tokens.json",
+        "size": 34648,
+        "sha256": "3c51f66c4c21f9e126970078f11ae77a78c74aee8df606ee9daba86e467108e0",
+        "git_oid": "1b33526d33aaa60d79f78ae8651dae50b730185a"
+      },
+      {
+        "path": "normalizer.json",
+        "size": 52666,
+        "sha256": "bf1c507dc8724ca9cf9903640dacfb69dae2f00edee4f21ceba106a7392f26dd",
+        "git_oid": "dd6ae819ad738ac1a546e9f9282ef325c33b9ea0"
+      },
+      {
+        "path": "merges.txt",
+        "size": 493869,
+        "sha256": "2df2990a395e35e8dfbc7511e08c12d56018d8d04691e0133e5d63b21e154dc6",
+        "git_oid": "6038932a2a1f09a66991b1c2adae0d14066fa29e"
+      },
+      {
+        "path": "vocab.json",
+        "size": 1036558,
+        "sha256": "e2aa043ef015641d363d8288e7c241c85e36a5c761fb303598e0710233344387",
+        "git_oid": "0f3456460629e21d559c6daa23ab6ce3644e8271"
+      },
+      {
+        "path": "README.md",
+        "size": 4656,
+        "sha256": "04ac0353890901dcc14dcfdc8d685ce614f5bb52549dceee981779812d819ff6",
+        "git_oid": "48fa2b052d40e9dc517ff81c8737c0d38b0b9f31"
+      }
+    ],
+    "text_kind": "whisper-quran",
+    "note": "",
+    "gated": false
+  },
+  {
+    "id": "whisper-small",
+    "name": "OpenAI Whisper Small",
+    "repo": "openai/whisper-small",
+    "revision": "973afd24965f72e36ca33b3055d56a652f456b4d",
+    "license": "Apache-2.0",
+    "license_url": "https://www.apache.org/licenses/LICENSE-2.0",
+    "files": [
+      {
+        "path": "model.safetensors",
+        "size": 966995080,
+        "sha256": "1d7734884874f1a1513ed9aa760a4f8e97aaa02fd6d93a3a85d27b2ae9ca596b",
+        "git_oid": "b737d9fc4345d96e8f69b440ab742a269bf7e734"
+      },
+      {
+        "path": "config.json",
+        "size": 1967,
+        "sha256": null,
+        "git_oid": "113bb3efe3a7396f2ea629eef12637bd8085238d"
+      },
+      {
+        "path": "generation_config.json",
+        "size": 3868,
+        "sha256": null,
+        "git_oid": "d3823179a367fa912e3b911b3d2e71ab2a028290"
+      },
+      {
+        "path": "preprocessor_config.json",
+        "size": 184990,
+        "sha256": null,
+        "git_oid": "c2048dfa9fd94a052e62e908d2c4dfb18534b4d2"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "size": 282683,
+        "sha256": null,
+        "git_oid": "d13b786c04765fb1a06492b53587752cd67665ea"
+      },
+      {
+        "path": "special_tokens_map.json",
+        "size": 2194,
+        "sha256": null,
+        "git_oid": "bf69932dca4b3719b59fdd8f6cc1978109509f6c"
+      },
+      {
+        "path": "added_tokens.json",
+        "size": 34604,
+        "sha256": null,
+        "git_oid": "e3d256c988462aa153dcabe2aa38b8e9b436c06f"
+      },
+      {
+        "path": "normalizer.json",
+        "size": 52666,
+        "sha256": null,
+        "git_oid": "dd6ae819ad738ac1a546e9f9282ef325c33b9ea0"
+      },
+      {
+        "path": "merges.txt",
+        "size": 493869,
+        "sha256": null,
+        "git_oid": "6038932a2a1f09a66991b1c2adae0d14066fa29e"
+      },
+      {
+        "path": "vocab.json",
+        "size": 835550,
+        "sha256": null,
+        "git_oid": "d7016e21da8776c8a9d577d0f559600f09a240eb"
+      },
+      {
+        "path": "tokenizer.json",
+        "size": 2480466,
+        "sha256": null,
+        "git_oid": "1e95340ff836fad1b5932e800fb7b8c5e6d78a74"
+      },
+      {
+        "path": "README.md",
+        "size": 20153,
+        "sha256": null,
+        "git_oid": "0277360c2131c5d741658f7fe5d26c1377bcfb9a"
+      }
+    ],
+    "text_kind": null,
+    "runtime_family": "whisper",
+    "language": "ar",
+    "note": "Неспециализированная модель для арабской речи; подключается отдельным runtime.",
+    "gated": false
+  },
+  {
+    "id": "whisper-medium",
+    "name": "OpenAI Whisper Medium",
+    "repo": "openai/whisper-medium",
+    "revision": "abdf7c39ab9d0397620ccaea8974cc764cd0953e",
+    "license": "Apache-2.0",
+    "license_url": "https://www.apache.org/licenses/LICENSE-2.0",
+    "files": [
+      {
+        "path": "model.safetensors",
+        "size": 3055544304,
+        "sha256": "62f73550fa6db24b0c6f6c5962bd0dae80fa644e93cde9cd9c3792971b47fd28",
+        "git_oid": "4447185cd32dd9cdc17cfdfc5bd3c926acef1928"
+      },
+      {
+        "path": "config.json",
+        "size": 1991,
+        "sha256": null,
+        "git_oid": "eda91ab1edc34a7c54512ed7a53e643b202387af"
+      },
+      {
+        "path": "generation_config.json",
+        "size": 3755,
+        "sha256": null,
+        "git_oid": "dda8239f83dec12c4a47e4b4c82af3e7f3391855"
+      },
+      {
+        "path": "preprocessor_config.json",
+        "size": 184990,
+        "sha256": null,
+        "git_oid": "c2048dfa9fd94a052e62e908d2c4dfb18534b4d2"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "size": 282683,
+        "sha256": null,
+        "git_oid": "d13b786c04765fb1a06492b53587752cd67665ea"
+      },
+      {
+        "path": "special_tokens_map.json",
+        "size": 2194,
+        "sha256": null,
+        "git_oid": "bf69932dca4b3719b59fdd8f6cc1978109509f6c"
+      },
+      {
+        "path": "added_tokens.json",
+        "size": 34604,
+        "sha256": null,
+        "git_oid": "e3d256c988462aa153dcabe2aa38b8e9b436c06f"
+      },
+      {
+        "path": "normalizer.json",
+        "size": 52666,
+        "sha256": null,
+        "git_oid": "dd6ae819ad738ac1a546e9f9282ef325c33b9ea0"
+      },
+      {
+        "path": "merges.txt",
+        "size": 493869,
+        "sha256": null,
+        "git_oid": "6038932a2a1f09a66991b1c2adae0d14066fa29e"
+      },
+      {
+        "path": "vocab.json",
+        "size": 835550,
+        "sha256": null,
+        "git_oid": "d7016e21da8776c8a9d577d0f559600f09a240eb"
+      },
+      {
+        "path": "tokenizer.json",
+        "size": 2480466,
+        "sha256": null,
+        "git_oid": "1e95340ff836fad1b5932e800fb7b8c5e6d78a74"
+      },
+      {
+        "path": "README.md",
+        "size": 19807,
+        "sha256": null,
+        "git_oid": "609cc5f9f8c2cdefa42a8012381a3ae85b1a4d76"
+      }
+    ],
+    "text_kind": null,
+    "runtime_family": "whisper",
+    "language": "ar",
+    "note": "Неспециализированная модель для арабской речи; подключается отдельным runtime.",
+    "gated": false
+  },
+  {
+    "id": "whisper-large-v3",
+    "name": "OpenAI Whisper Large v3",
+    "repo": "openai/whisper-large-v3",
+    "revision": "06f233fe06e710322aca913c1bc4249a0d71fce1",
+    "license": "Apache-2.0",
+    "license_url": "https://www.apache.org/licenses/LICENSE-2.0",
+    "files": [
+      {
+        "path": "model.safetensors",
+        "size": 3087130976,
+        "sha256": "a8e94b85976e5864ba3e9525c7e6c83b2a1eca42d4b797a0c7c24d778e40fd95",
+        "git_oid": "8cd5f415ca1a4669f588af4dfe1c02f3d509a3b3"
+      },
+      {
+        "path": "config.json",
+        "size": 1272,
+        "sha256": null,
+        "git_oid": "14c6c8cf48b64ebb1cb8b637e2b0fab3a9774972"
+      },
+      {
+        "path": "generation_config.json",
+        "size": 3903,
+        "sha256": null,
+        "git_oid": "f3294dfe3654ac4e362570867369ec48104af59f"
+      },
+      {
+        "path": "preprocessor_config.json",
+        "size": 340,
+        "sha256": null,
+        "git_oid": "931c77a740890c46365c7ae0c9d350ba3cca908f"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "size": 282843,
+        "sha256": null,
+        "git_oid": "06ffdc8308eae6bb7bd1fdd81e94b0a881a539ab"
+      },
+      {
+        "path": "special_tokens_map.json",
+        "size": 2072,
+        "sha256": null,
+        "git_oid": "3c18e97162d572f2b1d62e7e1c7b805f1be11dbe"
+      },
+      {
+        "path": "added_tokens.json",
+        "size": 34648,
+        "sha256": null,
+        "git_oid": "1b33526d33aaa60d79f78ae8651dae50b730185a"
+      },
+      {
+        "path": "normalizer.json",
+        "size": 52666,
+        "sha256": null,
+        "git_oid": "dd6ae819ad738ac1a546e9f9282ef325c33b9ea0"
+      },
+      {
+        "path": "merges.txt",
+        "size": 493869,
+        "sha256": null,
+        "git_oid": "6038932a2a1f09a66991b1c2adae0d14066fa29e"
+      },
+      {
+        "path": "vocab.json",
+        "size": 1036558,
+        "sha256": null,
+        "git_oid": "0f3456460629e21d559c6daa23ab6ce3644e8271"
+      },
+      {
+        "path": "tokenizer.json",
+        "size": 2480617,
+        "sha256": null,
+        "git_oid": "3a5e2ba63acdcac9a19ba56cf9bd27f185bfff61"
+      },
+      {
+        "path": "README.md",
+        "size": 21829,
+        "sha256": null,
+        "git_oid": "f98e6afab120b2c8cc504933527659c5adcc6d30"
+      }
+    ],
+    "text_kind": null,
+    "runtime_family": "whisper",
+    "language": "ar",
+    "note": "Неспециализированная модель для арабской речи; подключается отдельным runtime.",
+    "gated": false
+  },
+  {
+    "id": "whisper-large-v3-turbo",
+    "name": "OpenAI Whisper Large v3 Turbo",
+    "repo": "openai/whisper-large-v3-turbo",
+    "revision": "41f01f3fe87f28c78e2fbf8b568835947dd65ed9",
+    "license": "MIT",
+    "license_url": "https://huggingface.co/openai/whisper-large-v3-turbo",
+    "files": [
+      {
+        "path": "model.safetensors",
+        "size": 1617824864,
+        "sha256": "542566a422ae4f3fd23f1ba11add198fca01bbf82e66e6a2857b3f608b1eb9d1",
+        "git_oid": "d31c58c2bcd43b726463567df91f9a2b0581dd8e"
+      },
+      {
+        "path": "config.json",
+        "size": 1256,
+        "sha256": null,
+        "git_oid": "ad2f44ff1ed66e12765b2392dc041469db91a462"
+      },
+      {
+        "path": "generation_config.json",
+        "size": 3772,
+        "sha256": null,
+        "git_oid": "cbe752958dc3e4671b0e0220aa1c545423a6d5f5"
+      },
+      {
+        "path": "preprocessor_config.json",
+        "size": 340,
+        "sha256": null,
+        "git_oid": "931c77a740890c46365c7ae0c9d350ba3cca908f"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "size": 282843,
+        "sha256": null,
+        "git_oid": "06ffdc8308eae6bb7bd1fdd81e94b0a881a539ab"
+      },
+      {
+        "path": "special_tokens_map.json",
+        "size": 2186,
+        "sha256": null,
+        "git_oid": "312bc106291bb51bf2cc1648df070bef963a0639"
+      },
+      {
+        "path": "added_tokens.json",
+        "size": 34648,
+        "sha256": null,
+        "git_oid": "1b33526d33aaa60d79f78ae8651dae50b730185a"
+      },
+      {
+        "path": "normalizer.json",
+        "size": 52666,
+        "sha256": null,
+        "git_oid": "dd6ae819ad738ac1a546e9f9282ef325c33b9ea0"
+      },
+      {
+        "path": "merges.txt",
+        "size": 493869,
+        "sha256": null,
+        "git_oid": "6038932a2a1f09a66991b1c2adae0d14066fa29e"
+      },
+      {
+        "path": "vocab.json",
+        "size": 1036558,
+        "sha256": null,
+        "git_oid": "0f3456460629e21d559c6daa23ab6ce3644e8271"
+      },
+      {
+        "path": "tokenizer.json",
+        "size": 2710337,
+        "sha256": null,
+        "git_oid": "17456db595adc78a973f97d69d8cb50bc87c0b1c"
+      },
+      {
+        "path": "README.md",
+        "size": 21196,
+        "sha256": null,
+        "git_oid": "0bbe30273338d7e19f779c1343808e32617e64d1"
+      }
+    ],
+    "text_kind": null,
+    "runtime_family": "whisper",
+    "language": "ar",
+    "note": "Неспециализированная модель для арабской речи; подключается отдельным runtime.",
+    "gated": false
+  },
+  {
+    "id": "fastconformer-arabic",
+    "name": "NVIDIA FastConformer Arabic",
+    "repo": "nvidia/stt_ar_fastconformer_hybrid_large_pcd_v1.0",
+    "revision": "7f32349d952f42a28dce979ba73270aa2bbdfa89",
+    "license": "CC-BY-4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "files": [
+      {
+        "path": "stt_ar_fastconformer_hybrid_large_pcd_v1.0.nemo",
+        "size": 459233280,
+        "sha256": "d29d19d7c054a5fc010ac6815e9cbb0dd1b21a30e0a7f7f2982e1fecaf0c3e31",
+        "git_oid": "2eb7700ee82d4c762a28b1af438bec82429186e0"
+      },
+      {
+        "path": "README.md",
+        "size": 14313,
+        "sha256": null,
+        "git_oid": "518c58e389766c602e32bba5547b17533aea0346"
+      }
+    ],
+    "text_kind": null,
+    "runtime_family": "nemo-hybrid",
+    "language": "ar",
+    "note": "Неспециализированная модель для арабской речи; подключается отдельным runtime.",
+    "gated": false
+  },
+  {
+    "id": "mms-arabic",
+    "name": "Meta MMS · Arabic",
+    "repo": "facebook/mms-1b-all",
+    "revision": "3d33597edbdaaba14a8e858e2c8caa76e3cec0cd",
+    "license": "CC-BY-NC-4.0",
+    "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "files": [
+      {
+        "path": "model.safetensors",
+        "size": 3859521128,
+        "sha256": "0f1d95ce43d27e03d5d8dd56c697c805460f967c793dd2cbec2e8e8012deda98",
+        "git_oid": "10a61af651a3c6fd352c7b19ed3eae9aeea5637d"
+      },
+      {
+        "path": "adapter.ara.safetensors",
+        "size": 9259724,
+        "sha256": "c27e514cd2c56bc58222cdfa342d33ddafec1fec77a3eaf99511097f4877c69f",
+        "git_oid": "9bef8cc57640604853fe588620b76426b9306dfd"
+      },
+      {
+        "path": "config.json",
+        "size": 2040,
+        "sha256": null,
+        "git_oid": "dd547cc1b61ca6edfefb2f0cf65e3d8f81eceb6a"
+      },
+      {
+        "path": "preprocessor_config.json",
+        "size": 254,
+        "sha256": null,
+        "git_oid": "e7d53bd058c34639e2dec1357537a3d013bcda63"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "size": 397,
+        "sha256": null,
+        "git_oid": "8119434548d4a82fbe4e5e53c95d186bca037257"
+      },
+      {
+        "path": "special_tokens_map.json",
+        "size": 96,
+        "sha256": null,
+        "git_oid": "fdafe480f024ff444c7492147536765ce5d55a2d"
+      },
+      {
+        "path": "vocab.json",
+        "size": 1340148,
+        "sha256": null,
+        "git_oid": "5c1626173fb1db1da574d16b6e924e8efc1ade4c"
+      },
+      {
+        "path": "README.md",
+        "size": 14886,
+        "sha256": null,
+        "git_oid": "29f69541efbb8da105e5e021e364ff07f09e9465"
+      }
+    ],
+    "text_kind": null,
+    "runtime_family": "mms-asr",
+    "language": "ar",
+    "note": "Неспециализированная модель для арабской речи; подключается отдельным runtime.",
+    "gated": false
+  }
+]

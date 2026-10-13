@@ -103,6 +103,12 @@ def process_surah(
 
     # Lazy imports: keep module import light and free of heavy deps.
     from surah_cutter.data import quran_text, references
+    from surah_cutter.core import model_store
+
+    if model_store.active_kind() != "phonetic" and mode not in ("full", "tiled", "fingerprint"):
+        raise ValueError("Arabic Wav2Vec2 поддерживает полный, точный и пословный режимы. Выберите «Полный».")
+    if trace is not None:
+        trace["model_source"] = model_store.source()
 
     # 1. Known-reciter shortcut.
     if reciter is not None:
@@ -126,7 +132,7 @@ def process_surah(
         words = quran_text.surah_words(surah, db_path=db_path)
 
     if mode == "full":
-        rows = _full_align(audio_path, surah, words, log_event=log_event)
+        rows = _full_align(audio_path, surah, words, trace=trace, log_event=log_event)
     elif mode == "fast":
         rows = _fast_align(
             audio_path,
@@ -177,7 +183,7 @@ def _auto_align(
     if total_ms < 60_000:
         selected = "full"
         _emit_log(log_event, "Auto выбрал full: короткая сура")
-        ar = align.align_surah(pcm, sr, words, surah=surah)
+        ar = align.align_surah(pcm, sr, words, surah=surah, trace=trace, log_event=log_event)
     elif total_ms < 600_000:
         selected = "fast"
         _emit_log(log_event, "Auto выбрал fast: паузы + короткие нейро-окна")
@@ -236,6 +242,7 @@ def _full_align(
     surah: int,
     words: list,
     *,
+    trace: dict | None = None,
     log_event: LogEvent | None = None,
 ) -> list[tuple[int, int, int]]:
     """Decode + full-sura forced alignment; one row per ayah.
@@ -252,9 +259,11 @@ def _full_align(
     )
     # The acoustic model emits a Latin transliteration; align_surah pulls the
     # known per-word transliterations via transliteration.surah_word_tr(surah).
-    rows = align.align_surah(pcm, decode.DEFAULT_SR, words, surah=surah)
+    rows = align.align_surah(
+        pcm, decode.DEFAULT_SR, words, surah=surah, trace=trace, log_event=log_event
+    )
     # align_surah yields (ayah, start_ms, confidence); shape to write_timings'
-    # (sura, ayah, time_ms) and drop confidence (a separate write_timings arg).
+    # (sura, ayah, time_ms); per-ayah confidence is retained in trace for the writer.
     return [(surah, ayah, start_ms) for ayah, start_ms, _conf in rows]
 
 

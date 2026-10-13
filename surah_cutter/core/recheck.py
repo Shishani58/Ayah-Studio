@@ -93,6 +93,8 @@ def recheck_surah(
         surah = words[0].surah
     if bundle is None:
         bundle = _default_bundle()
+    if getattr(bundle, "text_kind", "phonetic") != "phonetic":
+        raise ValueError("Проверка фонетических начал доступна только для Quran Phonetics.")
 
     word_trs = transliteration.surah_word_tr(surah)
 

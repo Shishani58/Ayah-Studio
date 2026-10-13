@@ -81,3 +81,22 @@ def test_fast_align_forwards_optional_fingerprint_clips(monkeypatch):
 
     assert rows == [(11, 1, 111)]
     assert received == {"surah": 11, "ayah_audio_dir": "/clips"}
+
+
+def test_full_alignment_forwards_confidence_trace_and_logs(monkeypatch):
+    from surah_cutter.core import align
+
+    monkeypatch.setattr(decode, "decode", lambda _: np.zeros(16_000, np.float32))
+
+    def fake_full(_pcm, _sr, _words, *, surah, trace, log_event):
+        trace["ayahs"] = [{"ayah": 1, "conf": 0.01, "reliable": False}]
+        log_event("weak-onset")
+        return [(1, 6000, 0.01)]
+
+    monkeypatch.setattr(align, "align_surah", fake_full)
+    trace, logs = {}, []
+    rows = pipeline._full_align("dummy.mp3", 114, [], trace=trace, log_event=logs.append)
+
+    assert rows == [(114, 1, 6000)]
+    assert trace["ayahs"][0]["conf"] == 0.01
+    assert logs[-1] == "weak-onset"

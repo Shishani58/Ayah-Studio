@@ -76,6 +76,7 @@ def align_surah_tiled(
     bundle: Any = None,
     trace: dict | None = None,
     log_event: Callable[[str], None] | None = None,
+    check_onsets: bool = False,
 ) -> list[tuple[int, int, float]]:
     """Tiled exact forced alignment; see the module docstring.
 
@@ -102,6 +103,9 @@ def align_surah_tiled(
         surah = words[0].surah
     if bundle is None:
         bundle = _default_bundle()
+    if getattr(bundle, "text_kind", "phonetic") == "whisper":
+        return A.align_surah(pcm, sr, words, model=bundle, surah=surah,
+                             trace=trace, log_event=log_event)
 
     def emit(message: str) -> None:
         if log_event is not None:
@@ -110,7 +114,7 @@ def align_surah_tiled(
     word_trs = transliteration.surah_word_tr(surah)
     n_words = len(words)
     total_ms = len(pcm) * 1000.0 / sr if sr else 0.0
-    lag = A.ALIGN_LAG_MS
+    lag = getattr(bundle, "lag_ms", A.ALIGN_LAG_MS)
 
     # ayah -> ordered global word indices.
     ayah_words: "OrderedDict[int, list[int]]" = OrderedDict()
@@ -149,6 +153,11 @@ def align_surah_tiled(
     full_emissions = A._emissions(bundle, np.ascontiguousarray(pcm, dtype=np.float32), np)
     full_n_frames = int(full_emissions.shape[0])
     full_stride = A._stride_ms(len(pcm), sr, full_n_frames)
+    onset_pauses = []
+    if check_onsets:
+        from surah_cutter.core import candidates
+
+        onset_pauses = candidates.detect_energy_pauses(pcm, sr, use_ten_vad=False)
 
     def sample_to_frame(sample: int) -> int:
         if len(pcm) <= 0 or full_n_frames <= 0:
@@ -175,7 +184,6 @@ def align_surah_tiled(
         if f1 - f0 < 2:
             return None
         emis = np.ascontiguousarray(full_emissions[f0:f1], dtype=np.float32)
-        nf = emis.shape[0]
         stride = full_stride
         base = f0 * full_stride
         log_probs = np.ascontiguousarray(emis[None, :, :], dtype=np.float32)
@@ -188,7 +196,10 @@ def align_surah_tiled(
             else:
                 raise ValueError("banded CTC disabled")
         except ValueError:
-            path, fscores = forced_align(log_probs, target_arr, blank=bundle.blank_id)
+            try:
+                path, fscores = forced_align(log_probs, target_arr, blank=bundle.blank_id)
+            except ValueError:
+                return None  # Grow the chunk rather than fabricate a partial tail.
         path = np.asarray(path).reshape(-1)
         fscores = np.asarray(fscores).reshape(-1)
         segs = [
@@ -196,8 +207,8 @@ def align_surah_tiled(
             if s.label != bundle.blank_id
         ]
         tspans = [(s.start, s.end) for s in segs]
-        while len(tspans) < len(targets):
-            tspans.append(tspans[-1] if tspans else (nf - 1, nf - 1))
+        if [s.label for s in segs] != targets:
+            return None
         starts: list[float] = []
         confs: list[float] = []
         last = base
@@ -213,11 +224,22 @@ def align_surah_tiled(
                 start, conf = last, 0.0
             starts.append(start)
             confs.append(conf)
-        return starts, confs
+        checks = {}
+        if check_onsets:
+            checks = A._check_ayah_onsets(
+                sub_words, spans, tspans, fscores, stride, base_ms=base, pauses=onset_pauses,
+                lag_ms=lag,
+            )
+            for idx, word in enumerate(sub_words):
+                if idx == 0 or sub_words[idx - 1].ayah != word.ayah:
+                    starts[idx] = float(checks[word.ayah]["onset_ms"])
+                    confs[idx] = checks[word.ayah]["conf"]
+        return starts, confs, checks
 
     starts_ms: dict[int, float] = {}
     confs: dict[int, float] = {}
     chunks_dbg: list[dict] = []
+    trusted_checks: dict[int, dict] = {}
 
     i = 0  # index into ayah_list of the next ayah to TRUST
     while i < n_ayahs:
@@ -289,7 +311,7 @@ def align_surah_tiled(
                 f"{ayah_list[i]}-{ayah_list[j - 1]}"
             )
 
-        slice_starts, slice_confs = res
+        slice_starts, slice_confs, slice_checks = res
         for k in range(i, j):  # trust [i, j) only; context onsets discarded
             a = ayah_list[k]
             fw = ayah_words[a][0]
@@ -297,6 +319,8 @@ def align_surah_tiled(
             if 0 <= idx < len(slice_starts):
                 starts_ms[a] = slice_starts[idx]
                 confs[a] = slice_confs[idx]
+                if a in slice_checks:
+                    trusted_checks[a] = slice_checks[a]
 
         if trace is not None:
             chunks_dbg.append({
@@ -346,6 +370,9 @@ def align_surah_tiled(
             prior=prior_source,
             emissions_frames=full_n_frames,
             chunks=chunks_dbg,
+            emission_passes=1,
+            ayahs=[trusted_checks.get(a, {"ayah": a, "onset_ms": ms, "conf": conf})
+                   for a, ms, conf in rows],
         )
     return rows
 

@@ -114,18 +114,23 @@ def main(argv: list[str] | None = None) -> int:
         for i, (surah, path) in enumerate(jobs, start=1):
             print(f"[{i}/{total}] sura {surah:03d} <- {path.name} ...", flush=True)
             try:
+                trace: dict = {}
                 rows = pipeline.process_surah(
                     str(path),
                     surah,
                     reciter=args.reciter,
                     mode=args.mode,
                     ayah_audio_dir=args.ayah_audio_dir,
+                    trace=trace,
                 )
             except Exception as exc:  # noqa: BLE001 - keep batch going, report
                 failures += 1
                 print(f"    FAILED sura {surah}: {exc}", file=sys.stderr, flush=True)
                 continue
             written = db.write_timings(rows, source="auto")
+            db.update_auto_confidences(surah, {
+                item["ayah"]: item.get("conf") for item in trace.get("ayahs", [])
+            })
             print(f"    sura {surah:03d}: {written} ayah timings written", flush=True)
     finally:
         db.close()

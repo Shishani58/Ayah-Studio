@@ -87,3 +87,21 @@ def test_combined_pauses_respects_explicit_higher_min_pause():
     decisions = candidates.pause_pipeline_decisions(pcm, sr, surah=1, min_pause_ms=500.0)
 
     assert decisions == []
+
+
+def test_intro_vad_cannot_expand_pause_into_sounding_audio(monkeypatch):
+    energy_pause = candidates.Pause(5700, 6300, 600)
+    broad_vad = candidates.Pause(4600, 6310, 1710)
+    monkeypatch.setattr(candidates, "_pause_recall_candidates", lambda *a, **k:
+                        [(energy_pause, False)])
+    monkeypatch.setattr(candidates, "_dsp_pause_metrics", lambda *a:
+                        {"flatness": 0.1, "zcr": 0.1, "rms_ratio": 0.05})
+    monkeypatch.setattr(candidates, "_dsp_accepts_pause", lambda *a: True)
+    monkeypatch.setattr(candidates, "_local_vad_pauses", lambda *a, **k: ([], [broad_vad]))
+    monkeypatch.setattr(candidates, "_vad_confirms_pause", lambda *a: True)
+
+    decision = candidates.pause_pipeline_decisions(np.zeros(16_000), 16_000, surah=114)[0]
+
+    assert decision.accepted
+    assert decision.pause == energy_pause
+    assert decision.reason == "intro-vad"

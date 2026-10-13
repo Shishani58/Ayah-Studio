@@ -73,6 +73,92 @@ MAX_WAVEFORM_BUCKETS = 65536
 WAVEFORM_BUCKET_MS = 100
 
 
+async def waveform_events(audio_path: str):
+    """Decode incrementally, preserving a partial final bucket.
+
+    Full-scale amplitudes stay stable during loading. The final event carries
+    the exact PCM duration and normalization factor. Closing the iterator also
+    stops ffmpeg; stderr goes to a file so its pipe can never block decoding.
+    """
+    import asyncio
+    import tempfile
+
+    from anyio import CancelScope
+    import numpy as np
+
+    from surah_cutter.core import decode
+
+    # A metadata-only pass chooses roughly the same resolution as waveform_peaks.
+    # The duration hint never determines the final duration or truncates the PCM.
+    probe = await asyncio.create_subprocess_exec(
+        decode._ffmpeg_exe(), "-nostdin", "-hide_banner", "-i", audio_path,
+        "-t", "0", "-f", "null", "-",
+        stdout=asyncio.subprocess.DEVNULL, stderr=asyncio.subprocess.PIPE,
+    )
+    try:
+        _, metadata = await probe.communicate()
+    finally:
+        if probe.returncode is None:
+            probe.kill()
+            with CancelScope(shield=True):
+                await probe.wait()
+    match = re.search(rb"Duration: (\d+):(\d+):(\d+(?:\.\d+)?)", metadata)
+    estimated_ms = 0
+    samples_per_bucket = 160  # 10 ms when a container has no duration metadata.
+    if match:
+        hours, minutes, seconds = map(float, match.groups())
+        estimated_ms = round((hours * 3600 + minutes * 60 + seconds) * 1000)
+        buckets = max(MIN_WAVEFORM_BUCKETS,
+                      min(MAX_WAVEFORM_BUCKETS, estimated_ms // WAVEFORM_BUCKET_MS))
+        if estimated_ms > 0:
+            samples_per_bucket = max(1, round(estimated_ms * decode.DEFAULT_SR / 1000 / buckets))
+    block_bytes = samples_per_bucket * 4 * 200
+    sample_count = 0
+    offset = 0
+    maximum = 0.0
+    with tempfile.TemporaryFile() as errors:
+        proc = await asyncio.create_subprocess_exec(
+            decode._ffmpeg_exe(), "-nostdin", "-hide_banner", "-loglevel", "error",
+            "-i", audio_path, "-f", "f32le", "-acodec", "pcm_f32le",
+            "-ac", "1", "-ar", str(decode.DEFAULT_SR), "-",
+            stdout=asyncio.subprocess.PIPE, stderr=errors,
+        )
+        try:
+            yield {"type": "start", "bucket_ms": samples_per_bucket * 1000 / decode.DEFAULT_SR,
+                   "duration_hint_ms": estimated_ms}
+            while True:
+                try:
+                    block = await proc.stdout.readexactly(block_bytes)
+                    tail = False
+                except asyncio.IncompleteReadError as exc:
+                    block = exc.partial
+                    tail = True
+                if block:
+                    pcm = np.abs(np.frombuffer(block, dtype="<f4"))
+                    sample_count += len(pcm)
+                    peaks = [float(pcm[i:i + samples_per_bucket].max())
+                             for i in range(0, len(pcm), samples_per_bucket)]
+                    maximum = max(maximum, max(peaks))
+                    yield {"type": "chunk", "offset": offset, "peaks": peaks,
+                           "decoded_ms": round(sample_count * 1000 / decode.DEFAULT_SR)}
+                    offset += len(peaks)
+                if tail:
+                    break
+            if await proc.wait() != 0:
+                errors.seek(0)
+                raise decode.DecodeError(errors.read().decode("utf-8", "replace").strip())
+            yield {"type": "done", "duration_ms": round(sample_count * 1000 / decode.DEFAULT_SR),
+                   "maximum": maximum}
+        finally:
+            if proc.returncode is None:
+                try:
+                    proc.kill()
+                except ProcessLookupError:
+                    pass
+                with CancelScope(shield=True):
+                    await proc.wait()
+
+
 def waveform_peaks(audio_path: str, buckets: int | None = None) -> tuple[list[int], int]:
     """Downsampled |amplitude| envelope for the waveform canvas.
 

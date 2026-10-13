@@ -52,6 +52,8 @@ def forced_align(log_probs, targets, blank: int = 0):
     tgt = np.asarray(targets).reshape(-1).astype(np.int64)  # (L,)
     t_len, _ = emis.shape
     n_tok = tgt.shape[0]
+    if t_len == 0:
+        raise ValueError("CTC requires audio frames")
     if n_tok == 0:
         path = np.full((1, t_len), blank, dtype=np.int64)
         return path, emis[np.arange(t_len), blank][None, :]
@@ -87,6 +89,8 @@ def forced_align(log_probs, targets, blank: int = 0):
         dp = best + emis[t, ext]
         back[t] = idx - choice
 
+    if max(dp[n_st - 1], dp[n_st - 2]) <= _NEG / 2:
+        raise ValueError("CTC target sequence cannot fit in audio")
     s = n_st - 1 if dp[n_st - 1] >= dp[n_st - 2] else n_st - 2
     states = np.zeros(t_len, dtype=np.int64)
     for t in range(t_len - 1, -1, -1):

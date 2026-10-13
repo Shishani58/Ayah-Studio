@@ -9,7 +9,9 @@ from __future__ import annotations
 
 import json
 import queue
+import re
 import threading
+from functools import wraps
 from pathlib import Path
 from types import MappingProxyType
 from typing import Any
@@ -19,20 +21,38 @@ from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 from surah_cutter.data import quran_text
-from surah_cutter.webgui import settings
+from surah_cutter.core import model_store
+from surah_cutter.webgui import projects, settings
 from surah_cutter.webgui.state import (
     DB_CODE,
     DB_VERSION,
     STATE,
     classify_status,
     discover_audio,
+    waveform_events,
     waveform_peaks,
 )
 
 _STATIC_DIR = Path(__file__).resolve().parent / "static"
 #: Bundled Qur'an (QPC Hafs Uthmani) font, served at /fonts for the review text.
 _FONTS_DIR = Path(__file__).resolve().parents[2] / "assets" / "fonts"
-_GEN_MODES = {"auto", "full", "fast", "hybrid", "tiled"}
+_WORD_LOCK = threading.Lock()
+_GEN_MODES = {"auto", "full", "fast", "hybrid", "tiled", "words"}
+
+
+def _model_runtime(handler):
+    """Hold model selection fixed for synchronous inference and its writes."""
+    @wraps(handler)
+    def wrapped(*args, **kwargs):
+        if not model_store.RUNTIME_LOCK.acquire(blocking=False):
+            raise HTTPException(409, "Расчёт модели уже выполняется. Дождитесь завершения.")
+        try:
+            if handler.__name__ in ("recheck_sura", "get_fast_log") and model_store.active_kind() != "phonetic":
+                raise HTTPException(400, "Проверка фонетических начал доступна только для Quran Phonetics.")
+            return handler(*args, **kwargs)
+        finally:
+            model_store.RUNTIME_LOCK.release()
+    return wrapped
 
 
 # --- generation job (one at a time) ---------------------------------------
@@ -64,6 +84,10 @@ class _GenJob:
         self.q.put(event)
 
     def _run(self, suras: list[int], mode: str, reciter: str | None) -> None:
+        with model_store.RUNTIME_LOCK:
+            self._run_selected(suras, mode, reciter)
+
+    def _run_selected(self, suras: list[int], mode: str, reciter: str | None) -> None:
         from surah_cutter.core.pipeline import process_surah
         from surah_cutter.data.project_db import ProjectDB
 
@@ -101,25 +125,37 @@ class _GenJob:
                             "line": text,
                         })
 
-                    rows = process_surah(
-                        str(audio), surah, reciter=reciter, mode=mode,
-                        project_db=db,
-                        trace=trace if mode in ("auto", "fast", "tiled") else None,
-                        log_event=log_event,
+                    existing = [(s, a, t) for s, a, t in db.get_timings() if s == surah]
+                    complete = {a for _, a, _ in existing} == set(
+                        range(1, quran_text.ayah_count(surah) + 1)
                     )
-                    written = db.write_timings(rows, source="auto")
-                    _write_trace_confidences(db, surah, trace)
+                    if mode == "words" and complete:
+                        rows, written = existing, 0
+                        log_event("Пословный режим: используются сохранённые границы аятов.")
+                    else:
+                        boundary_mode = ("full" if model_store.active_kind() != "phonetic" else "fast") if mode == "words" else mode
+                        rows = process_surah(
+                            str(audio), surah, reciter=reciter, mode=boundary_mode,
+                            project_db=db,
+                            trace=trace,
+                            log_event=log_event,
+                        )
+                        written = db.write_timings(rows, source="auto")
+                        _write_trace_confidences(db, surah, trace)
+                    word_result = {}
+                    if mode == "words":
+                        word_result = _align_sura_words(db, self.db_path, audio, surah, log_event)
                     log_paths = _save_sura_log(
                         surah, mode, trace, log_lines, rows, self.db_path
                     )
                     completed = i + 1
                     event = {
                         "type": "sura", "surah": surah, "index": i,
-                        "ayahs": len(rows), "written": written,
+                        "ayahs": len(rows), "written": written, **word_result,
                     }
                     if log_paths:
                         event["log_paths"] = log_paths
-                    if trace:
+                    if trace and trace.get("mode") != "full":
                         event["fast_trace"] = _fast_trace_summary(trace)
                     self._emit(event)
             finally:
@@ -142,17 +178,104 @@ _PROJECT_LOCK = threading.RLock()
 def create_app() -> FastAPI:
     app = FastAPI(title="Ayah Studio")
     _restore_from_settings()
+    selected = settings.load().get("alignment_model", "quran-phonetics")
+    valid_ids = {item["id"] for item in model_store.catalog()} | {"quran-phonetics-fp32"}
+    model_store.ACTIVE_ID = selected if selected in valid_ids else "quran-phonetics"
+
+    @app.get("/api/models")
+    def get_models() -> dict[str, Any]:
+        return model_store.listing()
+
+    @app.post("/api/models/{model_id}/download")
+    def download_model(model_id: str, payload: dict[str, Any] = Body(default={})) -> dict:
+        try:
+            token = payload.get("token", "")
+            if not isinstance(token, str):
+                raise ValueError("Введите токен текстом.")
+            return model_store.start_download(model_id, token=token)
+        except ValueError as exc:
+            raise HTTPException(400, str(exc)) from exc
+
+    @app.post("/api/models/{model_id}/cancel")
+    def cancel_model_download(model_id: str) -> dict:
+        try:
+            model_store.cancel_download(model_id)
+            return {"ok": True}
+        except ValueError as exc:
+            raise HTTPException(400, str(exc)) from exc
+
+    @app.post("/api/models/{model_id}/select")
+    @_model_runtime
+    def select_model(model_id: str) -> dict:
+        with _PROJECT_LOCK:
+            if (_JOB is not None and _JOB.running) or _WORD_LOCK.locked():
+                raise HTTPException(409, "Дождитесь завершения расчёта перед сменой модели.")
+            try:
+                path = model_store.runtime_path(model_id)
+            except ValueError as exc:
+                raise HTTPException(400, str(exc)) from exc
+            if path is None:
+                raise HTTPException(400, "Сначала скачайте модель.")
+            try:
+                import numpy as np
+                from surah_cutter.core import align
+
+                emitter = model_store.load_emitter(model_id)
+                if hasattr(emitter, "probe"):
+                    emitter.probe()
+                else:
+                    probe = emitter.emissions(np.zeros(16000, dtype=np.float32))
+                    if probe.ndim != 2 or probe.shape[1] != len(emitter.vocab) or not np.isfinite(probe).all():
+                        raise ValueError("Несовместимый выход модели.")
+                fields = {"alignment_model": model_id}
+                if model_id not in ("quran-phonetics", "quran-phonetics-fp32"):
+                    fields["mode"] = "full"
+                settings.update(strict=True, **fields)
+            except Exception as exc:
+                raise HTTPException(400, "Не удалось проверить модель или сохранить выбор. Текущая модель сохранена.") from exc
+            model_store.ACTIVE_ID = model_id
+            bundle = align._OnnxBundle(emitter)
+            if model_id == "arabic-ctc":
+                bundle.text_kind = "arabic"
+                bundle.lag_ms = 0
+            align._ONNX_CACHE.clear()
+            align._ONNX_CACHE[str(path)] = bundle
+            from surah_cutter.core.model_runtime import release_runtimes
+
+            release_runtimes(keep=emitter)
+            return {**model_store.listing(), "mode": settings.load().get("mode", "auto")}
+
+    @app.post("/api/models/{model_id}/remove")
+    @_model_runtime
+    def remove_model(model_id: str) -> dict:
+        with _PROJECT_LOCK:
+            if (_JOB is not None and _JOB.running) or _WORD_LOCK.locked():
+                raise HTTPException(409, "Дождитесь завершения расчёта.")
+            try:
+                model_store.remove_download(model_id)
+            except (ValueError, OSError) as exc:
+                raise HTTPException(400, str(exc)) from exc
+            return {"ok": True}
 
     # -- project ----------------------------------------------------------
     @app.get("/api/project")
     def get_project() -> dict[str, Any]:
         cfg = settings.load()
+        managed = next((p for p in projects.list_projects()
+                        if STATE.db_path and Path(p["db_path"]).resolve() == STATE.db_path.resolve()), {})
         return {
             "audio_dir": str(STATE.audio_dir) if STATE.audio_dir else None,
             "db_path": str(STATE.db_path) if STATE.db_path else None,
             "audio_count": len(STATE.audio_map),
             "suras_with_audio": sorted(STATE.audio_map),
             "mode": cfg.get("mode", "auto"),
+            "project_id": managed.get("id"),
+            "reciter": managed.get("reciter", STATE.audio_dir.name if STATE.audio_dir else ""),
+            "recording": managed.get("recording", "Внешний проект"),
+            "time_step": cfg.get("time_step", 10),
+            "arabic_size": cfg.get("arabic_size", 30),
+            "theme": cfg.get("theme", "dark"),
+            "alignment_model": model_store.ACTIVE_ID,
         }
 
     @app.post("/api/project/open")
@@ -175,23 +298,75 @@ def create_app() -> FastAPI:
 
                 ProjectDB.open(db_path, DB_CODE, DB_VERSION).close()  # ensure schema
                 new_db_path = Path(db_path)
+            # Persist before publishing so a failed save leaves the selection intact.
+            try:
+                settings.update(
+                    strict=True,
+                    audio_dir=str(new_audio_dir) if new_audio_dir else None,
+                    db_path=str(new_db_path) if new_db_path else None,
+                )
+            except OSError as exc:
+                raise HTTPException(500, "Не удалось сохранить проект. Проверьте доступ к папке настроек.") from exc
             # Publish the complete selection only after every input is ready.
             STATE.audio_dir = new_audio_dir
             STATE.audio_map = new_audio_map
             STATE.db_path = new_db_path
-            # Remember the project so the app reopens here next launch.
-            settings.update(
-                audio_dir=str(STATE.audio_dir) if STATE.audio_dir else None,
-                db_path=str(STATE.db_path) if STATE.db_path else None,
-            )
             return get_project()
+
+    @app.get("/api/projects")
+    def list_projects() -> list[dict[str, Any]]:
+        return projects.list_projects()
+
+    @app.post("/api/projects/create")
+    def create_project(payload: dict[str, str] = Body(...)) -> dict[str, Any]:
+        with _PROJECT_LOCK:
+            if _JOB is not None and _JOB.running:
+                raise HTTPException(409, "Дождитесь завершения генерации перед импортом проекта.")
+            try:
+                project = projects.create(payload.get("reciter", ""),
+                                          payload.get("recording", ""),
+                                          payload.get("audio_dir", ""),
+                                          payload.get("db_path", ""))
+            except (OSError, ValueError) as exc:
+                raise HTTPException(400, str(exc)) from exc
+            except Exception as exc:
+                raise HTTPException(400, "Не удалось импортировать БД. Выберите SQLite .db с разметкой.") from exc
+            return open_project(project)
+
+    @app.post("/api/projects/activate")
+    def activate_project(payload: dict[str, str] = Body(...)) -> dict[str, Any]:
+        try:
+            project = projects.get(payload.get("id", ""))
+        except (OSError, ValueError) as exc:
+            raise HTTPException(404, "Проект не найден. Обновите список проектов.") from exc
+        return open_project(project)
 
     @app.post("/api/settings")
     def set_settings(payload: dict[str, Any] = Body(default={})) -> dict[str, Any]:
-        allowed = {k: v for k, v in payload.items() if k in ("mode",)}
+        allowed = {k: v for k, v in payload.items() if k in ("mode", "time_step", "arabic_size", "theme")}
+        if "theme" in allowed and allowed["theme"] not in ("light", "dark"):
+            raise HTTPException(400, "Выберите светлую или тёмную тему.")
         if "mode" in allowed and allowed["mode"] not in _GEN_MODES:
             raise HTTPException(400, f"unknown mode: {allowed['mode']}")
-        return settings.update(**allowed)
+        if "mode" in allowed and model_store.active_kind() != "phonetic" and allowed["mode"] not in ("full", "tiled", "words"):
+            raise HTTPException(400, "Арабская модель поддерживает полный, точный и пословный режимы.")
+        if "time_step" in allowed and allowed["time_step"] not in (10, 50, 100):
+            raise HTTPException(400, "Выберите шаг времени: 10, 50 или 100 мс.")
+        if "arabic_size" in allowed and allowed["arabic_size"] not in (26, 30, 36, 42):
+            raise HTTPException(400, "Выберите размер текста из списка.")
+        if payload.get("project_id"):
+            with _PROJECT_LOCK:
+                if payload["project_id"] != get_project()["project_id"]:
+                    raise HTTPException(409, "Проект изменился. Откройте настройки заново.")
+                try:
+                    projects.rename(payload["project_id"], payload.get("reciter", ""),
+                                    payload.get("recording", ""))
+                except (OSError, ValueError) as exc:
+                    raise HTTPException(400, str(exc)) from exc
+        try:
+            return settings.update(strict=True, **allowed)
+        except OSError as exc:
+            raise HTTPException(500, "Не удалось записать настройки. Проверьте доступ к папке настроек.") from exc
 
     # -- suras + statuses -------------------------------------------------
     @app.get("/api/suras")
@@ -199,6 +374,7 @@ def create_app() -> FastAPI:
         counts = quran_text.surah_ayah_counts()
         reviews = _reviews_by_sura()
         complete = _processed_suras()
+        word_progress = _word_progress()
         out = []
         for s in range(1, 115):
             ac = counts.get(s, 0)
@@ -206,6 +382,7 @@ def create_app() -> FastAPI:
                 "surah": s,
                 "ayah_count": ac,
                 "has_audio": s in STATE.audio_map,
+                "words_complete": word_progress.get(s, {}).get("complete", False),
                 "status": (
                     "partial" if reviews.get(s) and s not in complete
                     else classify_status(reviews.get(s), ac)
@@ -224,15 +401,17 @@ def create_app() -> FastAPI:
                 raise HTTPException(409, "generation already running")
             suras = payload.get("suras") or sorted(STATE.audio_map)
             suras = [s for s in suras if s in STATE.audio_map]
-            # Resume only skips suras containing every canonical ayah.
-            if payload.get("only_missing"):
-                done = _processed_suras()
-                suras = [s for s in suras if s not in done]
-            if not suras:
-                raise HTTPException(400, "no suras to process (all done or no audio)")
             mode = payload.get("mode", "auto")
             if mode not in _GEN_MODES:
                 raise HTTPException(400, f"unknown mode: {mode}")
+            if model_store.active_kind() != "phonetic" and mode not in ("full", "tiled", "words"):
+                raise HTTPException(400, "Для арабской модели выберите полный, точный или пословный режим.")
+            if payload.get("only_missing"):
+                done = ({s for s, p in _word_progress().items() if p["complete"]}
+                        if mode == "words" else _processed_suras())
+                suras = [s for s in suras if s not in done]
+            if not suras:
+                raise HTTPException(400, "no suras to process (all done or no audio)")
             reciter = payload.get("reciter")
             settings.update(mode=mode)  # remember last-used mode
             _JOB = _GenJob(STATE.db_path, STATE.audio_map)
@@ -282,6 +461,7 @@ def create_app() -> FastAPI:
         return {
             "surah": surah,
             "ayah_count": ac,
+            "word_progress": _word_progress(surah=surah).get(surah),
             "has_audio": surah in STATE.audio_map,
             "ayahs": ayahs,
         }
@@ -295,7 +475,28 @@ def create_app() -> FastAPI:
         peaks, duration_ms = waveform_peaks(str(audio))
         return {"surah": surah, "peaks": peaks, "duration_ms": duration_ms}
 
+    @app.get("/api/sura/{surah}/waveform/stream")
+    def stream_waveform(surah: int) -> StreamingResponse:
+        _check_surah(surah)
+        audio = STATE.audio_for(surah)
+        if audio is None:
+            raise HTTPException(404, f"no audio for sura {surah}")
+
+        async def events():
+            source = waveform_events(str(audio))
+            try:
+                async for event in source:
+                    yield f"data: {json.dumps(event)}\n\n"
+            except Exception as exc:
+                yield f"data: {json.dumps({'type': 'error', 'message': str(exc)})}\n\n"
+            finally:
+                await source.aclose()
+
+        return StreamingResponse(events(), media_type="text/event-stream",
+                                 headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+
     @app.get("/api/sura/{surah}/recheck")
+    @_model_runtime
     def recheck_sura(surah: int) -> dict[str, Any]:
         """Audit this sura's stored timings against the audio (read-only).
 
@@ -369,6 +570,7 @@ def create_app() -> FastAPI:
         }
 
     @app.post("/api/sura/{surah}/correct-draft")
+    @_model_runtime
     def correct_draft(
         surah: int,
         payload: dict[str, Any] = Body(default={}),
@@ -393,9 +595,16 @@ def create_app() -> FastAPI:
         from surah_cutter.core.pipeline import process_surah
         from surah_cutter.data.project_db import ProjectDB
 
+        trace: dict[str, Any] = {}
+        log_lines: list[str] = []
         with ProjectDB.open(str(db_path), DB_CODE, DB_VERSION) as db:
-            rows = process_surah(str(audio), surah, mode=mode, project_db=db)
+            rows = process_surah(
+                str(audio), surah, mode=mode, project_db=db,
+                trace=trace, log_event=log_lines.append,
+            )
             written = db.write_timings(rows, source=f"correct-{mode}")
+            _write_trace_confidences(db, surah, trace)
+        _save_sura_log(surah, f"correct-{mode}", trace, log_lines, rows, db_path)
         return {
             "ok": True,
             "surah": surah,
@@ -484,7 +693,42 @@ def create_app() -> FastAPI:
             ],
         }
 
+    @app.get("/api/sura/{surah}/logs")
+    def list_sura_logs(surah: int) -> dict[str, Any]:
+        _check_surah(surah)
+        folder = _sura_log_folder()
+        entries: dict[str, dict[str, Any]] = {}
+        for path in folder.glob(f"sura_{surah:03d}_*"):
+            if path.suffix not in {".log", ".json"} or path.is_symlink() or not path.is_file():
+                continue
+            if not re.fullmatch(rf"sura_{surah:03d}_[A-Za-z0-9_-]+", path.stem):
+                continue
+            entry = entries.setdefault(path.stem, {
+                "id": path.stem, "mode": path.stem.split("_", 2)[2], "modified_ms": 0,
+            })
+            entry["modified_ms"] = max(entry["modified_ms"], int(path.stat().st_mtime * 1000))
+        return {"logs": sorted(entries.values(), key=lambda item: item["modified_ms"], reverse=True)}
+
+    @app.get("/api/sura/{surah}/logs/{log_id}")
+    def get_sura_log(surah: int, log_id: str) -> dict[str, Any]:
+        _check_surah(surah)
+        if not re.fullmatch(rf"sura_{surah:03d}_[A-Za-z0-9_-]+", log_id):
+            raise HTTPException(404, "Лог не найден")
+        folder = _sura_log_folder()
+        result = {"id": log_id, "log": None, "json": None}
+        try:
+            for suffix, key in ((".log", "log"), (".json", "json")):
+                path = folder / f"{log_id}{suffix}"
+                if path.is_file() and not path.is_symlink():
+                    result[key] = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as exc:
+            raise HTTPException(500, "Не удалось прочитать лог") from exc
+        if result["log"] is None and result["json"] is None:
+            raise HTTPException(404, "Лог не найден")
+        return result
+
     @app.get("/api/sura/{surah}/fast-log")
+    @_model_runtime
     def get_fast_log(surah: int) -> dict[str, Any]:
         """Run fast alignment in debug mode and return a readable phase log."""
         _check_surah(surah)
@@ -625,16 +869,122 @@ def create_app() -> FastAPI:
             raise HTTPException(404, f"no audio for sura {surah}")
         return FileResponse(str(audio))
 
-    # -- edits ------------------------------------------------------------
-    @app.post("/api/timing")
-    def set_timing(payload: dict[str, int] = Body(...)) -> dict[str, Any]:
-        surah, ayah, time = payload["surah"], payload["ayah"], payload["time"]
-        _check_surah(surah)
-        _require_db()
+    # -- local word review ------------------------------------------------
+    @app.get("/api/sura/{surah}/words")
+    def get_sura_words(surah: int) -> dict[str, Any]:
+        from surah_cutter.core.decode import duration_ms
         from surah_cutter.data.project_db import ProjectDB
 
-        with ProjectDB.open(str(STATE.db_path), DB_CODE, DB_VERSION) as db:
-            db.set_time(surah, ayah, int(time))
+        _check_surah(surah)
+        _require_db()
+        with _PROJECT_LOCK:
+            db_path = STATE.db_path.resolve()
+            audio = STATE.audio_for(surah)
+            if audio is None:
+                raise HTTPException(404, "Нет аудио суры.")
+            timings, _ = _sura_timings_reviews(surah, db_path)
+            with ProjectDB.open(str(db_path), DB_CODE, DB_VERSION) as db:
+                cursor = db._conn.execute(
+                    "SELECT word_index, time, confidence, status, ayah_start, ayah_end "
+                    "FROM word_timings WHERE sura=?", (surah,)
+                )
+                keys = [col[0] for col in cursor.description]
+                saved = {row[0]: dict(zip(keys, row)) for row in cursor}
+        duration = duration_ms(str(audio))
+        words, numbers = [], {}
+        for word in quran_text.surah_words(surah):
+            numbers[word.ayah] = numbers.get(word.ayah, 0) + 1
+            start = timings.get(word.ayah)
+            end = timings.get(word.ayah + 1,
+                duration if word.ayah == quran_text.ayah_count(surah) else None)
+            row = saved.get(word.index, {})
+            words.append({**row, "word_index": word.index, "text": word.text,
+                "ayah": word.ayah, "number": numbers[word.ayah],
+                "start_ms": start, "end_ms": end,
+                "stale": bool(row and (row["ayah_start"], row["ayah_end"]) != (start, end))})
+        return {"surah": surah, "db_path": str(db_path), "words": words,
+                "word_progress": _word_progress(db_path, surah).get(surah)}
+
+    @app.get("/api/sura/{surah}/ayah/{ayah}/words")
+    def get_words(surah: int, ayah: int) -> dict[str, Any]:
+        db_path, audio, words, start, end = _word_context(surah, ayah)
+        return _word_response(db_path, surah, ayah, words, start, end)
+
+    @app.post("/api/sura/{surah}/ayah/{ayah}/words/align")
+    @_model_runtime
+    def generate_words(surah: int, ayah: int,
+                       payload: dict[str, Any] = Body(...)) -> dict[str, Any]:
+        from surah_cutter.core import decode, word_align
+        from surah_cutter.data.project_db import ProjectDB
+
+        if not _WORD_LOCK.acquire(blocking=False):
+            raise HTTPException(409, "Пословный расчёт уже выполняется.")
+        try:
+            db_path, audio, words, start, end = _word_context(surah, ayah, payload)
+            pcm = decode.decode_range(str(audio), start_ms=start, end_ms=end)
+            if abs(len(pcm) * 1000 / decode.DEFAULT_SR - (end - start)) > 100:
+                raise HTTPException(400, "Границы аята выходят за аудио. Уточните метки.")
+            rows = word_align.align_ayah_words(pcm, decode.DEFAULT_SR, words)
+            with _PROJECT_LOCK:
+                current = _word_context(surah, ayah, payload)
+                if current[:2] != (db_path, audio) or current[3:] != (start, end):
+                    raise HTTPException(409, "Проект или границы аята изменились. Повторите расчёт.")
+                with ProjectDB.open(str(db_path), DB_CODE, DB_VERSION) as db:
+                    db.write_word_timings(surah, ayah,
+                        [(i, start + t, c) for i, t, c in rows], start, end,
+                        model_store.source())
+            return _word_response(db_path, surah, ayah, words, start, end)
+        except ValueError as exc:
+            raise HTTPException(400, str(exc)) from exc
+        finally:
+            _WORD_LOCK.release()
+
+    @app.post("/api/sura/{surah}/ayah/{ayah}/words/edit")
+    def edit_word(surah: int, ayah: int,
+                  payload: dict[str, Any] = Body(...)) -> dict[str, Any]:
+        from surah_cutter.data.project_db import ProjectDB
+
+        with _PROJECT_LOCK:
+            db_path, audio, words, start, end = _word_context(surah, ayah, payload)
+            index = payload.get("word_index")
+            if type(index) is not int or index not in {w.index for w in words}:
+                raise HTTPException(400, "Выберите существующее слово аята.")
+            try:
+                with ProjectDB.open(str(db_path), DB_CODE, DB_VERSION) as db:
+                    if payload.get("action") == "verify":
+                        db.verify_word(surah, ayah, index, start, end)
+                    else:
+                        db.set_word_time(surah, ayah, index, payload.get("time"), start, end)
+            except ValueError as exc:
+                raise HTTPException(400, str(exc)) from exc
+        return _word_response(db_path, surah, ayah, words, start, end)
+
+    # -- edits ------------------------------------------------------------
+    @app.post("/api/timing")
+    def set_timing(payload: dict[str, Any] = Body(...)) -> dict[str, Any]:
+        surah, ayah, time = payload["surah"], payload["ayah"], payload["time"]
+        if any(type(v) is not int for v in (surah, ayah, time)):
+            raise HTTPException(400, "Введите номер суры, аята и время целыми числами.")
+        _check_surah(surah)
+        _require_db()
+        if time < 0 or not 1 <= ayah <= quran_text.surah_ayah_counts()[surah]:
+            raise HTTPException(400, "Введите неотрицательное время и существующий номер аята.")
+        from surah_cutter.data.project_db import ProjectDB
+
+        with _PROJECT_LOCK:
+            if payload.get("db_path") and Path(payload["db_path"]).resolve() != STATE.db_path.resolve():
+                raise HTTPException(409, "Проект изменился. Откройте суру заново перед правкой.")
+            with ProjectDB.open(str(STATE.db_path), DB_CODE, DB_VERSION) as db:
+                previous = db._conn.execute(
+                    "SELECT MAX(time) FROM timings WHERE sura=? AND ayah<?", (surah, ayah)
+                ).fetchone()[0]
+                following = db._conn.execute(
+                    "SELECT MIN(time) FROM timings WHERE sura=? AND ayah>?", (surah, ayah)
+                ).fetchone()[0]
+                if ((previous is not None and time <= previous)
+                        or (following is not None and time >= following)):
+                    raise HTTPException(400, "Начало аята должно находиться между соседними метками.")
+                db.set_time(surah, ayah, time)
         return {"ok": True, "surah": surah, "ayah": ayah, "time": int(time)}
 
     @app.post("/api/verify")
@@ -677,6 +1027,124 @@ def create_app() -> FastAPI:
 
 
 # --- helpers --------------------------------------------------------------
+
+
+def _align_sura_words(db, db_path, audio, surah, log_event):
+    """Align all ayah clips, preserving saved ayah marks and manual word edits."""
+    from surah_cutter.core import decode, word_align
+
+    pcm = decode.decode(str(audio))
+    duration = round(len(pcm) * 1000 / decode.DEFAULT_SR)
+    by_ayah = {}
+    for word in quran_text.surah_words(surah):
+        by_ayah.setdefault(word.ayah, []).append(word)
+    written = failures = 0
+    with _WORD_LOCK:
+        for ayah, words in by_ayah.items():
+            timings, _ = _sura_timings_reviews(surah, db_path)
+            start = timings.get(ayah)
+            end = timings.get(ayah + 1, duration if ayah == quran_text.ayah_count(surah) else None)
+            try:
+                if (type(start) is not int or type(end) is not int
+                        or not 0 <= start < end <= duration):
+                    raise ValueError("Сначала уточните границы аята.")
+                clip = pcm[start * decode.DEFAULT_SR // 1000:end * decode.DEFAULT_SR // 1000]
+                rows = word_align.align_ayah_words(clip, decode.DEFAULT_SR, words)
+                with _PROJECT_LOCK:
+                    current, _ = _sura_timings_reviews(surah, db_path)
+                    if (current.get(ayah), current.get(ayah + 1, duration)) != (start, end):
+                        raise ValueError("Границы аята изменились во время расчёта.")
+                    written += db.write_word_timings(surah, ayah,
+                        [(i, start + t, c) for i, t, c in rows], start, end,
+                        model_store.source())
+                log_event(f"Аят {ayah}: слов {len(words)}, метки сохранены.")
+            except ValueError as exc:
+                failures += 1
+                log_event(f"Аят {ayah}: требуется проверка — {exc}")
+    return {"words_written": written, "word_failures": failures}
+
+
+def _word_progress(db_path: Path | None = None, surah: int | None = None):
+    """Count canonical, current word marks without decoding audio for the dashboard."""
+    import sqlite3
+
+    db_path = db_path if db_path is not None else STATE.db_path
+    saved, timings = {}, {}
+    if db_path and db_path.exists():
+        with sqlite3.connect(str(db_path)) as conn:
+            where, args = (" WHERE sura=?", (surah,)) if surah else ("", ())
+            for s, a, t in conn.execute("SELECT sura, ayah, time FROM timings" + where, args):
+                timings.setdefault(s, {})[a] = t
+            if conn.execute("SELECT 1 FROM sqlite_master WHERE name='word_timings'").fetchone():
+                for row in conn.execute(
+                    "SELECT sura, ayah, word_index, time, status, ayah_start, ayah_end "
+                    "FROM word_timings" + where, args
+                ):
+                    saved.setdefault(row[0], {})[row[2]] = row
+    result = {}
+    for s in ([surah] if surah else saved):
+        words = quran_text.surah_words(s)
+        valid = []
+        marks = timings.get(s, {})
+        for word in words:
+            row = saved.get(s, {}).get(word.index)
+            if row is None:
+                continue
+            _, a, _, time, status, start, end = row
+            if (a == word.ayah and start == marks.get(a) and start <= time < end
+                    and (end == marks.get(a + 1) or a == quran_text.ayah_count(s))):
+                valid.append(status)
+        result[s] = {"total": len(words), "marked": len(valid),
+                     "edited": valid.count("edited"), "verified": valid.count("verified"),
+                     "complete": len(valid) == len(words)}
+    return result
+
+
+def _word_context(surah: int, ayah: int, payload: dict | None = None):
+    """Require exact adjacent ayah boundaries, and snapshot project identity."""
+    _check_surah(surah)
+    _require_db()
+    count = quran_text.ayah_count(surah)
+    if not 1 <= ayah <= count:
+        raise HTTPException(400, "Нет такого аята.")
+    with _PROJECT_LOCK:
+        db_path = STATE.db_path.resolve()
+        audio = STATE.audio_for(surah)
+        if audio is None:
+            raise HTTPException(404, "Нет аудио суры.")
+        audio = audio.resolve()
+        if payload is not None:
+            if payload.get("db_path") != str(db_path):
+                raise HTTPException(409, "Проект изменился. Откройте пословный режим заново.")
+            if _JOB and _JOB.running:
+                raise HTTPException(409, "Дождитесь завершения расчёта суры.")
+        timings, _ = _sura_timings_reviews(surah, db_path)
+    start = timings.get(ayah)
+    end = timings.get(ayah + 1)
+    if ayah == count:
+        from surah_cutter.core.decode import duration_ms
+        end = duration_ms(str(audio))
+    if (type(start) is not int or type(end) is not int or start < 0 or end <= start):
+        raise HTTPException(400, "Сначала разметьте начало этого и следующего аята.")
+    if payload is not None and (payload.get("start_ms"), payload.get("end_ms")) != (start, end):
+        raise HTTPException(409, "Границы аята изменились. Откройте пословный режим заново.")
+    words = [w for w in quran_text.surah_words(surah) if w.ayah == ayah]
+    return db_path, audio, words, start, end
+
+
+def _word_response(db_path, surah, ayah, words, start, end):
+    from surah_cutter.data.project_db import ProjectDB
+
+    with ProjectDB.open(str(db_path), DB_CODE, DB_VERSION) as db:
+        saved = {r["word_index"]: r for r in db.get_word_timings(surah, ayah)}
+    result = []
+    for word in words:
+        row = saved.get(word.index, {})
+        result.append({**row, "word_index": word.index, "text": word.text,
+            "stale": bool(row and (row["ayah_start"], row["ayah_end"]) != (start, end))})
+    return {"surah": surah, "ayah": ayah, "db_path": str(db_path),
+            "start_ms": start, "end_ms": end, "words": result,
+            "word_progress": _word_progress(db_path, surah).get(surah)}
 
 
 def _sse(event: dict[str, Any]) -> str:
@@ -723,7 +1191,7 @@ def _fast_trace_summary(trace: dict[str, Any]) -> dict[str, Any]:
 
 
 def _write_trace_confidences(db: Any, surah: int, trace: dict[str, Any]) -> None:
-    """Persist per-ayah fast confidence for UI highlighting."""
+    """Persist per-ayah alignment confidence for UI highlighting."""
     ayahs = trace.get("ayahs") or []
     confidences: dict[int, float | None] = {}
     for item in ayahs:
@@ -734,6 +1202,16 @@ def _write_trace_confidences(db: Any, surah: int, trace: dict[str, Any]) -> None
         confidences[int(ayah)] = float(conf) if conf is not None else None
     if confidences:
         db.update_auto_confidences(surah, confidences)
+
+
+def _sura_log_folder() -> Path:
+    if STATE.db_path is None:
+        raise HTTPException(400, "Сначала откройте проект")
+    db_path = STATE.db_path.resolve()
+    folder = db_path.with_name(f"{db_path.stem}.logs")
+    if folder.is_symlink():
+        raise HTTPException(400, "Папка логов не должна быть ссылкой")
+    return folder
 
 
 def _save_sura_log(

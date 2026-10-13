@@ -136,13 +136,18 @@ class _OnnxBundle:
     torch state, so the inference path needs no torch/transformers.
     """
 
-    __slots__ = ("emitter", "vocab", "blank_id", "delim_id")
+    __slots__ = ("emitter", "vocab", "blank_id", "delim_id", "text_kind", "lag_ms")
 
     def __init__(self, emitter: Any) -> None:
         self.emitter = emitter
         self.vocab = emitter.vocab
         self.blank_id = emitter.blank_id
         self.delim_id = emitter.vocab.get(WORD_DELIMITER)
+        self.text_kind = "phonetic"
+        self.lag_ms = ALIGN_LAG_MS
+        if hasattr(emitter, "text_kind"):
+            self.text_kind = emitter.text_kind
+            self.lag_ms = 0
 
 
 def _estimated_ctc_backtrace_bytes(
@@ -184,6 +189,8 @@ def align_surah(
     model: Any | None = None,
     surah: int | None = None,
     backend: str | None = None,
+    trace: dict | None = None,
+    log_event: Any | None = None,
 ) -> list[tuple[int, int, float]]:
     """Forced-align a sura's known words to its audio; return per-ayah starts.
 
@@ -204,9 +211,9 @@ def align_surah(
 
     Returns:
         Rows ``(ayah, start_ms, confidence)`` for every ayah of the sura, ordered
-        by ayah, with ``start_ms`` monotonically non-decreasing and
-        ``confidence`` in ``[0, 1]`` (mean per-frame path probability of the
-        ayah's first word's span).
+        by ayah, with strictly increasing ``start_ms`` and ``confidence`` in
+        ``[0, 1]`` (first-word token probability, excluding blank frames).
+        Weak first-token evidence and pause rechecks are recorded in ``trace``.
 
     Raises:
         ImportError: If the alignment extra is not installed.
@@ -243,6 +250,21 @@ def align_surah(
     else:
         bundle = model if isinstance(model, _Bundle) else _get_bundle(DEFAULT_MODEL_ID)
 
+    if getattr(bundle, "text_kind", "phonetic") == "whisper":
+        word_rows = bundle.emitter.align_words(pcm, words, intro=surah not in (1, 9))
+        first = {}
+        for word, (_, start, confidence) in zip(words, word_rows):
+            first.setdefault(word.ayah, (word.ayah, start, confidence))
+        rows = list(first.values())
+        if any(b[1] <= a[1] for a, b in zip(rows, rows[1:])):
+            raise ValueError("Границы аятов Whisper не различимы.")
+        if trace is not None:
+            trace.update({"mode": "full", "backend": "whisper-attention-dtw",
+                          "align_lag_ms": 0, "ayahs": [
+                              {"ayah": a, "onset_ms": ms, "conf": c, "reliable": c >= .25}
+                              for a, ms, c in rows]})
+        return rows
+
     # --- 1. build the fixed target id sequence ------------------------------
     word_trs = transliteration.surah_word_tr(surah)
     # Every sura except al-Fatiha (1, whose basmala IS ayah 1) and at-Tawba (9,
@@ -258,13 +280,12 @@ def align_surah(
     if targets and _full_ctc_requires_tiling(len(pcm), sr, len(targets)):
         from surah_cutter.core import align_tiled
 
-        return align_tiled.align_surah_tiled(
-            pcm,
-            sr,
-            words,
-            surah=surah,
-            bundle=bundle,
-        )
+        kwargs = {"surah": surah, "bundle": bundle, "check_onsets": True}
+        if trace is not None:
+            kwargs["trace"] = trace
+        if log_event is not None:
+            kwargs["log_event"] = log_event
+        return align_tiled.align_surah_tiled(pcm, sr, words, **kwargs)
 
     # --- 2. emissions: log-probs over the vocab, shape (T, V) ---------------
     emissions = _emissions(bundle, pcm, np)  # float32 (T, V)
@@ -272,10 +293,9 @@ def align_surah(
     stride_ms = _stride_ms(len(pcm), sr, n_frames)
 
     if not targets:
-        # No usable transliteration tokens (e.g. cache empty). Degrade to a
-        # uniform split so the pipeline still yields one row per ayah rather
-        # than crashing; flagged by zero confidence.
-        return _uniform_fallback(words, n_frames, stride_ms)
+        raise ValueError("Нет текста для точного выравнивания суры")
+    if any(end <= start for start, end in word_token_spans):
+        raise ValueError("Не все слова имеют токены для точного выравнивания")
 
     targets_arr = np.asarray(targets, dtype=np.int64)[None, :]  # (1, L)
     log_probs = np.ascontiguousarray(emissions[None, :, :], dtype=np.float32)
@@ -291,13 +311,10 @@ def align_surah(
     segments = merge_repeats(path.tolist(), {i: i for i in range(emissions.shape[1])})
     nonblank = [s for s in segments if s.label != bundle.blank_id]
 
-    # Map each target position -> (start_frame, end_frame). If the aligner
-    # produced fewer non-blank runs than targets (degenerate audio), pad the
-    # tail by reusing the last frame so indexing stays in range.
+    # A partial path is not evidence for missing words. Never invent a tail.
+    if [s.label for s in nonblank] != targets:
+        raise ValueError("Не удалось сопоставить полный текст суры с аудио")
     target_spans: list[tuple[int, int]] = [(s.start, s.end) for s in nonblank]
-    while len(target_spans) < len(targets):
-        last = target_spans[-1] if target_spans else (n_frames - 1, n_frames - 1)
-        target_spans.append(last)
 
     # --- per-token frames -> per-word spans -> per-ayah first-word start ----
     rows = _ayah_rows(
@@ -308,7 +325,101 @@ def align_surah(
         stride_ms,
         np,
     )
+    from surah_cutter.core import candidates
+
+    pauses = candidates.detect_energy_pauses(pcm, sr, use_ten_vad=False)
+    checks = _check_ayah_onsets(
+        words, word_token_spans, target_spans, frame_scores, stride_ms, pauses=pauses,
+        lag_ms=getattr(bundle, "lag_ms", ALIGN_LAG_MS),
+    )
+    rows = [(a, checks[a]["onset_ms"], checks[a]["conf"]) for a, _, _ in rows]
+    if any(right[1] <= left[1] for left, right in zip(rows, rows[1:])):
+        raise ValueError("Границы аятов не различимы; требуется проверка записи")
+    if trace is not None:
+        trace.update({
+            "mode": "full", "total_ms": len(pcm) * 1000.0 / sr,
+            "emission_passes": 1, "emissions_frames": n_frames,
+            "backend": "onnx" if use_onnx else "torch",
+            "batch_size": 1 if use_onnx else None,
+            "align_lag_ms": getattr(bundle, "lag_ms", ALIGN_LAG_MS),
+            "ayahs": list(checks.values()),
+        })
+    if log_event is not None:
+        for check in checks.values():
+            if check["repaired"] or not check["reliable"]:
+                reason = {
+                    "weak-onset": "начало слова не подтверждено, требуется ревью",
+                    "weak-word": "слово распознано неуверенно, требуется ревью",
+                    "weak-prefix-across-pause": "слабое начало перепроверено по паузе",
+                }.get(check["reason"], check["reason"])
+                log_event(
+                    f"Аят {check['ayah']}: {reason}, "
+                    f"исходный старт {check['raw_onset_ms'] / 1000:.3f} сек., "
+                    f"старт {check['onset_ms'] / 1000:.3f} сек., "
+                    f"conf={check['conf']:.4f}, первый звук={check['first_token_conf']:.4f}"
+                )
     return rows
+
+
+def _check_ayah_onsets(
+    words, word_token_spans, target_spans, frame_scores, stride_ms,
+    *, pauses, base_ms: float = 0.0, lag_ms: int | None = None,
+) -> dict[int, dict]:
+    """Check first-word evidence without letting blank frames hide weak tokens.
+
+    A weak prefix stretched across a strict DSP pause can belong to the
+    preceding sound. Move to the pause centre only if every token before that
+    pause is weak and a later token of the same word is strongly supported.
+    No pause/no strong suffix/competing pauses means review, not a guessed move.
+    ``base_ms`` lets FAST reuse this check on saved emission slices.
+    """
+    import numpy as np
+
+    checks: dict[int, dict] = {}
+    for word, (ts, te) in zip(words, word_token_spans):
+        if word.ayah in checks:
+            continue
+        spans = target_spans[ts:te]
+        if not spans or len(spans) != te - ts:
+            raise ValueError("Неполный текст начала аята")
+        token_confs = [_span_confidence(frame_scores, sf, ef) for sf, ef in spans]
+        token_scores = np.concatenate([
+            frame_scores[sf:ef + 1] for sf, ef in spans
+        ])
+        conf = _span_confidence(token_scores, 0, len(token_scores) - 1)
+        raw_ms = max(0, round(base_ms + spans[0][0] * stride_ms)
+                     - (ALIGN_LAG_MS if lag_ms is None else lag_ms))
+        check = {
+            "ayah": word.ayah, "raw_onset_ms": raw_ms, "onset_ms": raw_ms,
+            "conf": conf, "first_token_conf": token_confs[0],
+            "reliable": token_confs[0] >= 0.25 and conf >= 0.25,
+            "repaired": False,
+            "reason": ("weak-onset" if token_confs[0] < 0.25 else
+                       "weak-word" if conf < 0.25 else "ctc"),
+            "token_confs": token_confs,
+        }
+        if token_confs[0] < 0.25:
+            strong = next((i for i, c in enumerate(token_confs) if c >= 0.45), None)
+            if strong is not None:
+                first_ms = base_ms + spans[0][0] * stride_ms
+                strong_ms = base_ms + spans[strong][0] * stride_ms
+                supported = [
+                    p for p in pauses
+                    if first_ms < p.start_ms < p.end_ms <= strong_ms
+                    and all(
+                        c < 0.25 for (sf, _), c in zip(spans, token_confs)
+                        if base_ms + sf * stride_ms < p.end_ms
+                    )
+                ]
+                if len(supported) == 1:
+                    pause = supported[0]
+                    check.update({
+                        "onset_ms": round(pause.center_ms), "repaired": True,
+                        "reason": "weak-prefix-across-pause",
+                        "pause_start_ms": pause.start_ms, "pause_end_ms": pause.end_ms,
+                    })
+        checks[word.ayah] = check
+    return checks
 
 
 # --- emissions & stride ---------------------------------------------------
@@ -408,6 +519,15 @@ def _build_targets(
     ``word_token_spans``, so they are never emitted as a word/ayah — they only
     keep word 1 from being stretched back over the basmala.
     """
+    if hasattr(getattr(bundle, "emitter", None), "build_targets"):
+        return bundle.emitter.build_targets(words, intro=basmala_trs is not None)
+    if getattr(bundle, "text_kind", "phonetic") == "arabic":
+        from surah_cutter.data import quran_text
+
+        word_trs = [_arabic_target(w.text, bundle.vocab) for w in words]
+        if basmala_trs is not None:
+            basmala_trs = [_arabic_target(w.text, bundle.vocab)
+                           for w in quran_text.surah_words(1) if w.ayah == 1]
     vocab = bundle.vocab
     delim_id = bundle.delim_id
 
@@ -554,6 +674,26 @@ def _uniform_fallback(
 # --- model loading & vocab resolution -------------------------------------
 
 
+def _arabic_target(text: str, vocab: dict[str, int]) -> str:
+    """Normalise inference text only; the canonical Quran text stays untouched."""
+    import unicodedata
+
+    result = []
+    normalised = unicodedata.normalize("NFC", text).translate(str.maketrans({
+        "ٱ": "ا", "ۥ": "و", "ۦ": "ي", "۞": "", "۩": "",
+    }))
+    for ch in normalised:
+        if ch in vocab and ch != "ـ":
+            result.append(ch)
+        elif unicodedata.category(ch) in ("Mn", "Me", "Cf") or ch.isspace() or ch == "ـ":
+            continue
+        else:
+            raise ValueError(f"Символ {ch!r} не представлен в словаре арабской модели.")
+    if not result:
+        raise ValueError("Слово не представлено в словаре арабской модели.")
+    return "".join(result)
+
+
 def _get_onnx_bundle(model_path: str | None = None) -> "_OnnxBundle":
     """Load (and cache) the int8 ONNX emitter wrapped as an ``_OnnxBundle``.
 
@@ -561,7 +701,12 @@ def _get_onnx_bundle(model_path: str | None = None) -> "_OnnxBundle":
     ``SURAH_CUTTER_ONNX_MODEL`` env var). Raises ``FileNotFoundError`` with a
     pointer to the export tool when the artefact is missing.
     """
-    path = model_path or _DEFAULT_ONNX_MODEL
+    from surah_cutter.core import model_store
+
+    selected = model_store.runtime_path(model_store.ACTIVE_ID) if model_path is None else None
+    if model_path is None and model_store.ACTIVE_ID != "quran-phonetics" and selected is None:
+        raise ValueError("Выбранная модель не установлена или не подключена к разметке.")
+    path = model_path or str(selected or _DEFAULT_ONNX_MODEL)
     cached = _ONNX_CACHE.get(path)
     if cached is not None:
         return cached
@@ -574,10 +719,16 @@ def _get_onnx_bundle(model_path: str | None = None) -> "_OnnxBundle":
             "    python -m surah_cutter.tools.export_onnx"
         )
 
-    from surah_cutter.core import emissions as _emissions_mod
+    if model_path is None:
+        emitter = model_store.load_emitter(model_store.ACTIVE_ID)
+    else:
+        from surah_cutter.core import emissions as _emissions_mod
 
-    emitter = _emissions_mod.load_emitter(path)
+        emitter = _emissions_mod.load_emitter(path)
     bundle = _OnnxBundle(emitter)
+    if model_path is None and model_store.ACTIVE_ID == "arabic-ctc":
+        bundle.text_kind = "arabic"
+        bundle.lag_ms = 0
     _ONNX_CACHE[path] = bundle
     return bundle
 

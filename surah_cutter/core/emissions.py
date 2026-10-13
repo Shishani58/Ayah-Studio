@@ -27,6 +27,8 @@ Long audio is processed in overlapping windows with discarded context frames
 ``context`` seconds on each side, slide a ``window``-second frame with
 ``context`` of look-around, run each window, then trim the context frames back
 off so the concatenation reconstructs the contiguous emission sequence.
+Production inference processes one window per call: dynamic INT8 scales must
+not depend on another window or a mostly padded tail in the same batch.
 
 Heavy deps (:mod:`onnxruntime`) are imported lazily so ``core`` stays importable
 without them.
@@ -62,6 +64,11 @@ FRAME_STRIDE_MS = 20
 #: ``ctc_forced_aligner.generate_emissions`` defaults.
 DEFAULT_WINDOW_S = 30
 DEFAULT_CONTEXT_S = 2
+
+# Dynamic INT8 activation scales depend on all samples in a batch. Feeding a
+# mostly padded tail alongside a speech window can move an ayah onset by ~800 ms
+# (Shatri 114). Keep production inference independent of neighbouring windows.
+DEFAULT_BATCH_SIZE = 1
 
 
 def _time_to_frame(seconds: float) -> int:
@@ -111,7 +118,7 @@ class OnnxEmitter:
         *,
         window_s: int = DEFAULT_WINDOW_S,
         context_s: int = DEFAULT_CONTEXT_S,
-        batch_size: int = 4,
+        batch_size: int = DEFAULT_BATCH_SIZE,
     ) -> np.ndarray:
         """Return log-softmax emissions of shape ``(T, V)`` for ``pcm``.
 
@@ -168,7 +175,7 @@ def generate_emissions(
     output_name: str = "logits",
     window_s: int = DEFAULT_WINDOW_S,
     context_s: int = DEFAULT_CONTEXT_S,
-    batch_size: int = 4,
+    batch_size: int = DEFAULT_BATCH_SIZE,
     do_normalize: bool = True,
 ) -> np.ndarray:
     """Windowed ONNX inference -> ``(T, V)`` log-softmax emissions.

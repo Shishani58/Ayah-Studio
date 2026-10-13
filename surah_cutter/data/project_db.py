@@ -51,6 +51,16 @@ CREATE TABLE IF NOT EXISTS edit_history (
     ts TEXT,
     action TEXT
 );
+CREATE TABLE IF NOT EXISTS word_timings (
+    sura INTEGER NOT NULL, ayah INTEGER NOT NULL, word_index INTEGER NOT NULL,
+    time INTEGER NOT NULL, confidence REAL, status TEXT NOT NULL,
+    source TEXT NOT NULL, ayah_start INTEGER NOT NULL, ayah_end INTEGER NOT NULL,
+    updated_at TEXT NOT NULL, PRIMARY KEY (sura, ayah, word_index)
+);
+CREATE TABLE IF NOT EXISTS word_edit_history (
+    id INTEGER PRIMARY KEY, sura INTEGER, ayah INTEGER, word_index INTEGER,
+    old_time INTEGER, new_time INTEGER, ts TEXT, action TEXT
+);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_timings_sura_ayah ON timings (sura, ayah);
 """
 
@@ -241,3 +251,81 @@ class ProjectDB:
             return None
         keys = ("sura", "ayah", "end_ms", "confidence", "status", "source", "updated_at")
         return dict(zip(keys, row))
+
+    def get_word_timings(self, sura: int, ayah: int) -> list[dict]:
+        """Saved words in canonical order, including boundary snapshots."""
+        cursor = self._conn.execute(
+            "SELECT word_index, time, confidence, status, source, ayah_start, ayah_end "
+            "FROM word_timings WHERE sura=? AND ayah=? ORDER BY word_index", (sura, ayah)
+        )
+        keys = [col[0] for col in cursor.description]
+        return [dict(zip(keys, row)) for row in cursor]
+
+    def write_word_timings(self, sura: int, ayah: int, rows, start: int, end: int,
+                           source: str) -> int:
+        """Atomically merge auto words; preserve every manual/verified word."""
+        existing = {r["word_index"]: r for r in self.get_word_timings(sura, ayah)}
+        merged = []
+        for index, time, confidence in rows:
+            old = existing.get(index)
+            if old and old["status"] in ("edited", "verified"):
+                if (old["ayah_start"], old["ayah_end"]) != (start, end):
+                    raise ValueError("Границы аята изменились. Сначала обновите ручные метки слов.")
+                merged.append((index, old["time"], old["confidence"], False))
+            else:
+                merged.append((index, time, confidence, True))
+        times = [r[1] for r in merged]
+        if (not times or any(type(t) is not int or not start <= t < end for t in times)
+                or any(a >= b for a, b in zip(times, times[1:]))):
+            raise ValueError("Метки слов должны идти по порядку внутри аята; проверьте ручные метки.")
+        written = 0
+        with self._conn:
+            for index, time, confidence, writable in merged:
+                if not writable:
+                    continue
+                self._conn.execute(
+                    "INSERT INTO word_timings VALUES (?, ?, ?, ?, ?, 'auto', ?, ?, ?, ?) "
+                    "ON CONFLICT(sura, ayah, word_index) DO UPDATE SET "
+                    "time=excluded.time, confidence=excluded.confidence, source=excluded.source, "
+                    "ayah_start=excluded.ayah_start, ayah_end=excluded.ayah_end, "
+                    "updated_at=excluded.updated_at",
+                    (sura, ayah, index, time, confidence, source, start, end, _now()),
+                )
+                written += 1
+        return written
+
+    def set_word_time(self, sura: int, ayah: int, index: int, time: int,
+                      start: int, end: int) -> None:
+        """Manual word edit with neighbour guards and a separate audit trail."""
+        rows = self.get_word_timings(sura, ayah)
+        old = next((r for r in rows if r["word_index"] == index), None)
+        before = [r["time"] for r in rows if r["word_index"] < index]
+        after = [r["time"] for r in rows if r["word_index"] > index]
+        if (type(time) is not int or not start <= time < end
+                or (before and time <= max(before)) or (after and time >= min(after))):
+            raise ValueError("Начало слова должно быть внутри аята между соседними словами.")
+        with self._conn:
+            self._conn.execute(
+                "INSERT INTO word_timings VALUES (?, ?, ?, ?, NULL, 'edited', 'manual', ?, ?, ?) "
+                "ON CONFLICT(sura, ayah, word_index) DO UPDATE SET "
+                "time=excluded.time, confidence=NULL, status='edited', source='manual', "
+                "ayah_start=excluded.ayah_start, ayah_end=excluded.ayah_end, "
+                "updated_at=excluded.updated_at", (sura, ayah, index, time, start, end, _now()),
+            )
+            self._conn.execute(
+                "INSERT INTO word_edit_history "
+                "(sura, ayah, word_index, old_time, new_time, ts, action) "
+                "VALUES (?, ?, ?, ?, ?, ?, 'set_time')",
+                (sura, ayah, index, old["time"] if old else None, time, _now()),
+            )
+
+    def verify_word(self, sura: int, ayah: int, index: int, start: int, end: int) -> None:
+        """Verify a current saved mark; an old boundary snapshot cannot be verified."""
+        with self._conn:
+            cursor = self._conn.execute(
+                "UPDATE word_timings SET status='verified', updated_at=? "
+                "WHERE sura=? AND ayah=? AND word_index=? AND ayah_start=? AND ayah_end=?",
+                (_now(), sura, ayah, index, start, end),
+            )
+            if not cursor.rowcount:
+                raise ValueError("Сначала поставьте или обновите метку слова.")

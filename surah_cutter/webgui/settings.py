@@ -18,25 +18,29 @@ SETTINGS_PATH = Path.home() / ".surah-cutter" / "settings.json"
 def load() -> dict[str, Any]:
     """Return the saved settings dict (empty on first run / any error)."""
     try:
-        return json.loads(SETTINGS_PATH.read_text(encoding="utf-8"))
+        data = json.loads(SETTINGS_PATH.read_text(encoding="utf-8"))
+        return data if isinstance(data, dict) else {}
     except Exception:
         return {}
 
 
-def save(data: dict[str, Any]) -> None:
-    """Write ``data`` as the settings file (best-effort, never raises)."""
+def save(data: dict[str, Any], *, strict: bool = False) -> None:
+    """Atomically write settings; ``strict`` surfaces errors to explicit UI saves."""
     try:
         SETTINGS_PATH.parent.mkdir(parents=True, exist_ok=True)
-        SETTINGS_PATH.write_text(
+        temporary = SETTINGS_PATH.with_suffix(".tmp")
+        temporary.write_text(
             json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
         )
+        temporary.replace(SETTINGS_PATH)
     except Exception:
-        pass
+        if strict:
+            raise
 
 
-def update(**fields: Any) -> dict[str, Any]:
+def update(*, strict: bool = False, **fields: Any) -> dict[str, Any]:
     """Merge non-``None`` ``fields`` into the saved settings and persist."""
     data = load()
     data.update({k: v for k, v in fields.items() if v is not None})
-    save(data)
+    save(data, strict=strict)
     return data

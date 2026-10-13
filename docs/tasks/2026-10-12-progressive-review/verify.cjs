@@ -1,0 +1,101 @@
+// Run with NODE_PATH pointing to the bundled runtime's node_modules.
+const { chromium } = require('playwright');
+const assert = require('node:assert/strict');
+const pending = new Map();
+const sura = n => ({ surah: n, ayah_count: 1, ayahs: [{ ayah: 1, time: 0, text: '', status: 'auto' }] });
+const wave = n => ({ surah: n, peaks: [10, 40, 20], duration_ms: 1000 });
+(async () => {
+  const browser = await chromium.launch({ headless: true, channel: "chrome" });
+  try {
+    const page = await browser.newPage({ viewport: { width: 1180, height: 900 } });
+    const errors = [];
+    page.on('pageerror', e => errors.push(e.message));
+    const wav = Buffer.alloc(32044);
+    wav.write('RIFF'); wav.writeUInt32LE(wav.length - 8, 4); wav.write('WAVEfmt ', 8);
+    wav.writeUInt32LE(16, 16); wav.writeUInt16LE(1, 20); wav.writeUInt16LE(1, 22);
+    wav.writeUInt32LE(16000, 24); wav.writeUInt32LE(32000, 28);
+    wav.writeUInt16LE(2, 32); wav.writeUInt16LE(16, 34); wav.write('data', 36); wav.writeUInt32LE(32000, 40);
+    await page.route('**/api/**', async route => {
+      const path = new URL(route.request().url()).pathname;
+      if (/\/api\/sura\//.test(path)) {
+        const queue = pending.get(path) || []; queue.push(route); pending.set(path, queue); return;
+      }
+      if (/\/api\/audio\//.test(path)) return route.fulfill({ contentType: 'audio/wav', body: wav });
+      const body = path === '/api/project' ? {} : path === '/api/projects' ? [] : path === '/api/suras'
+        ? [113, 114].map(n => ({ surah: n, ayah_count: 1, has_audio: true, status: 'not_processed' })) : {};
+      await route.fulfill({ json: body });
+    });
+    const respond = async (path, json, status = 200) => {
+      for (let i = 0; i < 100 && !pending.get(path)?.length; i++) await new Promise(r => setTimeout(r, 10));
+      assert.ok(pending.get(path)?.length, `request ${path}`);
+      await pending.get(path).shift().fulfill({ status, json });
+    };
+    const open = n => page.evaluate(n => { void openReview(n); }, n);
+    await page.goto('http://127.0.0.1:8877');
+    await page.waitForFunction(() => dashboardSuras.length === 2);
+    await open(114);
+    assert.equal(await page.locator('#review').isVisible(), true);
+    assert.equal(await page.locator('#ayahLoadStatus').isVisible(), true);
+    assert.equal(await page.locator('#waveLoadStatus').isVisible(), true);
+    assert.equal(await page.locator('#regenSuraBtn').isDisabled(), true);
+    await page.screenshot({ path: '/tmp/surah-review-loading.png' });
+    await respond('/api/sura/114', sura(114));
+    await page.waitForFunction(() => R.dataReady && R.audioReady);
+    assert.equal(await page.locator('#ayahList > li').count(), 1);
+    assert.equal(await page.locator('#waveLoadStatus').isVisible(), true);
+    assert.equal(await page.locator('#playBtn').isEnabled(), true);
+    await page.screenshot({ path: '/tmp/surah-review-data.png' });
+    await respond('/api/sura/114/waveform', wave(114));
+    await page.waitForFunction(() => R.waveReady && !reviewLoading);
+    assert.equal(await page.locator('#waveLoadStatus').isVisible(), false);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await open(113);
+    await page.screenshot({ path: '/tmp/surah-review-mobile-loading.png' });
+    await open(114);
+    await respond('/api/sura/114', sura(114));
+    await respond('/api/sura/114/waveform', wave(114));
+    await page.waitForFunction(() => R.dataReady && R.waveReady);
+    await respond('/api/sura/113', sura(113));
+    await respond('/api/sura/113/waveform', { ...wave(113), duration_ms: 9999 });
+    assert.deepEqual(await page.evaluate(() => [R.surah, R.duration]), [114, 1000]);
+    await open(113);
+    await respond('/api/sura/113', sura(113));
+    await respond('/api/sura/113/waveform', { detail: 'test waveform failure' }, 500);
+    await page.waitForFunction(() => !reviewLoading);
+    assert.equal(await page.locator('#ayahList > li').count(), 1);
+    assert.equal(await page.locator('#waveLoadStatus button').isVisible(), true);
+    assert.equal(await page.locator('#waveScroll').getAttribute('aria-busy'), 'false');
+    await page.locator('#waveLoadStatus button').click();
+    await respond('/api/sura/113/waveform', wave(113));
+    await respond('/api/sura/113', { detail: 'test data failure' }, 500);
+    await page.waitForFunction(() => !reviewLoading);
+    assert.equal(await page.locator('#ayahLoadStatus button').isVisible(), true);
+    assert.equal(await page.locator('#playBtn').isDisabled(), true);
+    await open(114);
+    await page.evaluate(() => document.getElementById('audio').dispatchEvent(new Event('error')));
+    assert.equal(await page.locator('#audioLoadStatus button').isVisible(), true);
+    assert.equal(await page.locator('#playBtn').isDisabled(), true);
+    await page.locator('#backBtn').click();
+    await respond('/api/sura/114', sura(114));
+    await respond('/api/sura/114/waveform', wave(114));
+    assert.equal(await page.locator('#dashboard').isVisible(), true);
+    await page.setViewportSize({ width: 1180, height: 900 });
+    await page.evaluate(() => setMode('words'));
+    await open(114);
+    await respond('/api/sura/114', sura(114));
+    await page.waitForFunction(() => W.loading);
+    assert.equal(await page.locator('#ayahLoadStatus').textContent(), 'Загрузка слов и разметки…');
+    await respond('/api/sura/114/waveform', wave(114));
+    assert.equal(await page.locator('#ayahList').getAttribute('aria-busy'), 'true');
+    await respond('/api/sura/114/words', { surah: 114, words: [], word_progress: {} });
+    await page.waitForFunction(() => W.data !== null);
+    assert.equal(await page.locator('#ayahLoadStatus').isVisible(), false);
+    await page.evaluate(() => { void loadWords(); });
+    await respond('/api/sura/114/words', { detail: 'test words failure' }, 500);
+    await page.waitForFunction(() => !W.loading);
+    assert.equal(await page.locator('#ayahLoadStatus button').isVisible(), true);
+    assert.equal(await page.locator('#ayahList').getAttribute('aria-busy'), 'false');
+    assert.deepEqual(errors, []);
+    console.log('PASS: immediate shell, independent data/audio/wave, stale responses, errors/retry, back, words, desktop/mobile');
+  } finally { await browser.close(); }
+})().catch(e => { console.error(e); process.exitCode = 1; });

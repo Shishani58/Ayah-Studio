@@ -5570,6 +5570,9 @@ def align_surah_fast(
     if bundle is None:
         bundle = _default_bundle()
 
+    if getattr(bundle, "text_kind", "phonetic") != "phonetic":
+        raise ValueError("FAST поддерживает только Quran Phonetics. Выберите полный режим.")
+
     def emit(message: str) -> None:
         if log_event is not None:
             log_event(message)
@@ -5675,7 +5678,10 @@ def align_surah_fast(
         return full_emissions[f0:f1], base, full_stride, end
 
     # --- low-level: align words[i0:i1] within audio [t0_ms, t1_ms]. ----------
-    def align_slice(i0: int, i1: int, t0_ms: float, t1_ms: float, basmala: bool):
+    def align_slice(
+        i0: int, i1: int, t0_ms: float, t1_ms: float, basmala: bool,
+        *, check_onsets: bool = False,
+    ):
         if t1_ms - t0_ms < min_win_ms:
             mid = 0.5 * (t0_ms + t1_ms)
             t0_ms, t1_ms = mid - min_win_ms / 2, mid + min_win_ms / 2
@@ -5699,11 +5705,14 @@ def align_surah_fast(
             return None
         emis, base, stride, end = em
         nf = emis.shape[0]
-        path, fscores = forced_align(
-            np.ascontiguousarray(emis[None, :, :], dtype=np.float32),
-            np.asarray(targets, dtype=np.int64)[None, :],
-            blank=bundle.blank_id,
-        )
+        try:
+            path, fscores = forced_align(
+                np.ascontiguousarray(emis[None, :, :], dtype=np.float32),
+                np.asarray(targets, dtype=np.int64)[None, :],
+                blank=bundle.blank_id,
+            )
+        except ValueError:
+            return None  # The caller grows/retries an insufficient window.
         path = np.asarray(path).reshape(-1)
         fscores = np.asarray(fscores).reshape(-1)
         segs = [
@@ -5723,7 +5732,19 @@ def align_surah_fast(
             ends.append(max(0.0, base + ef * stride - lag))
             seg = fscores[sf:max(sf + 1, ef + 1)]
             confs.append(float(np.exp(seg.mean())) if seg.size else 0.0)
+        onset_checks = {}
+        if check_onsets and len(segs) == len(targets):
+            onset_checks = A._check_ayah_onsets(
+                sub_words, spans, tspans, fscores, stride, base_ms=base,
+                pauses=candidates.detect_energy_pauses(pcm, sr, use_ten_vad=False),
+            )
+            for idx, word in enumerate(sub_words):
+                if idx == 0 or sub_words[idx - 1].ayah != word.ayah:
+                    check = onset_checks[word.ayah]
+                    starts[idx] = float(check["onset_ms"])
+                    confs[idx] = check["conf"]
         return {"starts": starts, "ends": ends, "confs": confs, "lag_ms": lag,
+                "onset_checks": onset_checks,
                 "complete": len(segs) == len(targets),
                 "base": base, "end": end, "win_ms": end - base}
 
@@ -5815,7 +5836,10 @@ def align_surah_fast(
     intro = 6500.0 if basmala else 150.0
     head_end = min(n_words, fa1 + 4)
     head_dur = sum(wlen(j) for j in range(fa1, head_end))
-    res = align_slice(0, head_end, 0.0, min(intro + head_dur + 900.0, total_ms), basmala)
+    res = align_slice(
+        0, head_end, 0.0, min(intro + head_dur + 900.0, total_ms), basmala,
+        check_onsets=True,
+    )
     if res is None:
         emit("Fast не смог заякорить первый аят - ставлю грубый prior с conf=0")
         rows: list[tuple[int, int, float]] = []
@@ -5854,15 +5878,17 @@ def align_surah_fast(
         return rows
     a1 = ayah_list[0]
     content_start = res["starts"][fa1]
-    raw_content_start = content_start
+    first_check = res["onset_checks"].get(a1)
+    raw_content_start = first_check["raw_onset_ms"] if first_check else content_start
     intro_pause = next(
         (
             d.pause for d in pause_decisions
-            if d.reason == "intro-vad-tight"
+            if d.accepted and d.reason in {"intro-vad-tight", "intro-vad"}
             and d.pause.start_ms <= content_start <= d.pause.end_ms
         ),
         None,
     )
+    checked_content_start = content_start
     content_start = _first_ayah_content_start(
         content_start,
         basmala=basmala,
@@ -5873,9 +5899,14 @@ def align_surah_fast(
     )
     if intro_pause is not None:
         emit(
-            f"Первый аят: anchor {sec(raw_content_start)} сек. попал внутрь intro-паузы "
+            f"Первый аят: проверенное начало {sec(checked_content_start)} сек. внутри intro-паузы "
             f"{sec(intro_pause.start_ms)}-{sec(intro_pause.end_ms)} сек.; "
             f"ставлю старт {sec(content_start)} сек."
+        )
+    if first_check and first_check["repaired"]:
+        emit(
+            f"Первый аят: слабый первый звук пересекал паузу; "
+            f"старт {sec(raw_content_start)} → {sec(content_start)} сек., требуется ревью"
         )
     elif basmala and content_start < _BASMALA_MIN_CONTENT_START_MS:
         emit(
@@ -5899,6 +5930,7 @@ def align_surah_fast(
         ),
         "decode_start_ms": 0.0,
         "marker_ms": round(content_start, 1),
+        "onset_check": first_check,
     })
     log_read(model_reads[-1])
     starts_ms[a1] = content_start
@@ -5913,14 +5945,17 @@ def align_surah_fast(
             "pause_end_ms": round(intro_pause.end_ms, 1),
             "rough_ms": round(content_start, 1),
             "pause_sim": round(float(res["confs"][fa1]), 3),
-            "pause_reason": "intro-vad-tight",
+            "pause_reason": next(
+                d.reason for d in pause_decisions if d.pause is intro_pause
+            ),
             "match_action": "first_ayah_pause_owner",
             "timing_strategy": "pause_center_invariant",
         })
     tr_ayahs.append({"ayah": a1, "rough_ms": content_start,
                      "from_pause": intro_pause is not None,
                      "onset_ms": content_start, "conf": confs[a1],
-                     "win_s": round(res["win_ms"] / 1000.0, 2), "reliable": True})
+                     "win_s": round(res["win_ms"] / 1000.0, 2),
+                     "reliable": first_check["reliable"] if first_check else False})
 
     # ===================================================================== #
     # Phase 1c — match pause onsets to boundaries (order-preserving DP).      #
@@ -6786,6 +6821,8 @@ def align_surah_fast(
                         "status": "tail_near_existing",
                     })
                     continue
+                if any(p.start_ms < end_ms and pause_start_ms < p.end_ms for p in pauses):
+                    continue  # Two overlapping shelves cannot own different ayahs.
                 pause = candidates.Pause(pause_start_ms, end_ms, end_ms - pause_start_ms)
                 pauses.append(pause)
                 decision = candidates.PauseDecision(
@@ -6900,6 +6937,8 @@ def align_surah_fast(
                         "effective_start_ms": round(pause_start_ms, 1),
                         "status": "near_existing",
                     })
+                    continue
+                if any(p.start_ms < end_ms and pause_start_ms < p.end_ms for p in pauses):
                     continue
                 pause = candidates.Pause(pause_start_ms, end_ms, end_ms - pause_start_ms)
                 pauses.append(pause)
@@ -13232,7 +13271,8 @@ def align_surah_fast(
         """Atomically re-read only structurally damaged anchored intervals."""
         repaired_targets: set[int] = set()
         reliable_anchors = {
-            ayah for ayah in ayah_list if reliable_pause_anchor(ayah)
+            ayah for ayah in ayah_list
+            if ayah not in target_ayahs and reliable_pause_anchor(ayah)
         }
         spans = _bounded_local_repair_spans(
             ayah_list,
@@ -13432,6 +13472,34 @@ def align_surah_fast(
     # Re-align only when the matcher explicitly reports missing audio context;
     # otherwise a speculative repair can overwrite an already-correct block.
     structural_recheck_ayahs = list(insufficient_audio_ayahs)
+    # A weak wasl after similar openings can be the tail of a shifted pause
+    # sequence. If an unused trusted pause exists in that short, stop-free
+    # block, re-read the entire block together; do not trust its weak owners as
+    # anchors. This uses the saved emissions and never triggers new inference.
+    for ai, a in enumerate(ayah_list):
+        if place.get(a, (0.0, False))[1] or confs.get(a, 0.0) >= conf_thresh:
+            continue
+        prefix = _prefix_key(word_trs[ayah_words[a][0]])[:2]
+        if len(prefix) < 2:
+            continue
+        left = ai
+        while left > 0 and ai - left < 3:
+            previous_a = ayah_list[left - 1]
+            if _prefix_key(word_trs[ayah_words[previous_a][0]])[:2] != prefix:
+                break
+            left -= 1
+        block = ayah_list[left:ai + 1]
+        if len(block) < 2 or left == 0 or ai + 1 >= len(ayah_list):
+            continue
+        if any(ayah_waqf_count.get(block_a, 0) for block_a in block):
+            continue
+        lo, hi = starts_ms[ayah_list[left - 1]], starts_ms[ayah_list[ai + 1]]
+        owned = set(matched_center_for_ayah.values())
+        unused = [d for d in pause_decisions if d.accepted and d.reason == "dsp"
+                  and lo < d.pause.center_ms < hi and d.pause.center_ms not in owned]
+        if unused:
+            structural_recheck_ayahs.extend(block)
+    structural_recheck_ayahs = sorted(set(structural_recheck_ayahs))
     locally_repaired_ayahs = repair_structural_targets_locally(
         structural_recheck_ayahs
     )
@@ -13573,6 +13641,32 @@ def align_surah_fast(
                     f"Аят {a}: fingerprint той же записи подтвердил старт "
                     f"{sec(matched_ms)} сек. (corr={float(repair['correlation']):.3f})"
                 )
+
+    # A CTC start can coincide with a real DSP pause centre. Preserve its
+    # timestamp, but describe the observed pause rather than labelling it wasl.
+    dsp_by_marker = {
+        round(d.pause.center_ms): d.pause
+        for d in pause_decisions if d.accepted and d.reason == "dsp"
+    }
+    final_starts = {a: ms for a, ms, _conf in rows}
+    trace_by_ayah = {item["ayah"]: item for item in tr_ayahs}
+    for match in pause_match_debug:
+        a = match.get("ayah")
+        if (match.get("from_pause") or match.get("match_action") != "wasl"
+                or match.get("boundary_evidence") == "exact_fingerprint"):
+            continue
+        pause = dsp_by_marker.get(final_starts.get(a))
+        if pause is None:
+            continue
+        place[a] = (pause.center_ms, True)
+        matched_center_for_ayah[a] = pause.center_ms
+        match.update({
+            "from_pause": True, "pause": all_pause_ord.get(pause.center_ms),
+            "pause_start_ms": pause.start_ms, "pause_end_ms": pause.end_ms,
+            "pause_center_ms": pause.center_ms, "pause_reason": "dsp",
+            "match_action": "ctc_pause_confirmation",
+        })
+        trace_by_ayah[a]["from_pause"] = True
 
     write_fast_trace({
         "drift_detected": bool(drifted),
