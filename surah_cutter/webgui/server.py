@@ -22,6 +22,9 @@ from fastapi.staticfiles import StaticFiles
 
 from surah_cutter.data import quran_text
 from surah_cutter.core import model_store
+from surah_cutter.core.cancellation import (
+    GenerationCancelled, cancellation_scope, check_cancelled,
+)
 from surah_cutter.webgui import projects, settings
 from surah_cutter.webgui.state import (
     DB_CODE,
@@ -77,14 +80,14 @@ class _GenJob:
         self.thread.start()
 
     def request_cancel(self) -> None:
-        """Ask the worker to stop after the current sura finishes."""
+        """Interrupt the current calculation and stop the remaining queue."""
         self.cancel.set()
 
     def _emit(self, event: dict[str, Any]) -> None:
         self.q.put(event)
 
     def _run(self, suras: list[int], mode: str, reciter: str | None) -> None:
-        with model_store.RUNTIME_LOCK:
+        with model_store.RUNTIME_LOCK, cancellation_scope(self.cancel):
             self._run_selected(suras, mode, reciter)
 
     def _run_selected(self, suras: list[int], mode: str, reciter: str | None) -> None:
@@ -98,8 +101,6 @@ class _GenJob:
             db = ProjectDB.open(str(self.db_path), DB_CODE, DB_VERSION)
             try:
                 for i, surah in enumerate(suras):
-                    # Cancellation is checked between suras (a sura's alignment
-                    # is not interruptible mid-flight).
                     if self.cancel.is_set():
                         cancelled = True
                         break
@@ -116,6 +117,7 @@ class _GenJob:
                     log_lines: list[str] = []
 
                     def log_event(line: str) -> None:
+                        check_cancelled()
                         text = str(line)
                         log_lines.append(text)
                         self._emit({
@@ -140,11 +142,13 @@ class _GenJob:
                             trace=trace,
                             log_event=log_event,
                         )
-                        written = db.write_timings(rows, source="auto")
+                        check_cancelled()
+                        written = db.write_timings(rows, source=trace.get("model_source", model_store.source()))
                         _write_trace_confidences(db, surah, trace)
                     word_result = {}
                     if mode == "words":
                         word_result = _align_sura_words(db, self.db_path, audio, surah, log_event)
+                    check_cancelled()
                     log_paths = _save_sura_log(
                         surah, mode, trace, log_lines, rows, self.db_path
                     )
@@ -164,6 +168,8 @@ class _GenJob:
                 {"type": "cancelled", "completed": completed} if cancelled
                 else {"type": "done", "completed": completed}
             )
+        except GenerationCancelled:
+            self._emit({"type": "cancelled", "completed": completed})
         except Exception as exc:  # surface failures to the UI, don't crash the server
             self._emit({"type": "error", "message": str(exc)})
         finally:
@@ -179,8 +185,10 @@ def create_app() -> FastAPI:
     app = FastAPI(title="Ayah Studio")
     _restore_from_settings()
     selected = settings.load().get("alignment_model", "quran-phonetics")
-    valid_ids = {item["id"] for item in model_store.catalog()} | {"quran-phonetics-fp32"}
+    valid_ids = {item["id"] for item in model_store.available_catalog()}
     model_store.ACTIVE_ID = selected if selected in valid_ids else "quran-phonetics"
+    if selected not in valid_ids:
+        settings.update(strict=True, alignment_model="quran-phonetics")
 
     @app.get("/api/models")
     def get_models() -> dict[str, Any]:
@@ -210,6 +218,8 @@ def create_app() -> FastAPI:
         with _PROJECT_LOCK:
             if (_JOB is not None and _JOB.running) or _WORD_LOCK.locked():
                 raise HTTPException(409, "Дождитесь завершения расчёта перед сменой модели.")
+            if model_id not in {item["id"] for item in model_store.available_catalog()}:
+                raise HTTPException(400, "Модель исключена из каталога.")
             try:
                 path = model_store.runtime_path(model_id)
             except ValueError as exc:
@@ -219,7 +229,14 @@ def create_app() -> FastAPI:
             try:
                 import numpy as np
                 from surah_cutter.core import align
+                from surah_cutter.core.model_runtime import release_runtimes
 
+                # Selection holds the runtime lock. Release idle weights before
+                # loading another large model; a failed selection leaves the
+                # saved ID unchanged and reloads its weights on the next call.
+                if model_id != model_store.ACTIVE_ID:
+                    align._ONNX_CACHE.clear()
+                    release_runtimes()
                 emitter = model_store.load_emitter(model_id)
                 if hasattr(emitter, "probe"):
                     emitter.probe()
@@ -232,6 +249,10 @@ def create_app() -> FastAPI:
                     fields["mode"] = "full"
                 settings.update(strict=True, **fields)
             except Exception as exc:
+                from surah_cutter.core.model_runtime import _WORKERS, release_runtimes
+
+                previous = next((e for e in _WORKERS.values() if e.model_id == model_store.ACTIVE_ID), None)
+                release_runtimes(keep=previous)
                 raise HTTPException(400, "Не удалось проверить модель или сохранить выбор. Текущая модель сохранена.") from exc
             model_store.ACTIVE_ID = model_id
             bundle = align._OnnxBundle(emitter)
@@ -263,6 +284,7 @@ def create_app() -> FastAPI:
         cfg = settings.load()
         managed = next((p for p in projects.list_projects()
                         if STATE.db_path and Path(p["db_path"]).resolve() == STATE.db_path.resolve()), {})
+        external = cfg.get("external_projects", {}).get(str(STATE.db_path.resolve()), {}) if STATE.db_path else {}
         return {
             "audio_dir": str(STATE.audio_dir) if STATE.audio_dir else None,
             "db_path": str(STATE.db_path) if STATE.db_path else None,
@@ -270,11 +292,11 @@ def create_app() -> FastAPI:
             "suras_with_audio": sorted(STATE.audio_map),
             "mode": cfg.get("mode", "auto"),
             "project_id": managed.get("id"),
-            "reciter": managed.get("reciter", STATE.audio_dir.name if STATE.audio_dir else ""),
-            "recording": managed.get("recording", "Внешний проект"),
+            "reciter": managed.get("reciter", external.get("reciter", STATE.audio_dir.name if STATE.audio_dir else "")),
+            "recording": managed.get("recording", external.get("recording", "Внешний проект")),
             "time_step": cfg.get("time_step", 10),
             "arabic_size": cfg.get("arabic_size", 30),
-            "theme": cfg.get("theme", "dark"),
+            "theme": cfg.get("theme", "light"),
             "alignment_model": model_store.ACTIVE_ID,
         }
 
@@ -341,6 +363,16 @@ def create_app() -> FastAPI:
             raise HTTPException(404, "Проект не найден. Обновите список проектов.") from exc
         return open_project(project)
 
+    @app.post("/api/projects/update")
+    def update_project(payload: dict[str, str] = Body(...)) -> dict[str, Any]:
+        with _PROJECT_LOCK:
+            try:
+                projects.rename(payload.get("id", ""), payload.get("reciter", ""),
+                                payload.get("recording", ""))
+                return projects.get(payload.get("id", ""))
+            except (OSError, ValueError) as exc:
+                raise HTTPException(400, str(exc)) from exc
+
     @app.post("/api/settings")
     def set_settings(payload: dict[str, Any] = Body(default={})) -> dict[str, Any]:
         allowed = {k: v for k, v in payload.items() if k in ("mode", "time_step", "arabic_size", "theme")}
@@ -349,7 +381,7 @@ def create_app() -> FastAPI:
         if "mode" in allowed and allowed["mode"] not in _GEN_MODES:
             raise HTTPException(400, f"unknown mode: {allowed['mode']}")
         if "mode" in allowed and model_store.active_kind() != "phonetic" and allowed["mode"] not in ("full", "tiled", "words"):
-            raise HTTPException(400, "Арабская модель поддерживает полный, точный и пословный режимы.")
+            raise HTTPException(400, "Выбранная модель поддерживает полный, точный и пословный режимы.")
         if "time_step" in allowed and allowed["time_step"] not in (10, 50, 100):
             raise HTTPException(400, "Выберите шаг времени: 10, 50 или 100 мс.")
         if "arabic_size" in allowed and allowed["arabic_size"] not in (26, 30, 36, 42):
@@ -363,6 +395,18 @@ def create_app() -> FastAPI:
                                     payload.get("recording", ""))
                 except (OSError, ValueError) as exc:
                     raise HTTPException(400, str(exc)) from exc
+        elif "reciter" in payload or "recording" in payload:
+            with _PROJECT_LOCK:
+                if (not STATE.db_path or get_project()["project_id"]
+                        or payload.get("db_path") != str(STATE.db_path)):
+                    raise HTTPException(409, "Проект изменился. Откройте настройки заново.")
+                names = {key: payload.get(key, "") for key in ("reciter", "recording")}
+                if any(not isinstance(value, str) or not value.strip() or len(value.strip()) > 120
+                       for value in names.values()):
+                    raise HTTPException(400, "Введите чтеца и название записи (до 120 символов).")
+                external = dict(settings.load().get("external_projects", {}))
+                external[str(STATE.db_path.resolve())] = {key: value.strip() for key, value in names.items()}
+                allowed["external_projects"] = external
         try:
             return settings.update(strict=True, **allowed)
         except OSError as exc:
@@ -405,7 +449,7 @@ def create_app() -> FastAPI:
             if mode not in _GEN_MODES:
                 raise HTTPException(400, f"unknown mode: {mode}")
             if model_store.active_kind() != "phonetic" and mode not in ("full", "tiled", "words"):
-                raise HTTPException(400, "Для арабской модели выберите полный, точный или пословный режим.")
+                raise HTTPException(400, "Для выбранной модели выберите полный, точный или пословный режим.")
             if payload.get("only_missing"):
                 done = ({s for s, p in _word_progress().items() if p["complete"]}
                         if mode == "words" else _processed_suras())
@@ -953,6 +997,8 @@ def create_app() -> FastAPI:
                 with ProjectDB.open(str(db_path), DB_CODE, DB_VERSION) as db:
                     if payload.get("action") == "verify":
                         db.verify_word(surah, ayah, index, start, end)
+                    elif payload.get("action") == "status":
+                        db.set_word_status(surah, ayah, index, payload.get("status"), start, end)
                     else:
                         db.set_word_time(surah, ayah, index, payload.get("time"), start, end)
             except ValueError as exc:
@@ -989,14 +1035,27 @@ def create_app() -> FastAPI:
 
     @app.post("/api/verify")
     def set_verify(payload: dict[str, Any] = Body(...)) -> dict[str, Any]:
-        surah, ayah = int(payload["surah"]), int(payload["ayah"])
+        surah, ayah = payload.get("surah"), payload.get("ayah")
         status = payload.get("status", "verified")
+        if any(type(v) is not int for v in (surah, ayah)):
+            raise HTTPException(400, "Введите номер суры и аята целыми числами.")
         _check_surah(surah)
         _require_db()
-        from surah_cutter.data.project_db import ProjectDB
+        if not 1 <= ayah <= quran_text.surah_ayah_counts()[surah]:
+            raise HTTPException(400, "Укажите существующий номер аята.")
+        from surah_cutter.data.project_db import STATUSES, ProjectDB
 
-        with ProjectDB.open(str(STATE.db_path), DB_CODE, DB_VERSION) as db:
-            db.set_status(surah, ayah, status)
+        if status not in STATUSES:
+            raise HTTPException(400, "Неизвестный статус аята.")
+        with _PROJECT_LOCK:
+            if payload.get("db_path") and Path(payload["db_path"]).resolve() != STATE.db_path.resolve():
+                raise HTTPException(409, "Проект изменился. Откройте суру заново перед правкой.")
+            with ProjectDB.open(str(STATE.db_path), DB_CODE, DB_VERSION) as db:
+                if status != "auto" and db._conn.execute(
+                    "SELECT time FROM timings WHERE sura=? AND ayah=?", (surah, ayah)
+                ).fetchone() is None:
+                    raise HTTPException(400, "Сначала укажите начало аята.")
+                db.set_status(surah, ayah, status)
         return {"ok": True, "surah": surah, "ayah": ayah, "status": status}
 
     @app.post("/api/export")
@@ -1041,6 +1100,7 @@ def _align_sura_words(db, db_path, audio, surah, log_event):
     written = failures = 0
     with _WORD_LOCK:
         for ayah, words in by_ayah.items():
+            check_cancelled()
             timings, _ = _sura_timings_reviews(surah, db_path)
             start = timings.get(ayah)
             end = timings.get(ayah + 1, duration if ayah == quran_text.ayah_count(surah) else None)
@@ -1050,6 +1110,7 @@ def _align_sura_words(db, db_path, audio, surah, log_event):
                     raise ValueError("Сначала уточните границы аята.")
                 clip = pcm[start * decode.DEFAULT_SR // 1000:end * decode.DEFAULT_SR // 1000]
                 rows = word_align.align_ayah_words(clip, decode.DEFAULT_SR, words)
+                check_cancelled()
                 with _PROJECT_LOCK:
                     current, _ = _sura_timings_reviews(surah, db_path)
                     if (current.get(ayah), current.get(ayah + 1, duration)) != (start, end):

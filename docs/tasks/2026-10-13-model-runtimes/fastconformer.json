@@ -1,0 +1,304 @@
+[
+  {
+    "model": "fastconformer",
+    "surah": 114,
+    "rows": [
+      [
+        1,
+        6240,
+        0.897
+      ],
+      [
+        2,
+        10480,
+        0.5622
+      ],
+      [
+        3,
+        13360,
+        0.0283
+      ],
+      [
+        4,
+        16320,
+        0.0735
+      ],
+      [
+        5,
+        20880,
+        0.0
+      ],
+      [
+        6,
+        25120,
+        0.1288
+      ]
+    ],
+    "absolute_errors_ms": [
+      201,
+      217,
+      189,
+      178,
+      330,
+      190
+    ],
+    "median_ms": 195.5,
+    "p95_ms": 301.75,
+    "max_ms": 330,
+    "source": "ctc:fastconformer:revision=60973918b40c5fcdc0e93310c13a4a4661525142:adapter=known-text-v1:lag=0:runtime={\"numpy\":\"1.26.4\",\"torch\":\"2.8.0\",\"transformers\":\"4.53.3\"}",
+    "trace": {
+      "mode": "full",
+      "total_ms": 34560.0,
+      "emission_passes": 1,
+      "emissions_frames": 432,
+      "backend": "onnx",
+      "batch_size": 1,
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "raw_onset_ms": 6240,
+          "onset_ms": 6240,
+          "conf": 0.897,
+          "first_token_conf": 0.992,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.992,
+            0.9891,
+            0.9622,
+            0.6859
+          ]
+        },
+        {
+          "ayah": 2,
+          "raw_onset_ms": 10480,
+          "onset_ms": 10480,
+          "conf": 0.5622,
+          "first_token_conf": 0.9999,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9999,
+            0.2676,
+            0.471,
+            0.7929
+          ]
+        },
+        {
+          "ayah": 3,
+          "raw_onset_ms": 13360,
+          "onset_ms": 13360,
+          "conf": 0.0283,
+          "first_token_conf": 0.6948,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.6948,
+            0.0126,
+            0.0026
+          ]
+        },
+        {
+          "ayah": 4,
+          "raw_onset_ms": 16320,
+          "onset_ms": 16320,
+          "conf": 0.0735,
+          "first_token_conf": 0.0735,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0735
+          ]
+        },
+        {
+          "ayah": 5,
+          "raw_onset_ms": 20880,
+          "onset_ms": 20880,
+          "conf": 0.0,
+          "first_token_conf": 0.0014,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0014,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "ayah": 6,
+          "raw_onset_ms": 25120,
+          "onset_ms": 25120,
+          "conf": 0.1288,
+          "first_token_conf": 0.7861,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.7861,
+            0.0211
+          ]
+        }
+      ]
+    },
+    "first_ayah_words": [
+      [
+        0,
+        159,
+        0.9813
+      ],
+      [
+        1,
+        717,
+        0.9773
+      ],
+      [
+        2,
+        1435,
+        0.0444
+      ],
+      [
+        3,
+        2710,
+        0.0825
+      ]
+    ],
+    "seconds": 11.843
+  },
+  {
+    "model": "fastconformer",
+    "surah": 112,
+    "rows": [
+      [
+        1,
+        6151,
+        0.99
+      ],
+      [
+        2,
+        9186,
+        0.0
+      ],
+      [
+        3,
+        10943,
+        0.9957
+      ],
+      [
+        4,
+        13659,
+        0.8733
+      ]
+    ],
+    "absolute_errors_ms": [
+      57,
+      431,
+      80,
+      129
+    ],
+    "median_ms": 104.5,
+    "p95_ms": 385.6999999999999,
+    "max_ms": 431,
+    "source": "ctc:fastconformer:revision=60973918b40c5fcdc0e93310c13a4a4661525142:adapter=known-text-v1:lag=0:runtime={\"numpy\":\"1.26.4\",\"torch\":\"2.8.0\",\"transformers\":\"4.53.3\"}",
+    "trace": {
+      "mode": "full",
+      "total_ms": 23484.0625,
+      "emission_passes": 1,
+      "emissions_frames": 294,
+      "backend": "onnx",
+      "batch_size": 1,
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "raw_onset_ms": 6151,
+          "onset_ms": 6151,
+          "conf": 0.99,
+          "first_token_conf": 1.0,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            1.0,
+            0.9999,
+            0.9761,
+            0.9982
+          ]
+        },
+        {
+          "ayah": 2,
+          "raw_onset_ms": 9186,
+          "onset_ms": 9186,
+          "conf": 0.0,
+          "first_token_conf": 0.0,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "ayah": 3,
+          "raw_onset_ms": 10943,
+          "onset_ms": 10943,
+          "conf": 0.9957,
+          "first_token_conf": 0.9938,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9938,
+            0.9975
+          ]
+        },
+        {
+          "ayah": 4,
+          "raw_onset_ms": 13659,
+          "onset_ms": 13659,
+          "conf": 0.8733,
+          "first_token_conf": 0.9999,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9999,
+            0.9783,
+            0.7285
+          ]
+        }
+      ]
+    },
+    "first_ayah_words": [
+      [
+        0,
+        235,
+        0.1046
+      ],
+      [
+        1,
+        626,
+        0.3887
+      ],
+      [
+        2,
+        1096,
+        0.0
+      ],
+      [
+        3,
+        1722,
+        0.0568
+      ]
+    ],
+    "seconds": 1.934
+  }
+]

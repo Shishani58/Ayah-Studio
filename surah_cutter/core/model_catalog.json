@@ -58,7 +58,10 @@
     ],
     "text_kind": "phonetic",
     "note": "Текущая фонетическая модель. Загружается оригинал; ONNX собирается инструментом экспорта.",
-    "gated": false
+    "gated": false,
+    "hidden": false,
+    "description": "Основная модель: точные границы и быстрый расчёт. Поддерживает быстрый режим; сложные участки проверяйте на слух.",
+    "benchmark_summary": "Полный режим: ошибка 31–49 мс · расчёт 1–4 с"
   },
   {
     "id": "arabic-ctc",
@@ -89,7 +92,8 @@
     ],
     "text_kind": "arabic",
     "note": "Экспериментальная разметка аятов и слов. Поддерживаются полный и пословный режимы.",
-    "gated": false
+    "gated": false,
+    "hidden": true
   },
   {
     "id": "mms-fa",
@@ -120,7 +124,9 @@
     ],
     "text_kind": "mms-fa",
     "note": "",
-    "gated": false
+    "gated": false,
+    "runtime_family": "mms-fa",
+    "hidden": true
   },
   {
     "id": "muaalem",
@@ -163,7 +169,11 @@
     ],
     "text_kind": "muaalem",
     "note": "",
-    "gated": false
+    "gated": false,
+    "runtime_family": "muaalem-onnx",
+    "hidden": false,
+    "description": "Дополнительная проверка коранического произношения и огласовок. Хорошие результаты на длинной суре, но медленнее основной модели.",
+    "benchmark_summary": "Полный режим: ошибка 124–140 мс · расчёт 8–25 с"
   },
   {
     "id": "fastconformer",
@@ -188,7 +198,9 @@
     ],
     "text_kind": "fastconformer",
     "note": "",
-    "gated": false
+    "gated": false,
+    "runtime_family": "nemo-hybrid",
+    "hidden": true
   },
   {
     "id": "whisper-quran",
@@ -267,7 +279,9 @@
     ],
     "text_kind": "whisper-quran",
     "note": "",
-    "gated": false
+    "gated": false,
+    "runtime_family": "whisper",
+    "hidden": true
   },
   {
     "id": "whisper-small",
@@ -353,8 +367,9 @@
     "text_kind": null,
     "runtime_family": "whisper",
     "language": "ar",
-    "note": "Неспециализированная модель для арабской речи; подключается отдельным runtime.",
-    "gated": false
+    "note": "",
+    "gated": false,
+    "hidden": true
   },
   {
     "id": "whisper-medium",
@@ -440,8 +455,9 @@
     "text_kind": null,
     "runtime_family": "whisper",
     "language": "ar",
-    "note": "Неспециализированная модель для арабской речи; подключается отдельным runtime.",
-    "gated": false
+    "note": "",
+    "gated": false,
+    "hidden": true
   },
   {
     "id": "whisper-large-v3",
@@ -527,8 +543,11 @@
     "text_kind": null,
     "runtime_family": "whisper",
     "language": "ar",
-    "note": "Неспециализированная модель для арабской речи; подключается отдельным runtime.",
-    "gated": false
+    "note": "",
+    "gated": false,
+    "hidden": false,
+    "description": "Дополнительная проверка сложных записей. Точнее остальных обычных Whisper в наших замерах, но требует больше времени.",
+    "benchmark_summary": "Полный режим: ошибка 112–140 мс · расчёт 19–83 с"
   },
   {
     "id": "whisper-large-v3-turbo",
@@ -614,8 +633,9 @@
     "text_kind": null,
     "runtime_family": "whisper",
     "language": "ar",
-    "note": "Неспециализированная модель для арабской речи; подключается отдельным runtime.",
-    "gated": false
+    "note": "",
+    "gated": false,
+    "hidden": true
   },
   {
     "id": "fastconformer-arabic",
@@ -641,8 +661,11 @@
     "text_kind": null,
     "runtime_family": "nemo-hybrid",
     "language": "ar",
-    "note": "Неспециализированная модель для арабской речи; подключается отдельным runtime.",
-    "gated": false
+    "note": "",
+    "gated": false,
+    "hidden": false,
+    "description": "Быстрый дополнительный вариант для сравнения границ. На проверенных записях уступает основной модели по точности.",
+    "benchmark_summary": "Полный режим: ошибка 133–209 мс · расчёт 1–12 с"
   },
   {
     "id": "mms-arabic",
@@ -704,7 +727,8 @@
     "text_kind": null,
     "runtime_family": "mms-asr",
     "language": "ar",
-    "note": "Неспециализированная модель для арабской речи; подключается отдельным runtime.",
-    "gated": false
+    "note": "",
+    "gated": false,
+    "hidden": true
   }
 ]

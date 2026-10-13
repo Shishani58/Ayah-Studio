@@ -9,12 +9,14 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import tempfile
 import threading
+from functools import lru_cache
 
 import numpy as np
 
-ADAPTER_VERSION = "known-text-v1"
+ADAPTER_VERSION = "known-text-v2"
 _INSTALL_LOCK = threading.Lock()
 _WORKERS: dict[str, "RuntimeEmitter"] = {}
 _PACKAGES = {
@@ -24,8 +26,37 @@ _PACKAGES = {
                      "numpy==1.26.4", "pyarrow==19.0.1", "datasets==3.6.0",
                      "pandas==2.2.3", "peft==0.17.1", "accelerate==1.10.1",
                      "pytorch-lightning==2.5.3", "torchmetrics==1.8.1",
-                     "scipy==1.15.3", "numba==0.61.2"],
+                     "scipy==1.13.1", "numba==0.61.2"],
 }
+
+
+@lru_cache(maxsize=1)
+def _text_targets():
+    from surah_cutter.data.quran_text import DEFAULT_DB_PATH
+
+    path = DEFAULT_DB_PATH.with_name("model_text_targets.json")
+    data = json.loads(path.read_text())
+    if hashlib.sha256(DEFAULT_DB_PATH.read_bytes()).hexdigest() != data["canonical_sha256"]:
+        raise ValueError("Словарь модели не соответствует каноническому Корану.")
+    return data["surahs"]
+
+
+def inference_words(words, model_id):
+    if model_id == "mms-fa":
+        return [w.text for w in words]
+    table = _text_targets()[str(words[0].surah)]
+    result = []
+    for word in words:
+        if table[word.index][0] != word.text:
+            raise ValueError("Порядок слов модели не соответствует каноническому тексту.")
+        text = table[word.index][1 if model_id == "muaalem" else 2]
+        if ((model_id.startswith("whisper-") and model_id != "whisper-quran")
+                or model_id == "fastconformer-arabic"):
+            import unicodedata
+
+            text = "".join(c for c in text if unicodedata.category(c) not in ("Mn", "Me"))
+        result.append(text)
+    return result
 
 
 def environment(model_id: str) -> Path:
@@ -45,7 +76,8 @@ def ensure_runtime(model_id: str, cancel: threading.Event | None = None) -> Path
         if marker.is_file() and python.is_file():
             if json.loads(marker.read_text()).get("requirements") == fingerprint:
                 return python
-        uv = shutil.which("uv")
+        bundled_uv = Path(__file__).resolve().parents[2] / "uv-bin" / ("uv.exe" if os.name == "nt" else "uv")
+        uv = str(bundled_uv) if bundled_uv.is_file() else shutil.which("uv")
         if not uv:
             import uv as uv_package
 
@@ -70,7 +102,12 @@ def ensure_runtime(model_id: str, cancel: threading.Event | None = None) -> Path
                             raise InterruptedError
                 if code:
                     raise ValueError("Не удалось подготовить окружение модели. Проверьте сеть и место на диске.")
+        installed = subprocess.check_output(
+            [str(python), "-c", "import importlib.metadata,json; print(json.dumps({d.metadata['Name']:d.version for d in importlib.metadata.distributions()},sort_keys=True))"],
+            text=True,
+        )
         marker.write_text(json.dumps({"requirements": fingerprint, "packages": packages,
+                                      "versions": json.loads(installed),
                                       "python": "3.11", "adapter": ADAPTER_VERSION}))
     return python
 
@@ -88,6 +125,12 @@ class RuntimeEmitter:
         script = Path(__file__).with_name("model_worker.py")
         self._log = (environment(model_id).parent / f"{model_id}-runtime.log").open("a")
         env = os.environ.copy()
+        for name in ("PYTHONHOME", "PYTHONPATH"):
+            env.pop(name, None)
+        if "LD_LIBRARY_PATH_ORIG" in env:
+            env["LD_LIBRARY_PATH"] = env["LD_LIBRARY_PATH_ORIG"]
+        elif getattr(sys, "frozen", False):
+            env.pop("LD_LIBRARY_PATH", None)
         env.update({"HF_HUB_OFFLINE": "1", "TOKENIZERS_PARALLELISM": "false",
                     "OMP_NUM_THREADS": "4"})
         self.process = subprocess.Popen(
@@ -101,12 +144,15 @@ class RuntimeEmitter:
             self.blank_id = metadata["blank_id"]
             self.text_kind = metadata["text_kind"]
             self.runtime_versions = metadata["versions"]
-        except Exception:
+        except BaseException:
             self.close()
             raise
 
     def _receive(self) -> dict:
-        line = self.process.stdout.readline()
+        from surah_cutter.core.cancellation import interruptible
+
+        with interruptible(self.process.kill):
+            line = self.process.stdout.readline()
         if not line:
             raise ValueError("Процесс модели завершился. См. локальный журнал модели.")
         response = json.loads(line)
@@ -128,13 +174,16 @@ class RuntimeEmitter:
 
     def build_targets(self, words, intro: bool = False):
         response = self.request("targets", words=[w.text for w in words],
-                                surah=words[0].surah, intro=intro)
+                                surah=words[0].surah, intro=intro,
+                                renderings=inference_words(words, self.model_id),
+                                ayahs=[w.ayah for w in words])
         return response["targets"], [tuple(span) for span in response["spans"]]
 
-    def align_words(self, pcm, words, intro: bool = False):
+    def align_words(self, pcm, words, intro: bool = False, strict_words: bool = True):
         with self._lock:
             np.save(self.work / "audio.npy", np.ascontiguousarray(pcm, dtype=np.float32))
-            response = self.request("align", words=[w.text for w in words], intro=intro)
+            response = self.request("align", words=[w.text for w in words], intro=intro,
+                                    renderings=inference_words(words, self.model_id), strict_words=strict_words)
             rows = response["rows"]
             if len(rows) != len(words):
                 raise ValueError("Неполное сопоставление канонических слов.")

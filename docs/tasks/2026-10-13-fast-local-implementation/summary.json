@@ -1,0 +1,113 @@
+{
+  "settings": {
+    "sr": 16000,
+    "model": "/Users/ayub/Developer/surah-cutter/models/wav2vec2-quran-phonetics.onnx",
+    "model_sha256": "423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a",
+    "provider": "CPUExecutionProvider",
+    "normalize": true,
+    "batch_size": 1,
+    "max_read_ms": 6000,
+    "max_coverage": 0.65,
+    "max_audio_ratio": 2,
+    "initial_pause_speech_ms": 1300,
+    "lag_ms": 200,
+    "environment": {}
+  },
+  "source_sha256": {
+    "surah_cutter/core/align_fast.py": "68dec9cd1a9be71863f12b6b6730e9d505be5ec40ebee66223aa6ba33faf5ae4",
+    "surah_cutter/core/fast_reads.py": "1010804e91e68706c335f9c72c7d956c514e082a7dcfb1e3444b34534b5c349b",
+    "surah_cutter/core/emissions.py": "d97209d0f3fd7e6da8ce8e73c5cade6cc7d3027b12d141e3b0cada5719538280"
+  },
+  "summary": {
+    "suras": 37,
+    "ayahs": 564,
+    "median_ms": 73.5,
+    "p95_ms": 4465.850000000003,
+    "max_ms": 26762,
+    "over500": 107,
+    "review_ayahs": 288,
+    "seconds": 150.37612583278678,
+    "audio_ms": 4469984.75,
+    "covered_audio_ms": 1938541.875,
+    "total_ms": 3184483.5625,
+    "emission_passes": 1650,
+    "pause_violations": 0,
+    "positive_conf_over500": [
+      [
+        78,
+        28,
+        554,
+        0.8270378318005288
+      ],
+      [
+        80,
+        37,
+        672,
+        0.4156499391749373
+      ],
+      [
+        84,
+        10,
+        903,
+        0.6100846478398446
+      ],
+      [
+        87,
+        3,
+        2955,
+        0.54
+      ],
+      [
+        87,
+        4,
+        1374,
+        0.4205882352941177
+      ],
+      [
+        104,
+        7,
+        1223,
+        0.6068033790751391
+      ]
+    ]
+  },
+  "audio_sha256": {
+    "78": "6b5e524700d4139920eead0a5b10544a73ccb0c79f1e9d04df8e2d1f385d7024",
+    "79": "3b423fbe3e9c2ccbbd0e89d9edce0f40e7dfa81410bfc1ad6b0216076f7d861b",
+    "80": "4d91f378520caba3be8df904ee323be94815ca448a98ddda29b58a1b415dd13c",
+    "81": "77c07d5f499bd5fe079ec8c24b5b0cc1cfbeee70e7b2d60baa68d8162d6f1624",
+    "82": "90196140314a971ec8569dde9dd383b79d05022d8c237b41d833c7ff0a4507f7",
+    "83": "3fce909693b90ef2cb59f18b72d537f0bfb9085f5e92b1066d274063cc0eeb90",
+    "84": "2a5bfd46dbd9be0bcbe855e25d64861128d665bd424b49bc20c966722137e8bc",
+    "85": "b68cd8d27e57e002c708df9df5b073ccce7acb7e3a5501da4357071d6fcc5f7e",
+    "86": "2d793730777c78104f583061660a3846838f9b8654d64e7552f046727dceb308",
+    "87": "aec5b242c25b8f94e1ff483371cfafe6f79c41a1e61b0edcff099120dc7c1d0c",
+    "88": "b1b57abb36d87cd4ffea2dbb07c7f87edf91b6a92e19d9a611f0e2011f05f2b9",
+    "89": "65ae5afaf2b6041642113b1ffba08d08585d72d46c2c2733508498036e08c069",
+    "90": "619a04955e85e70a5d3ed53690dc0f051560d68e8e9a1392062413467dd8c0df",
+    "91": "4c519458c10b888212328d9ab53c041b90831879d07ddfc06140ac64374155e0",
+    "92": "ed251aa42af5b1345fe051853c7e992ffb9c167a51bffda3b28d2562eb6960c2",
+    "93": "59d89d4f07f5dca22079305dc8d86bcb2c14031ac5e50c8ee01f7d446a465783",
+    "94": "078766fa3fdb7aa85766a79e2ffd93662070a7c0bd4d0ecaf73436918f6789f5",
+    "95": "1fe075ffc31b29a9a9138baf5a273c18629175aa60da5ef4202239d564e1887f",
+    "96": "f813afea79f49abbde3bc27b3e7934ed15153e64cbe854a7b808629eafc03454",
+    "97": "2dbc3a8b3a0777db7c8f95e0dd4c690186575b6494b73a09952bc68e63795ffe",
+    "98": "bc7a058fcc0c8130cfaca391f40c76c0bccba24e4956fc6eb82085c2460dbfcf",
+    "99": "6ffa251650dad380b1389449217b588bc823d31bd2bc5f3f5c888f652ebc311e",
+    "100": "a89bb5420224f75acc3c97761dc7ac62dd003a497f6486701dd216b399de168b",
+    "101": "24a0bd7f877b0ac3e22aa35a6734aad897ab73432773eed1f4d9983e7d87a71e",
+    "102": "b27125d6aae203992b927cc063488b774a272a0c7bf1fcca35e989def822fcff",
+    "103": "912bb93d4dc6bd235bf5507d6778a889b372ff5fad8b02f8aa6069cedc2ddef6",
+    "104": "b069357c83148a03189b71c74d2a34bc5d48e03314081bf18b1d89650e485528",
+    "105": "610cfded82ca0e0640d037d5a0c6bae73a4aaf611765092ef34f93a0fb0a1474",
+    "106": "ab989c46033c2f859c34eca027f5fd72e4df52ad5121bafb635113f21de5627f",
+    "107": "134c233028abec8d439000546e15cb8c5141979d10b9e37d00c2d52e738e050e",
+    "108": "85d84d3493461230443bb5f5d7e8c0eb70adb0be2e780f75b71435527a788ee5",
+    "109": "cba1b5153fcaf7de463e304c229cd11979159e2db72241be873151ac995e0b78",
+    "110": "b893d90da2053f27e92d7d05b2e6bacd2a821467f6fb21a41da030f8d1b717e9",
+    "111": "3dee089ccdf51d549bf3540586468352525c66fc413af93ce30709056a908d3d",
+    "112": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a",
+    "113": "d24ac3ecc30fcda0903074f466c8b8413e29b3b301c65698919b7e42ba1e3774",
+    "114": "958819e2a43c6f02d397432b208398599f1c10dd7c08f19401ee3676550bf064"
+  }
+}

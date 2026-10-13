@@ -59,6 +59,7 @@ def pause_contract_violations(rows, trace: dict) -> list[str]:
     Independently matched exact-recording clips are exempt from the pause rule.
     """
     starts = {ayah: start_ms for ayah, start_ms, _conf in rows}
+    confidences = {ayah: confidence for ayah, _ms, confidence in rows}
     known_pause_centers = {
         float(pause["center_ms"])
         for pause in trace.get("phase1_pauses", [])
@@ -75,6 +76,10 @@ def pause_contract_violations(rows, trace: dict) -> list[str]:
         if match.get("boundary_evidence") in {"exact_fingerprint", "ctc_pre_owner"}:
             continue
         if not match.get("from_pause"):
+            if match.get("boundary_evidence") == "unresolved_local":
+                if confidences.get(ayah) != 0.0 or ayah not in trace.get("review_required_ayahs", []):
+                    violations.append(f"ayah {ayah}: unresolved local start lacks review flag/confidence=0")
+                continue
             if match.get("match_action") != "wasl":
                 violations.append(
                     f"ayah {ayah}: non-pause start {start_ms} has action "

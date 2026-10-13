@@ -11,14 +11,13 @@ Your audio stays on your computer. The app interface is in Russian.
 
 ## Install
 
-| Platform | Download 0.1.0 |
+| Platform | Download 0.2.0 |
 | --- | --- |
-| macOS · Apple Silicon | [DMG](https://github.com/Shishani58/Ayah-Studio/releases/download/v0.1.0/Ayah-Studio-0.1.0-macOS-arm64.dmg) |
-| Windows · x64 | [ZIP with ready-to-run EXE](https://github.com/Shishani58/Ayah-Studio/releases/download/v0.1.0/Ayah-Studio-0.1.0-Windows-x64.zip) |
+| macOS · Apple Silicon | [DMG](https://github.com/Shishani58/Ayah-Studio/releases/download/v0.2.0/Ayah-Studio-0.2.0-macOS-arm64.dmg) |
+| Windows · x64 | [ZIP with ready-to-run EXE](https://github.com/Shishani58/Ayah-Studio/releases/download/v0.2.0/Ayah-Studio-0.2.0-Windows-x64.zip) |
 
 For **Apple Silicon Macs** (M1 or newer). Open the DMG, drag **Ayah Studio**
-to **Applications**, eject the disk and launch the app. Python, source code and
-separate model downloads are not needed.
+to **Applications**, eject the disk and launch the app. Python and the default model are bundled. Optional models can be downloaded in Settings.
 
 This build is not Apple-notarized. If macOS blocks the first launch, see
 [Apple’s guidance](https://support.apple.com/en-us/102445).
@@ -29,16 +28,25 @@ The EXE is not code-signed. Intel Macs have not been verified.
 
 ## Features
 
-- Automatic alignment against the known Qur’an text.
+- Three modes: pause-based fast alignment with local checks, full alignment and words.
+- Bundled Quran Phonetics; optional Muaalem, FastConformer Arabic and Whisper Large-v3.
 - Waveform, Arabic text, ayah loop and playback speed controls.
 - Drag timing markers; manual edits survive regeneration.
+- Switch projects and choose light or dark appearance.
 - Search and filter 114 surahs, resume incomplete work.
 - Export a SQLite timing database for Qur’an apps.
+
+<img src="docs/images/review-dark.jpg" width="900" alt="Ayah editor in dark appearance">
+
+<details>
+<summary>Alignment models</summary>
+<img src="docs/images/models.jpg" width="900" alt="Alignment models in Settings">
+</details>
 
 ## Quick start
 
 1. Select your audio folder: one file per surah, named `001.mp3` … `114.mp3`.
-2. Create a `.db` project and generate timings.
+2. Add a project in Settings → Projects and select an alignment mode.
 3. Open a surah, listen, adjust and mark ayahs as verified.
 4. Export when all 114 surahs are ready.
 

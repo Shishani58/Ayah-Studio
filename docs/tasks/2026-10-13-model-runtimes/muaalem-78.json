@@ -1,0 +1,1121 @@
+[
+  {
+    "model": "muaalem",
+    "surah": 78,
+    "rows": [
+      [
+        1,
+        6561,
+        0.9656
+      ],
+      [
+        2,
+        12201,
+        0.9837
+      ],
+      [
+        3,
+        16362,
+        0.992
+      ],
+      [
+        4,
+        21122,
+        0.8731
+      ],
+      [
+        5,
+        24322,
+        0.9998
+      ],
+      [
+        6,
+        28923,
+        0.8847
+      ],
+      [
+        7,
+        33243,
+        0.9659
+      ],
+      [
+        8,
+        36484,
+        0.96
+      ],
+      [
+        9,
+        40444,
+        0.9515
+      ],
+      [
+        10,
+        44804,
+        0.8675
+      ],
+      [
+        11,
+        48725,
+        0.9275
+      ],
+      [
+        12,
+        54005,
+        0.9818
+      ],
+      [
+        13,
+        59766,
+        0.967
+      ],
+      [
+        14,
+        64886,
+        0.9616
+      ],
+      [
+        15,
+        73287,
+        0.9163
+      ],
+      [
+        16,
+        78848,
+        0.9926
+      ],
+      [
+        17,
+        83768,
+        0.905
+      ],
+      [
+        18,
+        89609,
+        0.987
+      ],
+      [
+        19,
+        96850,
+        0.9892
+      ],
+      [
+        20,
+        103770,
+        0.9116
+      ],
+      [
+        21,
+        109731,
+        0.9958
+      ],
+      [
+        22,
+        117132,
+        0.954
+      ],
+      [
+        23,
+        120892,
+        0.9364
+      ],
+      [
+        24,
+        127133,
+        0.9423
+      ],
+      [
+        25,
+        134213,
+        0.9837
+      ],
+      [
+        26,
+        139494,
+        0.9118
+      ],
+      [
+        27,
+        144054,
+        0.9473
+      ],
+      [
+        28,
+        151375,
+        0.9569
+      ],
+      [
+        29,
+        156336,
+        0.9201
+      ],
+      [
+        30,
+        161736,
+        0.9979
+      ],
+      [
+        31,
+        168177,
+        0.9884
+      ],
+      [
+        32,
+        172857,
+        0.9494
+      ],
+      [
+        33,
+        177218,
+        0.9377
+      ],
+      [
+        34,
+        180578,
+        0.9528
+      ],
+      [
+        35,
+        183898,
+        0.9735
+      ],
+      [
+        36,
+        192059,
+        0.9228
+      ],
+      [
+        37,
+        201660,
+        0.9926
+      ],
+      [
+        38,
+        213581,
+        0.918
+      ],
+      [
+        39,
+        230703,
+        0.9234
+      ],
+      [
+        40,
+        241544,
+        0.9728
+      ]
+    ],
+    "absolute_errors_ms": [
+      401,
+      287,
+      147,
+      200,
+      177,
+      123,
+      125,
+      98,
+      250,
+      183,
+      208,
+      336,
+      241,
+      166,
+      299,
+      376,
+      293,
+      226,
+      554,
+      250,
+      189,
+      283,
+      191,
+      1030,
+      250,
+      225,
+      133,
+      1129,
+      140,
+      222,
+      167,
+      229,
+      183,
+      204,
+      107,
+      1143,
+      1297,
+      248,
+      255,
+      246
+    ],
+    "median_ms": 227.5,
+    "p95_ms": 1129.7,
+    "max_ms": 1297,
+    "source": "ctc:muaalem:revision=a57907844f7c72969b40bc526a57e9c9dbc8bf3f:adapter=known-text-v1:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=hafs:madd=4:waqf=ayah:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+    "trace": {
+      "mode": "full",
+      "total_ms": 278987.75,
+      "emission_passes": 1,
+      "emissions_frames": 6974,
+      "backend": "muaalem",
+      "batch_size": 1,
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "raw_onset_ms": 6561,
+          "onset_ms": 6561,
+          "conf": 0.9656,
+          "first_token_conf": 0.9973,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9973,
+            0.9691,
+            0.9925,
+            0.914,
+            0.966,
+            0.9996,
+            0.9708
+          ]
+        },
+        {
+          "ayah": 2,
+          "raw_onset_ms": 12201,
+          "onset_ms": 12201,
+          "conf": 0.9837,
+          "first_token_conf": 1.0,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            1.0,
+            0.9931,
+            0.9997,
+            0.9587
+          ]
+        },
+        {
+          "ayah": 3,
+          "raw_onset_ms": 16362,
+          "onset_ms": 16362,
+          "conf": 0.992,
+          "first_token_conf": 0.9724,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9724,
+            0.9991,
+            0.9993,
+            0.9998,
+            0.9996,
+            0.9719,
+            0.9958,
+            1.0,
+            0.9982
+          ]
+        },
+        {
+          "ayah": 4,
+          "raw_onset_ms": 21122,
+          "onset_ms": 21122,
+          "conf": 0.8731,
+          "first_token_conf": 0.9435,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9435,
+            0.8134,
+            0.9484,
+            1.0,
+            0.9912,
+            0.7779,
+            0.7376
+          ]
+        },
+        {
+          "ayah": 5,
+          "raw_onset_ms": 24322,
+          "onset_ms": 24322,
+          "conf": 0.9998,
+          "first_token_conf": 1.0,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            1.0,
+            0.9997,
+            0.9997,
+            0.9997,
+            0.9995,
+            0.9999,
+            1.0
+          ]
+        },
+        {
+          "ayah": 6,
+          "raw_onset_ms": 28923,
+          "onset_ms": 28923,
+          "conf": 0.8847,
+          "first_token_conf": 0.7223,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.7223,
+            0.9922,
+            0.8178,
+            0.9833,
+            1.0
+          ]
+        },
+        {
+          "ayah": 7,
+          "raw_onset_ms": 33243,
+          "onset_ms": 33243,
+          "conf": 0.9659,
+          "first_token_conf": 0.8538,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.8538,
+            0.9983,
+            1.0,
+            1.0,
+            0.9981,
+            0.9999,
+            0.8981,
+            1.0,
+            0.9838,
+            1.0,
+            0.9905
+          ]
+        },
+        {
+          "ayah": 8,
+          "raw_onset_ms": 36484,
+          "onset_ms": 36484,
+          "conf": 0.96,
+          "first_token_conf": 1.0,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            1.0,
+            0.9412,
+            1.0,
+            0.9978,
+            0.9895,
+            0.9991,
+            1.0,
+            0.7098,
+            0.9999,
+            0.989,
+            1.0,
+            0.9652,
+            0.9974,
+            0.9963,
+            1.0
+          ]
+        },
+        {
+          "ayah": 9,
+          "raw_onset_ms": 40444,
+          "onset_ms": 40444,
+          "conf": 0.9515,
+          "first_token_conf": 1.0,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            1.0,
+            0.9989,
+            0.9962,
+            0.9845,
+            1.0,
+            0.9857,
+            0.9997,
+            0.9125,
+            0.9539,
+            0.9997,
+            0.7576
+          ]
+        },
+        {
+          "ayah": 10,
+          "raw_onset_ms": 44804,
+          "onset_ms": 44804,
+          "conf": 0.8675,
+          "first_token_conf": 0.8509,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.8509,
+            0.9999,
+            1.0,
+            0.6924,
+            0.9904,
+            1.0,
+            0.9997,
+            0.8234,
+            0.7498
+          ]
+        },
+        {
+          "ayah": 11,
+          "raw_onset_ms": 48725,
+          "onset_ms": 48725,
+          "conf": 0.9275,
+          "first_token_conf": 1.0,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            1.0,
+            0.9159,
+            1.0,
+            0.9771,
+            0.9984,
+            0.7452,
+            0.9996,
+            0.8893,
+            0.9654
+          ]
+        },
+        {
+          "ayah": 12,
+          "raw_onset_ms": 54005,
+          "onset_ms": 54005,
+          "conf": 0.9818,
+          "first_token_conf": 1.0,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            1.0,
+            0.9528,
+            0.9998,
+            0.9999,
+            0.9999,
+            0.922,
+            1.0,
+            0.9998,
+            0.9955,
+            0.9965,
+            1.0
+          ]
+        },
+        {
+          "ayah": 13,
+          "raw_onset_ms": 59766,
+          "onset_ms": 59766,
+          "conf": 0.967,
+          "first_token_conf": 1.0,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            1.0,
+            0.8724,
+            1.0,
+            0.9985,
+            1.0,
+            0.9999,
+            1.0,
+            0.9987,
+            0.9191,
+            0.9999,
+            0.9872
+          ]
+        },
+        {
+          "ayah": 14,
+          "raw_onset_ms": 64886,
+          "onset_ms": 64886,
+          "conf": 0.9616,
+          "first_token_conf": 0.9752,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9752,
+            0.9986,
+            0.9314,
+            0.9938,
+            0.9969,
+            0.8459,
+            1.0,
+            0.9998,
+            0.9977,
+            1.0,
+            0.9951,
+            0.9905,
+            1.0,
+            0.8505
+          ]
+        },
+        {
+          "ayah": 15,
+          "raw_onset_ms": 73287,
+          "onset_ms": 73287,
+          "conf": 0.9163,
+          "first_token_conf": 0.8144,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.8144,
+            0.8572,
+            0.9997,
+            0.9996,
+            1.0,
+            0.9995,
+            1.0,
+            0.8398,
+            0.9999
+          ]
+        },
+        {
+          "ayah": 16,
+          "raw_onset_ms": 78848,
+          "onset_ms": 78848,
+          "conf": 0.9926,
+          "first_token_conf": 1.0,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            1.0,
+            1.0,
+            1.0,
+            0.9997,
+            0.9871,
+            0.9802,
+            0.9675,
+            0.9999,
+            0.9998,
+            0.9922,
+            1.0,
+            0.9999,
+            1.0,
+            0.9999
+          ]
+        },
+        {
+          "ayah": 17,
+          "raw_onset_ms": 83768,
+          "onset_ms": 83768,
+          "conf": 0.905,
+          "first_token_conf": 0.9999,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9999,
+            0.734,
+            0.8562,
+            0.9677,
+            0.9867,
+            0.9999,
+            0.9154
+          ]
+        },
+        {
+          "ayah": 18,
+          "raw_onset_ms": 89609,
+          "onset_ms": 89609,
+          "conf": 0.987,
+          "first_token_conf": 0.9501,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9501,
+            0.9997,
+            1.0,
+            0.9999,
+            0.9991
+          ]
+        },
+        {
+          "ayah": 19,
+          "raw_onset_ms": 96850,
+          "onset_ms": 96850,
+          "conf": 0.9892,
+          "first_token_conf": 1.0,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            1.0,
+            0.9976,
+            0.9999,
+            0.9393,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            0.9995,
+            1.0
+          ]
+        },
+        {
+          "ayah": 20,
+          "raw_onset_ms": 103770,
+          "onset_ms": 103770,
+          "conf": 0.9116,
+          "first_token_conf": 0.7025,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.7025,
+            0.7787,
+            0.9996,
+            0.922,
+            0.9999,
+            0.9999,
+            1.0,
+            0.9485,
+            0.9999,
+            0.9999,
+            0.9976
+          ]
+        },
+        {
+          "ayah": 21,
+          "raw_onset_ms": 109731,
+          "onset_ms": 109731,
+          "conf": 0.9958,
+          "first_token_conf": 0.9878,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9878,
+            0.9942,
+            0.9992,
+            0.9996,
+            0.9994,
+            0.9998,
+            1.0
+          ]
+        },
+        {
+          "ayah": 22,
+          "raw_onset_ms": 117132,
+          "onset_ms": 117132,
+          "conf": 0.954,
+          "first_token_conf": 0.9998,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9998,
+            0.8232,
+            0.9674,
+            0.9752,
+            0.9937,
+            0.8373,
+            0.972,
+            0.9991,
+            0.996,
+            0.987,
+            0.9998,
+            0.999,
+            1.0
+          ]
+        },
+        {
+          "ayah": 23,
+          "raw_onset_ms": 120892,
+          "onset_ms": 120892,
+          "conf": 0.9364,
+          "first_token_conf": 0.9979,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9979,
+            0.9767,
+            0.6925,
+            0.9978,
+            0.9989,
+            0.9679,
+            0.991,
+            0.9979,
+            0.9993,
+            0.8829,
+            0.9981,
+            0.9998
+          ]
+        },
+        {
+          "ayah": 24,
+          "raw_onset_ms": 127133,
+          "onset_ms": 127133,
+          "conf": 0.9423,
+          "first_token_conf": 0.9999,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9999,
+            0.8865,
+            0.9992,
+            0.9735
+          ]
+        },
+        {
+          "ayah": 25,
+          "raw_onset_ms": 134213,
+          "onset_ms": 134213,
+          "conf": 0.9837,
+          "first_token_conf": 0.9573,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9573,
+            0.9954,
+            0.999,
+            1.0,
+            0.9934,
+            0.9333,
+            0.9997
+          ]
+        },
+        {
+          "ayah": 26,
+          "raw_onset_ms": 139494,
+          "onset_ms": 139494,
+          "conf": 0.9118,
+          "first_token_conf": 0.9824,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9824,
+            0.9997,
+            0.9999,
+            1.0,
+            0.7327,
+            0.9999,
+            0.9689,
+            0.9762,
+            0.8581,
+            0.7313,
+            0.9422,
+            0.9871
+          ]
+        },
+        {
+          "ayah": 27,
+          "raw_onset_ms": 144054,
+          "onset_ms": 144054,
+          "conf": 0.9473,
+          "first_token_conf": 0.962,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.962,
+            0.9653,
+            0.8405,
+            0.8776,
+            0.9993,
+            0.9996,
+            1.0,
+            0.9999,
+            1.0,
+            0.9999
+          ]
+        },
+        {
+          "ayah": 28,
+          "raw_onset_ms": 151375,
+          "onset_ms": 151375,
+          "conf": 0.9569,
+          "first_token_conf": 0.8711,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.8711,
+            0.9982,
+            0.8621,
+            0.9994,
+            0.9995,
+            1.0,
+            0.8833,
+            0.9989,
+            0.9988,
+            0.9902,
+            0.9848
+          ]
+        },
+        {
+          "ayah": 29,
+          "raw_onset_ms": 156336,
+          "onset_ms": 156336,
+          "conf": 0.9201,
+          "first_token_conf": 0.9988,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9988,
+            0.9999,
+            0.9505,
+            0.992,
+            0.7932,
+            0.7864,
+            0.9912
+          ]
+        },
+        {
+          "ayah": 30,
+          "raw_onset_ms": 161736,
+          "onset_ms": 161736,
+          "conf": 0.9979,
+          "first_token_conf": 0.9998,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9998,
+            0.9981,
+            1.0,
+            0.9972,
+            0.997,
+            1.0,
+            0.9998,
+            0.9932,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "ayah": 31,
+          "raw_onset_ms": 168177,
+          "onset_ms": 168177,
+          "conf": 0.9884,
+          "first_token_conf": 0.9558,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9558,
+            0.9952,
+            0.9973,
+            0.9992,
+            0.9989,
+            0.9997,
+            0.9999
+          ]
+        },
+        {
+          "ayah": 32,
+          "raw_onset_ms": 172857,
+          "onset_ms": 172857,
+          "conf": 0.9494,
+          "first_token_conf": 0.9995,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9995,
+            0.9996,
+            0.8587,
+            1.0,
+            0.9701,
+            0.827,
+            0.9789,
+            0.9923,
+            0.9999,
+            0.9998,
+            0.9994,
+            0.9977
+          ]
+        },
+        {
+          "ayah": 33,
+          "raw_onset_ms": 177218,
+          "onset_ms": 177218,
+          "conf": 0.9377,
+          "first_token_conf": 0.9394,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9394,
+            0.7317,
+            1.0,
+            0.9982,
+            1.0,
+            0.9958,
+            0.9998,
+            0.8031,
+            1.0,
+            0.9986,
+            0.9988,
+            0.9913
+          ]
+        },
+        {
+          "ayah": 34,
+          "raw_onset_ms": 180578,
+          "onset_ms": 180578,
+          "conf": 0.9528,
+          "first_token_conf": 1.0,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            1.0,
+            0.9987,
+            0.7549,
+            0.9972,
+            0.9995,
+            0.9981,
+            0.9957,
+            1.0,
+            1.0,
+            0.9962
+          ]
+        },
+        {
+          "ayah": 35,
+          "raw_onset_ms": 183898,
+          "onset_ms": 183898,
+          "conf": 0.9735,
+          "first_token_conf": 0.9998,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9998,
+            0.9852,
+            0.9365,
+            0.9999
+          ]
+        },
+        {
+          "ayah": 36,
+          "raw_onset_ms": 192059,
+          "onset_ms": 192059,
+          "conf": 0.9228,
+          "first_token_conf": 0.7189,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.7189,
+            0.9856,
+            0.9999,
+            0.9739,
+            0.9999,
+            1.0,
+            0.9982,
+            0.8157,
+            0.9999,
+            0.9734
+          ]
+        },
+        {
+          "ayah": 37,
+          "raw_onset_ms": 201660,
+          "onset_ms": 201660,
+          "conf": 0.9926,
+          "first_token_conf": 0.9993,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9993,
+            0.9872,
+            0.9973,
+            0.9997,
+            0.986
+          ]
+        },
+        {
+          "ayah": 38,
+          "raw_onset_ms": 213581,
+          "onset_ms": 213581,
+          "conf": 0.918,
+          "first_token_conf": 0.984,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.984,
+            0.996,
+            1.0,
+            0.9999,
+            0.7246
+          ]
+        },
+        {
+          "ayah": 39,
+          "raw_onset_ms": 230703,
+          "onset_ms": 230703,
+          "conf": 0.9234,
+          "first_token_conf": 1.0,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            1.0,
+            0.9988,
+            0.9969,
+            1.0,
+            0.9772,
+            0.9995,
+            0.7621,
+            0.7724
+          ]
+        },
+        {
+          "ayah": 40,
+          "raw_onset_ms": 241544,
+          "onset_ms": 241544,
+          "conf": 0.9728,
+          "first_token_conf": 0.9928,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9928,
+            0.9471,
+            0.9954,
+            0.9984,
+            0.9986,
+            0.9978,
+            0.9989,
+            0.9026,
+            0.9999,
+            0.9522,
+            0.9976
+          ]
+        }
+      ]
+    },
+    "first_ayah_words": [
+      [
+        0,
+        400,
+        0.9749
+      ],
+      [
+        1,
+        1878,
+        0.9695
+      ]
+    ],
+    "seconds": 101.319
+  }
+]

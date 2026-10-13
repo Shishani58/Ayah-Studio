@@ -9,7 +9,7 @@ import numpy as np
 import pytest
 from fastapi import HTTPException
 
-from surah_cutter.core import align, emissions, model_store, pipeline
+from surah_cutter.core import align, model_store, pipeline
 from surah_cutter.data.quran_text import Word
 from surah_cutter.webgui import server
 
@@ -127,22 +127,22 @@ def test_select_rejects_downloaded_unsupported_model():
 def test_selection_persists_only_after_runtime_probe(monkeypatch):
     monkeypatch.setattr(model_store, "runtime_path", lambda model: Path("model.onnx"))
     emitter = SimpleNamespace(vocab={"<pad>": 0}, blank_id=0, emissions=lambda pcm: np.zeros((2, 1)))
-    monkeypatch.setattr(emissions, "load_emitter", lambda *a, **kw: emitter)
+    monkeypatch.setattr(model_store, "load_emitter", lambda *a, **kw: emitter)
     seen = []
     monkeypatch.setattr(server.settings, "update", lambda **kw: seen.append(kw))
     monkeypatch.setattr(model_store, "listing", lambda: {})
-    endpoint("/api/models/{model_id}/select")("arabic-ctc")
-    assert seen == [{"strict": True, "alignment_model": "arabic-ctc", "mode": "full"}]
-    assert model_store.ACTIVE_ID == "arabic-ctc"
+    endpoint("/api/models/{model_id}/select")("fastconformer-arabic")
+    assert seen == [{"strict": True, "alignment_model": "fastconformer-arabic", "mode": "full"}]
+    assert model_store.ACTIVE_ID == "fastconformer-arabic"
 
 
 def test_failed_probe_or_save_preserves_selection(monkeypatch):
     monkeypatch.setattr(model_store, "runtime_path", lambda model: Path("model.onnx"))
     emitter = SimpleNamespace(vocab={"<pad>": 0}, blank_id=0, emissions=lambda pcm: np.zeros((2, 1)))
-    monkeypatch.setattr(emissions, "load_emitter", lambda *a, **kw: emitter)
+    monkeypatch.setattr(model_store, "load_emitter", lambda *a, **kw: emitter)
     monkeypatch.setattr(server.settings, "update", lambda **kw: (_ for _ in ()).throw(OSError()))
     with pytest.raises(HTTPException):
-        endpoint("/api/models/{model_id}/select")("arabic-ctc")
+        endpoint("/api/models/{model_id}/select")("fastconformer-arabic")
     assert model_store.ACTIVE_ID == "quran-phonetics"
 
 

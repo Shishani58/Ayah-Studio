@@ -185,3 +185,14 @@ def test_candidate_diagnoses_reports_ranked_pauses_near_reference(monkeypatch):
         "ayah 30: result/ref=570300/581328 pause=581250 accepted=False "
         "reasons=low_margin top=[30:0.610/p5,31:0.580/p2]"
     ]
+
+
+def test_unresolved_local_boundary_requires_zero_confidence_and_review():
+    trace = {"review_required_ayahs": [2], "pause_matches": [
+        {"ayah": 2, "from_pause": False, "match_action": "insufficient_audio",
+         "boundary_evidence": "unresolved_local"},
+    ]}
+    assert pause_contract_violations([(2, 1000, 0.0)], trace) == []
+    assert pause_contract_violations([(2, 1000, 0.9)], trace)
+    trace["review_required_ayahs"] = []
+    assert pause_contract_violations([(2, 1000, 0.0)], trace)

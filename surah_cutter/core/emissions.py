@@ -248,7 +248,16 @@ def generate_emissions(
 def _run(session: Any, batch: np.ndarray, input_name: str, output_name: str) -> np.ndarray:
     """Run one ONNX forward pass; return logits ``(B, T, V)`` as float32."""
     inputs = {input_name: np.ascontiguousarray(batch, dtype=np.float32)}
-    outputs = session.run([output_name], inputs)
+    from surah_cutter.core.cancellation import current_event, interruptible
+
+    if current_event() is None:
+        outputs = session.run([output_name], inputs)
+    else:
+        import onnxruntime as ort
+
+        options = ort.RunOptions()
+        with interruptible(lambda: setattr(options, "terminate", True)):
+            outputs = session.run([output_name], inputs, options)
     return np.asarray(outputs[0], dtype=np.float32)
 
 

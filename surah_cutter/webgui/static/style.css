@@ -879,10 +879,15 @@ dialog.motion-instant::backdrop { transition: none; }
 .floating-player .player-rate { margin-inline-start: 4px; }
 .floating-player .player-rate { position: relative; }
 .floating-player #rateBtn { min-height: 32px; width: 48px; padding: 4px; border-radius: 9px; font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; background: var(--panel2); }
-.rate-menu { position: absolute; right: 0; bottom: calc(100% + 24px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; width: 178px; max-height: min(260px, 60vh); overflow-y: auto; padding: 8px; border: 1px solid var(--control-line); border-radius: 12px; background: var(--panel); box-shadow: 0 8px 30px rgba(0,0,0,.45); }
+.rate-menu { position: absolute; right: 0; bottom: calc(100% + 24px); display: grid; gap: 10px; width: 264px; max-width: calc(100vw - 24px); max-height: min(260px, 60vh); overflow-y: auto; padding: 12px; border: 1px solid var(--control-line); border-radius: 12px; background: var(--panel); box-shadow: 0 8px 30px rgba(0,0,0,.45); }
+.rate-menu label { font-size: 12px; color: var(--muted); }
+.rate-menu output { font-variant-numeric: tabular-nums; }
+.rate-slider { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.rate-presets { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+@media (max-width: 600px) { .rate-menu { width: 240px; } }
 .rate-menu button { min-height: 32px; padding: 4px; font-size: 12px; background: transparent; border-color: transparent; }
 .rate-menu button[aria-pressed="true"] { color: var(--accent2); border-color: var(--accent); background: var(--panel2); }
-.floating-player #rate { width: 72px; height: 38px; border-radius: 10px; }
+.floating-player #rate { flex: 1; min-width: 0; width: 100%; height: 32px; margin: 0; padding: 0; accent-color: var(--accent); }
 .wave-playback-meta { display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding: 0 16px 4px; color: var(--muted); font-size: 12px; }
 .wave-playback-meta .clock { font-variant-numeric: tabular-nums; }
 .wave-playback-meta .review-load-status { padding: 0; margin-inline-end: auto; }
@@ -954,12 +959,26 @@ dialog.motion-instant::backdrop { transition: none; }
 #settingsDialog :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 #settingsDialog .settings-tabs button[aria-pressed="true"] { background: var(--panel2); }
 .model-list { display: grid; border-top: 1px solid var(--line); }
-.model-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px 16px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.model-card { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px 16px; padding: 8px 0; border-bottom: 1px solid var(--line); }
 .model-info { min-width: 0; }
-.model-info h4 { margin: 0 0 4px; font-size: 14px; font-weight: 500; overflow-wrap: anywhere; }
-.model-card[data-active="true"] h4 { color: var(--accent2); }
+.model-card[data-active="true"] { background: color-mix(in srgb, var(--accent) 12%, var(--panel)); box-shadow: inset 3px 0 var(--accent); }
+.model-card[data-active="true"] .model-name { color: var(--accent); }
+.model-choice { width: 100%; min-height: 0; padding: 0; border: 0; border-radius: 0; text-align: start; white-space: normal; background: transparent; }
+.model-choice:disabled { opacity: 1; cursor: default; }
+.model-choice::after { content: ""; position: absolute; inset: 0; }
+.model-choice:focus-visible { outline: none; }
+.model-choice:focus-visible::after { outline: 2px solid var(--accent); outline-offset: -2px; }
+.model-title, .model-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.model-title { margin-bottom: 4px; }
+.model-name { font-size: 14px; font-weight: 500; overflow-wrap: anywhere; }
+.model-badge { display: inline-block; padding: 2px 6px; border: 1px solid var(--line); border-radius: 5px; background: var(--panel2); color: var(--muted); font-size: 10px; font-weight: 500; line-height: 1.2; white-space: nowrap; }
+.model-card[data-active="true"] .model-status { color: var(--primary-text); background: var(--accent); border-color: var(--accent); }
 .model-meta { font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
-.model-actions { grid-column: 2; grid-row: 1; display: flex; gap: 6px; }
+.model-help { font-weight: 600; }
+.model-help-popover { position: fixed; inset: auto; margin: 0; box-sizing: border-box; width: min(420px, calc(100vw - 24px)); max-height: min(520px, calc(100vh - 24px)); overflow-y: auto; padding: 16px; color: var(--text); background: var(--panel); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 12px 32px rgba(0,0,0,.2); font-size: 13px; line-height: 1.45; }
+.model-help-popover p { margin: 5px 0 0; }
+.model-help-popover > .model-meta { margin-top: 14px; }
+.model-actions { position: relative; z-index: 1; grid-column: 2; grid-row: 1; display: flex; gap: 6px; }
 .model-actions .model-action { width: 34px; height: 34px; min-height: 34px; padding: 7px; }
 .model-card progress { grid-column: 1 / -1; width: 100%; height: 5px; accent-color: var(--accent); }
 .model-progress, .model-error, .model-token { grid-column: 1 / -1; }
@@ -967,6 +986,7 @@ dialog.motion-instant::backdrop { transition: none; }
 .model-card input[type="password"] { width: 100%; box-sizing: border-box; }
 #modelSettings h3 { margin-bottom: 12px; }
 #modelMessage:empty { display: none; }
+#modelMessage[data-kind="status"] { color: var(--muted); }
 @media (max-width: 480px) {
   .model-card { gap: 8px; }
   .model-actions { flex-wrap: wrap; justify-content: flex-end; max-width: 110px; }

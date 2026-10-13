@@ -23,6 +23,8 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from surah_cutter.core.cancellation import check_cancelled
+
 _NEG = -1.0e30
 
 
@@ -79,6 +81,8 @@ def forced_align(log_probs, targets, blank: int = 0):
     idx = np.arange(n_st)
 
     for t in range(1, t_len):
+        if t % 64 == 0:
+            check_cancelled()
         stay = dp
         prev1 = np.concatenate(([_NEG], dp[:-1]))
         prev2 = np.concatenate(([_NEG, _NEG], dp[:-2]))
@@ -94,6 +98,8 @@ def forced_align(log_probs, targets, blank: int = 0):
     s = n_st - 1 if dp[n_st - 1] >= dp[n_st - 2] else n_st - 2
     states = np.zeros(t_len, dtype=np.int64)
     for t in range(t_len - 1, -1, -1):
+        if t % 64 == 0:
+            check_cancelled()
         states[t] = s
         s = back[t, s]
 
@@ -150,6 +156,8 @@ def forced_align_banded(log_probs, targets, blank: int = 0, radius: int = 256):
     choices = np.zeros((t_len, n_st), dtype=np.uint8)
 
     for t in range(1, t_len):
+        if t % 64 == 0:
+            check_cancelled()
         stay = dp
         prev1 = np.concatenate(([_NEG], dp[:-1]))
         prev2 = np.concatenate(([_NEG, _NEG], dp[:-2]))
@@ -169,6 +177,8 @@ def forced_align_banded(log_probs, targets, blank: int = 0, radius: int = 256):
     s = n_st - 1 if end_a >= end_b else n_st - 2
     states = np.zeros(t_len, dtype=np.int64)
     for t in range(t_len - 1, -1, -1):
+        if t % 64 == 0:
+            check_cancelled()
         states[t] = s
         s -= int(choices[t, s])
         if s < 0:

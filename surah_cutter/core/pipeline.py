@@ -106,7 +106,7 @@ def process_surah(
     from surah_cutter.core import model_store
 
     if model_store.active_kind() != "phonetic" and mode not in ("full", "tiled", "fingerprint"):
-        raise ValueError("Arabic Wav2Vec2 поддерживает полный, точный и пословный режимы. Выберите «Полный».")
+        raise ValueError("Выбранная модель поддерживает полный, точный и пословный режимы. Выберите «Полный».")
     if trace is not None:
         trace["model_source"] = model_store.source()
 
@@ -114,6 +114,8 @@ def process_surah(
     if reciter is not None:
         name = references.find_reciter(reciter)
         if name is not None:
+            if trace is not None:
+                trace["model_source"] = f"reference:{name}"
             # Reference start times for the whole DB; keep this sura, sorted.
             timings = references.load_reference(name)
             return sorted(
@@ -153,6 +155,9 @@ def process_surah(
         rows = _fingerprint_align(audio_path, surah, words, ayah_audio_dir=ayah_audio_dir)
     else:
         rows = _hybrid(audio_path, surah, words, db_path=db_path)
+
+    if trace is not None:
+        trace["model_source"] = model_store.source()
 
     # Overlay frozen (edited/verified) ayahs: never overwrite manual work.
     if frozen:

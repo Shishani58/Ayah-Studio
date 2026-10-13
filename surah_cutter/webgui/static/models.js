@@ -19,6 +19,7 @@ function modelButton(icon, label) {
 
 async function modelAction(id, action, body = {}) {
   modelBusy = true;
+  $("modelMessage").dataset.kind = "status";
   $("modelMessage").textContent = action === "select" ? "Проверка и подключение модели…" : "";
   $("modelList").querySelectorAll("button").forEach(b => b.disabled = true);
   try {
@@ -26,27 +27,49 @@ async function modelAction(id, action, body = {}) {
     if (action === "select") {
       currentProject.mode = result.mode;
       currentProject.alignment_model = id;
-      setMode(result.mode); $("settingsMode").value = result.mode;
-      $("modelMessage").textContent = "Модель выбрана. Следующий расчёт использует её.";
+      setMode(result.mode);
+      $("modelMessage").textContent = "";
     }
-  } catch (e) { $("modelMessage").textContent = e.message; }
+  } catch (e) { $("modelMessage").dataset.kind = "error"; $("modelMessage").textContent = e.message; }
   finally { modelBusy = false; modelSignature = ""; await refreshModels(); }
 }
 
 function renderModel(m, downloading) {
   const card = modelElement("article", "", "model-card");
   card.dataset.active = String(m.active); card.dataset.model = m.id;
-  const info = modelElement("div", "", "model-info");
+  const info = modelElement("button", "", "model-info model-choice");
+  info.type = "button";
+  info.disabled = !m.ready || m.active;
+  info.setAttribute("aria-pressed", String(m.active));
+  info.setAttribute("aria-label", `Использовать ${m.name}`);
+  info.onclick = () => { if (!modelBusy && !m.active) modelAction(m.id, "select"); };
   const names = { "quran-phonetics": "Quran Phonetics · INT8", "quran-phonetics-fp32": "Quran Phonetics · FP32", "arabic-ctc": "Arabic Wav2Vec2 · INT8", muaalem: "Muaalem v3.2" };
   const status = m.active ? "Используется" : m.installed || m.ready ? "Скачано" : "Доступно для скачивания";
-  info.append(modelElement("h4", names[m.id] || m.name));
-  info.append(modelElement("span", `${modelSize(m.runtime_size || m.size)} · ${status}`, "model-meta"));
+  const title = modelElement("span", "", "model-title");
+  title.append(modelElement("span", names[m.id] || m.name, "model-name"));
+  if (m.id === "quran-phonetics") title.append(modelElement("span", "По умолчанию", "model-badge"));
+  const meta = modelElement("span", "", "model-meta model-badges");
+  meta.append(modelElement("span", modelSize(m.runtime_size || m.size)), modelElement("span", status, "model-badge model-status"));
+  info.append(title, meta);
   card.append(info);
   const actions = modelElement("div", "", "model-actions");
-  if (m.ready && !m.active) {
-    const select = modelButton("check", `Использовать ${m.name}`);
-    select.onclick = () => modelAction(m.id, "select"); actions.append(select);
-  }
+  const help = modelElement("button", "?", "ghost icon-btn model-action model-help");
+  help.type = "button";
+  help.title = `О модели ${names[m.id] || m.name}`;
+  help.setAttribute("aria-label", help.title);
+  const popover = modelElement("div", "", "model-help-popover");
+  popover.id = `modelHelp-${m.id}`;
+  popover.setAttribute("popover", "auto");
+  popover.setAttribute("aria-label", help.title);
+  const details = modelElement("div", "");
+  details.append(modelElement("strong", names[m.id] || m.name), modelElement("p", m.description || ""), modelElement("p", m.benchmark_summary || "", "model-meta"));
+  popover.append(details, $("modelHelpTemplate").content.cloneNode(true));
+  popover.addEventListener("toggle", event => {
+    if (event.newState === "open") positionModelHelp(popover);
+  });
+  help.setAttribute("popovertarget", popover.id);
+  card.append(popover);
+  actions.append(help);
   if (!m.local_only && !m.installed && !m.ready && m.job.state !== "downloading") {
     const label = m.job.state === "error" ? `Повторить загрузку ${m.name}` : `Скачать ${m.name}`;
     const download = modelButton("download", label);
@@ -92,3 +115,14 @@ async function refreshModels() {
   } catch (e) { $("modelMessage").textContent = "Не удалось загрузить каталог: " + e.message; }
   if (keepPolling) modelPoll = setTimeout(refreshModels, 1000);
 }
+
+function positionModelHelp(help) {
+  const button = document.querySelector(`[popovertarget="${help.id}"]`);
+  if (!button) return;
+  const anchor = button.getBoundingClientRect();
+  help.style.left = `${Math.max(12, Math.min(anchor.left, innerWidth - help.offsetWidth - 12))}px`;
+  help.style.top = `${Math.max(12, Math.min(anchor.bottom + 8, innerHeight - help.offsetHeight - 12))}px`;
+}
+window.addEventListener("resize", () => {
+  document.querySelectorAll(".model-help-popover:popover-open").forEach(positionModelHelp);
+});

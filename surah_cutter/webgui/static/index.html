@@ -1,95 +1,127 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="light">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Ayah Studio</title>
   <link rel="icon" href="/mark.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/studio.css" />
 </head>
-<body>
+<body data-focus-method="pointer">
   <header class="workspace-bar">
-    <button id="backBtn" class="ghost icon-btn" title="Все суры" aria-label="Все суры"></button>
+    <div class="workspace-navigation">
+    <span class="workspace-brand">Ayah Studio</span>
+    <div class="workspace-sidebar-control"><button id="sidebarToggle" class="ghost icon-btn" title="Скрыть боковую панель" aria-label="Скрыть боковую панель" aria-expanded="true" aria-controls="suraSidebar"></button></div>
+    </div>
+    <div class="workspace-primary">
+      <button id="regenSuraBtn" class="primary alignment-start hidden" disabled title="Рассчитать разметку суры выбранным режимом">Начать разметку</button>
+      <button id="genBtn" class="primary" disabled>Начать разметку</button>
+    </div>
+    <div class="workspace-context">
     <details id="recordingMenu" class="toolbar-menu recording-menu">
-      <summary id="recordingMenuToggle" title="Выбрать проект" aria-label="Выбрать проект"></summary>
+      <summary id="recordingMenuToggle" title="Выбрать проект" aria-label="Выбрать проект"><span id="projectName">Выбрать проект</span></summary>
       <div class="toolbar-popover mode-picker project-picker">
         <div class="mode-picker-heading">Проекты</div>
         <div id="projectPickerList" role="group" aria-label="Выбрать проект"></div>
-        <button id="pickerCreateProjectBtn" type="button" class="project-picker-create">Создать / импортировать проект</button>
+        <button id="pickerCreateProjectBtn" type="button" class="project-picker-create">Добавить проект</button>
         <select id="projectSelect" hidden aria-hidden="true" tabindex="-1"><option value="">Откройте или создайте проект</option></select>
       </div>
     </details>
-    <details id="suraMenu" class="toolbar-menu sura-menu">
-      <summary id="suraMenuToggle" aria-label="Выбрать суру" aria-disabled="true" title="Выбрать суру"><span id="suraPickerLabel">Сура</span><span aria-hidden="true">⌄</span></summary>
-      <div class="toolbar-popover sura-picker">
-        <label for="suraPickerSearch">Суры с аудио</label>
-        <input id="suraPickerSearch" type="search" inputmode="numeric" placeholder="Номер суры, например 114" autocomplete="off" />
-        <div id="suraPickerGrid" class="sura-picker-grid" role="group" aria-label="Суры с аудио"></div>
-        <p id="suraPickerEmpty" class="hidden">Нет сур с таким номером</p>
-        <select id="reviewSuraSelect" hidden aria-hidden="true" tabindex="-1" disabled><option value="">Сура</option></select>
-      </div>
-    </details>
-    <div class="workspace-review-actions hidden">
-      <details id="modeMenu" class="toolbar-menu">
+      <div class="workspace-mode">
+      <details id="modeMenu" class="toolbar-menu hidden">
         <summary id="modeMenuToggle" class="icon-btn" title="Режим разметки" aria-label="Режим разметки"></summary>
         <div class="toolbar-popover mode-picker" role="group" aria-label="Режим разметки">
           <div class="mode-picker-heading">Режим разметки</div>
-          <button type="button" data-review-mode="fast" aria-pressed="false"><span>Быстрый</span><small>Черновая разметка аятов</small></button>
-          <button type="button" data-review-mode="full" aria-pressed="false"><span>Полный</span><small>Полное выравнивание по аудио</small></button>
-          <button type="button" data-review-mode="words" aria-pressed="false"><span>По словам</span><small>Начало каждого слова</small></button>
-          <div class="mode-picker-heading secondary">Дополнительные режимы</div>
-          <button type="button" data-review-mode="auto" aria-pressed="false"><span>Авто</span><small>Автоматический выбор режима</small></button>
-          <button type="button" data-review-mode="tiled" aria-pressed="false"><span>Полный · большие суры</span><small>Выравнивание длинных записей</small></button>
-          <select id="suraMode" hidden aria-hidden="true" tabindex="-1"><option value="fast">Быстрый</option><option value="full">Полный</option><option value="words">По словам</option><option value="auto">Авто</option><option value="tiled">Полный · большие суры</option></select>
+          <button type="button" data-review-mode="fast" aria-pressed="false"><span class="mode-option-icon" aria-hidden="true"></span><span>Быстрый</span><small>Черновая разметка аятов</small></button>
+          <button type="button" data-review-mode="full" aria-pressed="false"><span class="mode-option-icon" aria-hidden="true"></span><span>Полный</span><small>Полное выравнивание по аудио</small></button>
+          <button type="button" data-review-mode="words" aria-pressed="false"><span class="mode-option-icon" aria-hidden="true"></span><span>По словам</span><small>Начало каждого слова</small></button>
+          <select id="suraMode" hidden aria-hidden="true" tabindex="-1"><option value="fast">Быстрый</option><option value="full">Полный</option><option value="words">По словам</option></select>
         </div>
       </details>
-      <details class="review-tools"><summary id="reviewToolsToggle" title="Инструменты разметки" aria-label="Инструменты разметки"></summary><div class="review-actions">
-
-        <div class="action-group">
-          <button id="draftPausesBtn" class="ghost" title="Черновая разметка по паузам и волне, без перезаписи ручных меток">Разметить по паузам</button>
-          <button id="pauseOverlayBtn" class="ghost toggle" aria-pressed="false" title="Показать найденные алгоритмом паузы">Показать найденные паузы</button>
-          <button id="correctDraftBtn" class="ghost" title="Исправить auto-тайм-коды точным проходом, не трогая ручные метки">Корректировка</button>
-        </div>
-        <div class="action-group secondary-actions">
-          <button id="alignWordsBtn" class="ghost hidden" disabled>Пересчитать слова выбранного аята</button>
-          <button id="verifySelectedBtn" class="ghost" disabled>Отметить выбранный проверенным</button>
-          <button id="recheckBtn" class="ghost" title="Перепроверить готовые тайм-коды: что реально слышно в каждой точке (ничего не меняет)">🔍 Перепроверить</button>
-          <button id="exportBtn" class="ghost" title="Экспорт чистой .db">⇩ Экспорт</button>
-        </div>
-      </div></details>
-      <button id="showSuraLogBtn" class="ghost icon-btn" aria-label="Логи текущей суры" title="Логи текущей суры" aria-haspopup="dialog" aria-controls="suraLiveLogBox"></button>
-      <button id="regenSuraBtn" class="primary alignment-start" title="Рассчитать разметку суры выбранным режимом">Начать разметку</button>
-    </div>
-      <div class="workspace-dashboard-actions"><button id="helpBtn" class="ghost icon-btn" title="Как это работает" aria-label="Как это работает" aria-expanded="false" aria-controls="help"></button><button id="createProjectBtn" class="icon-btn" title="Создать / импортировать проект" aria-label="Создать / импортировать проект"></button>
-      <div class="genbar">
         <details id="dashboardModeMenu" class="toolbar-menu">
           <summary id="dashboardModeToggle" title="Режим разметки" aria-label="Режим разметки"></summary>
           <div id="dashboardModePicker" class="toolbar-popover mode-picker" role="group" aria-label="Режим разметки"><div class="mode-picker-heading">Режим разметки</div></div>
         </details>
+      </div>
+    </div>
+    <div id="suraProgress" class="sura-progress workspace-summary hidden">
+      <span id="suraProgressText">Размечено 0/0</span>
+      <span id="suraProgressMeta">—</span>
+      <div class="progress sura-progress-bar" aria-hidden="true"><div id="suraProgressFill" class="progress-fill"></div><span id="suraProgressPct">0%</span></div>
+    </div>
+    <div class="workspace-actions">
+    <div class="workspace-review-actions hidden">
+      <details class="review-tools"><summary id="reviewToolsToggle" title="Инструменты разметки" aria-label="Инструменты разметки"></summary><div class="review-actions">
+        <div class="mode-picker-heading">Инструменты разметки</div>
+        <div class="action-group">
+          <label id="wordUnitControl" class="inline hidden">Время <select id="wordTimeUnit" aria-label="Единицы времени слов"><option value="s">Секунды</option><option value="ms">Миллисекунды</option></select></label>
+          <button id="draftPausesBtn" class="ghost" title="Черновая разметка по паузам и волне, без перезаписи ручных меток">Разметить по паузам</button>
+          <button id="pauseOverlayBtn" class="ghost toggle" aria-pressed="false" title="Показать найденные алгоритмом паузы">Показать найденные паузы</button>
+          <button id="correctDraftBtn" class="ghost" title="Исправить auto-тайм-коды точным проходом, не трогая ручные метки">Корректировка</button>
+          <button id="alignWordsBtn" class="ghost hidden" disabled>Пересчитать слова выбранного аята</button>
+          <button id="verifySelectedBtn" class="ghost" disabled>Отметить выбранный проверенным</button>
+          <button id="recheckBtn" class="ghost" title="Перепроверить готовые тайм-коды: что реально слышно в каждой точке (ничего не меняет)">Перепроверить</button>
+        </div>
+        <div class="action-group secondary-actions">
+          <button id="batchGenerateBtn" class="ghost">Разметить недостающие суры</button>
+          <button id="batchRegenerateBtn" class="ghost">Пересчитать auto-метки всех сур</button>
+
+        </div>
+      </div></details>
+      <button id="showSuraLogBtn" class="ghost logs-btn" aria-label="Логи текущей суры" title="Логи текущей суры" aria-haspopup="dialog" aria-controls="suraLiveLogBox">Логи</button>
+
+    </div>
+      <div class="workspace-dashboard-actions"><button id="helpBtn" class="ghost icon-btn" title="Как это работает" aria-label="Как это работает" aria-expanded="false" aria-controls="help"></button><button id="createProjectBtn" class="icon-btn hidden" title="Добавить проект" aria-label="Добавить проект"></button>
+      <div class="genbar">
           <select id="genMode" hidden aria-hidden="true" tabindex="-1">
             <option value="fast">Быстрый</option>
             <option value="full">Полный</option>
             <option value="words">По словам</option>
-            <optgroup label="Дополнительные режимы">
-              <option value="auto">Авто</option>
-              <option value="tiled">Полный · большие суры</option>
-            </optgroup>
           </select>
-        <button id="genBtn" class="primary" disabled>▶ Сгенерировать всё</button>
+
         <button id="regenBtn" class="ghost icon-btn hidden" title="Пересчитать все auto-аяты; ручные и проверенные сохраняются" aria-label="Пересчитать разметку всех сур"></button>
         <span id="modeHint" class="hint-inline hidden"></span>
       </div>
 
       </div>
 
-    <span id="saveState" class="save-state" role="status">Нет открытого проекта</span>
+
     <button id="settingsBtn" class="ghost icon-btn" title="Настройки" aria-label="Настройки"></button>
     <button id="workspaceExportBtn" class="ghost icon-btn" title="Экспорт разметки" aria-label="Экспорт разметки" disabled></button>
+    </div>
   </header>
+  <div id="navigationProgress" class="navigation-progress">
+    <span id="suraGenStatus" class="sura-gen-status" aria-live="polite"></span>
+    <div id="reviewGeneration" class="review-generation" role="progressbar" aria-label="Расчёт разметки"><div></div></div>
+  </div>
+  <div class="workspace-body">
+  <aside id="suraSidebar" class="sura-sidebar" aria-label="Навигация по сурам"><div class="sura-sidebar-content"><h2>Суры</h2>      <div class="library-filters">
+        <label class="search-field" for="suraSearch"><svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>
+          <input id="suraSearch" aria-label="Поиск суры по номеру или названию" type="search" placeholder="Поиск суры" autocomplete="off" />
+        </label>
+        <details id="filterMenu" class="toolbar-menu">
+          <summary id="filterMenuToggle" title="Фильтр сур" aria-label="Фильтр сур"></summary>
+          <div id="filterPicker" class="toolbar-popover mode-picker" role="group" aria-label="Показать суры"><div class="mode-picker-heading">Показать</div></div>
+        </details>
+          <select id="suraFilter" hidden aria-hidden="true" tabindex="-1">
+            <option value="audio">С аудио</option>
+            <option value="all" selected>Все суры</option>
+            <option value="not-processed">Без разметки</option>
+            <option value="partial">Неполная разметка</option>
+            <option value="processed">Черновики</option>
+            <option value="verified">Проверенные</option>
+          </select>
+        <p id="librarySummary" class="status">Откройте проект для начала работы</p>
+
+      </div>
+      <div id="grid" class="grid" aria-label="Список сур"></div>
+      <div id="gridEmpty" class="empty-state hidden" role="status"><h3>Здесь появятся ваши суры</h3><p>Создайте или импортируйте проект с помощью кнопки с папкой наверху.</p></div>
+</div></aside>
+  <main class="workspace-content">
   <p id="workspaceStatus" class="workspace-status" role="status"></p>
   <!-- ===== Dashboard ===== -->
-  <section id="dashboard" class="view">
-    <header class="topbar dashboard-panels">
+  <header class="topbar dashboard-panels">
       <!-- onboarding / how it works -->
       <div id="help" class="help-card collapsed">
         <ol>
@@ -132,53 +164,36 @@
 
       <p id="status" class="hidden" role="status"></p>
     </header>
-    <main class="library">
-      <div class="library-filters">
-        <label class="search-field" for="suraSearch">
-          <input id="suraSearch" aria-label="Номер суры" type="search" inputmode="numeric" placeholder="Найти, например 114" />
-        </label>
-        <details id="filterMenu" class="toolbar-menu">
-          <summary id="filterMenuToggle" title="Фильтр сур" aria-label="Фильтр сур"></summary>
-          <div id="filterPicker" class="toolbar-popover mode-picker" role="group" aria-label="Показать суры"><div class="mode-picker-heading">Показать</div></div>
-        </details>
-          <select id="suraFilter" hidden aria-hidden="true" tabindex="-1">
-            <option value="audio">С аудио</option>
-            <option value="all">Все суры</option>
-            <option value="not-processed">Без разметки</option>
-            <option value="partial">Неполная разметка</option>
-            <option value="processed">Черновики</option>
-            <option value="verified">Проверенные</option>
-          </select>
-        <p id="librarySummary" class="status">Откройте проект для начала работы</p>
-        <button id="dashboardExportBtn" class="hidden" disabled aria-label="Экспорт разметки"></button>
-      </div>
-      <div id="grid" class="grid" aria-label="Список сур"></div>
-      <div id="gridEmpty" class="empty-state hidden" role="status"><h3>Здесь появятся ваши суры</h3><p>Создайте или импортируйте проект с помощью кнопки с папкой наверху.</p></div>
-    </main>
+  <section id="dashboard" class="view">
+    <div class="library">
+      <div class="workspace-empty"><h1>Выберите суру</h1><p>Откройте суру в боковом списке, чтобы слушать запись и проверять разметку.</p></div>
+    </div>
   </section>
 
   <!-- ===== Review ===== -->
   <section id="review" class="view hidden">
+    <div class="hidden" aria-hidden="true"><h2 id="reviewTitle">Сура</h2><p id="reviewSubtitle"></p></div>
     <div class="wave-wrap">
       <div class="wave-row">
+        <span id="audioLoadStatus" class="review-load-status audio-load-status hidden" role="status"></span>
+        <div class="wave-toolbar">
+          <span id="clock" class="clock">0:00 / 0:00</span>
         <div class="wave-zoom" role="group" aria-label="Масштаб волны">
           <button id="zoomOutBtn" title="Уменьшить масштаб волны" aria-label="Уменьшить масштаб волны">−</button>
           <output id="zoomLabel" class="zoom-label" aria-live="polite" aria-label="Текущий масштаб">1×</output>
           <button id="zoomInBtn" title="Увеличить масштаб волны" aria-label="Увеличить масштаб волны">+</button>
         </div>
+        </div>
         <button id="waveStartBtn" class="ghost wave-edge-btn" title="В начало волны" aria-label="В начало волны">⏮</button>
         <div id="waveScroll" class="wave-scroll">
           <div id="waveContent" class="wave-content">
-            <canvas id="wave"></canvas>
+            <canvas id="wave" aria-label="Аудиоволна и границы аятов" title="Клик — перемотка; перетаскивание метки — правка начала"></canvas>
             <div id="waveLoadStatus" class="review-load-status wave-load-status hidden" role="status"></div>
           </div>
         </div>
         <button id="waveEndBtn" class="ghost wave-edge-btn" title="В конец волны" aria-label="В конец волны">⏭</button>
       </div>
-      <div class="wave-playback-meta">          <span id="audioLoadStatus" class="review-load-status hidden" role="status"></span>
-          <span id="clock" class="clock">0:00 / 0:00</span>
-      </div>
-      <p id="waveHint" class="wave-hint">Клик по волне — перемотка · тяните золотую линию — двигайте начало аята</p>
+      <p id="waveHint" class="wave-hint">Клик по волне — перемотка · тяните метку — двигайте начало аята</p>
       <div id="pauseInspector" class="pause-inspector hidden">
         <div class="pause-inspector-head">
           <strong id="pauseInspectorTitle">Паузы</strong>
@@ -203,48 +218,30 @@
       </div>
     </div>
 
-    <div class="ayah-table-head">
-      <span>Аят</span><span>Начало</span>
-      <div class="ayah-heading-content">
-        <span class="ayah-text-heading">Текст аята</span>
-          <label id="wordUnitControl" class="inline hidden">Время
-            <select id="wordTimeUnit" aria-label="Единицы времени слов"><option value="s">Секунды</option><option value="ms">Миллисекунды</option></select>
-          </label>
-
-        <div class="review-summary">
-          <h2 id="reviewTitle" tabindex="-1">Сура</h2>
-          <div id="suraProgress" class="sura-progress">
-            <span id="suraProgressText">размечено 0 / 0</span>
-            <span id="suraProgressMeta">—</span>
-            <div class="progress sura-progress-bar" aria-hidden="true"><div id="suraProgressFill" class="progress-fill"></div><span id="suraProgressPct">0%</span></div>
-          </div>
-        </div>
-        <span id="suraGenStatus" class="sura-gen-status" aria-live="polite"></span>
-      </div>
-    </div>
     <p id="ayahLoadStatus" class="review-load-status hidden" role="status"></p>
     <ul id="ayahList" class="ayah-list" aria-label="Аяты суры"></ul>
 
         <div class="player-controls floating-player" role="group" aria-label="Плеер">
+          <div class="player-settings">
+            <button id="playerSettingsBtn" type="button" class="icon-btn" title="Настройки плеера" aria-label="Настройки плеера" aria-expanded="false" aria-controls="playerSettingsMenu">⚙</button>
+            <div id="playerSettingsMenu" class="player-settings-menu hidden" role="group" aria-label="Настройки плеера">
+              <strong>Воспроизведение</strong>
+              <label><input type="radio" name="playbackMode" value="continuous" checked /> Читать дальше</label>
+              <label><input type="radio" name="playbackMode" value="single" /> Остановиться после аята</label>
+              <label><input type="radio" name="playbackMode" value="repeat" /> Повторять аят</label>
+              <p id="playerSettingsHint">Границы берутся из текущей разметки.</p>
+            </div>
+          </div>
           <button id="prevBtn" class="icon-btn" title="Предыдущий аят (←)" aria-label="Предыдущий аят">⏮</button>
           <button id="playBtn" class="primary icon-btn play-btn" title="Воспроизвести / пауза (Пробел)" aria-label="Воспроизвести">▶</button>
           <button id="nextBtn" class="icon-btn" title="Следующий аят (→)" aria-label="Следующий аят">⏭</button>
           <div class="player-rate">
             <button id="rateBtn" type="button" aria-label="Скорость воспроизведения: 1×" aria-expanded="false" aria-controls="rateMenu" title="Скорость воспроизведения">1×</button>
-            <div id="rateMenu" class="rate-menu hidden" role="group" aria-label="Выбрать скорость"></div>
-            <select id="rate" hidden aria-hidden="true" tabindex="-1">
-              <option value="0.25">0.25×</option>
-              <option value="0.5">0.5×</option>
-              <option value="0.75">0.75×</option>
-              <option value="1" selected>1×</option>
-              <option value="1.25">1.25×</option>
-              <option value="1.5">1.5×</option>
-              <option value="1.75">1.75×</option>
-              <option value="2">2×</option>
-              <option value="2.5">2.5×</option>
-              <option value="3">3×</option>
-              <option value="4">4×</option>
-            </select>
+            <div id="rateMenu" class="rate-menu hidden" role="group" aria-label="Выбрать скорость">
+              <label for="rate">Скорость воспроизведения <output id="rateValue" for="rate">1×</output></label>
+              <div class="rate-slider"><span>0.2×</span><input id="rate" type="range" min="0.2" max="2" step="0.05" value="1" /><span>2×</span></div>
+              <div id="ratePresets" class="rate-presets" role="group" aria-label="Быстрый выбор скорости"></div>
+            </div>
           </div>
         </div>
 
@@ -252,6 +249,9 @@
     <audio id="audio" preload="auto"></audio>
   </section>
 
+
+  </main>
+  </div>
 
   <dialog id="suraLiveLogBox" class="log-box sura-live-log-box" aria-labelledby="suraLogTitle">
     <header class="log-toolbar">
@@ -272,48 +272,21 @@
   <dialog id="settingsDialog" aria-labelledby="settingsTitle">
     <header class="dialog-heading"><h2 id="settingsTitle">Настройки</h2><button id="closeSettingsBtn" class="icon-btn ghost" aria-label="Закрыть настройки">×</button></header>
     <nav class="settings-tabs" aria-label="Разделы настроек">
-      <button type="button" data-settings-panel="interfaceSettings" aria-pressed="true">Интерфейс</button>
-      <button type="button" data-settings-panel="generationSettings" aria-pressed="false">Разметка</button>
-      <button type="button" data-settings-panel="modelSettings" aria-pressed="false">Модели</button>
-      <button type="button" data-settings-panel="projectSettings" aria-pressed="false">Проект</button>
-      <button type="button" data-settings-panel="importSettings" aria-pressed="false">Импорт</button>
+      <button type="button" data-settings-panel="interfaceSettings" aria-pressed="true"><svg class="settings-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>Интерфейс</button>
+      <button type="button" data-settings-panel="modelSettings" aria-pressed="false"><svg class="settings-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="3"/><path d="M9 1v4m6-4v4M9 19v4m6-4v4M1 9h4m-4 6h4m14-6h4m-4 6h4"/></svg>Модели</button>
+      <button type="button" data-settings-panel="projectSettings" aria-pressed="false"><svg class="settings-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h6l2-3h10v16H3z"/></svg>Проекты</button>
     </nav>
-    <section id="projectSettings" class="settings-panel">
-      <h3>Текущая запись</h3>
-      <div class="settings-fields"><label>Чтец<input id="settingsReciter" type="text" maxlength="120" /></label><label>Название записи<input id="settingsRecording" type="text" maxlength="120" /></label></div>
-      <p id="projectStorageSummary" class="settings-help"></p>
-      <details class="storage-details"><summary>Расположение данных</summary><dl><dt>Аудио</dt><dd id="audioLocation"></dd><dt>Разметка и история</dt><dd id="dbLocation"></dd></dl></details>
-      <p class="settings-help">Для каждой записи хранится отдельная разметка. Переключение суры не меняет место хранения.</p>
-      <button id="settingsExportBtn" class="ghost">Экспортировать .db…</button>
+    <div class="settings-content">
+    <section id="projectSettings" class="settings-panel hidden">
+      <div class="projects-heading"><h3>Проекты</h3><button id="addProjectBtn" type="button" class="primary">Добавить проект</button></div>
+      <p class="settings-help">Для каждой записи — свои аудио и разметка. Откройте проект для работы или измените его название.</p>
+      <div id="settingsProjectList" class="settings-project-list" aria-label="Список проектов"></div>
     </section>
-    <section id="importSettings" class="settings-panel hidden">      <!-- project setup -->
-      <h3>Создать проект из аудио</h3><p class="settings-help">Аудио и разметка копируются во внутреннюю папку. Исходные файлы сохраняются.</p>
-      <form id="projectForm" class="setup">
-        <div class="field"><label for="importReciter">Чтец</label><input id="importReciter" type="text" maxlength="120" required placeholder="Например, Аш-Шатри" /></div>
-        <div class="field"><label for="importRecording">Название записи</label><input id="importRecording" type="text" maxlength="120" required value="Запись 1" /></div>
-        <div class="field">
-          <label for="audioDir">Папка с аудио</label>
-          <div class="input-row">
-            <input id="audioDir" type="text" placeholder="Папка с файлами 001.mp3 … 114.mp3" />
-            <button id="browseAudio" type="button" class="browse hidden">Выбрать…</button>
-          </div>
-        </div>
-        <div class="field">
-          <label for="dbPath">Импорт разметки (.db), необязательно</label>
-          <div class="input-row">
-            <input id="dbPath" type="text" placeholder="Оставьте пустым для новой разметки" />
-            <button id="browseDb" type="button" class="browse hidden">Открыть…</button>
-
-          </div>
-        </div>
-        <button id="openBtn" type="submit">Создать и открыть проект</button>
-      </form>
-
-</section>
     <section id="interfaceSettings" class="settings-panel hidden">
+      <h3>Интерфейс</h3>
       <fieldset class="settings-group">
         <legend>Оформление</legend>
-        <p class="settings-help">Выберите тему. Изменения можно посмотреть до сохранения.</p>
+        <p class="settings-help">Изменения применяются и сохраняются автоматически.</p>
         <div class="theme-options">
           <label class="theme-option"><input type="radio" name="settingsTheme" value="light" /><span class="theme-swatch light" aria-hidden="true"><i></i><i></i><i></i></span><span>Светлая</span></label>
           <label class="theme-option"><input type="radio" name="settingsTheme" value="dark" checked /><span class="theme-swatch dark" aria-hidden="true"><i></i><i></i><i></i></span><span>Тёмная</span></label>
@@ -325,28 +298,40 @@
         <p class="settings-help">Размер применяется к аятам и словам на экране проверки.</p>
       </fieldset>
     </section>
-    <section id="generationSettings" class="settings-panel hidden">
-      <fieldset class="settings-group">
-        <legend>Правка времени</legend>
-        <div class="settings-fields"><label for="settingsStep">Шаг стрелок<select id="settingsStep" aria-describedby="stepHelp"><option value="10">10 мс · точно</option><option value="50">50 мс</option><option value="100">100 мс · быстро</option></select></label></div>
-        <p id="stepHelp" class="settings-help">Shift + стрелка увеличивает шаг в 10 раз.</p>
-      </fieldset>
-      <fieldset class="settings-group">
-        <legend>Генерация разметки</legend>
-        <div class="settings-fields"><label for="settingsMode">Режим<select id="settingsMode" aria-describedby="modeHelp"><option value="auto">Автоматически</option><option value="full">Полный</option><option value="words">По словам</option><option value="tiled">Точно · длинные суры</option><option value="fast">Быстрый</option></select></label></div>
-        <p id="modeHelp" class="settings-help">Применяется при следующем запуске генерации. Смена режима не запускает пересчёт. Ручные и проверенные метки сохраняются.</p>
-      </fieldset>
-    </section>
     <section id="modelSettings" class="settings-panel hidden">
       <h3>Модели аудио</h3>
       <p id="modelMessage" class="settings-message" role="status" aria-live="polite"></p>
       <div id="modelList" class="model-list" aria-label="Каталог моделей"></div>
+      <template id="modelHelpTemplate">
+        <p class="model-meta">Замеры: Шатри, суры 112 и 114, полный режим на Mac (CPU). Ошибка — медианное отклонение начала аята от эталона. Время включает загрузку модели и проверку слов первого аята. На других записях результаты могут отличаться.</p>
+        <p class="model-meta">Для быстрого режима пока используйте Quran Phonetics. Сложные границы требуют проверки. Остальные модели доступны в полном, точном и пословном режимах.</p>
+      </template>
     </section>
     <p id="settingsMessage" class="settings-message" role="status"></p>
-    <footer class="dialog-footer"><span>Настройки сохраняются на этом устройстве</span><button id="cancelSettingsBtn" class="ghost">Отмена</button><button id="saveSettingsBtn" class="primary">Сохранить</button></footer>
+    </div>
+  </dialog>
+
+  <dialog id="projectDialog" aria-labelledby="projectDialogTitle">
+    <header class="dialog-heading"><h2 id="projectDialogTitle">Добавить проект</h2><button id="closeProjectBtn" type="button" class="icon-btn ghost" aria-label="Закрыть форму проекта">×</button></header>
+    <form id="projectForm">
+      <div class="project-form-fields">
+        <div class="settings-fields">
+          <label for="importReciter">Чтец<input id="importReciter" name="reciter" type="text" maxlength="120" required placeholder="Например, Аш-Шатри" /></label>
+          <label for="importRecording">Название записи<input id="importRecording" name="recording" type="text" maxlength="120" required /></label>
+        </div>
+        <div id="projectImportFields">
+          <div class="field"><label for="audioDir">Папка с аудио</label><div class="input-row"><input id="audioDir" name="audio_dir" type="text" required placeholder="Папка с файлами 001.mp3 … 114.mp3" /><button id="browseAudio" type="button" class="browse hidden">Выбрать…</button></div></div>
+          <div class="field"><label for="dbPath">Разметка (.db), необязательно</label><div class="input-row"><input id="dbPath" name="db_path" type="text" placeholder="Оставьте пустым для новой разметки" /><button id="browseDb" type="button" class="browse hidden">Открыть…</button></div></div>
+          <p class="settings-help">Аудио и разметка копируются в проект. Исходные файлы сохраняются.</p>
+        </div>
+        <p id="projectFormMessage" class="settings-help" role="status" aria-live="polite"></p>
+      </div>
+      <footer class="dialog-footer"><button id="cancelProjectBtn" type="button" class="ghost">Отмена</button><button id="openBtn" type="submit" class="primary">Сохранить</button></footer>
+    </form>
   </dialog>
 
   <script src="/models.js"></script>
+  <script src="/sura-names.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>

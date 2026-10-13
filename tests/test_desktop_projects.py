@@ -118,3 +118,37 @@ def test_failed_persistence_keeps_current_selection(local_projects, monkeypatch)
         endpoint("/api/projects/activate")({"id": other["id"]})
     assert exc.value.status_code == 500
     assert server.STATE.db_path == Path(original["db_path"])
+
+
+def test_update_inactive_project_preserves_selection_audio_and_review(local_projects):
+    create = endpoint("/api/projects/create")
+    first = create({"reciter": "Первый", "recording": "1", "audio_dir": str(local_projects)})
+    with ProjectDB.open(first["db_path"], DB_CODE, DB_VERSION) as db:
+        db.set_time(112, 1, 123)
+        db.set_status(112, 1, "verified")
+    before = Path(first["db_path"]).read_bytes()
+    second = create({"reciter": "Второй", "recording": "2", "audio_dir": str(local_projects)})
+    saved_settings = settings.load()
+    result = endpoint("/api/projects/update")(
+        {"id": first["project_id"], "reciter": " Изменённый ", "recording": " Новая запись "}
+    )
+    assert result["reciter"] == "Изменённый"
+    assert result["recording"] == "Новая запись"
+    assert endpoint("/api/project")()["project_id"] == second["project_id"]
+    assert settings.load() == saved_settings
+    assert Path(first["db_path"]).read_bytes() == before
+    assert (Path(first["audio_dir"]) / "112.mp3").read_bytes() == b"audio source"
+    endpoint("/api/projects/activate")({"id": first["project_id"]})
+    assert endpoint("/api/project")()["reciter"] == "Изменённый"
+
+
+@pytest.mark.parametrize("names", [{"reciter": "", "recording": "1"},
+                                   {"reciter": "Чтец", "recording": " "},
+                                   {"reciter": "Ч" * 121, "recording": "1"}])
+def test_project_update_rejects_invalid_names_without_changes(local_projects, names):
+    project = projects.create("Чтец", "Запись", str(local_projects))
+    with pytest.raises(HTTPException) as exc:
+        endpoint("/api/projects/update")({"id": project["id"], **names})
+    assert exc.value.status_code == 400
+    assert projects.get(project["id"])["reciter"] == "Чтец"
+    assert projects.get(project["id"])["recording"] == "Запись"

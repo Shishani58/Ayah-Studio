@@ -321,11 +321,18 @@ class ProjectDB:
 
     def verify_word(self, sura: int, ayah: int, index: int, start: int, end: int) -> None:
         """Verify a current saved mark; an old boundary snapshot cannot be verified."""
+        self.set_word_status(sura, ayah, index, "verified", start, end)
+
+    def set_word_status(self, sura: int, ayah: int, index: int, status: str,
+                        start: int, end: int) -> None:
+        """Change review state without changing time or accepting stale boundaries."""
+        if status not in STATUSES:
+            raise ValueError("Неизвестный статус слова.")
         with self._conn:
             cursor = self._conn.execute(
-                "UPDATE word_timings SET status='verified', updated_at=? "
+                "UPDATE word_timings SET status=?, updated_at=? "
                 "WHERE sura=? AND ayah=? AND word_index=? AND ayah_start=? AND ayah_end=?",
-                (_now(), sura, ayah, index, start, end),
+                (status, _now(), sura, ayah, index, start, end),
             )
             if not cursor.rowcount:
                 raise ValueError("Сначала поставьте или обновите метку слова.")

@@ -2,9 +2,10 @@
 
 ## Установка пользователем
 
-Открыть `Ayah-Studio-0.1.0-macOS-arm64.dmg`, перенести `Ayah Studio.app`
+Открыть `Ayah-Studio-0.2.0-macOS-arm64.dmg`, перенести `Ayah Studio.app`
 на ярлык `Applications`, извлечь диск и запустить приложение из «Программ».
-Python, исходники, терминал и скачивание моделей пользователю не нужны.
+Python, исходники и терминал пользователю не нужны. Базовая модель включена;
+дополнительные модели устанавливаются отдельно через каталог настроек.
 Все вычисления выполняются локально. Проекты сохраняются вне .app.
 
 ## Windows x64
@@ -24,11 +25,11 @@ uv run --locked --extra build pyinstaller surah_cutter.spec --noconfirm --clean
 
 Скрипт проверяет frozen `--self-check` (ONNX inference, FFmpeg, 114/6236,
 ресурсы), ждёт появления отвечающего нативного окна, закрывает тестовый процесс
-и создаёт `Ayah-Studio-0.1.0-Windows-x64.zip` с SHA-256.
+и создаёт `Ayah-Studio-0.2.0-Windows-x64.zip` с SHA-256.
 Запуск требует интерактивной Windows-сессии; CI использует `windows-latest`.
 
 В GitHub Actions → build → Run workflow можно выбрать `windows_only` и указать
-существующий `release_tag`, например `v0.1.0`. Публикация сохраняет описание
+существующий `release_tag`, например `v0.2.0`. Публикация сохраняет описание
 релиза и его macOS assets. Для ручной сборки берётся выбранная ветка workflow;
 точный commit записывается в запуске Actions.
 
@@ -43,7 +44,7 @@ uv run --locked --extra build python tools/build_macos.py
 `--skip-build` упаковывает уже собранную `.app`; для изменённого кода нужен полный
 запуск. Версия берётся из Info.plist собранного bundle.
 
-Результат: `dist/Ayah Studio.app`, `dist/Ayah-Studio-0.1.0-macOS-arm64.dmg`
+Результат: `dist/Ayah Studio.app`, `dist/Ayah-Studio-0.2.0-macOS-arm64.dmg`
 и `.dmg.sha256`. Архитектура совпадает с Python сборочной машины: arm64 или
 x86_64. Универсальная сборка и запуск на Intel в этой задаче не проверялись.
 Зависимости зафиксированы в `uv.lock`; не включать extras `align` / `qt` в сборку.
@@ -54,7 +55,9 @@ x86_64. Универсальная сборка и запуск на Intel в э
 ## Что включено
 
 `surah_cutter.spec` упаковывает web-GUI, текст Корана (114 сур, 6236 аятов),
-эталонные тайминги, QPC Hafs, FFmpeg, ONNX Runtime, словарь и обе модели.
+эталонные тайминги, QPC Hafs, FFmpeg, ONNX Runtime, словари и обе модели.
+Также включены `uv` и worker для изолированных optional runtime; torch
+скачивается в отдельное окружение только при выборе дополнительной модели.
 Нужны локальные файлы (не коммитятся):
 
 - `models/wav2vec2-quran-phonetics.onnx` — int8 acoustic model;

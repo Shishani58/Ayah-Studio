@@ -23,15 +23,22 @@ def align_ayah_words(pcm, sr: int, words: list[Word]) -> list[tuple[int, int, fl
     bundle = align._get_onnx_bundle()
     if getattr(bundle, "text_kind", "phonetic") == "whisper":
         return bundle.emitter.align_words(pcm, words)
-    trs = transliteration.surah_word_tr(words[0].surah)
-    if any(w.index >= len(trs) for w in words):
-        raise ValueError("Нет полной транслитерации аята.")
-    targets, word_spans = align._build_targets(words, [trs[w.index] for w in words], bundle)
+    if (hasattr(getattr(bundle, "emitter", None), "build_targets")
+            or getattr(bundle, "text_kind", "phonetic") == "arabic"):
+        word_trs = []
+    else:
+        trs = transliteration.surah_word_tr(words[0].surah)
+        if any(w.index >= len(trs) for w in words):
+            raise ValueError("Нет полной транслитерации аята.")
+        word_trs = [trs[w.index] for w in words]
+    targets, word_spans = align._build_targets(words, word_trs, bundle)
     if not targets or any(end <= start for start, end in word_spans):
         raise ValueError("Не все слова представлены в словаре модели.")
     if align._full_ctc_requires_tiling(len(pcm), sr, len(targets)):
         raise ValueError("Аят слишком длинный для локального расчёта. Уточните его границы.")
     emissions = align._emissions(bundle, pcm, np)
+    if getattr(bundle, "text_kind", "").startswith("fastconformer"):
+        targets, word_spans = align._build_targets(words, word_trs, bundle)
     path, scores = forced_align(
         np.ascontiguousarray(emissions[None], dtype=np.float32),
         np.asarray(targets, dtype=np.int64)[None], blank=bundle.blank_id,
@@ -49,6 +56,6 @@ def align_ayah_words(pcm, sr: int, words: list[Word]) -> list[tuple[int, int, fl
         ms = max(0, round(first.start * stride - getattr(bundle, "lag_ms", align.ALIGN_LAG_MS)))
         if ms <= previous or ms >= len(pcm) * 1000 / sr:
             raise ValueError("Границы слов не различимы. Проверьте аят на слух.")
-        rows.append((word.index, ms, align._span_confidence(scores, first.start, last.end - 1)))
+        rows.append((word.index, ms, align._span_confidence(scores, first.start, last.end)))
         previous = ms
     return rows

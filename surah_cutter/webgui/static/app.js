@@ -13,24 +13,32 @@ const $ = (id) => document.getElementById(id);
 function studioIcon(name) {
   const paths = {
     play: '<path d="M8 5v14l11-7z" fill="currentColor" stroke="none"/>',
+    stop: '<rect x="6" y="6" width="12" height="12" rx="1" fill="currentColor" stroke="none"/>',
     pause: '<path d="M8 5v14M16 5v14" stroke-width="4"/>',
     previous: '<path d="M6 5v14M18 5l-9 7 9 7z"/>',
     next: '<path d="M18 5v14M6 5l9 7-9 7z"/>',
+    skipPrevious: '<path d="M5 5h3v14H5zM19 5 9 12l10 7z" fill="currentColor" stroke="none"/>',
+    skipNext: '<path d="M16 5h3v14h-3zM5 5l10 7-10 7z" fill="currentColor" stroke="none"/>',
+    search: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>',
     marker: '<path d="M6 21V3l12 1v9l-12-1"/>',
     check: '<path d="m5 12 4 4L19 6"/>',
+    edit: '<path d="m16 3 5 5-12 12-6 1 1-6zM14 5l5 5"/>',
     help: '<circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 4M12 17h.01"/>',
     filter: '<path d="M3 5h18l-7 8v6l-4 2v-8z"/>',
     addProject: '<path d="M3 7V5a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7zM3 9h18M12 12v6M9 15h6"/>',
     recording: '<path d="M3 7V5a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7zM3 9h18"/>',
-    back: '<path d="M20 12H4m6-6-6 6 6 6"/>',
-    settings: '<path d="m9 3-1 3-3 1-2 3 2 2v3l3 2 1 4h6l1-4 3-2v-3l2-2-2-3-3-1-1-3z"/><circle cx="12" cy="12" r="3"/>',
-    export: '<path d="M12 3v12m-4-4 4 4 4-4M4 16v5h16v-5"/>',
+    sidebar: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M6 8v1M6 12v1"/>',
+    settings: '<path d="M10 3h4l.5 2.5 2 .8 2.1-1.4 2.1 3.5-2.1 1.4.3 2.2 2.1 1.4-2 3.5-2.3-1-1.8 1.2L14 20h-4l-.6-2.4-1.8-1.2-2.3 1-2-3.5 2.1-1.4.3-2.2-2.1-1.4 2.1-3.5 2.1 1.4 2-.8z"/><circle cx="12" cy="11.5" r="3"/>',
+    export: '<path d="M12 15V3m-4 4 4-4 4 4M8 10H5v11h14V10h-3"/>',
     download: '<path d="M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4"/>',
     trash: '<path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/>',
     close: '<path d="m6 6 12 12M18 6 6 18"/>',
     refresh: '<path d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-2l2 7M4 12l2 7a7 7 0 0 0 12-2"/>',
     logs: '<path d="M6 3h9l4 4v14H6zM14 3v5h5M9 12h7M9 16h7"/>',
     tools: '<path d="m14 6 4 4 3-3a6 6 0 0 1-8 7l-7 7-3-3 7-7a6 6 0 0 1 7-8z"/>',
+    fast: '<path d="m13 2-9 12h7l-1 8 10-12h-7z"/>',
+    full: '<path d="M3 10v4M7 6v12M11 3v18M15 7v10M19 5v14M23 10v4"/>',
+    words: '<path d="M4 5h16M4 10h7m4 0h5M4 15h10m4 0h2M4 20h6m4 0h6"/>',
     mode: '<path d="M4 5h16M4 12h16M4 19h16M8 3v4M16 10v4M10 17v4"/>',
     up: '<path d="m6 15 6-6 6 6"/>',
     down: '<path d="m6 9 6 6 6-6"/>',
@@ -59,8 +67,90 @@ function parseTime(value) {
 }
 const ayahLabel = (count) => `${count} ${{ one: "аят", few: "аята", many: "аятов", other: "аята" }[new Intl.PluralRules("ru").select(count)]}`;
 function saveState(message, state = "") {
-  $("saveState").textContent = message;
-  $("saveState").className = "save-state " + state;
+  if (state === "error") setStatus(message);
+}
+const suraName = number => SURA_NAMES[number] || `Сура ${number}`;
+function updateReviewTitle(count) {
+  $("reviewTitle").textContent = suraName(R.surah);
+  $("reviewSubtitle").textContent = `Сура ${R.surah} · ${ayahLabel(count || 0)}`;
+}
+function syncSidebarStatus() {
+  if (!R.dataReady) return;
+  const sura = dashboardSuras.find(s => s.surah === R.surah);
+  if (!sura) return;
+  const marked = R.ayahs.filter(a => a.time != null);
+  sura.status = !marked.length ? "not-processed" : marked.length < sura.ayah_count
+    ? "partial" : marked.every(a => a.status === "verified") ? "verified" : "processed";
+  renderSuras();
+  const available = dashboardSuras.filter(s => s.has_audio).length;
+  const verified = dashboardSuras.filter(s => s.status === "verified").length;
+  $("librarySummary").textContent = `${available} с аудио · ${verified} проверено · ${dashboardSuras.length} всего`;
+  updateGenControls(dashboardSuras);
+}
+let sidebarAnimation = null, sidebarCompanionAnimations = [];
+function setSidebarVisible(visible) {
+  const sidebar = $("suraSidebar"), content = sidebar.firstElementChild;
+  const navigation = document.querySelector(".workspace-navigation");
+  const player = document.querySelector(".floating-player");
+  const button = $("sidebarToggle"), reduce = reducedMotion.matches;
+  const overlay = getComputedStyle(sidebar).position === "absolute";
+  const fullWidth = getComputedStyle(content).width;
+  // Snapshot every moving element before cancelling an interrupted transition.
+  const width = sidebar.hidden ? "0px" : getComputedStyle(sidebar).width;
+  const from = sidebar.hidden
+    ? { transform: reduce ? "none" : "translateX(-100%)", opacity: 0 }
+    : { transform: getComputedStyle(content).transform, opacity: getComputedStyle(content).opacity };
+  const navigationBasis = getComputedStyle(navigation).flexBasis;
+  const playerLeft = getComputedStyle(player).left;
+  if (sidebarAnimation) sidebarAnimation.cancel();
+  sidebarCompanionAnimations.forEach(animation => animation.cancel());
+  sidebarCompanionAnimations = [];
+  if (!visible && sidebar.contains(document.activeElement)) button.focus();
+  sidebar.inert = !visible;
+  sidebar.hidden = false;
+  document.body.classList.toggle("sidebar-hidden", !visible);
+  button.setAttribute("aria-expanded", String(visible));
+  button.title = visible ? "Скрыть боковую панель" : "Показать боковую панель";
+  button.setAttribute("aria-label", button.title);
+  const options = {
+    duration: reduce ? 100 : 220,
+    easing: getComputedStyle(document.documentElement).getPropertyValue("--ease-out").trim(),
+    fill: "forwards",
+  };
+  // The shell shrinks while its fixed-width contents slide: the main area
+  // gains exactly the space being released, instead of jumping after exit.
+  const targetWidth = visible || overlay ? fullWidth : "0px";
+  sidebarAnimation = sidebar.animate([
+    { width: overlay || reduce ? targetWidth : width }, { width: targetWidth },
+  ], options);
+  sidebarCompanionAnimations.push(content.animate([
+    from, { transform: visible || reduce ? "none" : "translateX(-100%)", opacity: visible ? 1 : 0 },
+  ], options));
+  if (!reduce && window.innerWidth > 820) {
+    sidebarCompanionAnimations.push(navigation.animate([
+      { flexBasis: navigationBasis }, { flexBasis: getComputedStyle(navigation).flexBasis },
+    ], options));
+  }
+  if (!reduce && !overlay) {
+    sidebarCompanionAnimations.push(player.animate([
+      { left: playerLeft }, { left: getComputedStyle(player).left },
+    ], options));
+  }
+  const animation = sidebarAnimation;
+  animation.onfinish = () => {
+    sidebar.hidden = !visible;
+    animation.cancel();
+    sidebarCompanionAnimations.forEach(companion => companion.cancel());
+    sidebarCompanionAnimations = [];
+    sidebarAnimation = null;
+    resizeWave(); drawWave();
+  };
+  const redraw = () => {
+    if (sidebarAnimation !== animation) return;
+    resizeWave(); drawWave();
+    requestAnimationFrame(redraw);
+  };
+  requestAnimationFrame(redraw);
 }
 function resetLiveLog(id) {
   const el = $(id);
@@ -135,16 +225,17 @@ async function writeClipboard(text) {
 const modeLabel = (mode) => ({ auto: "авто", full: "полный", words: "по словам", tiled: "точно·большие", fast: "быстрый", hybrid: "hybrid" }[mode] || mode);
 function selectedMode() { return $("genMode") ? $("genMode").value : "full"; }
 function selectedSuraMode() { return $("suraMode") ? $("suraMode").value : selectedMode(); }
+function modelSupportsFast() { return !currentProject.alignment_model || ["quran-phonetics", "quran-phonetics-fp32"].includes(currentProject.alignment_model); }
 function setMode(mode) {
-  const m = (mode === "auto" || mode === "fast" || mode === "tiled" || mode === "full" || mode === "words") ? mode : "auto";
+  const m = ["fast", "full", "words"].includes(mode) ? mode : "full";
   if ($("genMode")) $("genMode").value = m;
   if ($("suraMode")) $("suraMode").value = m;
   document.querySelectorAll("[data-review-mode], [data-dashboard-mode]").forEach(button => {
     button.setAttribute("aria-pressed", String((button.dataset.reviewMode || button.dataset.dashboardMode) === m));
-    button.disabled = currentProject.alignment_model === "arabic-ctc" && !["full", "tiled", "words"].includes(button.dataset.reviewMode || button.dataset.dashboardMode);
+    button.disabled = !modelSupportsFast() && !["full", "tiled", "words"].includes(button.dataset.reviewMode || button.dataset.dashboardMode);
   });
-  for (const id of ["genMode", "suraMode", "settingsMode"]) {
-    if ($(id)) [...$(id).options].forEach(option => option.disabled = currentProject.alignment_model === "arabic-ctc" && !["full", "tiled", "words"].includes(option.value));
+  for (const id of ["genMode", "suraMode"]) {
+    if ($(id)) [...$(id).options].forEach(option => option.disabled = !modelSupportsFast() && !["full", "tiled", "words"].includes(option.value));
   }
   $("dashboardModeToggle").title = `Режим разметки: ${modeLabel(m)}`;
   updateModeHint();
@@ -155,7 +246,7 @@ function setMode(mode) {
 function updateModeHint() {
   const mode = selectedMode();
   $("modeHint").textContent = mode === "words"
-    ? `Пословная разметка всей суры. Границы аятов сохраняются; недостающие рассчитываются ${currentProject.alignment_model === "arabic-ctc" ? "полным" : "быстрым"} режимом.`
+    ? `Пословная разметка всей суры. Границы аятов сохраняются; недостающие рассчитываются ${modelSupportsFast() ? "быстрым" : "полным"} режимом.`
     : mode === "auto"
     ? "Автоматический выбор режима. После генерации проверьте результат на слух."
     : mode === "fast"
@@ -172,52 +263,61 @@ let dashboardSuras = [];
 async function refreshSuras() {
   dashboardSuras = await api.get("/api/suras");
   renderSuras();
-  renderSuraSelector();
   updateGenControls(dashboardSuras);
   const available = dashboardSuras.filter(s => s.has_audio).length;
   const verified = dashboardSuras.filter(s => s.status === "verified").length;
   $("librarySummary").textContent = `${available} с аудио · ${verified} проверено · ${dashboardSuras.length} всего`;
-  $("dashboardExportBtn").disabled = !$("dbPath").value.trim();
+
 }
 function updateSuraFilterPicker() {
   const select = $("suraFilter");
   const label = select.selectedOptions[0].textContent;
   $("filterMenuToggle").title = `Показать: ${label}`;
   $("filterMenuToggle").setAttribute("aria-label", `Фильтр сур: ${label}`);
-  $("filterMenuToggle").classList.toggle("filtered", select.value !== "audio");
+  $("filterMenuToggle").classList.toggle("filtered", select.value !== "all");
   document.querySelectorAll("[data-sura-filter]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.suraFilter === select.value)));
 }
 function renderSuras() {
-  const query = $("suraSearch").value.trim();
+  const query = $("suraSearch").value.trim().toLocaleLowerCase("ru");
   const filter = $("suraFilter").value;
-  const suras = dashboardSuras.filter(s => (!query || String(s.surah).includes(query))
+  const suras = dashboardSuras.filter(s => (!query || `${s.surah} ${suraName(s.surah)}`.toLocaleLowerCase("ru").includes(query))
     && (filter === "all" || (filter === "audio" ? s.has_audio : s.has_audio && s.status === filter)));
   const grid = $("grid");
-  grid.innerHTML = "";
-  for (const s of suras) {
+  const focusedSura = grid.contains(document.activeElement) ? document.activeElement.dataset.surah : null;
+  const scrollTop = grid.scrollTop;
+  grid.replaceChildren();
+  for (const sura of suras) {
     const tile = document.createElement("button");
     tile.type = "button";
-    tile.disabled = !s.has_audio;
-    tile.className = "tile" + (s.has_audio ? "" : " no-audio");
-    tile.setAttribute("aria-label", `Сура ${s.surah}, ${ayahLabel(s.ayah_count)}, ${s.has_audio ? badgeLabel(s.status) : "нет аудио"}`);
-    tile.innerHTML = `
-      <div class="audio-dot ${s.has_audio ? "on" : ""}" title="${s.has_audio ? "есть аудио" : "нет аудио"}"></div>
-      <span class="num">Сура ${s.surah}</span>
-      <span class="meta">${s.ayah_count} аят.</span>
-      <span class="badge ${s.status}">${selectedMode() === "words" ? (s.words_complete ? "слова размечены" : "слова не завершены") : badgeLabel(s.status)}</span>`;
-    if (s.has_audio) tile.onclick = () => openReview(s.surah, true);
+    tile.dataset.surah = sura.surah;
+    tile.dataset.status = sura.status;
+    // Keep absent audio discoverable through keyboard and its accessible name.
+    tile.setAttribute("aria-disabled", String(!sura.has_audio));
+    tile.className = "tile" + (sura.has_audio ? "" : " no-audio");
+    tile.classList.toggle("active", sura.surah === R.surah);
+    tile.setAttribute("aria-current", sura.surah === R.surah ? "true" : "false");
+    const status = badgeLabel(sura.status);
+    const detail = `${status}${sura.has_audio ? "" : " · Нет аудио"}`;
+    tile.setAttribute("aria-label", `${sura.surah}. ${suraName(sura.surah)}, ${ayahLabel(sura.ayah_count)}, ${detail}`);
+    tile.innerHTML = `<span class="num" aria-hidden="true">${sura.surah}</span><span class="sura-label"><span class="sura-name">${escapeHtml(suraName(sura.surah))}</span><span class="badge ${sura.status}">${detail}</span></span>`;
+    tile.onclick = () => {
+      if (!sura.has_audio) { setStatus(`Сура ${sura.surah}: нет аудио. Импортируйте запись через меню проекта.`); return; }
+      void openReview(sura.surah);
+    };
     grid.appendChild(tile);
   }
+  grid.scrollTop = scrollTop;
+  if (focusedSura) grid.querySelector(`[data-surah="${focusedSura}"]`)?.focus({ preventScroll: true });
   $("gridEmpty").classList.toggle("hidden", suras.length > 0);
-  const hasAudio = dashboardSuras.some(s => s.has_audio);
-  $("gridEmpty").innerHTML = hasAudio
-    ? "<h3>Суры не найдены</h3><p>Измените номер суры или выберите другой фильтр.</p>"
-    : "<h3>Здесь появятся ваши суры</h3><p>Выберите папку с аудио выше и откройте проект.<br>Файлы должны называться 001.mp3 … 114.mp3.</p>";
+  $("gridEmpty").innerHTML = dashboardSuras.length
+    ? "<h3>Суры не найдены</h3><p>Измените поиск или фильтр.</p>"
+    : "<h3>Не удалось загрузить суры</h3><p>Откройте проект через кнопку с папкой.</p>";
 }
-const badgeLabel = (st) => ({ "not-processed": "без разметки", "partial": "неполная разметка", "processed": "черновик", "verified": "✓ проверена" }[st] || st);
+const badgeLabel = status => ({ "not-processed": "Не размечено", "partial": "Размечено частично", "processed": "Размечено", "verified": "Проверено" }[status] || "Нет данных");
 
 // reflect progress on the generate buttons (resume-aware)
 function updateGenControls(suras) {
+  if (GEN.running || generatingSurah != null) { syncAlignmentControls(); return; }
   const withAudio = suras.filter((s) => s.has_audio);
   const remaining = withAudio.filter((s) => selectedMode() === "words" ? !s.words_complete : ["not-processed", "partial"].includes(s.status)).length;
   const done = withAudio.length - remaining;
@@ -229,37 +329,93 @@ function updateGenControls(suras) {
   else { gen.disabled = true; gen.innerHTML = studioIcon("check") + ` Все ${withAudio.length} готовы`; regen.classList.remove("hidden"); }
 }
 
+let editingProject = null, projectFormBusy = false;
+
+function openProjectForm(project = null) {
+  if (projectFormBusy || editBusy || reviewLoading || $("projectSelect").disabled) return;
+  if (R.audio) R.audio.pause();
+  editingProject = project;
+  $("projectForm").reset();
+  $("projectDialogTitle").textContent = project ? "Изменить проект" : "Добавить проект";
+  $("importReciter").value = project?.reciter || "";
+  $("importRecording").value = project?.recording || "Запись 1";
+  $("projectImportFields").classList.toggle("hidden", !!project);
+  $("audioDir").required = !project;
+  $("audioDir").disabled = !!project;
+  $("dbPath").disabled = !!project;
+  $("projectFormMessage").textContent = "";
+  openDialog($("projectDialog"));
+  $("importReciter").focus();
+  if (project) $("importReciter").select();
+}
+
 async function openProject() {
-  const button = $("openBtn");
-  button.disabled = true;
-  $("settingsMessage").textContent = "Копирование аудио и разметки…";
+  if (projectFormBusy) return;
+  const target = editingProject;
+  const names = { reciter: $("importReciter").value.trim(), recording: $("importRecording").value.trim() };
+  if (!names.reciter || !names.recording) {
+    $("projectFormMessage").textContent = "Укажите чтеца и название записи.";
+    $(!names.reciter ? "importReciter" : "importRecording").focus();
+    return;
+  }
+  projectFormBusy = true;
+  $("projectForm").setAttribute("aria-busy", "true");
+  const controls = [...$("projectDialog").querySelectorAll("input, button")];
+  const disabled = controls.map(control => control.disabled);
+  controls.forEach(control => control.disabled = true);
+  $("projectFormMessage").textContent = target ? "Сохранение…" : "Копирование аудио и разметки…";
+  let saved = false;
   try {
-    const p = await api.post("/api/projects/create", {
-      reciter: $("importReciter").value.trim(), recording: $("importRecording").value.trim(),
-      audio_dir: $("audioDir").value.trim(), db_path: $("dbPath").value.trim(),
-    });
-    await applyProject(p);
-    closeDialog($("settingsDialog"));
+    if (!target) {
+      const p = await api.post("/api/projects/create", { ...names,
+        audio_dir: $("audioDir").value.trim(), db_path: $("dbPath").value.trim() });
+      saved = true;
+      await applyProject(p);
+    } else {
+      const p = target.id
+        ? await api.post("/api/projects/update", { id: target.id, ...names })
+        : await api.post("/api/settings", { ...names, db_path: target.db_path });
+      saved = true;
+      if (target.id === currentProject.project_id || (!target.id && target.db_path === currentProject.db_path)) {
+        Object.assign(currentProject, target.id ? { reciter: p.reciter, recording: p.recording } : names);
+      }
+      await refreshProjectLibrary();
+    }
     setStatus("");
-  } catch (e) { $("settingsMessage").textContent = "Не удалось создать проект: " + e.message; }
-  finally { button.disabled = false; }
+  } catch (e) {
+    if (saved) setStatus("Проект сохранён, но не удалось обновить экран: " + e.message);
+    else $("projectFormMessage").textContent = "Не удалось сохранить проект: " + e.message;
+  } finally {
+    projectFormBusy = false;
+    $("projectForm").removeAttribute("aria-busy");
+    controls.forEach((control, index) => control.disabled = disabled[index]);
+    if (saved) closeDialog($("projectDialog"), true);
+    if (!saved) $("openBtn").focus();
+    else if ($("settingsDialog").open) {
+      const edit = [...$("settingsProjectList").querySelectorAll("[data-edit-project]")]
+        .find(button => button.dataset.editProject === (target?.id || target?.db_path));
+      (edit || $("addProjectBtn")).focus();
+    } else $("recordingMenuToggle").focus();
+  }
 }
 
 let audioCount = 0;
-const GEN = { es: null, timer: null, startMs: 0, total: 0, wordFailures: 0 };
+const GEN = { running: false, ready: false, es: null, timer: null, startMs: 0, total: 0, wordFailures: 0 };
 
 function runGeneration(onlyMissing = true) {
+  if (GEN.running || generatingSurah != null) return;
   const mode = selectedMode();
   // Explicit start: confirm the deliberate, long-running action.
   const what = onlyMissing
     ? "недостающих (ещё не сгенерированных) сур"
     : `ВСЕХ ${audioCount || ""} сур заново`;
   const msg = `Запустить генерацию ${what} в режиме «${modeLabel(mode)}»?\n`
-    + `Размеченные вручную аяты (edited/verified) не затрагиваются. Можно отменить (после текущей суры).`;
+    + `Размеченные вручную аяты (edited/verified) не затрагиваются. Можно остановить текущий расчёт.`;
   if (!confirm(msg)) return;
   startGenUI();
   api.post("/api/generate", { mode, only_missing: onlyMissing })
     .then(() => {
+      GEN.ready = true; syncAlignmentControls();
       const es = new EventSource("/api/generate/stream");
       GEN.es = es;
       es.onmessage = (ev) => handleGenEvent(JSON.parse(ev.data));
@@ -268,7 +424,8 @@ function runGeneration(onlyMissing = true) {
     .catch((e) => { setStatus("Ошибка: " + e.message); endGenUI("error"); });
 }
 function startGenUI() {
-  $("genBtn").disabled = true;
+  GEN.running = true; GEN.ready = false; alignmentCancelling = false;
+  syncAlignmentControls();
   const panel = $("genPanel");
   panel.classList.remove("hidden", "done", "cancelled");
   $("cancelBtn").disabled = false;
@@ -312,6 +469,8 @@ function handleGenEvent(d) {
   else if (d.type === "error") { setStatus("Ошибка генерации: " + d.message); endGenUI("error"); }
 }
 function endGenUI(kind, completed) {
+  GEN.running = false; GEN.ready = false; alignmentCancelling = false;
+  syncAlignmentControls();
   if (GEN.es) { GEN.es.close(); GEN.es = null; }
   if (GEN.timer) { clearInterval(GEN.timer); GEN.timer = null; }
   updateElapsed();
@@ -329,17 +488,30 @@ function endGenUI(kind, completed) {
   } else {
     panel.classList.add("cancelled"); $("genTitle").textContent = "✕ Ошибка";
   }
+  $("suraGenStatus").className = "sura-gen-status " + (kind === "done" ? "ok" : kind === "error" ? "err" : "warn");
+  $("suraGenStatus").textContent = kind === "done" ? "Разметка завершена" : kind === "cancelled" ? "Разметка остановлена" : "Ошибка разметки. Проверьте логи.";
+  if (kind === "cancelled" && R.surah != null) reloadSura();
   refreshSuras();
 }
 async function cancelGeneration() {
+  if (alignmentCancelling) return;
+  alignmentCancelling = true; syncAlignmentControls();
   $("cancelBtn").disabled = true;
   $("cancelBtn").textContent = "Отмена…";
-  $("genCur").textContent = "отмена после текущей суры…";
-  try { await api.post("/api/generate/cancel", {}); } catch (e) { setStatus("Ошибка отмены: " + e.message); }
+  $("genCur").textContent = "остановка расчёта…";
+  $("suraGenStatus").textContent = "Остановка расчёта…";
+  try { await api.post("/api/generate/cancel", {}); }
+  catch (e) { alignmentCancelling = false; syncAlignmentControls(); $("cancelBtn").disabled = false; setStatus("Ошибка отмены: " + e.message); }
 }
 function setProgress(done, total, text) {
   $("progressFill").style.right = (100 - (total ? (done / total) * 100 : 0)) + "%";
   $("progressText").textContent = text;
+  if (GEN.running) {
+    $("suraGenStatus").textContent = alignmentCancelling ? "Остановка расчёта…" : `Разметка сур · ${text}`;
+    $("reviewGeneration").setAttribute("aria-valuenow", String(Math.round(total ? done / total * 100 : 0)));
+    $("reviewGeneration").classList.add("determinate");
+    $("reviewGeneration").firstElementChild.style.width = `${total ? done / total * 100 : 0}%`;
+  }
 }
 
 // ===========================================================================
@@ -348,7 +520,8 @@ function setProgress(done, total, text) {
 const R = {
   request: 0, dataReady: false, audioReady: false, waveReady: false, dataLoading: false, waveLoading: false,
   surah: null, ayahs: [], wordProgress: null, duration: 0, peaks: [], audio: null, current: -1,
-  loop: false, drag: -1, zoom: savedWaveZoom(), recheck: null,
+  loop: false, playbackMode: "continuous", playbackAyah: -1, playbackTimer: null,
+  drag: -1, zoom: savedWaveZoom(), recheck: null,
   pausesVisible: false, pauseDecisions: null,
   waveBorn: [], waveFrame: 0, waveCancel: null, waveBucketMs: 100, waveMaximum: 1,
   pinch: null,
@@ -359,11 +532,18 @@ const W = { loading: false, mode: false, data: null, selected: 0, request: 0, bu
 function applyReviewMode(mode) {
   const changed = W.mode !== (mode === "words");
   W.mode = mode === "words";
+  syncPlayerSettings();
+  clearTimeout(R.playbackTimer);
+  R.playbackAyah = -1;
   for (const id of ["draftPausesBtn", "correctDraftBtn", "recheckBtn"])
     $(id).classList.toggle("hidden", W.mode);
-  $("regenSuraBtn").innerHTML = studioIcon("play") + (W.mode ? " Разметить слова" : " Начать разметку");
+  syncAlignmentControls();
   $("regenSuraBtn").setAttribute("aria-label", W.mode ? "Разметить слова всей суры" : "Начать разметку суры");
   $("regenSuraBtn").title = W.mode ? "Сохранить границы аятов и рассчитать все слова суры" : "Рассчитать тайм-коды этой суры выбранным режимом";
+  for (const id of ["modeMenuToggle", "dashboardModeToggle"]) {
+    $(id).innerHTML = studioIcon(mode) + `<span><span class="mode-caption">Режим:</span> ${escapeHtml(modeLabel(mode))}</span>`;
+    $(id).setAttribute("aria-label", `Режим разметки: ${modeLabel(mode)}`);
+  }
   $("modeMenuToggle").title = `Режим разметки: ${modeLabel(mode)}`;
   $("verifySelectedBtn").textContent = W.mode ? "Отметить слово проверенным" : "Отметить выбранный проверенным";
   updateSuraProgress();
@@ -372,17 +552,13 @@ function applyReviewMode(mode) {
   if (R.audio) R.audio.pause();
   $("alignWordsBtn").classList.toggle("hidden", !W.mode);
   $("wordUnitControl").classList.toggle("hidden", !W.mode);
-  document.querySelector(".ayah-table-head").classList.toggle("word-mode", W.mode);
   $("ayahList").classList.toggle("word-mode", W.mode);
-  const headings = document.querySelectorAll(".ayah-table-head span");
-  headings[0].textContent = W.mode ? "Аят:слово" : "Аят";
-  headings[2].textContent = W.mode ? "Слово" : "Текст аята";
   for (const [id, wordLabel, ayahLabel] of [["prevBtn", "Предыдущее слово", "Предыдущий аят"], ["nextBtn", "Следующее слово", "Следующий аят"]]) {
     const label = W.mode ? wordLabel : ayahLabel;
     $(id).setAttribute("aria-label", label);
     $(id).title = label;
   }
-  $("waveHint").textContent = W.mode ? "Голубые линии — начала слов · тяните метку для правки" : "Клик по волне — перемотка · тяните золотую линию — двигайте начало аята";
+  $("waveHint").textContent = W.mode ? "Синие линии — начала слов · тяните метку для правки" : "Клик по волне — перемотка · тяните метку — двигайте начало аята";
   if (W.mode && R.dataReady && R.surah != null && !$("review").classList.contains("hidden")) { if (R.current < 0) setCurrent(0); else loadWords(); }
   else { resetWords(); if (R.dataReady) reviewLoadMessage("ayahLoadStatus", ""); }
   renderAyahList();
@@ -466,18 +642,41 @@ function renderWords() {
     li.classList.toggle("missing", word.time == null);
     li.classList.toggle("stale", !!word.stale);
     const label = `${word.ayah}:${word.number}`;
-    const status = word.stale ? "границы изменились" : ({ auto: "авто", edited: "правка", verified: "проверено" }[word.status] || "нет метки");
+    const status = word.stale ? "границы изменились" : ({ auto: "Не помечен", edited: "Нужно ревью", verified: "Всё хорошо" }[word.status] || "нет метки");
     const editable = Number.isInteger(word.start_ms) && Number.isInteger(word.end_ms);
     const editUnit = W.unit;
     const unit = editUnit === "ms" ? "мс" : "с";
     li.innerHTML = `
-      <div class="word-card-head"><button class="a-num" aria-label="Прослушать слово ${word.number} аята ${word.ayah}" aria-pressed="${i === W.selected}">${word.number}</button><span class="word-meta">${status}</span></div>
+      <div class="word-card-head"><button class="a-num" aria-label="Изменить слово ${word.number} аята ${word.ayah}" aria-haspopup="dialog" aria-controls="wordEditor${word.word_index}" aria-pressed="${i === W.selected}">${word.number}</button><span class="word-meta">${status}</span></div>
       <button class="a-text word-play" dir="rtl" lang="ar" aria-label="Прослушать ${escapeHtml(word.text)}">${escapeHtml(word.text)}</button>
+      <dialog id="wordEditor${word.word_index}" class="ayah-time-popover word-editor" aria-labelledby="wordEditorTitle${word.word_index}">
+      <div class="ayah-time-heading"><strong id="wordEditorTitle${word.word_index}">Аят ${word.ayah} · слово ${word.number}</strong><button type="button" class="ghost close-time" aria-label="Закрыть редактор слова">${studioIcon("close")}</button></div>
       <div class="word-time"><span class="word-unit">Начало, ${unit}</span><div class="time-editor">
         <input type="number" min="0" step="${W.unit === "ms" ? "1" : "0.001"}" class="a-time-input" inputmode="decimal" aria-label="Начало слова ${label}, ${W.unit === "ms" ? "миллисекунды" : "секунды"}" placeholder="Нет метки" value="${wordDisplayTime(word.time)}" ${editable ? "" : "disabled"} />
         <div class="time-arrows"><button type="button" aria-label="Увеличить время слова ${label}" ${editable ? "" : "disabled"}>${studioIcon("up")}</button><button type="button" aria-label="Уменьшить время слова ${label}" ${editable ? "" : "disabled"}>${studioIcon("down")}</button></div>
-      </div></div>`;
+      </div></div>
+      <div class="ayah-status-segments" role="group" aria-label="Статус слова ${label}">
+        <button type="button" data-word-status="auto" title="Сбросить проверку, сохранив время"><span class="status-swatch" aria-hidden="true"></span><span>Не помечен</span></button>
+        <button type="button" data-word-status="edited"><span class="status-swatch" aria-hidden="true"></span><span>Нужно ревью</span></button>
+        <button type="button" data-word-status="verified"><span class="status-swatch" aria-hidden="true"></span><span>Всё хорошо</span></button>
+      </div>
+      <p class="ayah-time-help">${word.stale ? "Границы изменились — обновите время.<br>" : ""}Шаг ${timeStep} мс · сохраняется автоматически</p>
+      <p class="ayah-time-error hidden" role="status"></p>
+      </dialog>`;
     applyTimingStatus(li, word);
+    li.querySelectorAll("[data-word-status]").forEach(button => {
+      button.setAttribute("aria-pressed", String(!word.stale && button.dataset.wordStatus === (word.status || "auto")));
+      button.disabled = W.busy || word.time == null || word.stale || !editable;
+      button.onclick = () => { W.selected = i; editWord(0, "status", button.dataset.wordStatus); };
+    });
+    const dialog = li.querySelector("dialog"), number = li.querySelector(".a-num");
+    li.querySelector(".close-time").onclick = () => dialog.close();
+    dialog.onclose = () => number.focus({ preventScroll: true });
+    dialog.onclick = e => {
+      e.stopPropagation();
+      const bounds = dialog.getBoundingClientRect();
+      if (e.target === dialog && (e.clientX < bounds.left || e.clientX > bounds.right || e.clientY < bounds.top || e.clientY > bounds.bottom)) dialog.close();
+    };
     const input = li.querySelector("input");
     input.onfocus = () => selectWord(i, false, false);
     const commitInput = async () => {
@@ -502,12 +701,25 @@ function renderWords() {
       btn.onclick = e => { W.selected = i; editWord((word.time ?? Math.round(R.audio.currentTime * 1000)) + (j === 0 ? 1 : -1) * timeStep * (e.shiftKey ? 10 : 1)); };
     });
     li.querySelector(".word-play").onclick = () => selectWord(i, true);
-    li.querySelector(".a-num").onclick = () => selectWord(i, true);
+    number.onclick = () => openWordEditor(i);
     groups.get(word.ayah).appendChild(li);
   });
   const word = words[W.selected];
   $("alignWordsBtn").disabled = !word || !Number.isInteger(word.start_ms) || W.busy;
   $("verifySelectedBtn").disabled = !word || word.time == null || word.stale || W.busy;
+}
+function openWordEditor(i, focusSelector = "input") {
+  if (W.busy || reviewLoading) return;
+  const row = document.querySelector(`#ayahList li[data-word="${i}"]`);
+  const dialog = row?.querySelector("dialog"), number = row?.querySelector(".a-num");
+  if (!dialog) return;
+  R.audio?.pause(); selectWord(i, false, false);
+  dialog.showModal();
+  const anchor = number.getBoundingClientRect(), bounds = dialog.getBoundingClientRect();
+  dialog.style.left = Math.max(8, Math.min(anchor.left, innerWidth - bounds.width - 8)) + "px";
+  dialog.style.top = Math.max(8, Math.min(anchor.bottom + 8, innerHeight - bounds.height - 8)) + "px";
+  const control = dialog.querySelector(focusSelector);
+  if (control && !control.disabled) { control.focus({ preventScroll: true }); if (control.tagName === "INPUT") control.select(); }
 }
 function selectWord(i, play = true, focusWave = true) {
   const word = W.data?.words[i];
@@ -539,18 +751,29 @@ async function alignWords() {
   finally { W.busy = false; }
   renderWords(); drawWave();
 }
-async function editWord(ms, action) {
+async function editWord(ms, action, status) {
   const data = wordContext(), request = W.request;
   if (!data || W.busy) return;
+  const popup = document.querySelector(".word-editor[open]");
+  const focusedStatus = document.activeElement?.dataset.wordStatus;
+  const popupIndex = popup ? Number(popup.closest("[data-word]").dataset.word) : null;
+  let error = "";
   W.busy = true; saveState("Сохранение…");
+  popup?.querySelectorAll("input, .time-arrows button, [data-word-status]").forEach(el => el.disabled = true);
   try {
     const result = await api.post(`/api/sura/${data.surah}/ayah/${data.ayah}/words/edit`,
-      { ...wordPayload(data), word_index: data.word_index, time: Math.round(ms), action });
+      { ...wordPayload(data), word_index: data.word_index, time: Math.round(ms), action, status });
     if (request !== W.request) return;
     mergeWordResult(result); saveState("Сохранено", "saved"); setStatus("");
-  } catch (e) { if (request === W.request) { saveState("Не сохранено", "error"); setStatus("Ошибка: " + e.message); } }
+  } catch (e) { if (request === W.request) { error = "Не сохранено. " + e.message; saveState("Не сохранено", "error"); setStatus(error); } }
   finally { W.busy = false; }
+  const reopen = popup?.open;
   renderWords(); drawWave();
+  if (reopen && request === W.request) {
+    openWordEditor(popupIndex, focusedStatus ? `[data-word-status="${focusedStatus}"]` : "input");
+    const message = document.querySelector(".word-editor[open] .ayah-time-error");
+    if (message) { message.textContent = error; message.classList.toggle("hidden", !error); }
+  }
 }
 function playWord() {
   if (!R.audioReady || !R.dataReady) return;
@@ -669,8 +892,16 @@ const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const dialogMotions = new WeakMap();
 const menuMotions = new WeakMap();
 let keyboardMotion = false;
-document.addEventListener("keydown", () => { keyboardMotion = true; }, true);
-document.addEventListener("pointerdown", () => { keyboardMotion = false; }, true);
+document.addEventListener("keydown", e => {
+  keyboardMotion = true;
+  if (["Tab", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+    document.body.dataset.focusMethod = "keyboard";
+  }
+}, true);
+document.addEventListener("pointerdown", () => {
+  keyboardMotion = false;
+  document.body.dataset.focusMethod = "pointer";
+}, true);
 function openDialog(dialog) {
   dialogMotions.get(dialog)?.cancel();
   dialog.classList.remove("motion-closing");
@@ -780,6 +1011,7 @@ function updateReviewReadiness() {
     $(id).disabled = !R.dataReady || !R.audioReady;
   $("ayahList").setAttribute("aria-busy", String(R.dataLoading || (W.mode && W.loading)));
   $("waveScroll").setAttribute("aria-busy", String(R.waveLoading));
+  syncAlignmentControls();
 }
 async function openReview(surah) {
   if (editBusy || W.busy) return;
@@ -795,12 +1027,12 @@ async function openReview(surah) {
     current: -1, recheck: null, pausesVisible: false, pauseDecisions: null,
     zoom: R.zoom, pinch: null, drag: -1, dataReady: false, audioReady: false, waveReady: false, dataLoading: true, waveLoading: true });
   resetWords();
-  renderSuraSelector();
+  renderSuras();
   resetLiveLog("suraLiveLog");
   setSuraLogVisible(false);
   updateWaveControls();
   const summary = dashboardSuras.find(s => s.surah === surah);
-  $("reviewTitle").textContent = `Сура ${surah}${summary ? " · " + ayahLabel(summary.ayah_count) : ""}`;
+  updateReviewTitle(summary?.ayah_count);
   $("suraGenStatus").textContent = "";
   $("suraGenStatus").className = "sura-gen-status";
   $("verifySelectedBtn").disabled = true;
@@ -846,6 +1078,7 @@ async function openReview(surah) {
     updateReviewReadiness();
   };
   audio.src = `/api/audio/${surah}`;
+  audio.defaultPlaybackRate = parseFloat($("rate").value);
   audio.playbackRate = parseFloat($("rate").value);
   audio.load();
 
@@ -855,7 +1088,7 @@ async function openReview(surah) {
         const sura = await api.get(`/api/sura/${surah}`);
         if (!active()) return;
         R.ayahs = sura.ayahs; R.wordProgress = sura.word_progress; R.dataReady = true; R.dataLoading = false;
-        $("reviewTitle").textContent = `Сура ${surah} · ${ayahLabel(sura.ayah_count)}`;
+        updateReviewTitle(sura.ayah_count);
         document.title = `${$("reviewTitle").textContent} — Ayah Studio`;
         reviewLoadMessage("ayahLoadStatus", "");
         renderAyahList(); updateGenHint(); updateSuraProgress(); updateReviewReadiness();
@@ -886,26 +1119,53 @@ function updateGenHint() {
   const generated = R.ayahs.some((a) => a.time != null);
   const hint = $("waveHint");
   if (W.mode) {
-    hint.textContent = generated ? "Голубые линии — начала слов · тяните метку для правки"
+    hint.textContent = generated ? "Синие линии — начала слов · тяните метку для правки"
       : "Нажмите «Рассчитать слова всей суры», чтобы сначала получить границы аятов.";
     hint.classList.toggle("warn", !generated);
-    $("regenSuraBtn").innerHTML = studioIcon("play") + (W.mode ? " Разметить слова" : " Начать разметку");
-    $("regenSuraBtn").setAttribute("aria-label", W.mode ? "Разметить слова всей суры" : "Начать разметку суры");
+    syncAlignmentControls();
     return;
   }
   if (generated) {
-    hint.textContent = "Клик по волне — перемотка · тяните золотую линию — двигайте начало аята";
+    hint.textContent = "Клик по волне — перемотка · тяните метку — двигайте начало аята";
     hint.classList.remove("warn");
-    $("regenSuraBtn").innerHTML = studioIcon("play") + (W.mode ? " Разметить слова" : " Начать разметку");
-    $("regenSuraBtn").setAttribute("aria-label", W.mode ? "Разметить слова всей суры" : "Начать разметку суры");
+    syncAlignmentControls();
   } else {
-    hint.textContent = "Сура без тайм-кодов: задайте начало аята в поле времени или запустите разметку.";
+    hint.textContent = "Сура без тайм-кодов: нажмите номер аята, чтобы задать начало, или запустите разметку.";
     hint.classList.add("warn");
-    $("regenSuraBtn").innerHTML = studioIcon("play") + (W.mode ? " Разметить слова" : " Начать разметку");
-    $("regenSuraBtn").setAttribute("aria-label", W.mode ? "Разметить слова всей суры" : "Начать разметку суры");
+    syncAlignmentControls();
   }
 }
-function updateSuraProgress(state = "") {
+let generatingSurah = null, generatingProject = null, generationReady = false, alignmentCancelling = false;
+function syncAlignmentControls() {
+  const running = GEN.running || generatingSurah != null;
+  const ready = GEN.running ? GEN.ready : generationReady;
+  for (const id of ["regenSuraBtn", "genBtn"]) {
+    const btn = $(id);
+    btn.classList.toggle("alignment-stop", running);
+    if (running) {
+      const label = alignmentCancelling ? "Остановка…" : "Остановить разметку";
+      btn.innerHTML = studioIcon("stop") + ` ${label}`;
+      btn.setAttribute("aria-label", label);
+      btn.title = "Остановить текущий расчёт";
+      btn.disabled = alignmentCancelling || !ready;
+    } else if (id === "regenSuraBtn") {
+      const label = W.mode ? "Разметить слова" : "Начать разметку";
+      btn.innerHTML = studioIcon("play") + ` ${label}`;
+      btn.setAttribute("aria-label", label);
+      btn.title = "Рассчитать разметку суры выбранным режимом";
+      btn.disabled = !R.dataReady;
+    }
+  }
+  $("navigationProgress").classList.toggle("running", running);
+  $("reviewGeneration").classList.toggle("hidden", !running);
+  if (!GEN.running) {
+    $("reviewGeneration").classList.remove("determinate");
+    $("reviewGeneration").removeAttribute("aria-valuenow");
+    $("reviewGeneration").firstElementChild.style.width = "";
+  }
+}
+function updateSuraProgress(state = R.surah != null && R.surah === generatingSurah && currentProject === generatingProject ? "running" : "") {
+  syncAlignmentControls();
   const wordProgress = R.wordProgress || {};
   const total = W.mode ? (wordProgress.total || 0) : R.ayahs.length;
   const marked = W.mode ? (wordProgress.marked || 0) : R.ayahs.filter((a) => a.time != null).length;
@@ -916,9 +1176,9 @@ function updateSuraProgress(state = "") {
   $("suraProgressPct").textContent = `${pct}%`;
   $("suraProgressText").textContent = state === "running"
     ? `расчёт суры… ${W.mode ? "слов" : "размечено"} ${marked} / ${total}`
-    : `${W.mode ? "слов размечено" : "размечено"} ${marked} / ${total}`;
-  $("suraProgressMeta").textContent = `проверено ${verified} · вручную ${edited} · осталось ${Math.max(0, total - marked)}`;
-  $("suraProgress").className = "sura-progress"
+    : `${W.mode ? "Слов размечено" : "Размечено"} ${marked}/${total}`;
+  $("suraProgressMeta").textContent = `Проверено ${verified}/${total} · Вручную ${edited} · Осталось ${Math.max(0, total - marked)}`;
+  $("suraProgress").className = "sura-progress workspace-summary" + (!document.body.classList.contains("review-open") ? " hidden" : "")
     + (state === "running" ? " running" : "")
     + (total > 0 && marked === total ? " done" : "");
 }
@@ -926,46 +1186,60 @@ function updateSuraProgress(state = "") {
 // regenerate just this sura with the chosen per-sura mode
 async function regenerateSura() {
   if (R.surah == null) return;
+  if (GEN.running || generatingSurah != null) return cancelGeneration();
   const surah = R.surah, mode = selectedSuraMode();
+  const project = currentProject;
+  const active = () => R.surah === surah && currentProject === project;
   const manual = R.ayahs.filter((a) => a.status === "edited" || a.status === "verified").length;
   if (manual > 0 && !confirm(
     `В этой суре ${manual} аят(ов) с ручной правкой/проверкой.\n`
     + `Пересчитать только auto-аяты (${modeLabel(mode)})? Ручные правки не затрагиваются.`)) return;
   const btn = $("regenSuraBtn"), st = $("suraGenStatus");
-  btn.disabled = true;
+  generatingSurah = surah;
+  generatingProject = project;
+  generationReady = false; alignmentCancelling = false;
+  syncAlignmentControls();
   resetLiveLog("suraLiveLog");
   const t0 = Date.now();
   const tick = () => {
-    st.textContent = `расчёт… ${Math.floor((Date.now() - t0) / 1000)}с`;
+    if (!active()) return;
+    st.textContent = alignmentCancelling ? "Остановка расчёта…" : `Расчёт · ${suraName(surah)} · ${Math.floor((Date.now() - t0) / 1000)}с`;
     updateSuraProgress("running");
   };
   st.className = "sura-gen-status running"; tick();
   const timer = setInterval(tick, 1000);
-  const stop = (cls, text) => { clearInterval(timer); btn.disabled = false; st.className = "sura-gen-status " + cls; st.textContent = text; updateSuraProgress(); };
+  const stop = (cls, text) => {
+    clearInterval(timer); generatingSurah = null; generatingProject = null; generationReady = false; alignmentCancelling = false; btn.disabled = false;
+    if (active()) { st.className = "sura-gen-status " + cls; st.textContent = text; }
+    updateSuraProgress();
+  };
   try {
     await api.post("/api/generate", { suras: [surah], mode });
   } catch (e) { stop("err", "ошибка: " + e.message); return; }
+  generationReady = true; syncAlignmentControls();
   const es = new EventSource("/api/generate/stream");
   es.onmessage = async (ev) => {
     const d = JSON.parse(ev.data);
-    if (d.type === "sura_log" && d.surah === surah) {
+    if (d.type === "sura_log" && d.surah === surah && active()) {
       appendLiveLog("suraLiveLog", d.line);
-      st.textContent = d.line;
+      if (!alignmentCancelling) st.textContent = d.line;
     }
-    if (d.type === "sura" && d.surah === surah) {
+    if (d.type === "sura" && d.surah === surah && active()) {
       await reloadSura();
+      if (!active()) return;
       st.textContent = d.words_written != null ? `слов записано ${d.words_written} · требуют проверки ${d.word_failures || 0} аят.` : `записано ${d.written ?? 0} аят.`;
       if (d.log_paths && d.log_paths.log) appendLiveLog("suraLiveLog", `Лог сохранён: ${d.log_paths.log}`);
     }
     if (d.type === "done" || d.type === "cancelled") {
       es.close();
-      await reloadSura(); refreshSuras();
+      if (active()) await reloadSura();
+      refreshSuras();
       const incomplete = mode === "words" && R.wordProgress && !R.wordProgress.complete;
-      stop(incomplete ? "warn" : "ok", incomplete ? "Расчёт завершён: некоторые слова требуют проверки."
+      stop(d.type === "cancelled" ? "warn" : incomplete ? "warn" : "ok", d.type === "cancelled" ? "Разметка остановлена" : incomplete ? "Расчёт завершён: некоторые слова требуют проверки."
         : `✓ готово за ${Math.floor((Date.now() - t0) / 1000)}с`);
     } else if (d.type === "error") { es.close(); stop("err", "ошибка: " + d.message); }
   };
-  es.onerror = () => { es.close(); if (btn.disabled) stop("", ""); };
+  es.onerror = () => { es.close(); stop("err", "Соединение с расчётом потеряно. Проверьте логи."); };
 }
 
 async function draftPausesSura() {
@@ -1070,8 +1344,9 @@ async function reloadSura() {
 
 function applyTimingStatus(row, item, suspect = false) {
   const status = item.time == null ? "missing"
-    : item.status === "verified" && !item.stale && !suspect ? "verified" : "uncertain";
-  const label = { missing: "Без разметки", verified: "Проверено", uncertain: "Требует проверки" }[status];
+    : item.status === "verified" && !item.stale && !suspect ? "verified"
+    : item.status == null || ["auto", "edited", "verified"].includes(item.status) ? "uncertain" : "neutral";
+  const label = { missing: "Без разметки", verified: "Проверено", uncertain: "Требует проверки", neutral: "Нет данных о состоянии" }[status];
   row.dataset.timingStatus = status;
   const number = row.querySelector(".a-num");
   if (number) {
@@ -1079,6 +1354,13 @@ function applyTimingStatus(row, item, suspect = false) {
     number.setAttribute("aria-label", `${number.dataset.baseLabel} · ${label}`);
     number.title = label;
   }
+}
+
+function updateAyahStatusControls(row, item) {
+  row?.querySelectorAll("[data-ayah-status]").forEach(button => {
+    button.setAttribute("aria-pressed", String(button.dataset.ayahStatus === (item.status || "auto")));
+    button.disabled = editBusy || (item.time == null && button.dataset.ayahStatus !== "auto");
+  });
 }
 
 function renderAyahList() {
@@ -1092,21 +1374,56 @@ function renderAyahList() {
     li.classList.toggle("missing", a.time == null);
     li.classList.toggle("active", i === R.current);
     li.innerHTML = `
-      <button class="a-num" aria-label="Выбрать и прослушать аят ${a.ayah}" aria-pressed="${i === R.current}">${a.ayah}</button>
+      <button class="a-num" aria-label="Изменить начало аята ${a.ayah}" aria-haspopup="dialog" aria-controls="ayahTime${a.ayah}" aria-pressed="${i === R.current}">${a.ayah}</button>
+      <dialog id="ayahTime${a.ayah}" class="ayah-time-popover" aria-labelledby="ayahTimeTitle${a.ayah}">
+      <div class="ayah-time-heading"><strong id="ayahTimeTitle${a.ayah}">Аят ${a.ayah} · начало</strong><button type="button" class="ghost close-time" aria-label="Закрыть редактор времени">${studioIcon("close")}</button></div>
       <div class="time-editor">
         <input type="text" class="a-time-input" inputmode="decimal" aria-label="Начало аята ${a.ayah}, минуты:секунды.миллисекунды" placeholder="Нет метки" value="${exactTime(a.time)}" />
         <div class="time-arrows"><button type="button" aria-label="Увеличить время аята ${a.ayah}" title="Позже (Shift — шаг ×10)">${studioIcon("up")}</button><button type="button" aria-label="Уменьшить время аята ${a.ayah}" title="Раньше (Shift — шаг ×10)">${studioIcon("down")}</button></div>
       </div>
+      <div class="ayah-status-segments" role="group" aria-label="Статус аята ${a.ayah}">
+        <button type="button" data-ayah-status="auto" title="Сбросить проверку, сохранив время"><span class="status-swatch" aria-hidden="true"></span><span>Не помечен</span></button>
+        <button type="button" data-ayah-status="edited"><span class="status-swatch" aria-hidden="true"></span><span>Нужно ревью</span></button>
+        <button type="button" data-ayah-status="verified"><span class="status-swatch" aria-hidden="true"></span><span>Всё хорошо</span></button>
+      </div>
+      <p class="ayah-time-help">Шаг ${timeStep} мс · сохраняется автоматически</p>
+      <p id="ayahTimeError${a.ayah}" class="ayah-time-error hidden" role="status"></p>
+      </dialog>
       <span class="a-text" dir="rtl" lang="ar">${escapeHtml(a.text || "")}</span>`;
     applyTimingStatus(li, a, R.recheck?.[a.ayah]?.verdict === "shift");
     const input = li.querySelector("input");
+    updateAyahStatusControls(li, a);
+    li.querySelectorAll("[data-ayah-status]").forEach(button => {
+      button.onclick = () => setAyahStatus(i, button.dataset.ayahStatus);
+    });
+    const dialog = li.querySelector("dialog"), number = li.querySelector(".a-num");
+    number.onclick = e => {
+      e.stopPropagation();
+      if (editBusy || reviewLoading) return;
+      if (R.audio) R.audio.pause();
+      setCurrent(i);
+      dialog.showModal();
+      const anchor = number.getBoundingClientRect(), bounds = dialog.getBoundingClientRect();
+      dialog.style.left = Math.max(8, Math.min(anchor.left, innerWidth - bounds.width - 8)) + "px";
+      dialog.style.top = Math.max(8, Math.min(anchor.bottom + 8, innerHeight - bounds.height - 8)) + "px";
+      input.focus(); input.select();
+    };
+    li.querySelector(".close-time").onclick = () => dialog.close();
+    dialog.onclick = e => {
+      e.stopPropagation();
+      const bounds = dialog.getBoundingClientRect();
+      if (e.target === dialog && (e.clientX < bounds.left || e.clientX > bounds.right || e.clientY < bounds.top || e.clientY > bounds.bottom)) dialog.close();
+    };
+    dialog.onclose = () => number.focus({ preventScroll: true });
     input.onfocus = () => setCurrent(i);
     const commitInput = async () => {
       if (input.value === exactTime(a.time)) return;
       const ms = parseTime(input.value);
       if (!Number.isSafeInteger(ms)) {
-        input.setAttribute("aria-invalid", "true"); input.setAttribute("aria-describedby", "workspaceStatus");
+        input.setAttribute("aria-invalid", "true"); input.setAttribute("aria-describedby", `ayahTimeError${a.ayah}`);
         setStatus("Введите время в формате 00:10.320 (минуты:секунды.миллисекунды).");
+        li.querySelector(".ayah-time-error").textContent = "Введите время в формате 00:10.320.";
+        li.querySelector(".ayah-time-error").classList.remove("hidden");
         return;
       }
       await commitMarker(i, ms);
@@ -1131,7 +1448,7 @@ function renderAyahList() {
       };
     });
     li.onclick = (e) => {
-      if (e.target.closest(".time-editor")) return;
+      if (e.target.closest("dialog")) return;
       if (a.time != null) seekAyah(i, true); else setCurrent(i);
     };
     ul.appendChild(li);
@@ -1327,7 +1644,7 @@ function drawPauseOverlay(ctx, left, right, h) {
 }
 function drawWave() {
   const c = $("wave"), wrap = $("waveScroll"), content = $("waveContent"), ctx = c.getContext("2d");
-  const w = c.clientWidth, h = c.clientHeight, mid = h / 2;
+  const w = c.clientWidth, h = c.clientHeight, waveTop = 26, waveBottom = h - 24, mid = (waveTop + waveBottom) / 2;
   ctx.clearRect(0, 0, w, h);
   const n = R.peaks.length;
   const left = wrap.scrollLeft, right = left + w, virtualW = content.clientWidth;
@@ -1337,27 +1654,45 @@ function drawWave() {
     const endMs = next && next.ayah === word.ayah ? next.time : word.end_ms;
     if (endMs != null) {
       const start = msToVirtualX(word.time) - left, end = msToVirtualX(endMs) - left;
-      ctx.fillStyle = "rgba(212,168,67,.13)"; ctx.fillRect(start, 0, end - start, h);
+      ctx.fillStyle = "rgba(0,122,255,.10)"; ctx.fillRect(start, 0, end - start, h);
     }
   } else if (!W.mode && R.current >= 0 && R.ayahs[R.current].time != null) {
     const start = msToVirtualX(R.ayahs[R.current].time) - left;
-    const end = msToVirtualX(ayahEndMs(R.current)) - left;
-    ctx.fillStyle = "rgba(212,168,67,.13)";
-    ctx.fillRect(start, 0, end - start, h);
+    const next = R.ayahs[R.current + 1];
+    const endMs = next ? next.time : R.duration;
+    // A missing next boundary is not a known ayah interval.
+    if (endMs != null && endMs >= R.ayahs[R.current].time) {
+      const end = msToVirtualX(endMs) - left;
+      ctx.fillStyle = "rgba(0,122,255,.10)";
+      ctx.fillRect(start, 0, end - start, h);
+    }
   }
   const colors = getComputedStyle(document.documentElement);
   const color = token => colors.getPropertyValue(token).trim();
-  ctx.strokeStyle = color("--blue"); ctx.lineWidth = 1; ctx.beginPath();
+  ctx.strokeStyle = color("--wave-ink"); ctx.lineWidth = 1; ctx.beginPath();
   const step = R.duration ? R.waveBucketMs / R.duration * virtualW : 0;
   const i0 = step ? Math.max(0, Math.floor(left / step) - 2) : 0;
   const i1 = step ? Math.min(n - 1, Math.ceil(right / step) + 2) : -1;
   const now = performance.now();
   for (let i = i0; i <= i1; i++) {
-    const x = i * step - left, amp = Math.min(1, R.peaks[i] / R.waveMaximum) * (mid - 2);
+    const x = i * step - left, amp = Math.min(1, R.peaks[i] / R.waveMaximum) * Math.max(0, (waveBottom - waveTop) / 2 - 2);
     ctx.globalAlpha = reducedMotion.matches ? 1 : Math.min(1, (now - R.waveBorn[i]) / 180);
     ctx.beginPath(); ctx.moveTo(x, mid - amp); ctx.lineTo(x, mid + amp); ctx.stroke();
   }
   ctx.globalAlpha = 1;
+  if (R.duration && w) {
+    const visibleMs = R.duration / R.zoom;
+    const rough = visibleMs / Math.max(2, w / 90);
+    const magnitude = 10 ** Math.floor(Math.log10(Math.max(1, rough)));
+    const tickMs = [1, 2, 5, 10].find(value => value * magnitude >= rough) * magnitude;
+    const startMs = left / virtualW * R.duration;
+    ctx.strokeStyle = color("--wave-marker"); ctx.fillStyle = color("--muted"); ctx.font = "11px -apple-system, sans-serif";
+    for (let ms = Math.ceil(startMs / tickMs) * tickMs; ms <= Math.min(R.duration, startMs + visibleMs); ms += tickMs) {
+      const x = msToVirtualX(ms) - left;
+      ctx.beginPath(); ctx.moveTo(x, h - 20); ctx.lineTo(x, h - 14); ctx.stroke();
+      ctx.fillText(exactTime(ms).slice(0, -4), Math.min(Math.max(0, x + 3), w - 40), h - 2);
+    }
+  }
   drawPauseOverlay(ctx, left, right, h);
   R.ayahs.forEach((a, i) => {
     if (W.mode || a.time == null || !R.duration) return;
@@ -1366,11 +1701,16 @@ function drawWave() {
     const x = vx - left;
     const rc = R.recheck ? R.recheck[a.ayah] : null;
     const suspect = rc && rc.verdict === "shift";
-    ctx.strokeStyle = a.status === "verified" && !suspect ? color("--green") : color("--amber");
+    ctx.strokeStyle = i === R.current ? color("--blue") : color("--wave-marker");
     ctx.lineWidth = (suspect || i === R.current) ? 2 : 1;
-    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
-    ctx.fillStyle = ctx.strokeStyle; ctx.font = "10px sans-serif";
-    ctx.fillText(suspect ? a.ayah + "→" + rc.match_ayah : a.ayah, x + 3, 11);
+    ctx.beginPath(); ctx.moveTo(x, 5); ctx.lineTo(x, waveBottom); ctx.stroke();
+    ctx.fillStyle = ctx.strokeStyle;
+    ctx.beginPath(); ctx.arc(x, 5, 2.5, 0, Math.PI * 2); ctx.fill();
+    // Other boundaries keep a compact number; the selected interval has a label.
+    if (i !== R.current) {
+      ctx.font = "10px sans-serif";
+      ctx.fillText(suspect ? a.ayah + "→" + rc.match_ayah : a.ayah, x + 5, 15);
+    }
   });
   if (W.mode && W.data) W.data.words.forEach((word, i) => {
     if (word.time == null) return;
@@ -1383,10 +1723,41 @@ function drawWave() {
     ctx.setLineDash([]); ctx.fillStyle = ctx.strokeStyle;
     ctx.fillText(`${word.ayah}:${word.number}`, x + 3, 28);
   });
+  const selected = !W.mode ? R.ayahs[R.current] : null;
+  if (selected?.time != null && R.duration) {
+    const next = R.ayahs[R.current + 1];
+    const endMs = next ? next.time : R.duration;
+    const start = msToVirtualX(selected.time) - left;
+    if (endMs != null && endMs > selected.time) {
+      const end = msToVirtualX(endMs) - left;
+      const from = Math.max(0, start), to = Math.min(w, end);
+      if (to > from) {
+        ctx.strokeStyle = color("--blue"); ctx.fillStyle = color("--blue"); ctx.lineWidth = 1;
+        // Real endpoint lines remain clipped at the visible viewport edges.
+        for (const x of [start, end]) if (x >= 0 && x <= w) {
+          ctx.beginPath(); ctx.moveTo(x, 17); ctx.lineTo(x, waveBottom); ctx.stroke();
+        }
+        ctx.beginPath(); ctx.moveTo(from, 20); ctx.lineTo(to, 20); ctx.stroke();
+        for (const [x, direction] of [[start, 1], [end, -1]]) if (x >= 0 && x <= w) {
+          ctx.beginPath(); ctx.moveTo(x, 20); ctx.lineTo(x + direction * 5, 17);
+          ctx.lineTo(x + direction * 5, 23); ctx.closePath(); ctx.fill();
+        }
+        const label = `Аят ${selected.ayah}`;
+        ctx.font = "11px -apple-system, sans-serif";
+        const labelWidth = ctx.measureText(label).width;
+        // Avoid overflowing labels at very short intervals or high zoom.
+        const labelX = Math.max(0, Math.min(w - labelWidth, (from + to - labelWidth) / 2));
+        ctx.fillStyle = color("--text"); ctx.fillText(label, labelX, 13);
+      }
+    } else if (start >= 0 && start <= w) {
+      ctx.fillStyle = color("--muted"); ctx.font = "10px sans-serif";
+      ctx.fillText(String(selected.ayah), start + 5, 15);
+    }
+  }
   if (R.audio && R.duration) {
     const playMs = R.audio.currentTime * 1000;
     const px = msToVirtualX(playMs) - left;
-    ctx.strokeStyle = color("--text"); ctx.lineWidth = 1;
+    ctx.strokeStyle = color("--blue"); ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, h); ctx.stroke();
   }
 }
@@ -1406,7 +1777,62 @@ function markerNearX(clientX) {
 }
 
 // ---- playback ----
-function togglePlay() { if (!R.audio || !R.audioReady || !R.dataReady) return; if (W.mode) { R.audio.paused ? playWord() : R.audio.pause(); return; } R.audio.paused ? R.audio.play() : R.audio.pause(); }
+function togglePlay() {
+  if (!R.audio || !R.audioReady || !R.dataReady) return;
+  if (W.mode) { R.audio.paused ? playWord() : R.audio.pause(); return; }
+  if (!R.audio.paused) { R.audio.pause(); return; }
+  if (R.playbackMode !== "continuous" && R.current >= 0
+      && R.audio.currentTime * 1000 >= ayahEndMs(R.current) - 2) {
+    seekAyah(R.current, true);
+  } else R.audio.play();
+}
+function scheduleAyahStop(reanchor = false) {
+  clearTimeout(R.playbackTimer);
+  if (W.mode || R.playbackMode === "continuous" || !R.audio || R.audio.paused || !R.dataReady) return;
+  if (reanchor || R.playbackAyah < 0) R.playbackAyah = currentAyahByTime(R.audio.currentTime * 1000);
+  const i = R.playbackAyah;
+  if (i < 0 || R.ayahs[i]?.time == null || ayahEndMs(i) <= R.ayahs[i].time) return;
+  const delay = Math.max(0, (ayahEndMs(i) - R.audio.currentTime * 1000) / R.audio.playbackRate);
+  R.playbackTimer = setTimeout(() => {
+    if (!finishAyahPlayback()) scheduleAyahStop();
+  }, delay);
+}
+function finishAyahPlayback() {
+  const i = R.playbackAyah;
+  if (W.mode || R.playbackMode === "continuous" || !R.audio || R.audio.paused || i < 0) return false;
+  const end = ayahEndMs(i);
+  if (R.audio.currentTime * 1000 < end) return false;
+  clearTimeout(R.playbackTimer);
+  if (R.loop) seekAyah(i, true);
+  else {
+    R.audio.pause();
+    R.audio.currentTime = Math.max(R.ayahs[i].time, end - 2) / 1000;
+    setCurrent(i);
+    drawWave();
+  }
+  return true;
+}
+function syncPlayerSettings() {
+  const inputs = document.querySelectorAll('[name="playbackMode"]');
+  for (const input of inputs) {
+    input.checked = input.value === R.playbackMode;
+    input.disabled = W.mode && input.value === "continuous";
+    if (input.value === "single") input.nextSibling.textContent = W.mode ? " Остановиться после слова" : " Остановиться после аята";
+    if (input.value === "repeat") input.nextSibling.textContent = W.mode ? " Повторять слово" : " Повторять аят";
+  }
+  $("playerSettingsHint").textContent = W.mode ? "В режиме слов воспроизводится только выбранное слово." : "Границы берутся из текущей разметки.";
+  // Word playback is always a clip, including the default continuous ayah mode.
+  if (W.mode && R.playbackMode === "continuous") document.querySelector('[name="playbackMode"][value="single"]').checked = true;
+  $("playerSettingsBtn").classList.toggle("active", R.playbackMode !== "continuous");
+}
+function setPlayerSettingsOpen(open) {
+  $("playerSettingsMenu").classList.toggle("hidden", !open);
+  $("playerSettingsBtn").setAttribute("aria-expanded", String(open));
+  if (open) {
+    setRateMenuOpen(false);
+    $("playerSettingsMenu").querySelector("input:checked").focus();
+  }
+}
 function scrollWaveToMs(ms) {
   if (R.zoom <= 1) return;
   const wrap = $("waveScroll"), x = msToVirtualX(ms);
@@ -1421,6 +1847,8 @@ function scrollWaveToEdge(edge) {
 function seekAyah(i, play) {
   const a = R.ayahs[i]; if (!a || a.time == null || !R.audio || !R.audioReady) return;
   R.audio.currentTime = a.time / 1000;
+  R.playbackAyah = i;
+  scheduleAyahStop();
   setCurrent(i);
   scrollWaveToMs(a.time);
   drawWave();
@@ -1447,6 +1875,7 @@ function setCurrent(i) {
   $("verifySelectedBtn").disabled = !R.ayahs[i] || R.ayahs[i].time == null;
   const li = document.querySelector(`.ayah-list li[data-i="${i}"]`);
   if (li) li.scrollIntoView({ block: "nearest" });
+  drawWave();
 }
 function currentAyahByTime(ms) {
   let idx = -1, first = -1;
@@ -1469,11 +1898,38 @@ async function toggleVerify(i) {
   if (W.mode) { await editWord(0, "verify"); return; }
   const a = R.ayahs[i];
   const next = a.status === "verified" ? "auto" : "verified";
+  await setAyahStatus(i, next);
+}
+
+async function setAyahStatus(i, status) {
+  if (editBusy || reviewLoading || !R.ayahs[i]) return false;
+  const a = R.ayahs[i];
+  const row = document.querySelector(`.ayah-list li[data-i="${i}"]`);
+  const error = row?.querySelector(".ayah-time-error");
+  const focused = row?.contains(document.activeElement) ? document.activeElement : null;
+  editBusy = true;
+  row?.querySelectorAll("input, [data-ayah-status], .time-arrows button").forEach(el => el.disabled = true);
   try {
-    await api.post("/api/verify", { surah: R.surah, ayah: a.ayah, status: next });
-    a.status = next === "auto" ? null : next;
-    renderAyahList(); updateSuraProgress(); const cur = R.current; R.current = -1; setCurrent(cur); drawWave();
-  } catch (e) { setStatus("Ошибка: " + e.message); }
+    await api.post("/api/verify", { surah: R.surah, ayah: a.ayah, status, db_path: currentProject.db_path });
+    a.status = status;
+    if (R.recheck) delete R.recheck[a.ayah];
+    if (row) applyTimingStatus(row, a);
+    updateAyahStatusControls(row, a);
+    updateSuraProgress(); syncSidebarStatus(); drawWave();
+    if (error) { error.textContent = ""; error.classList.add("hidden"); }
+    setStatus("");
+    return true;
+  } catch (e) {
+    const message = "Статус не сохранён. " + e.message;
+    if (error) { error.textContent = message; error.classList.remove("hidden"); }
+    setStatus(message);
+    return false;
+  } finally {
+    editBusy = false;
+    row?.querySelectorAll("input, .time-arrows button").forEach(el => el.disabled = false);
+    updateAyahStatusControls(row, a);
+    if (focused && document.activeElement === document.body) focused.focus({ preventScroll: true });
+  }
 }
 
 async function markCurrentStart() {
@@ -1494,35 +1950,42 @@ async function commitMarker(i, ms) {
   const row = document.querySelector(`.ayah-list li[data-i="${i}"]`);
   const input = row ? row.querySelector("input") : null;
   const focused = row && row.contains(document.activeElement) ? document.activeElement : null;
+  const error = row?.querySelector(".ayah-time-error");
+  const showError = message => { if (error) { error.textContent = message; error.classList.toggle("hidden", !message); } };
   const value = Math.round(ms);
   if (!Number.isSafeInteger(value) || value < 0 || value > R.duration) {
-    if (input) { input.value = exactTime(oldTime); input.setAttribute("aria-invalid", "true"); input.setAttribute("aria-describedby", "workspaceStatus"); }
+    if (input) { input.value = exactTime(oldTime); input.setAttribute("aria-invalid", "true"); input.setAttribute("aria-describedby", error?.id || "workspaceStatus"); }
     setStatus("Время не сохранено. Укажите начало в пределах аудиозаписи.");
+    showError("Укажите начало в пределах аудиозаписи.");
     saveState("Не сохранено", "error"); return false;
   }
   editBusy = true;
-  if (row) row.querySelectorAll("input, .time-arrows button").forEach(el => el.disabled = true);
+  if (row) row.querySelectorAll("input, [data-ayah-status], .time-arrows button").forEach(el => el.disabled = true);
   saveState("Сохранение…");
   try {
     await api.post("/api/timing", { surah, ayah: a.ayah, time: value, db_path: currentProject.db_path });
     a.time = value; a.status = "edited";
+    updateAyahStatusControls(row, a);
     if (input) { input.value = exactTime(value); input.removeAttribute("aria-invalid"); input.removeAttribute("aria-describedby"); }
     if (R.recheck) delete R.recheck[a.ayah];
     if (row) { row.classList.remove("missing"); applyTimingStatus(row, a); }
-    updateGenHint(); updateSuraProgress(); drawWave();
+    updateGenHint(); updateSuraProgress(); syncSidebarStatus(); drawWave();
     if (W.mode) loadWords(); else resetWords();
     saveState("Сохранено", "saved");
     setStatus("");
+    showError("");
     return true;
   } catch (e) {
     a.time = oldTime;
-    if (input) { input.value = exactTime(oldTime); input.setAttribute("aria-invalid", "true"); input.setAttribute("aria-describedby", "workspaceStatus"); }
+    if (input) { input.value = exactTime(oldTime); input.setAttribute("aria-invalid", "true"); input.setAttribute("aria-describedby", error?.id || "workspaceStatus"); }
     saveState("Не сохранено", "error");
     setStatus("Время не сохранено. " + e.message);
+    showError("Время не сохранено. " + e.message);
     drawWave(); return false;
   } finally {
     editBusy = false;
     if (row) row.querySelectorAll("input, .time-arrows button").forEach(el => el.disabled = false);
+    updateAyahStatusControls(row, a);
     if (focused && document.activeElement === document.body) focused.focus({ preventScroll: true });
   }
 }
@@ -1539,6 +2002,7 @@ async function exportProject() {
 // ===========================================================================
 function showView(name) {
   setRateMenuOpen(false);
+  setPlayerSettingsOpen(false);
   $("dashboardModeMenu").open = false;
   $("filterMenu").open = false;
   if (name !== "review") {
@@ -1550,16 +2014,21 @@ function showView(name) {
     R.audioReady = false;
     resetWords();
   }
+  document.body.classList.toggle("review-open", name === "review");
+  $("genBtn").classList.toggle("hidden", name === "review");
+  $("regenSuraBtn").classList.toggle("hidden", name !== "review");
   $("dashboard").classList.toggle("hidden", name !== "dashboard");
   $("review").classList.toggle("hidden", name !== "review");
   document.querySelector(".workspace-dashboard-actions").classList.toggle("hidden", name !== "dashboard");
   document.querySelector(".workspace-review-actions").classList.toggle("hidden", name !== "review");
   $("recordingMenu").open = false;
-  $("suraMenu").open = false;
   $("modeMenu").open = false;
   document.querySelector(".review-tools").open = false;
   document.title = name === "review" ? `${$("reviewTitle").textContent} — Ayah Studio` : "Ayah Studio";
-  (name === "review" ? $("reviewTitle") : $("suraSearch")).focus();
+  $("modeMenu").classList.toggle("hidden", name !== "review");
+  $("dashboardModeMenu").classList.toggle("hidden", name === "review");
+  $("suraProgress").classList.toggle("hidden", name !== "review");
+  (name === "review" ? $("regenSuraBtn") : $("suraSearch")).focus();
 }
 const baseName = (p) => p.replace(/[/\\]+$/, "").split(/[/\\]/).pop() || "reciter";
 
@@ -1587,8 +2056,10 @@ function renderProjectPicker() {
     const current = document.createElement("div");
     current.className = "project-picker-current";
     const name = document.createElement("strong"); name.textContent = currentProject.reciter || "Текущий проект";
-    const detail = document.createElement("small"); detail.textContent = "Внешний проект · выбран";
-    current.append(name, detail); list.append(current);
+    const detail = document.createElement("small"); detail.textContent = "Внешний проект";
+    const copy = document.createElement("div"); copy.className = "project-picker-copy";
+    copy.append(name, detail);
+    current.append(copy, projectPickerCheck(), projectPickerEdit()); list.append(current);
   }
   for (const project of projectLibrary) {
     const button = document.createElement("button");
@@ -1607,12 +2078,79 @@ function renderProjectPicker() {
       select.value = project.id;
       select.dispatchEvent(new Event("change"));
     };
-    list.append(button);
+    if (project.id === currentProject.project_id) {
+      const row = document.createElement("div"); row.className = "project-picker-row";
+      row.append(button, projectPickerEdit()); list.append(row);
+    } else list.append(button);
   }
   if (!list.children.length) {
     const empty = document.createElement("p"); empty.className = "project-picker-empty";
     empty.textContent = "Пока нет проектов"; list.append(empty);
   }
+}
+
+function projectPickerCheck() {
+  const check = document.createElement("span");
+  check.className = "project-picker-check";
+  check.innerHTML = studioIcon("check");
+  check.setAttribute("role", "img");
+  check.setAttribute("aria-label", "Текущий проект");
+  return check;
+}
+
+function renderSettingsProjects() {
+  const list = $("settingsProjectList");
+  list.replaceChildren();
+  const entries = [...projectLibrary];
+  if (!currentProject.project_id && currentProject.db_path) entries.unshift({ ...currentProject });
+  for (const project of entries) {
+    const active = project.id ? project.id === currentProject.project_id : project.db_path === currentProject.db_path;
+    const row = document.createElement("div"); row.className = "settings-project-row";
+    const copy = document.createElement("div"); copy.className = "project-picker-copy";
+    const name = document.createElement("strong"); name.textContent = project.reciter;
+    const detail = document.createElement("small"); detail.textContent = project.recording;
+    copy.append(name, detail);
+    if (active) {
+      const status = document.createElement("small"); status.className = "project-active-label";
+      status.textContent = "Открыт"; copy.append(status);
+    }
+    const actions = document.createElement("div"); actions.className = "settings-project-actions";
+    if (!active) {
+      const open = document.createElement("button"); open.type = "button"; open.className = "ghost";
+      open.textContent = "Открыть"; open.setAttribute("aria-label", `Открыть проект ${project.reciter} · ${project.recording}`);
+      open.disabled = $("projectSelect").disabled || editBusy || reviewLoading;
+      open.onclick = () => {
+        $("projectSelect").value = project.id;
+        $("projectSelect").dispatchEvent(new Event("change"));
+      };
+      actions.append(open);
+    }
+    const edit = document.createElement("button"); edit.type = "button"; edit.className = "ghost";
+    edit.textContent = "Изменить"; edit.setAttribute("aria-label", `Изменить проект ${project.reciter} · ${project.recording}`);
+    edit.dataset.editProject = project.id || project.db_path;
+    edit.disabled = $("projectSelect").disabled || editBusy || reviewLoading;
+    edit.onclick = () => openProjectForm(project);
+    actions.append(edit); row.append(copy, actions); list.append(row);
+  }
+  if (!entries.length) {
+    const empty = document.createElement("p"); empty.className = "projects-empty settings-help";
+    empty.textContent = "Пока нет проектов. Нажмите «Добавить проект» и выберите папку с аудио.";
+    list.append(empty);
+  }
+  $("addProjectBtn").disabled = $("projectSelect").disabled || editBusy || reviewLoading;
+}
+
+function projectPickerEdit() {
+  const edit = document.createElement("button");
+  edit.type = "button"; edit.className = "project-picker-edit icon-btn ghost";
+  edit.title = "Изменить имя проекта"; edit.setAttribute("aria-label", edit.title);
+  edit.innerHTML = studioIcon("edit");
+  edit.disabled = $("projectSelect").disabled || editBusy || reviewLoading;
+  edit.onclick = () => {
+    $("recordingMenu").open = false;
+    openProjectForm({ ...currentProject, id: currentProject.project_id });
+  };
+  return edit;
 }
 
 async function refreshProjectLibrary() {
@@ -1625,46 +2163,14 @@ async function refreshProjectLibrary() {
   for (const p of projectLibrary) select.add(new Option(`${p.reciter} · ${p.recording}`, p.id));
   select.value = currentProject.project_id || "";
   const recordingLabel = currentProject.db_path ? `Проект: ${currentProject.reciter || ""} · ${currentProject.recording || "Внешний проект"}` : "Выбрать проект";
+  $("recordingMenuToggle").innerHTML = studioIcon("recording") + '<span id="projectName"></span>';
+  $("projectName").textContent = currentProject.db_path ? currentProject.reciter || currentProject.recording || "Внешний проект" : "Выбрать проект";
   $("recordingMenuToggle").title = recordingLabel;
   $("recordingMenuToggle").setAttribute("aria-label", recordingLabel);
   $("workspaceExportBtn").disabled = !currentProject.db_path;
   renderProjectPicker();
-}
-
-function renderSuraPicker() {
-  const grid = $("suraPickerGrid");
-  const query = $("suraPickerSearch").value.trim();
-  grid.replaceChildren();
-  for (const sura of dashboardSuras.filter(s => s.has_audio && String(s.surah).startsWith(query))) {
-    const button = document.createElement("button");
-    button.type = "button"; button.textContent = sura.surah; button.dataset.surah = sura.surah;
-    button.setAttribute("aria-pressed", String(sura.surah === R.surah));
-    const label = `Сура ${sura.surah} · ${ayahLabel(sura.ayah_count)}`;
-    button.title = label; button.setAttribute("aria-label", label);
-    button.disabled = editBusy || W.busy;
-    button.onclick = () => {
-      if (editBusy || W.busy) return;
-      $("suraMenu").open = false;
-      $("reviewSuraSelect").value = sura.surah;
-      $("reviewSuraSelect").dispatchEvent(new Event("change"));
-    };
-    grid.append(button);
-  }
-  $("suraPickerEmpty").classList.toggle("hidden", grid.children.length > 0);
-}
-
-function renderSuraSelector() {
-  const select = $("reviewSuraSelect");
-  select.replaceChildren(new Option("Сура", ""));
-  for (const s of dashboardSuras.filter(s => s.has_audio)) {
-    select.add(new Option(`Сура ${s.surah}`, s.surah));
-  }
-  select.disabled = !dashboardSuras.some(s => s.has_audio);
-  select.value = R.surah || "";
-  $("suraPickerLabel").textContent = R.surah ? `Сура ${R.surah}` : "Сура";
-  $("suraMenuToggle").setAttribute("aria-disabled", String(select.disabled));
-  $("suraMenuToggle").setAttribute("aria-label", R.surah ? `Сура ${R.surah} · выбрать другую суру` : "Выбрать суру");
-  renderSuraPicker();
+  renderSettingsProjects();
+  updateSuraProgress();
 }
 
 async function applyProject(p) {
@@ -1683,7 +2189,7 @@ async function applyProject(p) {
 }
 
 function applyAppearance(theme, arabicSize) {
-  document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+  document.documentElement.dataset.theme = theme === "dark" ? "dark" : "light";
   document.documentElement.style.setProperty("--arabic-size", `${arabicSize || 30}px`);
   drawWave();
 }
@@ -1691,7 +2197,6 @@ function applyAppearance(theme, arabicSize) {
 function settingsPanel(id) {
   document.querySelectorAll(".settings-panel").forEach(panel => panel.classList.toggle("hidden", panel.id !== id));
   document.querySelectorAll("[data-settings-panel]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.settingsPanel === id)));
-  $("saveSettingsBtn").hidden = ["importSettings", "modelSettings"].includes(id);
   clearTimeout(modelPoll);
   if (id === "modelSettings") { modelSignature = ""; refreshModels(); }
 }
@@ -1700,50 +2205,58 @@ function openSettings(panel = "interfaceSettings") {
   if (editBusy || reviewLoading) { setStatus("Дождитесь завершения сохранения или загрузки, затем откройте настройки."); return; }
   if (R.audio) R.audio.pause();
   const p = currentProject;
-  $("settingsReciter").value = p.reciter || "";
-  $("settingsRecording").value = p.recording || "";
-  $("settingsReciter").disabled = !p.project_id;
-  $("settingsRecording").disabled = !p.project_id;
-  $("projectStorageSummary").textContent = p.db_path
-    ? `${p.audio_count || 0} файлов аудио · ${p.project_id ? "Внутренний проект: аудио, разметка и история хранятся вместе." : "Внешний проект. Чтобы хранить копию внутри приложения, используйте вкладку «Импорт»."}`
-    : "Нет открытого проекта. Создайте проект на вкладке «Импорт».";
-  $("audioLocation").textContent = p.audio_dir || "Не выбрано";
-  $("dbLocation").textContent = p.db_path || "Не выбрано";
-  $("settingsExportBtn").disabled = !p.db_path;
-  $("settingsStep").value = timeStep;
+  renderSettingsProjects();
   $("settingsArabicSize").value = p.arabic_size || 30;
-  document.querySelectorAll('[name="settingsTheme"]').forEach(input => input.checked = input.value === (p.theme || "dark"));
-  $("settingsMode").replaceChildren(...[...$("genMode").children].map(option => option.cloneNode(true)));
-  $("settingsMode").value = selectedMode();
+  document.querySelectorAll('[name="settingsTheme"]').forEach(input => input.checked = input.value === (p.theme || "light"));
   $("settingsMessage").textContent = "";
   settingsPanel(panel);
   openDialog($("settingsDialog"));
   if (panel === "modelSettings") refreshModels();
 }
 
-async function saveSettings() {
-  const button = $("saveSettingsBtn");
-  button.disabled = true;
-  const data = {
-    mode: $("settingsMode").value, time_step: Number($("settingsStep").value),
-    arabic_size: Number($("settingsArabicSize").value),
-    theme: document.querySelector('[name="settingsTheme"]:checked').value,
-    project_id: currentProject.project_id,
-    reciter: $("settingsReciter").value, recording: $("settingsRecording").value,
-  };
-  try {
-    await api.post("/api/settings", data);
-    Object.assign(currentProject, data);
-    applyAppearance(data.theme, data.arabic_size);
-    timeStep = data.time_step;
-    currentProject = await api.get("/api/project");
-    setMode(data.mode);
-    document.documentElement.style.setProperty("--arabic-size", `${data.arabic_size}px`);
-    await refreshProjectLibrary();
-    closeDialog($("settingsDialog"));
-    setStatus("Настройки сохранены.");
-  } catch (e) { $("settingsMessage").textContent = "Не удалось сохранить настройки: " + e.message; }
-  finally { button.disabled = false; }
+let settingsSaveQueue = Promise.resolve();
+const confirmedSettings = new WeakMap();
+const settingRevisions = new Map();
+
+function applySettingsChange(data) {
+  Object.assign(currentProject, data);
+  if ("theme" in data || "arabic_size" in data) {
+    applyAppearance(currentProject.theme, currentProject.arabic_size);
+    document.querySelectorAll('[name="settingsTheme"]').forEach(input => input.checked = input.value === currentProject.theme);
+    $("settingsArabicSize").value = currentProject.arabic_size || 30;
+  }
+  if ("time_step" in data) timeStep = data.time_step;
+  if ("mode" in data) setMode(data.mode);
+}
+
+function saveSettings(data) {
+  const project = currentProject;
+  if (!confirmedSettings.has(project)) confirmedSettings.set(project, { ...project, time_step: timeStep });
+  const confirmed = confirmedSettings.get(project);
+  const revisions = {};
+  for (const key of Object.keys(data)) {
+    revisions[key] = (settingRevisions.get(key) || 0) + 1;
+    settingRevisions.set(key, revisions[key]);
+  }
+  applySettingsChange(data);
+  $("settingsMessage").textContent = "";
+  settingsSaveQueue = settingsSaveQueue.then(async () => {
+    try {
+      await api.post("/api/settings", data);
+      Object.assign(confirmed, data);
+    } catch (e) {
+      if (project !== currentProject) return;
+      const rollback = {};
+      for (const key of Object.keys(data)) {
+        if (settingRevisions.get(key) === revisions[key]) rollback[key] = confirmed[key];
+      }
+      applySettingsChange(rollback);
+      $("settingsMessage").textContent = "Не удалось сохранить настройки: " + e.message;
+      setStatus("Не удалось сохранить настройки: " + e.message);
+      return;
+    }
+  });
+  return settingsSaveQueue;
 }
 
 function positionWorkspaceMenu(menu) {
@@ -1753,6 +2266,11 @@ function positionWorkspaceMenu(menu) {
   const margin = 8;
   panel.style.maxHeight = `${Math.max(0, window.innerHeight - margin * 2)}px`;
   const bounds = panel.getBoundingClientRect();
+  if (window.innerWidth <= 600) {
+    panel.style.left = "12px";
+    panel.style.top = `${Math.max(margin, window.innerHeight - bounds.height - 12)}px`;
+    return;
+  }
   const left = Math.max(margin, Math.min(anchor.left, window.innerWidth - bounds.width - margin));
   const below = anchor.bottom + 6;
   const top = bounds.height <= window.innerHeight - below - margin ? below
@@ -1762,24 +2280,31 @@ function positionWorkspaceMenu(menu) {
 }
 
 function setRateMenuOpen(open) {
+  if (open) setPlayerSettingsOpen(false);
   const wasOpen = !$("rateMenu").classList.contains("hidden");
   $("rateMenu").classList.toggle("hidden", !open);
   $("rateBtn").setAttribute("aria-expanded", String(open));
-  if (open && !wasOpen) animateMenu($("rateMenu"), $("rateBtn").getBoundingClientRect());
+  if (open && !wasOpen) {
+    if (window.innerWidth > 600) animateMenu($("rateMenu"), $("rateBtn").getBoundingClientRect());
+    $("rate").focus();
+  }
   if (!open) menuMotions.get($("rateMenu"))?.cancel();
 }
 function updateRatePicker() {
   const value = $("rate").value;
   $("rateBtn").textContent = `${value}×`;
   $("rateBtn").setAttribute("aria-label", `Скорость воспроизведения: ${value}×`);
+  $("rateValue").textContent = `${value}×`;
+  $("rate").setAttribute("aria-valuetext", `${value}×`);
   $("rateMenu").querySelectorAll("button").forEach(button => {
     button.setAttribute("aria-pressed", String(button.dataset.rate === value));
   });
 }
 
 function wireWorkspace() {
-  for (const [id, icon] of [["playBtn", "play"], ["prevBtn", "previous"], ["nextBtn", "next"], ["waveStartBtn", "previous"], ["waveEndBtn", "next"], ["backBtn", "back"], ["settingsBtn", "settings"], ["workspaceExportBtn", "export"], ["recordingMenuToggle", "recording"], ["modeMenuToggle", "mode"], ["reviewToolsToggle", "tools"], ["showSuraLogBtn", "logs"], ["dashboardModeToggle", "mode"], ["filterMenuToggle", "filter"], ["helpBtn", "help"], ["createProjectBtn", "addProject"], ["regenBtn", "refresh"]]) $(id).innerHTML = studioIcon(icon);
+  for (const [id, icon] of [["playBtn", "play"], ["prevBtn", "skipPrevious"], ["nextBtn", "skipNext"], ["waveStartBtn", "previous"], ["waveEndBtn", "next"], ["sidebarToggle", "sidebar"], ["settingsBtn", "settings"], ["workspaceExportBtn", "export"], ["recordingMenuToggle", "recording"], ["modeMenuToggle", "mode"], ["reviewToolsToggle", "tools"], ["dashboardModeToggle", "mode"], ["filterMenuToggle", "filter"], ["helpBtn", "help"], ["createProjectBtn", "addProject"], ["regenBtn", "refresh"]]) $(id).innerHTML = studioIcon(icon);
   document.querySelectorAll("[data-review-mode]").forEach(source => {
+    source.querySelector(".mode-option-icon").innerHTML = studioIcon(source.dataset.reviewMode);
     const button = source.cloneNode(true);
     button.dataset.dashboardMode = button.dataset.reviewMode;
     delete button.dataset.reviewMode;
@@ -1809,22 +2334,16 @@ function wireWorkspace() {
       $("modeMenuToggle").focus();
     };
   });
-  for (const menu of [$("recordingMenu"), $("suraMenu"), $("modeMenu"), $("dashboardModeMenu"), $("filterMenu"), document.querySelector(".review-tools")]) {
+  for (const menu of [$("recordingMenu"), $("modeMenu"), $("dashboardModeMenu"), $("filterMenu"), document.querySelector(".review-tools")]) {
     menu.querySelector("summary").addEventListener("click", e => {
       e.preventDefault();
       if (menu.querySelector("summary").getAttribute("aria-disabled") === "true") return;
       menu.open = !menu.open;
       if (menu === $("recordingMenu") && menu.open) renderProjectPicker();
-      if (menu === $("suraMenu") && menu.open) { $("suraPickerSearch").value = ""; renderSuraPicker(); }
-      positionWorkspaceMenu(menu);
-      if (menu === $("suraMenu") && menu.open) {
-        $("suraPickerSearch").focus();
-        $("suraPickerGrid").querySelector('[aria-pressed="true"]')?.scrollIntoView({ block: "nearest" });
-      }
     });
     menu.addEventListener("toggle", () => {
       if (menu.open) {
-        for (const other of [$("recordingMenu"), $("suraMenu"), $("modeMenu"), $("dashboardModeMenu"), $("filterMenu"), document.querySelector(".review-tools")]) {
+        for (const other of [$("recordingMenu"), $("modeMenu"), $("dashboardModeMenu"), $("filterMenu"), document.querySelector(".review-tools")]) {
           if (other !== menu) other.open = false;
         }
         positionWorkspaceMenu(menu);
@@ -1841,22 +2360,17 @@ function wireWorkspace() {
     document.addEventListener("click", e => { if (!menu.contains(e.target)) menu.open = false; });
   }
   $("settingsBtn").onclick = () => openSettings();
-  $("createProjectBtn").onclick = () => {
-    openSettings("importSettings");
-    $("audioDir").value = ""; $("dbPath").value = "";
-    $("importReciter").focus();
-  };
-  for (const id of ["closeSettingsBtn", "cancelSettingsBtn"]) $(id).onclick = () => closeDialog($("settingsDialog"));
+  $("createProjectBtn").onclick = () => openProjectForm();
+  $("addProjectBtn").onclick = () => openProjectForm();
+  for (const id of ["closeProjectBtn", "cancelProjectBtn"]) $(id).onclick = () => closeDialog($("projectDialog"));
+  $("projectDialog").addEventListener("cancel", e => { if (projectFormBusy) e.preventDefault(); });
+  $("closeSettingsBtn").onclick = () => closeDialog($("settingsDialog"));
   $("settingsDialog").addEventListener("close", () => {
     clearTimeout(modelPoll);
     $("modelList").querySelectorAll('input[type="password"]').forEach(input => input.value = "");
-    applyAppearance(currentProject.theme, currentProject.arabic_size);
   });
-  const previewAppearance = () => applyAppearance(document.querySelector('[name="settingsTheme"]:checked').value, Number($("settingsArabicSize").value));
-  document.querySelectorAll('[name="settingsTheme"]').forEach(input => input.onchange = previewAppearance);
-  $("settingsArabicSize").onchange = previewAppearance;
-  $("saveSettingsBtn").onclick = saveSettings;
-  $("settingsExportBtn").onclick = exportProject;
+  document.querySelectorAll('[name="settingsTheme"]').forEach(input => input.onchange = () => saveSettings({ theme: input.value }));
+  $("settingsArabicSize").onchange = e => saveSettings({ arabic_size: Number(e.target.value) });
   $("workspaceExportBtn").onclick = exportProject;
   document.querySelectorAll("[data-settings-panel]").forEach(btn => btn.onclick = () => settingsPanel(btn.dataset.settingsPanel));
   $("pickerCreateProjectBtn").onclick = () => {
@@ -1868,44 +2382,51 @@ function wireWorkspace() {
     if (!id || editBusy || reviewLoading) { e.target.value = currentProject.project_id || ""; return; }
     e.target.disabled = true;
     renderProjectPicker();
+    renderSettingsProjects();
     $("recordingMenu").open = false;
     try { await applyProject(await api.post("/api/projects/activate", { id })); setStatus(""); }
-    catch (error) { e.target.value = currentProject.project_id || ""; setStatus("Не удалось открыть проект. " + error.message); }
-    finally { e.target.disabled = false; renderProjectPicker(); }
-  };
-  $("suraPickerSearch").oninput = () => { renderSuraPicker(); positionWorkspaceMenu($("suraMenu")); };
-  $("suraPickerSearch").onkeydown = e => {
-    if (e.key !== "Enter") return;
-    e.preventDefault();
-    const number = Number(e.target.value.trim());
-    const buttons = [...$("suraPickerGrid").querySelectorAll("button")];
-    const exact = buttons.find(button => Number(button.dataset.surah) === number);
-    if (exact) exact.click(); else if (buttons.length === 1) buttons[0].click();
-  };
-  $("reviewSuraSelect").onchange = (e) => {
-    if (e.target.value) openReview(Number(e.target.value));
+    catch (error) {
+      e.target.value = currentProject.project_id || "";
+      $("settingsMessage").textContent = "Не удалось открыть проект: " + error.message;
+      setStatus("Не удалось открыть проект. " + error.message);
+    }
+    finally {
+      e.target.disabled = false; renderProjectPicker(); renderSettingsProjects();
+      if ($("settingsDialog").open) $("addProjectBtn").focus();
+    }
   };
   $("verifySelectedBtn").onclick = () => { if (R.current >= 0) toggleVerify(R.current); };
 }
 
 function wire() {
   wireWorkspace();
-  for (const option of $("rate").options) {
+  $("playerSettingsBtn").innerHTML = studioIcon("settings");
+  $("playerSettingsBtn").onclick = () => setPlayerSettingsOpen($("playerSettingsMenu").classList.contains("hidden"));
+  for (const input of document.querySelectorAll('[name="playbackMode"]')) input.onchange = () => {
+    R.playbackMode = input.value;
+    R.loop = input.value === "repeat";
+    syncPlayerSettings();
+    scheduleAyahStop(true);
+  };
+  for (const value of [0.5, 0.8, 1, 1.5, 2]) {
     const button = document.createElement("button");
-    button.type = "button"; button.dataset.rate = option.value; button.textContent = option.textContent;
+    button.type = "button"; button.dataset.rate = String(value); button.textContent = `${value}×`;
     button.onclick = () => {
-      $("rate").value = option.value;
-      $("rate").dispatchEvent(new Event("change"));
-      setRateMenuOpen(false); $("rateBtn").focus();
+      $("rate").value = value;
+      $("rate").dispatchEvent(new Event("input"));
     };
-    $("rateMenu").append(button);
+    $("ratePresets").append(button);
   }
   updateRatePicker();
   $("rateBtn").onclick = () => setRateMenuOpen($("rateMenu").classList.contains("hidden"));
   document.addEventListener("click", e => {
     if (!document.querySelector(".player-rate").contains(e.target)) setRateMenuOpen(false);
+    if (!document.querySelector(".player-settings").contains(e.target)) setPlayerSettingsOpen(false);
   });
   document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && !$("playerSettingsMenu").classList.contains("hidden")) {
+      setPlayerSettingsOpen(false); $("playerSettingsBtn").focus();
+    }
     if (e.key === "Escape" && !$("rateMenu").classList.contains("hidden")) {
       setRateMenuOpen(false); $("rateBtn").focus();
     }
@@ -1916,9 +2437,26 @@ function wire() {
   };
   $("projectForm").onsubmit = e => { e.preventDefault(); openProject(); };
   $("suraSearch").oninput = renderSuras;
+  $("grid").onkeydown = e => {
+    if (!["ArrowUp", "ArrowDown", "Home", "End"].includes(e.key)) return;
+    const buttons = [...$("grid").querySelectorAll("button")];
+    const index = buttons.indexOf(document.activeElement);
+    if (index < 0) return;
+    e.preventDefault();
+    const next = e.key === "Home" ? 0 : e.key === "End" ? buttons.length - 1
+      : Math.max(0, Math.min(buttons.length - 1, index + (e.key === "ArrowDown" ? 1 : -1)));
+    buttons[next].focus();
+  };
+  $("suraSearch").onkeydown = e => {
+    if (e.key === "Enter" || e.key === "ArrowDown") {
+      const first = $("grid").querySelector('button[aria-disabled="false"]');
+      if (first) { e.preventDefault(); e.key === "Enter" ? first.click() : first.focus(); }
+    }
+  };
   $("suraFilter").onchange = () => { updateSuraFilterPicker(); renderSuras(); };
-  $("dashboardExportBtn").onclick = exportProject;
-  $("genBtn").onclick = () => runGeneration(true);
+  $("genBtn").onclick = () => GEN.running || generatingSurah != null ? cancelGeneration() : runGeneration(true);
+  $("batchGenerateBtn").onclick = () => runGeneration(true);
+  $("batchRegenerateBtn").onclick = () => runGeneration(false);
   $("regenBtn").onclick = () => runGeneration(false);
   $("cancelBtn").onclick = cancelGeneration;
   $("regenSuraBtn").onclick = regenerateSura;
@@ -1946,12 +2484,17 @@ function wire() {
     try { await api.post("/api/settings", { mode }); currentProject.mode = mode; }
     catch (e) { setMode(previousMode); setStatus("Не удалось сохранить режим: " + e.message); }
   };
-  $("backBtn").onclick = () => { if (R.audio) R.audio.pause(); showView("dashboard"); refreshSuras(); };
+  $("sidebarToggle").onclick = () => setSidebarVisible($("sidebarToggle").getAttribute("aria-expanded") !== "true");
   $("playBtn").onclick = togglePlay;
   $("prevBtn").onclick = seekPrevUnit;
   $("nextBtn").onclick = seekNextUnit;
-  $("rate").onchange = () => { if (R.audio) R.audio.playbackRate = parseFloat($("rate").value); updateRatePicker(); };
-  $("exportBtn").onclick = exportProject;
+  $("rate").oninput = $("rate").onchange = () => {
+    if (R.audio) {
+      R.audio.defaultPlaybackRate = parseFloat($("rate").value);
+      R.audio.playbackRate = parseFloat($("rate").value);
+    }
+    updateRatePicker();
+  };
   for (const btn of document.querySelectorAll("[data-copy-log]")) {
     btn.addEventListener("click", () => copyLiveLog(btn.dataset.copyLog));
     updateLogCopyButton(btn.dataset.copyLog);
@@ -1964,12 +2507,18 @@ function wire() {
   audio.addEventListener("play", () => { $("playBtn").innerHTML = studioIcon("pause"); $("playBtn").setAttribute("aria-label", "Пауза"); });
   audio.addEventListener("pause", () => { $("playBtn").innerHTML = studioIcon("play"); $("playBtn").setAttribute("aria-label", "Воспроизвести"); });
   for (const event of ["play", "pause", "ratechange", "seeked"]) audio.addEventListener(event, scheduleWordStop);
+  for (const event of ["play", "seeking", "seeked"]) audio.addEventListener(event, () => scheduleAyahStop(true));
+  for (const event of ["pause", "ratechange"]) audio.addEventListener(event, () => scheduleAyahStop());
+  audio.addEventListener("ended", () => {
+    if (!W.mode && R.loop && R.playbackAyah >= 0) seekAyah(R.playbackAyah, true);
+  });
   audio.addEventListener("ended", () => { if (W.mode && W.stop) finishWord(); });
   audio.addEventListener("timeupdate", () => {
     const ms = audio.currentTime * 1000;
     $("clock").textContent = `${exactTime(ms)} / ${exactTime(R.duration)}`;
     if (W.stop && ms >= W.stop.end) { finishWord(); drawWave(); return; }
     if (W.mode) { drawWave(); return; }
+    if (finishAyahPlayback()) { drawWave(); return; }
     const i = currentAyahByTime(ms);
     if (i >= 0 && i !== R.current) setCurrent(i);
     if (R.zoom > 1) {
@@ -1978,7 +2527,6 @@ function wire() {
         wrap.scrollLeft = Math.max(0, x - wrap.clientWidth / 2);
       }
     }
-    if (R.loop && R.current >= 0 && ms >= ayahEndMs(R.current)) seekAyah(R.current, true);
     drawWave();
   });
 
@@ -2053,7 +2601,7 @@ function wire() {
   });
 
   window.addEventListener("keydown", (e) => {
-    if ($("suraLiveLogBox").open || $("settingsDialog").open || $("review").classList.contains("hidden") || e.target.closest("input, select, textarea, button, summary, [contenteditable]")) return;
+    if ($("suraLiveLogBox").open || $("settingsDialog").open || $("projectDialog").open || $("review").classList.contains("hidden") || e.target.closest("input, select, textarea, button, summary, [contenteditable]")) return;
     if (e.code === "Space") { e.preventDefault(); togglePlay(); }
     else if (e.code === "ArrowDown" || e.code === "ArrowRight") { e.preventDefault(); $("nextBtn").click(); }
     else if (e.code === "ArrowUp" || e.code === "ArrowLeft") { e.preventDefault(); $("prevBtn").click(); }

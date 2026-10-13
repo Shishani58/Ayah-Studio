@@ -1,0 +1,102 @@
+[
+  {
+    "model": "whisper-large-v3-turbo",
+    "surah": 114,
+    "audio_sha256": "958819e2a43c6f02d397432b208398599f1c10dd7c08f19401ee3676550bf064",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "error": "ValueError: Whisper не нашёл достаточных опор в каноническом тексте.",
+    "seconds": 33.141
+  },
+  {
+    "model": "whisper-large-v3-turbo",
+    "surah": 112,
+    "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "rows": [
+      [
+        1,
+        6360,
+        0.45117926597595215
+      ],
+      [
+        2,
+        9440,
+        0.8135737776756287
+      ],
+      [
+        3,
+        11180,
+        0.9948129653930664
+      ],
+      [
+        4,
+        13800,
+        0.9993612766265869
+      ]
+    ],
+    "absolute_errors_ms": [
+      266,
+      685,
+      317,
+      270
+    ],
+    "median_ms": 293.5,
+    "p95_ms": 629.7999999999998,
+    "max_ms": 685,
+    "source": "attention-dtw:whisper-large-v3-turbo:revision=41f01f3fe87f28c78e2fbf8b568835947dd65ed9:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:commit-before=24:context=1word:teacher-forcing:language=ar:target=imlaey-plain:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+    "trace": {
+      "mode": "full",
+      "backend": "whisper-attention-dtw",
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 6360,
+          "conf": 0.45117926597595215,
+          "reliable": true
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 9440,
+          "conf": 0.8135737776756287,
+          "reliable": true
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 11180,
+          "conf": 0.9948129653930664,
+          "reliable": true
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 13800,
+          "conf": 0.9993612766265869,
+          "reliable": true
+        }
+      ]
+    },
+    "first_ayah_words": [
+      [
+        0,
+        300,
+        0.9702759385108948
+      ],
+      [
+        1,
+        720,
+        0.9903642535209656
+      ],
+      [
+        2,
+        1380,
+        0.9997376799583435
+      ],
+      [
+        3,
+        1860,
+        0.9989363551139832
+      ]
+    ],
+    "seconds": 8.21
+  }
+]

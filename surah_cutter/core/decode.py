@@ -10,6 +10,8 @@ import subprocess
 
 import numpy as np
 
+from surah_cutter.core.cancellation import current_event, interruptible
+
 DEFAULT_SR = 16000
 
 
@@ -43,7 +45,13 @@ def decode(path: str, sr: int = DEFAULT_SR) -> np.ndarray:
         "-ar", str(sr),
         "-",
     ]
-    proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if current_event() is None:
+        proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    else:
+        with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE) as child:
+            with interruptible(child.kill):
+                stdout, stderr = child.communicate()
+            proc = subprocess.CompletedProcess(cmd, child.returncode, stdout, stderr)
     if proc.returncode != 0:
         msg = proc.stderr.decode("utf-8", "replace").strip()
         raise DecodeError(f"ffmpeg failed for {path!r}: {msg or 'unknown error'}")
@@ -82,7 +90,13 @@ def decode_range(
         "-ar", str(sr),
         "-",
     ]
-    proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if current_event() is None:
+        proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    else:
+        with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE) as child:
+            with interruptible(child.kill):
+                stdout, stderr = child.communicate()
+            proc = subprocess.CompletedProcess(cmd, child.returncode, stdout, stderr)
     if proc.returncode != 0:
         msg = proc.stderr.decode("utf-8", "replace").strip()
         raise DecodeError(f"ffmpeg failed for {path!r}: {msg or 'unknown error'}")

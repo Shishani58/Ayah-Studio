@@ -236,6 +236,14 @@ def align_surah(
         use_onnx = False
     else:
         use_onnx = (backend or DEFAULT_BACKEND).strip().lower() == "onnx"
+        from surah_cutter.core import model_store
+
+        if model_store.ACTIVE_ID != "quran-phonetics":
+            if backend is not None and backend.strip().lower() != "onnx":
+                raise ValueError("Выбранная модель не поддерживает этот backend.")
+            # A legacy oracle environment must never replace the selected
+            # weights with DEFAULT_MODEL_ID.
+            use_onnx = True
 
     # Forced-alignment math is pure numpy (vendored in core._ctc), backend-
     # agnostic and torch-free; torch is only pulled in for the torch emission
@@ -251,7 +259,7 @@ def align_surah(
         bundle = model if isinstance(model, _Bundle) else _get_bundle(DEFAULT_MODEL_ID)
 
     if getattr(bundle, "text_kind", "phonetic") == "whisper":
-        word_rows = bundle.emitter.align_words(pcm, words, intro=surah not in (1, 9))
+        word_rows = bundle.emitter.align_words(pcm, words, intro=surah not in (1, 9), strict_words=False)
         first = {}
         for word, (_, start, confidence) in zip(words, word_rows):
             first.setdefault(word.ayah, (word.ayah, start, confidence))
@@ -266,18 +274,23 @@ def align_surah(
         return rows
 
     # --- 1. build the fixed target id sequence ------------------------------
-    word_trs = transliteration.surah_word_tr(surah)
+    custom_targets = (hasattr(getattr(bundle, "emitter", None), "build_targets")
+                      or getattr(bundle, "text_kind", "phonetic") == "arabic")
+    word_trs = [] if custom_targets else transliteration.surah_word_tr(surah)
     # Every sura except al-Fatiha (1, whose basmala IS ayah 1) and at-Tawba (9,
     # which has no basmala) opens with an intro-basmala in the audio that is not
     # in ``words``. Prepend its tokens so word 1 isn't dragged back over it.
-    basmala_trs = _basmala_trs(transliteration) if surah not in (1, 9) else None
+    basmala_trs = ([] if custom_targets else _basmala_trs(transliteration)) if surah not in (1, 9) else None
     targets, word_token_spans = _build_targets(words, word_trs, bundle, basmala_trs)
 
     # Whole-sura Viterbi is O(frames × target states) in both time and memory.
     # Route oversized exact jobs through bounded exact tiles before computing
     # emissions, so a long sura cannot allocate hundreds of GiB merely because
     # a caller explicitly selected the full path or a fallback escalated here.
-    if targets and _full_ctc_requires_tiling(len(pcm), sr, len(targets)):
+    estimated_targets = len(targets)
+    if getattr(bundle, "text_kind", "").startswith("fastconformer"):
+        estimated_targets = max(estimated_targets, 2 * sum(len(w.text) for w in words) + 256)
+    if targets and _full_ctc_requires_tiling(len(pcm), sr, estimated_targets):
         from surah_cutter.core import align_tiled
 
         kwargs = {"surah": surah, "bundle": bundle, "check_onsets": True}
@@ -289,6 +302,8 @@ def align_surah(
 
     # --- 2. emissions: log-probs over the vocab, shape (T, V) ---------------
     emissions = _emissions(bundle, pcm, np)  # float32 (T, V)
+    if getattr(bundle, "text_kind", "").startswith("fastconformer"):
+        targets, word_token_spans = _build_targets(words, word_trs, bundle, basmala_trs)
     n_frames = emissions.shape[0]
     stride_ms = _stride_ms(len(pcm), sr, n_frames)
 
@@ -339,7 +354,7 @@ def align_surah(
         trace.update({
             "mode": "full", "total_ms": len(pcm) * 1000.0 / sr,
             "emission_passes": 1, "emissions_frames": n_frames,
-            "backend": "onnx" if use_onnx else "torch",
+            "backend": getattr(getattr(bundle, "emitter", None), "model_id", "onnx") if use_onnx else "torch",
             "batch_size": 1 if use_onnx else None,
             "align_lag_ms": getattr(bundle, "lag_ms", ALIGN_LAG_MS),
             "ayahs": list(checks.values()),
@@ -433,6 +448,9 @@ def _emissions(bundle: Any, pcm, np) -> Any:
     return the identical ``(T, V)`` log-softmax over the same vocab order, so the
     downstream forced alignment is unaffected by the choice.
     """
+    from surah_cutter.core.cancellation import check_cancelled
+
+    check_cancelled()
     if isinstance(bundle, _OnnxBundle):
         emissions = bundle.emitter.emissions(np.ascontiguousarray(pcm, dtype=np.float32))
         return np.ascontiguousarray(emissions, dtype=np.float32)
@@ -709,7 +727,10 @@ def _get_onnx_bundle(model_path: str | None = None) -> "_OnnxBundle":
     path = model_path or str(selected or _DEFAULT_ONNX_MODEL)
     cached = _ONNX_CACHE.get(path)
     if cached is not None:
-        return cached
+        process = getattr(cached.emitter, "process", None)
+        if process is None or process.poll() is None:
+            return cached
+        del _ONNX_CACHE[path]
 
     import os as _os
 

@@ -1,0 +1,637 @@
+[
+  {
+    "model": "mms-fa",
+    "surah": 114,
+    "audio_sha256": "958819e2a43c6f02d397432b208398599f1c10dd7c08f19401ee3676550bf064",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "rows": [
+      [
+        1,
+        6304,
+        0.0533
+      ],
+      [
+        2,
+        10446,
+        0.9684
+      ],
+      [
+        3,
+        13348,
+        0.9872
+      ],
+      [
+        4,
+        16249,
+        0.5375
+      ],
+      [
+        5,
+        20732,
+        0.9909
+      ],
+      [
+        6,
+        25115,
+        0.9854
+      ]
+    ],
+    "absolute_errors_ms": [
+      265,
+      183,
+      177,
+      107,
+      182,
+      185
+    ],
+    "median_ms": 182.5,
+    "p95_ms": 245.0,
+    "max_ms": 265,
+    "source": "ctc:mms-fa:revision=985c77a85742e764a3440969193b52c18b518d4f:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:context=2:batch=1:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+    "trace": {
+      "mode": "full",
+      "total_ms": 34560.0,
+      "emission_passes": 1,
+      "emissions_frames": 1727,
+      "backend": "mms-fa",
+      "batch_size": 1,
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "raw_onset_ms": 6304,
+          "onset_ms": 6304,
+          "conf": 0.0533,
+          "first_token_conf": 0.0029,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0029,
+            0.9852
+          ]
+        },
+        {
+          "ayah": 2,
+          "raw_onset_ms": 10446,
+          "onset_ms": 10446,
+          "conf": 0.9684,
+          "first_token_conf": 0.981,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.981,
+            0.9723,
+            0.9521
+          ]
+        },
+        {
+          "ayah": 3,
+          "raw_onset_ms": 13348,
+          "onset_ms": 13348,
+          "conf": 0.9872,
+          "first_token_conf": 0.9815,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9815,
+            0.9933,
+            0.987
+          ]
+        },
+        {
+          "ayah": 4,
+          "raw_onset_ms": 16249,
+          "onset_ms": 16249,
+          "conf": 0.5375,
+          "first_token_conf": 0.969,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.969,
+            0.2981
+          ]
+        },
+        {
+          "ayah": 5,
+          "raw_onset_ms": 20732,
+          "onset_ms": 20732,
+          "conf": 0.9909,
+          "first_token_conf": 0.9944,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9944,
+            0.9925,
+            0.9896,
+            0.9861,
+            0.9921
+          ]
+        },
+        {
+          "ayah": 6,
+          "raw_onset_ms": 25115,
+          "onset_ms": 25115,
+          "conf": 0.9854,
+          "first_token_conf": 0.9779,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9779,
+            0.9931
+          ]
+        }
+      ]
+    },
+    "first_ayah_words": [
+      [
+        0,
+        282,
+        0.3053
+      ],
+      [
+        1,
+        704,
+        0.9654
+      ],
+      [
+        2,
+        1448,
+        0.9885
+      ],
+      [
+        3,
+        2172,
+        0.9013
+      ]
+    ],
+    "seconds": 15.609
+  },
+  {
+    "model": "mms-fa",
+    "surah": 112,
+    "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "rows": [
+      [
+        1,
+        6286,
+        0.9622
+      ],
+      [
+        2,
+        8949,
+        0.9599
+      ],
+      [
+        3,
+        10991,
+        0.9911
+      ],
+      [
+        4,
+        13714,
+        0.9861
+      ]
+    ],
+    "absolute_errors_ms": [
+      192,
+      194,
+      128,
+      184
+    ],
+    "median_ms": 188.0,
+    "p95_ms": 193.7,
+    "max_ms": 194,
+    "source": "ctc:mms-fa:revision=985c77a85742e764a3440969193b52c18b518d4f:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:context=2:batch=1:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+    "trace": {
+      "mode": "full",
+      "total_ms": 23484.0625,
+      "emission_passes": 1,
+      "emissions_frames": 1173,
+      "backend": "mms-fa",
+      "batch_size": 1,
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "raw_onset_ms": 6286,
+          "onset_ms": 6286,
+          "conf": 0.9622,
+          "first_token_conf": 0.9353,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9353,
+            0.9898
+          ]
+        },
+        {
+          "ayah": 2,
+          "raw_onset_ms": 8949,
+          "onset_ms": 8949,
+          "conf": 0.9599,
+          "first_token_conf": 0.9826,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9826,
+            0.9224,
+            0.9844,
+            0.99
+          ]
+        },
+        {
+          "ayah": 3,
+          "raw_onset_ms": 10991,
+          "onset_ms": 10991,
+          "conf": 0.9911,
+          "first_token_conf": 0.9913,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9913,
+            0.9909
+          ]
+        },
+        {
+          "ayah": 4,
+          "raw_onset_ms": 13714,
+          "onset_ms": 13714,
+          "conf": 0.9861,
+          "first_token_conf": 0.9749,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9749,
+            0.9929,
+            0.9907
+          ]
+        }
+      ]
+    },
+    "first_ayah_words": [
+      [
+        0,
+        202,
+        0.862
+      ],
+      [
+        1,
+        564,
+        0.9456
+      ],
+      [
+        2,
+        887,
+        0.9943
+      ],
+      [
+        3,
+        1814,
+        0.9808
+      ]
+    ],
+    "seconds": 2.524
+  },
+  {
+    "model": "muaalem",
+    "surah": 114,
+    "audio_sha256": "958819e2a43c6f02d397432b208398599f1c10dd7c08f19401ee3676550bf064",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "rows": [
+      [
+        1,
+        6320,
+        0.9931
+      ],
+      [
+        2,
+        10440,
+        0.9417
+      ],
+      [
+        3,
+        13240,
+        0.9072
+      ],
+      [
+        4,
+        16240,
+        0.9441
+      ],
+      [
+        5,
+        20640,
+        0.9463
+      ],
+      [
+        6,
+        25080,
+        0.8837
+      ]
+    ],
+    "absolute_errors_ms": [
+      281,
+      177,
+      69,
+      98,
+      90,
+      150
+    ],
+    "median_ms": 124.0,
+    "p95_ms": 255.0,
+    "max_ms": 281,
+    "source": "ctc:muaalem:revision=a57907844f7c72969b40bc526a57e9c9dbc8bf3f:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=hafs:madd=4:waqf=ayah:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+    "trace": {
+      "mode": "full",
+      "total_ms": 34560.0,
+      "emission_passes": 1,
+      "emissions_frames": 864,
+      "backend": "muaalem",
+      "batch_size": 1,
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "raw_onset_ms": 6320,
+          "onset_ms": 6320,
+          "conf": 0.9931,
+          "first_token_conf": 0.9995,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9995,
+            0.9866,
+            1.0
+          ]
+        },
+        {
+          "ayah": 2,
+          "raw_onset_ms": 10440,
+          "onset_ms": 10440,
+          "conf": 0.9417,
+          "first_token_conf": 0.9999,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9999,
+            0.9791,
+            0.9189,
+            0.9923,
+            0.8053,
+            0.9993
+          ]
+        },
+        {
+          "ayah": 3,
+          "raw_onset_ms": 13240,
+          "onset_ms": 13240,
+          "conf": 0.9072,
+          "first_token_conf": 0.9379,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9379,
+            0.9992,
+            1.0,
+            0.7766,
+            0.9998,
+            0.732,
+            0.9999,
+            0.9967
+          ]
+        },
+        {
+          "ayah": 4,
+          "raw_onset_ms": 16240,
+          "onset_ms": 16240,
+          "conf": 0.9441,
+          "first_token_conf": 0.9992,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9992,
+            0.8747,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "ayah": 5,
+          "raw_onset_ms": 20640,
+          "onset_ms": 20640,
+          "conf": 0.9463,
+          "first_token_conf": 0.9998,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9998,
+            0.9404,
+            0.9723,
+            1.0,
+            1.0,
+            1.0,
+            0.9122,
+            1.0,
+            0.8377
+          ]
+        },
+        {
+          "ayah": 6,
+          "raw_onset_ms": 25080,
+          "onset_ms": 25080,
+          "conf": 0.8837,
+          "first_token_conf": 0.9968,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9968,
+            0.7355,
+            0.9993,
+            1.0
+          ]
+        }
+      ]
+    },
+    "first_ayah_words": [
+      [
+        0,
+        282,
+        0.9993
+      ],
+      [
+        1,
+        644,
+        0.9645
+      ],
+      [
+        2,
+        1448,
+        0.976
+      ],
+      [
+        3,
+        2172,
+        0.9522
+      ]
+    ],
+    "seconds": 24.56
+  },
+  {
+    "model": "muaalem",
+    "surah": 112,
+    "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "rows": [
+      [
+        1,
+        6321,
+        0.9873
+      ],
+      [
+        2,
+        8882,
+        0.9562
+      ],
+      [
+        3,
+        10962,
+        1.0
+      ],
+      [
+        4,
+        13682,
+        0.995
+      ]
+    ],
+    "absolute_errors_ms": [
+      227,
+      127,
+      99,
+      152
+    ],
+    "median_ms": 139.5,
+    "p95_ms": 215.74999999999997,
+    "max_ms": 227,
+    "source": "ctc:muaalem:revision=a57907844f7c72969b40bc526a57e9c9dbc8bf3f:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=hafs:madd=4:waqf=ayah:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+    "trace": {
+      "mode": "full",
+      "total_ms": 23484.0625,
+      "emission_passes": 1,
+      "emissions_frames": 587,
+      "backend": "muaalem",
+      "batch_size": 1,
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "raw_onset_ms": 6321,
+          "onset_ms": 6321,
+          "conf": 0.9873,
+          "first_token_conf": 0.9999,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9999,
+            1.0,
+            0.9749
+          ]
+        },
+        {
+          "ayah": 2,
+          "raw_onset_ms": 8882,
+          "onset_ms": 8882,
+          "conf": 0.9562,
+          "first_token_conf": 0.9989,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9989,
+            0.9955,
+            0.9964,
+            0.9996,
+            0.9993,
+            0.9805,
+            1.0,
+            0.7781,
+            0.9436
+          ]
+        },
+        {
+          "ayah": 3,
+          "raw_onset_ms": 10962,
+          "onset_ms": 10962,
+          "conf": 1.0,
+          "first_token_conf": 1.0,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "ayah": 4,
+          "raw_onset_ms": 13682,
+          "onset_ms": 13682,
+          "conf": 0.995,
+          "first_token_conf": 1.0,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            1.0,
+            1.0,
+            0.9908,
+            0.9918,
+            1.0
+          ]
+        }
+      ]
+    },
+    "first_ayah_words": [
+      [
+        0,
+        202,
+        0.9482
+      ],
+      [
+        1,
+        564,
+        0.9781
+      ],
+      [
+        2,
+        927,
+        0.8675
+      ],
+      [
+        3,
+        1774,
+        0.9632
+      ]
+    ],
+    "seconds": 7.698
+  }
+]

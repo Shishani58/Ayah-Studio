@@ -1,23 +1,7 @@
-"""FAST forced alignment from one emissions pass and pause-owner anchors.
+"""FAST alignment from pauses and bounded local acoustic reads.
 
-The acoustic model reads the complete PCM exactly once. Every later greedy
-decode, text hypothesis and local forced alignment slices the retained emissions
-matrix, so widening a text read never repeats acoustic inference.
-
-An energy/DSP detector supplies plausible silence segments. A first pass reads a
-minimum distinguishing opening (at least a configurable character budget),
-keeps only high-margin pause/ayah hypotheses, and selects an increasing anchor
-skeleton. A separate sequential pass validates those anchors. The intervals
-between validated anchors are then resolved independently and left-to-right;
-the future anchor bounds the pause set but cannot distort the interval's time
-prior. Missing-pause intervals become atomic *wasl* alignments over the same
-cached frames.
-
-Pause-backed boundaries remain at their confirmed pause centres. Local repair is
-allowed only for an explicit ``insufficient_audio`` result, not merely because a
-duration prior dislikes an already-read boundary.
-
-Returns the same shape as :func:`align.align_surah`: ``[(ayah, start_ms, conf)]``.
+DSP/VAD scans the signal first. Only distinguishing phrases near boundaries
+reach the text model. Unresolved reads stay for review; no FULL/tiled escalation.
 """
 
 from __future__ import annotations
@@ -97,12 +81,12 @@ _AMBIG_PREFIX_CHARS = int(os.environ.get("SC_FAST_AMBIG_PREFIX_CHARS", "6"))
 #: Pause verification begins at the beginning of the quiet interval.  The
 #: boundary marker itself stays at its centre; expanding an uncertain read adds
 #: context around this start instead of moving the marker toward speech.
-_PAUSE_DECODE_WIN_MS = float(os.environ.get("SC_FAST_PAUSE_DECODE_WIN_MS", "2500"))
+_PAUSE_DECODE_WIN_MS = float(os.environ.get("SC_FAST_PAUSE_DECODE_WIN_MS", "1300"))
 _PAUSE_DECODE_AMBIG_WIN_MS = float(os.environ.get("SC_FAST_PAUSE_DECODE_AMBIG_WIN_MS", "4500"))
 _PAUSE_DECODE_TEXT_MAX_WIN_MS = float(os.environ.get("SC_FAST_PAUSE_DECODE_TEXT_MAX_WIN_MS", "8500"))
 _PAUSE_DECODE_TEXT_MS_PER_CHAR = float(os.environ.get("SC_FAST_PAUSE_DECODE_TEXT_MS_PER_CHAR", "140"))
 _MIN_DISAMBIG_CHARS = int(os.environ.get("SC_FAST_MIN_DISAMBIG_CHARS", "8"))
-_ANCHOR_READ_MS = float(os.environ.get("SC_FAST_ANCHOR_READ_MS", "4500"))
+_ANCHOR_READ_MS = float(os.environ.get("SC_FAST_ANCHOR_READ_MS", "1300"))
 _ANCHOR_MIN_SIM = float(os.environ.get("SC_FAST_ANCHOR_MIN_SIM", "0.62"))
 _ANCHOR_MIN_MARGIN = float(os.environ.get("SC_FAST_ANCHOR_MIN_MARGIN", "0.14"))
 _ANCHOR_MIN_PREFIX_CHARS = int(os.environ.get("SC_FAST_ANCHOR_MIN_PREFIX_CHARS", "4"))
@@ -578,7 +562,7 @@ def _emission_frame_bounds(
     total_samples: int,
     total_frames: int,
 ) -> tuple[int, int]:
-    """Map one audio interval into a previously computed full-emissions pass."""
+    """Map one audio interval into a cached emissions window."""
     if total_samples <= 0 or total_frames <= 0:
         return 0, 0
     start = max(0, min(total_samples, int(sample_start)))
@@ -5608,7 +5592,7 @@ def align_surah_fast(
         if read.get("near_edge") is not None:
             extra += ", край окна" if read["near_edge"] else ", внутри окна"
         emit(
-            f"Чтение аудио {dur:.2f} сек. ({sec(float(w0))}-{sec(float(w1))}), "
+            f"Сопоставление локального контекста {dur:.2f} сек. ({sec(float(w0))}-{sec(float(w1))}), "
             f"прочитано слово «{target}» - {detect}{extra}"
         )
 
@@ -5636,46 +5620,14 @@ def align_surah_fast(
     # wav2vec2's conv feature-extractor needs a minimum input length.
     min_win_ms = 800.0
 
-    # One acoustic pass for the complete surah.  The emitter performs its own
-    # bounded 30-second windowing with context, while every pause probe, greedy
-    # decode and local forced alignment below only slices these saved frames.
-    # This makes repeated *decisions* cheap without ever re-reading audio through
-    # the neural model.
+    from surah_cutter.core.fast_reads import LocalAcousticReads
+
     inv_vocab = {v: k for k, v in bundle.vocab.items()}
-    emit(
-        f"Сура {surah}: одноразовое чтение emissions всей суры "
-        f"{total_ms / 1000.0:.2f} сек."
-    )
-    full_emissions = A._emissions(
-        bundle,
-        np.ascontiguousarray(pcm, dtype=np.float32),
-        np,
-    )
-    full_n_frames = int(full_emissions.shape[0])
-    full_stride = A._stride_ms(len(pcm), sr, full_n_frames)
-    audio_ms = total_ms
-    emission_passes = 1
+    acoustic = LocalAcousticReads(pcm, sr, bundle, max_read_ms=6000.0, log_event=log_event)
+    review_ayahs: set[int] = set()
 
     def emissions_for(t0_ms: float, t1_ms: float):
-        """Emissions over [t0,t1] as ``(emis, base_ms, stride_ms, end_ms)``.
-
-        Always returns a frame slice from the one full-surah model pass.
-        """
-        s0 = max(0, int(round(t0_ms * sr / 1000.0)))
-        s1 = min(len(pcm), int(round(t1_ms * sr / 1000.0)))
-        if s1 - s0 < int(0.3 * sr):
-            return None
-        f0, f1 = _emission_frame_bounds(
-            s0,
-            s1,
-            total_samples=len(pcm),
-            total_frames=full_n_frames,
-        )
-        if f1 - f0 < 2:
-            return None
-        base = f0 * full_stride
-        end = f1 * full_stride
-        return full_emissions[f0:f1], base, full_stride, end
+        return acoustic.read(t0_ms, t1_ms)
 
     # --- low-level: align words[i0:i1] within audio [t0_ms, t1_ms]. ----------
     def align_slice(
@@ -5701,7 +5653,7 @@ def align_surah_fast(
         if not targets:
             return None
         em = emissions_for(t0_ms, t1_ms)
-        if em is None:  # < 0.3 s of audio
+        if em is None:
             return None
         emis, base, stride, end = em
         nf = emis.shape[0]
@@ -5826,20 +5778,26 @@ def align_surah_fast(
         )
 
     # ===================================================================== #
-    # Phase 1b — anchor ayah 1 (absorbs the intro-basmala for non-Fatiha).   #
+    # Phase 1b — anchor ayah 1 locally after the intro pause.   #
     # ===================================================================== #
-    # This neural call also tells us where the CONTENT starts (after the ~6.5 s
-    # basmala) — essential for the prior below, which otherwise places every
-    # boundary ~6 s too early (it knows word fractions, not the basmala offset).
+    # Use the detected intro pause to read only the first content phrase.
+    # Without an intro owner the coarse location remains a hypothesis; failed
+    # local evidence returns review rows rather than reading the entire intro.
     basmala = surah not in (1, 9)
     fa1 = ayah_words[ayah_list[0]][0]
     intro = 6500.0 if basmala else 150.0
-    head_end = min(n_words, fa1 + 4)
-    head_dur = sum(wlen(j) for j in range(fa1, head_end))
-    res = align_slice(
-        0, head_end, 0.0, min(intro + head_dur + 900.0, total_ms), basmala,
-        check_onsets=True,
+    opening_pause = next((d.pause for d in pause_decisions
+                          if d.accepted and d.reason in {"intro-vad-tight", "intro-vad"}), None)
+    anchor_start = max(0.0, opening_pause.start_ms - 300.0) if opening_pause else (
+        max(0.0, intro - 1200.0) if basmala else 0.0
     )
+    head_end = min(n_words, fa1 + 2)
+    res = None
+    for width in (2500.0, 4000.0, 6000.0):
+        res = align_slice(0, head_end, anchor_start,
+                          min(anchor_start + width, total_ms), False, check_onsets=True)
+        if res is not None and res["complete"]:
+            break
     if res is None:
         emit("Fast не смог заякорить первый аят - ставлю грубый prior с conf=0")
         rows: list[tuple[int, int, float]] = []
@@ -5853,10 +5811,9 @@ def align_surah_fast(
                 "fast_anchor_failed": True,
                 "drift_detected": True,
                 "total_ms": total_ms,
-                "audio_ms": audio_ms,
-                "coverage": round(audio_ms / total_ms, 3) if total_ms else 0.0,
-                "emission_passes": emission_passes,
-                "emissions_frames": full_n_frames,
+                "audio_ms": acoustic.audio_ms,
+                "coverage": round(acoustic.covered_ms / total_ms, 3) if total_ms else 0.0,
+                **acoustic.diagnostics(),
                 "ayahs": [
                     {
                         "ayah": ayah,
@@ -5869,7 +5826,10 @@ def align_surah_fast(
                     }
                     for ayah, ms, _conf in rows
                 ],
-                "model_reads": model_reads,
+                "alignment_reads": model_reads,
+                "model_reads": acoustic.calls,
+                "review_required_ayahs": ayah_list,
+                "bounded_ctc_fallback": None,
                 "phase1_pauses": [],
                 "pause_matches": [],
                 "n_pause": 0,
@@ -6217,11 +6177,10 @@ def align_surah_fast(
             pause_decode_reasons[p] = plan.reason if plan is not None else (
                 "text-aware-opening" if win_ms > decode_win_ms else "default"
             )
-        emissions_for(max(0.0, decode_start - _PAUSE_CACHE_PRE_ROLL_MS), decode_end)
         heard = greedy_decode(decode_start, decode_end)
         pause_decodes[key] = heard
         emit(
-            f"Пауза {pause_ord[p]}: чтение аудио {(decode_end - decode_start) / 1000.0:.2f} сек. "
+            f"Пауза {pause_ord[p]}: проверка контекста {(decode_end - decode_start) / 1000.0:.2f} сек. "
             f"с начала паузы {sec(pause.start_ms if pause is not None else p)} сек. "
             f"({sec(decode_start)}-{sec(decode_end)}), "
             f"старт относительно конца паузы {edge_delta:+.0f}мс, "
@@ -6241,20 +6200,11 @@ def align_surah_fast(
         )
 
     def _sim_ij(i: int, j: int) -> float:
-        win_ms = decode_window_for(i) if needs_extended_decode(i, j) else decode_win_ms
+        # Start with the minimum pause probe. Text ambiguity alone does not
+        # justify reading more audio at every unrelated pause.
+        win_ms = decode_win_ms
         pause = pause_by_center.get(pause_onsets[j])
         plan = None
-        if pause is not None:
-            plan = _build_pause_read_plan(
-                pause_start_ms=pause.start_ms,
-                pause_end_ms=pause.end_ms,
-                total_ms=total_ms,
-                disambiguation=text_disambiguations[i],
-                tempo=active_tempo_estimate,
-                minimum_window_ms=decode_win_ms,
-                maximum_window_ms=_PAUSE_DECODE_TEXT_MAX_WIN_MS,
-                fallback_speech_ms=win_ms,
-            )
         win_key = int(round(
             plan.decode_end_ms - plan.decode_start_ms
             if plan is not None else win_ms
@@ -6269,6 +6219,8 @@ def align_surah_fast(
                 if (
                     disambiguation.reason == "unique"
                     or s >= _CONFIRM_MATCH_SIM
+                    or s < _MIN_MATCH_SIM
+                    or _onset_prefix_len(heard, openings[i]) < 2
                     or pause is None
                 ):
                     break
@@ -6279,8 +6231,8 @@ def align_surah_fast(
                     disambiguation=disambiguation,
                     tempo=active_tempo_estimate,
                     minimum_window_ms=decode_win_ms,
-                    maximum_window_ms=_PAUSE_DECODE_TEXT_MAX_WIN_MS,
-                    fallback_speech_ms=win_ms,
+                    maximum_window_ms=acoustic.max_read_ms,
+                    fallback_speech_ms=decode_window_for(i),
                     expansion_count=expansion_count,
                 )
                 if plan is not None and expanded_plan.decode_end_ms <= plan.decode_end_ms + 1.0:
@@ -6416,11 +6368,8 @@ def align_surah_fast(
     def run_sequence_match() -> tuple[list[float | None], list[dict]]:
         nonlocal anchor_skeleton_debug
         candidate_skeleton = build_anchor_skeleton()
-        # Anchor classification deliberately uses a wider text window than the
-        # sequential owner matcher. Keep only the hypotheses: decoded text and
-        # read plans from this phase must not alter the following coarse pass.
-        # Clearing these dictionaries does not run the acoustic model again;
-        # every decode is rebuilt from the same full-emissions frame slices.
+        # Keep hypotheses separate from the sequential pass. Acoustic probes
+        # already in the local cache can be reused without inference.
         reset_pause_caches()
         coarse_matched, coarse_events = _sequential_pause_match(
             exp,
@@ -9326,46 +9275,6 @@ def align_surah_fast(
         })
         log_read(model_reads[-1])
 
-    tiled_fallback_rows: dict[int, tuple[float, float]] | None = None
-    tiled_fallback_trace: dict = {}
-    tiled_fallback_reasons: list[str] = []
-
-    def bounded_surah_fallback(reason: str) -> dict[int, tuple[float, float]]:
-        """Run whole-sura recovery with bounded tiled CTC, at most once."""
-        nonlocal tiled_fallback_rows
-        if tiled_fallback_rows is None:
-            from surah_cutter.core import align_tiled
-
-            emit(
-                f"Сура {surah}: bounded tiled CTC fallback ({reason}); "
-                "whole-sura Viterbi запрещён по памяти"
-            )
-            fallback_rows = align_tiled.align_surah_tiled(
-                pcm,
-                sr,
-                words,
-                surah=surah,
-                bundle=bundle,
-                trace=tiled_fallback_trace,
-                log_event=log_event,
-            )
-            tiled_fallback_rows = {
-                int(ayah): (float(start_ms), float(confidence))
-                for ayah, start_ms, confidence in fallback_rows
-            }
-            missing = [ayah for ayah in ayah_list if ayah not in tiled_fallback_rows]
-            if missing:
-                raise RuntimeError(
-                    f"tiled CTC fallback omitted ayahs {missing[:8]}"
-                )
-            emit(
-                f"Сура {surah}: bounded tiled CTC fallback завершён, "
-                f"chunks={tiled_fallback_trace.get('n_chunks')}"
-            )
-        if reason not in tiled_fallback_reasons:
-            tiled_fallback_reasons.append(reason)
-        return tiled_fallback_rows
-
     def fill_wasl_run(ai: int) -> None:
         left_a = ayah_list[ai - 1]  # always an anchor (run starts after one)
         i0 = ayah_words[left_a][0]
@@ -9396,24 +9305,17 @@ def align_surah_fast(
 
         res = align_slice(i0, i1, t0, t1, basmala=False)
         result_i0 = i0
-        tiled_fallback = False
         if res is None:
-            fallback = bounded_surah_fallback(
-                f"atomic_wasl_{run[0]}_{run[-1]}"
-            )
-            tiled_fallback = True
             for a in run:
-                wasl_onsets[a] = fallback[a]
-        else:
-            for a in run:
-                fa = ayah_words[a][0]
-                k = fa - result_i0
-                onset = res["starts"][k]
-                verify = _sim(
-                    greedy_decode(onset - 50.0, onset + _VERIFY_WINDOW_MS),
-                    ayah_opening(a),
-                )
-                wasl_onsets[a] = (onset, max(res["confs"][k], verify))
+                wasl_onsets[a] = (place[a][0], 0.0)
+                wasl_audio_bracket_proven[a] = False
+                review_ayahs.add(a)
+            return
+        for a in run:
+            k = ayah_words[a][0] - result_i0
+            onset = res["starts"][k]
+            verify = _sim(greedy_decode(onset - 50.0, onset + _VERIFY_WINDOW_MS), ayah_opening(a))
+            wasl_onsets[a] = (onset, max(res["confs"][k], verify))
         if len(run) == 1:
             a = run[0]
             run_ai = ayah_list.index(a)
@@ -9597,12 +9499,9 @@ def align_surah_fast(
                 < _AMBIG_PREFIX_CHARS
             )
         model_reads.append({
-            "phase": "wasl-tiled-fallback" if tiled_fallback else "wasl-run",
+            "phase": "wasl-run",
             "ayah": run[0],
-            "window_ms": (
-                [0.0, round(total_ms, 1)]
-                if tiled_fallback else [round(res["base"], 1), round(res["end"], 1)]
-            ),
+            "window_ms": [round(res["base"], 1), round(res["end"], 1)],
             "left_owner_pause_ms": (
                 [round(left_owner.start_ms, 1), round(left_owner.end_ms, 1)]
                 if left_owner is not None else None
@@ -13174,27 +13073,20 @@ def align_surah_fast(
             ],
             "gap_repairs": anchor_gap_repairs_debug,
         }
-        trace["model_reads"] = model_reads
+        trace["alignment_reads"] = model_reads
+        trace["model_reads"] = acoustic.calls
         trace["ayahs"] = tr_ayahs
-        trace["audio_ms"] = audio_ms
+        trace["audio_ms"] = acoustic.audio_ms
         trace["total_ms"] = total_ms
-        trace["emission_passes"] = emission_passes
-        trace["emissions_frames"] = full_n_frames
+        trace.update(acoustic.diagnostics())
         trace["n_pause"] = sum(1 for t in tr_ayahs if t["from_pause"])
         trace["n_wasl"] = sum(
             1 for t in tr_ayahs if not t["from_pause"] and t["ayah"] != ayah_list[0]
         )
         trace["n_refine_skipped"] = sum(1 for t in tr_ayahs if t.get("refine_skipped"))
-        trace["coverage"] = round(audio_ms / total_ms, 3) if total_ms else 0.0
-        trace["bounded_ctc_fallback"] = (
-            {
-                "backend": "tiled",
-                "reasons": list(tiled_fallback_reasons),
-                "n_chunks": tiled_fallback_trace.get("n_chunks"),
-                "emissions_frames": tiled_fallback_trace.get("emissions_frames"),
-            }
-            if tiled_fallback_rows is not None else None
-        )
+        trace["coverage"] = round(acoustic.covered_ms / total_ms, 3) if total_ms else 0.0
+        trace["bounded_ctc_fallback"] = None
+        trace["review_required_ayahs"] = sorted(review_ayahs)
         trace["boundary_diagnostics"] = _fast_boundary_diagnostics(
             trace["pause_sequence_events"],
             pause_match_debug,
@@ -13475,7 +13367,7 @@ def align_surah_fast(
     # A weak wasl after similar openings can be the tail of a shifted pause
     # sequence. If an unused trusted pause exists in that short, stop-free
     # block, re-read the entire block together; do not trust its weak owners as
-    # anchors. This uses the saved emissions and never triggers new inference.
+    # anchors. The acoustic guard can refuse a block wider than local evidence.
     for ai, a in enumerate(ayah_list):
         if place.get(a, (0.0, False))[1] or confs.get(a, 0.0) >= conf_thresh:
             continue
@@ -13532,46 +13424,8 @@ def align_surah_fast(
             f"{unresolved_insufficient_audio_ayahs}; оставляю их слабыми для review"
         )
     if verification_cascade or unresolved_structural_pairs:
-        reason = (
-            "low_verify_coverage"
-            if verification_cascade
-            else "unresolved_local_structure"
-        )
-        emit(
-            f"Сура {surah}: FAST fallback к bounded tiled CTC ({reason}), "
-            f"аяты {unresolved_insufficient_audio_ayahs}, "
-            f"обратные пары {unresolved_structural_pairs}"
-        )
-        fallback = bounded_surah_fallback(reason)
-        full_rows = [
-            (ayah, int(round(fallback[ayah][0])), float(fallback[ayah][1]))
-            for ayah in ayah_list
-        ]
-        # Tiled CTC keeps timestamps non-decreasing, whereas FAST's
-        # output contract is strict: two neighbouring ayahs must never share a
-        # start.  Preserve that invariant across the stronger fallback too, so
-        # an emergency CTC escalation cannot reintroduce a duplicate boundary.
-        full_rows, full_ctc_monotonic_repairs = _enforce_strictly_increasing_starts(
-            full_rows
-        )
-        if trace is not None:
-            fallback_meta = {
-                "reason": reason,
-                "ayahs": unresolved_insufficient_audio_ayahs,
-                "structural_pairs": unresolved_structural_pairs,
-                "backend": "tiled",
-                "monotonic_repairs": full_ctc_monotonic_repairs,
-                "locally_repaired_ayahs": locally_repaired_ayahs,
-            }
-            write_fast_trace({
-                "drift_detected": bool(drifted),
-                "mean_conf": round(mean_conf, 3),
-                "verify_sim": round(verify_sim, 3),
-                "full_ctc_fallback": fallback_meta,
-            })
-            # FAST pause owners do not apply to CTC-produced starts.
-            trace["pause_matches"] = []
-        return full_rows
+        review_ayahs.update(ayah_list)
+        emit(f"Сура {surah}: недостаточно локальных доказательств; требуется ревью")
 
     fingerprint_repairs: list[dict[str, int | float]] = []
     if ayah_audio_dir:
@@ -13667,6 +13521,16 @@ def align_surah_fast(
             "match_action": "ctc_pause_confirmation",
         })
         trace_by_ayah[a]["from_pause"] = True
+
+    review_ayahs.update(unresolved_insufficient_audio_ayahs)
+    review_ayahs.update(a for a, _ms, conf in rows if conf < conf_thresh)
+    rows = [(a, ms, 0.0 if a in review_ayahs else conf) for a, ms, conf in rows]
+    for match in pause_match_debug:
+        if match.get("ayah") in review_ayahs and not match.get("from_pause"):
+            match["boundary_evidence"] = "unresolved_local"
+    for item in tr_ayahs:
+        if item["ayah"] in review_ayahs:
+            item.update(conf=0.0, reliable=False, review_reason="local_evidence_insufficient")
 
     write_fast_trace({
         "drift_detected": bool(drifted),

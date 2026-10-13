@@ -66,6 +66,44 @@ def timings(path):
         return conn.execute("SELECT sura, ayah, time FROM timings ORDER BY sura, ayah").fetchall()
 
 
+def test_ayah_review_status_round_trip_preserves_time(project):
+    with ProjectDB.open(str(project.db_path), DB_CODE, DB_VERSION) as db:
+        db.set_time(114, 1, 5614)
+    verify = endpoint("/api/verify")
+    for status in ("verified", "edited", "auto"):
+        verify({"surah": 114, "ayah": 1, "status": status, "db_path": str(project.db_path)})
+        ayah = endpoint("/api/sura/{surah}")(114)["ayahs"][0]
+        assert (ayah["status"], ayah["time"]) == (status, 5614)
+    with ProjectDB.open(str(project.db_path), DB_CODE, DB_VERSION) as db:
+        db.set_status(114, 1, "edited")
+        assert db.write_timings([(114, 1, 9999)], source="auto") == 0
+
+
+@pytest.mark.parametrize("payload", [
+    {"surah": 114, "ayah": 7},
+    {"surah": 114, "ayah": True},
+    {"surah": "114", "ayah": 1},
+    {"surah": 114, "ayah": 1, "status": "bad"},
+    {"surah": 114, "ayah": 1, "status": "verified"},
+    {"surah": 114, "ayah": 1, "status": "edited"},
+])
+def test_ayah_review_status_rejects_invalid_or_missing_timing(project, payload):
+    with pytest.raises(HTTPException) as exc:
+        endpoint("/api/verify")(payload)
+    assert exc.value.status_code == 400
+    with ProjectDB.open(str(project.db_path), DB_CODE, DB_VERSION) as db:
+        assert db.get_review(114, 1) is None
+
+
+def test_ayah_review_status_rejects_changed_project(project, tmp_path):
+    with pytest.raises(HTTPException) as exc:
+        endpoint("/api/verify")({
+            "surah": 114, "ayah": 1, "status": "auto", "db_path": str(tmp_path / "old.db"),
+        })
+    assert exc.value.status_code == 409
+    assert timings(project.db_path) == []
+
+
 def test_saved_sura_logs_list_pairs_and_read_full_data(project):
     lines = [f"line {i}" for i in range(300)]
     paths = server._save_sura_log(114, "fast", {"phase": "complete"}, lines, [], project.db_path)
@@ -342,6 +380,48 @@ def test_word_api_requires_adjacent_boundaries_and_current_project(word_project)
     assert exc.value.status_code == 409
 
 
+def test_word_status_round_trip_preserves_time_and_manual_protection(word_project):
+    get = endpoint("/api/sura/{surah}/ayah/{ayah}/words")
+    edit = endpoint("/api/sura/{surah}/ayah/{ayah}/words/edit")
+    data = get(114, 1)
+    index = data["words"][0]["word_index"]
+    payload = {"db_path": data["db_path"], "start_ms": 1000, "end_ms": 5000,
+               "word_index": index, "time": 1200}
+    edit(114, 1, payload)
+    for status in ("verified", "edited", "auto"):
+        result = edit(114, 1, {**payload, "action": "status", "status": status})
+        assert (result["words"][0]["status"], result["words"][0]["time"]) == (status, 1200)
+        if status != "auto":
+            with ProjectDB.open(str(word_project.db_path), DB_CODE, DB_VERSION) as db:
+                assert db.write_word_timings(114, 1, [(index, 1300, .9)], 1000, 5000, "test") == 0
+    for invalid in ("bad", None):
+        with pytest.raises(HTTPException) as exc:
+            edit(114, 1, {**payload, "action": "status", "status": invalid})
+        assert exc.value.status_code == 400
+    assert get(114, 1)["words"][0]["status"] == "auto"
+
+
+def test_word_status_cannot_accept_missing_or_stale_mark(word_project):
+    get = endpoint("/api/sura/{surah}/ayah/{ayah}/words")
+    edit = endpoint("/api/sura/{surah}/ayah/{ayah}/words/edit")
+    data = get(114, 1)
+    payload = {"db_path": data["db_path"], "start_ms": 1000, "end_ms": 5000,
+               "word_index": data["words"][0]["word_index"], "action": "status"}
+    for status in ("auto", "edited", "verified"):
+        with pytest.raises(HTTPException) as exc:
+            edit(114, 1, {**payload, "status": status})
+        assert exc.value.status_code == 400
+    edit(114, 1, {**payload, "action": "set_time", "time": 1200})
+    with ProjectDB.open(str(word_project.db_path), DB_CODE, DB_VERSION) as db:
+        db.set_time(114, 2, 5500)
+    for status in ("auto", "edited", "verified"):
+        with pytest.raises(HTTPException) as exc:
+            edit(114, 1, {**payload, "end_ms": 5500, "status": status})
+        assert exc.value.status_code == 400
+    word = get(114, 1)["words"][0]
+    assert word["stale"] and word["status"] == "edited" and word["time"] == 1200
+
+
 def test_word_alignment_rejects_changed_project_before_write(word_project, monkeypatch):
     from surah_cutter.core import decode, word_align
     import numpy as np
@@ -524,6 +604,98 @@ def test_settings_rejects_invalid_theme(project, theme):
     assert exc.value.status_code == 400
 
 
-def test_settings_defaults_to_dark(project, monkeypatch):
+def test_settings_defaults_to_light(project, monkeypatch):
     monkeypatch.setattr(server.settings, "load", lambda: {})
-    assert endpoint("/api/project")()["theme"] == "dark"
+    assert endpoint("/api/project")()["theme"] == "light"
+
+
+def test_external_project_names_persist_per_database(project, tmp_path, monkeypatch):
+    monkeypatch.setattr(server.settings, "SETTINGS_PATH", tmp_path / "settings.json")
+    monkeypatch.setattr(server.projects, "list_projects", lambda: [])
+
+    def persist(*, strict=False, **fields):
+        data = server.settings.load()
+        data.update(fields)
+        server.settings.save(data, strict=strict)
+        return data
+
+    monkeypatch.setattr(server.settings, "update", persist)
+    before = project.db_path.read_bytes()
+    endpoint("/api/settings")({
+        "db_path": str(project.db_path), "reciter": " Новый чтец ", "recording": "Запись",
+    })
+    assert endpoint("/api/project")()["reciter"] == "Новый чтец"
+    assert endpoint("/api/project")()["recording"] == "Запись"
+    assert project.db_path.read_bytes() == before
+    original = project.db_path
+    project.db_path = tmp_path / "other.db"
+    assert endpoint("/api/project")()["recording"] == "Внешний проект"
+    with pytest.raises(HTTPException) as exc:
+        endpoint("/api/settings")({"db_path": str(original), "reciter": "X", "recording": "Y"})
+    assert exc.value.status_code == 409
+    project.db_path = original
+    for name in ("", " " * 3, "x" * 121, 123):
+        with pytest.raises(HTTPException) as exc:
+            endpoint("/api/settings")({"db_path": str(original), "reciter": name, "recording": "Y"})
+        assert exc.value.status_code == 400
+    assert endpoint("/api/project")()["reciter"] == "Новый чтец"
+
+
+def test_cancel_current_sura_does_not_write_computed_rows(project, monkeypatch):
+    from surah_cutter.core import pipeline
+
+    job = server._GenJob(project.db_path, project.audio_map)
+    calls = []
+
+    def process(audio, surah, **kwargs):
+        calls.append(surah)
+        job.request_cancel()
+        return [(surah, 1, 100)]
+
+    monkeypatch.setattr(pipeline, "process_surah", process)
+    job._run([113, 114], "full", None)
+    assert calls == [113]
+    assert timings(project.db_path) == []
+    assert list(job.q.queue)[-2:] == [{"type": "cancelled", "completed": 0}, None]
+    assert not job.running
+    assert server.model_store.RUNTIME_LOCK.acquire(blocking=False)
+    server.model_store.RUNTIME_LOCK.release()
+    # A fresh job can write immediately after cancellation.
+    monkeypatch.setattr(pipeline, "process_surah", lambda audio, surah, **kw: [(surah, 1, 100)])
+    retry = server._GenJob(project.db_path, project.audio_map)
+    retry._run([114], "full", None)
+    assert timings(project.db_path) == [(114, 1, 100)]
+    assert list(retry.q.queue)[-2:] == [{"type": "done", "completed": 1}, None]
+
+
+def test_cancel_words_preserves_finished_ayah_and_manual_marks(complete_word_project, monkeypatch):
+    from surah_cutter.core import decode, word_align
+    import numpy as np
+
+    monkeypatch.setattr(decode, "decode", lambda _: np.zeros(480000))
+    path = complete_word_project.db_path
+    with ProjectDB.open(str(path), DB_CODE, DB_VERSION) as db:
+        db.set_word_time(114, 1, 0, 1100, 1000, 5000)
+        db.verify_word(114, 1, 0, 1000, 5000)
+    before = timings(path)
+    job = server._GenJob(path, complete_word_project.audio_map)
+    calls = []
+
+    def align(pcm, sr, words):
+        ayah = words[0].ayah
+        calls.append(ayah)
+        if ayah == 2:
+            job.request_cancel()
+        return [(w.index, 50 + i * 500, .9) for i, w in enumerate(words)]
+
+    monkeypatch.setattr(word_align, "align_ayah_words", align)
+    job._run([114], "words", None)
+    assert calls == [1, 2]
+    assert timings(path) == before
+    with ProjectDB.open(str(path), DB_CODE, DB_VERSION) as db:
+        first = db.get_word_timings(114, 1)
+        assert len(first) > 1
+        assert first[0]["time"] == 1100
+        assert first[0]["status"] == "verified"
+        assert db.get_word_timings(114, 2) == []
+    assert list(job.q.queue)[-2:] == [{"type": "cancelled", "completed": 0}, None]

@@ -1,0 +1,326 @@
+[
+  {
+    "model": "quran-phonetics",
+    "surah": 114,
+    "audio_sha256": "958819e2a43c6f02d397432b208398599f1c10dd7c08f19401ee3676550bf064",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "rows": [
+      [
+        1,
+        6100,
+        0.0319
+      ],
+      [
+        2,
+        10260,
+        0.1392
+      ],
+      [
+        3,
+        13140,
+        0.186
+      ],
+      [
+        4,
+        16060,
+        0.1959
+      ],
+      [
+        5,
+        20540,
+        0.0586
+      ],
+      [
+        6,
+        24900,
+        0.319
+      ]
+    ],
+    "absolute_errors_ms": [
+      61,
+      3,
+      31,
+      82,
+      10,
+      30
+    ],
+    "median_ms": 30.5,
+    "p95_ms": 76.75,
+    "max_ms": 82,
+    "source": "onnx-ctc:quran-phonetics:revision=local-export:lag=200",
+    "trace": {
+      "mode": "full",
+      "total_ms": 34560.0,
+      "emission_passes": 1,
+      "emissions_frames": 1728,
+      "backend": "onnx",
+      "batch_size": 1,
+      "align_lag_ms": 200,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "raw_onset_ms": 6100,
+          "onset_ms": 6100,
+          "conf": 0.0319,
+          "first_token_conf": 0.0,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0,
+            0.0016,
+            0.9759
+          ]
+        },
+        {
+          "ayah": 2,
+          "raw_onset_ms": 10260,
+          "onset_ms": 10260,
+          "conf": 0.1392,
+          "first_token_conf": 0.0,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0,
+            0.9944,
+            0.9944,
+            0.1541,
+            0.9859,
+            0.9975
+          ]
+        },
+        {
+          "ayah": 3,
+          "raw_onset_ms": 13140,
+          "onset_ms": 13140,
+          "conf": 0.186,
+          "first_token_conf": 0.9722,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.9722,
+            0.3667,
+            0.9995,
+            0.0023,
+            0.053
+          ]
+        },
+        {
+          "ayah": 4,
+          "raw_onset_ms": 16060,
+          "onset_ms": 16060,
+          "conf": 0.1959,
+          "first_token_conf": 0.0088,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0088,
+            0.8965,
+            0.9515
+          ]
+        },
+        {
+          "ayah": 5,
+          "raw_onset_ms": 20540,
+          "onset_ms": 20540,
+          "conf": 0.0586,
+          "first_token_conf": 0.7336,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.7336,
+            0.7216,
+            0.7594,
+            0.7942,
+            0.005,
+            0.0011,
+            0.0
+          ]
+        },
+        {
+          "ayah": 6,
+          "raw_onset_ms": 24900,
+          "onset_ms": 24900,
+          "conf": 0.319,
+          "first_token_conf": 0.0084,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0084,
+            0.8129,
+            0.5956,
+            0.9994
+          ]
+        }
+      ]
+    },
+    "first_ayah_words": [
+      [
+        0,
+        61,
+        0.2128
+      ],
+      [
+        1,
+        524,
+        0.7482
+      ],
+      [
+        2,
+        1228,
+        0.5525
+      ],
+      [
+        3,
+        1992,
+        0.7894
+      ]
+    ],
+    "seconds": 3.825
+  },
+  {
+    "model": "quran-phonetics",
+    "surah": 112,
+    "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "rows": [
+      [
+        1,
+        6020,
+        0.0641
+      ],
+      [
+        2,
+        8729,
+        0.0043
+      ],
+      [
+        3,
+        10791,
+        0.264
+      ],
+      [
+        4,
+        13514,
+        0.3286
+      ]
+    ],
+    "absolute_errors_ms": [
+      74,
+      26,
+      72,
+      16
+    ],
+    "median_ms": 49.0,
+    "p95_ms": 73.7,
+    "max_ms": 74,
+    "source": "onnx-ctc:quran-phonetics:revision=local-export:lag=200",
+    "trace": {
+      "mode": "full",
+      "total_ms": 23484.0625,
+      "emission_passes": 1,
+      "emissions_frames": 1173,
+      "backend": "onnx",
+      "batch_size": 1,
+      "align_lag_ms": 200,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "raw_onset_ms": 5306,
+          "onset_ms": 6020,
+          "conf": 0.0641,
+          "first_token_conf": 0.0,
+          "reliable": false,
+          "repaired": true,
+          "reason": "weak-prefix-across-pause",
+          "token_confs": [
+            0.0,
+            0.7775,
+            0.9937
+          ],
+          "pause_start_ms": 5720.0,
+          "pause_end_ms": 6320.0
+        },
+        {
+          "ayah": 2,
+          "raw_onset_ms": 8729,
+          "onset_ms": 8729,
+          "conf": 0.0043,
+          "first_token_conf": 0.0083,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0083,
+            0.0061,
+            0.5922,
+            0.0246,
+            0.0051,
+            0.0002,
+            0.0
+          ]
+        },
+        {
+          "ayah": 3,
+          "raw_onset_ms": 10791,
+          "onset_ms": 10791,
+          "conf": 0.264,
+          "first_token_conf": 0.9879,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9879,
+            0.7082,
+            0.0098
+          ]
+        },
+        {
+          "ayah": 4,
+          "raw_onset_ms": 13514,
+          "onset_ms": 13514,
+          "conf": 0.3286,
+          "first_token_conf": 0.9753,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9753,
+            0.9968,
+            0.9997,
+            0.9889,
+            0.004
+          ]
+        }
+      ]
+    },
+    "first_ayah_words": [
+      [
+        0,
+        2,
+        0.8116
+      ],
+      [
+        1,
+        364,
+        0.4429
+      ],
+      [
+        2,
+        747,
+        0.5136
+      ],
+      [
+        3,
+        1634,
+        0.39
+      ]
+    ],
+    "seconds": 1.029
+  }
+]

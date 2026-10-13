@@ -23,6 +23,7 @@ Do not edit generated bundles by hand.
 
 import os
 import sys
+import uv
 from pathlib import Path
 
 from PyInstaller.utils.hooks import collect_submodules
@@ -38,6 +39,9 @@ datas = [
     (str(ROOT / "data" / "quran_mushaf.db"), "data"),
     (str(ROOT / "data" / "references"), "data/references"),
     (str(ROOT / "data" / "word_tr_cache.json"), "data"),
+    (str(ROOT / "data" / "model_text_targets.json"), "data"),
+    (str(ROOT / "surah_cutter/core/model_catalog.json"), "surah_cutter/core"),
+    (str(ROOT / "surah_cutter/core/model_worker.py"), "surah_cutter/core"),
     (str(ROOT / "assets" / "fonts" / "qpc_hafs.ttf"), "assets/fonts"),
     # The FastAPI single-page UI resolves this relative to server.py.
     (str(ROOT / "surah_cutter" / "webgui" / "static"), "surah_cutter/webgui/static"),
@@ -89,7 +93,7 @@ excludes = [
 a = Analysis(
     [str(ROOT / "surah_cutter" / "webgui" / "launch.py")],
     pathex=[str(ROOT)],
-    binaries=[],
+    binaries=[(uv.find_uv_bin(), "uv-bin")],
     datas=datas,
     hiddenimports=hiddenimports,
     hookspath=[],
@@ -143,7 +147,7 @@ if sys.platform == "darwin":
         info_plist={
             "CFBundleName": "Ayah Studio",
             "CFBundleDisplayName": "Ayah Studio",
-            "CFBundleShortVersionString": "0.1.0",
+            "CFBundleShortVersionString": "0.2.0",
             "NSHighResolutionCapable": True,
             "LSApplicationCategoryType": "public.app-category.music",
         },
