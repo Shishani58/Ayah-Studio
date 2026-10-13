@@ -7,7 +7,10 @@
 393 теста исходного состояния и 399 с исправлением отмены прошли;
 Ruff, JS syntax, diff-check и sync AGENTS/CLAUDE — OK.
 Локальный DMG прошёл frozen self-check, codesign и hdiutil verify.
-Публикация и сборки обеих платформ: [задача](tasks/2026-10-13-release-0.2.0/task.md).
+[Релиз 0.2.0](https://github.com/Shishani58/Ayah-Studio/releases/tag/v0.2.0)
+опубликован из `bd541b1`; релизный CI обеих платформ прошёл. Публичные DMG/ZIP
+скачаны целиком, SHA-256 и состав проверены; опубликованный DMG прошёл
+self-check/codesign/hdiutil. Подробности: [задача](tasks/2026-10-13-release-0.2.0/task.md).
 
 ## Остановка текущей разметки — 2026-10-13
 
