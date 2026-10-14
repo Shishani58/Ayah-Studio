@@ -1,0 +1,49 @@
+{
+  "revision": "5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c",
+  "license": "Apache-2.0",
+  "repo": "tarteel-ai/whisper-base-ar-quran",
+  "license_url": "https://www.apache.org/licenses/LICENSE-2.0",
+  "download_authorized": true,
+  "files": [
+    {
+      "path": "pytorch_model.bin",
+      "sha256": "ec75894993a4570a237b2b1c19fd8a448f1e8f6e083cfab699574f7be53874fa"
+    },
+    {
+      "path": "config.json",
+      "sha256": "31e690221f47d7505f9d14c807a241c941aef7815ba1132654f1b7feea2cdbae"
+    },
+    {
+      "path": "preprocessor_config.json",
+      "sha256": "9b5cd03a36fbb8a627c64d98a5b5b126ead95a77720723944487311f0110b666"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "sha256": "70e1ec9195ccd4baebf920c7e9f8cdd90f37a2b8aebcf305095c2dff074d1260"
+    },
+    {
+      "path": "special_tokens_map.json",
+      "sha256": "87870d95726faac1641b583cbbb6d8a0c22deab726bcaeac9bb06c350bc638b1"
+    },
+    {
+      "path": "added_tokens.json",
+      "sha256": "5687ef031827f4c9fa3e7cbdd7fd915de0d6c7c6416463a28c63cbe1cf99a07a"
+    },
+    {
+      "path": "normalizer.json",
+      "sha256": "bf1c507dc8724ca9cf9903640dacfb69dae2f00edee4f21ceba106a7392f26dd"
+    },
+    {
+      "path": "merges.txt",
+      "sha256": "78f27f801feb4283ae969d4cadacb28fc051b655647402b1a252c7079ea11c46"
+    },
+    {
+      "path": "vocab.json",
+      "sha256": "e2aa043ef015641d363d8288e7c241c85e36a5c761fb303598e0710233344387"
+    },
+    {
+      "path": "README.md",
+      "sha256": "243246b49329ac0f33f5fa260d7bf60dcefa325542d4aa5bcf9637057e633aed"
+    }
+  ]
+}

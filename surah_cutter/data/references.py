@@ -13,6 +13,8 @@ from __future__ import annotations
 import sqlite3
 from pathlib import Path
 
+from surah_cutter.resources import resource_path
+
 __all__ = [
     "REFERENCES_DIR",
     "list_references",
@@ -23,7 +25,7 @@ __all__ = [
 
 # Дефолтный каталог с эталонами: <repo>/data/references.
 # references.py -> data/ -> surah_cutter/ -> <repo>/
-REFERENCES_DIR = Path(__file__).resolve().parents[2] / "data" / "references"
+REFERENCES_DIR = resource_path("data", "references")
 
 EXPECTED_TOTAL_AYAHS = 6236
 EXPECTED_SURA_COUNT = 114

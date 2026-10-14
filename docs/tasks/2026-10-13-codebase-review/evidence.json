@@ -1,0 +1,103 @@
+{
+  "python": {
+    "exit_code": 0,
+    "result": {
+      "manual_edit_race": {
+        "saved_manual": 1100,
+        "after_generation": 1200,
+        "status": "auto"
+      },
+      "nonmonotonic_merge": [
+        [
+          1,
+          1,
+          1000
+        ],
+        [
+          1,
+          2,
+          2500
+        ],
+        [
+          1,
+          3,
+          2400
+        ]
+      ],
+      "sse_second_subscriber": {
+        "first": [
+          "data: {\"type\": \"done\", \"completed\": 1}\n\n"
+        ],
+        "remaining": 0
+      },
+      "settings_lost_update": {
+        "mode": "words",
+        "theme": "light"
+      },
+      "recheck_outside_audio": [
+        {
+          "ayah": 1,
+          "time": 15000,
+          "score": 0.0,
+          "verdict": "ok",
+          "match_ayah": null,
+          "match_score": 0.0,
+          "hint": ""
+        },
+        {
+          "ayah": 2,
+          "time": 18000,
+          "score": 0.0,
+          "verdict": "ok",
+          "match_ayah": null,
+          "match_score": 0.0,
+          "hint": ""
+        }
+      ],
+      "transliteration_segmentation": [
+        {
+          "surah": 2,
+          "ayah": 181,
+          "canonical_words": 14,
+          "cached_words": 13,
+          "last_word": "عَلِيمٞ",
+          "last_target": "",
+          "word_alignment_error": "Не все слова представлены в словаре модели."
+        },
+        {
+          "surah": 8,
+          "ayah": 6,
+          "canonical_words": 12,
+          "cached_words": 11,
+          "last_word": "يَنظُرُونَ",
+          "last_target": "",
+          "word_alignment_error": "Не все слова представлены в словаре модели."
+        },
+        {
+          "surah": 13,
+          "ayah": 37,
+          "canonical_words": 20,
+          "cached_words": 19,
+          "last_word": "وَاقٖ",
+          "last_target": "",
+          "word_alignment_error": "Не все слова представлены в словаре модели."
+        }
+      ],
+      "cli_provenance": "auto"
+    }
+  },
+  "javascript": {
+    "exit_code": 0,
+    "result": {
+      "current_sura": 114,
+      "recheck_from_sura": 112,
+      "applied": {
+        "1": {
+          "ayah": 1,
+          "verdict": "shift",
+          "match_ayah": 2
+        }
+      }
+    }
+  }
+}

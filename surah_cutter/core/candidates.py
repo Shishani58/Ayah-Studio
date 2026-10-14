@@ -33,8 +33,10 @@ from surah_cutter.data.quran_text import DEFAULT_DB_PATH
 
 # Модель Silero VAD (ONNX). Кладём под models/ репозитория.
 # models/ -> <repo>; candidates.py -> core -> surah_cutter -> <repo>.
-MODELS_DIR = Path(__file__).resolve().parents[2] / "models"
-SILERO_VAD_PATH = MODELS_DIR / "silero_vad.onnx"
+from surah_cutter.resources import external_model_path
+
+SILERO_VAD_PATH = external_model_path("silero_vad.onnx")
+MODELS_DIR = SILERO_VAD_PATH.parent
 
 # Канонический источник весов Silero VAD (ONNX) — официальный репозиторий.
 # Скачивается ЛЕНИВО и только при allow_download=True (по умолчанию выключено).

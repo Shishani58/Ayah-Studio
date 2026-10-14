@@ -1,0 +1,502 @@
+{
+  "quran-phonetics": {
+    "all46": {
+      "recordings": 46,
+      "ayahs": 1475,
+      "confirmed": 33,
+      "review": 1442,
+      "confirmed_over500": [],
+      "all_over500": 1379,
+      "median_ms": 6120.0,
+      "p95_ms": 76362.09999999998,
+      "max_ms": 108982,
+      "first_confirmed": 10,
+      "model_reads": 515,
+      "local_model_seconds": 47.930842510657385,
+      "boundary_kinds": {
+        "first_onset": 1,
+        "estimate": 1442,
+        "pause": 32
+      },
+      "reason_counts": {
+        "unresolved_local_block": 23,
+        "blocked_by_unresolved_ayah": 1379,
+        "incomplete_distinguishing_phrase": 21,
+        "unresolved_before_unique_anchor": 18,
+        "no_local_evidence": 1
+      },
+      "max_local_ms": 6000.0,
+      "max_union_ratio": 0.5635176505648722,
+      "max_sum_ratio": 1.0087880780446261,
+      "peak_accounted_cache_bytes": 973948,
+      "sequence_violations": []
+    },
+    "previous_iteration46": {
+      "recordings": 46,
+      "ayahs": 1475,
+      "confirmed": 23,
+      "review": 1452,
+      "confirmed_over500": [],
+      "all_over500": 1388,
+      "median_ms": 6124.0,
+      "p95_ms": 76362.09999999998,
+      "max_ms": 108982,
+      "first_confirmed": 10,
+      "model_reads": 318,
+      "local_model_seconds": 23.372326622484252,
+      "boundary_kinds": {
+        "first_onset": 1,
+        "estimate": 1452,
+        "pause": 22
+      },
+      "reason_counts": {
+        "unresolved_local_block": 17,
+        "blocked_by_unresolved_ayah": 1396,
+        "incomplete_distinguishing_phrase": 23,
+        "unresolved_before_unique_anchor": 10,
+        "no_local_evidence": 5,
+        "future_outside_bounded_block": 1
+      },
+      "max_local_ms": 6000.0,
+      "max_union_ratio": 0.47178716663128156,
+      "max_sum_ratio": 0.8358776919042643,
+      "peak_accounted_cache_bytes": 381816,
+      "sequence_violations": []
+    },
+    "paired37_new": {
+      "recordings": 37,
+      "ayahs": 564,
+      "confirmed": 28,
+      "review": 536,
+      "confirmed_over500": [],
+      "all_over500": 490,
+      "median_ms": 3981.0,
+      "p95_ms": 9723.400000000003,
+      "max_ms": 14948,
+      "first_confirmed": 9,
+      "model_reads": 408,
+      "local_model_seconds": 35.45494792005047,
+      "boundary_kinds": {
+        "estimate": 536,
+        "pause": 28
+      },
+      "reason_counts": {
+        "unresolved_before_unique_anchor": 14,
+        "blocked_by_unresolved_ayah": 486,
+        "unresolved_local_block": 19,
+        "incomplete_distinguishing_phrase": 16,
+        "no_local_evidence": 1
+      },
+      "max_local_ms": 6000.0,
+      "max_union_ratio": 0.5635176505648722,
+      "max_sum_ratio": 1.0087880780446261,
+      "peak_accounted_cache_bytes": 973948,
+      "sequence_violations": []
+    },
+    "paired37_legacy": {
+      "recordings": 37,
+      "ayahs": 564,
+      "confirmed": 276,
+      "review": 288,
+      "confirmed_over500": [
+        [
+          78,
+          28,
+          554
+        ],
+        [
+          80,
+          37,
+          672
+        ],
+        [
+          84,
+          10,
+          903
+        ],
+        [
+          87,
+          3,
+          2955
+        ],
+        [
+          87,
+          4,
+          1374
+        ],
+        [
+          104,
+          7,
+          1223
+        ]
+      ],
+      "all_over500": 107,
+      "median_ms": 73.5,
+      "p95_ms": 4465.850000000003,
+      "max_ms": 26762,
+      "first_confirmed": 4,
+      "model_reads": 1650,
+      "local_model_seconds": null,
+      "boundary_kinds": {},
+      "reason_counts": {},
+      "max_local_ms": 6000.0,
+      "max_union_ratio": 0.65,
+      "max_sum_ratio": 1.9974861226371177,
+      "peak_accounted_cache_bytes": 2995200,
+      "sequence_violations": [
+        {
+          "ayah": 18,
+          "start_ms": 113784,
+          "reason": "outside_audio"
+        },
+        {
+          "ayah": 19,
+          "start_ms": 121115,
+          "reason": "outside_audio"
+        }
+      ]
+    },
+    "coverage_gate": false,
+    "false_confident_gate": true,
+    "new_unlistened_disagreements": [],
+    "no_new_unlistened_disagreement_gate": true
+  },
+  "whisper-tarteel-base": {
+    "all46": {
+      "recordings": 46,
+      "ayahs": 1475,
+      "confirmed": 404,
+      "review": 1071,
+      "confirmed_over500": [
+        [
+          79,
+          26,
+          508
+        ]
+      ],
+      "all_over500": 997,
+      "median_ms": 3896.0,
+      "p95_ms": 56848.99999999999,
+      "max_ms": 87014,
+      "first_confirmed": 35,
+      "model_reads": 779,
+      "local_model_seconds": 445.2979261635337,
+      "boundary_kinds": {
+        "estimate": 1071,
+        "pause": 404
+      },
+      "reason_counts": {
+        "unresolved_before_unique_anchor": 39,
+        "unsupported_wasl_timing": 21,
+        "blocked_by_unresolved_ayah": 1009,
+        "incomplete_distinguishing_phrase": 1,
+        "ambiguous_phrase": 1
+      },
+      "max_local_ms": 4200.0,
+      "max_union_ratio": 0.5128497610275247,
+      "max_sum_ratio": 0.7665370093649834,
+      "peak_accounted_cache_bytes": 242318,
+      "sequence_violations": []
+    },
+    "previous_iteration46": {
+      "recordings": 46,
+      "ayahs": 1475,
+      "confirmed": 377,
+      "review": 1098,
+      "confirmed_over500": [],
+      "all_over500": 1027,
+      "median_ms": 4637.0,
+      "p95_ms": 57231.099999999984,
+      "max_ms": 87014,
+      "first_confirmed": 35,
+      "model_reads": 723,
+      "local_model_seconds": 266.8518102047965,
+      "boundary_kinds": {
+        "estimate": 1098,
+        "pause": 377
+      },
+      "reason_counts": {
+        "unresolved_before_unique_anchor": 35,
+        "unsupported_wasl_timing": 20,
+        "blocked_by_unresolved_ayah": 1040,
+        "incomplete_distinguishing_phrase": 1,
+        "future_outside_bounded_block": 1,
+        "ambiguous_phrase": 1
+      },
+      "max_local_ms": 4200.0,
+      "max_union_ratio": 0.5128497610275247,
+      "max_sum_ratio": 0.7665370093649834,
+      "peak_accounted_cache_bytes": 242318,
+      "sequence_violations": []
+    },
+    "paired37_new": {
+      "recordings": 37,
+      "ayahs": 564,
+      "confirmed": 302,
+      "review": 262,
+      "confirmed_over500": [
+        [
+          79,
+          26,
+          508
+        ]
+      ],
+      "all_over500": 219,
+      "median_ms": 116.5,
+      "p95_ms": 7249.900000000001,
+      "max_ms": 13508,
+      "first_confirmed": 31,
+      "model_reads": 542,
+      "local_model_seconds": 340.3013201195281,
+      "boundary_kinds": {
+        "estimate": 262,
+        "pause": 302
+      },
+      "reason_counts": {
+        "incomplete_distinguishing_phrase": 1,
+        "blocked_by_unresolved_ayah": 225,
+        "unresolved_before_unique_anchor": 23,
+        "unsupported_wasl_timing": 12,
+        "ambiguous_phrase": 1
+      },
+      "max_local_ms": 4200.0,
+      "max_union_ratio": 0.5128497610275247,
+      "max_sum_ratio": 0.7665370093649834,
+      "peak_accounted_cache_bytes": 159470,
+      "sequence_violations": []
+    },
+    "paired37_legacy": {
+      "recordings": 37,
+      "ayahs": 564,
+      "confirmed": 411,
+      "review": 153,
+      "confirmed_over500": [
+        [
+          78,
+          28,
+          554
+        ],
+        [
+          78,
+          36,
+          654
+        ],
+        [
+          78,
+          37,
+          657
+        ],
+        [
+          80,
+          37,
+          672
+        ],
+        [
+          81,
+          15,
+          607
+        ],
+        [
+          83,
+          10,
+          558
+        ],
+        [
+          83,
+          13,
+          628
+        ],
+        [
+          83,
+          31,
+          513
+        ],
+        [
+          84,
+          10,
+          903
+        ]
+      ],
+      "all_over500": 64,
+      "median_ms": 67.5,
+      "p95_ms": 1628.200000000002,
+      "max_ms": 6062,
+      "first_confirmed": 11,
+      "model_reads": 1104,
+      "local_model_seconds": 1030.272772649536,
+      "boundary_kinds": {},
+      "reason_counts": {},
+      "max_local_ms": 4200.0,
+      "max_union_ratio": 0.5700694836612403,
+      "max_sum_ratio": 1.055494085573819,
+      "peak_accounted_cache_bytes": 0,
+      "sequence_violations": []
+    },
+    "coverage_gate": false,
+    "false_confident_gate": true,
+    "new_unlistened_disagreements": [
+      [
+        79,
+        26,
+        508
+      ]
+    ],
+    "no_new_unlistened_disagreement_gate": false
+  },
+  "whisper-tarteel-tiny": {
+    "all46": {
+      "recordings": 46,
+      "ayahs": 1475,
+      "confirmed": 305,
+      "review": 1170,
+      "confirmed_over500": [],
+      "all_over500": 1087,
+      "median_ms": 5800.0,
+      "p95_ms": 52945.59999999999,
+      "max_ms": 79350,
+      "first_confirmed": 35,
+      "model_reads": 675,
+      "local_model_seconds": 164.73734803847037,
+      "boundary_kinds": {
+        "estimate": 1170,
+        "pause": 305
+      },
+      "reason_counts": {
+        "unresolved_before_unique_anchor": 44,
+        "unsupported_wasl_timing": 27,
+        "blocked_by_unresolved_ayah": 1098,
+        "ambiguous_phrase": 1
+      },
+      "max_local_ms": 4200.0,
+      "max_union_ratio": 0.5005381660351602,
+      "max_sum_ratio": 0.7549740967134349,
+      "peak_accounted_cache_bytes": 196904,
+      "sequence_violations": []
+    },
+    "previous_iteration46": {
+      "recordings": 46,
+      "ayahs": 1475,
+      "confirmed": 279,
+      "review": 1196,
+      "confirmed_over500": [],
+      "all_over500": 1118,
+      "median_ms": 6110.0,
+      "p95_ms": 52945.59999999999,
+      "max_ms": 79350,
+      "first_confirmed": 33,
+      "model_reads": 612,
+      "local_model_seconds": 124.70593064278364,
+      "boundary_kinds": {
+        "estimate": 1196,
+        "pause": 279
+      },
+      "reason_counts": {
+        "unresolved_before_unique_anchor": 41,
+        "unsupported_wasl_timing": 26,
+        "blocked_by_unresolved_ayah": 1126,
+        "incomplete_distinguishing_phrase": 2,
+        "ambiguous_phrase": 1
+      },
+      "max_local_ms": 4200.0,
+      "max_union_ratio": 0.5005381660351602,
+      "max_sum_ratio": 0.7549740967134349,
+      "peak_accounted_cache_bytes": 182697,
+      "sequence_violations": []
+    },
+    "paired37_new": {
+      "recordings": 37,
+      "ayahs": 564,
+      "confirmed": 230,
+      "review": 334,
+      "confirmed_over500": [],
+      "all_over500": 276,
+      "median_ms": 451.0,
+      "p95_ms": 8369.7,
+      "max_ms": 14151,
+      "first_confirmed": 31,
+      "model_reads": 477,
+      "local_model_seconds": 120.96482129138894,
+      "boundary_kinds": {
+        "estimate": 334,
+        "pause": 230
+      },
+      "reason_counts": {
+        "unresolved_before_unique_anchor": 32,
+        "blocked_by_unresolved_ayah": 283,
+        "unsupported_wasl_timing": 18,
+        "ambiguous_phrase": 1
+      },
+      "max_local_ms": 4200.0,
+      "max_union_ratio": 0.5005381660351602,
+      "max_sum_ratio": 0.7549740967134349,
+      "peak_accounted_cache_bytes": 146846,
+      "sequence_violations": []
+    },
+    "paired37_legacy": {
+      "recordings": 37,
+      "ayahs": 564,
+      "confirmed": 395,
+      "review": 169,
+      "confirmed_over500": [
+        [
+          78,
+          28,
+          554
+        ],
+        [
+          78,
+          36,
+          654
+        ],
+        [
+          78,
+          37,
+          657
+        ],
+        [
+          80,
+          37,
+          672
+        ],
+        [
+          81,
+          15,
+          607
+        ],
+        [
+          83,
+          10,
+          558
+        ],
+        [
+          83,
+          13,
+          628
+        ],
+        [
+          83,
+          31,
+          513
+        ]
+      ],
+      "all_over500": 70,
+      "median_ms": 68.0,
+      "p95_ms": 1627.1500000000024,
+      "max_ms": 6062,
+      "first_confirmed": 11,
+      "model_reads": 1122,
+      "local_model_seconds": 311.39714966434985,
+      "boundary_kinds": {},
+      "reason_counts": {},
+      "max_local_ms": 4200.0,
+      "max_union_ratio": 0.5883364479478175,
+      "max_sum_ratio": 0.9852202656866557,
+      "peak_accounted_cache_bytes": 0,
+      "sequence_violations": []
+    },
+    "coverage_gate": false,
+    "false_confident_gate": true,
+    "new_unlistened_disagreements": [],
+    "no_new_unlistened_disagreement_gate": true
+  }
+}

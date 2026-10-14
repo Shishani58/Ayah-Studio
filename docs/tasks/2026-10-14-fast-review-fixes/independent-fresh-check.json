@@ -1,0 +1,40 @@
+{
+  "source_matches": {
+    "surah_cutter/core/align_fast.py": true,
+    "surah_cutter/core/align_fast_whisper.py": true,
+    "surah_cutter/core/fast_reads.py": true,
+    "surah_cutter/core/candidates.py": true,
+    "surah_cutter/core/fast_executor.py": true,
+    "surah_cutter/core/fast_adapters.py": true,
+    "surah_cutter/core/fast_ctc.py": true,
+    "surah_cutter/core/align.py": true,
+    "surah_cutter/core/emissions.py": true,
+    "surah_cutter/core/model_runtime.py": true,
+    "surah_cutter/core/model_worker.py": true,
+    "surah_cutter/core/model_store.py": true,
+    "tools/bench_fast_models.py": true,
+    "surah_cutter/data/alignment_identity.py": true
+  },
+  "unique_run_keys": 4,
+  "metrics": {
+    "whisper-tarteel-tiny": {
+      "records": 2,
+      "ayahs": 141,
+      "confirmed": 22,
+      "over500": [],
+      "median_ms": 12838.0,
+      "p95_ms": 25483.0,
+      "max_ms": 31865
+    },
+    "whisper-tarteel-base": {
+      "records": 2,
+      "ayahs": 141,
+      "confirmed": 36,
+      "over500": [],
+      "median_ms": 5048.0,
+      "p95_ms": 20084.0,
+      "max_ms": 23877
+    }
+  },
+  "paired": {}
+}

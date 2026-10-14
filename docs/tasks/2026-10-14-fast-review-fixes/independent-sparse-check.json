@@ -1,0 +1,28 @@
+{
+  "policy": {
+    "speech_ms": [
+      1300,
+      2500,
+      4000
+    ],
+    "max_candidates": 8,
+    "first_search_ms": 15000,
+    "cache_bytes": 33554432,
+    "ctc_quality": 0.25,
+    "asr_quality": 0.6,
+    "max_block_ayahs": 2,
+    "tempo_lower_ratio": 0.2,
+    "tempo_upper_ratio": 2.5,
+    "beam_log_margin": 2.1972245773362196,
+    "sparse_anchors": true,
+    "max_unresolved_ayahs": null,
+    "expansion_lookahead": 2,
+    "ctc_prefix_probability": 0.9,
+    "ctc_expansion_probability": 0.1
+  },
+  "gap_stays_review": true,
+  "late_current_not_substituted": true,
+  "long_gap_remains_review": true,
+  "explicit_gap_cap_respected": true,
+  "repeated_future_rejected": true
+}

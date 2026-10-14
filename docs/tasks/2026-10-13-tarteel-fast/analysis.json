@@ -1,0 +1,48 @@
+{
+  "paired_over500": {
+    "both": 27,
+    "quran_only": 80,
+    "base_only": 37,
+    "neither": 420
+  },
+  "subsets": {
+    "quran-phonetics:positive_conf": {
+      "n": 276,
+      "median_ms": 56.0,
+      "p95_ms": 205.25,
+      "max_ms": 2955
+    },
+    "quran-phonetics:review": {
+      "n": 288,
+      "median_ms": 120.0,
+      "p95_ms": 10319.749999999915,
+      "max_ms": 26762
+    },
+    "quran-phonetics:reads": {
+      "max_window_ms": 6000.0,
+      "max_coverage": 0.65,
+      "covered_ratio": 0.6087460767039208,
+      "input_ratio": 1.403676502726492,
+      "denied": 1299
+    },
+    "whisper-tarteel-base:positive_conf": {
+      "n": 411,
+      "median_ms": 53.0,
+      "p95_ms": 207.5,
+      "max_ms": 903
+    },
+    "whisper-tarteel-base:review": {
+      "n": 153,
+      "median_ms": 252.0,
+      "p95_ms": 3558.0,
+      "max_ms": 6062
+    },
+    "whisper-tarteel-base:reads": {
+      "max_window_ms": 4200.0,
+      "max_coverage": 0.5700694836612403,
+      "covered_ratio": 0.4644363154881256,
+      "input_ratio": 0.7098249859469953,
+      "denied": 0
+    }
+  }
+}

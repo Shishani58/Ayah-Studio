@@ -1,0 +1,182 @@
+{
+  "catalog_path": "/Users/ayub/Developer/quran_flutter/assets/data/reciters/reciters-base.json",
+  "catalog_sha256": "b20a2906586ced76a8f8d68e6a7bdb6fcf03da39d4c174702c32dd5b26fba849",
+  "recordings": [
+    {
+      "name": "saad_al_ghamidi",
+      "reciter": {
+        "id": 11,
+        "country": "sa",
+        "name": "Саад аль-Гамиди",
+        "url_template": "https://quran-audio.quranacademy.org/by-surah/Saad-Al-Ghamidi/{sura}.mp3",
+        "recitation_type": null,
+        "recitation_speed": null,
+        "timecodes_db_url": "https://cdn.quranacademy.org/mobile-app/reciters/timecodes/saad_al_ghamidi.db",
+        "timecodes_version": 1
+      },
+      "audio_dir": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi",
+      "reference": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi/saad_al_ghamidi.db",
+      "files": [
+        {
+          "url": "https://cdn.quranacademy.org/mobile-app/reciters/timecodes/saad_al_ghamidi.db",
+          "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi/saad_al_ghamidi.db",
+          "bytes": 106496,
+          "sha256": "4fdb78de213c4c9763e820d932c7d3420e65f32b48ea2aa2411defc5a8e57de3"
+        },
+        {
+          "url": "https://quran-audio.quranacademy.org/by-surah/Saad-Al-Ghamidi/080.mp3",
+          "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi/080.mp3",
+          "bytes": 3009408,
+          "sha256": "01cbc697f10e8cb67347e83e42cc9bfd46dacf646655940921a7ce78f1f519e9"
+        },
+        {
+          "url": "https://quran-audio.quranacademy.org/by-surah/Saad-Al-Ghamidi/098.mp3",
+          "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi/098.mp3",
+          "bytes": 1821696,
+          "sha256": "ed0dff4f6de5d0c795aaf5f8fc0b6da2c8b79c4059e58a1c318876e19062c965"
+        },
+        {
+          "url": "https://quran-audio.quranacademy.org/by-surah/Saad-Al-Ghamidi/112.mp3",
+          "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi/112.mp3",
+          "bytes": 306048,
+          "sha256": "a58bccb959151791597f0e750784260429fedc8c685e20c45d0429368ca2e8db"
+        }
+      ],
+      "local_reference": "data/references/saad_al_ghamidi.db",
+      "reference_sha_matches_packaged": true,
+      "all_reference_rows_match_packaged": true
+    },
+    {
+      "name": "mohammed_siddiq_al_minshawi",
+      "reciter": {
+        "id": 33,
+        "country": "eg",
+        "name": "Мухаммад аль-Миншауи",
+        "url_template": "https://quran-audio.quranacademy.org/by-surah/Mohammed_Siddiq_Al-Minshawi/{sura}.mp3",
+        "recitation_type": "murattal",
+        "recitation_speed": null,
+        "timecodes_db_url": "https://cdn.quranacademy.org/mobile-app/reciters/timecodes/mohammed_siddiq_al_minshawi.db",
+        "timecodes_version": 1
+      },
+      "audio_dir": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mohammed_siddiq_al_minshawi",
+      "reference": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mohammed_siddiq_al_minshawi/mohammed_siddiq_al_minshawi.db",
+      "files": [
+        {
+          "url": "https://cdn.quranacademy.org/mobile-app/reciters/timecodes/mohammed_siddiq_al_minshawi.db",
+          "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mohammed_siddiq_al_minshawi/mohammed_siddiq_al_minshawi.db",
+          "bytes": 106496,
+          "sha256": "04c08fe43cc987d623b4bf0a0b40bbc62082982977497a8148e916e0240bc6b5"
+        },
+        {
+          "url": "https://quran-audio.quranacademy.org/by-surah/Mohammed_Siddiq_Al-Minshawi/080.mp3",
+          "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mohammed_siddiq_al_minshawi/080.mp3",
+          "bytes": 3828506,
+          "sha256": "744f97a99c064eeda9cf26c679e454639606b5eb27e2997f394da58333fe0591"
+        },
+        {
+          "url": "https://quran-audio.quranacademy.org/by-surah/Mohammed_Siddiq_Al-Minshawi/098.mp3",
+          "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mohammed_siddiq_al_minshawi/098.mp3",
+          "bytes": 2515278,
+          "sha256": "a015642df545f098dfc2dd1340df11ab1145df4d065eb021c83c24601bcf4c04"
+        },
+        {
+          "url": "https://quran-audio.quranacademy.org/by-surah/Mohammed_Siddiq_Al-Minshawi/112.mp3",
+          "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mohammed_siddiq_al_minshawi/112.mp3",
+          "bytes": 351085,
+          "sha256": "f28c4886847ac4d7cb5fb48d377ffc1e62bc7108578e1f9c89b293174340a260"
+        }
+      ],
+      "local_reference": "data/references/mohammed_siddiq_al_minshawi.db",
+      "reference_sha_matches_packaged": true,
+      "all_reference_rows_match_packaged": true
+    },
+    {
+      "name": "mahmoud_khalil_al_hussary",
+      "reciter": {
+        "id": 28,
+        "country": "eg",
+        "name": "Махмуд аль-Хусари",
+        "url_template": "https://quran-audio.quranacademy.org/by-surah/Mahmoud_Khalil_Al-Hussary/{sura}.mp3",
+        "recitation_type": null,
+        "recitation_speed": null,
+        "timecodes_db_url": "https://cdn.quranacademy.org/mobile-app/reciters/timecodes/mahmoud_khalil_al_hussary.db",
+        "timecodes_version": 1
+      },
+      "audio_dir": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mahmoud_khalil_al_hussary",
+      "reference": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mahmoud_khalil_al_hussary/mahmoud_khalil_al_hussary.db",
+      "files": [
+        {
+          "url": "https://cdn.quranacademy.org/mobile-app/reciters/timecodes/mahmoud_khalil_al_hussary.db",
+          "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mahmoud_khalil_al_hussary/mahmoud_khalil_al_hussary.db",
+          "bytes": 106496,
+          "sha256": "b669fd8f0d4406c0230d20ee9a83b29b7c91c5568e15ece76db3c7f7a2bcab5c"
+        },
+        {
+          "url": "https://quran-audio.quranacademy.org/by-surah/Mahmoud_Khalil_Al-Hussary/080.mp3",
+          "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mahmoud_khalil_al_hussary/080.mp3",
+          "bytes": 4625972,
+          "sha256": "8330f7a327659a1a137471452f96e47d39c2a147a1de9f5f5b1ae1ccf77df7e1"
+        },
+        {
+          "url": "https://quran-audio.quranacademy.org/by-surah/Mahmoud_Khalil_Al-Hussary/098.mp3",
+          "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mahmoud_khalil_al_hussary/098.mp3",
+          "bytes": 3101675,
+          "sha256": "26cf4d3e75708d065c223fa5289bfce76f2e15d208d813d848272d82d58ea49e"
+        },
+        {
+          "url": "https://quran-audio.quranacademy.org/by-surah/Mahmoud_Khalil_Al-Hussary/112.mp3",
+          "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mahmoud_khalil_al_hussary/112.mp3",
+          "bytes": 651598,
+          "sha256": "c6d2edaa89cf4dfc52e1ae969cf491ac02061854bd5e63b927126536cff64223"
+        }
+      ],
+      "local_reference": "data/references/mahmoud_khalil_al_hussary.db",
+      "reference_sha_matches_packaged": true,
+      "all_reference_rows_match_packaged": true
+    },
+    {
+      "name": "abdul_basit_mujawwad",
+      "reciter": {
+        "id": 4,
+        "country": "eg",
+        "name": "Абдуль-Басит Абдус-Самад",
+        "url_template": "https://quran-audio.quranacademy.org/by-surah/Abdul_Basit_Mujawwad/{sura}.mp3",
+        "recitation_type": "mujawwad",
+        "recitation_speed": null,
+        "timecodes_db_url": "https://cdn.quranacademy.org/mobile-app/reciters/timecodes/abdul_basit_mujawwad.db",
+        "timecodes_version": 1
+      },
+      "audio_dir": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/abdul_basit_mujawwad",
+      "reference": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/abdul_basit_mujawwad/abdul_basit_mujawwad.db",
+      "files": [
+        {
+          "url": "https://cdn.quranacademy.org/mobile-app/reciters/timecodes/abdul_basit_mujawwad.db",
+          "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/abdul_basit_mujawwad/abdul_basit_mujawwad.db",
+          "bytes": 106496,
+          "sha256": "5ea01239f1f2904f7af87e230aad42c1808a2c86273a45e9c4befae63ed890c1"
+        },
+        {
+          "url": "https://quran-audio.quranacademy.org/by-surah/Abdul_Basit_Mujawwad/080.mp3",
+          "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/abdul_basit_mujawwad/080.mp3",
+          "bytes": 6317035,
+          "sha256": "83740d9004e99c3835cb5a04d25bbfcd5860e95482c933963cd1a2f1514a0c7d"
+        },
+        {
+          "url": "https://quran-audio.quranacademy.org/by-surah/Abdul_Basit_Mujawwad/098.mp3",
+          "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/abdul_basit_mujawwad/098.mp3",
+          "bytes": 4163291,
+          "sha256": "78d3fb891fcbf92eaf0effb56d7e803036c4f791a91063bc9de3b9a71a7a2033"
+        },
+        {
+          "url": "https://quran-audio.quranacademy.org/by-surah/Abdul_Basit_Mujawwad/112.mp3",
+          "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/abdul_basit_mujawwad/112.mp3",
+          "bytes": 802063,
+          "sha256": "ca5edf5bf9ac40ad56a4800db792b287368b41ad6015e9c354aa1a0cb5ef5a7a"
+        }
+      ],
+      "local_reference": "data/references/abdul_basit_mujawwad.db",
+      "reference_sha_matches_packaged": true,
+      "all_reference_rows_match_packaged": true
+    }
+  ]
+}

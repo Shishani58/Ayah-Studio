@@ -74,6 +74,13 @@ surah-cutter-gui-qt = "surah_cutter.gui.app:main"
 [tool.hatch.build.targets.wheel]
 packages = ["surah_cutter"]
 
+[tool.hatch.build.targets.wheel.force-include]
+"data/quran_mushaf.db" = "surah_cutter/bundled/data/quran_mushaf.db"
+"data/word_tr_cache.json" = "surah_cutter/bundled/data/word_tr_cache.json"
+"data/model_text_targets.json" = "surah_cutter/bundled/data/model_text_targets.json"
+"data/references" = "surah_cutter/bundled/data/references"
+"assets/fonts/qpc_hafs.ttf" = "surah_cutter/bundled/assets/fonts/qpc_hafs.ttf"
+
 [tool.ruff]
 line-length = 100
 target-version = "py310"

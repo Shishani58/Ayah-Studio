@@ -1,0 +1,967 @@
+[
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 114,
+    "audio_sha256": "958819e2a43c6f02d397432b208398599f1c10dd7c08f19401ee3676550bf064",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "decode_seconds": 0.0826,
+    "load_probe_seconds": 4.4599,
+    "full_seconds": 2.2382,
+    "rows": [
+      [
+        1,
+        6580,
+        0.9998733401298523
+      ],
+      [
+        2,
+        10640,
+        0.995455265045166
+      ],
+      [
+        3,
+        13540,
+        0.6247844696044922
+      ],
+      [
+        4,
+        16840,
+        0.9952841401100159
+      ],
+      [
+        5,
+        21120,
+        0.8221800327301025
+      ],
+      [
+        6,
+        25280,
+        0.9701349139213562
+      ]
+    ],
+    "absolute_errors_ms": [
+      541,
+      377,
+      369,
+      698,
+      570,
+      350
+    ],
+    "median_ms": 459.0,
+    "p95_ms": 666.0,
+    "max_ms": 698,
+    "source": "attention-dtw:whisper-tarteel-tiny:revision=c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:commit-before=24:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-tiny@169d4a4341b33bc18d8881c4b69c2e104e1cc0af:sha256=a5d5325911f16e74001a72fa13d6e208eee51548f994646de1f4b4cc8b35b512:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+    "trace": {
+      "model_source": "attention-dtw:whisper-tarteel-tiny:revision=c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:commit-before=24:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-tiny@169d4a4341b33bc18d8881c4b69c2e104e1cc0af:sha256=a5d5325911f16e74001a72fa13d6e208eee51548f994646de1f4b4cc8b35b512:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+      "mode": "full",
+      "backend": "whisper-attention-dtw",
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 6580,
+          "conf": 0.9998733401298523,
+          "reliable": true
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 10640,
+          "conf": 0.995455265045166,
+          "reliable": true
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 13540,
+          "conf": 0.6247844696044922,
+          "reliable": true
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 16840,
+          "conf": 0.9952841401100159,
+          "reliable": true
+        },
+        {
+          "ayah": 5,
+          "onset_ms": 21120,
+          "conf": 0.8221800327301025,
+          "reliable": true
+        },
+        {
+          "ayah": 6,
+          "onset_ms": 25280,
+          "conf": 0.9701349139213562,
+          "reliable": true
+        }
+      ]
+    },
+    "first_ayah_words": [
+      [
+        0,
+        600,
+        0.7499833106994629
+      ],
+      [
+        1,
+        900,
+        0.9998237490653992
+      ],
+      [
+        2,
+        1660,
+        0.9998499751091003
+      ],
+      [
+        3,
+        3020,
+        0.9998041987419128
+      ]
+    ],
+    "words_seconds": 0.239,
+    "seconds": 7.042
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 112,
+    "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "decode_seconds": 0.0618,
+    "load_probe_seconds": 0.2375,
+    "full_seconds": 0.369,
+    "rows": [
+      [
+        1,
+        6580,
+        0.9999724626541138
+      ],
+      [
+        2,
+        9420,
+        0.8352949023246765
+      ],
+      [
+        3,
+        11140,
+        0.9964666366577148
+      ],
+      [
+        4,
+        13840,
+        0.9988370537757874
+      ]
+    ],
+    "absolute_errors_ms": [
+      486,
+      665,
+      277,
+      310
+    ],
+    "median_ms": 398.0,
+    "p95_ms": 638.15,
+    "max_ms": 665,
+    "source": "attention-dtw:whisper-tarteel-tiny:revision=c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:commit-before=24:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-tiny@169d4a4341b33bc18d8881c4b69c2e104e1cc0af:sha256=a5d5325911f16e74001a72fa13d6e208eee51548f994646de1f4b4cc8b35b512:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+    "trace": {
+      "model_source": "attention-dtw:whisper-tarteel-tiny:revision=c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:commit-before=24:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-tiny@169d4a4341b33bc18d8881c4b69c2e104e1cc0af:sha256=a5d5325911f16e74001a72fa13d6e208eee51548f994646de1f4b4cc8b35b512:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+      "mode": "full",
+      "backend": "whisper-attention-dtw",
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 6580,
+          "conf": 0.9999724626541138,
+          "reliable": true
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 9420,
+          "conf": 0.8352949023246765,
+          "reliable": true
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 11140,
+          "conf": 0.9964666366577148,
+          "reliable": true
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 13840,
+          "conf": 0.9988370537757874,
+          "reliable": true
+        }
+      ]
+    },
+    "first_ayah_words": [
+      [
+        0,
+        540,
+        0.7499966621398926
+      ],
+      [
+        1,
+        840,
+        0.9997682571411133
+      ],
+      [
+        2,
+        1560,
+        0.9999672174453735
+      ],
+      [
+        3,
+        1960,
+        0.9992694854736328
+      ]
+    ],
+    "words_seconds": 0.2106,
+    "seconds": 0.885
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 78,
+    "audio_sha256": "6b5e524700d4139920eead0a5b10544a73ccb0c79f1e9d04df8e2d1f385d7024",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "decode_seconds": 0.3674,
+    "load_probe_seconds": 0.1673,
+    "error": "ValueError: Слишком много текста для одного окна Whisper.",
+    "seconds": 13.071
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 114,
+    "audio_sha256": "958819e2a43c6f02d397432b208398599f1c10dd7c08f19401ee3676550bf064",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "decode_seconds": 0.0864,
+    "load_probe_seconds": 4.7046,
+    "full_seconds": 4.4652,
+    "rows": [
+      [
+        1,
+        6420,
+        0.9982023239135742
+      ],
+      [
+        2,
+        10560,
+        0.9999930262565613
+      ],
+      [
+        3,
+        13440,
+        0.6259128451347351
+      ],
+      [
+        4,
+        16400,
+        0.9999980926513672
+      ],
+      [
+        5,
+        20820,
+        0.9999330043792725
+      ],
+      [
+        6,
+        25220,
+        0.9999921321868896
+      ]
+    ],
+    "absolute_errors_ms": [
+      381,
+      297,
+      269,
+      258,
+      270,
+      290
+    ],
+    "median_ms": 280.0,
+    "p95_ms": 360.0,
+    "max_ms": 381,
+    "source": "attention-dtw:whisper-tarteel-base:revision=5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:commit-before=24:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-base@e37978b90ca9030d5170a5c07aadb050351a65bb:sha256=444b3f636d2fff89dd9ecf549e2a085b61f7ff0fa0246d4628bac6a3b8cc9ba4:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+    "trace": {
+      "model_source": "attention-dtw:whisper-tarteel-base:revision=5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:commit-before=24:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-base@e37978b90ca9030d5170a5c07aadb050351a65bb:sha256=444b3f636d2fff89dd9ecf549e2a085b61f7ff0fa0246d4628bac6a3b8cc9ba4:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+      "mode": "full",
+      "backend": "whisper-attention-dtw",
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 6420,
+          "conf": 0.9982023239135742,
+          "reliable": true
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 10560,
+          "conf": 0.9999930262565613,
+          "reliable": true
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 13440,
+          "conf": 0.6259128451347351,
+          "reliable": true
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 16400,
+          "conf": 0.9999980926513672,
+          "reliable": true
+        },
+        {
+          "ayah": 5,
+          "onset_ms": 20820,
+          "conf": 0.9999330043792725,
+          "reliable": true
+        },
+        {
+          "ayah": 6,
+          "onset_ms": 25220,
+          "conf": 0.9999921321868896,
+          "reliable": true
+        }
+      ]
+    },
+    "first_ayah_words": [
+      [
+        0,
+        400,
+        0.7500009536743164
+      ],
+      [
+        1,
+        800,
+        0.9999781847000122
+      ],
+      [
+        2,
+        1540,
+        0.9999993443489075
+      ],
+      [
+        3,
+        2820,
+        0.9999958276748657
+      ]
+    ],
+    "words_seconds": 0.3044,
+    "seconds": 9.567
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 112,
+    "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "decode_seconds": 0.0607,
+    "load_probe_seconds": 0.3502,
+    "full_seconds": 0.4943,
+    "rows": [
+      [
+        1,
+        6440,
+        0.9980812072753906
+      ],
+      [
+        2,
+        9080,
+        0.972734808921814
+      ],
+      [
+        3,
+        11080,
+        0.9999879002571106
+      ],
+      [
+        4,
+        13520,
+        0.9957456588745117
+      ]
+    ],
+    "absolute_errors_ms": [
+      346,
+      325,
+      217,
+      10
+    ],
+    "median_ms": 271.0,
+    "p95_ms": 342.84999999999997,
+    "max_ms": 346,
+    "source": "attention-dtw:whisper-tarteel-base:revision=5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:commit-before=24:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-base@e37978b90ca9030d5170a5c07aadb050351a65bb:sha256=444b3f636d2fff89dd9ecf549e2a085b61f7ff0fa0246d4628bac6a3b8cc9ba4:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+    "trace": {
+      "model_source": "attention-dtw:whisper-tarteel-base:revision=5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:commit-before=24:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-base@e37978b90ca9030d5170a5c07aadb050351a65bb:sha256=444b3f636d2fff89dd9ecf549e2a085b61f7ff0fa0246d4628bac6a3b8cc9ba4:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+      "mode": "full",
+      "backend": "whisper-attention-dtw",
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 6440,
+          "conf": 0.9980812072753906,
+          "reliable": true
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 9080,
+          "conf": 0.972734808921814,
+          "reliable": true
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 11080,
+          "conf": 0.9999879002571106,
+          "reliable": true
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 13520,
+          "conf": 0.9957456588745117,
+          "reliable": true
+        }
+      ]
+    },
+    "first_ayah_words": [
+      [
+        0,
+        340,
+        0.7500014305114746
+      ],
+      [
+        1,
+        720,
+        0.9999884366989136
+      ],
+      [
+        2,
+        1140,
+        0.9999889135360718
+      ],
+      [
+        3,
+        1860,
+        0.9999942779541016
+      ]
+    ],
+    "words_seconds": 0.2846,
+    "seconds": 1.195
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 78,
+    "audio_sha256": "6b5e524700d4139920eead0a5b10544a73ccb0c79f1e9d04df8e2d1f385d7024",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "decode_seconds": 0.2845,
+    "load_probe_seconds": 0.2979,
+    "full_seconds": 40.5946,
+    "rows": [
+      [
+        1,
+        6720,
+        0.8739160299301147
+      ],
+      [
+        2,
+        12340,
+        0.9999762177467346
+      ],
+      [
+        3,
+        16560,
+        0.9947651028633118
+      ],
+      [
+        4,
+        21300,
+        0.9992991089820862
+      ],
+      [
+        5,
+        24440,
+        0.9999901056289673
+      ],
+      [
+        6,
+        29080,
+        0.9999957084655762
+      ],
+      [
+        7,
+        33400,
+        0.9999982118606567
+      ],
+      [
+        8,
+        36600,
+        0.9999907612800598
+      ],
+      [
+        9,
+        40560,
+        0.9972472786903381
+      ],
+      [
+        10,
+        44920,
+        0.9999108910560608
+      ],
+      [
+        11,
+        48820,
+        0.9996421337127686
+      ],
+      [
+        12,
+        54120,
+        0.9897636771202087
+      ],
+      [
+        13,
+        59880,
+        0.9999832510948181
+      ],
+      [
+        14,
+        65000,
+        0.916658341884613
+      ],
+      [
+        15,
+        73440,
+        0.9076735973358154
+      ],
+      [
+        16,
+        78940,
+        0.9999338984489441
+      ],
+      [
+        17,
+        83960,
+        0.9999967813491821
+      ],
+      [
+        18,
+        89720,
+        0.9999993443489075
+      ],
+      [
+        19,
+        96940,
+        0.9999651908874512
+      ],
+      [
+        20,
+        103880,
+        0.9996698498725891
+      ],
+      [
+        21,
+        109940,
+        0.9999974370002747
+      ],
+      [
+        22,
+        117280,
+        0.9165976047515869
+      ],
+      [
+        23,
+        121040,
+        0.8761416673660278
+      ],
+      [
+        24,
+        127240,
+        0.7499924302101135
+      ],
+      [
+        25,
+        134400,
+        0.9999992251396179
+      ],
+      [
+        26,
+        139580,
+        0.9999398589134216
+      ],
+      [
+        27,
+        144560,
+        0.9999992847442627
+      ],
+      [
+        28,
+        151500,
+        0.999998927116394
+      ],
+      [
+        29,
+        156440,
+        0.999998927116394
+      ],
+      [
+        30,
+        161840,
+        0.9998036623001099
+      ],
+      [
+        31,
+        168420,
+        0.9999988675117493
+      ],
+      [
+        32,
+        172940,
+        0.9999111890792847
+      ],
+      [
+        33,
+        177340,
+        0.999984860420227
+      ],
+      [
+        34,
+        180680,
+        0.9975512623786926
+      ],
+      [
+        35,
+        184040,
+        0.7499989867210388
+      ],
+      [
+        36,
+        192140,
+        0.9999969601631165
+      ],
+      [
+        37,
+        201700,
+        0.833327054977417
+      ],
+      [
+        38,
+        213700,
+        0.9999993443489075
+      ],
+      [
+        39,
+        230880,
+        0.6251968741416931
+      ],
+      [
+        40,
+        241760,
+        0.9999988079071045
+      ]
+    ],
+    "absolute_errors_ms": [
+      560,
+      426,
+      345,
+      378,
+      295,
+      280,
+      282,
+      214,
+      366,
+      299,
+      303,
+      451,
+      355,
+      280,
+      452,
+      468,
+      485,
+      337,
+      644,
+      360,
+      398,
+      431,
+      339,
+      1137,
+      437,
+      311,
+      639,
+      1254,
+      244,
+      326,
+      410,
+      312,
+      305,
+      306,
+      249,
+      1224,
+      1337,
+      367,
+      432,
+      462
+    ],
+    "median_ms": 366.5,
+    "p95_ms": 1225.5,
+    "max_ms": 1337,
+    "source": "attention-dtw:whisper-tarteel-base:revision=5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:commit-before=24:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-base@e37978b90ca9030d5170a5c07aadb050351a65bb:sha256=444b3f636d2fff89dd9ecf549e2a085b61f7ff0fa0246d4628bac6a3b8cc9ba4:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+    "trace": {
+      "model_source": "attention-dtw:whisper-tarteel-base:revision=5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:commit-before=24:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-base@e37978b90ca9030d5170a5c07aadb050351a65bb:sha256=444b3f636d2fff89dd9ecf549e2a085b61f7ff0fa0246d4628bac6a3b8cc9ba4:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+      "mode": "full",
+      "backend": "whisper-attention-dtw",
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 6720,
+          "conf": 0.8739160299301147,
+          "reliable": true
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 12340,
+          "conf": 0.9999762177467346,
+          "reliable": true
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 16560,
+          "conf": 0.9947651028633118,
+          "reliable": true
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 21300,
+          "conf": 0.9992991089820862,
+          "reliable": true
+        },
+        {
+          "ayah": 5,
+          "onset_ms": 24440,
+          "conf": 0.9999901056289673,
+          "reliable": true
+        },
+        {
+          "ayah": 6,
+          "onset_ms": 29080,
+          "conf": 0.9999957084655762,
+          "reliable": true
+        },
+        {
+          "ayah": 7,
+          "onset_ms": 33400,
+          "conf": 0.9999982118606567,
+          "reliable": true
+        },
+        {
+          "ayah": 8,
+          "onset_ms": 36600,
+          "conf": 0.9999907612800598,
+          "reliable": true
+        },
+        {
+          "ayah": 9,
+          "onset_ms": 40560,
+          "conf": 0.9972472786903381,
+          "reliable": true
+        },
+        {
+          "ayah": 10,
+          "onset_ms": 44920,
+          "conf": 0.9999108910560608,
+          "reliable": true
+        },
+        {
+          "ayah": 11,
+          "onset_ms": 48820,
+          "conf": 0.9996421337127686,
+          "reliable": true
+        },
+        {
+          "ayah": 12,
+          "onset_ms": 54120,
+          "conf": 0.9897636771202087,
+          "reliable": true
+        },
+        {
+          "ayah": 13,
+          "onset_ms": 59880,
+          "conf": 0.9999832510948181,
+          "reliable": true
+        },
+        {
+          "ayah": 14,
+          "onset_ms": 65000,
+          "conf": 0.916658341884613,
+          "reliable": true
+        },
+        {
+          "ayah": 15,
+          "onset_ms": 73440,
+          "conf": 0.9076735973358154,
+          "reliable": true
+        },
+        {
+          "ayah": 16,
+          "onset_ms": 78940,
+          "conf": 0.9999338984489441,
+          "reliable": true
+        },
+        {
+          "ayah": 17,
+          "onset_ms": 83960,
+          "conf": 0.9999967813491821,
+          "reliable": true
+        },
+        {
+          "ayah": 18,
+          "onset_ms": 89720,
+          "conf": 0.9999993443489075,
+          "reliable": true
+        },
+        {
+          "ayah": 19,
+          "onset_ms": 96940,
+          "conf": 0.9999651908874512,
+          "reliable": true
+        },
+        {
+          "ayah": 20,
+          "onset_ms": 103880,
+          "conf": 0.9996698498725891,
+          "reliable": true
+        },
+        {
+          "ayah": 21,
+          "onset_ms": 109940,
+          "conf": 0.9999974370002747,
+          "reliable": true
+        },
+        {
+          "ayah": 22,
+          "onset_ms": 117280,
+          "conf": 0.9165976047515869,
+          "reliable": true
+        },
+        {
+          "ayah": 23,
+          "onset_ms": 121040,
+          "conf": 0.8761416673660278,
+          "reliable": true
+        },
+        {
+          "ayah": 24,
+          "onset_ms": 127240,
+          "conf": 0.7499924302101135,
+          "reliable": true
+        },
+        {
+          "ayah": 25,
+          "onset_ms": 134400,
+          "conf": 0.9999992251396179,
+          "reliable": true
+        },
+        {
+          "ayah": 26,
+          "onset_ms": 139580,
+          "conf": 0.9999398589134216,
+          "reliable": true
+        },
+        {
+          "ayah": 27,
+          "onset_ms": 144560,
+          "conf": 0.9999992847442627,
+          "reliable": true
+        },
+        {
+          "ayah": 28,
+          "onset_ms": 151500,
+          "conf": 0.999998927116394,
+          "reliable": true
+        },
+        {
+          "ayah": 29,
+          "onset_ms": 156440,
+          "conf": 0.999998927116394,
+          "reliable": true
+        },
+        {
+          "ayah": 30,
+          "onset_ms": 161840,
+          "conf": 0.9998036623001099,
+          "reliable": true
+        },
+        {
+          "ayah": 31,
+          "onset_ms": 168420,
+          "conf": 0.9999988675117493,
+          "reliable": true
+        },
+        {
+          "ayah": 32,
+          "onset_ms": 172940,
+          "conf": 0.9999111890792847,
+          "reliable": true
+        },
+        {
+          "ayah": 33,
+          "onset_ms": 177340,
+          "conf": 0.999984860420227,
+          "reliable": true
+        },
+        {
+          "ayah": 34,
+          "onset_ms": 180680,
+          "conf": 0.9975512623786926,
+          "reliable": true
+        },
+        {
+          "ayah": 35,
+          "onset_ms": 184040,
+          "conf": 0.7499989867210388,
+          "reliable": true
+        },
+        {
+          "ayah": 36,
+          "onset_ms": 192140,
+          "conf": 0.9999969601631165,
+          "reliable": true
+        },
+        {
+          "ayah": 37,
+          "onset_ms": 201700,
+          "conf": 0.833327054977417,
+          "reliable": true
+        },
+        {
+          "ayah": 38,
+          "onset_ms": 213700,
+          "conf": 0.9999993443489075,
+          "reliable": true
+        },
+        {
+          "ayah": 39,
+          "onset_ms": 230880,
+          "conf": 0.6251968741416931,
+          "reliable": true
+        },
+        {
+          "ayah": 40,
+          "onset_ms": 241760,
+          "conf": 0.9999988079071045,
+          "reliable": true
+        }
+      ]
+    },
+    "first_ayah_words": [
+      [
+        0,
+        580,
+        0.7999948263168335
+      ],
+      [
+        1,
+        1960,
+        0.9999890923500061
+      ]
+    ],
+    "words_seconds": 0.267,
+    "seconds": 41.456
+  }
+]

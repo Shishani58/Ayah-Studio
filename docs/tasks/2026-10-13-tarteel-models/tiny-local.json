@@ -1,0 +1,733 @@
+[
+  {
+    "surah": 114,
+    "audio_sha256": "958819e2a43c6f02d397432b208398599f1c10dd7c08f19401ee3676550bf064",
+    "decode_seconds": 0.0746432919986546,
+    "dsp_seconds": 0.006731375120580196,
+    "phrases": [
+      [
+        1,
+        [
+          "قل",
+          "اعوذ"
+        ]
+      ],
+      [
+        2,
+        [
+          "ملك",
+          "الناس"
+        ]
+      ],
+      [
+        3,
+        [
+          "اله",
+          "الناس"
+        ]
+      ],
+      [
+        4,
+        [
+          "من",
+          "شر"
+        ]
+      ],
+      [
+        5,
+        [
+          "الذي",
+          "يوسوس"
+        ]
+      ],
+      [
+        6,
+        [
+          "من",
+          "الجنة"
+        ]
+      ]
+    ],
+    "duration_ms": 34560.0,
+    "pauses": [
+      {
+        "start_ms": 5720.0,
+        "end_ms": 6300.0,
+        "depth_ms": 580.0
+      },
+      {
+        "start_ms": 15840.0,
+        "end_ms": 16240.0,
+        "depth_ms": 400.0
+      },
+      {
+        "start_ms": 24660.0,
+        "end_ms": 25100.0,
+        "depth_ms": 440.0
+      }
+    ],
+    "model": "whisper-tarteel-tiny",
+    "load_seconds": 3.221062040887773,
+    "model_reads": [
+      {
+        "start_ms": 6100.0,
+        "end_ms": 7600.0,
+        "input_ms": 1500.0,
+        "pause_center_ms": 6010.0,
+        "seconds": 0.24499745783396065,
+        "text": "قُلْ أَعُوذُ بِالْأَعْوِ",
+        "ayah": 1,
+        "similarity": 0.8,
+        "margin": 0.8,
+        "confirmed": true,
+        "reason": "minimal_phrase",
+        "reference_ayah": 1,
+        "reference_distance_ms": 29.0,
+        "correct_ayah": true
+      },
+      {
+        "start_ms": 16040.0,
+        "end_ms": 17540.0,
+        "input_ms": 1500.0,
+        "pause_center_ms": 16040.0,
+        "seconds": 0.15219595888629556,
+        "text": "مِنْ شَرِّ",
+        "ayah": 4,
+        "similarity": 1.0,
+        "margin": 0.5,
+        "confirmed": true,
+        "reason": "minimal_phrase",
+        "reference_ayah": 4,
+        "reference_distance_ms": 102.0,
+        "correct_ayah": true
+      },
+      {
+        "start_ms": 24900.0,
+        "end_ms": 26400.0,
+        "input_ms": 1500.0,
+        "pause_center_ms": 24880.0,
+        "seconds": 0.1662945409771055,
+        "text": "مِنَ الْجِنِّ",
+        "ayah": 6,
+        "similarity": 0.5,
+        "margin": 0.0,
+        "confirmed": false,
+        "reason": "minimal_phrase",
+        "reference_ayah": 6,
+        "reference_distance_ms": 50.0,
+        "correct_ayah": true
+      },
+      {
+        "start_ms": 24900.0,
+        "end_ms": 28100.0,
+        "input_ms": 3200.0,
+        "pause_center_ms": 24880.0,
+        "seconds": 0.2210492908488959,
+        "text": "مِنَ الْجِنَّةِ وَالنَّ",
+        "ayah": 6,
+        "similarity": 0.8,
+        "margin": 0.4,
+        "confirmed": true,
+        "reason": "unconfirmed_phrase",
+        "reference_ayah": 6,
+        "reference_distance_ms": 50.0,
+        "correct_ayah": true
+      }
+    ],
+    "coverage": 0.17939814814814814,
+    "covered_audio_ms": 6200.0,
+    "audio_ms": 7700.0,
+    "inference_seconds": 0.7845372485462576,
+    "runtime_versions": {
+      "torch": "2.8.0",
+      "transformers": "4.57.3",
+      "numpy": "2.4.6"
+    },
+    "generation_config_source": {
+      "repo": "openai/whisper-tiny",
+      "revision": "169d4a4341b33bc18d8881c4b69c2e104e1cc0af",
+      "path": "generation_config.json",
+      "sha256": "a5d5325911f16e74001a72fa13d6e208eee51548f994646de1f4b4cc8b35b512"
+    },
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "revision": "c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0"
+  },
+  {
+    "surah": 112,
+    "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a",
+    "decode_seconds": 0.030183125054463744,
+    "dsp_seconds": 0.0009514580015093088,
+    "phrases": [
+      [
+        1,
+        [
+          "قل",
+          "هو"
+        ]
+      ],
+      [
+        2,
+        [
+          "الله",
+          "الصمد"
+        ]
+      ],
+      [
+        3,
+        [
+          "لم",
+          "يلد"
+        ]
+      ],
+      [
+        4,
+        [
+          "ولم",
+          "يكن"
+        ]
+      ]
+    ],
+    "duration_ms": 23484.0625,
+    "pauses": [
+      {
+        "start_ms": 5720.0,
+        "end_ms": 6320.0,
+        "depth_ms": 600.0
+      },
+      {
+        "start_ms": 8500.0,
+        "end_ms": 8880.0,
+        "depth_ms": 380.0
+      },
+      {
+        "start_ms": 10620.0,
+        "end_ms": 11000.0,
+        "depth_ms": 380.0
+      }
+    ],
+    "model": "whisper-tarteel-tiny",
+    "load_seconds": 3.221062040887773,
+    "model_reads": [
+      {
+        "start_ms": 6120.0,
+        "end_ms": 7620.0,
+        "input_ms": 1500.0,
+        "pause_center_ms": 6020.0,
+        "seconds": 0.1797050000168383,
+        "text": "قُلْ هُوَ اللَّهُ",
+        "ayah": 1,
+        "similarity": 0.8,
+        "margin": 0.4,
+        "confirmed": true,
+        "reason": "minimal_phrase",
+        "reference_ayah": 1,
+        "reference_distance_ms": 74.0,
+        "correct_ayah": true
+      },
+      {
+        "start_ms": 8680.0,
+        "end_ms": 10180.0,
+        "input_ms": 1500.0,
+        "pause_center_ms": 8690.0,
+        "seconds": 0.16652333294041455,
+        "text": "اللَّهُ الصَّالُ",
+        "ayah": 2,
+        "similarity": 0.5,
+        "margin": 0.5,
+        "confirmed": false,
+        "reason": "minimal_phrase",
+        "reference_ayah": 2,
+        "reference_distance_ms": 65.0,
+        "correct_ayah": true
+      },
+      {
+        "start_ms": 8680.0,
+        "end_ms": 11880.0,
+        "input_ms": 3200.0,
+        "pause_center_ms": 8690.0,
+        "seconds": 0.24754858296364546,
+        "text": "اللَّهُ الصَّمَدُ لَمْ يَلِدْ",
+        "ayah": 3,
+        "similarity": 0.6666666666666666,
+        "margin": 0.0,
+        "confirmed": false,
+        "reason": "unconfirmed_phrase",
+        "reference_ayah": 2,
+        "reference_distance_ms": 65.0,
+        "correct_ayah": false
+      },
+      {
+        "start_ms": 10800.0,
+        "end_ms": 12300.0,
+        "input_ms": 1500.0,
+        "pause_center_ms": 10810.0,
+        "seconds": 0.4057809580117464,
+        "text": "لَمْ يَلِدْ وَلَمْ يَلِدْ وَلَمْ يَلِدْ وَلَمْ يَلِدْ",
+        "ayah": 3,
+        "similarity": 0.4,
+        "margin": 0.2,
+        "confirmed": false,
+        "reason": "minimal_phrase",
+        "reference_ayah": 3,
+        "reference_distance_ms": 53.0,
+        "correct_ayah": true
+      },
+      {
+        "start_ms": 10800.0,
+        "end_ms": 14000.0,
+        "input_ms": 3200.0,
+        "pause_center_ms": 10810.0,
+        "seconds": 0.24116070801392198,
+        "text": "لَمْ يَلِدْ وَلَمْ يُولَدْ",
+        "ayah": 3,
+        "similarity": 0.6666666666666666,
+        "margin": 0.3333333333333333,
+        "confirmed": false,
+        "reason": "unconfirmed_phrase",
+        "reference_ayah": 3,
+        "reference_distance_ms": 53.0,
+        "correct_ayah": true
+      }
+    ],
+    "coverage": 0.290409719357543,
+    "covered_audio_ms": 6820.0,
+    "audio_ms": 10900.0,
+    "inference_seconds": 1.2407185819465667,
+    "runtime_versions": {
+      "torch": "2.8.0",
+      "transformers": "4.57.3",
+      "numpy": "2.4.6"
+    },
+    "generation_config_source": {
+      "repo": "openai/whisper-tiny",
+      "revision": "169d4a4341b33bc18d8881c4b69c2e104e1cc0af",
+      "path": "generation_config.json",
+      "sha256": "a5d5325911f16e74001a72fa13d6e208eee51548f994646de1f4b4cc8b35b512"
+    },
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "revision": "c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0"
+  },
+  {
+    "surah": 78,
+    "audio_sha256": "6b5e524700d4139920eead0a5b10544a73ccb0c79f1e9d04df8e2d1f385d7024",
+    "decode_seconds": 0.24205745896324515,
+    "dsp_seconds": 0.007413499988615513,
+    "phrases": [
+      [
+        1,
+        [
+          "عم",
+          "يتساءلون"
+        ]
+      ],
+      [
+        2,
+        [
+          "عن",
+          "النبا"
+        ]
+      ],
+      [
+        3,
+        [
+          "الذي",
+          "هم"
+        ]
+      ],
+      [
+        4,
+        [
+          "كلا",
+          "سيعلمون"
+        ]
+      ],
+      [
+        5,
+        [
+          "ثم",
+          "كلا"
+        ]
+      ],
+      [
+        6,
+        [
+          "الم",
+          "نجعل"
+        ]
+      ],
+      [
+        7,
+        [
+          "والجبال",
+          "اوتادا"
+        ]
+      ],
+      [
+        8,
+        [
+          "وخلقناكم",
+          "ازواجا"
+        ]
+      ],
+      [
+        9,
+        [
+          "وجعلنا",
+          "نومكم"
+        ]
+      ],
+      [
+        10,
+        [
+          "وجعلنا",
+          "الليل"
+        ]
+      ],
+      [
+        11,
+        [
+          "وجعلنا",
+          "النهار"
+        ]
+      ],
+      [
+        12,
+        [
+          "وبنينا",
+          "فوقكم"
+        ]
+      ],
+      [
+        13,
+        [
+          "وجعلنا",
+          "سراجا"
+        ]
+      ],
+      [
+        14,
+        [
+          "وانزلنا",
+          "من"
+        ]
+      ],
+      [
+        15,
+        [
+          "لنخرج",
+          "به"
+        ]
+      ],
+      [
+        16,
+        [
+          "وجنات",
+          "الفافا"
+        ]
+      ],
+      [
+        17,
+        [
+          "ان",
+          "يوم"
+        ]
+      ],
+      [
+        18,
+        [
+          "يوم",
+          "ينفخ"
+        ]
+      ],
+      [
+        19,
+        [
+          "وفتحت",
+          "السماء"
+        ]
+      ],
+      [
+        20,
+        [
+          "وسيرت",
+          "الجبال"
+        ]
+      ],
+      [
+        21,
+        [
+          "ان",
+          "جهنم"
+        ]
+      ],
+      [
+        22,
+        [
+          "للطاغين",
+          "مابا"
+        ]
+      ],
+      [
+        23,
+        [
+          "لابثين",
+          "فيها"
+        ]
+      ],
+      [
+        24,
+        [
+          "لا",
+          "يذوقون"
+        ]
+      ],
+      [
+        25,
+        [
+          "الا",
+          "حميما"
+        ]
+      ],
+      [
+        26,
+        [
+          "جزاء",
+          "وفاقا"
+        ]
+      ],
+      [
+        27,
+        [
+          "انهم",
+          "كانوا"
+        ]
+      ],
+      [
+        28,
+        [
+          "وكذبوا",
+          "باياتنا"
+        ]
+      ],
+      [
+        29,
+        [
+          "وكل",
+          "شيء"
+        ]
+      ],
+      [
+        30,
+        [
+          "فذوقوا",
+          "فلن"
+        ]
+      ],
+      [
+        31,
+        [
+          "ان",
+          "للمتقين"
+        ]
+      ],
+      [
+        32,
+        [
+          "حدائق",
+          "واعنابا"
+        ]
+      ],
+      [
+        33,
+        [
+          "وكواعب",
+          "اترابا"
+        ]
+      ],
+      [
+        34,
+        [
+          "وكاسا",
+          "دهاقا"
+        ]
+      ],
+      [
+        35,
+        [
+          "لا",
+          "يسمعون"
+        ]
+      ],
+      [
+        36,
+        [
+          "جزاء",
+          "من"
+        ]
+      ],
+      [
+        37,
+        [
+          "رب",
+          "السماوات"
+        ]
+      ],
+      [
+        38,
+        [
+          "يوم",
+          "يقوم"
+        ]
+      ],
+      [
+        39,
+        [
+          "ذلك",
+          "اليوم"
+        ]
+      ],
+      [
+        40,
+        [
+          "انا",
+          "انذرناكم"
+        ]
+      ]
+    ],
+    "duration_ms": 278987.75,
+    "pauses": [
+      {
+        "start_ms": 11840.0,
+        "end_ms": 12180.0,
+        "depth_ms": 340.0
+      },
+      {
+        "start_ms": 124160.0,
+        "end_ms": 124520.0,
+        "depth_ms": 360.0
+      },
+      {
+        "start_ms": 263860.0,
+        "end_ms": 264320.0,
+        "depth_ms": 460.0
+      }
+    ],
+    "model": "whisper-tarteel-tiny",
+    "load_seconds": 3.221062040887773,
+    "model_reads": [
+      {
+        "start_ms": 11980.0,
+        "end_ms": 13480.0,
+        "input_ms": 1500.0,
+        "pause_center_ms": 12010.0,
+        "seconds": 0.09960125014185905,
+        "text": "ع",
+        "ayah": 40,
+        "similarity": 0.0,
+        "margin": 0.0,
+        "confirmed": false,
+        "reason": "minimal_phrase",
+        "reference_ayah": 2,
+        "reference_distance_ms": 96.0,
+        "correct_ayah": false
+      },
+      {
+        "start_ms": 11980.0,
+        "end_ms": 15180.0,
+        "input_ms": 3200.0,
+        "pause_center_ms": 12010.0,
+        "seconds": 0.22485508397221565,
+        "text": "عَنِ النَّبَإِ الْعَظِيمِ",
+        "ayah": 2,
+        "similarity": 0.8,
+        "margin": 0.8,
+        "confirmed": true,
+        "reason": "unconfirmed_phrase",
+        "reference_ayah": 2,
+        "reference_distance_ms": 96.0,
+        "correct_ayah": true
+      },
+      {
+        "start_ms": 124320.0,
+        "end_ms": 125820.0,
+        "input_ms": 1500.0,
+        "pause_center_ms": 124340.0,
+        "seconds": 0.10591316712088883,
+        "text": "قاب",
+        "ayah": 40,
+        "similarity": 0.0,
+        "margin": 0.0,
+        "confirmed": false,
+        "reason": "minimal_phrase",
+        "reference_ayah": 24,
+        "reference_distance_ms": 1763.0,
+        "correct_ayah": false
+      },
+      {
+        "start_ms": 124320.0,
+        "end_ms": 127520.0,
+        "input_ms": 3200.0,
+        "pause_center_ms": 124340.0,
+        "seconds": 0.12494766688905656,
+        "text": "قَابًا",
+        "ayah": 40,
+        "similarity": 0.0,
+        "margin": 0.0,
+        "confirmed": false,
+        "reason": "unconfirmed_phrase",
+        "reference_ayah": 24,
+        "reference_distance_ms": 1763.0,
+        "correct_ayah": false
+      },
+      {
+        "start_ms": 264120.0,
+        "end_ms": 265620.0,
+        "input_ms": 1500.0,
+        "pause_center_ms": 264090.0,
+        "seconds": 0.14689337485469878,
+        "text": "وَيَقُولُ",
+        "ayah": 40,
+        "similarity": 0.0,
+        "margin": 0.0,
+        "confirmed": false,
+        "reason": "minimal_phrase",
+        "reference_ayah": 40,
+        "reference_distance_ms": 22792.0,
+        "correct_ayah": true
+      },
+      {
+        "start_ms": 264120.0,
+        "end_ms": 267320.0,
+        "input_ms": 3200.0,
+        "pause_center_ms": 264090.0,
+        "seconds": 0.22317066718824208,
+        "text": "وَيَقُولُ الْكَافِرُ يَا",
+        "ayah": 40,
+        "similarity": 0.0,
+        "margin": 0.0,
+        "confirmed": false,
+        "reason": "unconfirmed_phrase",
+        "reference_ayah": 40,
+        "reference_distance_ms": 22792.0,
+        "correct_ayah": true
+      }
+    ],
+    "coverage": 0.034410112988831947,
+    "covered_audio_ms": 9600.0,
+    "audio_ms": 14100.0,
+    "inference_seconds": 0.925381210166961,
+    "runtime_versions": {
+      "torch": "2.8.0",
+      "transformers": "4.57.3",
+      "numpy": "2.4.6"
+    },
+    "generation_config_source": {
+      "repo": "openai/whisper-tiny",
+      "revision": "169d4a4341b33bc18d8881c4b69c2e104e1cc0af",
+      "path": "generation_config.json",
+      "sha256": "a5d5325911f16e74001a72fa13d6e208eee51548f994646de1f4b4cc8b35b512"
+    },
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "revision": "c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0"
+  }
+]

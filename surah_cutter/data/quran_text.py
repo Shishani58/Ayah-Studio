@@ -16,8 +16,10 @@ from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
+from surah_cutter.resources import resource_path
+
 # Bundled DB: <repo>/data/quran_mushaf.db (this file is surah_cutter/data/quran_text.py).
-DEFAULT_DB_PATH = Path(__file__).resolve().parents[2] / "data" / "quran_mushaf.db"
+DEFAULT_DB_PATH = resource_path("data", "quran_mushaf.db")
 
 
 @dataclass(frozen=True)

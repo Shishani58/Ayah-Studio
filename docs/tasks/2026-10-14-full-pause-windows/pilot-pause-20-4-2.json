@@ -1,0 +1,330 @@
+{
+  "case": "pause:20:4:2",
+  "load_s": 0.14755366696044803,
+  "surahs": [
+    {
+      "surah": 112,
+      "repeat": 0,
+      "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a",
+      "duration_s": 23.4840625,
+      "decode_s": 0.05903666582889855,
+      "emissions_s": 2.318084124941379,
+      "alignment_s": 0.21550408308394253,
+      "full_s": 2.5335882080253214,
+      "emissions_sha256": "bb437e4c1b339478497562109ac314817dee779979fe225827c190111984ebf4",
+      "frames": 1175,
+      "windows": {
+        "window_s": 20,
+        "context_s": 2,
+        "workers": 4,
+        "batch_size": 1,
+        "dsp_s": 0.00580449984408915,
+        "windows": [
+          {
+            "start_ms": 0.0,
+            "end_ms": 23484.0625,
+            "read_start_ms": 0.0,
+            "read_end_ms": 23484.0625,
+            "input_samples": 440000,
+            "frames": 1175,
+            "cut_reason": "end"
+          }
+        ],
+        "short_clip": false,
+        "inference_s": 2.309064708882943,
+        "pause_cuts": 0,
+        "fallback_cuts": 0
+      },
+      "rows": [
+        [
+          1,
+          6076,
+          0.1131
+        ],
+        [
+          2,
+          8714,
+          0.0031
+        ],
+        [
+          3,
+          10773,
+          0.2598
+        ],
+        [
+          4,
+          13491,
+          0.3696
+        ]
+      ],
+      "errors_ms": [
+        -18,
+        -41,
+        -90,
+        -39
+      ],
+      "stats": {
+        "n": 4,
+        "median_ms": 40.0,
+        "p95_ms": 82.64999999999998,
+        "max_ms": 90.0,
+        "over500": 0
+      },
+      "seam_errors_ms": [],
+      "review": [
+        1,
+        2
+      ]
+    },
+    {
+      "surah": 114,
+      "repeat": 0,
+      "audio_sha256": "958819e2a43c6f02d397432b208398599f1c10dd7c08f19401ee3676550bf064",
+      "duration_s": 34.56,
+      "decode_s": 0.054138374980539083,
+      "emissions_s": 2.3328802918549627,
+      "alignment_s": 0.023963874904438853,
+      "full_s": 2.3568441667594016,
+      "emissions_sha256": "27236873571d72417e8f00624c14d7ad048a5732981c07e56c3f857348facd03",
+      "frames": 1728,
+      "windows": {
+        "window_s": 20,
+        "context_s": 2,
+        "workers": 4,
+        "batch_size": 1,
+        "dsp_s": 0.0014624169562011957,
+        "windows": [
+          {
+            "start_ms": 0.0,
+            "end_ms": 20460.0,
+            "read_start_ms": 0.0,
+            "read_end_ms": 22460.0,
+            "input_samples": 391360,
+            "frames": 1023,
+            "cut_reason": "pause"
+          },
+          {
+            "start_ms": 20460.0,
+            "end_ms": 34560.0,
+            "read_start_ms": 18460.0,
+            "read_end_ms": 34560.0,
+            "input_samples": 289600,
+            "frames": 705,
+            "cut_reason": "end"
+          }
+        ],
+        "short_clip": false,
+        "inference_s": 2.3305606248322874,
+        "pause_cuts": 1,
+        "fallback_cuts": 0
+      },
+      "rows": [
+        [
+          1,
+          6100,
+          0.0265
+        ],
+        [
+          2,
+          10260,
+          0.1848
+        ],
+        [
+          3,
+          13160,
+          0.2765
+        ],
+        [
+          4,
+          16060,
+          0.6003
+        ],
+        [
+          5,
+          20540,
+          0.046
+        ],
+        [
+          6,
+          24900,
+          0.5844
+        ]
+      ],
+      "errors_ms": [
+        61,
+        -3,
+        -11,
+        -82,
+        -10,
+        -30
+      ],
+      "stats": {
+        "n": 6,
+        "median_ms": 20.5,
+        "p95_ms": 76.75,
+        "max_ms": 82.0,
+        "over500": 0
+      },
+      "seam_errors_ms": [
+        -10
+      ],
+      "review": [
+        1,
+        2,
+        5
+      ]
+    },
+    {
+      "surah": 98,
+      "repeat": 0,
+      "audio_sha256": "bc7a058fcc0c8130cfaca391f40c76c0bccba24e4956fc6eb82085c2460dbfcf",
+      "duration_s": 109.8188125,
+      "decode_s": 0.11798758315853775,
+      "emissions_s": 6.682163750054315,
+      "alignment_s": 0.1787280000280589,
+      "full_s": 6.860891750082374,
+      "emissions_sha256": "97ba3f0391aca06b97a7afe6bdba9a2230fc1563f6caa2c8903e7223a6a99389",
+      "frames": 5491,
+      "windows": {
+        "window_s": 20,
+        "context_s": 2,
+        "workers": 4,
+        "batch_size": 1,
+        "dsp_s": 0.00321508408524096,
+        "windows": [
+          {
+            "start_ms": 0.0,
+            "end_ms": 22960.0,
+            "read_start_ms": 0.0,
+            "read_end_ms": 24960.0,
+            "input_samples": 431360,
+            "frames": 1148,
+            "cut_reason": "pause"
+          },
+          {
+            "start_ms": 22960.0,
+            "end_ms": 44160.0,
+            "read_start_ms": 20960.0,
+            "read_end_ms": 46160.0,
+            "input_samples": 403200,
+            "frames": 1060,
+            "cut_reason": "pause"
+          },
+          {
+            "start_ms": 44160.0,
+            "end_ms": 61840.0,
+            "read_start_ms": 42160.0,
+            "read_end_ms": 63840.0,
+            "input_samples": 346880,
+            "frames": 884,
+            "cut_reason": "pause"
+          },
+          {
+            "start_ms": 61840.0,
+            "end_ms": 80740.0,
+            "read_start_ms": 59840.0,
+            "read_end_ms": 82740.0,
+            "input_samples": 366400,
+            "frames": 945,
+            "cut_reason": "pause"
+          },
+          {
+            "start_ms": 80740.0,
+            "end_ms": 109818.8125,
+            "read_start_ms": 78740.0,
+            "read_end_ms": 109818.8125,
+            "input_samples": 529280,
+            "frames": 1454,
+            "cut_reason": "end"
+          }
+        ],
+        "short_clip": false,
+        "inference_s": 6.675800208002329,
+        "pause_cuts": 4,
+        "fallback_cuts": 0
+      },
+      "rows": [
+        [
+          1,
+          6160,
+          0.7125
+        ],
+        [
+          2,
+          16980,
+          0.0091
+        ],
+        [
+          3,
+          22880,
+          0.0106
+        ],
+        [
+          4,
+          26060,
+          0.9915
+        ],
+        [
+          5,
+          35300,
+          0.9158
+        ],
+        [
+          6,
+          53119,
+          0.0725
+        ],
+        [
+          7,
+          71839,
+          0.1869
+        ],
+        [
+          8,
+          80759,
+          0.0266
+        ]
+      ],
+      "errors_ms": [
+        50,
+        269,
+        135,
+        113,
+        88,
+        171,
+        163,
+        58
+      ],
+      "stats": {
+        "n": 8,
+        "median_ms": 124.0,
+        "p95_ms": 234.69999999999993,
+        "max_ms": 269.0,
+        "over500": 0
+      },
+      "seam_errors_ms": [
+        135,
+        58
+      ],
+      "review": [
+        2,
+        3,
+        6,
+        7,
+        8
+      ]
+    }
+  ],
+  "failures": [],
+  "onnxruntime": "1.27.0",
+  "model_sha256": "423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a",
+  "peak_rss_mib": 1768.03125,
+  "errors": {
+    "n": 18,
+    "median_ms": 59.5,
+    "p95_ms": 185.69999999999987,
+    "max_ms": 269.0,
+    "over500": 0
+  },
+  "full_s": 11.751324124867097
+}

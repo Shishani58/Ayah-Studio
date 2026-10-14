@@ -18,6 +18,8 @@ Your audio stays on your computer. The app interface is in Russian.
 
 For **Apple Silicon Macs** (M1 or newer). Open the DMG, drag **Ayah Studio**
 to **Applications**, eject the disk and launch the app. Python and the default model are bundled. Optional models can be downloaded in Settings.
+The interface supports English and Russian. It uses the system language on first
+launch; change it later in **Settings → Interface → Language**.
 
 This build is not Apple-notarized. If macOS blocks the first launch, see
 [Apple’s guidance](https://support.apple.com/en-us/102445).

@@ -1,0 +1,861 @@
+{
+  "kind": "observation_replay_not_new_inference",
+  "frozen_source_sha256": "7072ef5556a336c1d79b7131e67d4d5bb429b66ff18c5bc343c636b5ee533380",
+  "current_source_sha256": "011ceae6dbcbf616c33bb44b3737d9008d9471f656160baa980c5a03654ef97a",
+  "current_algorithm": "sequential-fast-v2-experimental-4",
+  "current_dsp_models": {
+    "silero": {
+      "path": "/Users/ayub/Developer/surah-cutter/models/silero_vad.onnx",
+      "available": true,
+      "sha256": "1a153a22f4509e292a94e67d6f9b85e8deb25b4988682b7e174c65279d8788e3",
+      "provider": "CPUExecutionProvider"
+    },
+    "onnxruntime_version": "1.27.0",
+    "numpy_version": "2.5.0",
+    "ten_vad": {
+      "available": false
+    }
+  },
+  "results": [
+    {
+      "model": "quran-phonetics",
+      "surah": 1,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 1,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 2
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 1,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 2
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 2,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 2,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 2,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 3
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 9,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 4
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 9,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 3
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 9,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 6
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 78,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 5
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 78,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 5
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 78,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 5
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 79,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 79,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 79,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 80,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 80,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 9
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 80,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 7
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 81,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 81,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 18
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 81,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 33
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 82,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 82,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 14
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 82,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 11
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 83,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 83,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 16
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 83,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 16
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 84,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 84,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 6
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 84,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 6
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 85,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 5
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 85,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 6
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 85,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 16
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 86,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 86,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 7
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 86,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 31
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 87,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 87,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 87,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 7
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 88,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 6
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 88,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 45
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 88,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 41
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 89,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 5
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 89,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 11
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 89,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 90,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 90,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 4
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 90,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 29
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 91,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 5
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 91,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 19
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 91,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 23
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 92,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 5
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 92,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 5
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 92,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 5
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 93,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 6
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 93,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 19
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 93,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 14
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 94,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 4
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 94,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 9
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 94,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 7
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 95,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 95,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 7
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 95,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 4
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 96,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 96,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 9
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 96,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 7
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 97,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 5
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 97,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 10
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 97,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 9
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 98,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 12
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 98,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 6
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 98,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 23
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 99,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 6
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 99,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 11
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 99,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 10
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 100,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 6
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 100,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 6
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 100,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 19
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 101,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 101,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 5
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 101,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 5
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 102,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 102,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 102,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 9
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 103,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 5
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 103,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 5
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 103,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 5
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 104,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 12
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 104,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 14
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 104,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 17
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 105,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 105,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 105,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 7
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 106,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 6
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 106,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 7
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 106,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 4
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 107,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 5
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 107,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 4
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 107,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 4
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 108,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 6
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 108,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 6
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 108,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 6
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 109,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 9
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 109,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 10
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 109,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 10
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 110,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 5
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 110,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 5
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 110,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 5
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 111,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 7
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 111,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 11
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 111,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 8
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 112,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 4
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 112,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 7
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 112,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 7
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 113,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 7
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 113,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 5
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 113,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 12
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 114,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 7
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 114,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 5
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 114,
+      "identical_rows": true,
+      "identical_windows": true,
+      "replayed_observations": 4
+    }
+  ]
+}

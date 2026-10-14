@@ -1,0 +1,86 @@
+{
+  "pytest": {
+    "passed": 784,
+    "skipped": 7,
+    "seconds": 11.49,
+    "opt_in_audio_skips": true
+  },
+  "independent_probes": {
+    "beam": 32,
+    "attribution": 5,
+    "context": 6,
+    "prefix": 35,
+    "prefix-proof": 5,
+    "identity": 9,
+    "sparse": 5,
+    "edge": 7
+  },
+  "ruff": "passed",
+  "protected_files": 49,
+  "fresh_model_cases": 4,
+  "fresh_dispatches": 126,
+  "fresh_context_aggregate": [
+    [
+      "whisper-tarteel-tiny",
+      109,
+      3,
+      0.9963571699239625
+    ],
+    [
+      "whisper-tarteel-tiny",
+      109,
+      5,
+      0.8536755726578299
+    ],
+    [
+      "whisper-tarteel-base",
+      109,
+      3,
+      0.9998740116489376
+    ],
+    [
+      "whisper-tarteel-base",
+      109,
+      5,
+      0.9998735349447193
+    ]
+  ],
+  "same_boundaries_and_acceptance_as_sparse4": [
+    [
+      "whisper-tarteel-tiny",
+      20,
+      true
+    ],
+    [
+      "whisper-tarteel-tiny",
+      109,
+      true
+    ],
+    [
+      "whisper-tarteel-base",
+      20,
+      true
+    ],
+    [
+      "whisper-tarteel-base",
+      109,
+      true
+    ]
+  ],
+  "source_sha256": {
+    "surah_cutter/core/align_fast.py": "0847f22065d7dd91ec49490341fd17c401bd4ecd48b049f98ad4dc627fe67b59",
+    "surah_cutter/core/align_fast_whisper.py": "cf4cd9768989f1ee0eb58b1749e22a63917f2e6f6facef8af68637886609a456",
+    "surah_cutter/core/fast_reads.py": "82ad5dbedf01636d2692fe17070a5938ff692fffced0a52d6f2fadce1283fe4b",
+    "surah_cutter/core/candidates.py": "311d6ad230f2dc2aaf9cba31431d9e8d8570a1252865e1bc8cad1fc2942bf2db",
+    "surah_cutter/core/fast_executor.py": "747886fe9527e9a7147aa952c65cd5eb5b5d4453d58d5e6c9f94052284d21ebd",
+    "surah_cutter/core/fast_adapters.py": "199345503bcc41fd4a88505f2c2ed32e0dd67075b55cafe1cc22eb71992c864f",
+    "surah_cutter/core/fast_ctc.py": "7b681cc7fd4179fcde6b7654bb986de8984b86a5e884c653148fe1b3d6daca3d",
+    "surah_cutter/core/align.py": "dd98b59bc807f9f494134880a8277a34af90fb5b2658d19ac99107195ac5d931",
+    "surah_cutter/core/emissions.py": "dde1335cf3f5641dff8cc3e4803ebdb7c61cd766dc960e3f9f163f5b3bba158a",
+    "surah_cutter/core/model_runtime.py": "f34bae23814e3a11e6230c0d5ae67b308257bef7af1cbdd56fb8dc166b0213a5",
+    "surah_cutter/core/model_worker.py": "f4cd775a0d558384c68477b485f893a44640f0892e6bf180264c51e24fd313ab",
+    "surah_cutter/core/model_store.py": "434675e4266f394a60649297311fdbbc34ac2fb3ae8f99435fc3be9016a73a23",
+    "tools/bench_fast_models.py": "611eda18abac9bca5ddc9e723cce2a8ba2e0559fcc3cf85fb7cec2ae7ab4cf33",
+    "surah_cutter/data/alignment_identity.py": "7108ade84f10e7f3aeaf2a790f256e487055c9eaa7bb3486ee549e70af81e010"
+  }
+}

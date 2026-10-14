@@ -1,0 +1,130 @@
+[
+  {
+    "mode": "fast",
+    "seconds": 1.77,
+    "written": 6,
+    "rows": [
+      [
+        114,
+        1,
+        6010
+      ],
+      [
+        114,
+        2,
+        10170
+      ],
+      [
+        114,
+        3,
+        13120
+      ],
+      [
+        114,
+        4,
+        16040
+      ],
+      [
+        114,
+        5,
+        20460
+      ],
+      [
+        114,
+        6,
+        24880
+      ]
+    ],
+    "confidence": [
+      0.4287,
+      0.977,
+      0.589,
+      0.995,
+      0.789,
+      0.875
+    ],
+    "trace": {
+      "model_source": "onnx-ctc:quran-phonetics:revision=local-export:sha256=423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a:lag=200",
+      "backend": "onnx",
+      "align_lag_ms": 200,
+      "coverage": 0.452,
+      "covered_audio_ms": 15620.0,
+      "audio_ms": 29390.0,
+      "emission_passes": 12,
+      "denied_acoustic_reads": [
+        {
+          "window_ms": [
+            12960.0,
+            20510.0
+          ],
+          "reason": "nonlocal_window"
+        },
+        {
+          "window_ms": [
+            15840.0,
+            24090.0
+          ],
+          "reason": "nonlocal_window"
+        },
+        {
+          "window_ms": [
+            15840.0,
+            24935.0
+          ],
+          "reason": "nonlocal_window"
+        }
+      ]
+    }
+  },
+  {
+    "mode": "full",
+    "seconds": 3.67,
+    "written": 6,
+    "rows": [
+      [
+        114,
+        1,
+        6100
+      ],
+      [
+        114,
+        2,
+        10260
+      ],
+      [
+        114,
+        3,
+        13140
+      ],
+      [
+        114,
+        4,
+        16060
+      ],
+      [
+        114,
+        5,
+        20540
+      ],
+      [
+        114,
+        6,
+        24900
+      ]
+    ],
+    "confidence": [
+      0.0319,
+      0.1392,
+      0.186,
+      0.1959,
+      0.0586,
+      0.319
+    ],
+    "trace": {
+      "model_source": "onnx-ctc:quran-phonetics:revision=local-export:sha256=423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a:lag=200",
+      "backend": "onnx",
+      "align_lag_ms": 200,
+      "emission_passes": 1
+    }
+  }
+]

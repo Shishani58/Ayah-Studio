@@ -79,6 +79,72 @@ def test_ayah_review_status_round_trip_preserves_time(project):
         assert db.write_timings([(114, 1, 9999)], source="auto") == 0
 
 
+def test_generation_reruns_changed_mode_and_keeps_manual_marks(project, monkeypatch):
+    from surah_cutter.core import pipeline
+
+    calls = []
+
+    def align(audio, surah, **kwargs):
+        mode = kwargs["mode"]
+        calls.append(mode)
+        confidence = 0.2 if mode == "fast" else 0.9
+        kwargs["trace"].update(mode=mode, model_source="onnx-ctc:test", ayahs=[
+            {"ayah": a, "conf": confidence} for a in range(1, 7)
+        ])
+        return [(surah, a, a * 1000 + (100 if mode == "full" else 0)) for a in range(1, 7)]
+
+    monkeypatch.setattr(pipeline, "process_surah", align)
+    monkeypatch.setattr(server._GenJob, "start", server._GenJob._run)
+    monkeypatch.setattr(server.model_store, "active_kind", lambda: "phonetic")
+    generate = endpoint("/api/generate")
+    generate({"suras": [114], "mode": "fast", "only_missing": True})
+    with ProjectDB.open(str(project.db_path), DB_CODE, DB_VERSION) as db:
+        db.set_time(114, 1, 999)
+        db.set_status(114, 2, "verified")
+        protected = [db.get_review(114, a) for a in (1, 2)]
+    assert generate({"suras": [114], "mode": "full", "only_missing": True})["suras"] == [114]
+    assert calls == ["fast", "full"]
+    ayahs = endpoint("/api/sura/{surah}")(114)["ayahs"]
+    assert [a["time"] for a in ayahs] == [999, 2000, 3100, 4100, 5100, 6100]
+    assert [a["confidence"] for a in ayahs] == [None, 0.2, 0.9, 0.9, 0.9, 0.9]
+    with ProjectDB.open(str(project.db_path), DB_CODE, DB_VERSION) as db:
+        assert [db.get_review(114, a) for a in (1, 2)] == protected
+        assert "requested_mode=full" in db.get_review(114, 3)["source"]
+    assert endpoint("/api/suras")()[-1]["alignment_modes"] == ["full"]
+    with pytest.raises(HTTPException, match="all done"):
+        generate({"suras": [114], "mode": "full", "only_missing": True})
+    assert calls == ["fast", "full"]
+
+
+def test_explicit_mode_resume_recalculates_unknown_and_mixed_modes(project, monkeypatch):
+    with ProjectDB.open(str(project.db_path), DB_CODE, DB_VERSION) as db:
+        db.write_timings([(114, a, a * 1000) for a in range(1, 7)], source="legacy")
+    starts = []
+    monkeypatch.setattr(server._GenJob, "start", lambda job, suras, mode, reciter: starts.append(suras))
+    assert endpoint("/api/generate")({"suras": [114], "mode": "full", "only_missing": True})["suras"] == [114]
+    with ProjectDB.open(str(project.db_path), DB_CODE, DB_VERSION) as db:
+        db.write_timings([(114, a, a * 1000) for a in range(1, 7)], source="test:requested_mode=full")
+        db.write_timings([(114, 6, 6000)], source="test:requested_mode=fast")
+    assert endpoint("/api/suras")()[-1]["alignment_modes"] == ["fast", "full"]
+    assert endpoint("/api/generate")({"suras": [114], "mode": "full", "only_missing": True})["suras"] == [114]
+    with ProjectDB.open(str(project.db_path), DB_CODE, DB_VERSION) as db:
+        for a in range(1, 7):
+            db.set_status(114, a, "verified")
+    assert endpoint("/api/suras")()[-1]["alignment_modes"] == []
+    with pytest.raises(HTTPException, match="all done"):
+        endpoint("/api/generate")({"suras": [114], "mode": "full", "only_missing": True})
+
+
+def test_manual_time_invalidates_confidence_even_after_verification(project):
+    with ProjectDB.open(str(project.db_path), DB_CODE, DB_VERSION) as db:
+        db.write_timings([(114, 1, 1000)], source="test", confidence=0.9)
+        db.set_time(114, 1, 1100)
+        db.set_status(114, 1, "verified")
+        # Keep the historic model evidence, but don't present it for a manual time.
+        assert db.get_review(114, 1)["confidence"] == 0.9
+    assert endpoint("/api/sura/{surah}")(114)["ayahs"][0]["confidence"] is None
+
+
 @pytest.mark.parametrize("payload", [
     {"surah": 114, "ayah": 7},
     {"surah": 114, "ayah": True},
@@ -167,8 +233,8 @@ def test_job_retains_audio_database_and_logs_when_state_changes(project, tmp_pat
     assert not project.db_path.exists()
     assert (tmp_path / "a.logs/sura_114_fast.log").read_text() == "test alignment\n"
     assert not (tmp_path / "b.logs").exists()
-    events = list(job.q.queue)
-    assert events[-2] == {"type": "done", "completed": 2}
+    events = job.events.snapshot()
+    assert events[-1] == {"type": "done", "completed": 2}
 
 
 def test_full_job_saves_trace_confidence_and_preserves_manual_rows(project, monkeypatch):
@@ -181,6 +247,9 @@ def test_full_job_saves_trace_confidence_and_preserves_manual_rows(project, monk
     def process(audio, surah, **kwargs):
         kwargs["trace"].update({
             "mode": "full",
+            "model_source": "test-model:revision=immutable",
+            "backend": "test", "align_lag_ms": 120,
+            "lag_adjust_ms": 37,
             "ayahs": [{"ayah": 1, "conf": 0.01}, {"ayah": 2, "conf": 0.15}],
         })
         kwargs["log_event"]("weak-onset")
@@ -196,6 +265,10 @@ def test_full_job_saves_trace_confidence_and_preserves_manual_rows(project, monk
         assert meta[1]["status"] == "verified"
         assert meta[1]["confidence"] is None
         assert meta[2]["confidence"] == 0.15
+        assert meta[2]["source"] == (
+            "test-model:revision=immutable:backend=test:requested_mode=full"
+            ":actual_mode=full:align_lag_ms=120:lag_adjust_ms=37"
+        )
     import json
 
     saved = json.loads(project.db_path.with_name("a.logs").joinpath("sura_114_full.json").read_text())
@@ -206,7 +279,12 @@ def test_full_draft_correction_keeps_confidence_diagnostics(project, monkeypatch
     from surah_cutter.core import pipeline
 
     def process(audio, surah, **kwargs):
-        kwargs["trace"]["ayahs"] = [{"ayah": 1, "conf": 0.03, "reliable": False}]
+        kwargs["trace"].update({
+            "ayahs": [{"ayah": 1, "conf": 0.03, "reliable": False}],
+            "model_source": "correct-model:revision=pinned",
+            "backend": "test", "align_lag_ms": 0,
+            "mode": "full", "lag_adjust_ms": 0,
+        })
         kwargs["log_event"]("weak-onset")
         return [(surah, 1, 6100)]
 
@@ -216,7 +294,26 @@ def test_full_draft_correction_keeps_confidence_diagnostics(project, monkeypatch
     assert result["written"] == 1
     with ProjectDB.open(str(project.db_path), DB_CODE, DB_VERSION) as db:
         assert db.get_review(114, 1)["confidence"] == 0.03
+        assert db.get_review(114, 1)["source"] == (
+            "correct-model:revision=pinned:backend=test:requested_mode=full"
+            ":actual_mode=full:align_lag_ms=0:lag_adjust_ms=0"
+        )
     assert project.db_path.with_name("a.logs").joinpath("sura_114_correct-full.log").read_text() == "weak-onset\n"
+
+
+@pytest.mark.parametrize("path", [
+    "/api/sura/{surah}/draft-pauses", "/api/sura/{surah}/correct-draft",
+])
+def test_draft_write_rejects_request_from_another_project(project, tmp_path, monkeypatch, path):
+    from surah_cutter.core import decode, pipeline
+
+    monkeypatch.setattr(decode, "decode", lambda *_: pytest.fail("Stale request must not decode audio"))
+    monkeypatch.setattr(pipeline, "process_surah", lambda *_a, **_k:
+                        pytest.fail("Stale request must not align audio"))
+    with pytest.raises(HTTPException) as exc:
+        endpoint(path)(114, {"db_path": str(tmp_path / "previous.db"), "mode": "full"})
+    assert exc.value.status_code == 409
+    assert timings(project.db_path) == []
 
 
 def test_running_generation_rejects_project_switch_and_second_start(project, tmp_path, monkeypatch):
@@ -275,7 +372,9 @@ def test_resume_fills_partial_sura_and_preserves_manual_ayahs(project, monkeypat
 
 def test_wrong_ayah_set_is_partial_even_with_expected_row_count(project):
     with ProjectDB.open(str(project.db_path), DB_CODE, DB_VERSION) as db:
-        db.write_timings([(114, a, a * 1000) for a in [1, 2, 3, 4, 5, 999]], source="auto")
+        db._conn.executemany("INSERT INTO timings VALUES (?, ?, ?)",
+                             [(114, a, a * 1000) for a in [1, 2, 3, 4, 5, 999]])
+        db._conn.commit()
     assert server._processed_suras() == set()
     statuses = {row["surah"]: row["status"] for row in endpoint("/api/suras")()}
     assert statuses[114] == "partial"
@@ -487,7 +586,7 @@ def test_word_sura_job_keeps_ayahs_and_preserves_verified_word(complete_word_pro
     job = server._GenJob(path, complete_word_project.audio_map)
     job._run([114], "words", None)
     assert timings(path) == before
-    event = next(e for e in job.q.queue if e and e["type"] == "sura")
+    event = next(e for e in job.events.snapshot() if e and e["type"] == "sura")
     assert event["words_written"] == len(server.quran_text.surah_words(114)) - 1
     assert event["word_failures"] == 0
     assert event["written"] == 0
@@ -532,7 +631,7 @@ def test_word_sura_job_reports_unaligned_ayah_and_continues(complete_word_projec
     monkeypatch.setattr(word_align, "align_ayah_words", compute)
     job = server._GenJob(complete_word_project.db_path, complete_word_project.audio_map)
     job._run([114], "words", None)
-    event = next(e for e in job.q.queue if e and e["type"] == "sura")
+    event = next(e for e in job.events.snapshot() if e and e["type"] == "sura")
     assert event["word_failures"] == 1
     assert not server._word_progress()[114]["complete"]
     with ProjectDB.open(str(complete_word_project.db_path), DB_CODE, DB_VERSION) as db:
@@ -656,7 +755,7 @@ def test_cancel_current_sura_does_not_write_computed_rows(project, monkeypatch):
     job._run([113, 114], "full", None)
     assert calls == [113]
     assert timings(project.db_path) == []
-    assert list(job.q.queue)[-2:] == [{"type": "cancelled", "completed": 0}, None]
+    assert job.events.snapshot()[-1:] == [{"type": "cancelled", "completed": 0}]
     assert not job.running
     assert server.model_store.RUNTIME_LOCK.acquire(blocking=False)
     server.model_store.RUNTIME_LOCK.release()
@@ -665,7 +764,7 @@ def test_cancel_current_sura_does_not_write_computed_rows(project, monkeypatch):
     retry = server._GenJob(project.db_path, project.audio_map)
     retry._run([114], "full", None)
     assert timings(project.db_path) == [(114, 1, 100)]
-    assert list(retry.q.queue)[-2:] == [{"type": "done", "completed": 1}, None]
+    assert retry.events.snapshot()[-1:] == [{"type": "done", "completed": 1}]
 
 
 def test_cancel_words_preserves_finished_ayah_and_manual_marks(complete_word_project, monkeypatch):
@@ -698,4 +797,4 @@ def test_cancel_words_preserves_finished_ayah_and_manual_marks(complete_word_pro
         assert first[0]["time"] == 1100
         assert first[0]["status"] == "verified"
         assert db.get_word_timings(114, 2) == []
-    assert list(job.q.queue)[-2:] == [{"type": "cancelled", "completed": 0}, None]
+    assert job.events.snapshot()[-1:] == [{"type": "cancelled", "completed": 0}]

@@ -1,0 +1,13 @@
+{
+  "file_change_does_not_relabel_loaded_weights": true,
+  "returned_copy_cannot_mutate_snapshot": true,
+  "influence_changes_key": {
+    "weights_sha256": true,
+    "vocab": true,
+    "blank_id": true,
+    "do_normalize": true,
+    "onnxruntime": true,
+    "providers": true
+  },
+  "loaded_code_kwdefault_changes_fingerprint": true
+}

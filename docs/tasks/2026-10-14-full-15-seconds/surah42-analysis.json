@@ -1,0 +1,302 @@
+{
+  "groups": {
+    "fixed:30:1:0": {
+      "full_times_s": [
+        58.111609291285276,
+        54.93653133301996
+      ],
+      "mean_full_s": 56.52407031215262,
+      "median_full_s": 56.52407031215262,
+      "peak_rss_mib": [
+        1511.515625,
+        1511.53125
+      ],
+      "max_peak_rss_mib": 1511.53125,
+      "stats": {
+        "n": 53,
+        "median_ms": 66.0,
+        "p95_ms": 127.79999999999998,
+        "max_ms": 830.0,
+        "over500": 1
+      },
+      "mean_abs_error_ms": 83.73584905660377,
+      "large_errors": [
+        {
+          "ayah": 1,
+          "error_ms": -830,
+          "flagged": true
+        }
+      ],
+      "repeat_checks": {
+        "emissions": true,
+        "rows_confidence": true,
+        "review": true,
+        "windows": true
+      },
+      "review_ayahs": [
+        1,
+        2,
+        4,
+        6,
+        9,
+        10,
+        11,
+        12,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        25,
+        26,
+        28,
+        30,
+        33,
+        34,
+        35,
+        37,
+        38,
+        39,
+        42,
+        43,
+        45,
+        46,
+        47,
+        49,
+        50,
+        52,
+        53
+      ],
+      "frames": 49623
+    },
+    "strong:15:3:0": {
+      "full_times_s": [
+        35.895170625066385,
+        34.601419957820326
+      ],
+      "mean_full_s": 35.248295291443355,
+      "median_full_s": 35.248295291443355,
+      "peak_rss_mib": [
+        1740.65625,
+        1840.265625
+      ],
+      "max_peak_rss_mib": 1840.265625,
+      "stats": {
+        "n": 53,
+        "median_ms": 74.0,
+        "p95_ms": 127.39999999999999,
+        "max_ms": 810.0,
+        "over500": 1
+      },
+      "mean_abs_error_ms": 83.01886792452831,
+      "large_errors": [
+        {
+          "ayah": 1,
+          "error_ms": -810,
+          "flagged": true
+        }
+      ],
+      "repeat_checks": {
+        "emissions": true,
+        "rows_confidence": true,
+        "review": true,
+        "windows": true
+      },
+      "review_ayahs": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        9,
+        10,
+        12,
+        16,
+        17,
+        18,
+        19,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        28,
+        31,
+        33,
+        34,
+        37,
+        38,
+        39,
+        42,
+        43,
+        44,
+        45,
+        47,
+        49,
+        50,
+        52,
+        53
+      ],
+      "frames": 49623,
+      "windows": 63,
+      "min_window_s": 7.68,
+      "max_window_s": 24.0,
+      "all_internal_cuts_in_confirmed_signal_pauses": true
+    },
+    "strong:20:3:0": {
+      "full_times_s": [
+        36.00593737512827,
+        33.996436666930094
+      ],
+      "mean_full_s": 35.00118702102918,
+      "median_full_s": 35.00118702102918,
+      "peak_rss_mib": [
+        2032.5625,
+        2099.4375
+      ],
+      "max_peak_rss_mib": 2099.4375,
+      "stats": {
+        "n": 53,
+        "median_ms": 66.0,
+        "p95_ms": 127.39999999999999,
+        "max_ms": 810.0,
+        "over500": 1
+      },
+      "mean_abs_error_ms": 83.39622641509433,
+      "large_errors": [
+        {
+          "ayah": 1,
+          "error_ms": -810,
+          "flagged": true
+        }
+      ],
+      "repeat_checks": {
+        "emissions": true,
+        "rows_confidence": true,
+        "review": true,
+        "windows": true
+      },
+      "review_ayahs": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        9,
+        10,
+        12,
+        13,
+        16,
+        17,
+        18,
+        19,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        31,
+        33,
+        34,
+        35,
+        37,
+        38,
+        39,
+        42,
+        43,
+        44,
+        45,
+        47,
+        49,
+        50,
+        52,
+        53
+      ],
+      "frames": 49623,
+      "windows": 48,
+      "min_window_s": 15.64,
+      "max_window_s": 32.24,
+      "all_internal_cuts_in_confirmed_signal_pauses": true
+    }
+  },
+  "sources_unchanged": false,
+  "source_changes": [
+    {
+      "path": "surah_cutter/core/emissions.py",
+      "before": "a651c130ceac9d6b8b53581db1637790b5b26d2089309f5fce10020e28502524",
+      "after": "a972f5f0f6efac8c5af6ed88fc355dedbcb592478b1adebab21aff32e1323013",
+      "mtime": 1791936020.5872462
+    }
+  ],
+  "last_import_upper_bound_epoch": 1791935991.4820178,
+  "source_changes_after_all_imports": true,
+  "inputs_identical": true,
+  "15_vs_20_changed_boundaries": [
+    {
+      "ayah": 11,
+      "error15_ms": -83,
+      "error20_ms": -63,
+      "delta_ms": -20
+    },
+    {
+      "ayah": 16,
+      "error15_ms": -101,
+      "error20_ms": -121,
+      "delta_ms": 20
+    },
+    {
+      "ayah": 19,
+      "error15_ms": -81,
+      "error20_ms": -101,
+      "delta_ms": 20
+    },
+    {
+      "ayah": 27,
+      "error15_ms": -61,
+      "error20_ms": -41,
+      "delta_ms": -20
+    },
+    {
+      "ayah": 29,
+      "error15_ms": -82,
+      "error20_ms": -102,
+      "delta_ms": 20
+    }
+  ],
+  "15_vs_20_review_added": [],
+  "15_vs_20_review_removed": [
+    13,
+    27,
+    35
+  ],
+  "new_large_errors_vs_current": {
+    "15": [],
+    "20": []
+  },
+  "time15_minus20_s": 0.2471082704141736,
+  "time15_increase_vs20_percent": 0.7059996858555406,
+  "time15_reduction_vs_current_percent": 37.64020337391554,
+  "time20_reduction_vs_current_percent": 38.07737689848574,
+  "max_rss15_reduction_vs20_mib": 259.171875,
+  "paired_15_vs20": [
+    {
+      "15_s": 35.895170625066385,
+      "20_s": 36.00593737512827,
+      "15_minus20_s": -0.11076675006188452
+    },
+    {
+      "15_s": 34.601419957820326,
+      "20_s": 33.996436666930094,
+      "15_minus20_s": 0.6049832908902317
+    }
+  ]
+}

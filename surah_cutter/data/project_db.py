@@ -6,17 +6,22 @@ tables used during alignment review: ``review_meta`` and ``edit_history``.
 Pure-Python ``sqlite3`` only — no GUI/heavy deps. Every mutating call commits
 immediately (autosave).
 
-Status invariant (CLAUDE.md non-negotiable): regeneration must not clobber
-manual work. ``write_timings`` overwrites an ayah only when its
+By default regeneration must not clobber manual work.
+``write_timings`` overwrites an ayah only when its
 ``review_meta.status`` is ``auto`` or absent; ``edited``/``verified`` rows are
-left untouched.
+left untouched. An explicit GUI overwrite choice permits replacement with
+old/new timings recorded in the existing edit history.
 """
 
 from __future__ import annotations
 
 import sqlite3
-from collections.abc import Iterable, Sequence
+import math
+from collections.abc import Iterable, Iterator, Sequence
+from contextlib import contextmanager
 from datetime import datetime, timezone
+
+from surah_cutter.data.quran_text import surah_ayah_counts
 
 # Allowed review statuses. ``auto`` = machine-generated (overwritable);
 # ``edited`` = manually changed; ``verified`` = human-confirmed.
@@ -131,6 +136,38 @@ class ProjectDB:
             (sura, ayah, time),
         )
 
+    @contextmanager
+    def _write_transaction(self) -> Iterator[None]:
+        """Lock the writer before reading statuses/neighbours; roll back on failure."""
+        with self._conn:
+            self._conn.execute("BEGIN IMMEDIATE")
+            yield
+
+    @staticmethod
+    def _validate_key(sura: int, ayah: int) -> None:
+        counts = surah_ayah_counts()
+        if (type(sura) is not int or type(ayah) is not int
+                or sura not in counts or not 1 <= ayah <= counts[sura]):
+            raise ValueError("Укажите существующие целые номера суры и аята.")
+
+    @staticmethod
+    def _validate_time(time: int) -> None:
+        if type(time) is not int or not 0 <= time <= 2**63 - 1:
+            raise ValueError("Начало аята должно быть неотрицательным целым числом миллисекунд.")
+
+    def _validate_order(self, sura: int) -> None:
+        previous = None
+        for ayah, time in self._conn.execute(
+            "SELECT ayah, time FROM timings WHERE sura=? ORDER BY ayah", (sura,)
+        ):
+            self._validate_key(sura, ayah)
+            self._validate_time(time)
+            if previous is not None and time <= previous:
+                raise ValueError(
+                    "Начала аятов должны идти строго по порядку; проверьте ручные метки."
+                )
+            previous = time
+
     # -- writes ------------------------------------------------------------
 
     def write_timings(
@@ -139,6 +176,11 @@ class ProjectDB:
         source: str,
         confidence: float | None = None,
         force: bool = False,
+        *,
+        confidences: dict[int, float | None] | None = None,
+        overwrite_manual: bool = False,
+        duration_ms: float | None = None,
+        persisted: list[dict] | None = None,
     ) -> int:
         """Merge auto-generated timings.
 
@@ -147,30 +189,77 @@ class ProjectDB:
         or absent; ``edited``/``verified`` ayahs are skipped (left untouched).
         Written ayahs get/keep ``review_meta.status = 'auto'``.
 
-        With ``force=True`` the skip is bypassed: every row is written and reset
-        to ``auto`` (used by an explicit per-sura "recompute from scratch" that
-        the user opted into, discarding prior manual edits for those ayahs).
+        ``overwrite_manual=True`` requires an explicit user choice and records
+        replaced human timings in edit_history. ``force=True`` stays rejected.
+        The complete merged order is checked under the same writer lock; any
+        conflict rolls back all timings and metadata from this call.
 
         Returns the number of ayahs actually written.
         """
+        if force:
+            raise ValueError("Принудительная перезапись ручных меток запрещена.")
+        if duration_ms is not None and (
+            isinstance(duration_ms, bool) or not isinstance(duration_ms, (int, float))
+            or not math.isfinite(duration_ms) or duration_ms <= 0
+        ):
+            raise ValueError("Длительность аудио должна быть конечной и положительной.")
+        from surah_cutter.core.cancellation import check_cancelled
+
+        check_cancelled()
+        rows = list(rows)  # Consume generators before acquiring the short DB lock.
+        keys = set()
+        for sura, ayah, time in rows:
+            self._validate_key(sura, ayah)
+            self._validate_time(time)
+            if (sura, ayah) in keys:
+                raise ValueError("Повторяющийся аят в результате разметки.")
+            keys.add((sura, ayah))
         written = 0
         now = _now()
-        for sura, ayah, time in rows:
-            status = self._status(sura, ayah)
-            if not force and status in ("edited", "verified"):
-                continue
-            self._set_timing(sura, ayah, time)
-            self._conn.execute(
-                "INSERT INTO review_meta "
-                "(sura, ayah, end_ms, confidence, status, source, updated_at) "
-                "VALUES (?, ?, NULL, ?, 'auto', ?, ?) "
-                "ON CONFLICT(sura, ayah) DO UPDATE SET "
-                "confidence = excluded.confidence, status = 'auto', "
-                "source = excluded.source, updated_at = excluded.updated_at",
-                (sura, ayah, confidence, source, now),
-            )
-            written += 1
-        self._conn.commit()
+        snapshot = []
+        with self._write_transaction():
+            check_cancelled()
+            for sura, ayah, time in rows:
+                status = self._status(sura, ayah)
+                if status in ("edited", "verified"):
+                    if not overwrite_manual:
+                        continue
+                    old = self._conn.execute(
+                        "SELECT time FROM timings WHERE sura=? AND ayah=?", (sura, ayah)
+                    ).fetchone()
+                    self._conn.execute(
+                        "INSERT INTO edit_history (sura, ayah, old_time, new_time, ts, action) "
+                        "VALUES (?, ?, ?, ?, ?, 'generation_overwrite')",
+                        (sura, ayah, old[0] if old else None, time, now),
+                    )
+                self._set_timing(sura, ayah, time)
+                self._conn.execute(
+                    "INSERT INTO review_meta "
+                    "(sura, ayah, end_ms, confidence, status, source, updated_at) "
+                    "VALUES (?, ?, NULL, ?, 'auto', ?, ?) "
+                    "ON CONFLICT(sura, ayah) DO UPDATE SET "
+                    "confidence = excluded.confidence, status = 'auto', "
+                    "source = excluded.source, updated_at = excluded.updated_at",
+                    (sura, ayah, confidences.get(ayah, confidence)
+                     if confidences is not None else confidence, source, now),
+                )
+                written += 1
+            for sura in {s for s, _ in keys}:
+                self._validate_order(sura)
+                for ayah, time in self._conn.execute(
+                    "SELECT ayah, time FROM timings WHERE sura=? ORDER BY ayah", (sura,)
+                ):
+                    if duration_ms is not None and time >= duration_ms:
+                        raise ValueError("Начало аята должно быть внутри длительности аудио; "
+                                         "проверьте ручные метки.")
+                    if persisted is not None:
+                        snapshot.append({"sura": sura, "ayah": ayah, "time": time,
+                                         **(self.get_review(sura, ayah) or {})})
+            # The last cancellation gate is inside the transaction, immediately
+            # before SQLite commits. A request arriving later loses to commit.
+            check_cancelled()
+        if persisted is not None:
+            persisted[:] = snapshot
         return written
 
     def update_auto_confidences(
@@ -179,13 +268,13 @@ class ProjectDB:
         confidences: dict[int, float | None],
     ) -> None:
         """Update per-ayah confidence for machine-generated rows only."""
-        for ayah, confidence in confidences.items():
-            self._conn.execute(
-                "UPDATE review_meta SET confidence = ? "
-                "WHERE sura = ? AND ayah = ? AND status = 'auto'",
-                (confidence, sura, ayah),
-            )
-        self._conn.commit()
+        with self._write_transaction():
+            for ayah, confidence in confidences.items():
+                self._conn.execute(
+                    "UPDATE review_meta SET confidence = ? "
+                    "WHERE sura = ? AND ayah = ? AND status = 'auto'",
+                    (confidence, sura, ayah),
+                )
 
     def set_time(self, sura: int, ayah: int, time: int) -> None:
         """Manually set an ayah's start time.
@@ -193,42 +282,50 @@ class ProjectDB:
         Records the change in ``edit_history`` and marks the ayah ``edited``
         so future regeneration leaves it alone.
         """
-        old = self._conn.execute(
-            "SELECT time FROM timings WHERE sura = ? AND ayah = ?", (sura, ayah)
-        ).fetchone()
-        old_time = old[0] if old else None
-        now = _now()
-        self._set_timing(sura, ayah, time)
-        self._conn.execute(
-            "INSERT INTO edit_history "
-            "(sura, ayah, old_time, new_time, ts, action) "
-            "VALUES (?, ?, ?, ?, ?, 'set_time')",
-            (sura, ayah, old_time, time, now),
-        )
-        self._conn.execute(
-            "INSERT INTO review_meta "
-            "(sura, ayah, end_ms, confidence, status, source, updated_at) "
-            "VALUES (?, ?, NULL, NULL, 'edited', 'manual', ?) "
-            "ON CONFLICT(sura, ayah) DO UPDATE SET "
-            "status = 'edited', source = 'manual', updated_at = excluded.updated_at",
-            (sura, ayah, now),
-        )
-        self._conn.commit()
+        self._validate_key(sura, ayah)
+        self._validate_time(time)
+        with self._write_transaction():
+            old = self._conn.execute(
+                "SELECT time FROM timings WHERE sura = ? AND ayah = ?", (sura, ayah)
+            ).fetchone()
+            old_time = old[0] if old else None
+            now = _now()
+            self._set_timing(sura, ayah, time)
+            self._conn.execute(
+                "INSERT INTO edit_history "
+                "(sura, ayah, old_time, new_time, ts, action) "
+                "VALUES (?, ?, ?, ?, ?, 'set_time')",
+                (sura, ayah, old_time, time, now),
+            )
+            self._conn.execute(
+                "INSERT INTO review_meta "
+                "(sura, ayah, end_ms, confidence, status, source, updated_at) "
+                "VALUES (?, ?, NULL, NULL, 'edited', 'manual', ?) "
+                "ON CONFLICT(sura, ayah) DO UPDATE SET "
+                "status = 'edited', source = 'manual', updated_at = excluded.updated_at",
+                (sura, ayah, now),
+            )
+            self._validate_order(sura)
 
     def set_status(self, sura: int, ayah: int, status: str) -> None:
         """Set the review status for an ayah (one of :data:`STATUSES`)."""
         if status not in STATUSES:
             raise ValueError(f"invalid status {status!r}; expected one of {STATUSES}")
-        now = _now()
-        self._conn.execute(
-            "INSERT INTO review_meta "
-            "(sura, ayah, end_ms, confidence, status, source, updated_at) "
-            "VALUES (?, ?, NULL, NULL, ?, NULL, ?) "
-            "ON CONFLICT(sura, ayah) DO UPDATE SET "
-            "status = excluded.status, updated_at = excluded.updated_at",
-            (sura, ayah, status, now),
-        )
-        self._conn.commit()
+        self._validate_key(sura, ayah)
+        with self._write_transaction():
+            if status != "auto" and self._conn.execute(
+                "SELECT 1 FROM timings WHERE sura=? AND ayah=?", (sura, ayah)
+            ).fetchone() is None:
+                raise ValueError("Сначала укажите начало аята.")
+            now = _now()
+            self._conn.execute(
+                "INSERT INTO review_meta "
+                "(sura, ayah, end_ms, confidence, status, source, updated_at) "
+                "VALUES (?, ?, NULL, NULL, ?, NULL, ?) "
+                "ON CONFLICT(sura, ayah) DO UPDATE SET "
+                "status = excluded.status, updated_at = excluded.updated_at",
+                (sura, ayah, status, now),
+            )
 
     # -- reads -------------------------------------------------------------
 
@@ -262,31 +359,40 @@ class ProjectDB:
         return [dict(zip(keys, row)) for row in cursor]
 
     def write_word_timings(self, sura: int, ayah: int, rows, start: int, end: int,
-                           source: str) -> int:
-        """Atomically merge auto words; preserve every manual/verified word."""
-        existing = {r["word_index"]: r for r in self.get_word_timings(sura, ayah)}
-        merged = []
-        for index, time, confidence in rows:
-            old = existing.get(index)
-            if old and old["status"] in ("edited", "verified"):
-                if (old["ayah_start"], old["ayah_end"]) != (start, end):
-                    raise ValueError("Границы аята изменились. Сначала обновите ручные метки слов.")
-                merged.append((index, old["time"], old["confidence"], False))
-            else:
-                merged.append((index, time, confidence, True))
-        times = [r[1] for r in merged]
-        if (not times or any(type(t) is not int or not start <= t < end for t in times)
-                or any(a >= b for a, b in zip(times, times[1:]))):
-            raise ValueError("Метки слов должны идти по порядку внутри аята; проверьте ручные метки.")
-        written = 0
-        with self._conn:
+                           source: str, *, overwrite_manual: bool = False) -> int:
+        """Merge words; replacing human marks requires an explicit user choice."""
+        rows = list(rows)
+        with self._write_transaction():
+            existing = {r["word_index"]: r for r in self.get_word_timings(sura, ayah)}
+            merged = []
+            for index, time, confidence in rows:
+                old = existing.get(index)
+                if old and old["status"] in ("edited", "verified") and not overwrite_manual:
+                    if (old["ayah_start"], old["ayah_end"]) != (start, end):
+                        raise ValueError("Границы аята изменились. Сначала обновите ручные метки слов.")
+                    merged.append((index, old["time"], old["confidence"], False))
+                else:
+                    merged.append((index, time, confidence, True))
+            times = [r[1] for r in merged]
+            if (not times or any(type(t) is not int or not start <= t < end for t in times)
+                    or any(a >= b for a, b in zip(times, times[1:]))):
+                raise ValueError("Метки слов должны идти по порядку внутри аята; проверьте ручные метки.")
+            written = 0
             for index, time, confidence, writable in merged:
                 if not writable:
                     continue
+                old = existing.get(index)
+                if old and old["status"] in ("edited", "verified"):
+                    self._conn.execute(
+                        "INSERT INTO word_edit_history "
+                        "(sura, ayah, word_index, old_time, new_time, ts, action) "
+                        "VALUES (?, ?, ?, ?, ?, ?, 'generation_overwrite')",
+                        (sura, ayah, index, old["time"], time, _now()),
+                    )
                 self._conn.execute(
                     "INSERT INTO word_timings VALUES (?, ?, ?, ?, ?, 'auto', ?, ?, ?, ?) "
                     "ON CONFLICT(sura, ayah, word_index) DO UPDATE SET "
-                    "time=excluded.time, confidence=excluded.confidence, source=excluded.source, "
+                    "time=excluded.time, confidence=excluded.confidence, status='auto', source=excluded.source, "
                     "ayah_start=excluded.ayah_start, ayah_end=excluded.ayah_end, "
                     "updated_at=excluded.updated_at",
                     (sura, ayah, index, time, confidence, source, start, end, _now()),
@@ -297,14 +403,14 @@ class ProjectDB:
     def set_word_time(self, sura: int, ayah: int, index: int, time: int,
                       start: int, end: int) -> None:
         """Manual word edit with neighbour guards and a separate audit trail."""
-        rows = self.get_word_timings(sura, ayah)
-        old = next((r for r in rows if r["word_index"] == index), None)
-        before = [r["time"] for r in rows if r["word_index"] < index]
-        after = [r["time"] for r in rows if r["word_index"] > index]
-        if (type(time) is not int or not start <= time < end
-                or (before and time <= max(before)) or (after and time >= min(after))):
-            raise ValueError("Начало слова должно быть внутри аята между соседними словами.")
-        with self._conn:
+        with self._write_transaction():
+            rows = self.get_word_timings(sura, ayah)
+            old = next((r for r in rows if r["word_index"] == index), None)
+            before = [r["time"] for r in rows if r["word_index"] < index]
+            after = [r["time"] for r in rows if r["word_index"] > index]
+            if (type(time) is not int or not start <= time < end
+                    or (before and time <= max(before)) or (after and time >= min(after))):
+                raise ValueError("Начало слова должно быть внутри аята между соседними словами.")
             self._conn.execute(
                 "INSERT INTO word_timings VALUES (?, ?, ?, ?, NULL, 'edited', 'manual', ?, ?, ?) "
                 "ON CONFLICT(sura, ayah, word_index) DO UPDATE SET "
@@ -328,7 +434,7 @@ class ProjectDB:
         """Change review state without changing time or accepting stale boundaries."""
         if status not in STATUSES:
             raise ValueError("Неизвестный статус слова.")
-        with self._conn:
+        with self._write_transaction():
             cursor = self._conn.execute(
                 "UPDATE word_timings SET status=?, updated_at=? "
                 "WHERE sura=? AND ayah=? AND word_index=? AND ayah_start=? AND ayah_end=?",

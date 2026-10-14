@@ -1,0 +1,67 @@
+{
+  "models": {
+    "whisper-tarteel-tiny": {
+      "median_ms": 68.0,
+      "p95_ms": 1757.500000000003,
+      "max_ms": 6062,
+      "over500": 72,
+      "confident": 394,
+      "confident_over500": 8,
+      "confident_max_ms": 672,
+      "review": 170,
+      "search_seconds": 243.8218348736409,
+      "max_read_ms": 4200.0,
+      "max_surah_coverage": 0.5753269056624561,
+      "corpus_coverage": 0.4634848857066443,
+      "input_ratio": 0.7160658722979356,
+      "denied_reads": 0
+    },
+    "quran-phonetics": {
+      "median_ms": 73.5,
+      "p95_ms": 4465.850000000003,
+      "max_ms": 26762,
+      "over500": 107,
+      "confident": 276,
+      "confident_over500": 6,
+      "confident_max_ms": 2955,
+      "review": 288,
+      "search_seconds": 133.26198283373378,
+      "max_read_ms": 6000.0,
+      "max_surah_coverage": 0.65,
+      "corpus_coverage": 0.6087460767039208,
+      "input_ratio": 1.403676502726492,
+      "denied_reads": 1299
+    },
+    "whisper-tarteel-base": {
+      "median_ms": 67.5,
+      "p95_ms": 1628.200000000002,
+      "max_ms": 6062,
+      "over500": 64,
+      "confident": 411,
+      "confident_over500": 9,
+      "confident_max_ms": 903,
+      "review": 153,
+      "search_seconds": 448.2589367479086,
+      "max_read_ms": 4200.0,
+      "max_surah_coverage": 0.5700694836612403,
+      "corpus_coverage": 0.4644363154881256,
+      "input_ratio": 0.7098249859469953,
+      "denied_reads": 0
+    }
+  },
+  "paired": {
+    "quran-phonetics": {
+      "tiny_corrected_over500": 76,
+      "tiny_new_over500": 41,
+      "both_over500": 31
+    },
+    "whisper-tarteel-base": {
+      "tiny_corrected_over500": 6,
+      "tiny_new_over500": 14,
+      "both_over500": 58
+    }
+  },
+  "protected_hashes_unchanged": true,
+  "prior_pause_hashes_identical": true,
+  "prior_control_rows_identical": true
+}

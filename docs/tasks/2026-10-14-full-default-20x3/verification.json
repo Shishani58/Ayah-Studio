@@ -1,0 +1,85 @@
+{
+  "cases": [
+    {
+      "surah": 42,
+      "timings_and_confidence_unchanged": true,
+      "review_added": [
+        5,
+        8,
+        11,
+        20,
+        32,
+        40,
+        46,
+        51
+      ],
+      "large_errors": [
+        {
+          "ayah": 1,
+          "error_ms": -810,
+          "flagged": true
+        }
+      ]
+    },
+    {
+      "surah": 83,
+      "timings_and_confidence_unchanged": true,
+      "review_added": [
+        8,
+        10,
+        15,
+        16,
+        18,
+        33,
+        34
+      ],
+      "large_errors": [
+        {
+          "ayah": 10,
+          "error_ms": 825,
+          "flagged": true
+        },
+        {
+          "ayah": 13,
+          "error_ms": 924,
+          "flagged": true
+        },
+        {
+          "ayah": 31,
+          "error_ms": 823,
+          "flagged": true
+        }
+      ]
+    },
+    {
+      "surah": 95,
+      "timings_and_confidence_unchanged": true,
+      "review_added": [
+        1,
+        7,
+        8
+      ],
+      "large_errors": [
+        {
+          "ayah": 8,
+          "error_ms": 840,
+          "flagged": true
+        }
+      ]
+    }
+  ],
+  "primary_full_policy": {
+    "window_s": 20,
+    "workers": 3,
+    "context_s": 2,
+    "pause_policy": "strong-dsp-v1",
+    "max_window_s": 60,
+    "review_policy": "qpc-pause-review-v1"
+  },
+  "source_manifest": {
+    "surah_cutter/core/align.py": "dd98b59bc807f9f494134880a8277a34af90fb5b2658d19ac99107195ac5d931",
+    "surah_cutter/core/align_tiled.py": "e859e058938a22de08797d45a792fadc29d8166da02731576ec2061eebfac3a8",
+    "surah_cutter/core/full_windows.py": "26aa3033583cb7d88b4379a2850dc4a1b411f3d8acb388309e3384c2e4d87063",
+    "surah_cutter/data/alignment_result.py": "cff57b7f28cafb5f19738e268cd65dace43e8483ec4d78123d7499269b1bd95e"
+  }
+}

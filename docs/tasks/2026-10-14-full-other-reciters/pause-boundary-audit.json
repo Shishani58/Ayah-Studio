@@ -1,0 +1,1588 @@
+[
+  {
+    "reciter": "mahmoud_khalil_al_hussary",
+    "surah": 80,
+    "errors": {
+      "n": 42,
+      "median_ms": 130.5,
+      "p95_ms": 1191.6499999999983,
+      "max_ms": 1483.0,
+      "over500": 9
+    },
+    "median_signed_error_ms": 101.0,
+    "positive_large": 9,
+    "reference_inside_pause": 9,
+    "predicted_in_same_pause": 9,
+    "large": 9,
+    "unflagged": 0,
+    "events": [
+      {
+        "ayah": 18,
+        "reference_ms": 112624,
+        "onset_ms": 113193,
+        "error_ms": 569,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 110960.0,
+          "end_ms": 113400.0,
+          "center_ms": 112180.0,
+          "duration_ms": 2440.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.1812542559459519,
+            "zcr": 0.09243674442830122,
+            "rms_ratio": 0.010737135839171274
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 1664.0,
+        "onset_from_pause_end_ms": -207.0
+      },
+      {
+        "ayah": 23,
+        "reference_ms": 140527,
+        "onset_ms": 141332,
+        "error_ms": 805,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 138540.0,
+          "end_ms": 141520.0,
+          "center_ms": 140030.0,
+          "duration_ms": 2980.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.20062209908728088,
+            "zcr": 0.1033489217402868,
+            "rms_ratio": 0.011194078599827255
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 1987.0,
+        "onset_from_pause_end_ms": -188.0
+      },
+      {
+        "ayah": 24,
+        "reference_ms": 148139,
+        "onset_ms": 148751,
+        "error_ms": 612,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 147220.0,
+          "end_ms": 148980.0,
+          "center_ms": 148100.0,
+          "duration_ms": 1760.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.19320646588623525,
+            "zcr": 0.11820774248994101,
+            "rms_ratio": 0.018879541778180686
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 919.0,
+        "onset_from_pause_end_ms": -229.0
+      },
+      {
+        "ayah": 25,
+        "reference_ms": 156019,
+        "onset_ms": 157231,
+        "error_ms": 1212,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 154980.0,
+          "end_ms": 157240.0,
+          "center_ms": 156110.0,
+          "duration_ms": 2260.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.1952838804880677,
+            "zcr": 0.14908181791124736,
+            "rms_ratio": 0.015696068914877702
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 1039.0,
+        "onset_from_pause_end_ms": -9.0
+      },
+      {
+        "ayah": 26,
+        "reference_ms": 164446,
+        "onset_ms": 165910,
+        "error_ms": 1464,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 163540.0,
+          "end_ms": 166140.0,
+          "center_ms": 164840.0,
+          "duration_ms": 2600.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.19932503674711793,
+            "zcr": 0.16696124388432082,
+            "rms_ratio": 0.011667722282766853
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 906.0,
+        "onset_from_pause_end_ms": -230.0
+      },
+      {
+        "ayah": 33,
+        "reference_ms": 204774,
+        "onset_ms": 205328,
+        "error_ms": 554,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 202940.0,
+          "end_ms": 205560.0,
+          "center_ms": 204250.0,
+          "duration_ms": 2620.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.33528156088932703,
+            "zcr": 0.11931197438959323,
+            "rms_ratio": 0.008061291199389914
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 1834.0,
+        "onset_from_pause_end_ms": -232.0
+      },
+      {
+        "ayah": 34,
+        "reference_ms": 214324,
+        "onset_ms": 215807,
+        "error_ms": 1483,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 213520.0,
+          "end_ms": 215960.0,
+          "center_ms": 214740.0,
+          "duration_ms": 2440.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.2150061165054389,
+            "zcr": 0.12409879656788837,
+            "rms_ratio": 0.010058054994809879
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 804.0,
+        "onset_from_pause_end_ms": -153.0
+      },
+      {
+        "ayah": 38,
+        "reference_ms": 245567,
+        "onset_ms": 246126,
+        "error_ms": 559,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 244600.0,
+          "end_ms": 246340.0,
+          "center_ms": 245470.0,
+          "duration_ms": 1740.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.2009895791641709,
+            "zcr": 0.12290834289331065,
+            "rms_ratio": 0.010303254568685829
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 967.0,
+        "onset_from_pause_end_ms": -214.0
+      },
+      {
+        "ayah": 39,
+        "reference_ms": 253040,
+        "onset_ms": 253805,
+        "error_ms": 765,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 252220.0,
+          "end_ms": 253820.0,
+          "center_ms": 253020.0,
+          "duration_ms": 1600.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.16736848113553257,
+            "zcr": 0.12062155475498068,
+            "rms_ratio": 0.01912498679343572
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 820.0,
+        "onset_from_pause_end_ms": -15.0
+      }
+    ]
+  },
+  {
+    "reciter": "mahmoud_khalil_al_hussary",
+    "surah": 98,
+    "errors": {
+      "n": 8,
+      "median_ms": 311.5,
+      "p95_ms": 710.3499999999998,
+      "max_ms": 864.0,
+      "over500": 1
+    },
+    "median_signed_error_ms": 311.5,
+    "positive_large": 1,
+    "reference_inside_pause": 1,
+    "predicted_in_same_pause": 0,
+    "large": 1,
+    "unflagged": 0,
+    "events": [
+      {
+        "ayah": 3,
+        "reference_ms": 44295,
+        "onset_ms": 45159,
+        "error_ms": 864,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 42540.0,
+          "end_ms": 44620.0,
+          "center_ms": 43580.0,
+          "duration_ms": 2080.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.18778791253819738,
+            "zcr": 0.13867638920537778,
+            "rms_ratio": 0.010259429911672703
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": false,
+        "reference_from_pause_start_ms": 1755.0,
+        "onset_from_pause_end_ms": 539.0
+      }
+    ]
+  },
+  {
+    "reciter": "mahmoud_khalil_al_hussary",
+    "surah": 112,
+    "errors": {
+      "n": 4,
+      "median_ms": 450.5,
+      "p95_ms": 626.3,
+      "max_ms": 629.0,
+      "over500": 2
+    },
+    "median_signed_error_ms": 450.5,
+    "positive_large": 2,
+    "reference_inside_pause": 2,
+    "predicted_in_same_pause": 2,
+    "large": 2,
+    "unflagged": 0,
+    "events": [
+      {
+        "ayah": 1,
+        "reference_ms": 7928,
+        "onset_ms": 8557,
+        "error_ms": 629,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 7260.0,
+          "end_ms": 8760.0,
+          "center_ms": 8010.0,
+          "duration_ms": 1500.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.16759333525727357,
+            "zcr": 0.26503101823779096,
+            "rms_ratio": 0.014354144879443885
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 668.0,
+        "onset_from_pause_end_ms": -203.0
+      },
+      {
+        "ayah": 2,
+        "reference_ms": 13724,
+        "onset_ms": 14335,
+        "error_ms": 611,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 13080.0,
+          "end_ms": 14440.0,
+          "center_ms": 13760.0,
+          "duration_ms": 1360.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.14099112429864377,
+            "zcr": 0.15485181519870828,
+            "rms_ratio": 0.018117138807459406
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 644.0,
+        "onset_from_pause_end_ms": -105.0
+      }
+    ]
+  },
+  {
+    "reciter": "abdul_basit_mujawwad",
+    "surah": 80,
+    "errors": {
+      "n": 42,
+      "median_ms": 1299.5,
+      "p95_ms": 2426.6499999999987,
+      "max_ms": 4132.0,
+      "over500": 40
+    },
+    "median_signed_error_ms": 1299.5,
+    "positive_large": 40,
+    "reference_inside_pause": 39,
+    "predicted_in_same_pause": 37,
+    "large": 40,
+    "unflagged": 0,
+    "events": [
+      {
+        "ayah": 1,
+        "reference_ms": 6502,
+        "onset_ms": 7740,
+        "error_ms": 1238,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 5600.0,
+          "end_ms": 7840.0,
+          "center_ms": 6720.0,
+          "duration_ms": 2240.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.2687159472162029,
+            "zcr": 0.08666125785029598,
+            "rms_ratio": 0.014241449604016462
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 902.0,
+        "onset_from_pause_end_ms": -100.0
+      },
+      {
+        "ayah": 2,
+        "reference_ms": 12500,
+        "onset_ms": 14460,
+        "error_ms": 1960,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 11920.0,
+          "end_ms": 14540.0,
+          "center_ms": 13230.0,
+          "duration_ms": 2620.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.30246889612220423,
+            "zcr": 0.1198963388297467,
+            "rms_ratio": 0.01603698659489622
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 580.0,
+        "onset_from_pause_end_ms": -80.0
+      },
+      {
+        "ayah": 3,
+        "reference_ms": 22188,
+        "onset_ms": 23720,
+        "error_ms": 1532,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 21660.0,
+          "end_ms": 23900.0,
+          "center_ms": 22780.0,
+          "duration_ms": 2240.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.21152639972577625,
+            "zcr": 0.09681781303524745,
+            "rms_ratio": 0.015096974858905557
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 528.0,
+        "onset_from_pause_end_ms": -180.0
+      },
+      {
+        "ayah": 4,
+        "reference_ms": 33189,
+        "onset_ms": 35020,
+        "error_ms": 1831,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 32460.0,
+          "end_ms": 35140.0,
+          "center_ms": 33800.0,
+          "duration_ms": 2680.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.28737209424981647,
+            "zcr": 0.09251221508469952,
+            "rms_ratio": 0.015114049910490906
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 729.0,
+        "onset_from_pause_end_ms": -120.0
+      },
+      {
+        "ayah": 5,
+        "reference_ms": 44438,
+        "onset_ms": 46459,
+        "error_ms": 2021,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 43960.0,
+          "end_ms": 46580.0,
+          "center_ms": 45270.0,
+          "duration_ms": 2620.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.24687638963560746,
+            "zcr": 0.07538301277979624,
+            "rms_ratio": 0.013627706767382062
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 478.0,
+        "onset_from_pause_end_ms": -121.0
+      },
+      {
+        "ayah": 6,
+        "reference_ms": 52646,
+        "onset_ms": 54819,
+        "error_ms": 2173,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 52500.0,
+          "end_ms": 55040.0,
+          "center_ms": 53770.0,
+          "duration_ms": 2540.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.26900808201018317,
+            "zcr": 0.13456235720475854,
+            "rms_ratio": 0.014961181272166153
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 146.0,
+        "onset_from_pause_end_ms": -221.0
+      },
+      {
+        "ayah": 7,
+        "reference_ms": 61146,
+        "onset_ms": 62819,
+        "error_ms": 1673,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 60640.0,
+          "end_ms": 63020.0,
+          "center_ms": 61830.0,
+          "duration_ms": 2380.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.29531834025821363,
+            "zcr": 0.10721022551310566,
+            "rms_ratio": 0.014287415268251617
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 506.0,
+        "onset_from_pause_end_ms": -201.0
+      },
+      {
+        "ayah": 8,
+        "reference_ms": 71524,
+        "onset_ms": 73339,
+        "error_ms": 1815,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 70940.0,
+          "end_ms": 73480.0,
+          "center_ms": 72210.0,
+          "duration_ms": 2540.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.18579665534759082,
+            "zcr": 0.09031224559468473,
+            "rms_ratio": 0.016248623771525063
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 584.0,
+        "onset_from_pause_end_ms": -141.0
+      },
+      {
+        "ayah": 9,
+        "reference_ms": 82350,
+        "onset_ms": 82859,
+        "error_ms": 509,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 82400.0,
+          "end_ms": 83000.0,
+          "center_ms": 82700.0,
+          "duration_ms": 600.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.25879761648749494,
+            "zcr": 0.17161528626225317,
+            "rms_ratio": 0.028863781540865142
+          }
+        },
+        "reference_in_pause": false,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": -50.0,
+        "onset_from_pause_end_ms": -141.0
+      },
+      {
+        "ayah": 10,
+        "reference_ms": 86413,
+        "onset_ms": 86939,
+        "error_ms": 526,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 86260.0,
+          "end_ms": 87020.0,
+          "center_ms": 86640.0,
+          "duration_ms": 760.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.3911448847426005,
+            "zcr": 0.1714761954370247,
+            "rms_ratio": 0.02522766969592508
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 153.0,
+        "onset_from_pause_end_ms": -81.0
+      },
+      {
+        "ayah": 11,
+        "reference_ms": 93538,
+        "onset_ms": 95559,
+        "error_ms": 2021,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 93100.0,
+          "end_ms": 95760.0,
+          "center_ms": 94430.0,
+          "duration_ms": 2660.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.2729776562913304,
+            "zcr": 0.10642766069151728,
+            "rms_ratio": 0.015570129006609831
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 438.0,
+        "onset_from_pause_end_ms": -201.0
+      },
+      {
+        "ayah": 12,
+        "reference_ms": 103727,
+        "onset_ms": 105799,
+        "error_ms": 2072,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 103260.0,
+          "end_ms": 106000.0,
+          "center_ms": 104630.0,
+          "duration_ms": 2740.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.2299094958013192,
+            "zcr": 0.1123089222122629,
+            "rms_ratio": 0.016280528030292292
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 467.0,
+        "onset_from_pause_end_ms": -201.0
+      },
+      {
+        "ayah": 13,
+        "reference_ms": 112350,
+        "onset_ms": 113458,
+        "error_ms": 1108,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 111880.0,
+          "end_ms": 113520.0,
+          "center_ms": 112700.0,
+          "duration_ms": 1640.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.27644202166247117,
+            "zcr": 0.15460956966088094,
+            "rms_ratio": 0.016691185850176555
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 470.0,
+        "onset_from_pause_end_ms": -62.0
+      },
+      {
+        "ayah": 14,
+        "reference_ms": 119412,
+        "onset_ms": 120678,
+        "error_ms": 1266,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 118900.0,
+          "end_ms": 120540.0,
+          "center_ms": 119720.0,
+          "duration_ms": 1640.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.21806424530587365,
+            "zcr": 0.1304531441361544,
+            "rms_ratio": 0.021751726947029634
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": false,
+        "reference_from_pause_start_ms": 512.0,
+        "onset_from_pause_end_ms": 138.0
+      },
+      {
+        "ayah": 15,
+        "reference_ms": 127100,
+        "onset_ms": 128218,
+        "error_ms": 1118,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 126620.0,
+          "end_ms": 128380.0,
+          "center_ms": 127500.0,
+          "duration_ms": 1760.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.2840776615025832,
+            "zcr": 0.09293331770772295,
+            "rms_ratio": 0.017252563048949933
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 480.0,
+        "onset_from_pause_end_ms": -162.0
+      },
+      {
+        "ayah": 16,
+        "reference_ms": 132475,
+        "onset_ms": 134038,
+        "error_ms": 1563,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 132340.0,
+          "end_ms": 133940.0,
+          "center_ms": 133140.0,
+          "duration_ms": 1600.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.24842556948839542,
+            "zcr": 0.12617735144754547,
+            "rms_ratio": 0.01755268864140798
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": false,
+        "reference_from_pause_start_ms": 135.0,
+        "onset_from_pause_end_ms": 98.0
+      },
+      {
+        "ayah": 17,
+        "reference_ms": 138600,
+        "onset_ms": 140638,
+        "error_ms": 2038,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 138140.0,
+          "end_ms": 140840.0,
+          "center_ms": 139490.0,
+          "duration_ms": 2700.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.25848063394918286,
+            "zcr": 0.07920962622111764,
+            "rms_ratio": 0.013852287305305779
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 460.0,
+        "onset_from_pause_end_ms": -202.0
+      },
+      {
+        "ayah": 18,
+        "reference_ms": 149286,
+        "onset_ms": 153418,
+        "error_ms": 4132,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 149160.0,
+          "end_ms": 153580.0,
+          "center_ms": 151370.0,
+          "duration_ms": 4420.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.19861674550571712,
+            "zcr": 0.11216420428703473,
+            "rms_ratio": 0.010643892722143554
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 126.0,
+        "onset_from_pause_end_ms": -162.0
+      },
+      {
+        "ayah": 19,
+        "reference_ms": 159286,
+        "onset_ms": 160198,
+        "error_ms": 912,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 158540.0,
+          "end_ms": 160300.0,
+          "center_ms": 159420.0,
+          "duration_ms": 1760.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.16504387346307076,
+            "zcr": 0.12918473377866324,
+            "rms_ratio": 0.020415703184458293
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 746.0,
+        "onset_from_pause_end_ms": -102.0
+      },
+      {
+        "ayah": 20,
+        "reference_ms": 168912,
+        "onset_ms": 169758,
+        "error_ms": 846,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 168320.0,
+          "end_ms": 169980.0,
+          "center_ms": 169150.0,
+          "duration_ms": 1660.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.2197246504439764,
+            "zcr": 0.13521396724863535,
+            "rms_ratio": 0.01589133646340954
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 592.0,
+        "onset_from_pause_end_ms": -222.0
+      },
+      {
+        "ayah": 21,
+        "reference_ms": 176661,
+        "onset_ms": 178098,
+        "error_ms": 1437,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 176100.0,
+          "end_ms": 178100.0,
+          "center_ms": 177100.0,
+          "duration_ms": 2000.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.30855632486638995,
+            "zcr": 0.13094874146540303,
+            "rms_ratio": 0.018051390976511723
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 561.0,
+        "onset_from_pause_end_ms": -2.0
+      },
+      {
+        "ayah": 22,
+        "reference_ms": 185662,
+        "onset_ms": 187057,
+        "error_ms": 1395,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 185200.0,
+          "end_ms": 187020.0,
+          "center_ms": 186110.0,
+          "duration_ms": 1820.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.18791323449702171,
+            "zcr": 0.1148386610941677,
+            "rms_ratio": 0.018500290590022
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": false,
+        "reference_from_pause_start_ms": 462.0,
+        "onset_from_pause_end_ms": 37.0
+      },
+      {
+        "ayah": 23,
+        "reference_ms": 195661,
+        "onset_ms": 197437,
+        "error_ms": 1776,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 195240.0,
+          "end_ms": 197640.0,
+          "center_ms": 196440.0,
+          "duration_ms": 2400.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.2624586359138804,
+            "zcr": 0.09551047741287425,
+            "rms_ratio": 0.01589526620331274
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 421.0,
+        "onset_from_pause_end_ms": -203.0
+      },
+      {
+        "ayah": 24,
+        "reference_ms": 205977,
+        "onset_ms": 208417,
+        "error_ms": 2440,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 205620.0,
+          "end_ms": 208620.0,
+          "center_ms": 207120.0,
+          "duration_ms": 3000.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.20800463507916842,
+            "zcr": 0.1002222760183983,
+            "rms_ratio": 0.013627760425697523
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 357.0,
+        "onset_from_pause_end_ms": -203.0
+      },
+      {
+        "ayah": 25,
+        "reference_ms": 218349,
+        "onset_ms": 220257,
+        "error_ms": 1908,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 217880.0,
+          "end_ms": 220300.0,
+          "center_ms": 219090.0,
+          "duration_ms": 2420.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.213606892492407,
+            "zcr": 0.1044276666943223,
+            "rms_ratio": 0.014860860709974987
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 469.0,
+        "onset_from_pause_end_ms": -43.0
+      },
+      {
+        "ayah": 26,
+        "reference_ms": 228913,
+        "onset_ms": 229917,
+        "error_ms": 1004,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 228720.0,
+          "end_ms": 230140.0,
+          "center_ms": 229430.0,
+          "duration_ms": 1420.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.21866677827933986,
+            "zcr": 0.1456917505828662,
+            "rms_ratio": 0.020511388643799384
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 193.0,
+        "onset_from_pause_end_ms": -223.0
+      },
+      {
+        "ayah": 27,
+        "reference_ms": 237852,
+        "onset_ms": 238557,
+        "error_ms": 705,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 237560.0,
+          "end_ms": 238780.0,
+          "center_ms": 238170.0,
+          "duration_ms": 1220.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.16574487767028814,
+            "zcr": 0.12135149478153193,
+            "rms_ratio": 0.018647386569208908
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 292.0,
+        "onset_from_pause_end_ms": -223.0
+      },
+      {
+        "ayah": 28,
+        "reference_ms": 246851,
+        "onset_ms": 247397,
+        "error_ms": 546,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 246340.0,
+          "end_ms": 247500.0,
+          "center_ms": 246920.0,
+          "duration_ms": 1160.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.2305893509862195,
+            "zcr": 0.129508094255891,
+            "rms_ratio": 0.022830598598586847
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 511.0,
+        "onset_from_pause_end_ms": -103.0
+      },
+      {
+        "ayah": 29,
+        "reference_ms": 253164,
+        "onset_ms": 254237,
+        "error_ms": 1073,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 253000.0,
+          "end_ms": 254420.0,
+          "center_ms": 253710.0,
+          "duration_ms": 1420.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.22064687397230243,
+            "zcr": 0.1002529887395208,
+            "rms_ratio": 0.021037802084218533
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 164.0,
+        "onset_from_pause_end_ms": -183.0
+      },
+      {
+        "ayah": 30,
+        "reference_ms": 260538,
+        "onset_ms": 261356,
+        "error_ms": 818,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 260380.0,
+          "end_ms": 261560.0,
+          "center_ms": 260970.0,
+          "duration_ms": 1180.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.26242038942227475,
+            "zcr": 0.19363931613456706,
+            "rms_ratio": 0.023380563161464592
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 158.0,
+        "onset_from_pause_end_ms": -204.0
+      },
+      {
+        "ayah": 31,
+        "reference_ms": 267662,
+        "onset_ms": 268376,
+        "error_ms": 714,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 267320.0,
+          "end_ms": 268580.0,
+          "center_ms": 267950.0,
+          "duration_ms": 1260.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.27811228956939527,
+            "zcr": 0.14415591794988353,
+            "rms_ratio": 0.024142540509179404
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 342.0,
+        "onset_from_pause_end_ms": -204.0
+      },
+      {
+        "ayah": 32,
+        "reference_ms": 274603,
+        "onset_ms": 275936,
+        "error_ms": 1333,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 274360.0,
+          "end_ms": 276080.0,
+          "center_ms": 275220.0,
+          "duration_ms": 1720.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.3554260527667999,
+            "zcr": 0.13029368163788613,
+            "rms_ratio": 0.019832585587471686
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 243.0,
+        "onset_from_pause_end_ms": -144.0
+      },
+      {
+        "ayah": 33,
+        "reference_ms": 283726,
+        "onset_ms": 287416,
+        "error_ms": 3690,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 283660.0,
+          "end_ms": 287620.0,
+          "center_ms": 285640.0,
+          "duration_ms": 3960.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.20357740015697115,
+            "zcr": 0.04613562723071103,
+            "rms_ratio": 0.010090297930323455
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 66.0,
+        "onset_from_pause_end_ms": -204.0
+      },
+      {
+        "ayah": 34,
+        "reference_ms": 297163,
+        "onset_ms": 299136,
+        "error_ms": 1973,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 296840.0,
+          "end_ms": 299320.0,
+          "center_ms": 298080.0,
+          "duration_ms": 2480.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.21610697510879154,
+            "zcr": 0.10560629327298689,
+            "rms_ratio": 0.013870856009272407
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 323.0,
+        "onset_from_pause_end_ms": -184.0
+      },
+      {
+        "ayah": 35,
+        "reference_ms": 307727,
+        "onset_ms": 308416,
+        "error_ms": 689,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 307240.0,
+          "end_ms": 308600.0,
+          "center_ms": 307920.0,
+          "duration_ms": 1360.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.2929038502668021,
+            "zcr": 0.27652481900098963,
+            "rms_ratio": 0.019207817430418706
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 487.0,
+        "onset_from_pause_end_ms": -184.0
+      },
+      {
+        "ayah": 37,
+        "reference_ms": 323601,
+        "onset_ms": 324356,
+        "error_ms": 755,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 323180.0,
+          "end_ms": 324480.0,
+          "center_ms": 323830.0,
+          "duration_ms": 1300.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.2784301000724863,
+            "zcr": 0.057952738636986675,
+            "rms_ratio": 0.01655587909069924
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 421.0,
+        "onset_from_pause_end_ms": -124.0
+      },
+      {
+        "ayah": 38,
+        "reference_ms": 339477,
+        "onset_ms": 340620,
+        "error_ms": 1143,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 338860.0,
+          "end_ms": 342380.0,
+          "center_ms": 340620.0,
+          "duration_ms": 3520.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.27963066505963,
+            "zcr": 0.06333823173794155,
+            "rms_ratio": 0.011172805664457438
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 617.0,
+        "onset_from_pause_end_ms": -1760.0
+      },
+      {
+        "ayah": 39,
+        "reference_ms": 350352,
+        "onset_ms": 351935,
+        "error_ms": 1583,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 349880.0,
+          "end_ms": 352020.0,
+          "center_ms": 350950.0,
+          "duration_ms": 2140.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.34370756403272507,
+            "zcr": 0.10735818681145239,
+            "rms_ratio": 0.018747224206560928
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 472.0,
+        "onset_from_pause_end_ms": -85.0
+      },
+      {
+        "ayah": 40,
+        "reference_ms": 358415,
+        "onset_ms": 359335,
+        "error_ms": 920,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 358060.0,
+          "end_ms": 359380.0,
+          "center_ms": 358720.0,
+          "duration_ms": 1320.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.30715562588670253,
+            "zcr": 0.1447815076243332,
+            "rms_ratio": 0.02220178167773092
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 355.0,
+        "onset_from_pause_end_ms": -45.0
+      },
+      {
+        "ayah": 41,
+        "reference_ms": 369354,
+        "onset_ms": 369935,
+        "error_ms": 581,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 368900.0,
+          "end_ms": 370000.0,
+          "center_ms": 369450.0,
+          "duration_ms": 1100.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.2318406060548587,
+            "zcr": 0.12055322827315645,
+            "rms_ratio": 0.02022097618204547
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 454.0,
+        "onset_from_pause_end_ms": -65.0
+      }
+    ]
+  },
+  {
+    "reciter": "abdul_basit_mujawwad",
+    "surah": 98,
+    "errors": {
+      "n": 8,
+      "median_ms": 3086.5,
+      "p95_ms": 4264.15,
+      "max_ms": 4331.0,
+      "over500": 8
+    },
+    "median_signed_error_ms": 3086.5,
+    "positive_large": 7,
+    "reference_inside_pause": 8,
+    "predicted_in_same_pause": 6,
+    "large": 8,
+    "unflagged": 0,
+    "events": [
+      {
+        "ayah": 1,
+        "reference_ms": 8319,
+        "onset_ms": 12459,
+        "error_ms": 4140,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 7980.0,
+          "end_ms": 12380.0,
+          "center_ms": 10180.0,
+          "duration_ms": 4400.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.20527348003220763,
+            "zcr": 0.1429413759047156,
+            "rms_ratio": 0.006234919901319843
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": false,
+        "reference_from_pause_start_ms": 339.0,
+        "onset_from_pause_end_ms": 79.0
+      },
+      {
+        "ayah": 2,
+        "reference_ms": 37506,
+        "onset_ms": 40898,
+        "error_ms": 3392,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 35720.0,
+          "end_ms": 40980.0,
+          "center_ms": 38350.0,
+          "duration_ms": 5260.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.35815875251493123,
+            "zcr": 0.15747742006642237,
+            "rms_ratio": 0.011301263835316397
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 1786.0,
+        "onset_from_pause_end_ms": -82.0
+      },
+      {
+        "ayah": 3,
+        "reference_ms": 53945,
+        "onset_ms": 56037,
+        "error_ms": 2092,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 53060.0,
+          "end_ms": 56260.0,
+          "center_ms": 54660.0,
+          "duration_ms": 3200.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.2700380776655884,
+            "zcr": 0.14379407471370712,
+            "rms_ratio": 0.014545441186430932
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 885.0,
+        "onset_from_pause_end_ms": -223.0
+      },
+      {
+        "ayah": 4,
+        "reference_ms": 63945,
+        "onset_ms": 68276,
+        "error_ms": 4331,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 63020.0,
+          "end_ms": 68460.0,
+          "center_ms": 65740.0,
+          "duration_ms": 5440.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.3107917817551064,
+            "zcr": 0.13178423040045456,
+            "rms_ratio": 0.009641079266464942
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 925.0,
+        "onset_from_pause_end_ms": -184.0
+      },
+      {
+        "ayah": 5,
+        "reference_ms": 88944,
+        "onset_ms": 92175,
+        "error_ms": 3231,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 88940.0,
+          "end_ms": 92220.0,
+          "center_ms": 90580.0,
+          "duration_ms": 3280.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.3792105205179568,
+            "zcr": 0.15182595805204432,
+            "rms_ratio": 0.005794733853870169
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 4.0,
+        "onset_from_pause_end_ms": -45.0
+      },
+      {
+        "ayah": 6,
+        "reference_ms": 132010,
+        "onset_ms": 134733,
+        "error_ms": 2723,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 131280.0,
+          "end_ms": 134800.0,
+          "center_ms": 133040.0,
+          "duration_ms": 3520.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.2967788012349477,
+            "zcr": 0.18774530776242118,
+            "rms_ratio": 0.011044660834521455
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 730.0,
+        "onset_from_pause_end_ms": -67.0
+      },
+      {
+        "ayah": 7,
+        "reference_ms": 169383,
+        "onset_ms": 166571,
+        "error_ms": -2812,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 168340.0,
+          "end_ms": 173600.0,
+          "center_ms": 170970.0,
+          "duration_ms": 5260.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.35179328233516405,
+            "zcr": 0.07063812056520301,
+            "rms_ratio": 0.010480729730843977
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": false,
+        "reference_from_pause_start_ms": 1043.0,
+        "onset_from_pause_end_ms": -7029.0
+      },
+      {
+        "ayah": 8,
+        "reference_ms": 193947,
+        "onset_ms": 196889,
+        "error_ms": 2942,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 192760.0,
+          "end_ms": 197020.0,
+          "center_ms": 194890.0,
+          "duration_ms": 4260.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.36892521372274273,
+            "zcr": 0.16715193829174224,
+            "rms_ratio": 0.011198135387288116
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 1187.0,
+        "onset_from_pause_end_ms": -131.0
+      }
+    ]
+  },
+  {
+    "reciter": "abdul_basit_mujawwad",
+    "surah": 112,
+    "errors": {
+      "n": 4,
+      "median_ms": 1126.5,
+      "p95_ms": 1942.1999999999998,
+      "max_ms": 2064.0,
+      "over500": 4
+    },
+    "median_signed_error_ms": 1126.5,
+    "positive_large": 4,
+    "reference_inside_pause": 4,
+    "predicted_in_same_pause": 4,
+    "large": 4,
+    "unflagged": 0,
+    "events": [
+      {
+        "ayah": 1,
+        "reference_ms": 9493,
+        "onset_ms": 11557,
+        "error_ms": 2064,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 9180.0,
+          "end_ms": 11780.0,
+          "center_ms": 10480.0,
+          "duration_ms": 2600.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.20745754459740767,
+            "zcr": 0.24744486282947822,
+            "rms_ratio": 0.008095391297374311
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 313.0,
+        "onset_from_pause_end_ms": -223.0
+      },
+      {
+        "ayah": 2,
+        "reference_ms": 17116,
+        "onset_ms": 17776,
+        "error_ms": 660,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 16360.0,
+          "end_ms": 17900.0,
+          "center_ms": 17130.0,
+          "duration_ms": 1540.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.38911901592621106,
+            "zcr": 0.19185651524072647,
+            "rms_ratio": 0.016501993408564543
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 756.0,
+        "onset_from_pause_end_ms": -124.0
+      },
+      {
+        "ayah": 3,
+        "reference_ms": 22554,
+        "onset_ms": 23555,
+        "error_ms": 1001,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 22200.0,
+          "end_ms": 23680.0,
+          "center_ms": 22940.0,
+          "duration_ms": 1480.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.39749310633646856,
+            "zcr": 0.19290686112031818,
+            "rms_ratio": 0.01393285808884739
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 354.0,
+        "onset_from_pause_end_ms": -125.0
+      },
+      {
+        "ayah": 4,
+        "reference_ms": 29681,
+        "onset_ms": 30933,
+        "error_ms": 1252,
+        "flagged": true,
+        "nearest_pause": {
+          "start_ms": 29060.0,
+          "end_ms": 31100.0,
+          "center_ms": 30080.0,
+          "duration_ms": 2040.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.35226137967172444,
+            "zcr": 0.19335749193789686,
+            "rms_ratio": 0.01717910982964243
+          }
+        },
+        "reference_in_pause": true,
+        "onset_in_same_pause": true,
+        "reference_from_pause_start_ms": 621.0,
+        "onset_from_pause_end_ms": -167.0
+      }
+    ]
+  }
+]

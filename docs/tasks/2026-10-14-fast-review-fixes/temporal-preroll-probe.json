@@ -1,0 +1,7241 @@
+{
+  "results": [
+    {
+      "case": "crop5720_silence0",
+      "asr": {
+        "text": "إِنَّا",
+        "token_confidence": 0.9793758988380432,
+        "min_token_confidence": 0.957974374294281,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -0.000324673397699371,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -0.0016643255949020386,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -0.00011288482346571982,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -6.615896563744172e-05,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -3.0636318115284666e-05,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.042934250086545944,
+            "bytes": [
+              216,
+              167
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "timings": {
+        "إِنَّا": {
+          "existing_query_plus_one": [
+            [
+              1020,
+              0.772770345211029
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            1020,
+            1020,
+            1240,
+            2680,
+            2680,
+            2680
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            11933,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ]
+        },
+        "الْحَمْدُ": {
+          "existing_query_plus_one": [
+            [
+              0,
+              0.37373027205467224
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            0,
+            0,
+            1720,
+            1720,
+            1720,
+            1720,
+            1720,
+            2520
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            2423,
+            17195,
+            5016,
+            6808,
+            2304,
+            17195,
+            3215,
+            10859
+          ]
+        }
+      },
+      "actual_dispatches": [
+        {
+          "method": "independent_asr",
+          "samples": 43200,
+          "sha256": "1679617ff11ff18246509b8dcfa7f13178ab0c264511559e14c457df07469e25",
+          "seconds": 0.21763841598294675
+        },
+        {
+          "method": "teacher_forced_attention_إِنَّا",
+          "samples": 43200,
+          "sha256": "1679617ff11ff18246509b8dcfa7f13178ab0c264511559e14c457df07469e25",
+          "seconds": 0.11561108403839171
+        },
+        {
+          "method": "teacher_forced_attention_الْحَمْدُ",
+          "samples": 43200,
+          "sha256": "1679617ff11ff18246509b8dcfa7f13178ab0c264511559e14c457df07469e25",
+          "seconds": 0.10138383391313255
+        }
+      ],
+      "model": "whisper-tarteel-tiny",
+      "crop_start_ms": 5720,
+      "silence_ms": 0,
+      "ledger": {
+        "emission_passes": 3,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              2700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.21763841598294675
+          },
+          {
+            "phase": "teacher_forced_attention_إِنَّا",
+            "window_ms": [
+              0.0,
+              2700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.11561108403839171
+          },
+          {
+            "phase": "teacher_forced_attention_الْحَمْدُ",
+            "window_ms": [
+              0.0,
+              2700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.10138383391313255
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 8100.0,
+        "covered_audio_ms": 2700.0,
+        "coverage": 0.15199225965344357,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            2700.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "units": [
+        "انا"
+      ],
+      "unit_quality": [
+        0.9579743747286196
+      ],
+      "attribution": [
+        {
+          "word": "انا",
+          "selected_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "token_ids": [
+            28814,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ],
+          "probabilities": [
+            0.9996753793030045,
+            0.9983370586269025,
+            0.9998871215477863,
+            0.9999338432228186,
+            0.9999693641511719,
+            0.9579743747286196
+          ]
+        }
+      ],
+      "independently_proved_inna": true,
+      "rms_onsets_ms": {
+        "0.003": 0,
+        "0.01": 0,
+        "0.02382712811231613": 600
+      }
+    },
+    {
+      "case": "crop5720_silence200",
+      "asr": {
+        "text": "إِنَّا",
+        "token_confidence": 0.9851322174072266,
+        "min_token_confidence": 0.9441612958908081,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -0.000248043768806383,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -0.003710173536092043,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -8.821098163025454e-05,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -0.00012659224739763886,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -5.328513361746445e-05,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.057458240538835526,
+            "bytes": [
+              216,
+              167
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "timings": {
+        "إِنَّا": {
+          "existing_query_plus_one": [
+            [
+              1040,
+              0.7620241045951843
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            1040,
+            1240,
+            1240,
+            2880,
+            2880,
+            2880
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            11933,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ]
+        },
+        "الْحَمْدُ": {
+          "existing_query_plus_one": [
+            [
+              0,
+              0.36601710319519043
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            0,
+            0,
+            1920,
+            1920,
+            1920,
+            1920,
+            1920,
+            2720
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            2423,
+            17195,
+            5016,
+            6808,
+            2304,
+            17195,
+            3215,
+            10859
+          ]
+        }
+      },
+      "actual_dispatches": [
+        {
+          "method": "independent_asr",
+          "samples": 46400,
+          "sha256": "ec8ae35f9df4f97546272c1bdf8f304ba25a9175944d2d3b87c91af963e3dba8",
+          "seconds": 0.1554878749884665
+        },
+        {
+          "method": "teacher_forced_attention_إِنَّا",
+          "samples": 46400,
+          "sha256": "ec8ae35f9df4f97546272c1bdf8f304ba25a9175944d2d3b87c91af963e3dba8",
+          "seconds": 0.10406033415347338
+        },
+        {
+          "method": "teacher_forced_attention_الْحَمْدُ",
+          "samples": 46400,
+          "sha256": "ec8ae35f9df4f97546272c1bdf8f304ba25a9175944d2d3b87c91af963e3dba8",
+          "seconds": 0.12970254197716713
+        }
+      ],
+      "model": "whisper-tarteel-tiny",
+      "crop_start_ms": 5720,
+      "silence_ms": 200,
+      "ledger": {
+        "emission_passes": 3,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              2900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.1554878749884665
+          },
+          {
+            "phase": "teacher_forced_attention_إِنَّا",
+            "window_ms": [
+              0.0,
+              2900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.10406033415347338
+          },
+          {
+            "phase": "teacher_forced_attention_الْحَمْدُ",
+            "window_ms": [
+              0.0,
+              2900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.12970254197716713
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 8700.0,
+        "covered_audio_ms": 2900.0,
+        "coverage": 0.16143341741323824,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            2900.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "units": [
+        "انا"
+      ],
+      "unit_quality": [
+        0.9441613172310545
+      ],
+      "attribution": [
+        {
+          "word": "انا",
+          "selected_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "token_ids": [
+            28814,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ],
+          "probabilities": [
+            0.9997519869915059,
+            0.9962967006536352,
+            0.999911792908844,
+            0.9998734157650628,
+            0.9999467162860101,
+            0.9441613172310545
+          ]
+        }
+      ],
+      "independently_proved_inna": true,
+      "rms_onsets_ms": {
+        "0.003": 200,
+        "0.01": 200,
+        "0.02382712811231613": 800
+      }
+    },
+    {
+      "case": "crop5720_silence1200",
+      "asr": {
+        "text": "إِنَّا",
+        "token_confidence": 0.9759242534637451,
+        "min_token_confidence": 0.9362131953239441,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -0.00030083899036981165,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -0.020682500675320625,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -7.86750388215296e-05,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -0.00038652101648040116,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -7.4741430580616e-05,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.06591203808784485,
+            "bytes": [
+              216,
+              167
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "timings": {
+        "إِنَّا": {
+          "existing_query_plus_one": [
+            [
+              2220,
+              0.7591744065284729
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            2220,
+            2240,
+            2720,
+            3880,
+            3880,
+            3880
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            11933,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ]
+        },
+        "الْحَمْدُ": {
+          "existing_query_plus_one": [
+            [
+              0,
+              0.323962926864624
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            0,
+            0,
+            3880,
+            3880,
+            3880,
+            3880,
+            3880,
+            3880
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            2423,
+            17195,
+            5016,
+            6808,
+            2304,
+            17195,
+            3215,
+            10859
+          ]
+        }
+      },
+      "actual_dispatches": [
+        {
+          "method": "independent_asr",
+          "samples": 62400,
+          "sha256": "e4346f3bae38307b88c2cd38062b42ca1ccfd5b7b24346eab8349d7fff207d2f",
+          "seconds": 0.16604549996554852
+        },
+        {
+          "method": "teacher_forced_attention_إِنَّا",
+          "samples": 62400,
+          "sha256": "e4346f3bae38307b88c2cd38062b42ca1ccfd5b7b24346eab8349d7fff207d2f",
+          "seconds": 0.09994224994443357
+        },
+        {
+          "method": "teacher_forced_attention_الْحَمْدُ",
+          "samples": 62400,
+          "sha256": "e4346f3bae38307b88c2cd38062b42ca1ccfd5b7b24346eab8349d7fff207d2f",
+          "seconds": 0.1022157499101013
+        }
+      ],
+      "model": "whisper-tarteel-tiny",
+      "crop_start_ms": 5720,
+      "silence_ms": 1200,
+      "ledger": {
+        "emission_passes": 3,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              3900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.16604549996554852
+          },
+          {
+            "phase": "teacher_forced_attention_إِنَّا",
+            "window_ms": [
+              0.0,
+              3900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.09994224994443357
+          },
+          {
+            "phase": "teacher_forced_attention_الْحَمْدُ",
+            "window_ms": [
+              0.0,
+              3900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.1022157499101013
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 11700.0,
+        "covered_audio_ms": 3900.0,
+        "coverage": 0.2056521380901376,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            3900.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "units": [
+        "انا"
+      ],
+      "unit_quality": [
+        0.9362132117741373
+      ],
+      "attribution": [
+        {
+          "word": "انا",
+          "selected_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "token_ids": [
+            28814,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ],
+          "probabilities": [
+            0.9996992062571417,
+            0.9795299152901334,
+            0.9999213280559782,
+            0.9996135536731443,
+            0.9999252613624905,
+            0.9362132117741373
+          ]
+        }
+      ],
+      "independently_proved_inna": true,
+      "rms_onsets_ms": {
+        "0.003": 1200,
+        "0.01": 1200,
+        "0.02382712811231613": 1800
+      }
+    },
+    {
+      "case": "crop6320_silence0",
+      "asr": {
+        "text": "إِنَّا أَعْطَيْنَا",
+        "token_confidence": 0.9880926012992859,
+        "min_token_confidence": 0.852976381778717,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -0.0011820956133306026,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -1.2874520507466514e-05,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -6.532455881824717e-05,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -1.7881233361549675e-05,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -3.194758028257638e-05,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.0004844683862756938,
+            "bytes": [
+              216,
+              167
+            ]
+          },
+          {
+            "id": 5551,
+            "log_probability": -0.0001072826053132303,
+            "bytes": [
+              32,
+              216,
+              163
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.0004101150552742183,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3615,
+            "log_probability": -0.010146466083824635,
+            "bytes": [
+              216,
+              185
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -1.8596476365928538e-05,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 9566,
+            "log_probability": -0.003993394784629345,
+            "bytes": [
+              216,
+              183
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.1590234339237213,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 1829,
+            "log_probability": -0.010394483804702759,
+            "bytes": [
+              217,
+              138
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -1.490105023549404e-05,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -9.417489309271332e-06,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.018803440034389496,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.01087123155593872,
+            "bytes": [
+              216,
+              167
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "timings": {
+        "إِنَّا": {
+          "existing_query_plus_one": [
+            [
+              720,
+              0.8329240679740906
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            720,
+            720,
+            720,
+            1040,
+            1960,
+            1980
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            11933,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ]
+        },
+        "الْحَمْدُ": {
+          "existing_query_plus_one": [
+            [
+              100,
+              0.29822802543640137
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            100,
+            100,
+            960,
+            960,
+            960,
+            960,
+            960,
+            1940
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            2423,
+            17195,
+            5016,
+            6808,
+            2304,
+            17195,
+            3215,
+            10859
+          ]
+        }
+      },
+      "actual_dispatches": [
+        {
+          "method": "independent_asr",
+          "samples": 43200,
+          "sha256": "c899e0455fe3d18415b15a3dd697df7f8805987d50caaae2ed57e26a67176c3d",
+          "seconds": 0.24238025001250207
+        },
+        {
+          "method": "teacher_forced_attention_إِنَّا",
+          "samples": 43200,
+          "sha256": "c899e0455fe3d18415b15a3dd697df7f8805987d50caaae2ed57e26a67176c3d",
+          "seconds": 0.09867908293381333
+        },
+        {
+          "method": "teacher_forced_attention_الْحَمْدُ",
+          "samples": 43200,
+          "sha256": "c899e0455fe3d18415b15a3dd697df7f8805987d50caaae2ed57e26a67176c3d",
+          "seconds": 0.09964629192836583
+        }
+      ],
+      "model": "whisper-tarteel-tiny",
+      "crop_start_ms": 6320,
+      "silence_ms": 0,
+      "ledger": {
+        "emission_passes": 3,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              2700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.24238025001250207
+          },
+          {
+            "phase": "teacher_forced_attention_إِنَّا",
+            "window_ms": [
+              0.0,
+              2700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.09867908293381333
+          },
+          {
+            "phase": "teacher_forced_attention_الْحَمْدُ",
+            "window_ms": [
+              0.0,
+              2700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.09964629192836583
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 8100.0,
+        "covered_audio_ms": 2700.0,
+        "coverage": 0.1573054164770141,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            2700.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "units": [
+        "انا",
+        "اعطينا"
+      ],
+      "unit_quality": [
+        0.9988186027864701,
+        0.85297637015173
+      ],
+      "attribution": [
+        {
+          "word": "انا",
+          "selected_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "token_ids": [
+            28814,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ],
+          "probabilities": [
+            0.9988186027864701,
+            0.9999871255623688,
+            0.9999346775747843,
+            0.9999821189265068,
+            0.9999680529300359,
+            0.9995156489495837
+          ]
+        },
+        {
+          "word": "اعطينا",
+          "selected_indices": [
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "token_ids": [
+            5551,
+            6808,
+            3615,
+            17195,
+            9566,
+            6808,
+            1829,
+            17195,
+            1863,
+            6808,
+            995
+          ],
+          "probabilities": [
+            0.9998927231492597,
+            0.9995899690304098,
+            0.989904835646139,
+            0.9999814036965474,
+            0.9960145682129994,
+            0.85297637015173,
+            0.9896593521483029,
+            0.9999850990607846,
+            0.9999905825550351,
+            0.9813722417800828,
+            0.9891876467288601
+          ]
+        }
+      ],
+      "independently_proved_inna": true,
+      "rms_onsets_ms": {
+        "0.003": 0,
+        "0.01": 0,
+        "0.02382712811231613": 0
+      }
+    },
+    {
+      "case": "crop6320_silence200",
+      "asr": {
+        "text": "إِنَّا أَعْطَيْنَا",
+        "token_confidence": 0.9692203998565674,
+        "min_token_confidence": 0.6329076886177063,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -9.548207890475169e-05,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -2.2172682292875834e-05,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -2.0861407392658293e-05,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -1.5258672647178173e-05,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -1.680836794548668e-05,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.00033098942367359996,
+            "bytes": [
+              216,
+              167
+            ]
+          },
+          {
+            "id": 5551,
+            "log_probability": -8.821098163025454e-05,
+            "bytes": [
+              32,
+              216,
+              163
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.0004003438516519964,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3615,
+            "log_probability": -0.004605400841683149,
+            "bytes": [
+              216,
+              185
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -2.13382354559144e-05,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 9566,
+            "log_probability": -0.003123882692307234,
+            "bytes": [
+              216,
+              183
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.4574306905269623,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 1829,
+            "log_probability": -0.06168331205844879,
+            "bytes": [
+              217,
+              138
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -1.4185804502631072e-05,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -6.318072337307967e-06,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.022901801392436028,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.011914871633052826,
+            "bytes": [
+              216,
+              167
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "timings": {
+        "إِنَّا": {
+          "existing_query_plus_one": [
+            [
+              940,
+              0.8331514000892639
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            940,
+            940,
+            940,
+            1460,
+            2120,
+            2180
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            11933,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ]
+        },
+        "الْحَمْدُ": {
+          "existing_query_plus_one": [
+            [
+              260,
+              0.29024264216423035
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            260,
+            260,
+            2500,
+            2500,
+            2660,
+            2680,
+            2700,
+            2860
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            2423,
+            17195,
+            5016,
+            6808,
+            2304,
+            17195,
+            3215,
+            10859
+          ]
+        }
+      },
+      "actual_dispatches": [
+        {
+          "method": "independent_asr",
+          "samples": 46400,
+          "sha256": "c178aa8289749c584d2571a53c8f25f738638a531c41998b511e3ede6f25162b",
+          "seconds": 0.2402296660002321
+        },
+        {
+          "method": "teacher_forced_attention_إِنَّا",
+          "samples": 46400,
+          "sha256": "c178aa8289749c584d2571a53c8f25f738638a531c41998b511e3ede6f25162b",
+          "seconds": 0.09961087489500642
+        },
+        {
+          "method": "teacher_forced_attention_الْحَمْدُ",
+          "samples": 46400,
+          "sha256": "c178aa8289749c584d2571a53c8f25f738638a531c41998b511e3ede6f25162b",
+          "seconds": 0.09884995897300541
+        }
+      ],
+      "model": "whisper-tarteel-tiny",
+      "crop_start_ms": 6320,
+      "silence_ms": 200,
+      "ledger": {
+        "emission_passes": 3,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              2900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.2402296660002321
+          },
+          {
+            "phase": "teacher_forced_attention_إِنَّا",
+            "window_ms": [
+              0.0,
+              2900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.09961087489500642
+          },
+          {
+            "phase": "teacher_forced_attention_الْحَمْدُ",
+            "window_ms": [
+              0.0,
+              2900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.09884995897300541
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 8700.0,
+        "covered_audio_ms": 2900.0,
+        "coverage": 0.16701160802663548,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            2900.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "units": [
+        "انا",
+        "اعطينا"
+      ],
+      "unit_quality": [
+        0.9996690653472826,
+        0.6329076940056876
+      ],
+      "attribution": [
+        {
+          "word": "انا",
+          "selected_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "token_ids": [
+            28814,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ],
+          "probabilities": [
+            0.9999045224793639,
+            0.9999778275635193,
+            0.999979138810205,
+            0.9999847414437658,
+            0.9999831917733143,
+            0.9996690653472826
+          ]
+        },
+        {
+          "word": "اعطينا",
+          "selected_indices": [
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "token_ids": [
+            5551,
+            6808,
+            3615,
+            17195,
+            9566,
+            6808,
+            1829,
+            17195,
+            1863,
+            6808,
+            995
+          ],
+          "probabilities": [
+            0.999911792908844,
+            0.9995997362752547,
+            0.995405187755625,
+            0.9999786619922026,
+            0.9968809915523865,
+            0.6329076940056876,
+            0.9401805835037975,
+            0.9999858142961154,
+            0.9999936819476216,
+            0.977358454300417,
+            0.988155829373573
+          ]
+        }
+      ],
+      "independently_proved_inna": true,
+      "rms_onsets_ms": {
+        "0.003": 200,
+        "0.01": 200,
+        "0.02382712811231613": 200
+      }
+    },
+    {
+      "case": "crop6320_silence1200",
+      "asr": {
+        "text": "إِنَّا أَعْطَيْنَا",
+        "token_confidence": 0.9690502882003784,
+        "min_token_confidence": 0.6336220502853394,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -8.380061626667157e-05,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -3.755022044060752e-05,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -4.410646579344757e-05,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -2.13382354559144e-05,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -1.1324817933200393e-05,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.00037555795279331505,
+            "bytes": [
+              216,
+              167
+            ]
+          },
+          {
+            "id": 5551,
+            "log_probability": -0.0005192600074224174,
+            "bytes": [
+              32,
+              216,
+              163
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.0008725888328626752,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3615,
+            "log_probability": -0.013290857896208763,
+            "bytes": [
+              216,
+              185
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -1.6212332411669195e-05,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 9566,
+            "log_probability": -0.00960290152579546,
+            "bytes": [
+              216,
+              183
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.45630261301994324,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 1829,
+            "log_probability": -0.05679654702544212,
+            "bytes": [
+              217,
+              138
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -3.242440288886428e-05,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -7.748573807475623e-06,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.019177615642547607,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.008630713447928429,
+            "bytes": [
+              216,
+              167
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "timings": {
+        "إِنَّا": {
+          "existing_query_plus_one": [
+            [
+              1940,
+              0.8331014513969421
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            1940,
+            1940,
+            1940,
+            3260,
+            3260,
+            3260
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            11933,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ]
+        },
+        "الْحَمْدُ": {
+          "existing_query_plus_one": [
+            [
+              0,
+              0.28800320625305176
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            0,
+            0,
+            3520,
+            3520,
+            3660,
+            3720,
+            3720,
+            3880
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            2423,
+            17195,
+            5016,
+            6808,
+            2304,
+            17195,
+            3215,
+            10859
+          ]
+        }
+      },
+      "actual_dispatches": [
+        {
+          "method": "independent_asr",
+          "samples": 62400,
+          "sha256": "3ece7d9548c1e78c19b198f400b56cc0e41ecc20b9c981392e151b0dc94dd0ef",
+          "seconds": 0.24522579181939363
+        },
+        {
+          "method": "teacher_forced_attention_إِنَّا",
+          "samples": 62400,
+          "sha256": "3ece7d9548c1e78c19b198f400b56cc0e41ecc20b9c981392e151b0dc94dd0ef",
+          "seconds": 0.10193737503141165
+        },
+        {
+          "method": "teacher_forced_attention_الْحَمْدُ",
+          "samples": 62400,
+          "sha256": "3ece7d9548c1e78c19b198f400b56cc0e41ecc20b9c981392e151b0dc94dd0ef",
+          "seconds": 0.10457866615615785
+        }
+      ],
+      "model": "whisper-tarteel-tiny",
+      "crop_start_ms": 6320,
+      "silence_ms": 1200,
+      "ledger": {
+        "emission_passes": 3,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              3900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.24522579181939363
+          },
+          {
+            "phase": "teacher_forced_attention_إِنَّا",
+            "window_ms": [
+              0.0,
+              3900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.10193737503141165
+          },
+          {
+            "phase": "teacher_forced_attention_الْحَمْدُ",
+            "window_ms": [
+              0.0,
+              3900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.10457866615615785
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 11700.0,
+        "covered_audio_ms": 3900.0,
+        "coverage": 0.21237130945290564,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            3900.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "units": [
+        "انا",
+        "اعطينا"
+      ],
+      "unit_quality": [
+        0.9996245125602671,
+        0.6336220657969326
+      ],
+      "attribution": [
+        {
+          "word": "انا",
+          "selected_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "token_ids": [
+            28814,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ],
+          "probabilities": [
+            0.9999162028949069,
+            0.9999624504845601,
+            0.9999558945068824,
+            0.9999786619922026,
+            0.9999886752461923,
+            0.9996245125602671
+          ]
+        },
+        {
+          "word": "اعطينا",
+          "selected_indices": [
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "token_ids": [
+            5551,
+            6808,
+            3615,
+            17195,
+            9566,
+            6808,
+            1829,
+            17195,
+            1863,
+            6808,
+            995
+          ],
+          "probabilities": [
+            0.9994808747847235,
+            0.9991277917620639,
+            0.9867970755541745,
+            0.9999837877990074,
+            0.990443059096962,
+            0.6336220657969326,
+            0.9447862693908561,
+            0.9999675761227764,
+            0.9999922514562126,
+            0.9810051049157985,
+            0.9914064242409989
+          ]
+        }
+      ],
+      "independently_proved_inna": true,
+      "rms_onsets_ms": {
+        "0.003": 1200,
+        "0.01": 1200,
+        "0.02382712811231613": 1200
+      }
+    },
+    {
+      "case": "basmala_negative",
+      "asr": {
+        "text": "بِسْمِ اللَّهِ الرَّحْمِ",
+        "token_confidence": 0.9739937782287598,
+        "min_token_confidence": 0.8050552606582642,
+        "selected_tokens": [
+          {
+            "id": 3555,
+            "log_probability": -0.0001931004080688581,
+            "bytes": [
+              216,
+              168
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -0.0002335037279408425,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 3794,
+            "log_probability": -0.07356957346200943,
+            "bytes": [
+              216,
+              179
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -3.4570634852570947e-06,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 2304,
+            "log_probability": -0.004890266805887222,
+            "bytes": [
+              217,
+              133
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -0.00014256415306590497,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 13672,
+            "log_probability": -2.658331868587993e-05,
+            "bytes": [
+              32,
+              216,
+              167,
+              217,
+              132,
+              217,
+              132
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -8.344646857949556e-07,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3224,
+            "log_probability": -0.001872811233624816,
+            "bytes": [
+              217,
+              135
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -4.529942543740617e-06,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 34892,
+            "log_probability": -0.011111052706837654,
+            "bytes": [
+              32,
+              216,
+              167,
+              217,
+              132,
+              216,
+              177
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -0.0012322221882641315,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.00028200942324474454,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 5016,
+            "log_probability": -5.113947918289341e-05,
+            "bytes": [
+              216,
+              173
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -0.0038208591286092997,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 2304,
+            "log_probability": -0.216844379901886,
+            "bytes": [
+              217,
+              133
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -0.18631181120872498,
+            "bytes": [
+              217,
+              144
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "timings": {
+        "إِنَّا": {
+          "existing_query_plus_one": [
+            [
+              680,
+              0.5021671652793884
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            680,
+            680,
+            680,
+            1340,
+            1660,
+            1700
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            11933,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ]
+        },
+        "الْحَمْدُ": {
+          "existing_query_plus_one": [
+            [
+              0,
+              0.34822916984558105
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            0,
+            0,
+            1900,
+            2260,
+            2360,
+            2380,
+            2680,
+            2680
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            2423,
+            17195,
+            5016,
+            6808,
+            2304,
+            17195,
+            3215,
+            10859
+          ]
+        }
+      },
+      "actual_dispatches": [
+        {
+          "method": "independent_asr",
+          "samples": 43200,
+          "sha256": "e74ee119e4a6a4bf027a9beab1a0f5bc53779786e9685cf8b7b0d116d004771e",
+          "seconds": 0.2661617500707507
+        },
+        {
+          "method": "teacher_forced_attention_إِنَّا",
+          "samples": 43200,
+          "sha256": "e74ee119e4a6a4bf027a9beab1a0f5bc53779786e9685cf8b7b0d116d004771e",
+          "seconds": 0.1031211658846587
+        },
+        {
+          "method": "teacher_forced_attention_الْحَمْدُ",
+          "samples": 43200,
+          "sha256": "e74ee119e4a6a4bf027a9beab1a0f5bc53779786e9685cf8b7b0d116d004771e",
+          "seconds": 0.10157654178328812
+        }
+      ],
+      "model": "whisper-tarteel-tiny",
+      "crop_start_ms": 0,
+      "silence_ms": 0,
+      "ledger": {
+        "emission_passes": 3,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              2700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.2661617500707507
+          },
+          {
+            "phase": "teacher_forced_attention_إِنَّا",
+            "window_ms": [
+              0.0,
+              2700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.1031211658846587
+          },
+          {
+            "phase": "teacher_forced_attention_الْحَمْدُ",
+            "window_ms": [
+              0.0,
+              2700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.10157654178328812
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 8100.0,
+        "covered_audio_ms": 2700.0,
+        "coverage": 0.11497158977498037,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            2700.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "units": [
+        "بسم",
+        "الله",
+        "الرحم"
+      ],
+      "unit_quality": [
+        0.9290715048218526,
+        0.9981289413830561,
+        0.8050552423330473
+      ],
+      "attribution": [
+        {
+          "word": "بسم",
+          "selected_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "token_ids": [
+            3555,
+            11082,
+            3794,
+            17195,
+            2304,
+            11082
+          ],
+          "probabilities": [
+            0.999806918234615,
+            0.9997665235319328,
+            0.9290715048218526,
+            0.9999965429424904,
+            0.995121671081084,
+            0.9998574460087201
+          ]
+        },
+        {
+          "word": "الله",
+          "selected_indices": [
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "token_ids": [
+            13672,
+            11703,
+            6808,
+            3224,
+            11082
+          ],
+          "probabilities": [
+            0.9999734170346474,
+            1.0,
+            0.9999991655356624,
+            0.9981289413830561,
+            0.9999954700677164
+          ]
+        },
+        {
+          "word": "الرحم",
+          "selected_indices": [
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17
+          ],
+          "token_ids": [
+            34892,
+            11703,
+            6808,
+            5016,
+            17195,
+            2304,
+            11082
+          ],
+          "probabilities": [
+            0.988950447052853,
+            0.998768536685764,
+            0.9997180303376749,
+            0.999948861828418,
+            0.9961864310657402,
+            0.8050552423330473,
+            0.8300147467266998
+          ]
+        }
+      ],
+      "independently_proved_inna": false,
+      "rms_onsets_ms": {
+        "0.003": 160,
+        "0.01": 220,
+        "0.025444364175200462": 260
+      }
+    },
+    {
+      "case": "crop5720_silence0",
+      "asr": {
+        "text": "إِنَّا",
+        "token_confidence": 0.9116683602333069,
+        "min_token_confidence": 0.9987058639526367,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -1.5497195136049413e-06,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -1.1920928244535389e-07,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -1.1920928244535389e-07,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.0012949660886079073,
+            "bytes": [
+              216,
+              167
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "timings": {
+        "إِنَّا": {
+          "existing_query_plus_one": [
+            [
+              1040,
+              0.8331990242004395
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            1040,
+            1060,
+            1200,
+            1500,
+            1540,
+            2000
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            11933,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ]
+        },
+        "الْحَمْدُ": {
+          "existing_query_plus_one": [
+            [
+              720,
+              0.26230672001838684
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            720,
+            1760,
+            1760,
+            1760,
+            2680,
+            2680,
+            2680,
+            2680
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            2423,
+            17195,
+            5016,
+            6808,
+            2304,
+            17195,
+            3215,
+            10859
+          ]
+        }
+      },
+      "actual_dispatches": [
+        {
+          "method": "independent_asr",
+          "samples": 43200,
+          "sha256": "1679617ff11ff18246509b8dcfa7f13178ab0c264511559e14c457df07469e25",
+          "seconds": 0.3421224160119891
+        },
+        {
+          "method": "teacher_forced_attention_إِنَّا",
+          "samples": 43200,
+          "sha256": "1679617ff11ff18246509b8dcfa7f13178ab0c264511559e14c457df07469e25",
+          "seconds": 0.386532082920894
+        },
+        {
+          "method": "teacher_forced_attention_الْحَمْدُ",
+          "samples": 43200,
+          "sha256": "1679617ff11ff18246509b8dcfa7f13178ab0c264511559e14c457df07469e25",
+          "seconds": 0.8255860840436071
+        }
+      ],
+      "model": "whisper-tarteel-base",
+      "crop_start_ms": 5720,
+      "silence_ms": 0,
+      "ledger": {
+        "emission_passes": 3,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              2700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.3421224160119891
+          },
+          {
+            "phase": "teacher_forced_attention_إِنَّا",
+            "window_ms": [
+              0.0,
+              2700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.386532082920894
+          },
+          {
+            "phase": "teacher_forced_attention_الْحَمْدُ",
+            "window_ms": [
+              0.0,
+              2700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.8255860840436071
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 8100.0,
+        "covered_audio_ms": 2700.0,
+        "coverage": 0.15199225965344357,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            2700.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "units": [
+        "انا"
+      ],
+      "unit_quality": [
+        0.9987058720181651
+      ],
+      "attribution": [
+        {
+          "word": "انا",
+          "selected_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "token_ids": [
+            28814,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ],
+          "probabilities": [
+            0.9999984502816872,
+            0.9999998807907247,
+            1.0,
+            0.9999998807907247,
+            1.0,
+            0.9987058720181651
+          ]
+        }
+      ],
+      "independently_proved_inna": true,
+      "rms_onsets_ms": {
+        "0.003": 0,
+        "0.01": 0,
+        "0.02382712811231613": 600
+      }
+    },
+    {
+      "case": "crop5720_silence200",
+      "asr": {
+        "text": "إِنَّا",
+        "token_confidence": 0.9347967505455017,
+        "min_token_confidence": 0.9979487061500549,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -1.6689286894688848e-06,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -2.3841855067985307e-07,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -2.3841855067985307e-07,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.0020534161012619734,
+            "bytes": [
+              216,
+              167
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "timings": {
+        "إِنَّا": {
+          "existing_query_plus_one": [
+            [
+              1240,
+              0.8331301808357239
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            1240,
+            1320,
+            1320,
+            1700,
+            1740,
+            2200
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            11933,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ]
+        },
+        "الْحَمْدُ": {
+          "existing_query_plus_one": [
+            [
+              920,
+              0.2519761323928833
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            920,
+            1720,
+            1720,
+            1720,
+            1720,
+            1720,
+            1720,
+            1740
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            2423,
+            17195,
+            5016,
+            6808,
+            2304,
+            17195,
+            3215,
+            10859
+          ]
+        }
+      },
+      "actual_dispatches": [
+        {
+          "method": "independent_asr",
+          "samples": 46400,
+          "sha256": "ec8ae35f9df4f97546272c1bdf8f304ba25a9175944d2d3b87c91af963e3dba8",
+          "seconds": 0.7407148329075426
+        },
+        {
+          "method": "teacher_forced_attention_إِنَّا",
+          "samples": 46400,
+          "sha256": "ec8ae35f9df4f97546272c1bdf8f304ba25a9175944d2d3b87c91af963e3dba8",
+          "seconds": 0.31167874997481704
+        },
+        {
+          "method": "teacher_forced_attention_الْحَمْدُ",
+          "samples": 46400,
+          "sha256": "ec8ae35f9df4f97546272c1bdf8f304ba25a9175944d2d3b87c91af963e3dba8",
+          "seconds": 1.004130625165999
+        }
+      ],
+      "model": "whisper-tarteel-base",
+      "crop_start_ms": 5720,
+      "silence_ms": 200,
+      "ledger": {
+        "emission_passes": 3,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              2900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.7407148329075426
+          },
+          {
+            "phase": "teacher_forced_attention_إِنَّا",
+            "window_ms": [
+              0.0,
+              2900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.31167874997481704
+          },
+          {
+            "phase": "teacher_forced_attention_الْحَمْدُ",
+            "window_ms": [
+              0.0,
+              2900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 1.004130625165999
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 8700.0,
+        "covered_audio_ms": 2900.0,
+        "coverage": 0.16143341741323824,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            2900.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "units": [
+        "انا"
+      ],
+      "unit_quality": [
+        0.9979486907152768
+      ],
+      "attribution": [
+        {
+          "word": "انا",
+          "selected_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "token_ids": [
+            28814,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ],
+          "probabilities": [
+            0.9999983310727032,
+            1.0,
+            1.0,
+            0.9999997615814777,
+            0.9999997615814777,
+            0.9979486907152768
+          ]
+        }
+      ],
+      "independently_proved_inna": true,
+      "rms_onsets_ms": {
+        "0.003": 200,
+        "0.01": 200,
+        "0.02382712811231613": 800
+      }
+    },
+    {
+      "case": "crop5720_silence1200",
+      "asr": {
+        "text": "إِنَّا",
+        "token_confidence": 0.9805880188941956,
+        "min_token_confidence": 0.9974047541618347,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -1.4305104514278355e-06,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -1.1920928244535389e-07,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -2.3841855067985307e-07,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -1.1920928244535389e-07,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.00259860185906291,
+            "bytes": [
+              216,
+              167
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "timings": {
+        "إِنَّا": {
+          "existing_query_plus_one": [
+            [
+              2240,
+              0.8331077694892883
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            2240,
+            2240,
+            2260,
+            2700,
+            2740,
+            3200
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            11933,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ]
+        },
+        "الْحَمْدُ": {
+          "existing_query_plus_one": [
+            [
+              20,
+              0.2780812680721283
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            20,
+            40,
+            60,
+            3280,
+            3880,
+            3880,
+            3880,
+            3880
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            2423,
+            17195,
+            5016,
+            6808,
+            2304,
+            17195,
+            3215,
+            10859
+          ]
+        }
+      },
+      "actual_dispatches": [
+        {
+          "method": "independent_asr",
+          "samples": 62400,
+          "sha256": "e4346f3bae38307b88c2cd38062b42ca1ccfd5b7b24346eab8349d7fff207d2f",
+          "seconds": 0.46903279097750783
+        },
+        {
+          "method": "teacher_forced_attention_إِنَّا",
+          "samples": 62400,
+          "sha256": "e4346f3bae38307b88c2cd38062b42ca1ccfd5b7b24346eab8349d7fff207d2f",
+          "seconds": 0.24214525008574128
+        },
+        {
+          "method": "teacher_forced_attention_الْحَمْدُ",
+          "samples": 62400,
+          "sha256": "e4346f3bae38307b88c2cd38062b42ca1ccfd5b7b24346eab8349d7fff207d2f",
+          "seconds": 0.22658450016751885
+        }
+      ],
+      "model": "whisper-tarteel-base",
+      "crop_start_ms": 5720,
+      "silence_ms": 1200,
+      "ledger": {
+        "emission_passes": 3,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              3900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.46903279097750783
+          },
+          {
+            "phase": "teacher_forced_attention_إِنَّا",
+            "window_ms": [
+              0.0,
+              3900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.24214525008574128
+          },
+          {
+            "phase": "teacher_forced_attention_الْحَمْدُ",
+            "window_ms": [
+              0.0,
+              3900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.22658450016751885
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 11700.0,
+        "covered_audio_ms": 3900.0,
+        "coverage": 0.2056521380901376,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            3900.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "units": [
+        "انا"
+      ],
+      "unit_quality": [
+        0.9974047715840368
+      ],
+      "attribution": [
+        {
+          "word": "انا",
+          "selected_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "token_ids": [
+            28814,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ],
+          "probabilities": [
+            0.9999985694905718,
+            1.0,
+            0.9999998807907247,
+            0.9999997615814777,
+            0.9999998807907247,
+            0.9974047715840368
+          ]
+        }
+      ],
+      "independently_proved_inna": true,
+      "rms_onsets_ms": {
+        "0.003": 1200,
+        "0.01": 1200,
+        "0.02382712811231613": 1800
+      }
+    },
+    {
+      "case": "crop6320_silence0",
+      "asr": {
+        "text": "إِنَّا أَعْطَيْنَا",
+        "token_confidence": 0.9994589686393738,
+        "min_token_confidence": 0.9921994805335999,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -1.1801649634435307e-05,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -1.1920928244535389e-07,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -1.1920928244535389e-07,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -2.5033637939486653e-05,
+            "bytes": [
+              216,
+              167
+            ]
+          },
+          {
+            "id": 5551,
+            "log_probability": -0.00015448330668732524,
+            "bytes": [
+              32,
+              216,
+              163
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -9.417489309271332e-06,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3615,
+            "log_probability": -8.821448318485636e-06,
+            "bytes": [
+              216,
+              185
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -2.264974000354414e-06,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 9566,
+            "log_probability": -0.0007007050444371998,
+            "bytes": [
+              216,
+              183
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.0005947966128587723,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 1829,
+            "log_probability": -0.0003719830128829926,
+            "bytes": [
+              217,
+              138
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -2.3841855067985307e-07,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -2.145764938177308e-06,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -5.960462772236497e-07,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.007831109687685966,
+            "bytes": [
+              216,
+              167
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "timings": {
+        "إِنَّا": {
+          "existing_query_plus_one": [
+            [
+              420,
+              0.8333311080932617
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            420,
+            420,
+            620,
+            880,
+            920,
+            1180
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            11933,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ]
+        },
+        "الْحَمْدُ": {
+          "existing_query_plus_one": [
+            [
+              100,
+              0.25306540727615356
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            100,
+            940,
+            940,
+            940,
+            940,
+            940,
+            940,
+            940
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            2423,
+            17195,
+            5016,
+            6808,
+            2304,
+            17195,
+            3215,
+            10859
+          ]
+        }
+      },
+      "actual_dispatches": [
+        {
+          "method": "independent_asr",
+          "samples": 43200,
+          "sha256": "c899e0455fe3d18415b15a3dd697df7f8805987d50caaae2ed57e26a67176c3d",
+          "seconds": 0.5149117079563439
+        },
+        {
+          "method": "teacher_forced_attention_إِنَّا",
+          "samples": 43200,
+          "sha256": "c899e0455fe3d18415b15a3dd697df7f8805987d50caaae2ed57e26a67176c3d",
+          "seconds": 0.2503151670098305
+        },
+        {
+          "method": "teacher_forced_attention_الْحَمْدُ",
+          "samples": 43200,
+          "sha256": "c899e0455fe3d18415b15a3dd697df7f8805987d50caaae2ed57e26a67176c3d",
+          "seconds": 0.28144612489268184
+        }
+      ],
+      "model": "whisper-tarteel-base",
+      "crop_start_ms": 6320,
+      "silence_ms": 0,
+      "ledger": {
+        "emission_passes": 3,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              2700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.5149117079563439
+          },
+          {
+            "phase": "teacher_forced_attention_إِنَّا",
+            "window_ms": [
+              0.0,
+              2700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.2503151670098305
+          },
+          {
+            "phase": "teacher_forced_attention_الْحَمْدُ",
+            "window_ms": [
+              0.0,
+              2700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.28144612489268184
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 8100.0,
+        "covered_audio_ms": 2700.0,
+        "coverage": 0.1573054164770141,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            2700.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "units": [
+        "انا",
+        "اعطينا"
+      ],
+      "unit_quality": [
+        0.9999749666753994,
+        0.9921994735661077
+      ],
+      "attribution": [
+        {
+          "word": "انا",
+          "selected_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "token_ids": [
+            28814,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ],
+          "probabilities": [
+            0.9999881984200047,
+            1.0,
+            1.0,
+            0.9999998807907247,
+            0.9999998807907247,
+            0.9999749666753994
+          ]
+        },
+        {
+          "word": "اعطينا",
+          "selected_indices": [
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "token_ids": [
+            5551,
+            6808,
+            3615,
+            17195,
+            9566,
+            6808,
+            1829,
+            17195,
+            1863,
+            6808,
+            995
+          ],
+          "probabilities": [
+            0.9998455286252442,
+            0.9999905825550351,
+            0.9999911785905904,
+            0.9999977350285647,
+            0.999299540392013,
+            0.9994053802435803,
+            0.9996280861642202,
+            0.9999997615814777,
+            0.999997854237364,
+            0.9999994039539004,
+            0.9921994735661077
+          ]
+        }
+      ],
+      "independently_proved_inna": true,
+      "rms_onsets_ms": {
+        "0.003": 0,
+        "0.01": 0,
+        "0.02382712811231613": 0
+      }
+    },
+    {
+      "case": "crop6320_silence200",
+      "asr": {
+        "text": "إِنَّا أَعْطَيْنَا",
+        "token_confidence": 0.9988272786140442,
+        "min_token_confidence": 0.9828324913978577,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -6.6756979322235566e-06,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -1.1920928244535389e-07,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -1.1920928244535389e-07,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -2.0503786799963564e-05,
+            "bytes": [
+              216,
+              167
+            ]
+          },
+          {
+            "id": 5551,
+            "log_probability": -4.95898348162882e-05,
+            "bytes": [
+              32,
+              216,
+              163
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -8.702239938429557e-06,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3615,
+            "log_probability": -8.940656698541716e-06,
+            "bytes": [
+              216,
+              185
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -4.172316494077677e-06,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 9566,
+            "log_probability": -0.0006957017467357218,
+            "bytes": [
+              216,
+              183
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.002283110748976469,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 1829,
+            "log_probability": -0.0007057083421386778,
+            "bytes": [
+              217,
+              138
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -3.576278118089249e-07,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -1.311301275563892e-06,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -7.152555099310121e-07,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.017316577956080437,
+            "bytes": [
+              216,
+              167
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "timings": {
+        "إِنَّا": {
+          "existing_query_plus_one": [
+            [
+              640,
+              0.8333318829536438
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            640,
+            640,
+            780,
+            1080,
+            1120,
+            1600
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            11933,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ]
+        },
+        "الْحَمْدُ": {
+          "existing_query_plus_one": [
+            [
+              320,
+              0.26715344190597534
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            320,
+            1120,
+            1120,
+            1120,
+            1120,
+            1120,
+            1120,
+            1140
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            2423,
+            17195,
+            5016,
+            6808,
+            2304,
+            17195,
+            3215,
+            10859
+          ]
+        }
+      },
+      "actual_dispatches": [
+        {
+          "method": "independent_asr",
+          "samples": 46400,
+          "sha256": "c178aa8289749c584d2571a53c8f25f738638a531c41998b511e3ede6f25162b",
+          "seconds": 0.5313924581278116
+        },
+        {
+          "method": "teacher_forced_attention_إِنَّا",
+          "samples": 46400,
+          "sha256": "c178aa8289749c584d2571a53c8f25f738638a531c41998b511e3ede6f25162b",
+          "seconds": 0.23709366703405976
+        },
+        {
+          "method": "teacher_forced_attention_الْحَمْدُ",
+          "samples": 46400,
+          "sha256": "c178aa8289749c584d2571a53c8f25f738638a531c41998b511e3ede6f25162b",
+          "seconds": 0.22356054186820984
+        }
+      ],
+      "model": "whisper-tarteel-base",
+      "crop_start_ms": 6320,
+      "silence_ms": 200,
+      "ledger": {
+        "emission_passes": 3,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              2900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.5313924581278116
+          },
+          {
+            "phase": "teacher_forced_attention_إِنَّا",
+            "window_ms": [
+              0.0,
+              2900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.23709366703405976
+          },
+          {
+            "phase": "teacher_forced_attention_الْحَمْدُ",
+            "window_ms": [
+              0.0,
+              2900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.22356054186820984
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 8700.0,
+        "covered_audio_ms": 2900.0,
+        "coverage": 0.16701160802663548,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            2900.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "units": [
+        "انا",
+        "اعطينا"
+      ],
+      "unit_quality": [
+        0.9999794964234012,
+        0.9828324922776137
+      ],
+      "attribution": [
+        {
+          "word": "انا",
+          "selected_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "token_ids": [
+            28814,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ],
+          "probabilities": [
+            0.9999933243243502,
+            1.0,
+            1.0,
+            0.9999998807907247,
+            0.9999998807907247,
+            0.9999794964234012
+          ]
+        },
+        {
+          "word": "اعطينا",
+          "selected_indices": [
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "token_ids": [
+            5551,
+            6808,
+            3615,
+            17195,
+            9566,
+            6808,
+            1829,
+            17195,
+            1863,
+            6808,
+            995
+          ],
+          "probabilities": [
+            0.9999504113947393,
+            0.999991297797926,
+            0.999991059383269,
+            0.9999958276922101,
+            0.9993045401976142,
+            0.9977194935660127,
+            0.9992945406114271,
+            0.9999996423722521,
+            0.9999986886995842,
+            0.9999992847447459,
+            0.9828324922776137
+          ]
+        }
+      ],
+      "independently_proved_inna": true,
+      "rms_onsets_ms": {
+        "0.003": 200,
+        "0.01": 200,
+        "0.02382712811231613": 200
+      }
+    },
+    {
+      "case": "crop6320_silence1200",
+      "asr": {
+        "text": "إِنَّا أَعْطَيْنَا",
+        "token_confidence": 0.998155415058136,
+        "min_token_confidence": 0.9694159030914307,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -2.622600959512056e-06,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -1.1920928244535389e-07,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -2.3841855067985307e-07,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -1.5020257706055418e-05,
+            "bytes": [
+              216,
+              167
+            ]
+          },
+          {
+            "id": 5551,
+            "log_probability": -0.00018976318824570626,
+            "bytes": [
+              32,
+              216,
+              163
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -6.556489552167477e-06,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3615,
+            "log_probability": -3.58813522325363e-05,
+            "bytes": [
+              216,
+              185
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -2.145764938177308e-06,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 9566,
+            "log_probability": -0.0003122795606032014,
+            "bytes": [
+              216,
+              183
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.0005194983095861971,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 1829,
+            "log_probability": -0.0008282806375063956,
+            "bytes": [
+              217,
+              138
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -7.152555099310121e-07,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -2.622600959512056e-06,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -1.311301275563892e-06,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.031061533838510513,
+            "bytes": [
+              216,
+              167
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "timings": {
+        "إِنَّا": {
+          "existing_query_plus_one": [
+            [
+              1640,
+              0.8333320617675781
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            1640,
+            1640,
+            1780,
+            2100,
+            2100,
+            2620
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            11933,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ]
+        },
+        "الْحَمْدُ": {
+          "existing_query_plus_one": [
+            [
+              0,
+              0.29362428188323975
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            0,
+            0,
+            0,
+            1940,
+            1960,
+            2000,
+            2000,
+            2140
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            2423,
+            17195,
+            5016,
+            6808,
+            2304,
+            17195,
+            3215,
+            10859
+          ]
+        }
+      },
+      "actual_dispatches": [
+        {
+          "method": "independent_asr",
+          "samples": 62400,
+          "sha256": "3ece7d9548c1e78c19b198f400b56cc0e41ecc20b9c981392e151b0dc94dd0ef",
+          "seconds": 0.6423695001285523
+        },
+        {
+          "method": "teacher_forced_attention_إِنَّا",
+          "samples": 62400,
+          "sha256": "3ece7d9548c1e78c19b198f400b56cc0e41ecc20b9c981392e151b0dc94dd0ef",
+          "seconds": 0.6004906250163913
+        },
+        {
+          "method": "teacher_forced_attention_الْحَمْدُ",
+          "samples": 62400,
+          "sha256": "3ece7d9548c1e78c19b198f400b56cc0e41ecc20b9c981392e151b0dc94dd0ef",
+          "seconds": 0.3782265828922391
+        }
+      ],
+      "model": "whisper-tarteel-base",
+      "crop_start_ms": 6320,
+      "silence_ms": 1200,
+      "ledger": {
+        "emission_passes": 3,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              3900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.6423695001285523
+          },
+          {
+            "phase": "teacher_forced_attention_إِنَّا",
+            "window_ms": [
+              0.0,
+              3900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.6004906250163913
+          },
+          {
+            "phase": "teacher_forced_attention_الْحَمْدُ",
+            "window_ms": [
+              0.0,
+              3900.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.3782265828922391
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 11700.0,
+        "covered_audio_ms": 3900.0,
+        "coverage": 0.21237130945290564,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            3900.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "units": [
+        "انا",
+        "اعطينا"
+      ],
+      "unit_quality": [
+        0.9999849798550975,
+        0.9694159193580524
+      ],
+      "attribution": [
+        {
+          "word": "انا",
+          "selected_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "token_ids": [
+            28814,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ],
+          "probabilities": [
+            0.9999973774024795,
+            1.0,
+            1.0,
+            0.9999998807907247,
+            0.9999997615814777,
+            0.9999849798550975
+          ]
+        },
+        {
+          "word": "اعطينا",
+          "selected_indices": [
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "token_ids": [
+            5551,
+            6808,
+            3615,
+            17195,
+            9566,
+            6808,
+            1829,
+            17195,
+            1863,
+            6808,
+            995
+          ],
+          "probabilities": [
+            0.9998102548156492,
+            0.9999934435319415,
+            0.9999641192914955,
+            0.999997854237364,
+            0.9996877691935837,
+            0.9994806366062967,
+            0.9991720622922137,
+            0.9999992847447459,
+            0.9999973774024795,
+            0.9999986886995842,
+            0.9694159193580524
+          ]
+        }
+      ],
+      "independently_proved_inna": true,
+      "rms_onsets_ms": {
+        "0.003": 1200,
+        "0.01": 1200,
+        "0.02382712811231613": 1200
+      }
+    },
+    {
+      "case": "basmala_negative",
+      "asr": {
+        "text": "بِسْمِ اللَّهِ الرَّحْمَنِ",
+        "token_confidence": 0.9602760672569275,
+        "min_token_confidence": 0.6148528456687927,
+        "selected_tokens": [
+          {
+            "id": 3555,
+            "log_probability": -4.076874756719917e-05,
+            "bytes": [
+              216,
+              168
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -1.7881377516459906e-06,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 3794,
+            "log_probability": -4.470248313737102e-05,
+            "bytes": [
+              216,
+              179
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -9.536738616588991e-07,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 2304,
+            "log_probability": -1.6689286894688848e-06,
+            "bytes": [
+              217,
+              133
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -2.8013790142722428e-05,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 13672,
+            "log_probability": -2.9802276912960224e-06,
+            "bytes": [
+              32,
+              216,
+              167,
+              217,
+              132,
+              217,
+              132
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -3.576272320060525e-06,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -1.1920928244535389e-07,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3224,
+            "log_probability": -1.9073468138230965e-06,
+            "bytes": [
+              217,
+              135
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -1.1920928244535389e-07,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 34892,
+            "log_probability": -5.006777428206988e-06,
+            "bytes": [
+              32,
+              216,
+              167,
+              217,
+              132,
+              216,
+              177
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -8.821448318485636e-06,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -7.152531907195225e-06,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 5016,
+            "log_probability": -3.6954811548639555e-06,
+            "bytes": [
+              216,
+              173
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -1.7165990357170813e-05,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 2304,
+            "log_probability": -0.355177640914917,
+            "bytes": [
+              217,
+              133
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.48637229204177856,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -0.008740618824958801,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -0.0007410878897644579,
+            "bytes": [
+              217,
+              144
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "timings": {
+        "إِنَّا": {
+          "existing_query_plus_one": [
+            [
+              420,
+              0.2873692512512207
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            420,
+            420,
+            680,
+            860,
+            880,
+            1580
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            11933,
+            11082,
+            1863,
+            11703,
+            6808,
+            995
+          ]
+        },
+        "الْحَمْدُ": {
+          "existing_query_plus_one": [
+            [
+              380,
+              0.45202764868736267
+            ]
+          ],
+          "diagnostic_predicting_query": 0,
+          "query_times": [
+            0,
+            380,
+            600,
+            880,
+            880,
+            880,
+            1020,
+            1040,
+            1740
+          ],
+          "first_text_index": 0,
+          "token_ids": [
+            2423,
+            17195,
+            5016,
+            6808,
+            2304,
+            17195,
+            3215,
+            10859
+          ]
+        }
+      },
+      "actual_dispatches": [
+        {
+          "method": "independent_asr",
+          "samples": 43200,
+          "sha256": "e74ee119e4a6a4bf027a9beab1a0f5bc53779786e9685cf8b7b0d116d004771e",
+          "seconds": 0.9443843339104205
+        },
+        {
+          "method": "teacher_forced_attention_إِنَّا",
+          "samples": 43200,
+          "sha256": "e74ee119e4a6a4bf027a9beab1a0f5bc53779786e9685cf8b7b0d116d004771e",
+          "seconds": 0.32707529212348163
+        },
+        {
+          "method": "teacher_forced_attention_الْحَمْدُ",
+          "samples": 43200,
+          "sha256": "e74ee119e4a6a4bf027a9beab1a0f5bc53779786e9685cf8b7b0d116d004771e",
+          "seconds": 0.21511883311904967
+        }
+      ],
+      "model": "whisper-tarteel-base",
+      "crop_start_ms": 0,
+      "silence_ms": 0,
+      "ledger": {
+        "emission_passes": 3,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              2700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.9443843339104205
+          },
+          {
+            "phase": "teacher_forced_attention_إِنَّا",
+            "window_ms": [
+              0.0,
+              2700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.32707529212348163
+          },
+          {
+            "phase": "teacher_forced_attention_الْحَمْدُ",
+            "window_ms": [
+              0.0,
+              2700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.21511883311904967
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 8100.0,
+        "covered_audio_ms": 2700.0,
+        "coverage": 0.11497158977498037,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            2700.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "units": [
+        "بسم",
+        "الله",
+        "الرحمن"
+      ],
+      "unit_quality": [
+        0.9999552985160037,
+        0.9999964237340748,
+        0.6148528598719226
+      ],
+      "attribution": [
+        {
+          "word": "بسم",
+          "selected_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "token_ids": [
+            3555,
+            11082,
+            3794,
+            17195,
+            2304,
+            11082
+          ],
+          "probabilities": [
+            0.9999592320834669,
+            0.9999982118638471,
+            0.9999552985160037,
+            0.9999990463265931,
+            0.9999983310727032,
+            0.9999719866022398
+          ]
+        },
+        {
+          "word": "الله",
+          "selected_indices": [
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "token_ids": [
+            13672,
+            11703,
+            6808,
+            3224,
+            11082
+          ],
+          "probabilities": [
+            0.9999970197767496,
+            0.9999964237340748,
+            0.9999998807907247,
+            0.9999980926550052,
+            0.9999998807907247
+          ]
+        },
+        {
+          "word": "الرحمن",
+          "selected_indices": [
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19
+          ],
+          "token_ids": [
+            34892,
+            11703,
+            6808,
+            5016,
+            17195,
+            2304,
+            6808,
+            1863,
+            11082
+          ],
+          "probabilities": [
+            0.9999949932351057,
+            0.9999911785905904,
+            0.9999928474936721,
+            0.9999963045256735,
+            0.9999828341569776,
+            0.7010488971791682,
+            0.6148528598719226,
+            0.9912974693316272,
+            0.9992591866480427
+          ]
+        }
+      ],
+      "independently_proved_inna": false,
+      "rms_onsets_ms": {
+        "0.003": 160,
+        "0.01": 220,
+        "0.025444364175200462": 260
+      }
+    }
+  ],
+  "ctc": [
+    {
+      "case": "crop5720_silence0",
+      "units": [
+        "i",
+        "n",
+        "n",
+        "ā"
+      ],
+      "positions_ms": [
+        505.22388059701484,
+        585.820895522388,
+        1129.8507462686566,
+        1230.597014925373
+      ],
+      "unit_quality": [
+        0.9985546469688416,
+        0.9991198182106018,
+        0.9999370574951172,
+        0.9998586177825928
+      ],
+      "ledger": {
+        "emission_passes": 1,
+        "emissions_frames": 134,
+        "acoustic_reads": [
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              0.0,
+              2700.0
+            ],
+            "frames": 134,
+            "outcome": "completed",
+            "id": 0,
+            "reason": "temporal_preroll_independent_ctc",
+            "requested_window_ms": [
+              0,
+              2700
+            ],
+            "samples": [
+              0,
+              43200
+            ],
+            "observed": {
+              "units": [
+                "i",
+                "n",
+                "n",
+                "ā"
+              ],
+              "positions_ms": [
+                505.22388059701484,
+                585.820895522388,
+                1129.8507462686566,
+                1230.597014925373
+              ],
+              "quality": 0.9993675351142883,
+              "truncated": false,
+              "text": "innā",
+              "unit_quality": [
+                0.9985546469688416,
+                0.9991198182106018,
+                0.9999370574951172,
+                0.9998586177825928
+              ],
+              "frames": 134,
+              "attribution": [],
+              "hypotheses": [
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā"
+                  ],
+                  "positions_ms": [
+                    505.22388059701484,
+                    585.820895522388,
+                    1129.8507462686566,
+                    1230.597014925373
+                  ],
+                  "unit_quality": [
+                    0.9985546529016842,
+                    0.9991198187748068,
+                    0.999937061454891,
+                    0.99985863777234
+                  ],
+                  "log_probability": -0.31127873509027737
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "a"
+                  ],
+                  "positions_ms": [
+                    505.22388059701484,
+                    585.820895522388,
+                    1129.8507462686566,
+                    1230.597014925373,
+                    2479.8507462686566
+                  ],
+                  "unit_quality": [
+                    0.9985546529016842,
+                    0.9991198187748068,
+                    0.999937061454891,
+                    0.99985863777234,
+                    0.2511758944805866
+                  ],
+                  "log_probability": -1.381698161203492
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "ā"
+                  ],
+                  "positions_ms": [
+                    505.22388059701484,
+                    585.820895522388,
+                    1129.8507462686566,
+                    1230.597014925373,
+                    2479.8507462686566
+                  ],
+                  "unit_quality": [
+                    0.9985546529016842,
+                    0.9991198187748068,
+                    0.999937061454891,
+                    0.99985863777234,
+                    0.008174404274103077
+                  ],
+                  "log_probability": -4.809688006330512
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "m"
+                  ],
+                  "positions_ms": [
+                    505.22388059701484,
+                    585.820895522388,
+                    1129.8507462686566,
+                    1230.597014925373,
+                    2479.8507462686566
+                  ],
+                  "unit_quality": [
+                    0.9985546529016842,
+                    0.9991198187748068,
+                    0.999937061454891,
+                    0.99985863777234,
+                    0.001507080406986712
+                  ],
+                  "log_probability": -6.475908074263798
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "r"
+                  ],
+                  "positions_ms": [
+                    505.22388059701484,
+                    585.820895522388,
+                    1129.8507462686566,
+                    1230.597014925373,
+                    2479.8507462686566
+                  ],
+                  "unit_quality": [
+                    0.9985546529016842,
+                    0.9991198187748068,
+                    0.999937061454891,
+                    0.99985863777234,
+                    0.0010418990868182863
+                  ],
+                  "log_probability": -6.869650755811713
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "b"
+                  ],
+                  "positions_ms": [
+                    505.22388059701484,
+                    585.820895522388,
+                    1129.8507462686566,
+                    1230.597014925373,
+                    2479.8507462686566
+                  ],
+                  "unit_quality": [
+                    0.9985546529016842,
+                    0.9991198187748068,
+                    0.999937061454891,
+                    0.99985863777234,
+                    0.0009056972943715585
+                  ],
+                  "log_probability": -7.009745989728949
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "i"
+                  ],
+                  "positions_ms": [
+                    505.22388059701484,
+                    585.820895522388,
+                    1129.8507462686566,
+                    1230.597014925373,
+                    2479.8507462686566
+                  ],
+                  "unit_quality": [
+                    0.9985546529016842,
+                    0.9991198187748068,
+                    0.999937061454891,
+                    0.99985863777234,
+                    0.000737693764025142
+                  ],
+                  "log_probability": -7.214922343183539
+                },
+                {
+                  "units": [
+                    "i",
+                    "l",
+                    "n",
+                    "n",
+                    "ā"
+                  ],
+                  "positions_ms": [
+                    505.22388059701484,
+                    585.820895522388,
+                    605.9701492537313,
+                    1129.8507462686566,
+                    1230.597014925373
+                  ],
+                  "unit_quality": [
+                    0.9985546529016842,
+                    0.0005488448719038201,
+                    0.9993934736292567,
+                    0.999937061454891,
+                    0.99985863777234
+                  ],
+                  "log_probability": -7.818597562852808
+                }
+              ],
+              "null_log_probability": -51.52076721191406,
+              "posterior_sha256": "28fc688aba665c057dd21486b0df5ef38c35be60e027edd7fb3485e2f5aa4a9c",
+              "stride_ms": 20.149253731343283
+            },
+            "seconds": 0.14027025015093386
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 2700.0,
+        "covered_audio_ms": 2700.0,
+        "coverage": 0.15199225965344357,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            2700.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 30512,
+        "peak_cache_bytes": 30512,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": 33554432,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        },
+        "model_passes": 1
+      },
+      "actual_dispatches": [
+        {
+          "samples": 43200,
+          "sha256": "1679617ff11ff18246509b8dcfa7f13178ab0c264511559e14c457df07469e25"
+        }
+      ]
+    },
+    {
+      "case": "crop5720_silence200",
+      "units": [
+        "i",
+        "n",
+        "n",
+        "ā"
+      ],
+      "positions_ms": [
+        706.25,
+        786.8055555555555,
+        1330.5555555555557,
+        1431.25
+      ],
+      "unit_quality": [
+        0.9989805817604065,
+        0.999256432056427,
+        0.9999415874481201,
+        0.9998446702957153
+      ],
+      "ledger": {
+        "emission_passes": 1,
+        "emissions_frames": 144,
+        "acoustic_reads": [
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              0.0,
+              2900.0
+            ],
+            "frames": 144,
+            "outcome": "completed",
+            "id": 0,
+            "reason": "temporal_preroll_independent_ctc",
+            "requested_window_ms": [
+              0,
+              2900
+            ],
+            "samples": [
+              0,
+              46400
+            ],
+            "observed": {
+              "units": [
+                "i",
+                "n",
+                "n",
+                "ā"
+              ],
+              "positions_ms": [
+                706.25,
+                786.8055555555555,
+                1330.5555555555557,
+                1431.25
+              ],
+              "quality": 0.9995058178901672,
+              "truncated": false,
+              "text": "innā",
+              "unit_quality": [
+                0.9989805817604065,
+                0.999256432056427,
+                0.9999415874481201,
+                0.9998446702957153
+              ],
+              "frames": 144,
+              "attribution": [],
+              "hypotheses": [
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā"
+                  ],
+                  "positions_ms": [
+                    706.25,
+                    786.8055555555555,
+                    1330.5555555555557,
+                    1431.25
+                  ],
+                  "unit_quality": [
+                    0.9989806086742293,
+                    0.9992564489050645,
+                    0.9999415908602124,
+                    0.9998446944204133
+                  ],
+                  "log_probability": -0.17448454318942613
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "a"
+                  ],
+                  "positions_ms": [
+                    706.25,
+                    786.8055555555555,
+                    1330.5555555555557,
+                    1431.25,
+                    2679.8611111111113
+                  ],
+                  "unit_quality": [
+                    0.9989806086742293,
+                    0.9992564489050645,
+                    0.9999415908602124,
+                    0.9998446944204133,
+                    0.137607851235273
+                  ],
+                  "log_probability": -1.9703553984342157
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "ā"
+                  ],
+                  "positions_ms": [
+                    706.25,
+                    786.8055555555555,
+                    1330.5555555555557,
+                    1431.25,
+                    2679.8611111111113
+                  ],
+                  "unit_quality": [
+                    0.9989806086742293,
+                    0.9992564489050645,
+                    0.9999415908602124,
+                    0.9998446944204133,
+                    0.011906932343628834
+                  ],
+                  "log_probability": -4.425422699838831
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "m"
+                  ],
+                  "positions_ms": [
+                    706.25,
+                    786.8055555555555,
+                    1330.5555555555557,
+                    1431.25,
+                    2679.8611111111113
+                  ],
+                  "unit_quality": [
+                    0.9989806086742293,
+                    0.9992564489050645,
+                    0.9999415908602124,
+                    0.9998446944204133,
+                    0.001851997384882615
+                  ],
+                  "log_probability": -6.239811111872155
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "r"
+                  ],
+                  "positions_ms": [
+                    706.25,
+                    786.8055555555555,
+                    1330.5555555555557,
+                    1431.25,
+                    2679.8611111111113
+                  ],
+                  "unit_quality": [
+                    0.9989806086742293,
+                    0.9992564489050645,
+                    0.9999415908602124,
+                    0.9998446944204133,
+                    0.0011029353857934996
+                  ],
+                  "log_probability": -6.814924351558109
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "b"
+                  ],
+                  "positions_ms": [
+                    706.25,
+                    786.8055555555555,
+                    1330.5555555555557,
+                    1431.25,
+                    2679.8611111111113
+                  ],
+                  "unit_quality": [
+                    0.9989806086742293,
+                    0.9992564489050645,
+                    0.9999415908602124,
+                    0.9998446944204133,
+                    0.000824257965706789
+                  ],
+                  "log_probability": -7.106171242579838
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "i"
+                  ],
+                  "positions_ms": [
+                    706.25,
+                    786.8055555555555,
+                    1330.5555555555557,
+                    1431.25,
+                    2679.8611111111113
+                  ],
+                  "unit_quality": [
+                    0.9989806086742293,
+                    0.9992564489050645,
+                    0.9999415908602124,
+                    0.9998446944204133,
+                    0.0006602618433889029
+                  ],
+                  "log_probability": -7.328018299922367
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "u"
+                  ],
+                  "positions_ms": [
+                    706.25,
+                    786.8055555555555,
+                    1330.5555555555557,
+                    1431.25,
+                    2679.8611111111113
+                  ],
+                  "unit_quality": [
+                    0.9989806086742293,
+                    0.9992564489050645,
+                    0.9999415908602124,
+                    0.9998446944204133,
+                    0.0003680594293687186
+                  ],
+                  "log_probability": -7.912410370692631
+                }
+              ],
+              "null_log_probability": -53.90816879272461,
+              "posterior_sha256": "b5dcfca2ffff79eab03bebe22a2c9f4d2044d54fb1189469d56c61995d044aaa",
+              "stride_ms": 20.13888888888889
+            },
+            "seconds": 0.12586466688662767
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 2900.0,
+        "covered_audio_ms": 2900.0,
+        "coverage": 0.16143341741323824,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            2900.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 32032,
+        "peak_cache_bytes": 32032,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": 33554432,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        },
+        "model_passes": 1
+      },
+      "actual_dispatches": [
+        {
+          "samples": 46400,
+          "sha256": "ec8ae35f9df4f97546272c1bdf8f304ba25a9175944d2d3b87c91af963e3dba8"
+        }
+      ]
+    },
+    {
+      "case": "crop5720_silence1200",
+      "units": [
+        "i",
+        "n",
+        "n",
+        "ā"
+      ],
+      "positions_ms": [
+        1709.7938144329896,
+        1790.2061855670104,
+        2332.9896907216494,
+        2433.505154639175
+      ],
+      "unit_quality": [
+        0.9996883869171143,
+        0.9995515942573547,
+        0.9999160766601562,
+        0.9996730089187622
+      ],
+      "ledger": {
+        "emission_passes": 1,
+        "emissions_frames": 194,
+        "acoustic_reads": [
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              0.0,
+              3900.0
+            ],
+            "frames": 194,
+            "outcome": "completed",
+            "id": 0,
+            "reason": "temporal_preroll_independent_ctc",
+            "requested_window_ms": [
+              0,
+              3900
+            ],
+            "samples": [
+              0,
+              62400
+            ],
+            "observed": {
+              "units": [
+                "i",
+                "n",
+                "n",
+                "ā"
+              ],
+              "positions_ms": [
+                1709.7938144329896,
+                1790.2061855670104,
+                2332.9896907216494,
+                2433.505154639175
+              ],
+              "quality": 0.9997072666883469,
+              "truncated": false,
+              "text": "innā",
+              "unit_quality": [
+                0.9996883869171143,
+                0.9995515942573547,
+                0.9999160766601562,
+                0.9996730089187622
+              ],
+              "frames": 194,
+              "attribution": [],
+              "hypotheses": [
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā"
+                  ],
+                  "positions_ms": [
+                    1709.7938144329896,
+                    1790.2061855670104,
+                    2332.9896907216494,
+                    2433.505154639175
+                  ],
+                  "unit_quality": [
+                    0.9996883648504417,
+                    0.999551616580163,
+                    0.9999160837028892,
+                    0.9996729966795573
+                  ],
+                  "log_probability": -0.17981802308749975
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "a"
+                  ],
+                  "positions_ms": [
+                    1709.7938144329896,
+                    1790.2061855670104,
+                    2332.9896907216494,
+                    2433.505154639175,
+                    3679.8969072164946
+                  ],
+                  "unit_quality": [
+                    0.9996883648504417,
+                    0.999551616580163,
+                    0.9999160837028892,
+                    0.9996729966795573,
+                    0.14075736618808582
+                  ],
+                  "log_probability": -1.8568949312220466
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "ā"
+                  ],
+                  "positions_ms": [
+                    1709.7938144329896,
+                    1790.2061855670104,
+                    2332.9896907216494,
+                    2433.505154639175,
+                    3679.8969072164946
+                  ],
+                  "unit_quality": [
+                    0.9996883648504417,
+                    0.999551616580163,
+                    0.9999160837028892,
+                    0.9996729966795573,
+                    0.0011326097661454166
+                  ],
+                  "log_probability": -6.806910503746985
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "m"
+                  ],
+                  "positions_ms": [
+                    1709.7938144329896,
+                    1790.2061855670104,
+                    2332.9896907216494,
+                    2433.505154639175,
+                    3679.8969072164946
+                  ],
+                  "unit_quality": [
+                    0.9996883648504417,
+                    0.999551616580163,
+                    0.9999160837028892,
+                    0.9996729966795573,
+                    0.0005538885431103428
+                  ],
+                  "log_probability": -7.182792974208363
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "r"
+                  ],
+                  "positions_ms": [
+                    1709.7938144329896,
+                    1790.2061855670104,
+                    2332.9896907216494,
+                    2433.505154639175,
+                    3679.8969072164946
+                  ],
+                  "unit_quality": [
+                    0.9996883648504417,
+                    0.999551616580163,
+                    0.9999160837028892,
+                    0.9996729966795573,
+                    0.0005076452446447335
+                  ],
+                  "log_probability": -7.351742333064887
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "b"
+                  ],
+                  "positions_ms": [
+                    1709.7938144329896,
+                    1790.2061855670104,
+                    2332.9896907216494,
+                    2433.505154639175,
+                    3679.8969072164946
+                  ],
+                  "unit_quality": [
+                    0.9996883648504417,
+                    0.999551616580163,
+                    0.9999160837028892,
+                    0.9996729966795573,
+                    0.00042510411558599665
+                  ],
+                  "log_probability": -7.786856163384436
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "'",
+                    "n",
+                    "ā"
+                  ],
+                  "positions_ms": [
+                    1709.7938144329896,
+                    1790.2061855670104,
+                    1830.4123711340205,
+                    2332.9896907216494,
+                    2433.505154639175
+                  ],
+                  "unit_quality": [
+                    0.9996883648504417,
+                    0.999551616580163,
+                    0.00013562203512158382,
+                    0.9999160837028892,
+                    0.9996729966795573
+                  ],
+                  "log_probability": -8.100713574518545
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "u",
+                    "n",
+                    "ā"
+                  ],
+                  "positions_ms": [
+                    1709.7938144329896,
+                    1790.2061855670104,
+                    1830.4123711340205,
+                    2332.9896907216494,
+                    2433.505154639175
+                  ],
+                  "unit_quality": [
+                    0.9996883648504417,
+                    0.999551616580163,
+                    0.00016422071661138267,
+                    0.9999160837028892,
+                    0.9996729966795573
+                  ],
+                  "log_probability": -8.391974814416804
+                }
+              ],
+              "null_log_probability": -49.759124755859375,
+              "posterior_sha256": "edcbab585645c8fe281fa16c8b7ad26817fdba777c2b34b0312bac5eb806327e",
+              "stride_ms": 20.103092783505154
+            },
+            "seconds": 0.21086091687902808
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 3900.0,
+        "covered_audio_ms": 3900.0,
+        "coverage": 0.2056521380901376,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            3900.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 40162,
+        "peak_cache_bytes": 40162,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": 33554432,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        },
+        "model_passes": 1
+      },
+      "actual_dispatches": [
+        {
+          "samples": 62400,
+          "sha256": "e4346f3bae38307b88c2cd38062b42ca1ccfd5b7b24346eab8349d7fff207d2f"
+        }
+      ]
+    },
+    {
+      "case": "crop6320_silence0",
+      "units": [
+        "i",
+        "n",
+        "n",
+        "ā",
+        "a",
+        "k",
+        "h",
+        "i",
+        "n"
+      ],
+      "positions_ms": [
+        0.0,
+        0.0,
+        525.3731343283582,
+        626.1194029850745,
+        1895.5223880597014,
+        2117.1641791044776,
+        2137.313432835821,
+        2278.3582089552237,
+        2439.55223880597
+      ],
+      "unit_quality": [
+        0.9768211841583252,
+        0.9757096171379089,
+        0.999786913394928,
+        0.9998879432678223,
+        0.997215986251831,
+        0.9922778606414795,
+        0.9783899784088135,
+        0.9998351335525513,
+        0.9998158812522888
+      ],
+      "ledger": {
+        "emission_passes": 1,
+        "emissions_frames": 134,
+        "acoustic_reads": [
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              0.0,
+              2700.0
+            ],
+            "frames": 134,
+            "outcome": "completed",
+            "id": 0,
+            "reason": "temporal_preroll_independent_ctc",
+            "requested_window_ms": [
+              0,
+              2700
+            ],
+            "samples": [
+              0,
+              43200
+            ],
+            "observed": {
+              "units": [
+                "i",
+                "n",
+                "n",
+                "ā",
+                "a",
+                "k",
+                "h",
+                "i",
+                "n"
+              ],
+              "positions_ms": [
+                0.0,
+                0.0,
+                525.3731343283582,
+                626.1194029850745,
+                1895.5223880597014,
+                2117.1641791044776,
+                2137.313432835821,
+                2278.3582089552237,
+                2439.55223880597
+              ],
+              "quality": 0.9910822775628831,
+              "truncated": false,
+              "text": "innāakhin",
+              "unit_quality": [
+                0.9768211841583252,
+                0.9757096171379089,
+                0.999786913394928,
+                0.9998879432678223,
+                0.997215986251831,
+                0.9922778606414795,
+                0.9783899784088135,
+                0.9998351335525513,
+                0.9998158812522888
+              ],
+              "frames": 134,
+              "attribution": [],
+              "hypotheses": [
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "k",
+                    "h",
+                    "i",
+                    "n"
+                  ],
+                  "positions_ms": [
+                    0.0,
+                    0.0,
+                    525.3731343283582,
+                    626.1194029850745,
+                    1895.5223880597014,
+                    2117.1641791044776,
+                    2137.313432835821,
+                    2278.3582089552237,
+                    2439.55223880597
+                  ],
+                  "unit_quality": [
+                    0.9768211604811553,
+                    0.9757096379531109,
+                    0.9997868992150214,
+                    0.9998879558243913,
+                    0.9972160098249746,
+                    0.9922778746485882,
+                    0.9783899715912486,
+                    0.9998351607315255,
+                    0.9998158555572949
+                  ],
+                  "log_probability": -0.0858675619512647
+                },
+                {
+                  "units": [
+                    "i",
+                    "l",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "k",
+                    "h",
+                    "i",
+                    "n"
+                  ],
+                  "positions_ms": [
+                    0.0,
+                    0.0,
+                    1.4925373134328197,
+                    525.3731343283582,
+                    626.1194029850745,
+                    1895.5223880597014,
+                    2117.1641791044776,
+                    2137.313432835821,
+                    2278.3582089552237,
+                    2439.55223880597
+                  ],
+                  "unit_quality": [
+                    0.9768211604811553,
+                    0.023491592225014752,
+                    0.9749234582928594,
+                    0.9997868992150214,
+                    0.9998879558243913,
+                    0.9972160098249746,
+                    0.9922778746485882,
+                    0.9783899715912486,
+                    0.9998351607315255,
+                    0.9998158555572949
+                  ],
+                  "log_probability": -3.693479931859688
+                },
+                {
+                  "units": [
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "k",
+                    "h",
+                    "i",
+                    "n"
+                  ],
+                  "positions_ms": [
+                    0.0,
+                    525.3731343283582,
+                    626.1194029850745,
+                    1895.5223880597014,
+                    2117.1641791044776,
+                    2137.313432835821,
+                    2278.3582089552237,
+                    2439.55223880597
+                  ],
+                  "unit_quality": [
+                    0.9757096379531109,
+                    0.9997868992150214,
+                    0.9998879558243913,
+                    0.9972160098249746,
+                    0.9922778746485882,
+                    0.9783899715912486,
+                    0.9998351607315255,
+                    0.9998158555572949
+                  ],
+                  "log_probability": -3.965955503501081
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "k",
+                    "i",
+                    "n"
+                  ],
+                  "positions_ms": [
+                    0.0,
+                    0.0,
+                    525.3731343283582,
+                    626.1194029850745,
+                    1895.5223880597014,
+                    2117.1641791044776,
+                    2278.3582089552237,
+                    2439.55223880597
+                  ],
+                  "unit_quality": [
+                    0.9768211604811553,
+                    0.9757096379531109,
+                    0.9997868992150214,
+                    0.9998879558243913,
+                    0.9972160098249746,
+                    0.9922778746485882,
+                    0.9998351607315255,
+                    0.9998158555572949
+                  ],
+                  "log_probability": -4.077069891149579
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "h",
+                    "i",
+                    "n"
+                  ],
+                  "positions_ms": [
+                    0.0,
+                    0.0,
+                    525.3731343283582,
+                    626.1194029850745,
+                    1895.5223880597014,
+                    2117.1641791044776,
+                    2278.3582089552237,
+                    2439.55223880597
+                  ],
+                  "unit_quality": [
+                    0.9768211604811553,
+                    0.9757096379531109,
+                    0.9997868992150214,
+                    0.9998879558243913,
+                    0.9972160098249746,
+                    0.003001578040769786,
+                    0.9998351607315255,
+                    0.9998158555572949
+                  ],
+                  "log_probability": -5.995073344748399
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "g",
+                    "h",
+                    "i",
+                    "n"
+                  ],
+                  "positions_ms": [
+                    0.0,
+                    0.0,
+                    525.3731343283582,
+                    626.1194029850745,
+                    1895.5223880597014,
+                    2117.1641791044776,
+                    2137.313432835821,
+                    2278.3582089552237,
+                    2439.55223880597
+                  ],
+                  "unit_quality": [
+                    0.9768211604811553,
+                    0.9757096379531109,
+                    0.9997868992150214,
+                    0.9998879558243913,
+                    0.9972160098249746,
+                    0.002280148536844098,
+                    0.9783899715912486,
+                    0.9998351607315255,
+                    0.9998158555572949
+                  ],
+                  "log_probability": -6.272462134020578
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "k",
+                    "h",
+                    "i"
+                  ],
+                  "positions_ms": [
+                    0.0,
+                    0.0,
+                    525.3731343283582,
+                    626.1194029850745,
+                    1895.5223880597014,
+                    2117.1641791044776,
+                    2137.313432835821,
+                    2278.3582089552237
+                  ],
+                  "unit_quality": [
+                    0.9768211604811553,
+                    0.9757096379531109,
+                    0.9997868992150214,
+                    0.9998879558243913,
+                    0.9972160098249746,
+                    0.9922778746485882,
+                    0.9783899715912486,
+                    0.9998351607315255
+                  ],
+                  "log_probability": -8.99621642956412
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "k",
+                    "h",
+                    "i",
+                    "n",
+                    "n"
+                  ],
+                  "positions_ms": [
+                    0.0,
+                    0.0,
+                    525.3731343283582,
+                    626.1194029850745,
+                    1895.5223880597014,
+                    2117.1641791044776,
+                    2137.313432835821,
+                    2278.3582089552237,
+                    2439.55223880597,
+                    2479.8507462686566
+                  ],
+                  "unit_quality": [
+                    0.9768211604811553,
+                    0.9757096379531109,
+                    0.9997868992150214,
+                    0.9998879558243913,
+                    0.9972160098249746,
+                    0.9922778746485882,
+                    0.9783899715912486,
+                    0.9998351607315255,
+                    0.9998158555572949,
+                    1.6004483764377445e-05
+                  ],
+                  "log_probability": -11.129379168271003
+                }
+              ],
+              "null_log_probability": -77.03437805175781,
+              "posterior_sha256": "95bc97b3a4c83f05632535e8cabca16238a7faaf8d3a688acc2955be63f16993",
+              "stride_ms": 20.149253731343283
+            },
+            "seconds": 0.14755508303642273
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 2700.0,
+        "covered_audio_ms": 2700.0,
+        "coverage": 0.1573054164770141,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            2700.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 32574,
+        "peak_cache_bytes": 32574,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": 33554432,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        },
+        "model_passes": 1
+      },
+      "actual_dispatches": [
+        {
+          "samples": 43200,
+          "sha256": "c899e0455fe3d18415b15a3dd697df7f8805987d50caaae2ed57e26a67176c3d"
+        }
+      ]
+    },
+    {
+      "case": "crop6320_silence200",
+      "units": [
+        "i",
+        "n",
+        "n",
+        "ā",
+        "a",
+        "k",
+        "h",
+        "i",
+        "n"
+      ],
+      "positions_ms": [
+        102.08333333333331,
+        182.6388888888889,
+        726.3888888888889,
+        827.0833333333333,
+        2095.8333333333335,
+        2317.3611111111113,
+        2337.5,
+        2478.472222222222,
+        2639.5833333333335
+      ],
+      "unit_quality": [
+        0.7954229116439819,
+        0.8174518942832947,
+        0.9999366998672485,
+        0.9998998641967773,
+        0.9970144033432007,
+        0.9260830283164978,
+        0.9988946318626404,
+        0.999842643737793,
+        0.9999245405197144
+      ],
+      "ledger": {
+        "emission_passes": 1,
+        "emissions_frames": 144,
+        "acoustic_reads": [
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              0.0,
+              2900.0
+            ],
+            "frames": 144,
+            "outcome": "completed",
+            "id": 0,
+            "reason": "temporal_preroll_independent_ctc",
+            "requested_window_ms": [
+              0,
+              2900
+            ],
+            "samples": [
+              0,
+              46400
+            ],
+            "observed": {
+              "units": [
+                "i",
+                "n",
+                "n",
+                "ā",
+                "a",
+                "k",
+                "h",
+                "i",
+                "n"
+              ],
+              "positions_ms": [
+                102.08333333333331,
+                182.6388888888889,
+                726.3888888888889,
+                827.0833333333333,
+                2095.8333333333335,
+                2317.3611111111113,
+                2337.5,
+                2478.472222222222,
+                2639.5833333333335
+              ],
+              "quality": 0.9482745130856832,
+              "truncated": false,
+              "text": "innāakhin",
+              "unit_quality": [
+                0.7954229116439819,
+                0.8174518942832947,
+                0.9999366998672485,
+                0.9998998641967773,
+                0.9970144033432007,
+                0.9260830283164978,
+                0.9988946318626404,
+                0.999842643737793,
+                0.9999245405197144
+              ],
+              "frames": 144,
+              "attribution": [],
+              "hypotheses": [
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "k",
+                    "h",
+                    "i",
+                    "n"
+                  ],
+                  "positions_ms": [
+                    102.08333333333331,
+                    182.6388888888889,
+                    726.3888888888889,
+                    827.0833333333333,
+                    2095.8333333333335,
+                    2317.3611111111113,
+                    2337.5,
+                    2478.472222222222,
+                    2639.5833333333335
+                  ],
+                  "unit_quality": [
+                    0.7954229094481674,
+                    0.8174518931871942,
+                    0.9999367038714213,
+                    0.9998998742228323,
+                    0.997014403203644,
+                    0.9260830022179596,
+                    0.9988946034454053,
+                    0.9998426684993716,
+                    0.999924546211394
+                  ],
+                  "log_probability": -0.39943505313622285
+                },
+                {
+                  "units": [
+                    "i",
+                    "l",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "k",
+                    "h",
+                    "i",
+                    "n"
+                  ],
+                  "positions_ms": [
+                    102.08333333333331,
+                    182.6388888888889,
+                    202.77777777777777,
+                    726.3888888888889,
+                    827.0833333333333,
+                    2095.8333333333335,
+                    2317.3611111111113,
+                    2337.5,
+                    2478.472222222222,
+                    2639.5833333333335
+                  ],
+                  "unit_quality": [
+                    0.7954229094481674,
+                    0.18018164092254488,
+                    0.9873513314627314,
+                    0.9999367038714213,
+                    0.9998998742228323,
+                    0.997014403203644,
+                    0.9260830022179596,
+                    0.9988946034454053,
+                    0.9998426684993716,
+                    0.999924546211394
+                  ],
+                  "log_probability": -1.7510644077071706
+                },
+                {
+                  "units": [
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "k",
+                    "h",
+                    "i",
+                    "n"
+                  ],
+                  "positions_ms": [
+                    182.6388888888889,
+                    726.3888888888889,
+                    827.0833333333333,
+                    2095.8333333333335,
+                    2317.3611111111113,
+                    2337.5,
+                    2478.472222222222,
+                    2639.5833333333335
+                  ],
+                  "unit_quality": [
+                    0.8174518931871942,
+                    0.9999367038714213,
+                    0.9998998742228323,
+                    0.997014403203644,
+                    0.9260830022179596,
+                    0.9988946034454053,
+                    0.9998426684993716,
+                    0.999924546211394
+                  ],
+                  "log_probability": -3.0429236428682715
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "h",
+                    "i",
+                    "n"
+                  ],
+                  "positions_ms": [
+                    102.08333333333331,
+                    182.6388888888889,
+                    726.3888888888889,
+                    827.0833333333333,
+                    2095.8333333333335,
+                    2317.3611111111113,
+                    2478.472222222222,
+                    2639.5833333333335
+                  ],
+                  "unit_quality": [
+                    0.7954229094481674,
+                    0.8174518931871942,
+                    0.9999367038714213,
+                    0.9998998742228323,
+                    0.997014403203644,
+                    0.06356454732007183,
+                    0.9998426684993716,
+                    0.999924546211394
+                  ],
+                  "log_probability": -3.200284448088822
+                },
+                {
+                  "units": [
+                    "l",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "k",
+                    "h",
+                    "i",
+                    "n"
+                  ],
+                  "positions_ms": [
+                    182.6388888888889,
+                    202.77777777777777,
+                    726.3888888888889,
+                    827.0833333333333,
+                    2095.8333333333335,
+                    2317.3611111111113,
+                    2337.5,
+                    2478.472222222222,
+                    2639.5833333333335
+                  ],
+                  "unit_quality": [
+                    0.18018164092254488,
+                    0.9873513314627314,
+                    0.9999367038714213,
+                    0.9998998742228323,
+                    0.997014403203644,
+                    0.9260830022179596,
+                    0.9988946034454053,
+                    0.9998426684993716,
+                    0.999924546211394
+                  ],
+                  "log_probability": -4.392598883291572
+                },
+                {
+                  "units": [
+                    "i",
+                    "l",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "h",
+                    "i",
+                    "n"
+                  ],
+                  "positions_ms": [
+                    102.08333333333331,
+                    182.6388888888889,
+                    202.77777777777777,
+                    726.3888888888889,
+                    827.0833333333333,
+                    2095.8333333333335,
+                    2317.3611111111113,
+                    2478.472222222222,
+                    2639.5833333333335
+                  ],
+                  "unit_quality": [
+                    0.7954229094481674,
+                    0.18018164092254488,
+                    0.9873513314627314,
+                    0.9999367038714213,
+                    0.9998998742228323,
+                    0.997014403203644,
+                    0.06356454732007183,
+                    0.9998426684993716,
+                    0.999924546211394
+                  ],
+                  "log_probability": -4.551913802450706
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "k",
+                    "h",
+                    "i"
+                  ],
+                  "positions_ms": [
+                    102.08333333333331,
+                    182.6388888888889,
+                    726.3888888888889,
+                    827.0833333333333,
+                    2095.8333333333335,
+                    2317.3611111111113,
+                    2337.5,
+                    2478.472222222222
+                  ],
+                  "unit_quality": [
+                    0.7954229094481674,
+                    0.8174518931871942,
+                    0.9999367038714213,
+                    0.9998998742228323,
+                    0.997014403203644,
+                    0.9260830022179596,
+                    0.9988946034454053,
+                    0.9998426684993716
+                  ],
+                  "log_probability": -10.69460573114234
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "k",
+                    "h",
+                    "i",
+                    "n",
+                    "a"
+                  ],
+                  "positions_ms": [
+                    102.08333333333331,
+                    182.6388888888889,
+                    726.3888888888889,
+                    827.0833333333333,
+                    2095.8333333333335,
+                    2317.3611111111113,
+                    2337.5,
+                    2478.472222222222,
+                    2639.5833333333335,
+                    2659.722222222222
+                  ],
+                  "unit_quality": [
+                    0.7954229094481674,
+                    0.8174518931871942,
+                    0.9999367038714213,
+                    0.9998998742228323,
+                    0.997014403203644,
+                    0.9260830022179596,
+                    0.9988946034454053,
+                    0.9998426684993716,
+                    0.999924546211394,
+                    1.5368421798339674e-05
+                  ],
+                  "log_probability": -11.175512277868096
+                }
+              ],
+              "null_log_probability": -85.19895935058594,
+              "posterior_sha256": "36c202772dd30c988f6b6f79d261b6bbb2f9358f3dc2c28943b07c15e771ef1b",
+              "stride_ms": 20.13888888888889
+            },
+            "seconds": 0.2690964578650892
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 2900.0,
+        "covered_audio_ms": 2900.0,
+        "coverage": 0.16701160802663548,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            2900.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 34844,
+        "peak_cache_bytes": 34844,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": 33554432,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        },
+        "model_passes": 1
+      },
+      "actual_dispatches": [
+        {
+          "samples": 46400,
+          "sha256": "c178aa8289749c584d2571a53c8f25f738638a531c41998b511e3ede6f25162b"
+        }
+      ]
+    },
+    {
+      "case": "crop6320_silence1200",
+      "units": [
+        "i",
+        "n",
+        "n",
+        "ā",
+        "a",
+        "k",
+        "h",
+        "i",
+        "n"
+      ],
+      "positions_ms": [
+        1106.701030927835,
+        1187.1134020618556,
+        1729.8969072164948,
+        1830.4123711340205,
+        3096.907216494845,
+        3318.041237113402,
+        3338.144329896907,
+        3478.865979381443,
+        3639.6907216494847
+      ],
+      "unit_quality": [
+        0.9289939403533936,
+        0.9362260699272156,
+        0.9999388456344604,
+        0.9999059438705444,
+        0.9983385801315308,
+        0.8475939035415649,
+        0.9987913966178894,
+        0.9998575448989868,
+        0.9999086856842041
+      ],
+      "ledger": {
+        "emission_passes": 1,
+        "emissions_frames": 194,
+        "acoustic_reads": [
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              0.0,
+              3900.0
+            ],
+            "frames": 194,
+            "outcome": "completed",
+            "id": 0,
+            "reason": "temporal_preroll_independent_ctc",
+            "requested_window_ms": [
+              0,
+              3900
+            ],
+            "samples": [
+              0,
+              62400
+            ],
+            "observed": {
+              "units": [
+                "i",
+                "n",
+                "n",
+                "ā",
+                "a",
+                "k",
+                "h",
+                "i",
+                "n"
+              ],
+              "positions_ms": [
+                1106.701030927835,
+                1187.1134020618556,
+                1729.8969072164948,
+                1830.4123711340205,
+                3096.907216494845,
+                3318.041237113402,
+                3338.144329896907,
+                3478.865979381443,
+                3639.6907216494847
+              ],
+              "quality": 0.9677283234066434,
+              "truncated": false,
+              "text": "innāakhin",
+              "unit_quality": [
+                0.9289939403533936,
+                0.9362260699272156,
+                0.9999388456344604,
+                0.9999059438705444,
+                0.9983385801315308,
+                0.8475939035415649,
+                0.9987913966178894,
+                0.9998575448989868,
+                0.9999086856842041
+              ],
+              "frames": 194,
+              "attribution": [],
+              "hypotheses": [
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "k",
+                    "h",
+                    "i",
+                    "n"
+                  ],
+                  "positions_ms": [
+                    1106.701030927835,
+                    1187.1134020618556,
+                    1729.8969072164948,
+                    1830.4123711340205,
+                    3096.907216494845,
+                    3318.041237113402,
+                    3338.144329896907,
+                    3478.865979381443,
+                    3639.6907216494847
+                  ],
+                  "unit_quality": [
+                    0.9289939249162964,
+                    0.9362260604238304,
+                    0.9999388493741573,
+                    0.9999059527170496,
+                    0.9983386032148887,
+                    0.8475938945666728,
+                    0.9987913690391044,
+                    0.9998575651864731,
+                    0.9999086940219724
+                  ],
+                  "log_probability": -0.44526861869263235
+                },
+                {
+                  "units": [
+                    "i",
+                    "l",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "k",
+                    "h",
+                    "i",
+                    "n"
+                  ],
+                  "positions_ms": [
+                    1106.701030927835,
+                    1167.0103092783504,
+                    1187.1134020618556,
+                    1729.8969072164948,
+                    1830.4123711340205,
+                    3096.907216494845,
+                    3318.041237113402,
+                    3338.144329896907,
+                    3478.865979381443,
+                    3639.6907216494847
+                  ],
+                  "unit_quality": [
+                    0.9289939249162964,
+                    0.18030237368311333,
+                    0.9362260604238304,
+                    0.9999388493741573,
+                    0.9999059527170496,
+                    0.9983386032148887,
+                    0.8475938945666728,
+                    0.9987913690391044,
+                    0.9998575651864731,
+                    0.9999086940219724
+                  ],
+                  "log_probability": -1.657821800953461
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "h",
+                    "i",
+                    "n"
+                  ],
+                  "positions_ms": [
+                    1106.701030927835,
+                    1187.1134020618556,
+                    1729.8969072164948,
+                    1830.4123711340205,
+                    3096.907216494845,
+                    3318.041237113402,
+                    3478.865979381443,
+                    3639.6907216494847
+                  ],
+                  "unit_quality": [
+                    0.9289939249162964,
+                    0.9362260604238304,
+                    0.9999388493741573,
+                    0.9999059527170496,
+                    0.9983386032148887,
+                    0.14496024413634914,
+                    0.9998575651864731,
+                    0.9999086940219724
+                  ],
+                  "log_probability": -2.2105966705561038
+                },
+                {
+                  "units": [
+                    "i",
+                    "l",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "h",
+                    "i",
+                    "n"
+                  ],
+                  "positions_ms": [
+                    1106.701030927835,
+                    1167.0103092783504,
+                    1187.1134020618556,
+                    1729.8969072164948,
+                    1830.4123711340205,
+                    3096.907216494845,
+                    3318.041237113402,
+                    3478.865979381443,
+                    3639.6907216494847
+                  ],
+                  "unit_quality": [
+                    0.9289939249162964,
+                    0.18030237368311333,
+                    0.9362260604238304,
+                    0.9999388493741573,
+                    0.9999059527170496,
+                    0.9983386032148887,
+                    0.14496024413634914,
+                    0.9998575651864731,
+                    0.9999086940219724
+                  ],
+                  "log_probability": -3.423221714472399
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "k",
+                    "h",
+                    "i"
+                  ],
+                  "positions_ms": [
+                    1106.701030927835,
+                    1187.1134020618556,
+                    1729.8969072164948,
+                    1830.4123711340205,
+                    3096.907216494845,
+                    3318.041237113402,
+                    3338.144329896907,
+                    3478.865979381443
+                  ],
+                  "unit_quality": [
+                    0.9289939249162964,
+                    0.9362260604238304,
+                    0.9999388493741573,
+                    0.9999059527170496,
+                    0.9983386032148887,
+                    0.8475938945666728,
+                    0.9987913690391044,
+                    0.9998575651864731
+                  ],
+                  "log_probability": -10.25640107975534
+                },
+                {
+                  "units": [
+                    "i",
+                    "l",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "k",
+                    "h",
+                    "i"
+                  ],
+                  "positions_ms": [
+                    1106.701030927835,
+                    1167.0103092783504,
+                    1187.1134020618556,
+                    1729.8969072164948,
+                    1830.4123711340205,
+                    3096.907216494845,
+                    3318.041237113402,
+                    3338.144329896907,
+                    3478.865979381443
+                  ],
+                  "unit_quality": [
+                    0.9289939249162964,
+                    0.18030237368311333,
+                    0.9362260604238304,
+                    0.9999388493741573,
+                    0.9999059527170496,
+                    0.9983386032148887,
+                    0.8475938945666728,
+                    0.9987913690391044,
+                    0.9998575651864731
+                  ],
+                  "log_probability": -11.468954261647045
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "h",
+                    "i"
+                  ],
+                  "positions_ms": [
+                    1106.701030927835,
+                    1187.1134020618556,
+                    1729.8969072164948,
+                    1830.4123711340205,
+                    3096.907216494845,
+                    3318.041237113402,
+                    3478.865979381443
+                  ],
+                  "unit_quality": [
+                    0.9289939249162964,
+                    0.9362260604238304,
+                    0.9999388493741573,
+                    0.9999059527170496,
+                    0.9983386032148887,
+                    0.14496024413634914,
+                    0.9998575651864731
+                  ],
+                  "log_probability": -12.021729131249687
+                },
+                {
+                  "units": [
+                    "i",
+                    "n",
+                    "n",
+                    "ā",
+                    "a",
+                    "k",
+                    "h",
+                    "i",
+                    "n",
+                    "a"
+                  ],
+                  "positions_ms": [
+                    1106.701030927835,
+                    1187.1134020618556,
+                    1729.8969072164948,
+                    1830.4123711340205,
+                    3096.907216494845,
+                    3318.041237113402,
+                    3338.144329896907,
+                    3478.865979381443,
+                    3639.6907216494847,
+                    3659.7938144329896
+                  ],
+                  "unit_quality": [
+                    0.9289939249162964,
+                    0.9362260604238304,
+                    0.9999388493741573,
+                    0.9999059527170496,
+                    0.9983386032148887,
+                    0.8475938945666728,
+                    0.9987913690391044,
+                    0.9998575651864731,
+                    0.9999086940219724,
+                    5.87313411041405e-06
+                  ],
+                  "log_probability": -12.167192502097318
+                }
+              ],
+              "null_log_probability": -85.803466796875,
+              "posterior_sha256": "39ba10fa8b043f3cb5903a3478b64264b063c60d966dcd096e1b6241af6c079f",
+              "stride_ms": 20.103092783505154
+            },
+            "seconds": 0.31048033316619694
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 3900.0,
+        "covered_audio_ms": 3900.0,
+        "coverage": 0.21237130945290564,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            3900.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 42404,
+        "peak_cache_bytes": 42404,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": 33554432,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        },
+        "model_passes": 1
+      },
+      "actual_dispatches": [
+        {
+          "samples": 62400,
+          "sha256": "3ece7d9548c1e78c19b198f400b56cc0e41ecc20b9c981392e151b0dc94dd0ef"
+        }
+      ]
+    },
+    {
+      "case": "basmala_negative",
+      "units": [
+        "b",
+        "i",
+        "s",
+        "'",
+        "m",
+        "i",
+        "l",
+        "l",
+        "ā",
+        "h",
+        "i",
+        "n",
+        "ū",
+        "k"
+      ],
+      "positions_ms": [
+        82.08955223880594,
+        182.83582089552237,
+        444.77611940298505,
+        485.0746268656716,
+        585.820895522388,
+        686.5671641791045,
+        767.1641791044776,
+        1049.2537313432836,
+        1150.0,
+        1573.134328358209,
+        1673.8805970149253,
+        1835.0746268656715,
+        1935.8208955223881,
+        2379.10447761194
+      ],
+      "unit_quality": [
+        0.9989960789680481,
+        0.958686351776123,
+        0.9997832179069519,
+        0.9996492862701416,
+        0.9997914433479309,
+        0.9962705373764038,
+        0.7856944799423218,
+        0.9997280240058899,
+        0.9998301267623901,
+        0.9983528852462769,
+        0.9978156089782715,
+        0.905198335647583,
+        0.9920715689659119,
+        0.7321784496307373
+      ],
+      "ledger": {
+        "emission_passes": 1,
+        "emissions_frames": 134,
+        "acoustic_reads": [
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              0.0,
+              2700.0
+            ],
+            "frames": 134,
+            "outcome": "completed",
+            "id": 0,
+            "reason": "temporal_preroll_independent_ctc",
+            "requested_window_ms": [
+              0,
+              2700
+            ],
+            "samples": [
+              0,
+              43200
+            ],
+            "observed": {
+              "units": [
+                "b",
+                "i",
+                "s",
+                "'",
+                "m",
+                "i",
+                "l",
+                "l",
+                "ā",
+                "h",
+                "i",
+                "n",
+                "ū",
+                "k"
+              ],
+              "positions_ms": [
+                82.08955223880594,
+                182.83582089552237,
+                444.77611940298505,
+                485.0746268656716,
+                585.820895522388,
+                686.5671641791045,
+                767.1641791044776,
+                1049.2537313432836,
+                1150.0,
+                1573.134328358209,
+                1673.8805970149253,
+                1835.0746268656715,
+                1935.8208955223881,
+                2379.10447761194
+              ],
+              "quality": 0.9545747424874987,
+              "truncated": false,
+              "text": "bis'millāhinūk",
+              "unit_quality": [
+                0.9989960789680481,
+                0.958686351776123,
+                0.9997832179069519,
+                0.9996492862701416,
+                0.9997914433479309,
+                0.9962705373764038,
+                0.7856944799423218,
+                0.9997280240058899,
+                0.9998301267623901,
+                0.9983528852462769,
+                0.9978156089782715,
+                0.905198335647583,
+                0.9920715689659119,
+                0.7321784496307373
+              ],
+              "frames": 134,
+              "attribution": [],
+              "hypotheses": [
+                {
+                  "units": [
+                    "b",
+                    "i",
+                    "s",
+                    "'",
+                    "m",
+                    "i",
+                    "l",
+                    "l",
+                    "ā",
+                    "h",
+                    "i",
+                    "n",
+                    "ū",
+                    "a",
+                    "k"
+                  ],
+                  "positions_ms": [
+                    82.08955223880594,
+                    182.83582089552237,
+                    444.77611940298505,
+                    485.0746268656716,
+                    585.820895522388,
+                    686.5671641791045,
+                    767.1641791044776,
+                    1049.2537313432836,
+                    1150.0,
+                    1573.134328358209,
+                    1673.8805970149253,
+                    1835.0746268656715,
+                    1935.8208955223881,
+                    2197.7611940298507,
+                    2379.10447761194
+                  ],
+                  "unit_quality": [
+                    0.9989960746201195,
+                    0.9586863336663232,
+                    0.9997832053070167,
+                    0.9996492900994494,
+                    0.9997914272527199,
+                    0.9962705507349175,
+                    0.7856945072280724,
+                    0.9997280383804813,
+                    0.9998301556085302,
+                    0.9983528609557033,
+                    0.9978156226393983,
+                    0.9051983510989858,
+                    0.9920715718861443,
+                    0.42904378864440634,
+                    0.7321784499289186
+                  ],
+                  "log_probability": -1.652673689436244
+                },
+                {
+                  "units": [
+                    "b",
+                    "i",
+                    "s",
+                    "'",
+                    "m",
+                    "i",
+                    "l",
+                    "l",
+                    "ā",
+                    "h",
+                    "i",
+                    "n",
+                    "ū",
+                    "k"
+                  ],
+                  "positions_ms": [
+                    82.08955223880594,
+                    182.83582089552237,
+                    444.77611940298505,
+                    485.0746268656716,
+                    585.820895522388,
+                    686.5671641791045,
+                    767.1641791044776,
+                    1049.2537313432836,
+                    1150.0,
+                    1573.134328358209,
+                    1673.8805970149253,
+                    1835.0746268656715,
+                    1935.8208955223881,
+                    2379.10447761194
+                  ],
+                  "unit_quality": [
+                    0.9989960746201195,
+                    0.9586863336663232,
+                    0.9997832053070167,
+                    0.9996492900994494,
+                    0.9997914272527199,
+                    0.9962705507349175,
+                    0.7856945072280724,
+                    0.9997280383804813,
+                    0.9998301556085302,
+                    0.9983528609557033,
+                    0.9978156226393983,
+                    0.9051983510989858,
+                    0.9920715718861443,
+                    0.7321784499289186
+                  ],
+                  "log_probability": -1.8663253961661563
+                },
+                {
+                  "units": [
+                    "b",
+                    "i",
+                    "s",
+                    "'",
+                    "m",
+                    "i",
+                    "l",
+                    "l",
+                    "ā",
+                    "h",
+                    "i",
+                    "n",
+                    "ū",
+                    "a",
+                    "k",
+                    "h"
+                  ],
+                  "positions_ms": [
+                    82.08955223880594,
+                    182.83582089552237,
+                    444.77611940298505,
+                    485.0746268656716,
+                    585.820895522388,
+                    686.5671641791045,
+                    767.1641791044776,
+                    1049.2537313432836,
+                    1150.0,
+                    1573.134328358209,
+                    1673.8805970149253,
+                    1835.0746268656715,
+                    1935.8208955223881,
+                    2197.7611940298507,
+                    2379.10447761194,
+                    2419.402985074627
+                  ],
+                  "unit_quality": [
+                    0.9989960746201195,
+                    0.9586863336663232,
+                    0.9997832053070167,
+                    0.9996492900994494,
+                    0.9997914272527199,
+                    0.9962705507349175,
+                    0.7856945072280724,
+                    0.9997280383804813,
+                    0.9998301556085302,
+                    0.9983528609557033,
+                    0.9978156226393983,
+                    0.9051983510989858,
+                    0.9920715718861443,
+                    0.42904378864440634,
+                    0.7321784499289186,
+                    0.40048730295443424
+                  ],
+                  "log_probability": -2.041421910169385
+                },
+                {
+                  "units": [
+                    "b",
+                    "i",
+                    "s",
+                    "'",
+                    "m",
+                    "i",
+                    "l",
+                    "l",
+                    "ā",
+                    "h",
+                    "i",
+                    "n",
+                    "ū",
+                    "k",
+                    "h"
+                  ],
+                  "positions_ms": [
+                    82.08955223880594,
+                    182.83582089552237,
+                    444.77611940298505,
+                    485.0746268656716,
+                    585.820895522388,
+                    686.5671641791045,
+                    767.1641791044776,
+                    1049.2537313432836,
+                    1150.0,
+                    1573.134328358209,
+                    1673.8805970149253,
+                    1835.0746268656715,
+                    1935.8208955223881,
+                    2379.10447761194,
+                    2419.402985074627
+                  ],
+                  "unit_quality": [
+                    0.9989960746201195,
+                    0.9586863336663232,
+                    0.9997832053070167,
+                    0.9996492900994494,
+                    0.9997914272527199,
+                    0.9962705507349175,
+                    0.7856945072280724,
+                    0.9997280383804813,
+                    0.9998301556085302,
+                    0.9983528609557033,
+                    0.9978156226393983,
+                    0.9051983510989858,
+                    0.9920715718861443,
+                    0.7321784499289186,
+                    0.40048730295443424
+                  ],
+                  "log_probability": -2.2550736168992973
+                },
+                {
+                  "units": [
+                    "b",
+                    "i",
+                    "i",
+                    "s",
+                    "'",
+                    "m",
+                    "i",
+                    "l",
+                    "l",
+                    "ā",
+                    "h",
+                    "i",
+                    "n",
+                    "ū",
+                    "a",
+                    "k"
+                  ],
+                  "positions_ms": [
+                    82.08955223880594,
+                    182.83582089552237,
+                    243.28358208955223,
+                    444.77611940298505,
+                    485.0746268656716,
+                    585.820895522388,
+                    686.5671641791045,
+                    767.1641791044776,
+                    1049.2537313432836,
+                    1150.0,
+                    1573.134328358209,
+                    1673.8805970149253,
+                    1835.0746268656715,
+                    1935.8208955223881,
+                    2197.7611940298507,
+                    2379.10447761194
+                  ],
+                  "unit_quality": [
+                    0.9989960746201195,
+                    0.9586863336663232,
+                    0.7500559828693121,
+                    0.9997832053070167,
+                    0.9996492900994494,
+                    0.9997914272527199,
+                    0.9962705507349175,
+                    0.7856945072280724,
+                    0.9997280383804813,
+                    0.9998301556085302,
+                    0.9983528609557033,
+                    0.9978156226393983,
+                    0.9051983510989858,
+                    0.9920715718861443,
+                    0.42904378864440634,
+                    0.7321784499289186
+                  ],
+                  "log_probability": -2.526290467351319
+                },
+                {
+                  "units": [
+                    "b",
+                    "i",
+                    "i",
+                    "s",
+                    "'",
+                    "m",
+                    "i",
+                    "l",
+                    "l",
+                    "ā",
+                    "h",
+                    "i",
+                    "n",
+                    "ū",
+                    "k"
+                  ],
+                  "positions_ms": [
+                    82.08955223880594,
+                    182.83582089552237,
+                    243.28358208955223,
+                    444.77611940298505,
+                    485.0746268656716,
+                    585.820895522388,
+                    686.5671641791045,
+                    767.1641791044776,
+                    1049.2537313432836,
+                    1150.0,
+                    1573.134328358209,
+                    1673.8805970149253,
+                    1835.0746268656715,
+                    1935.8208955223881,
+                    2379.10447761194
+                  ],
+                  "unit_quality": [
+                    0.9989960746201195,
+                    0.9586863336663232,
+                    0.7500559828693121,
+                    0.9997832053070167,
+                    0.9996492900994494,
+                    0.9997914272527199,
+                    0.9962705507349175,
+                    0.7856945072280724,
+                    0.9997280383804813,
+                    0.9998301556085302,
+                    0.9983528609557033,
+                    0.9978156226393983,
+                    0.9051983510989858,
+                    0.9920715718861443,
+                    0.7321784499289186
+                  ],
+                  "log_probability": -2.7399421740812313
+                },
+                {
+                  "units": [
+                    "b",
+                    "i",
+                    "i",
+                    "s",
+                    "'",
+                    "m",
+                    "i",
+                    "l",
+                    "l",
+                    "ā",
+                    "h",
+                    "i",
+                    "n",
+                    "ū",
+                    "a",
+                    "k",
+                    "h"
+                  ],
+                  "positions_ms": [
+                    82.08955223880594,
+                    182.83582089552237,
+                    243.28358208955223,
+                    444.77611940298505,
+                    485.0746268656716,
+                    585.820895522388,
+                    686.5671641791045,
+                    767.1641791044776,
+                    1049.2537313432836,
+                    1150.0,
+                    1573.134328358209,
+                    1673.8805970149253,
+                    1835.0746268656715,
+                    1935.8208955223881,
+                    2197.7611940298507,
+                    2379.10447761194,
+                    2419.402985074627
+                  ],
+                  "unit_quality": [
+                    0.9989960746201195,
+                    0.9586863336663232,
+                    0.7500559828693121,
+                    0.9997832053070167,
+                    0.9996492900994494,
+                    0.9997914272527199,
+                    0.9962705507349175,
+                    0.7856945072280724,
+                    0.9997280383804813,
+                    0.9998301556085302,
+                    0.9983528609557033,
+                    0.9978156226393983,
+                    0.9051983510989858,
+                    0.9920715718861443,
+                    0.42904378864440634,
+                    0.7321784499289186,
+                    0.40048730295443424
+                  ],
+                  "log_probability": -2.91503868808446
+                },
+                {
+                  "units": [
+                    "b",
+                    "i",
+                    "i",
+                    "s",
+                    "'",
+                    "m",
+                    "i",
+                    "l",
+                    "l",
+                    "ā",
+                    "h",
+                    "i",
+                    "n",
+                    "ū",
+                    "k",
+                    "h"
+                  ],
+                  "positions_ms": [
+                    82.08955223880594,
+                    182.83582089552237,
+                    243.28358208955223,
+                    444.77611940298505,
+                    485.0746268656716,
+                    585.820895522388,
+                    686.5671641791045,
+                    767.1641791044776,
+                    1049.2537313432836,
+                    1150.0,
+                    1573.134328358209,
+                    1673.8805970149253,
+                    1835.0746268656715,
+                    1935.8208955223881,
+                    2379.10447761194,
+                    2419.402985074627
+                  ],
+                  "unit_quality": [
+                    0.9989960746201195,
+                    0.9586863336663232,
+                    0.7500559828693121,
+                    0.9997832053070167,
+                    0.9996492900994494,
+                    0.9997914272527199,
+                    0.9962705507349175,
+                    0.7856945072280724,
+                    0.9997280383804813,
+                    0.9998301556085302,
+                    0.9983528609557033,
+                    0.9978156226393983,
+                    0.9051983510989858,
+                    0.9920715718861443,
+                    0.7321784499289186,
+                    0.40048730295443424
+                  ],
+                  "log_probability": -3.1286903948143725
+                }
+              ],
+              "null_log_probability": -138.72645568847656,
+              "posterior_sha256": "3ac219ffc3cc6e06d57dcf3e6bcb3b7e37456a84ed0950c185b92e218273b951",
+              "stride_ms": 20.149253731343283
+            },
+            "seconds": 0.17871262482367456
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 2700.0,
+        "covered_audio_ms": 2700.0,
+        "coverage": 0.11497158977498037,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            2700.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 36178,
+        "peak_cache_bytes": 36178,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": 33554432,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        },
+        "model_passes": 1
+      },
+      "actual_dispatches": [
+        {
+          "samples": 43200,
+          "sha256": "e74ee119e4a6a4bf027a9beab1a0f5bc53779786e9685cf8b7b0d116d004771e"
+        }
+      ]
+    }
+  ],
+  "source_sha256": "965352f4527ce2310168a942f4906fc630f18aab9f8bc255378f0ff60e1b533a",
+  "worker_sha256": "f4cd775a0d558384c68477b485f893a44640f0892e6bf180264c51e24fd313ab",
+  "limitation": "DSP activity is not labelled word onset; predicting-query alternative and existing convention are diagnostic only. No timing capability enabled."
+}

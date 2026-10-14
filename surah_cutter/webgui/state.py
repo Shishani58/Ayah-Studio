@@ -12,44 +12,18 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+from surah_cutter.data.project_state import (
+    discover_audio, surah_from_name,  # noqa: F401 — compatibility API
+)
+
 # db_version identity for working/exported DBs (mirrors gui/dashboard + cli).
 DB_CODE = "surah-cutter"
 DB_VERSION = 1
 
 #: Audio file extensions a sura file may use (decode.decode handles them all).
-AUDIO_EXTS = (".mp3", ".m4a", ".ogg", ".flac", ".wav")
 
 #: Sura number = the leading digit run of the filename stem (``003.mp3`` /
 #: ``03_x.m4a`` / ``3`` → 3). Same rule as the Qt dashboard/CLI.
-_NUM_RE = re.compile(r"^(\d{1,3})")
-
-
-def surah_from_name(name: str) -> int | None:
-    """Return the sura number parsed from a filename, or ``None``.
-
-    Matches the leading digit run of the stem and accepts 1..114.
-    """
-    stem = Path(name).stem
-    m = _NUM_RE.match(stem)
-    if not m:
-        return None
-    n = int(m.group(1))
-    return n if 1 <= n <= 114 else None
-
-
-def discover_audio(audio_dir: str | Path) -> dict[int, Path]:
-    """Map sura number → audio file path for a folder (best file per sura)."""
-    out: dict[int, Path] = {}
-    d = Path(audio_dir)
-    if not d.is_dir():
-        return out
-    for p in sorted(d.iterdir()):
-        if p.suffix.lower() not in AUDIO_EXTS:
-            continue
-        n = surah_from_name(p.name)
-        if n is not None and n not in out:
-            out[n] = p
-    return out
 
 
 def classify_status(statuses: list[str] | None, ayah_count: int) -> str:

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import atexit
+from contextlib import contextmanager
 import hashlib
 import json
 import os
@@ -17,6 +18,9 @@ from functools import lru_cache
 import numpy as np
 
 ADAPTER_VERSION = "known-text-v2"
+RPC_TIMEOUT_S = 300.0
+INFERENCE_TIMEOUT_S = 1800.0
+INSTALL_TIMEOUT_S = 1800.0
 _INSTALL_LOCK = threading.Lock()
 _WORKERS: dict[str, "RuntimeEmitter"] = {}
 _PACKAGES = {
@@ -50,7 +54,8 @@ def inference_words(words, model_id):
         if table[word.index][0] != word.text:
             raise ValueError("Порядок слов модели не соответствует каноническому тексту.")
         text = table[word.index][1 if model_id == "muaalem" else 2]
-        if ((model_id.startswith("whisper-") and model_id != "whisper-quran")
+        if ((model_id.startswith("whisper-") and model_id not in
+             ("whisper-quran", "whisper-tarteel-tiny", "whisper-tarteel-base"))
                 or model_id == "fastconformer-arabic"):
             import unicodedata
 
@@ -71,11 +76,15 @@ def ensure_runtime(model_id: str, cancel: threading.Event | None = None) -> Path
     packages = _PACKAGES[folder.name]
     marker = folder / "ayah-runtime.json"
     python = folder / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
-    fingerprint = hashlib.sha256(json.dumps(packages).encode()).hexdigest()
+    lock = Path(__file__).with_name("runtime_locks") / f"{folder.name}.txt"
+    fingerprint = hashlib.sha256(lock.read_bytes()).hexdigest()
     with _INSTALL_LOCK:
         if marker.is_file() and python.is_file():
-            if json.loads(marker.read_text()).get("requirements") == fingerprint:
-                return python
+            try:
+                if json.loads(marker.read_text()).get("requirements") == fingerprint:
+                    return python
+            except (ValueError, OSError):
+                pass  # An incomplete receipt cannot certify an environment.
         bundled_uv = Path(__file__).resolve().parents[2] / "uv-bin" / ("uv.exe" if os.name == "nt" else "uv")
         uv = str(bundled_uv) if bundled_uv.is_file() else shutil.which("uv")
         if not uv:
@@ -84,27 +93,38 @@ def ensure_runtime(model_id: str, cancel: threading.Event | None = None) -> Path
             uv = uv_package.find_uv_bin()
         folder.parent.mkdir(parents=True, exist_ok=True)
         commands = [[str(uv), "venv", str(folder), "--python", "3.11"],
-                    [str(uv), "pip", "install", "--python", str(python), *packages]]
+                    [str(uv), "pip", "install", "--python", str(python),
+                     "--require-hashes", "-r", str(lock)]]
         # Logs are local diagnostics, never returned verbatim to the UI.
         with (folder.parent / f"{folder.name}-install.log").open("a") as log:
             for command in commands:
                 if command[1] == "venv" and python.exists():
                     continue
+                from time import monotonic
+
+                if cancel is not None and cancel.is_set():
+                    raise InterruptedError
                 process = subprocess.Popen(command, stdout=log, stderr=log)
-                while True:
-                    try:
-                        code = process.wait(timeout=0.25)
-                        break
-                    except subprocess.TimeoutExpired:
-                        if cancel is not None and cancel.is_set():
-                            process.terminate()
-                            process.wait()
-                            raise InterruptedError
+                deadline = monotonic() + INSTALL_TIMEOUT_S
+                try:
+                    while True:
+                        try:
+                            code = process.wait(timeout=0.25)
+                            break
+                        except subprocess.TimeoutExpired:
+                            if cancel is not None and cancel.is_set():
+                                raise InterruptedError
+                            if monotonic() >= deadline:
+                                raise ValueError("Подготовка модели превысила время ожидания.")
+                finally:
+                    if process.poll() is None:
+                        process.kill()
+                        process.wait(timeout=10)
                 if code:
                     raise ValueError("Не удалось подготовить окружение модели. Проверьте сеть и место на диске.")
         installed = subprocess.check_output(
             [str(python), "-c", "import importlib.metadata,json; print(json.dumps({d.metadata['Name']:d.version for d in importlib.metadata.distributions()},sort_keys=True))"],
-            text=True,
+            text=True, timeout=RPC_TIMEOUT_S,
         )
         marker.write_text(json.dumps({"requirements": fingerprint, "packages": packages,
                                       "versions": json.loads(installed),
@@ -144,15 +164,56 @@ class RuntimeEmitter:
             self.blank_id = metadata["blank_id"]
             self.text_kind = metadata["text_kind"]
             self.runtime_versions = metadata["versions"]
+            self._loaded_runtime_identity = json.dumps(metadata["runtime_identity"], sort_keys=True, allow_nan=False)
         except BaseException:
             self.close()
             raise
 
-    def _receive(self) -> dict:
-        from surah_cutter.core.cancellation import interruptible
+    @property
+    def runtime_identity(self):
+        """A fresh copy of the immutable identity returned by the loaded worker."""
+        return json.loads(self._loaded_runtime_identity)
 
-        with interruptible(self.process.kill):
-            line = self.process.stdout.readline()
+    @contextmanager
+    def _deadline(self, timeout: float):
+        """Bound pipe writes and reads, and retire the watchdog before reuse."""
+        from surah_cutter.core.cancellation import interruptible, check_cancelled
+
+        expired = threading.Event()
+
+        def abort():
+            try:
+                self.process.kill()
+            except ProcessLookupError:
+                pass
+
+        def timed_out():
+            expired.set()
+            abort()
+
+        timer = threading.Timer(timeout, timed_out)
+        timer.daemon = True
+        timer.start()
+        try:
+            with interruptible(abort):
+                try:
+                    yield
+                finally:
+                    timer.cancel()
+                    timer.join()
+                    if expired.is_set():
+                        check_cancelled()
+                        raise ValueError("Модель превысила время ожидания. Повторите расчёт.")
+        finally:
+            timer.cancel()
+            timer.join()
+
+    def _receive(self, timeout: float | None = None) -> dict:
+        with self._deadline(RPC_TIMEOUT_S if timeout is None else timeout):
+            return self._read_response()
+
+    def _read_response(self) -> dict:
+        line = self.process.stdout.readline()
         if not line:
             raise ValueError("Процесс модели завершился. См. локальный журнал модели.")
         response = json.loads(line)
@@ -162,9 +223,14 @@ class RuntimeEmitter:
 
     def request(self, action: str, **fields) -> dict:
         with self._lock:
-            self.process.stdin.write(json.dumps({"action": action, **fields}, ensure_ascii=False) + "\n")
-            self.process.stdin.flush()
-            return self._receive()
+            timeout = INFERENCE_TIMEOUT_S if action in ("align", "emissions") else RPC_TIMEOUT_S
+            with self._deadline(timeout):
+                try:
+                    self.process.stdin.write(json.dumps({"action": action, **fields}, ensure_ascii=False) + "\n")
+                    self.process.stdin.flush()
+                except (BrokenPipeError, OSError) as exc:
+                    raise ValueError("Процесс модели завершился. Повторите расчёт.") from exc
+                return self._read_response()
 
     def emissions(self, pcm, **_kwargs) -> np.ndarray:
         with self._lock:
@@ -196,6 +262,14 @@ class RuntimeEmitter:
         if result.ndim != 2 or result.shape[1] != len(self.vocab) or not np.isfinite(result).all():
             raise ValueError("Несовместимый выход модели.")
 
+    def recognize_local(self, pcm, *, total_samples):
+        if (self.model_id not in ("whisper-tarteel-tiny", "whisper-tarteel-base") or np.ndim(pcm) != 1
+                or not 4800 <= len(pcm) <= 96000 or len(pcm) >= total_samples):
+            raise ValueError("FAST Whisper требует локальный участок до 6 секунд.")
+        with self._lock:
+            np.save(self.work / "audio.npy", np.ascontiguousarray(pcm, dtype=np.float32))
+            return self.request("recognize_local", total_samples=total_samples)
+
     def close(self):
         if getattr(self, "process", None) is not None:
             if self.process.poll() is None:
@@ -207,8 +281,10 @@ class RuntimeEmitter:
                     self.process.wait()
             self.process.stdin.close()
             self.process.stdout.close()
-        self._log.close()
-        self._temporary.cleanup()
+        if getattr(self, "_log", None) is not None:
+            self._log.close()
+        if getattr(self, "_temporary", None) is not None:
+            self._temporary.cleanup()
 
 
 def load_runtime(model_id: str, folder: Path) -> RuntimeEmitter:

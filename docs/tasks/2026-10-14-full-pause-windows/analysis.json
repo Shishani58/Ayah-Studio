@@ -1,0 +1,4598 @@
+{
+  "full_s_before": 271.4992127092555,
+  "full_s_after": 212.48482420528308,
+  "time_reduction_percent": 21.736486052786486,
+  "speedup": 1.2777346039873334,
+  "rss_before_mib": 1119.953125,
+  "rss_after_mib": 1503.34375,
+  "before_errors": {
+    "n": 564,
+    "median_ms": 58.0,
+    "p95_ms": 269.0,
+    "max_ms": 1196.0,
+    "over500": 15
+  },
+  "after_errors": {
+    "n": 564,
+    "median_ms": 57.5,
+    "p95_ms": 253.4000000000001,
+    "max_ms": 1196.0,
+    "over500": 15
+  },
+  "new_large_errors": [],
+  "improved_large_errors": [],
+  "max_boundary_delta_ms": 420,
+  "max_accuracy_regression_ms": 100,
+  "seam_ayahs": 113,
+  "seam_max_error_before_ms": 1088,
+  "seam_max_error_after_ms": 1088,
+  "pause_cuts": 121,
+  "fallback_cuts": 2,
+  "sources_unchanged": {
+    "surah_cutter/core/emissions.py": true,
+    "surah_cutter/core/full_windows.py": true,
+    "surah_cutter/core/align.py": true,
+    "surah_cutter/core/_ctc.py": true,
+    "surah_cutter/core/candidates.py": true,
+    "tools/bench_full_windows.py": true,
+    "data/quran_mushaf.db": true,
+    "data/word_tr_cache.json": true
+  },
+  "changes": [
+    {
+      "surah": 78,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": -860,
+      "after_error_ms": -860,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": 165,
+      "after_error_ms": 165,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": 64,
+      "after_error_ms": 64,
+      "review": false
+    },
+    {
+      "surah": 78,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": 37,
+      "after_error_ms": 37,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": -6,
+      "after_error_ms": -6,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": 79,
+      "after_error_ms": 79,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 7,
+      "delta_ms": 0,
+      "before_error_ms": -39,
+      "after_error_ms": -39,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 8,
+      "delta_ms": 0,
+      "before_error_ms": -108,
+      "after_error_ms": -108,
+      "review": false
+    },
+    {
+      "surah": 78,
+      "ayah": 9,
+      "delta_ms": 0,
+      "before_error_ms": 44,
+      "after_error_ms": 44,
+      "review": false
+    },
+    {
+      "surah": 78,
+      "ayah": 10,
+      "delta_ms": 0,
+      "before_error_ms": -3,
+      "after_error_ms": -3,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 11,
+      "delta_ms": 0,
+      "before_error_ms": 21,
+      "after_error_ms": 21,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 12,
+      "delta_ms": 0,
+      "before_error_ms": 129,
+      "after_error_ms": 129,
+      "review": false
+    },
+    {
+      "surah": 78,
+      "ayah": 13,
+      "delta_ms": 0,
+      "before_error_ms": 32,
+      "after_error_ms": 32,
+      "review": false
+    },
+    {
+      "surah": 78,
+      "ayah": 14,
+      "delta_ms": 0,
+      "before_error_ms": -3,
+      "after_error_ms": -3,
+      "review": false
+    },
+    {
+      "surah": 78,
+      "ayah": 15,
+      "delta_ms": 0,
+      "before_error_ms": 149,
+      "after_error_ms": 149,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 16,
+      "delta_ms": 0,
+      "before_error_ms": 185,
+      "after_error_ms": 185,
+      "review": false
+    },
+    {
+      "surah": 78,
+      "ayah": 17,
+      "delta_ms": 0,
+      "before_error_ms": 201,
+      "after_error_ms": 201,
+      "review": false
+    },
+    {
+      "surah": 78,
+      "ayah": 18,
+      "delta_ms": 0,
+      "before_error_ms": 33,
+      "after_error_ms": 33,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 19,
+      "delta_ms": 0,
+      "before_error_ms": 340,
+      "after_error_ms": 340,
+      "review": false
+    },
+    {
+      "surah": 78,
+      "ayah": 20,
+      "delta_ms": 0,
+      "before_error_ms": 55,
+      "after_error_ms": 55,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 21,
+      "delta_ms": 0,
+      "before_error_ms": 113,
+      "after_error_ms": 113,
+      "review": false
+    },
+    {
+      "surah": 78,
+      "ayah": 22,
+      "delta_ms": 0,
+      "before_error_ms": 86,
+      "after_error_ms": 86,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 23,
+      "delta_ms": 0,
+      "before_error_ms": -6,
+      "after_error_ms": -6,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 24,
+      "delta_ms": 0,
+      "before_error_ms": 831,
+      "after_error_ms": 831,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 25,
+      "delta_ms": -20,
+      "before_error_ms": 171,
+      "after_error_ms": 151,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 26,
+      "delta_ms": 0,
+      "before_error_ms": 25,
+      "after_error_ms": 25,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 27,
+      "delta_ms": 0,
+      "before_error_ms": 33,
+      "after_error_ms": 33,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 28,
+      "delta_ms": 0,
+      "before_error_ms": 947,
+      "after_error_ms": 947,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 29,
+      "delta_ms": 0,
+      "before_error_ms": -63,
+      "after_error_ms": -63,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 30,
+      "delta_ms": 0,
+      "before_error_ms": 19,
+      "after_error_ms": 19,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 31,
+      "delta_ms": 0,
+      "before_error_ms": 83,
+      "after_error_ms": 83,
+      "review": false
+    },
+    {
+      "surah": 78,
+      "ayah": 32,
+      "delta_ms": 20,
+      "before_error_ms": 4,
+      "after_error_ms": 24,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 33,
+      "delta_ms": 0,
+      "before_error_ms": -23,
+      "after_error_ms": -23,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 34,
+      "delta_ms": 0,
+      "before_error_ms": -22,
+      "after_error_ms": -22,
+      "review": false
+    },
+    {
+      "surah": 78,
+      "ayah": 35,
+      "delta_ms": 0,
+      "before_error_ms": -79,
+      "after_error_ms": -79,
+      "review": false
+    },
+    {
+      "surah": 78,
+      "ayah": 36,
+      "delta_ms": 0,
+      "before_error_ms": 936,
+      "after_error_ms": 936,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 37,
+      "delta_ms": 0,
+      "before_error_ms": 1088,
+      "after_error_ms": 1088,
+      "review": true
+    },
+    {
+      "surah": 78,
+      "ayah": 38,
+      "delta_ms": 0,
+      "before_error_ms": 38,
+      "after_error_ms": 38,
+      "review": false
+    },
+    {
+      "surah": 78,
+      "ayah": 39,
+      "delta_ms": 0,
+      "before_error_ms": 22,
+      "after_error_ms": 22,
+      "review": false
+    },
+    {
+      "surah": 78,
+      "ayah": 40,
+      "delta_ms": 0,
+      "before_error_ms": 151,
+      "after_error_ms": 151,
+      "review": false
+    },
+    {
+      "surah": 79,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 90,
+      "after_error_ms": 90,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": -42,
+      "after_error_ms": -42,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": -96,
+      "after_error_ms": -96,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": -63,
+      "after_error_ms": -63,
+      "review": false
+    },
+    {
+      "surah": 79,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": -110,
+      "after_error_ms": -110,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": 44,
+      "after_error_ms": 44,
+      "review": false
+    },
+    {
+      "surah": 79,
+      "ayah": 7,
+      "delta_ms": 0,
+      "before_error_ms": 337,
+      "after_error_ms": 337,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 8,
+      "delta_ms": -40,
+      "before_error_ms": 226,
+      "after_error_ms": 186,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 9,
+      "delta_ms": 0,
+      "before_error_ms": 185,
+      "after_error_ms": 185,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 10,
+      "delta_ms": 0,
+      "before_error_ms": 57,
+      "after_error_ms": 57,
+      "review": false
+    },
+    {
+      "surah": 79,
+      "ayah": 11,
+      "delta_ms": 0,
+      "before_error_ms": 368,
+      "after_error_ms": 368,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 12,
+      "delta_ms": 0,
+      "before_error_ms": 184,
+      "after_error_ms": 184,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 13,
+      "delta_ms": 0,
+      "before_error_ms": 103,
+      "after_error_ms": 103,
+      "review": false
+    },
+    {
+      "surah": 79,
+      "ayah": 14,
+      "delta_ms": 0,
+      "before_error_ms": 164,
+      "after_error_ms": 164,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 15,
+      "delta_ms": 40,
+      "before_error_ms": 201,
+      "after_error_ms": 241,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 16,
+      "delta_ms": 0,
+      "before_error_ms": 241,
+      "after_error_ms": 241,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 17,
+      "delta_ms": 0,
+      "before_error_ms": 269,
+      "after_error_ms": 269,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 18,
+      "delta_ms": 0,
+      "before_error_ms": 25,
+      "after_error_ms": 25,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 19,
+      "delta_ms": 0,
+      "before_error_ms": 20,
+      "after_error_ms": 20,
+      "review": false
+    },
+    {
+      "surah": 79,
+      "ayah": 20,
+      "delta_ms": 0,
+      "before_error_ms": 31,
+      "after_error_ms": 31,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 21,
+      "delta_ms": 0,
+      "before_error_ms": 40,
+      "after_error_ms": 40,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 22,
+      "delta_ms": 0,
+      "before_error_ms": -47,
+      "after_error_ms": -47,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 23,
+      "delta_ms": 0,
+      "before_error_ms": -14,
+      "after_error_ms": -14,
+      "review": false
+    },
+    {
+      "surah": 79,
+      "ayah": 24,
+      "delta_ms": -20,
+      "before_error_ms": -33,
+      "after_error_ms": -53,
+      "review": false
+    },
+    {
+      "surah": 79,
+      "ayah": 25,
+      "delta_ms": 0,
+      "before_error_ms": 12,
+      "after_error_ms": 12,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 26,
+      "delta_ms": 20,
+      "before_error_ms": 836,
+      "after_error_ms": 856,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 27,
+      "delta_ms": 0,
+      "before_error_ms": 122,
+      "after_error_ms": 122,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 28,
+      "delta_ms": 0,
+      "before_error_ms": 28,
+      "after_error_ms": 28,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 29,
+      "delta_ms": 0,
+      "before_error_ms": -52,
+      "after_error_ms": -52,
+      "review": false
+    },
+    {
+      "surah": 79,
+      "ayah": 30,
+      "delta_ms": 0,
+      "before_error_ms": 50,
+      "after_error_ms": 50,
+      "review": false
+    },
+    {
+      "surah": 79,
+      "ayah": 31,
+      "delta_ms": 0,
+      "before_error_ms": 32,
+      "after_error_ms": 32,
+      "review": false
+    },
+    {
+      "surah": 79,
+      "ayah": 32,
+      "delta_ms": 0,
+      "before_error_ms": 20,
+      "after_error_ms": 20,
+      "review": false
+    },
+    {
+      "surah": 79,
+      "ayah": 33,
+      "delta_ms": 0,
+      "before_error_ms": -70,
+      "after_error_ms": -70,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 34,
+      "delta_ms": 0,
+      "before_error_ms": 28,
+      "after_error_ms": 28,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 35,
+      "delta_ms": 0,
+      "before_error_ms": 100,
+      "after_error_ms": 100,
+      "review": false
+    },
+    {
+      "surah": 79,
+      "ayah": 36,
+      "delta_ms": 0,
+      "before_error_ms": 73,
+      "after_error_ms": 73,
+      "review": false
+    },
+    {
+      "surah": 79,
+      "ayah": 37,
+      "delta_ms": 0,
+      "before_error_ms": 552,
+      "after_error_ms": 552,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 38,
+      "delta_ms": 20,
+      "before_error_ms": -30,
+      "after_error_ms": -10,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 39,
+      "delta_ms": 0,
+      "before_error_ms": -46,
+      "after_error_ms": -46,
+      "review": false
+    },
+    {
+      "surah": 79,
+      "ayah": 40,
+      "delta_ms": 0,
+      "before_error_ms": 10,
+      "after_error_ms": 10,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 41,
+      "delta_ms": 0,
+      "before_error_ms": -42,
+      "after_error_ms": -42,
+      "review": false
+    },
+    {
+      "surah": 79,
+      "ayah": 42,
+      "delta_ms": 0,
+      "before_error_ms": -12,
+      "after_error_ms": -12,
+      "review": false
+    },
+    {
+      "surah": 79,
+      "ayah": 43,
+      "delta_ms": 0,
+      "before_error_ms": 90,
+      "after_error_ms": 90,
+      "review": true
+    },
+    {
+      "surah": 79,
+      "ayah": 44,
+      "delta_ms": 20,
+      "before_error_ms": 86,
+      "after_error_ms": 106,
+      "review": false
+    },
+    {
+      "surah": 79,
+      "ayah": 45,
+      "delta_ms": 20,
+      "before_error_ms": 11,
+      "after_error_ms": 31,
+      "review": false
+    },
+    {
+      "surah": 79,
+      "ayah": 46,
+      "delta_ms": 0,
+      "before_error_ms": 310,
+      "after_error_ms": 310,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 140,
+      "after_error_ms": 140,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": 77,
+      "after_error_ms": 77,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": -40,
+      "after_error_ms": -40,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 4,
+      "delta_ms": -20,
+      "before_error_ms": 107,
+      "after_error_ms": 87,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": 86,
+      "after_error_ms": 86,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": 30,
+      "after_error_ms": 30,
+      "review": false
+    },
+    {
+      "surah": 80,
+      "ayah": 7,
+      "delta_ms": 0,
+      "before_error_ms": -85,
+      "after_error_ms": -85,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 8,
+      "delta_ms": 20,
+      "before_error_ms": -80,
+      "after_error_ms": -60,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 9,
+      "delta_ms": 0,
+      "before_error_ms": -103,
+      "after_error_ms": -103,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 10,
+      "delta_ms": 0,
+      "before_error_ms": -57,
+      "after_error_ms": -57,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 11,
+      "delta_ms": 0,
+      "before_error_ms": 2,
+      "after_error_ms": 2,
+      "review": false
+    },
+    {
+      "surah": 80,
+      "ayah": 12,
+      "delta_ms": 0,
+      "before_error_ms": 14,
+      "after_error_ms": 14,
+      "review": false
+    },
+    {
+      "surah": 80,
+      "ayah": 13,
+      "delta_ms": 0,
+      "before_error_ms": 38,
+      "after_error_ms": 38,
+      "review": false
+    },
+    {
+      "surah": 80,
+      "ayah": 14,
+      "delta_ms": 0,
+      "before_error_ms": 88,
+      "after_error_ms": 88,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 15,
+      "delta_ms": 0,
+      "before_error_ms": 60,
+      "after_error_ms": 60,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 16,
+      "delta_ms": 0,
+      "before_error_ms": 65,
+      "after_error_ms": 65,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 17,
+      "delta_ms": 0,
+      "before_error_ms": 158,
+      "after_error_ms": 158,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 18,
+      "delta_ms": 0,
+      "before_error_ms": 29,
+      "after_error_ms": 29,
+      "review": false
+    },
+    {
+      "surah": 80,
+      "ayah": 19,
+      "delta_ms": 0,
+      "before_error_ms": -49,
+      "after_error_ms": -49,
+      "review": false
+    },
+    {
+      "surah": 80,
+      "ayah": 20,
+      "delta_ms": -20,
+      "before_error_ms": 33,
+      "after_error_ms": 13,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 21,
+      "delta_ms": 0,
+      "before_error_ms": -7,
+      "after_error_ms": -7,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 22,
+      "delta_ms": 0,
+      "before_error_ms": 5,
+      "after_error_ms": 5,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 23,
+      "delta_ms": -20,
+      "before_error_ms": 71,
+      "after_error_ms": 51,
+      "review": false
+    },
+    {
+      "surah": 80,
+      "ayah": 24,
+      "delta_ms": 0,
+      "before_error_ms": 73,
+      "after_error_ms": 73,
+      "review": false
+    },
+    {
+      "surah": 80,
+      "ayah": 25,
+      "delta_ms": -100,
+      "before_error_ms": 315,
+      "after_error_ms": 215,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 26,
+      "delta_ms": 0,
+      "before_error_ms": 74,
+      "after_error_ms": 74,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 27,
+      "delta_ms": 0,
+      "before_error_ms": -85,
+      "after_error_ms": -85,
+      "review": false
+    },
+    {
+      "surah": 80,
+      "ayah": 28,
+      "delta_ms": 0,
+      "before_error_ms": -50,
+      "after_error_ms": -50,
+      "review": false
+    },
+    {
+      "surah": 80,
+      "ayah": 29,
+      "delta_ms": 0,
+      "before_error_ms": -34,
+      "after_error_ms": -34,
+      "review": false
+    },
+    {
+      "surah": 80,
+      "ayah": 30,
+      "delta_ms": 0,
+      "before_error_ms": -69,
+      "after_error_ms": -69,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 31,
+      "delta_ms": 0,
+      "before_error_ms": -57,
+      "after_error_ms": -57,
+      "review": false
+    },
+    {
+      "surah": 80,
+      "ayah": 32,
+      "delta_ms": 0,
+      "before_error_ms": 35,
+      "after_error_ms": 35,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 33,
+      "delta_ms": 0,
+      "before_error_ms": 27,
+      "after_error_ms": 27,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 34,
+      "delta_ms": -20,
+      "before_error_ms": -34,
+      "after_error_ms": -54,
+      "review": false
+    },
+    {
+      "surah": 80,
+      "ayah": 35,
+      "delta_ms": 0,
+      "before_error_ms": -15,
+      "after_error_ms": -15,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 36,
+      "delta_ms": 0,
+      "before_error_ms": -49,
+      "after_error_ms": -49,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 37,
+      "delta_ms": 0,
+      "before_error_ms": 1015,
+      "after_error_ms": 1015,
+      "review": false
+    },
+    {
+      "surah": 80,
+      "ayah": 38,
+      "delta_ms": 0,
+      "before_error_ms": -41,
+      "after_error_ms": -41,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 39,
+      "delta_ms": 0,
+      "before_error_ms": -19,
+      "after_error_ms": -19,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 40,
+      "delta_ms": 0,
+      "before_error_ms": -35,
+      "after_error_ms": -35,
+      "review": true
+    },
+    {
+      "surah": 80,
+      "ayah": 41,
+      "delta_ms": 0,
+      "before_error_ms": 32,
+      "after_error_ms": 32,
+      "review": false
+    },
+    {
+      "surah": 80,
+      "ayah": 42,
+      "delta_ms": 0,
+      "before_error_ms": 16,
+      "after_error_ms": 16,
+      "review": false
+    },
+    {
+      "surah": 81,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 180,
+      "after_error_ms": 180,
+      "review": true
+    },
+    {
+      "surah": 81,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": 69,
+      "after_error_ms": 69,
+      "review": true
+    },
+    {
+      "surah": 81,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": -27,
+      "after_error_ms": -27,
+      "review": true
+    },
+    {
+      "surah": 81,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": 7,
+      "after_error_ms": 7,
+      "review": true
+    },
+    {
+      "surah": 81,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": -21,
+      "after_error_ms": -21,
+      "review": true
+    },
+    {
+      "surah": 81,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": 34,
+      "after_error_ms": 34,
+      "review": true
+    },
+    {
+      "surah": 81,
+      "ayah": 7,
+      "delta_ms": 0,
+      "before_error_ms": 38,
+      "after_error_ms": 38,
+      "review": true
+    },
+    {
+      "surah": 81,
+      "ayah": 8,
+      "delta_ms": 0,
+      "before_error_ms": -42,
+      "after_error_ms": -42,
+      "review": true
+    },
+    {
+      "surah": 81,
+      "ayah": 9,
+      "delta_ms": 0,
+      "before_error_ms": -57,
+      "after_error_ms": -57,
+      "review": true
+    },
+    {
+      "surah": 81,
+      "ayah": 10,
+      "delta_ms": 0,
+      "before_error_ms": -51,
+      "after_error_ms": -51,
+      "review": true
+    },
+    {
+      "surah": 81,
+      "ayah": 11,
+      "delta_ms": 0,
+      "before_error_ms": 14,
+      "after_error_ms": 14,
+      "review": true
+    },
+    {
+      "surah": 81,
+      "ayah": 12,
+      "delta_ms": 0,
+      "before_error_ms": -86,
+      "after_error_ms": -86,
+      "review": true
+    },
+    {
+      "surah": 81,
+      "ayah": 13,
+      "delta_ms": 0,
+      "before_error_ms": -82,
+      "after_error_ms": -82,
+      "review": true
+    },
+    {
+      "surah": 81,
+      "ayah": 14,
+      "delta_ms": 0,
+      "before_error_ms": 77,
+      "after_error_ms": 77,
+      "review": true
+    },
+    {
+      "surah": 81,
+      "ayah": 15,
+      "delta_ms": 0,
+      "before_error_ms": 953,
+      "after_error_ms": 953,
+      "review": false
+    },
+    {
+      "surah": 81,
+      "ayah": 16,
+      "delta_ms": 0,
+      "before_error_ms": 1,
+      "after_error_ms": 1,
+      "review": false
+    },
+    {
+      "surah": 81,
+      "ayah": 17,
+      "delta_ms": 20,
+      "before_error_ms": -22,
+      "after_error_ms": -2,
+      "review": true
+    },
+    {
+      "surah": 81,
+      "ayah": 18,
+      "delta_ms": 0,
+      "before_error_ms": 9,
+      "after_error_ms": 9,
+      "review": true
+    },
+    {
+      "surah": 81,
+      "ayah": 19,
+      "delta_ms": 0,
+      "before_error_ms": 77,
+      "after_error_ms": 77,
+      "review": true
+    },
+    {
+      "surah": 81,
+      "ayah": 20,
+      "delta_ms": -420,
+      "before_error_ms": 458,
+      "after_error_ms": 38,
+      "review": true
+    },
+    {
+      "surah": 81,
+      "ayah": 21,
+      "delta_ms": 0,
+      "before_error_ms": 42,
+      "after_error_ms": 42,
+      "review": true
+    },
+    {
+      "surah": 81,
+      "ayah": 22,
+      "delta_ms": 0,
+      "before_error_ms": 13,
+      "after_error_ms": 13,
+      "review": true
+    },
+    {
+      "surah": 81,
+      "ayah": 23,
+      "delta_ms": 0,
+      "before_error_ms": 25,
+      "after_error_ms": 25,
+      "review": false
+    },
+    {
+      "surah": 81,
+      "ayah": 24,
+      "delta_ms": -20,
+      "before_error_ms": 78,
+      "after_error_ms": 58,
+      "review": false
+    },
+    {
+      "surah": 81,
+      "ayah": 25,
+      "delta_ms": -20,
+      "before_error_ms": -3,
+      "after_error_ms": -23,
+      "review": false
+    },
+    {
+      "surah": 81,
+      "ayah": 26,
+      "delta_ms": 0,
+      "before_error_ms": 102,
+      "after_error_ms": 102,
+      "review": false
+    },
+    {
+      "surah": 81,
+      "ayah": 27,
+      "delta_ms": 0,
+      "before_error_ms": 23,
+      "after_error_ms": 23,
+      "review": false
+    },
+    {
+      "surah": 81,
+      "ayah": 28,
+      "delta_ms": 0,
+      "before_error_ms": 147,
+      "after_error_ms": 147,
+      "review": false
+    },
+    {
+      "surah": 81,
+      "ayah": 29,
+      "delta_ms": -20,
+      "before_error_ms": 165,
+      "after_error_ms": 145,
+      "review": false
+    },
+    {
+      "surah": 82,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 140,
+      "after_error_ms": 140,
+      "review": true
+    },
+    {
+      "surah": 82,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": 5,
+      "after_error_ms": 5,
+      "review": true
+    },
+    {
+      "surah": 82,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": 3,
+      "after_error_ms": 3,
+      "review": true
+    },
+    {
+      "surah": 82,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": 103,
+      "after_error_ms": 103,
+      "review": true
+    },
+    {
+      "surah": 82,
+      "ayah": 5,
+      "delta_ms": -60,
+      "before_error_ms": 66,
+      "after_error_ms": 6,
+      "review": true
+    },
+    {
+      "surah": 82,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": 329,
+      "after_error_ms": 329,
+      "review": true
+    },
+    {
+      "surah": 82,
+      "ayah": 7,
+      "delta_ms": 0,
+      "before_error_ms": 468,
+      "after_error_ms": 468,
+      "review": true
+    },
+    {
+      "surah": 82,
+      "ayah": 8,
+      "delta_ms": 0,
+      "before_error_ms": 85,
+      "after_error_ms": 85,
+      "review": false
+    },
+    {
+      "surah": 82,
+      "ayah": 9,
+      "delta_ms": 0,
+      "before_error_ms": 158,
+      "after_error_ms": 158,
+      "review": true
+    },
+    {
+      "surah": 82,
+      "ayah": 10,
+      "delta_ms": -20,
+      "before_error_ms": 98,
+      "after_error_ms": 78,
+      "review": false
+    },
+    {
+      "surah": 82,
+      "ayah": 11,
+      "delta_ms": 0,
+      "before_error_ms": -59,
+      "after_error_ms": -59,
+      "review": true
+    },
+    {
+      "surah": 82,
+      "ayah": 12,
+      "delta_ms": -20,
+      "before_error_ms": 166,
+      "after_error_ms": 146,
+      "review": true
+    },
+    {
+      "surah": 82,
+      "ayah": 13,
+      "delta_ms": -20,
+      "before_error_ms": 343,
+      "after_error_ms": 323,
+      "review": false
+    },
+    {
+      "surah": 82,
+      "ayah": 14,
+      "delta_ms": 0,
+      "before_error_ms": -95,
+      "after_error_ms": -95,
+      "review": false
+    },
+    {
+      "surah": 82,
+      "ayah": 15,
+      "delta_ms": -20,
+      "before_error_ms": -14,
+      "after_error_ms": -34,
+      "review": true
+    },
+    {
+      "surah": 82,
+      "ayah": 16,
+      "delta_ms": 0,
+      "before_error_ms": -47,
+      "after_error_ms": -47,
+      "review": false
+    },
+    {
+      "surah": 82,
+      "ayah": 17,
+      "delta_ms": 0,
+      "before_error_ms": -68,
+      "after_error_ms": -68,
+      "review": false
+    },
+    {
+      "surah": 82,
+      "ayah": 18,
+      "delta_ms": 0,
+      "before_error_ms": 31,
+      "after_error_ms": 31,
+      "review": true
+    },
+    {
+      "surah": 82,
+      "ayah": 19,
+      "delta_ms": 20,
+      "before_error_ms": 86,
+      "after_error_ms": 106,
+      "review": false
+    },
+    {
+      "surah": 83,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 120,
+      "after_error_ms": 120,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": 105,
+      "after_error_ms": 105,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": 26,
+      "after_error_ms": 26,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": 185,
+      "after_error_ms": 185,
+      "review": false
+    },
+    {
+      "surah": 83,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": 25,
+      "after_error_ms": 25,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": 53,
+      "after_error_ms": 53,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 7,
+      "delta_ms": 0,
+      "before_error_ms": 62,
+      "after_error_ms": 62,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 8,
+      "delta_ms": 0,
+      "before_error_ms": 199,
+      "after_error_ms": 199,
+      "review": false
+    },
+    {
+      "surah": 83,
+      "ayah": 9,
+      "delta_ms": 0,
+      "before_error_ms": 6,
+      "after_error_ms": 6,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 10,
+      "delta_ms": 0,
+      "before_error_ms": 825,
+      "after_error_ms": 825,
+      "review": false
+    },
+    {
+      "surah": 83,
+      "ayah": 11,
+      "delta_ms": 0,
+      "before_error_ms": 55,
+      "after_error_ms": 55,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 12,
+      "delta_ms": 0,
+      "before_error_ms": -28,
+      "after_error_ms": -28,
+      "review": false
+    },
+    {
+      "surah": 83,
+      "ayah": 13,
+      "delta_ms": 0,
+      "before_error_ms": 924,
+      "after_error_ms": 924,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 14,
+      "delta_ms": 0,
+      "before_error_ms": 48,
+      "after_error_ms": 48,
+      "review": false
+    },
+    {
+      "surah": 83,
+      "ayah": 15,
+      "delta_ms": 0,
+      "before_error_ms": 86,
+      "after_error_ms": 86,
+      "review": false
+    },
+    {
+      "surah": 83,
+      "ayah": 16,
+      "delta_ms": -20,
+      "before_error_ms": 196,
+      "after_error_ms": 176,
+      "review": false
+    },
+    {
+      "surah": 83,
+      "ayah": 17,
+      "delta_ms": 0,
+      "before_error_ms": 124,
+      "after_error_ms": 124,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 18,
+      "delta_ms": 0,
+      "before_error_ms": 138,
+      "after_error_ms": 138,
+      "review": false
+    },
+    {
+      "surah": 83,
+      "ayah": 19,
+      "delta_ms": 0,
+      "before_error_ms": 138,
+      "after_error_ms": 138,
+      "review": false
+    },
+    {
+      "surah": 83,
+      "ayah": 20,
+      "delta_ms": 0,
+      "before_error_ms": -48,
+      "after_error_ms": -48,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 21,
+      "delta_ms": 0,
+      "before_error_ms": -21,
+      "after_error_ms": -21,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 22,
+      "delta_ms": 0,
+      "before_error_ms": 43,
+      "after_error_ms": 43,
+      "review": false
+    },
+    {
+      "surah": 83,
+      "ayah": 23,
+      "delta_ms": 0,
+      "before_error_ms": 69,
+      "after_error_ms": 69,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 24,
+      "delta_ms": 0,
+      "before_error_ms": -14,
+      "after_error_ms": -14,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 25,
+      "delta_ms": 0,
+      "before_error_ms": 165,
+      "after_error_ms": 165,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 26,
+      "delta_ms": 0,
+      "before_error_ms": -39,
+      "after_error_ms": -39,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 27,
+      "delta_ms": 0,
+      "before_error_ms": -6,
+      "after_error_ms": -6,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 28,
+      "delta_ms": 0,
+      "before_error_ms": 111,
+      "after_error_ms": 111,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 29,
+      "delta_ms": 0,
+      "before_error_ms": 241,
+      "after_error_ms": 241,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 30,
+      "delta_ms": 20,
+      "before_error_ms": 27,
+      "after_error_ms": 47,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 31,
+      "delta_ms": 0,
+      "before_error_ms": 823,
+      "after_error_ms": 823,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 32,
+      "delta_ms": 0,
+      "before_error_ms": 139,
+      "after_error_ms": 139,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 33,
+      "delta_ms": -20,
+      "before_error_ms": 120,
+      "after_error_ms": 100,
+      "review": false
+    },
+    {
+      "surah": 83,
+      "ayah": 34,
+      "delta_ms": 0,
+      "before_error_ms": 28,
+      "after_error_ms": 28,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 35,
+      "delta_ms": 0,
+      "before_error_ms": 41,
+      "after_error_ms": 41,
+      "review": true
+    },
+    {
+      "surah": 83,
+      "ayah": 36,
+      "delta_ms": 60,
+      "before_error_ms": 160,
+      "after_error_ms": 220,
+      "review": true
+    },
+    {
+      "surah": 84,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 221,
+      "after_error_ms": 221,
+      "review": true
+    },
+    {
+      "surah": 84,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": 34,
+      "after_error_ms": 34,
+      "review": true
+    },
+    {
+      "surah": 84,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": 16,
+      "after_error_ms": 16,
+      "review": true
+    },
+    {
+      "surah": 84,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": 3,
+      "after_error_ms": 3,
+      "review": false
+    },
+    {
+      "surah": 84,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": -13,
+      "after_error_ms": -13,
+      "review": false
+    },
+    {
+      "surah": 84,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": 173,
+      "after_error_ms": 173,
+      "review": true
+    },
+    {
+      "surah": 84,
+      "ayah": 7,
+      "delta_ms": 20,
+      "before_error_ms": 171,
+      "after_error_ms": 191,
+      "review": true
+    },
+    {
+      "surah": 84,
+      "ayah": 8,
+      "delta_ms": 0,
+      "before_error_ms": 109,
+      "after_error_ms": 109,
+      "review": false
+    },
+    {
+      "surah": 84,
+      "ayah": 9,
+      "delta_ms": 0,
+      "before_error_ms": 170,
+      "after_error_ms": 170,
+      "review": false
+    },
+    {
+      "surah": 84,
+      "ayah": 10,
+      "delta_ms": 0,
+      "before_error_ms": 1196,
+      "after_error_ms": 1196,
+      "review": true
+    },
+    {
+      "surah": 84,
+      "ayah": 11,
+      "delta_ms": 0,
+      "before_error_ms": 92,
+      "after_error_ms": 92,
+      "review": false
+    },
+    {
+      "surah": 84,
+      "ayah": 12,
+      "delta_ms": 0,
+      "before_error_ms": 23,
+      "after_error_ms": 23,
+      "review": false
+    },
+    {
+      "surah": 84,
+      "ayah": 13,
+      "delta_ms": 0,
+      "before_error_ms": 77,
+      "after_error_ms": 77,
+      "review": true
+    },
+    {
+      "surah": 84,
+      "ayah": 14,
+      "delta_ms": 0,
+      "before_error_ms": 254,
+      "after_error_ms": 254,
+      "review": true
+    },
+    {
+      "surah": 84,
+      "ayah": 15,
+      "delta_ms": 0,
+      "before_error_ms": 89,
+      "after_error_ms": 89,
+      "review": true
+    },
+    {
+      "surah": 84,
+      "ayah": 16,
+      "delta_ms": 20,
+      "before_error_ms": 152,
+      "after_error_ms": 172,
+      "review": false
+    },
+    {
+      "surah": 84,
+      "ayah": 17,
+      "delta_ms": 0,
+      "before_error_ms": 10,
+      "after_error_ms": 10,
+      "review": true
+    },
+    {
+      "surah": 84,
+      "ayah": 18,
+      "delta_ms": 0,
+      "before_error_ms": -34,
+      "after_error_ms": -34,
+      "review": false
+    },
+    {
+      "surah": 84,
+      "ayah": 19,
+      "delta_ms": 0,
+      "before_error_ms": -47,
+      "after_error_ms": -47,
+      "review": true
+    },
+    {
+      "surah": 84,
+      "ayah": 20,
+      "delta_ms": 0,
+      "before_error_ms": 15,
+      "after_error_ms": 15,
+      "review": false
+    },
+    {
+      "surah": 84,
+      "ayah": 21,
+      "delta_ms": 0,
+      "before_error_ms": -18,
+      "after_error_ms": -18,
+      "review": true
+    },
+    {
+      "surah": 84,
+      "ayah": 22,
+      "delta_ms": 0,
+      "before_error_ms": 487,
+      "after_error_ms": 487,
+      "review": true
+    },
+    {
+      "surah": 84,
+      "ayah": 23,
+      "delta_ms": 0,
+      "before_error_ms": -75,
+      "after_error_ms": -75,
+      "review": true
+    },
+    {
+      "surah": 84,
+      "ayah": 24,
+      "delta_ms": 20,
+      "before_error_ms": -30,
+      "after_error_ms": -10,
+      "review": true
+    },
+    {
+      "surah": 84,
+      "ayah": 25,
+      "delta_ms": 0,
+      "before_error_ms": 153,
+      "after_error_ms": 153,
+      "review": true
+    },
+    {
+      "surah": 85,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 109,
+      "after_error_ms": 109,
+      "review": false
+    },
+    {
+      "surah": 85,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": -13,
+      "after_error_ms": -13,
+      "review": false
+    },
+    {
+      "surah": 85,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": -69,
+      "after_error_ms": -69,
+      "review": false
+    },
+    {
+      "surah": 85,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": -59,
+      "after_error_ms": -59,
+      "review": true
+    },
+    {
+      "surah": 85,
+      "ayah": 5,
+      "delta_ms": -20,
+      "before_error_ms": 105,
+      "after_error_ms": 85,
+      "review": true
+    },
+    {
+      "surah": 85,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": 108,
+      "after_error_ms": 108,
+      "review": true
+    },
+    {
+      "surah": 85,
+      "ayah": 7,
+      "delta_ms": 0,
+      "before_error_ms": 19,
+      "after_error_ms": 19,
+      "review": true
+    },
+    {
+      "surah": 85,
+      "ayah": 8,
+      "delta_ms": 20,
+      "before_error_ms": 123,
+      "after_error_ms": 143,
+      "review": true
+    },
+    {
+      "surah": 85,
+      "ayah": 9,
+      "delta_ms": 0,
+      "before_error_ms": 209,
+      "after_error_ms": 209,
+      "review": true
+    },
+    {
+      "surah": 85,
+      "ayah": 10,
+      "delta_ms": 0,
+      "before_error_ms": 227,
+      "after_error_ms": 227,
+      "review": false
+    },
+    {
+      "surah": 85,
+      "ayah": 11,
+      "delta_ms": 0,
+      "before_error_ms": 130,
+      "after_error_ms": 130,
+      "review": false
+    },
+    {
+      "surah": 85,
+      "ayah": 12,
+      "delta_ms": 0,
+      "before_error_ms": 178,
+      "after_error_ms": 178,
+      "review": false
+    },
+    {
+      "surah": 85,
+      "ayah": 13,
+      "delta_ms": 0,
+      "before_error_ms": 41,
+      "after_error_ms": 41,
+      "review": true
+    },
+    {
+      "surah": 85,
+      "ayah": 14,
+      "delta_ms": 0,
+      "before_error_ms": -63,
+      "after_error_ms": -63,
+      "review": true
+    },
+    {
+      "surah": 85,
+      "ayah": 15,
+      "delta_ms": 0,
+      "before_error_ms": -89,
+      "after_error_ms": -89,
+      "review": true
+    },
+    {
+      "surah": 85,
+      "ayah": 16,
+      "delta_ms": 0,
+      "before_error_ms": -28,
+      "after_error_ms": -28,
+      "review": true
+    },
+    {
+      "surah": 85,
+      "ayah": 17,
+      "delta_ms": -20,
+      "before_error_ms": -66,
+      "after_error_ms": -86,
+      "review": true
+    },
+    {
+      "surah": 85,
+      "ayah": 18,
+      "delta_ms": -20,
+      "before_error_ms": -53,
+      "after_error_ms": -73,
+      "review": true
+    },
+    {
+      "surah": 85,
+      "ayah": 19,
+      "delta_ms": 0,
+      "before_error_ms": -95,
+      "after_error_ms": -95,
+      "review": true
+    },
+    {
+      "surah": 85,
+      "ayah": 20,
+      "delta_ms": -20,
+      "before_error_ms": -10,
+      "after_error_ms": -30,
+      "review": true
+    },
+    {
+      "surah": 85,
+      "ayah": 21,
+      "delta_ms": 60,
+      "before_error_ms": 54,
+      "after_error_ms": 114,
+      "review": true
+    },
+    {
+      "surah": 85,
+      "ayah": 22,
+      "delta_ms": 0,
+      "before_error_ms": 0,
+      "after_error_ms": 0,
+      "review": true
+    },
+    {
+      "surah": 86,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 49,
+      "after_error_ms": 49,
+      "review": false
+    },
+    {
+      "surah": 86,
+      "ayah": 2,
+      "delta_ms": -20,
+      "before_error_ms": -12,
+      "after_error_ms": -32,
+      "review": false
+    },
+    {
+      "surah": 86,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": -15,
+      "after_error_ms": -15,
+      "review": true
+    },
+    {
+      "surah": 86,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": 57,
+      "after_error_ms": 57,
+      "review": false
+    },
+    {
+      "surah": 86,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": -40,
+      "after_error_ms": -40,
+      "review": true
+    },
+    {
+      "surah": 86,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": -88,
+      "after_error_ms": -88,
+      "review": true
+    },
+    {
+      "surah": 86,
+      "ayah": 7,
+      "delta_ms": 0,
+      "before_error_ms": 6,
+      "after_error_ms": 6,
+      "review": true
+    },
+    {
+      "surah": 86,
+      "ayah": 8,
+      "delta_ms": 0,
+      "before_error_ms": 100,
+      "after_error_ms": 100,
+      "review": true
+    },
+    {
+      "surah": 86,
+      "ayah": 9,
+      "delta_ms": 0,
+      "before_error_ms": 66,
+      "after_error_ms": 66,
+      "review": false
+    },
+    {
+      "surah": 86,
+      "ayah": 10,
+      "delta_ms": 0,
+      "before_error_ms": -19,
+      "after_error_ms": -19,
+      "review": true
+    },
+    {
+      "surah": 86,
+      "ayah": 11,
+      "delta_ms": 0,
+      "before_error_ms": -21,
+      "after_error_ms": -21,
+      "review": true
+    },
+    {
+      "surah": 86,
+      "ayah": 12,
+      "delta_ms": 0,
+      "before_error_ms": -59,
+      "after_error_ms": -59,
+      "review": true
+    },
+    {
+      "surah": 86,
+      "ayah": 13,
+      "delta_ms": 0,
+      "before_error_ms": -74,
+      "after_error_ms": -74,
+      "review": true
+    },
+    {
+      "surah": 86,
+      "ayah": 14,
+      "delta_ms": 0,
+      "before_error_ms": -12,
+      "after_error_ms": -12,
+      "review": false
+    },
+    {
+      "surah": 86,
+      "ayah": 15,
+      "delta_ms": 20,
+      "before_error_ms": 48,
+      "after_error_ms": 68,
+      "review": true
+    },
+    {
+      "surah": 86,
+      "ayah": 16,
+      "delta_ms": 0,
+      "before_error_ms": 34,
+      "after_error_ms": 34,
+      "review": true
+    },
+    {
+      "surah": 86,
+      "ayah": 17,
+      "delta_ms": 0,
+      "before_error_ms": -85,
+      "after_error_ms": -85,
+      "review": false
+    },
+    {
+      "surah": 87,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 48,
+      "after_error_ms": 48,
+      "review": true
+    },
+    {
+      "surah": 87,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": 47,
+      "after_error_ms": 47,
+      "review": true
+    },
+    {
+      "surah": 87,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": 24,
+      "after_error_ms": 24,
+      "review": true
+    },
+    {
+      "surah": 87,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": -16,
+      "after_error_ms": -16,
+      "review": true
+    },
+    {
+      "surah": 87,
+      "ayah": 5,
+      "delta_ms": -20,
+      "before_error_ms": -123,
+      "after_error_ms": -143,
+      "review": true
+    },
+    {
+      "surah": 87,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": -48,
+      "after_error_ms": -48,
+      "review": false
+    },
+    {
+      "surah": 87,
+      "ayah": 7,
+      "delta_ms": 20,
+      "before_error_ms": -35,
+      "after_error_ms": -15,
+      "review": true
+    },
+    {
+      "surah": 87,
+      "ayah": 8,
+      "delta_ms": 0,
+      "before_error_ms": -127,
+      "after_error_ms": -127,
+      "review": false
+    },
+    {
+      "surah": 87,
+      "ayah": 9,
+      "delta_ms": 0,
+      "before_error_ms": -23,
+      "after_error_ms": -23,
+      "review": true
+    },
+    {
+      "surah": 87,
+      "ayah": 10,
+      "delta_ms": 0,
+      "before_error_ms": -82,
+      "after_error_ms": -82,
+      "review": true
+    },
+    {
+      "surah": 87,
+      "ayah": 11,
+      "delta_ms": 20,
+      "before_error_ms": -122,
+      "after_error_ms": -102,
+      "review": true
+    },
+    {
+      "surah": 87,
+      "ayah": 12,
+      "delta_ms": 0,
+      "before_error_ms": -9,
+      "after_error_ms": -9,
+      "review": true
+    },
+    {
+      "surah": 87,
+      "ayah": 13,
+      "delta_ms": 0,
+      "before_error_ms": -97,
+      "after_error_ms": -97,
+      "review": true
+    },
+    {
+      "surah": 87,
+      "ayah": 14,
+      "delta_ms": 0,
+      "before_error_ms": -15,
+      "after_error_ms": -15,
+      "review": true
+    },
+    {
+      "surah": 87,
+      "ayah": 15,
+      "delta_ms": 0,
+      "before_error_ms": -11,
+      "after_error_ms": -11,
+      "review": false
+    },
+    {
+      "surah": 87,
+      "ayah": 16,
+      "delta_ms": 0,
+      "before_error_ms": -57,
+      "after_error_ms": -57,
+      "review": true
+    },
+    {
+      "surah": 87,
+      "ayah": 17,
+      "delta_ms": 0,
+      "before_error_ms": -41,
+      "after_error_ms": -41,
+      "review": true
+    },
+    {
+      "surah": 87,
+      "ayah": 18,
+      "delta_ms": 20,
+      "before_error_ms": -8,
+      "after_error_ms": 12,
+      "review": false
+    },
+    {
+      "surah": 87,
+      "ayah": 19,
+      "delta_ms": 20,
+      "before_error_ms": -83,
+      "after_error_ms": -63,
+      "review": true
+    },
+    {
+      "surah": 88,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": -80,
+      "after_error_ms": -80,
+      "review": true
+    },
+    {
+      "surah": 88,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": -62,
+      "after_error_ms": -62,
+      "review": true
+    },
+    {
+      "surah": 88,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": 104,
+      "after_error_ms": 104,
+      "review": true
+    },
+    {
+      "surah": 88,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": 174,
+      "after_error_ms": 174,
+      "review": true
+    },
+    {
+      "surah": 88,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": -61,
+      "after_error_ms": -61,
+      "review": true
+    },
+    {
+      "surah": 88,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": 96,
+      "after_error_ms": 96,
+      "review": false
+    },
+    {
+      "surah": 88,
+      "ayah": 7,
+      "delta_ms": 0,
+      "before_error_ms": -62,
+      "after_error_ms": -62,
+      "review": true
+    },
+    {
+      "surah": 88,
+      "ayah": 8,
+      "delta_ms": 0,
+      "before_error_ms": -129,
+      "after_error_ms": -129,
+      "review": true
+    },
+    {
+      "surah": 88,
+      "ayah": 9,
+      "delta_ms": 0,
+      "before_error_ms": 62,
+      "after_error_ms": 62,
+      "review": true
+    },
+    {
+      "surah": 88,
+      "ayah": 10,
+      "delta_ms": 0,
+      "before_error_ms": -8,
+      "after_error_ms": -8,
+      "review": true
+    },
+    {
+      "surah": 88,
+      "ayah": 11,
+      "delta_ms": 0,
+      "before_error_ms": -13,
+      "after_error_ms": -13,
+      "review": false
+    },
+    {
+      "surah": 88,
+      "ayah": 12,
+      "delta_ms": -20,
+      "before_error_ms": -3,
+      "after_error_ms": -23,
+      "review": true
+    },
+    {
+      "surah": 88,
+      "ayah": 13,
+      "delta_ms": 0,
+      "before_error_ms": -29,
+      "after_error_ms": -29,
+      "review": true
+    },
+    {
+      "surah": 88,
+      "ayah": 14,
+      "delta_ms": 0,
+      "before_error_ms": -61,
+      "after_error_ms": -61,
+      "review": true
+    },
+    {
+      "surah": 88,
+      "ayah": 15,
+      "delta_ms": 0,
+      "before_error_ms": -35,
+      "after_error_ms": -35,
+      "review": false
+    },
+    {
+      "surah": 88,
+      "ayah": 16,
+      "delta_ms": 0,
+      "before_error_ms": -83,
+      "after_error_ms": -83,
+      "review": true
+    },
+    {
+      "surah": 88,
+      "ayah": 17,
+      "delta_ms": 0,
+      "before_error_ms": 131,
+      "after_error_ms": 131,
+      "review": false
+    },
+    {
+      "surah": 88,
+      "ayah": 18,
+      "delta_ms": 0,
+      "before_error_ms": 13,
+      "after_error_ms": 13,
+      "review": true
+    },
+    {
+      "surah": 88,
+      "ayah": 19,
+      "delta_ms": 0,
+      "before_error_ms": 29,
+      "after_error_ms": 29,
+      "review": true
+    },
+    {
+      "surah": 88,
+      "ayah": 20,
+      "delta_ms": 0,
+      "before_error_ms": 7,
+      "after_error_ms": 7,
+      "review": true
+    },
+    {
+      "surah": 88,
+      "ayah": 21,
+      "delta_ms": 0,
+      "before_error_ms": 37,
+      "after_error_ms": 37,
+      "review": true
+    },
+    {
+      "surah": 88,
+      "ayah": 22,
+      "delta_ms": 0,
+      "before_error_ms": 66,
+      "after_error_ms": 66,
+      "review": false
+    },
+    {
+      "surah": 88,
+      "ayah": 23,
+      "delta_ms": 0,
+      "before_error_ms": 69,
+      "after_error_ms": 69,
+      "review": false
+    },
+    {
+      "surah": 88,
+      "ayah": 24,
+      "delta_ms": 0,
+      "before_error_ms": 95,
+      "after_error_ms": 95,
+      "review": true
+    },
+    {
+      "surah": 88,
+      "ayah": 25,
+      "delta_ms": 0,
+      "before_error_ms": 360,
+      "after_error_ms": 360,
+      "review": false
+    },
+    {
+      "surah": 88,
+      "ayah": 26,
+      "delta_ms": 0,
+      "before_error_ms": -26,
+      "after_error_ms": -26,
+      "review": true
+    },
+    {
+      "surah": 89,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": -90,
+      "after_error_ms": -90,
+      "review": false
+    },
+    {
+      "surah": 89,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": 60,
+      "after_error_ms": 60,
+      "review": false
+    },
+    {
+      "surah": 89,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": -35,
+      "after_error_ms": -35,
+      "review": true
+    },
+    {
+      "surah": 89,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": -42,
+      "after_error_ms": -42,
+      "review": true
+    },
+    {
+      "surah": 89,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": -544,
+      "after_error_ms": -544,
+      "review": true
+    },
+    {
+      "surah": 89,
+      "ayah": 6,
+      "delta_ms": 20,
+      "before_error_ms": 123,
+      "after_error_ms": 143,
+      "review": false
+    },
+    {
+      "surah": 89,
+      "ayah": 7,
+      "delta_ms": 0,
+      "before_error_ms": 57,
+      "after_error_ms": 57,
+      "review": false
+    },
+    {
+      "surah": 89,
+      "ayah": 8,
+      "delta_ms": 0,
+      "before_error_ms": 157,
+      "after_error_ms": 157,
+      "review": true
+    },
+    {
+      "surah": 89,
+      "ayah": 9,
+      "delta_ms": 0,
+      "before_error_ms": -43,
+      "after_error_ms": -43,
+      "review": false
+    },
+    {
+      "surah": 89,
+      "ayah": 10,
+      "delta_ms": 0,
+      "before_error_ms": -49,
+      "after_error_ms": -49,
+      "review": true
+    },
+    {
+      "surah": 89,
+      "ayah": 11,
+      "delta_ms": 0,
+      "before_error_ms": 172,
+      "after_error_ms": 172,
+      "review": true
+    },
+    {
+      "surah": 89,
+      "ayah": 12,
+      "delta_ms": 0,
+      "before_error_ms": -28,
+      "after_error_ms": -28,
+      "review": true
+    },
+    {
+      "surah": 89,
+      "ayah": 13,
+      "delta_ms": 0,
+      "before_error_ms": 27,
+      "after_error_ms": 27,
+      "review": true
+    },
+    {
+      "surah": 89,
+      "ayah": 14,
+      "delta_ms": 0,
+      "before_error_ms": 148,
+      "after_error_ms": 148,
+      "review": false
+    },
+    {
+      "surah": 89,
+      "ayah": 15,
+      "delta_ms": 0,
+      "before_error_ms": 9,
+      "after_error_ms": 9,
+      "review": true
+    },
+    {
+      "surah": 89,
+      "ayah": 16,
+      "delta_ms": 0,
+      "before_error_ms": -64,
+      "after_error_ms": -64,
+      "review": true
+    },
+    {
+      "surah": 89,
+      "ayah": 17,
+      "delta_ms": 0,
+      "before_error_ms": 207,
+      "after_error_ms": 207,
+      "review": false
+    },
+    {
+      "surah": 89,
+      "ayah": 18,
+      "delta_ms": -20,
+      "before_error_ms": 51,
+      "after_error_ms": 31,
+      "review": false
+    },
+    {
+      "surah": 89,
+      "ayah": 19,
+      "delta_ms": 0,
+      "before_error_ms": 55,
+      "after_error_ms": 55,
+      "review": false
+    },
+    {
+      "surah": 89,
+      "ayah": 20,
+      "delta_ms": 0,
+      "before_error_ms": 11,
+      "after_error_ms": 11,
+      "review": true
+    },
+    {
+      "surah": 89,
+      "ayah": 21,
+      "delta_ms": 0,
+      "before_error_ms": 156,
+      "after_error_ms": 156,
+      "review": true
+    },
+    {
+      "surah": 89,
+      "ayah": 22,
+      "delta_ms": 0,
+      "before_error_ms": 67,
+      "after_error_ms": 67,
+      "review": false
+    },
+    {
+      "surah": 89,
+      "ayah": 23,
+      "delta_ms": 0,
+      "before_error_ms": 65,
+      "after_error_ms": 65,
+      "review": false
+    },
+    {
+      "surah": 89,
+      "ayah": 24,
+      "delta_ms": 0,
+      "before_error_ms": 403,
+      "after_error_ms": 403,
+      "review": true
+    },
+    {
+      "surah": 89,
+      "ayah": 25,
+      "delta_ms": 0,
+      "before_error_ms": 117,
+      "after_error_ms": 117,
+      "review": true
+    },
+    {
+      "surah": 89,
+      "ayah": 26,
+      "delta_ms": 0,
+      "before_error_ms": -38,
+      "after_error_ms": -38,
+      "review": false
+    },
+    {
+      "surah": 89,
+      "ayah": 27,
+      "delta_ms": 0,
+      "before_error_ms": 161,
+      "after_error_ms": 161,
+      "review": true
+    },
+    {
+      "surah": 89,
+      "ayah": 28,
+      "delta_ms": 0,
+      "before_error_ms": 340,
+      "after_error_ms": 340,
+      "review": true
+    },
+    {
+      "surah": 89,
+      "ayah": 29,
+      "delta_ms": 0,
+      "before_error_ms": 184,
+      "after_error_ms": 184,
+      "review": true
+    },
+    {
+      "surah": 89,
+      "ayah": 30,
+      "delta_ms": 0,
+      "before_error_ms": -76,
+      "after_error_ms": -76,
+      "review": true
+    },
+    {
+      "surah": 90,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 49,
+      "after_error_ms": 49,
+      "review": true
+    },
+    {
+      "surah": 90,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": -23,
+      "after_error_ms": -23,
+      "review": true
+    },
+    {
+      "surah": 90,
+      "ayah": 3,
+      "delta_ms": -20,
+      "before_error_ms": -24,
+      "after_error_ms": -44,
+      "review": true
+    },
+    {
+      "surah": 90,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": -137,
+      "after_error_ms": -137,
+      "review": true
+    },
+    {
+      "surah": 90,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": -21,
+      "after_error_ms": -21,
+      "review": true
+    },
+    {
+      "surah": 90,
+      "ayah": 6,
+      "delta_ms": 20,
+      "before_error_ms": 61,
+      "after_error_ms": 81,
+      "review": true
+    },
+    {
+      "surah": 90,
+      "ayah": 7,
+      "delta_ms": 0,
+      "before_error_ms": 57,
+      "after_error_ms": 57,
+      "review": true
+    },
+    {
+      "surah": 90,
+      "ayah": 8,
+      "delta_ms": 0,
+      "before_error_ms": 152,
+      "after_error_ms": 152,
+      "review": true
+    },
+    {
+      "surah": 90,
+      "ayah": 9,
+      "delta_ms": 0,
+      "before_error_ms": 22,
+      "after_error_ms": 22,
+      "review": false
+    },
+    {
+      "surah": 90,
+      "ayah": 10,
+      "delta_ms": 0,
+      "before_error_ms": -93,
+      "after_error_ms": -93,
+      "review": true
+    },
+    {
+      "surah": 90,
+      "ayah": 11,
+      "delta_ms": 0,
+      "before_error_ms": -15,
+      "after_error_ms": -15,
+      "review": true
+    },
+    {
+      "surah": 90,
+      "ayah": 12,
+      "delta_ms": 0,
+      "before_error_ms": -95,
+      "after_error_ms": -95,
+      "review": false
+    },
+    {
+      "surah": 90,
+      "ayah": 13,
+      "delta_ms": 0,
+      "before_error_ms": -60,
+      "after_error_ms": -60,
+      "review": true
+    },
+    {
+      "surah": 90,
+      "ayah": 14,
+      "delta_ms": 0,
+      "before_error_ms": 44,
+      "after_error_ms": 44,
+      "review": false
+    },
+    {
+      "surah": 90,
+      "ayah": 15,
+      "delta_ms": 0,
+      "before_error_ms": 48,
+      "after_error_ms": 48,
+      "review": false
+    },
+    {
+      "surah": 90,
+      "ayah": 16,
+      "delta_ms": -20,
+      "before_error_ms": 82,
+      "after_error_ms": 62,
+      "review": false
+    },
+    {
+      "surah": 90,
+      "ayah": 17,
+      "delta_ms": 0,
+      "before_error_ms": -37,
+      "after_error_ms": -37,
+      "review": true
+    },
+    {
+      "surah": 90,
+      "ayah": 18,
+      "delta_ms": 0,
+      "before_error_ms": 99,
+      "after_error_ms": 99,
+      "review": false
+    },
+    {
+      "surah": 90,
+      "ayah": 19,
+      "delta_ms": 0,
+      "before_error_ms": 111,
+      "after_error_ms": 111,
+      "review": true
+    },
+    {
+      "surah": 90,
+      "ayah": 20,
+      "delta_ms": 0,
+      "before_error_ms": 63,
+      "after_error_ms": 63,
+      "review": true
+    },
+    {
+      "surah": 91,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 29,
+      "after_error_ms": 29,
+      "review": true
+    },
+    {
+      "surah": 91,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": -110,
+      "after_error_ms": -110,
+      "review": false
+    },
+    {
+      "surah": 91,
+      "ayah": 3,
+      "delta_ms": -20,
+      "before_error_ms": -24,
+      "after_error_ms": -44,
+      "review": false
+    },
+    {
+      "surah": 91,
+      "ayah": 4,
+      "delta_ms": -20,
+      "before_error_ms": -41,
+      "after_error_ms": -61,
+      "review": true
+    },
+    {
+      "surah": 91,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": 94,
+      "after_error_ms": 94,
+      "review": true
+    },
+    {
+      "surah": 91,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": -69,
+      "after_error_ms": -69,
+      "review": false
+    },
+    {
+      "surah": 91,
+      "ayah": 7,
+      "delta_ms": 0,
+      "before_error_ms": -52,
+      "after_error_ms": -52,
+      "review": true
+    },
+    {
+      "surah": 91,
+      "ayah": 8,
+      "delta_ms": 0,
+      "before_error_ms": 23,
+      "after_error_ms": 23,
+      "review": true
+    },
+    {
+      "surah": 91,
+      "ayah": 9,
+      "delta_ms": 0,
+      "before_error_ms": -63,
+      "after_error_ms": -63,
+      "review": false
+    },
+    {
+      "surah": 91,
+      "ayah": 10,
+      "delta_ms": 0,
+      "before_error_ms": -45,
+      "after_error_ms": -45,
+      "review": true
+    },
+    {
+      "surah": 91,
+      "ayah": 11,
+      "delta_ms": 0,
+      "before_error_ms": -69,
+      "after_error_ms": -69,
+      "review": true
+    },
+    {
+      "surah": 91,
+      "ayah": 12,
+      "delta_ms": -20,
+      "before_error_ms": -10,
+      "after_error_ms": -30,
+      "review": true
+    },
+    {
+      "surah": 91,
+      "ayah": 13,
+      "delta_ms": 0,
+      "before_error_ms": -119,
+      "after_error_ms": -119,
+      "review": true
+    },
+    {
+      "surah": 91,
+      "ayah": 14,
+      "delta_ms": 0,
+      "before_error_ms": 18,
+      "after_error_ms": 18,
+      "review": true
+    },
+    {
+      "surah": 91,
+      "ayah": 15,
+      "delta_ms": 0,
+      "before_error_ms": -53,
+      "after_error_ms": -53,
+      "review": false
+    },
+    {
+      "surah": 92,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 50,
+      "after_error_ms": 50,
+      "review": true
+    },
+    {
+      "surah": 92,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": -44,
+      "after_error_ms": -44,
+      "review": true
+    },
+    {
+      "surah": 92,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": -39,
+      "after_error_ms": -39,
+      "review": false
+    },
+    {
+      "surah": 92,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": 13,
+      "after_error_ms": 13,
+      "review": false
+    },
+    {
+      "surah": 92,
+      "ayah": 5,
+      "delta_ms": -20,
+      "before_error_ms": 53,
+      "after_error_ms": 33,
+      "review": false
+    },
+    {
+      "surah": 92,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": -105,
+      "after_error_ms": -105,
+      "review": true
+    },
+    {
+      "surah": 92,
+      "ayah": 7,
+      "delta_ms": 0,
+      "before_error_ms": -85,
+      "after_error_ms": -85,
+      "review": true
+    },
+    {
+      "surah": 92,
+      "ayah": 8,
+      "delta_ms": 0,
+      "before_error_ms": -29,
+      "after_error_ms": -29,
+      "review": true
+    },
+    {
+      "surah": 92,
+      "ayah": 9,
+      "delta_ms": 0,
+      "before_error_ms": -100,
+      "after_error_ms": -100,
+      "review": false
+    },
+    {
+      "surah": 92,
+      "ayah": 10,
+      "delta_ms": 0,
+      "before_error_ms": -59,
+      "after_error_ms": -59,
+      "review": true
+    },
+    {
+      "surah": 92,
+      "ayah": 11,
+      "delta_ms": 20,
+      "before_error_ms": -58,
+      "after_error_ms": -38,
+      "review": true
+    },
+    {
+      "surah": 92,
+      "ayah": 12,
+      "delta_ms": 0,
+      "before_error_ms": 36,
+      "after_error_ms": 36,
+      "review": false
+    },
+    {
+      "surah": 92,
+      "ayah": 13,
+      "delta_ms": 0,
+      "before_error_ms": -123,
+      "after_error_ms": -123,
+      "review": false
+    },
+    {
+      "surah": 92,
+      "ayah": 14,
+      "delta_ms": 0,
+      "before_error_ms": -57,
+      "after_error_ms": -57,
+      "review": true
+    },
+    {
+      "surah": 92,
+      "ayah": 15,
+      "delta_ms": 0,
+      "before_error_ms": 3,
+      "after_error_ms": 3,
+      "review": false
+    },
+    {
+      "surah": 92,
+      "ayah": 16,
+      "delta_ms": 0,
+      "before_error_ms": -30,
+      "after_error_ms": -30,
+      "review": true
+    },
+    {
+      "surah": 92,
+      "ayah": 17,
+      "delta_ms": 0,
+      "before_error_ms": -135,
+      "after_error_ms": -135,
+      "review": true
+    },
+    {
+      "surah": 92,
+      "ayah": 18,
+      "delta_ms": 0,
+      "before_error_ms": -20,
+      "after_error_ms": -20,
+      "review": true
+    },
+    {
+      "surah": 92,
+      "ayah": 19,
+      "delta_ms": 0,
+      "before_error_ms": -93,
+      "after_error_ms": -93,
+      "review": false
+    },
+    {
+      "surah": 92,
+      "ayah": 20,
+      "delta_ms": -20,
+      "before_error_ms": 27,
+      "after_error_ms": 7,
+      "review": true
+    },
+    {
+      "surah": 92,
+      "ayah": 21,
+      "delta_ms": -20,
+      "before_error_ms": -76,
+      "after_error_ms": -96,
+      "review": false
+    },
+    {
+      "surah": 93,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 16,
+      "after_error_ms": 16,
+      "review": true
+    },
+    {
+      "surah": 93,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": -109,
+      "after_error_ms": -109,
+      "review": true
+    },
+    {
+      "surah": 93,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": 16,
+      "after_error_ms": 16,
+      "review": true
+    },
+    {
+      "surah": 93,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": 34,
+      "after_error_ms": 34,
+      "review": false
+    },
+    {
+      "surah": 93,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": -74,
+      "after_error_ms": -74,
+      "review": false
+    },
+    {
+      "surah": 93,
+      "ayah": 6,
+      "delta_ms": 20,
+      "before_error_ms": -21,
+      "after_error_ms": -1,
+      "review": false
+    },
+    {
+      "surah": 93,
+      "ayah": 7,
+      "delta_ms": 0,
+      "before_error_ms": -125,
+      "after_error_ms": -125,
+      "review": false
+    },
+    {
+      "surah": 93,
+      "ayah": 8,
+      "delta_ms": 0,
+      "before_error_ms": -100,
+      "after_error_ms": -100,
+      "review": false
+    },
+    {
+      "surah": 93,
+      "ayah": 9,
+      "delta_ms": 0,
+      "before_error_ms": -92,
+      "after_error_ms": -92,
+      "review": true
+    },
+    {
+      "surah": 93,
+      "ayah": 10,
+      "delta_ms": 0,
+      "before_error_ms": -36,
+      "after_error_ms": -36,
+      "review": true
+    },
+    {
+      "surah": 93,
+      "ayah": 11,
+      "delta_ms": 0,
+      "before_error_ms": -13,
+      "after_error_ms": -13,
+      "review": true
+    },
+    {
+      "surah": 94,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 93,
+      "after_error_ms": 93,
+      "review": true
+    },
+    {
+      "surah": 94,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": 89,
+      "after_error_ms": 89,
+      "review": false
+    },
+    {
+      "surah": 94,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": 136,
+      "after_error_ms": 136,
+      "review": true
+    },
+    {
+      "surah": 94,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": -67,
+      "after_error_ms": -67,
+      "review": true
+    },
+    {
+      "surah": 94,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": -28,
+      "after_error_ms": -28,
+      "review": false
+    },
+    {
+      "surah": 94,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": -32,
+      "after_error_ms": -32,
+      "review": true
+    },
+    {
+      "surah": 94,
+      "ayah": 7,
+      "delta_ms": -20,
+      "before_error_ms": 11,
+      "after_error_ms": -9,
+      "review": false
+    },
+    {
+      "surah": 94,
+      "ayah": 8,
+      "delta_ms": 0,
+      "before_error_ms": -57,
+      "after_error_ms": -57,
+      "review": true
+    },
+    {
+      "surah": 95,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": -89,
+      "after_error_ms": -89,
+      "review": false
+    },
+    {
+      "surah": 95,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": -122,
+      "after_error_ms": -122,
+      "review": true
+    },
+    {
+      "surah": 95,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": -88,
+      "after_error_ms": -88,
+      "review": true
+    },
+    {
+      "surah": 95,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": 26,
+      "after_error_ms": 26,
+      "review": false
+    },
+    {
+      "surah": 95,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": 47,
+      "after_error_ms": 47,
+      "review": true
+    },
+    {
+      "surah": 95,
+      "ayah": 6,
+      "delta_ms": -20,
+      "before_error_ms": 111,
+      "after_error_ms": 91,
+      "review": true
+    },
+    {
+      "surah": 95,
+      "ayah": 7,
+      "delta_ms": 0,
+      "before_error_ms": 125,
+      "after_error_ms": 125,
+      "review": false
+    },
+    {
+      "surah": 95,
+      "ayah": 8,
+      "delta_ms": 0,
+      "before_error_ms": 840,
+      "after_error_ms": 840,
+      "review": false
+    },
+    {
+      "surah": 96,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 19,
+      "after_error_ms": 19,
+      "review": false
+    },
+    {
+      "surah": 96,
+      "ayah": 2,
+      "delta_ms": -20,
+      "before_error_ms": 60,
+      "after_error_ms": 40,
+      "review": false
+    },
+    {
+      "surah": 96,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": 38,
+      "after_error_ms": 38,
+      "review": false
+    },
+    {
+      "surah": 96,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": 8,
+      "after_error_ms": 8,
+      "review": true
+    },
+    {
+      "surah": 96,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": 71,
+      "after_error_ms": 71,
+      "review": true
+    },
+    {
+      "surah": 96,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": -4,
+      "after_error_ms": -4,
+      "review": false
+    },
+    {
+      "surah": 96,
+      "ayah": 7,
+      "delta_ms": 0,
+      "before_error_ms": 151,
+      "after_error_ms": 151,
+      "review": true
+    },
+    {
+      "surah": 96,
+      "ayah": 8,
+      "delta_ms": 0,
+      "before_error_ms": 92,
+      "after_error_ms": 92,
+      "review": false
+    },
+    {
+      "surah": 96,
+      "ayah": 9,
+      "delta_ms": 0,
+      "before_error_ms": 17,
+      "after_error_ms": 17,
+      "review": false
+    },
+    {
+      "surah": 96,
+      "ayah": 10,
+      "delta_ms": 0,
+      "before_error_ms": 45,
+      "after_error_ms": 45,
+      "review": true
+    },
+    {
+      "surah": 96,
+      "ayah": 11,
+      "delta_ms": 0,
+      "before_error_ms": 1,
+      "after_error_ms": 1,
+      "review": false
+    },
+    {
+      "surah": 96,
+      "ayah": 12,
+      "delta_ms": 0,
+      "before_error_ms": 67,
+      "after_error_ms": 67,
+      "review": false
+    },
+    {
+      "surah": 96,
+      "ayah": 13,
+      "delta_ms": 0,
+      "before_error_ms": 86,
+      "after_error_ms": 86,
+      "review": false
+    },
+    {
+      "surah": 96,
+      "ayah": 14,
+      "delta_ms": -20,
+      "before_error_ms": 100,
+      "after_error_ms": 80,
+      "review": true
+    },
+    {
+      "surah": 96,
+      "ayah": 15,
+      "delta_ms": 0,
+      "before_error_ms": 28,
+      "after_error_ms": 28,
+      "review": false
+    },
+    {
+      "surah": 96,
+      "ayah": 16,
+      "delta_ms": 0,
+      "before_error_ms": 16,
+      "after_error_ms": 16,
+      "review": false
+    },
+    {
+      "surah": 96,
+      "ayah": 17,
+      "delta_ms": 0,
+      "before_error_ms": 80,
+      "after_error_ms": 80,
+      "review": true
+    },
+    {
+      "surah": 96,
+      "ayah": 18,
+      "delta_ms": 0,
+      "before_error_ms": 22,
+      "after_error_ms": 22,
+      "review": true
+    },
+    {
+      "surah": 96,
+      "ayah": 19,
+      "delta_ms": 0,
+      "before_error_ms": -4,
+      "after_error_ms": -4,
+      "review": false
+    },
+    {
+      "surah": 97,
+      "ayah": 1,
+      "delta_ms": -60,
+      "before_error_ms": 197,
+      "after_error_ms": 137,
+      "review": false
+    },
+    {
+      "surah": 97,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": 118,
+      "after_error_ms": 118,
+      "review": false
+    },
+    {
+      "surah": 97,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": 37,
+      "after_error_ms": 37,
+      "review": false
+    },
+    {
+      "surah": 97,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": 84,
+      "after_error_ms": 84,
+      "review": true
+    },
+    {
+      "surah": 97,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": 28,
+      "after_error_ms": 28,
+      "review": true
+    },
+    {
+      "surah": 98,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 50,
+      "after_error_ms": 50,
+      "review": false
+    },
+    {
+      "surah": 98,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": 269,
+      "after_error_ms": 269,
+      "review": true
+    },
+    {
+      "surah": 98,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": 135,
+      "after_error_ms": 135,
+      "review": true
+    },
+    {
+      "surah": 98,
+      "ayah": 4,
+      "delta_ms": -20,
+      "before_error_ms": 133,
+      "after_error_ms": 113,
+      "review": false
+    },
+    {
+      "surah": 98,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": 88,
+      "after_error_ms": 88,
+      "review": false
+    },
+    {
+      "surah": 98,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": 171,
+      "after_error_ms": 171,
+      "review": true
+    },
+    {
+      "surah": 98,
+      "ayah": 7,
+      "delta_ms": 0,
+      "before_error_ms": 163,
+      "after_error_ms": 163,
+      "review": true
+    },
+    {
+      "surah": 98,
+      "ayah": 8,
+      "delta_ms": 0,
+      "before_error_ms": 58,
+      "after_error_ms": 58,
+      "review": true
+    },
+    {
+      "surah": 99,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 69,
+      "after_error_ms": 69,
+      "review": true
+    },
+    {
+      "surah": 99,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": 11,
+      "after_error_ms": 11,
+      "review": false
+    },
+    {
+      "surah": 99,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": -56,
+      "after_error_ms": -56,
+      "review": false
+    },
+    {
+      "surah": 99,
+      "ayah": 4,
+      "delta_ms": -20,
+      "before_error_ms": -19,
+      "after_error_ms": -39,
+      "review": false
+    },
+    {
+      "surah": 99,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": -54,
+      "after_error_ms": -54,
+      "review": false
+    },
+    {
+      "surah": 99,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": 44,
+      "after_error_ms": 44,
+      "review": true
+    },
+    {
+      "surah": 99,
+      "ayah": 7,
+      "delta_ms": 0,
+      "before_error_ms": 121,
+      "after_error_ms": 121,
+      "review": false
+    },
+    {
+      "surah": 99,
+      "ayah": 8,
+      "delta_ms": 0,
+      "before_error_ms": -23,
+      "after_error_ms": -23,
+      "review": false
+    },
+    {
+      "surah": 100,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 60,
+      "after_error_ms": 60,
+      "review": false
+    },
+    {
+      "surah": 100,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": -63,
+      "after_error_ms": -63,
+      "review": false
+    },
+    {
+      "surah": 100,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": -110,
+      "after_error_ms": -110,
+      "review": false
+    },
+    {
+      "surah": 100,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": -122,
+      "after_error_ms": -122,
+      "review": false
+    },
+    {
+      "surah": 100,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": -94,
+      "after_error_ms": -94,
+      "review": false
+    },
+    {
+      "surah": 100,
+      "ayah": 6,
+      "delta_ms": 20,
+      "before_error_ms": 63,
+      "after_error_ms": 83,
+      "review": false
+    },
+    {
+      "surah": 100,
+      "ayah": 7,
+      "delta_ms": 20,
+      "before_error_ms": -125,
+      "after_error_ms": -105,
+      "review": true
+    },
+    {
+      "surah": 100,
+      "ayah": 8,
+      "delta_ms": 20,
+      "before_error_ms": -8,
+      "after_error_ms": 12,
+      "review": true
+    },
+    {
+      "surah": 100,
+      "ayah": 9,
+      "delta_ms": 0,
+      "before_error_ms": 195,
+      "after_error_ms": 195,
+      "review": false
+    },
+    {
+      "surah": 100,
+      "ayah": 10,
+      "delta_ms": 0,
+      "before_error_ms": -56,
+      "after_error_ms": -56,
+      "review": true
+    },
+    {
+      "surah": 100,
+      "ayah": 11,
+      "delta_ms": -100,
+      "before_error_ms": 212,
+      "after_error_ms": 112,
+      "review": false
+    },
+    {
+      "surah": 101,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 69,
+      "after_error_ms": 69,
+      "review": true
+    },
+    {
+      "surah": 101,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": 2,
+      "after_error_ms": 2,
+      "review": true
+    },
+    {
+      "surah": 101,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": -22,
+      "after_error_ms": -22,
+      "review": false
+    },
+    {
+      "surah": 101,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": 31,
+      "after_error_ms": 31,
+      "review": false
+    },
+    {
+      "surah": 101,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": 24,
+      "after_error_ms": 24,
+      "review": false
+    },
+    {
+      "surah": 101,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": 21,
+      "after_error_ms": 21,
+      "review": false
+    },
+    {
+      "surah": 101,
+      "ayah": 7,
+      "delta_ms": 20,
+      "before_error_ms": 17,
+      "after_error_ms": 37,
+      "review": true
+    },
+    {
+      "surah": 101,
+      "ayah": 8,
+      "delta_ms": 0,
+      "before_error_ms": 27,
+      "after_error_ms": 27,
+      "review": false
+    },
+    {
+      "surah": 101,
+      "ayah": 9,
+      "delta_ms": 0,
+      "before_error_ms": 26,
+      "after_error_ms": 26,
+      "review": true
+    },
+    {
+      "surah": 101,
+      "ayah": 10,
+      "delta_ms": 0,
+      "before_error_ms": 4,
+      "after_error_ms": 4,
+      "review": false
+    },
+    {
+      "surah": 101,
+      "ayah": 11,
+      "delta_ms": 0,
+      "before_error_ms": -23,
+      "after_error_ms": -23,
+      "review": true
+    },
+    {
+      "surah": 102,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 89,
+      "after_error_ms": 89,
+      "review": true
+    },
+    {
+      "surah": 102,
+      "ayah": 2,
+      "delta_ms": -60,
+      "before_error_ms": 80,
+      "after_error_ms": 20,
+      "review": true
+    },
+    {
+      "surah": 102,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": -46,
+      "after_error_ms": -46,
+      "review": false
+    },
+    {
+      "surah": 102,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": -58,
+      "after_error_ms": -58,
+      "review": true
+    },
+    {
+      "surah": 102,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": -28,
+      "after_error_ms": -28,
+      "review": false
+    },
+    {
+      "surah": 102,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": -30,
+      "after_error_ms": -30,
+      "review": true
+    },
+    {
+      "surah": 102,
+      "ayah": 7,
+      "delta_ms": 0,
+      "before_error_ms": -11,
+      "after_error_ms": -11,
+      "review": true
+    },
+    {
+      "surah": 102,
+      "ayah": 8,
+      "delta_ms": 0,
+      "before_error_ms": -57,
+      "after_error_ms": -57,
+      "review": true
+    },
+    {
+      "surah": 103,
+      "ayah": 1,
+      "delta_ms": -10,
+      "before_error_ms": 82,
+      "after_error_ms": 72,
+      "review": true
+    },
+    {
+      "surah": 103,
+      "ayah": 2,
+      "delta_ms": -12,
+      "before_error_ms": 37,
+      "after_error_ms": 25,
+      "review": false
+    },
+    {
+      "surah": 103,
+      "ayah": 3,
+      "delta_ms": -18,
+      "before_error_ms": 87,
+      "after_error_ms": 69,
+      "review": true
+    },
+    {
+      "surah": 104,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 78,
+      "after_error_ms": 78,
+      "review": true
+    },
+    {
+      "surah": 104,
+      "ayah": 2,
+      "delta_ms": 20,
+      "before_error_ms": 49,
+      "after_error_ms": 69,
+      "review": true
+    },
+    {
+      "surah": 104,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": -18,
+      "after_error_ms": -18,
+      "review": true
+    },
+    {
+      "surah": 104,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": 59,
+      "after_error_ms": 59,
+      "review": true
+    },
+    {
+      "surah": 104,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": 42,
+      "after_error_ms": 42,
+      "review": true
+    },
+    {
+      "surah": 104,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": -4,
+      "after_error_ms": -4,
+      "review": true
+    },
+    {
+      "surah": 104,
+      "ayah": 7,
+      "delta_ms": 0,
+      "before_error_ms": -26,
+      "after_error_ms": -26,
+      "review": true
+    },
+    {
+      "surah": 104,
+      "ayah": 8,
+      "delta_ms": 100,
+      "before_error_ms": 150,
+      "after_error_ms": 250,
+      "review": true
+    },
+    {
+      "surah": 104,
+      "ayah": 9,
+      "delta_ms": 0,
+      "before_error_ms": -31,
+      "after_error_ms": -31,
+      "review": true
+    },
+    {
+      "surah": 105,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 126,
+      "after_error_ms": 126,
+      "review": true
+    },
+    {
+      "surah": 105,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": -51,
+      "after_error_ms": -51,
+      "review": true
+    },
+    {
+      "surah": 105,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": -25,
+      "after_error_ms": -25,
+      "review": true
+    },
+    {
+      "surah": 105,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": -29,
+      "after_error_ms": -29,
+      "review": true
+    },
+    {
+      "surah": 105,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": -65,
+      "after_error_ms": -65,
+      "review": true
+    },
+    {
+      "surah": 106,
+      "ayah": 1,
+      "delta_ms": 20,
+      "before_error_ms": 13,
+      "after_error_ms": 33,
+      "review": true
+    },
+    {
+      "surah": 106,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": -2,
+      "after_error_ms": -2,
+      "review": true
+    },
+    {
+      "surah": 106,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": -84,
+      "after_error_ms": -84,
+      "review": true
+    },
+    {
+      "surah": 106,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": 66,
+      "after_error_ms": 66,
+      "review": true
+    },
+    {
+      "surah": 107,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 138,
+      "after_error_ms": 138,
+      "review": false
+    },
+    {
+      "surah": 107,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": -15,
+      "after_error_ms": -15,
+      "review": false
+    },
+    {
+      "surah": 107,
+      "ayah": 3,
+      "delta_ms": 20,
+      "before_error_ms": -1,
+      "after_error_ms": 19,
+      "review": true
+    },
+    {
+      "surah": 107,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": -45,
+      "after_error_ms": -45,
+      "review": true
+    },
+    {
+      "surah": 107,
+      "ayah": 5,
+      "delta_ms": 20,
+      "before_error_ms": -136,
+      "after_error_ms": -116,
+      "review": true
+    },
+    {
+      "surah": 107,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": 174,
+      "after_error_ms": 174,
+      "review": true
+    },
+    {
+      "surah": 107,
+      "ayah": 7,
+      "delta_ms": 0,
+      "before_error_ms": -128,
+      "after_error_ms": -128,
+      "review": true
+    },
+    {
+      "surah": 108,
+      "ayah": 1,
+      "delta_ms": -11,
+      "before_error_ms": 207,
+      "after_error_ms": 196,
+      "review": false
+    },
+    {
+      "surah": 108,
+      "ayah": 2,
+      "delta_ms": -18,
+      "before_error_ms": -1,
+      "after_error_ms": -19,
+      "review": false
+    },
+    {
+      "surah": 108,
+      "ayah": 3,
+      "delta_ms": -23,
+      "before_error_ms": 4,
+      "after_error_ms": -19,
+      "review": false
+    },
+    {
+      "surah": 109,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 40,
+      "after_error_ms": 40,
+      "review": false
+    },
+    {
+      "surah": 109,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": -49,
+      "after_error_ms": -49,
+      "review": false
+    },
+    {
+      "surah": 109,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": -55,
+      "after_error_ms": -55,
+      "review": true
+    },
+    {
+      "surah": 109,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": -99,
+      "after_error_ms": -99,
+      "review": false
+    },
+    {
+      "surah": 109,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": -38,
+      "after_error_ms": -38,
+      "review": true
+    },
+    {
+      "surah": 109,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": -81,
+      "after_error_ms": -81,
+      "review": true
+    },
+    {
+      "surah": 110,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 197,
+      "after_error_ms": 197,
+      "review": true
+    },
+    {
+      "surah": 110,
+      "ayah": 2,
+      "delta_ms": 20,
+      "before_error_ms": -51,
+      "after_error_ms": -31,
+      "review": true
+    },
+    {
+      "surah": 110,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": 84,
+      "after_error_ms": 84,
+      "review": true
+    },
+    {
+      "surah": 111,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 88,
+      "after_error_ms": 88,
+      "review": true
+    },
+    {
+      "surah": 111,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": 48,
+      "after_error_ms": 48,
+      "review": true
+    },
+    {
+      "surah": 111,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": 32,
+      "after_error_ms": 32,
+      "review": false
+    },
+    {
+      "surah": 111,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": -62,
+      "after_error_ms": -62,
+      "review": true
+    },
+    {
+      "surah": 111,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": -79,
+      "after_error_ms": -79,
+      "review": true
+    },
+    {
+      "surah": 112,
+      "ayah": 1,
+      "delta_ms": 56,
+      "before_error_ms": -74,
+      "after_error_ms": -18,
+      "review": true
+    },
+    {
+      "surah": 112,
+      "ayah": 2,
+      "delta_ms": -15,
+      "before_error_ms": -26,
+      "after_error_ms": -41,
+      "review": true
+    },
+    {
+      "surah": 112,
+      "ayah": 3,
+      "delta_ms": -18,
+      "before_error_ms": -72,
+      "after_error_ms": -90,
+      "review": false
+    },
+    {
+      "surah": 112,
+      "ayah": 4,
+      "delta_ms": -23,
+      "before_error_ms": -16,
+      "after_error_ms": -39,
+      "review": false
+    },
+    {
+      "surah": 113,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": -4,
+      "after_error_ms": -4,
+      "review": true
+    },
+    {
+      "surah": 113,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": -74,
+      "after_error_ms": -74,
+      "review": false
+    },
+    {
+      "surah": 113,
+      "ayah": 3,
+      "delta_ms": 0,
+      "before_error_ms": -71,
+      "after_error_ms": -71,
+      "review": false
+    },
+    {
+      "surah": 113,
+      "ayah": 4,
+      "delta_ms": -20,
+      "before_error_ms": -123,
+      "after_error_ms": -143,
+      "review": false
+    },
+    {
+      "surah": 113,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": -106,
+      "after_error_ms": -106,
+      "review": true
+    },
+    {
+      "surah": 114,
+      "ayah": 1,
+      "delta_ms": 0,
+      "before_error_ms": 61,
+      "after_error_ms": 61,
+      "review": true
+    },
+    {
+      "surah": 114,
+      "ayah": 2,
+      "delta_ms": 0,
+      "before_error_ms": -3,
+      "after_error_ms": -3,
+      "review": true
+    },
+    {
+      "surah": 114,
+      "ayah": 3,
+      "delta_ms": 20,
+      "before_error_ms": -31,
+      "after_error_ms": -11,
+      "review": false
+    },
+    {
+      "surah": 114,
+      "ayah": 4,
+      "delta_ms": 0,
+      "before_error_ms": -82,
+      "after_error_ms": -82,
+      "review": false
+    },
+    {
+      "surah": 114,
+      "ayah": 5,
+      "delta_ms": 0,
+      "before_error_ms": -10,
+      "after_error_ms": -10,
+      "review": true
+    },
+    {
+      "surah": 114,
+      "ayah": 6,
+      "delta_ms": 0,
+      "before_error_ms": -30,
+      "after_error_ms": -30,
+      "review": true
+    }
+  ],
+  "new_large_errors_without_review": [
+    {
+      "surah": 83,
+      "ayah": 10,
+      "error_ms": 825,
+      "before_review": true,
+      "after_review": false
+    },
+    {
+      "surah": 95,
+      "ayah": 8,
+      "error_ms": 840,
+      "before_review": true,
+      "after_review": false
+    }
+  ],
+  "large_errors_newly_flagged": [
+    {
+      "surah": 79,
+      "ayah": 26,
+      "error_ms": 856,
+      "before_review": false,
+      "after_review": true
+    }
+  ],
+  "review_ayahs_before": 403,
+  "review_ayahs_after": 354,
+  "repeated_pairs": [
+    {
+      "baseline_s": 69.98275954090059,
+      "pause_s": 48.14737708447501,
+      "time_reduction_percent": 31.201088096081932
+    },
+    {
+      "baseline_s": 71.05767212831415,
+      "pause_s": 45.05025408207439,
+      "time_reduction_percent": 36.60043633188015
+    }
+  ],
+  "repeated_emissions_identical": {
+    "baseline": true,
+    "pause": true
+  }
+}

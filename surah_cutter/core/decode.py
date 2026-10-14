@@ -7,6 +7,8 @@ pipe как f32le и парсится numpy. Модуль не зависит о
 from __future__ import annotations
 
 import subprocess
+from functools import lru_cache
+from pathlib import Path
 
 import numpy as np
 
@@ -104,6 +106,15 @@ def decode_range(
 
 
 def duration_ms(path: str, sr: int = DEFAULT_SR) -> int:
-    """Длительность аудио в миллисекундах (через декод при `sr`)."""
+    """Exact PCM duration, cached only while the file identity is unchanged."""
+    resolved = Path(path).resolve()
+    stat = resolved.stat()
+    return _cached_duration(str(resolved), sr, stat.st_dev, stat.st_ino,
+                            stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns)
+
+
+@lru_cache(maxsize=256)
+def _cached_duration(path: str, sr: int, device: int, inode: int,
+                     size: int, modified: int, changed: int) -> int:
     n = len(decode(path, sr=sr))
     return int(round(n * 1000 / sr))

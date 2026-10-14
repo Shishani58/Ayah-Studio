@@ -6,6 +6,7 @@ Only local pinned weights are loaded. No Hub code and no canonical text writes.
 from __future__ import annotations
 
 import difflib
+import hashlib
 import importlib.metadata
 import itertools
 import json
@@ -18,7 +19,12 @@ import numpy as np
 
 _RPC = sys.stdout
 SR = 16000
+WHISPER_FULL_VERSION = "pause-retry-spelled-letters-v2"
 BASMALA = ["بِسْمِ", "ٱللَّهِ", "ٱلرَّحْمَٰنِ", "ٱلرَّحِيمِ"]
+
+
+class WhisperTextOverflow(ValueError):
+    """Known target cannot fit in the decoder's positional budget."""
 
 
 def reply(value):
@@ -31,6 +37,41 @@ def plain(text):
         "ٱ": "ا", "ۥ": "و", "ۦ": "ي", "ـ": "", "۩": "", "۞": "",
     }))
     return "".join(c for c in text if unicodedata.category(c) not in ("Mn", "Me", "Cf"))
+
+
+def whisper_alignment_text(word):
+    """Spoken names for Quran opening letters, retaining one canonical span."""
+    normalized = plain(word)
+    if normalized not in {"الم", "المص", "الر", "المر", "كهيعص", "طه", "طسم", "طس",
+                           "يس", "ص", "حم", "عسق", "ق", "ن"}:
+        return word
+    names = {"ا": "أَلِفْ", "ل": "لَامْ", "م": "مِيمْ", "ص": "صَادْ", "ر": "رَا",
+             "ك": "كَافْ", "ه": "هَا", "ي": "يَا", "ع": "عَيْنْ", "ط": "طَا",
+             "س": "سِينْ", "ح": "حَا", "ق": "قَافْ", "ن": "نُونْ"}
+    return " ".join(names[letter] for letter in normalized)
+
+
+def whisper_energy_pauses(pcm):
+    """Bounded RMS pauses; worker also runs outside the application package."""
+    frame = SR // 50
+    count = len(pcm) // frame
+    if count < 5:
+        return []
+    rms = np.sqrt(np.mean(pcm[:count * frame].reshape(count, frame) ** 2, axis=1))
+    rms = np.convolve(rms, np.ones(5) / 5, mode="same")
+    noise, speech = np.percentile(rms, [15, 70])
+    cutoff = max(1e-5, min(noise + (speech - noise) * .18, speech * .35))
+    transitions = np.diff(np.r_[False, rms <= cutoff, False].astype(np.int8))
+    pauses = []
+    for lo, hi in zip(np.flatnonzero(transitions == 1), np.flatnonzero(transitions == -1)):
+        if hi - lo < 15 or lo < 5 or hi > count - 5:
+            continue
+        left = rms[max(0, lo - 18):lo].mean()
+        right = rms[hi:min(count, hi + 18)].mean()
+        deep_long = hi - lo >= 35 and rms[lo:hi].mean() < min(left, right) / 2.4
+        if min(left, right) > cutoff * 2.2 or (deep_long and max(left, right) > cutoff * 2.2):
+            pauses.append((float(lo * 20), float(hi * 20)))
+    return pauses
 
 
 def softmax_log(x):
@@ -89,12 +130,37 @@ class Acoustic:
             self.blank_id = len(self.model.ctc_decoder.vocabulary)
             self.vocab = {f"token:{i}": i for i in range(self.blank_id + 1)}
         elif model_id.startswith("whisper-"):
-            from transformers import WhisperProcessor, WhisperForConditionalGeneration
+            from transformers import GenerationConfig, WhisperConfig, WhisperProcessor, WhisperForConditionalGeneration
 
             self.processor = WhisperProcessor.from_pretrained(folder, local_files_only=True)
-            self.model = WhisperForConditionalGeneration.from_pretrained(
-                folder, local_files_only=True, attn_implementation="eager").eval()
+            if model_id in ("whisper-tarteel-tiny", "whisper-tarteel-base"):
+                # Tarteel publishes only a state dict and no generation config.
+                # Never unpickle Hub code; use explicit safe loading and strict keys.
+                config = WhisperConfig.from_pretrained(folder, local_files_only=True)
+                config._attn_implementation = "eager"
+                self.model = WhisperForConditionalGeneration(config)
+                weights = torch.load(folder / "pytorch_model.bin", map_location="cpu", weights_only=True)
+                # Old Transformers omitted the tied output projection from checkpoints.
+                if "proj_out.weight" not in weights and config.tie_word_embeddings:
+                    if self.model.proj_out.weight is not self.model.model.decoder.embed_tokens.weight:
+                        raise ValueError("Whisper output projection is not tied to the token embedding.")
+                    weights["proj_out.weight"] = weights["model.decoder.embed_tokens.weight"]
+                self.model.load_state_dict(weights, strict=True)
+                entry = next(m for m in json.loads(Path(__file__).with_name("model_catalog.json").read_text())
+                             if m["id"] == model_id)
+                # Explicit, pinned upstream metadata, not different model weights.
+                # These heads were selected for OpenAI, not calibrated by Tarteel.
+                self.model.generation_config = GenerationConfig.from_dict(entry["generation_config"])
+                self.model.eval()
+            else:
+                self.model = WhisperForConditionalGeneration.from_pretrained(
+                    folder, local_files_only=True, attn_implementation="eager").eval()
             self.processor.tokenizer.set_prefix_tokens(language="ar", task="transcribe", predict_timestamps=False)
+            heads = self.model.generation_config.alignment_heads
+            if not heads or any(not (0 <= layer < self.model.config.decoder_layers
+                                     and 0 <= head < self.model.config.decoder_attention_heads)
+                                for layer, head in heads):
+                raise ValueError("Некорректные alignment heads Whisper.")
             self.vocab = {"unused": 0}
             self.text_kind = "whisper"
         elif model_id == "mms-arabic":
@@ -262,7 +328,7 @@ class Acoustic:
         tokenizer = self.processor.tokenizer
         tokens, spans = [], []
         for word in words:
-            ids = tokenizer.encode(" " + word.replace("ٱ", "ا"), add_special_tokens=False)
+            ids = tokenizer.encode(" " + whisper_alignment_text(word).replace("ٱ", "ا"), add_special_tokens=False)
             first = 0
             while first < len(ids) and not tokenizer.decode([ids[first]]).strip():
                 first += 1
@@ -272,7 +338,7 @@ class Acoustic:
             tokens.extend(ids)
         prefix = tokenizer.prefix_tokens
         if len(prefix) + len(tokens) + 1 > self.model.config.max_target_positions:
-            raise ValueError("Слишком много текста для одного окна Whisper.")
+            raise WhisperTextOverflow("Слишком много текста для одного окна Whisper.")
         features = self.processor(pcm, sampling_rate=SR, return_tensors="pt").input_features
         decoder = torch.tensor([[*prefix, *tokens, tokenizer.eos_token_id]])
         with torch.inference_mode():
@@ -307,39 +373,155 @@ class Acoustic:
                 rows[i] = (rows[i][0], 0.0)
         return rows
 
+    def whisper_local(self, pcm, total_samples):
+        """A bounded ASR phrase only; never call the FULL/tiled aligner here."""
+        if (self.model_id not in ("whisper-tarteel-tiny", "whisper-tarteel-base") or pcm.ndim != 1
+                or not SR * .3 <= len(pcm) <= SR * 6 or len(pcm) >= total_samples):
+            raise ValueError("FAST Whisper требует локальный участок до 6 секунд.")
+        torch = self.torch
+        processed = self.processor(pcm, sampling_rate=SR, return_tensors="pt", return_attention_mask=True)
+        with torch.inference_mode():
+            generated = self.model.generate(
+                processed.input_features, attention_mask=processed.attention_mask,
+                language="ar", task="transcribe", return_timestamps=False,
+                max_new_tokens=64, do_sample=False, num_beams=1, use_cache=True,
+                return_dict_in_generate=True, output_scores=True,
+            )
+        sequence = generated.sequences[0]
+        scores = generated.scores
+        selected = sequence[-len(scores):]
+        log_probs = [score[0].log_softmax(-1)[token] for score, token in zip(scores, selected)]
+        confidence = float(torch.stack(log_probs).mean().exp()) if log_probs else 0.0
+        text = self.processor.batch_decode(generated.sequences, skip_special_tokens=True)[0]
+        minimum = min((float(p.exp()) for token, p in zip(selected, log_probs)
+                       if int(token) not in self.processor.tokenizer.all_special_ids), default=0.0)
+        tokenizer = self.processor.tokenizer
+        # Retain the exact selected BPE bytes, including tokens split inside a
+        # UTF-8 character or spanning a space. Word attribution is performed by
+        # the local adapter; no expected Quran text participates in this decode.
+        from transformers.models.whisper.tokenization_whisper import bytes_to_unicode
+        byte_decoder = {character: value for value, character in bytes_to_unicode().items()}
+        selected_tokens = []
+        for token, probability in zip(selected, log_probs):
+            token_id = int(token)
+            if token_id in tokenizer.all_special_ids:
+                continue
+            encoded = tokenizer.convert_ids_to_tokens(token_id)
+            selected_tokens.append({"id": token_id, "log_probability": float(probability),
+                                    "bytes": list(bytes(byte_decoder[c] for c in encoded))})
+        return {"text": text, "token_confidence": confidence,
+                "min_token_confidence": minimum,
+                "selected_tokens": selected_tokens,
+                "truncated": int(sequence[-1]) != self.processor.tokenizer.eos_token_id}
+
+    def whisper_locate(self, pcm, words):
+        """ASR locates a known prefix; it never supplies the timing text."""
+        processed = self.processor(pcm, sampling_rate=SR, return_tensors="pt", return_attention_mask=True)
+        with self.torch.inference_mode():
+            generated = self.model.generate(
+                processed.input_features, attention_mask=processed.attention_mask,
+                language="ar", task="transcribe", return_timestamps=True,
+                max_new_tokens=400, do_sample=False, num_beams=1,
+            )
+        hypothesis = self.processor.batch_decode(generated, skip_special_tokens=True)[0].split()
+        observed = [plain(w) for w in hypothesis]
+        # A repeated phrase hundreds of words ahead is not evidence that those
+        # intervening words were read in this short window. Match a local prefix.
+        canonical, owners = [], []
+        for index, word in enumerate(words[:min(180, max(12, len(observed) * 2))]):
+            units = plain(word).split()
+            canonical.extend(units)
+            owners.extend([index] * len(units))
+        blocks = difflib.SequenceMatcher(None, canonical, observed, autojunk=False).get_matching_blocks()
+        matched = sum(b.size for b in blocks)
+        longest = max((b.size for b in blocks), default=0)
+        if (not observed or matched < max(min(2, len(words)), len(observed) * 0.5)
+                or (len(observed) >= 8 and longest < 3)):
+            return None
+        last = max(b.a + b.size for b in blocks if b.size) - 1
+        end = owners[last] + 1
+        # Do not consume a canonical word when ASR only matched its first unit.
+        if last + 1 < len(owners) and owners[last + 1] == owners[last]:
+            return None
+        prefix_words = max((owners[b.a + b.size - 1] + 1 for b in blocks if b.a == 0 and b.size), default=0)
+        return end, prefix_words
+
+    def whisper_pause_retry(self, pcm, words, rows, offset, window_samples, strict_words):
+        """Confirm both sides of a DSP pause before consuming an early ASR end."""
+        clip = pcm[offset:offset + window_samples]
+        candidates = [(start, end) for start, end in whisper_energy_pauses(clip)
+                      if rows[-1][0] + 200 < start and end < len(clip) * 1000 / SR - 200][:3]
+        for start, finish in candidates:
+            split = round((start + finish) * SR / 2000)
+            located = self.whisper_locate(clip[:split], words)
+            if located is None or located[0] != len(rows):
+                continue
+            end = located[0]
+            if end == len(words):
+                # An early EOS cannot claim that the rest of the recording is silence.
+                continue
+            next_offset = offset + split
+            following = self.whisper_locate(pcm[next_offset:next_offset + window_samples], words[end:])
+            if following is None or following[1] < min(2, len(words) - end):
+                continue
+            confirmed = self.whisper_clip(clip[:split], words[:end], strict_words=strict_words)
+            if len(confirmed) != end or any(ms >= start for ms, _ in confirmed):
+                continue
+            print(f"Whisper FULL pause retry: {offset / SR:.3f}-{next_offset / SR:.3f}; "
+                  f"confirmed={end}; next-prefix={following[0]}", file=sys.stderr)
+            return confirmed, end, next_offset
+        return None
+
     def whisper_align(self, pcm, words, strict_words=True):
-        if len(pcm) <= 30 * SR:
+        window_s = 30
+        if len(pcm) <= window_s * SR:
             return self.whisper_clip(pcm, words, strict_words=strict_words)
         # ASR is only a coarse locator for bounded windows. All final timing
         # rows come from teacher forcing the original canonical word sequence.
         result, cursor, offset = [], 0, 0
-        torch = self.torch
         while cursor < len(words):
-            clip = pcm[offset:offset + 30 * SR]
+            clip = pcm[offset:offset + window_s * SR]
             if len(clip) < SR // 10:
                 raise ValueError("Недостаточно аудио для оставшегося текста Whisper.")
-            features = self.processor(clip, sampling_rate=SR, return_tensors="pt").input_features
-            with torch.inference_mode():
-                generated = self.model.generate(features, language="ar", task="transcribe",
-                                                return_timestamps=True, max_new_tokens=400,
-                                                do_sample=False, num_beams=1)
-            hypothesis = self.processor.batch_decode(generated, skip_special_tokens=True)[0].split()
-            canonical = [plain(w) for w in words[cursor:cursor + 180]]
-            observed = [plain(w) for w in hypothesis]
-            blocks = difflib.SequenceMatcher(None, canonical, observed, autojunk=False).get_matching_blocks()
-            matched = sum(b.size for b in blocks)
-            longest = max((b.size for b in blocks), default=0)
-            if (not observed or matched < max(2, len(observed) * 0.5)
-                    or (len(observed) >= 8 and longest < 3)):
-                print("Whisper anchors:", cursor, offset / SR, observed, canonical, matched, file=sys.stderr)
+            located = self.whisper_locate(clip, words[cursor:])
+            if located is None:
+                if window_s > 10:
+                    window_s -= 10
+                    continue
                 raise ValueError("Whisper не нашёл достаточных опор в каноническом тексте.")
-            end = max(b.a + b.size for b in blocks if b.size)
+            end = located[0]
             segment_words = words[cursor:cursor + end]
-            rows = self.whisper_clip(clip, segment_words, strict_words=strict_words)
+            try:
+                rows = self.whisper_clip(clip, segment_words, strict_words=strict_words)
+            except WhisperTextOverflow:
+                # Re-locate the same known sequence in a shorter audio window.
+                # Never truncate the target words or bypass anchor validation.
+                if window_s <= 10:
+                    raise
+                window_s -= 10
+                continue
             final = offset + len(clip) == len(pcm)
+            # The locator may emit EOS at an internal pause. Validate the short
+            # phrase and the next known prefix, rather than losing words to the
+            # usual overlap or pretending that ASR covered the entire window.
+            if rows and rows[-1][0] < (len(clip) * 1000 / SR - 6000):
+                retry = self.whisper_pause_retry(
+                    pcm, words[cursor:], rows, offset, window_s * SR, strict_words)
+                if retry is not None:
+                    confirmed, consumed, next_offset = retry
+                    base_ms = offset * 1000 // SR
+                    result.extend((base_ms + ms, conf) for ms, conf in confirmed)
+                    cursor += consumed
+                    offset = next_offset
+                    window_s = 30
+                    continue
             if final and cursor + end != len(words):
+                if window_s > 10 and len(clip) > 10 * SR:
+                    window_s = 10
+                    continue
                 raise ValueError("Whisper не подтвердил весь конец канонического текста.")
-            commit = end if final else next((i for i, row in enumerate(rows) if row[0] >= 24000), end - 2)
+            commit = end if final else next((i for i, row in enumerate(rows)
+                                            if row[0] >= (window_s - 6) * 1000), end - 2)
             if commit <= 0 or (not final and commit < 2):
                 raise ValueError("Whisper не продвинулся по каноническому тексту.")
             base_ms = offset * 1000 // SR
@@ -353,6 +535,7 @@ class Acoustic:
                 if new_offset <= offset:
                     raise ValueError("Whisper не продвинулся по аудио.")
                 offset = new_offset
+            window_s = 30
         if strict_words and any(b[0] <= a[0] for a, b in zip(result, result[1:])):
             raise ValueError("Whisper дал конфликт порядка слов.")
         return result
@@ -365,16 +548,37 @@ def main():
     model_id, folder, work = sys.argv[1:]
     work = Path(work)
     try:
-        acoustic = Acoustic(model_id, Path(folder))
+        folder = Path(folder)
+        # Freeze assets before loading, then reject mutation during loading.
+        assets = {str(p.relative_to(folder)): hashlib.sha256(p.read_bytes()).hexdigest()
+                  for p in sorted(folder.rglob("*")) if p.is_file() and p.suffix in
+                  {".bin", ".safetensors", ".onnx", ".json", ".txt", ".model"}}
+        acoustic = Acoustic(model_id, folder)
+        if any(hashlib.sha256((folder / p).read_bytes()).hexdigest() != sha for p, sha in assets.items()):
+            raise ValueError("Model assets changed during loading")
         versions = {p: importlib.metadata.version(p) for p in
                     ("torch", "transformers", "numpy")}
+        versions.update(python=sys.version, unicode=unicodedata.unidata_version)
         for package in ("torchaudio", "quran-transcript", "uroman", "onnxruntime", "nemo-toolkit", "sentencepiece"):
             try:
                 versions[package] = importlib.metadata.version(package)
             except importlib.metadata.PackageNotFoundError:
                 pass
+        identity = {"model_id": model_id, "assets": assets, "versions": versions,
+                    "worker_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                    "vocab": acoustic.vocab, "blank_id": acoustic.blank_id}
+        if acoustic.text_kind == "whisper":
+            identity.update(config=acoustic.model.config.to_dict(),
+                            generation_config=acoustic.model.generation_config.to_dict(),
+                            tokenizer_vocab_sha256=hashlib.sha256(json.dumps(
+                                acoustic.processor.tokenizer.get_vocab(), sort_keys=True).encode()).hexdigest(),
+                            tokenizer_special=acoustic.processor.tokenizer.special_tokens_map,
+                            tokenizer_prefix=acoustic.processor.tokenizer.prefix_tokens,
+                            feature_extractor=acoustic.processor.feature_extractor.to_dict(),
+                            local_generation={"language": "ar", "task": "transcribe", "return_timestamps": False,
+                                              "max_new_tokens": 64, "do_sample": False, "num_beams": 1})
         reply({"vocab": acoustic.vocab, "blank_id": acoustic.blank_id,
-               "text_kind": acoustic.text_kind, "versions": versions})
+               "text_kind": acoustic.text_kind, "versions": versions, "runtime_identity": identity})
     except Exception as exc:
         traceback.print_exc()
         reply({"error": f"Не удалось загрузить модель: {exc}"})
@@ -396,14 +600,23 @@ def main():
                 words = (BASMALA if request["intro"] else []) + request["renderings"]
                 rows = acoustic.whisper_align(pcm, words, strict_words=request["strict_words"])
                 reply({"rows": rows[len(BASMALA) if request["intro"] else 0:]})
+            elif action == "recognize_local":
+                pcm = np.load(work / "audio.npy", allow_pickle=False)
+                reply(acoustic.whisper_local(pcm, request["total_samples"]))
             elif action == "probe":
                 # A real encoder/decoder forward; silence has no usable word
                 # boundary evidence, so the probe does not run timing validation.
                 torch = acoustic.torch
                 features = acoustic.processor(np.zeros(SR, np.float32), sampling_rate=SR, return_tensors="pt").input_features
                 with torch.inference_mode():
-                    out = acoustic.model(features, decoder_input_ids=torch.tensor([acoustic.processor.tokenizer.prefix_tokens]))
-                if not torch.isfinite(out.logits).all():
+                    encoded = acoustic.model.model.encoder(features, output_attentions=False, return_dict=True)
+                    out = acoustic.model(encoder_outputs=encoded,
+                                         decoder_input_ids=torch.tensor([acoustic.processor.tokenizer.prefix_tokens]),
+                                         output_attentions=True, use_cache=False)
+                heads = acoustic.model.generation_config.alignment_heads
+                if (not torch.isfinite(out.logits).all()
+                        or any(not torch.isfinite(out.cross_attentions[layer][:, head]).all()
+                               for layer, head in heads)):
                     raise ValueError("Некорректный выход Whisper.")
                 reply({"ok": True})
             else:

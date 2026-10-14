@@ -1,0 +1,97 @@
+{
+  "surah": 42,
+  "duration_s": 992.4440625,
+  "groups": {
+    "3": {
+      "full_times_s": [
+        36.61915237503126,
+        33.75026704184711,
+        32.70223733293824
+      ],
+      "median_full_s": 33.75026704184711,
+      "range_full_s": [
+        32.70223733293824,
+        36.61915237503126
+      ],
+      "peak_rss_mib": [
+        1774.984375,
+        1972.1875,
+        2152.640625
+      ],
+      "median_peak_rss_mib": 1972.1875,
+      "max_peak_rss_mib": 2152.640625,
+      "errors": {
+        "n": 53,
+        "median_ms": 66.0,
+        "p95_ms": 127.39999999999999,
+        "max_ms": 810.0,
+        "over500": 1
+      }
+    },
+    "4": {
+      "full_times_s": [
+        33.49001354188658,
+        32.03573995898478,
+        30.877849999116734
+      ],
+      "median_full_s": 32.03573995898478,
+      "range_full_s": [
+        30.877849999116734,
+        33.49001354188658
+      ],
+      "peak_rss_mib": [
+        2187.234375,
+        2144.125,
+        2203.515625
+      ],
+      "median_peak_rss_mib": 2187.234375,
+      "max_peak_rss_mib": 2203.515625,
+      "errors": {
+        "n": 53,
+        "median_ms": 66.0,
+        "p95_ms": 127.39999999999999,
+        "max_ms": 810.0,
+        "over500": 1
+      }
+    }
+  },
+  "paired_comparisons": [
+    {
+      "workers3_s": 36.61915237503126,
+      "workers4_s": 33.49001354188658,
+      "reduction_percent": 8.54508810334529
+    },
+    {
+      "workers3_s": 33.75026704184711,
+      "workers4_s": 32.03573995898478,
+      "reduction_percent": 5.0800400504579235
+    },
+    {
+      "workers3_s": 32.70223733293824,
+      "workers4_s": 30.877849999116734,
+      "reduction_percent": 5.578784458224062
+    }
+  ],
+  "time_reduction_percent": 5.0800400504579235,
+  "max_rss_increase_mib": 50.875,
+  "median_rss_increase_mib": 215.046875,
+  "checks": {
+    "emissions_identical": true,
+    "rows_confidence_identical": true,
+    "review_identical": true,
+    "windows_identical": true,
+    "errors_identical": true,
+    "53_ayahs_in_order": true,
+    "no_failures": true,
+    "model_and_inputs_identical": true,
+    "sources_unchanged": true
+  },
+  "windows_count": 49,
+  "large_error_ayahs": [
+    {
+      "ayah": 1,
+      "error_ms": -810,
+      "flagged": true
+    }
+  ]
+}

@@ -22,7 +22,7 @@ top-level imports are PySide6 + pyqtgraph + pure-Python ``data`` helpers only.
 
 from __future__ import annotations
 
-from pathlib import Path
+from surah_cutter.resources import resource_path
 
 from PySide6.QtCore import QObject, Qt, QThread, QUrl, Signal
 from PySide6.QtGui import QFont, QFontDatabase
@@ -47,7 +47,7 @@ _DB_CODE = "surah-cutter"
 _DB_VERSION = 1
 
 # Bundled Quran font: <repo>/assets/fonts/qpc_hafs.ttf.
-_FONT_PATH = Path(__file__).resolve().parents[2] / "assets" / "fonts" / "qpc_hafs.ttf"
+_FONT_PATH = resource_path("assets", "fonts", "qpc_hafs.ttf")
 
 # Confidence -> colour for the ayah's boundary line / chip. Low confidence is
 # flagged red so the reviewer focuses there first; None means unknown (grey).
@@ -548,13 +548,20 @@ class ReviewView(QWidget):
 
     # -- editing (all autosave via ProjectDB) ------------------------------
 
-    def _apply_edit(self, ayah: int, new_ms: int, *, record: bool) -> None:
+    def _apply_edit(self, ayah: int, new_ms: int, *, record: bool) -> bool:
         """Set ``ayah``'s start to ``new_ms``: persist, log undo, refresh UI."""
         new_ms = max(0, int(new_ms))
         old_ms = self._starts.get(ayah)
         if old_ms is not None and old_ms == new_ms:
-            return
-        self._persist_time(ayah, new_ms)
+            return True
+        try:
+            self._persist_time(ayah, new_ms)
+        except ValueError as exc:
+            if old_ms is not None:
+                self._sync_line(ayah)
+            self._refresh_edit_fields()
+            self._set_status(str(exc))
+            return False
         self._starts[ayah] = new_ms
         if record and old_ms is not None:
             self._undo.append((ayah, old_ms, new_ms))
@@ -564,6 +571,7 @@ class ReviewView(QWidget):
         if ayah == self._selected:
             self._refresh_edit_fields()
         self._set_status(f"Ayah {ayah} start → {new_ms} ms")
+        return True
 
     def _persist_time(self, ayah: int, new_ms: int) -> None:
         """Write the new start to the DB (set_time → status 'edited', history)."""
@@ -606,16 +614,20 @@ class ReviewView(QWidget):
         if not self._undo:
             return
         ayah, old_ms, new_ms = self._undo.pop()
-        self._apply_edit(ayah, old_ms, record=False)
-        self._redo.append((ayah, old_ms, new_ms))
+        if self._apply_edit(ayah, old_ms, record=False):
+            self._redo.append((ayah, old_ms, new_ms))
+        else:
+            self._undo.append((ayah, old_ms, new_ms))
         self._refresh_undo_buttons()
 
     def _do_redo(self) -> None:
         if not self._redo:
             return
         ayah, old_ms, new_ms = self._redo.pop()
-        self._apply_edit(ayah, new_ms, record=False)
-        self._undo.append((ayah, old_ms, new_ms))
+        if self._apply_edit(ayah, new_ms, record=False):
+            self._undo.append((ayah, old_ms, new_ms))
+        else:
+            self._redo.append((ayah, old_ms, new_ms))
         self._refresh_undo_buttons()
 
     def _refresh_undo_buttons(self) -> None:

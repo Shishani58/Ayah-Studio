@@ -1,0 +1,258 @@
+{
+  "checked_at_utc": "2026-10-13T18:24:47.469379+00:00",
+  "head": "4b7ce8a77078dcf1290ee91bdd9f9a8315e0f90b",
+  "files": {
+    ".github/workflows/build.yml": {
+      "sha256": "02e3c69942941e01f30e7e004f326e04b4ef1561b7bfe7c0af55947268fbaaad",
+      "lines": 134
+    },
+    "bench_tiled.py": {
+      "sha256": "537c8cae5b88e7728699509bb558554bde8ccfc1bd127fba5aaaf37b30207bb0",
+      "lines": 72
+    },
+    "data/model_text_targets.json": {
+      "sha256": "c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a",
+      "lines": 1
+    },
+    "data/quran_mushaf.db": {
+      "sha256": "c35272ed2a80916f5665f18e150686cfe258249cdf3ad50d3ac787f8cfe3fd66",
+      "lines": null
+    },
+    "data/word_tr_cache.json": {
+      "sha256": "fedfb51fa0345074bea68b903f36379bcfc86013f01db5eb0f4d5a9ab8fece57",
+      "lines": 1
+    },
+    "pyproject.toml": {
+      "sha256": "2cec02051f46810b6b434282da9473adeb192e34cdb8fbf6ed9e0dbf31250001",
+      "lines": 79
+    },
+    "surah_cutter/__init__.py": {
+      "sha256": "9c1c6a4be6dcfa1838de6f2901c044133728da6567ee1b6cef131ab9ac64df3c",
+      "lines": 3
+    },
+    "surah_cutter/cli.py": {
+      "sha256": "226b312f96e72005d554985622f47055f8772e44c5bdbf779a50576b856613d4",
+      "lines": 143
+    },
+    "surah_cutter/core/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lines": 0
+    },
+    "surah_cutter/core/_ctc.py": {
+      "sha256": "bad3fcb9e6cdaa6dd05b9f4398abf86f6d65520957f25abcab001e8383725fe9",
+      "lines": 209
+    },
+    "surah_cutter/core/align.py": {
+      "sha256": "a020e253433d6a7829e06be36cf62be673666d879115ee15f90e349453fa566f",
+      "lines": 811
+    },
+    "surah_cutter/core/align_fast.py": {
+      "sha256": "27acd15856d976416e6def06b868d28451f5cb441d3a903c225bba5ad9ed133a",
+      "lines": 13553
+    },
+    "surah_cutter/core/align_tiled.py": {
+      "sha256": "e42fc859f3b2c4f713caaf4771bd14a2e510fe1336045e6186a93cbc4fa4ac3b",
+      "lines": 420
+    },
+    "surah_cutter/core/cancellation.py": {
+      "sha256": "b3c61f6b85bf57e02a1e55e62233759b2b5063a29a1a808cb92b83b134071ef1",
+      "lines": 59
+    },
+    "surah_cutter/core/candidates.py": {
+      "sha256": "db4f077e52474eb213073325dad6833d7c6937404c62cc4a4c1ff84b23870bf2",
+      "lines": 1088
+    },
+    "surah_cutter/core/decode.py": {
+      "sha256": "6b43ef7786aa9a4b7e57d778455745043a0a6f21af0382327589151bdddf9cb7",
+      "lines": 109
+    },
+    "surah_cutter/core/draft.py": {
+      "sha256": "db24ea3a81b0244e9cfcf67d2a21d5c334ab7ac28177cb043ba5af111fceaa43",
+      "lines": 194
+    },
+    "surah_cutter/core/emissions.py": {
+      "sha256": "c33ddb9f869b4d063915ce4a0a4ce02c3405e1fe9f45f870a1e837725d957e65",
+      "lines": 323
+    },
+    "surah_cutter/core/fast_reads.py": {
+      "sha256": "1010804e91e68706c335f9c72c7d956c514e082a7dcfb1e3444b34534b5c349b",
+      "lines": 88
+    },
+    "surah_cutter/core/fingerprint.py": {
+      "sha256": "266f3c239d8689e09d1806d8bf06d43cb1abc87b8161f1c4cc680e7fc2fc9cbf",
+      "lines": 422
+    },
+    "surah_cutter/core/lag.py": {
+      "sha256": "f1e591a2c4065bafe608be3aca7c88de3ac3feab337ad9c07878127bf1ebfa97",
+      "lines": 59
+    },
+    "surah_cutter/core/model_runtime.py": {
+      "sha256": "52e83a7f42294a589fc1f0787de1600ea05687e56cb57a0262bd3401ab3585e4",
+      "lines": 233
+    },
+    "surah_cutter/core/model_store.py": {
+      "sha256": "1649feb4758f5060df8027206c345c17b35979267d71ee2f5c055ddfa706abd1",
+      "lines": 394
+    },
+    "surah_cutter/core/model_worker.py": {
+      "sha256": "1ebd1fcc2ed63f8c1fcebe7491c00ba57d0572701f559a1f6f2d3554f715799b",
+      "lines": 417
+    },
+    "surah_cutter/core/pipeline.py": {
+      "sha256": "e33b664643e3f8987172f200a7f4cde827f93610ed569ac24ffef136037d9a17",
+      "lines": 521
+    },
+    "surah_cutter/core/recheck.py": {
+      "sha256": "9c72a5b745a1c9ef2339f7556402e0112e28ae2fa7a3d4b6241a834f69691144",
+      "lines": 188
+    },
+    "surah_cutter/core/repair.py": {
+      "sha256": "515d8a33c46cc2cf48ef33622e38ac6efe99501a4a6332489ffd04668a75dbed",
+      "lines": 148
+    },
+    "surah_cutter/core/word_align.py": {
+      "sha256": "e72ee239d77d7675cbf4591162a985edcda4e8d7b1533b40ddf8725c784ca8f4",
+      "lines": 61
+    },
+    "surah_cutter/data/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lines": 0
+    },
+    "surah_cutter/data/export_db.py": {
+      "sha256": "2991d223bda07742e8d2d066fc8b036d942eb41f4e7218d3b0dad0cb357c422c",
+      "lines": 120
+    },
+    "surah_cutter/data/project_db.py": {
+      "sha256": "e283616cb5d70ab85d2e64c2b848c9f5d3331da9a4f36f106cc05d862dd900cb",
+      "lines": 338
+    },
+    "surah_cutter/data/quran_text.py": {
+      "sha256": "08d887aa42ea688048c0da09646de60a8f1f88b934d7aa568c1d7e4ce0d9835c",
+      "lines": 137
+    },
+    "surah_cutter/data/reference_prior.py": {
+      "sha256": "ac9705d921c5beca45ce32d2a684eb69b4933dcd73bb4e6731b011ae244081b0",
+      "lines": 91
+    },
+    "surah_cutter/data/references.py": {
+      "sha256": "437fc53b5194830768feefc4e071584d54f51a665a5efaed259516020fc8a758",
+      "lines": 211
+    },
+    "surah_cutter/data/transliteration.py": {
+      "sha256": "acb6e8698e786d55ca5a0ebe4db329b1dad4f8a88eab2fb5cfb7b154c7176c79",
+      "lines": 338
+    },
+    "surah_cutter/eval/__init__.py": {
+      "sha256": "bd3d3948db4a8e17b08580cb5f9b9722c0b3e7b656113c57e8c11b961744573d",
+      "lines": 11
+    },
+    "surah_cutter/eval/metric.py": {
+      "sha256": "0a4da85b8e757fdf0196c26626d27ba32aac61c223f50c49237a7e567e7739d2",
+      "lines": 121
+    },
+    "surah_cutter/gui/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lines": 0
+    },
+    "surah_cutter/gui/app.py": {
+      "sha256": "87a89fd0b9ee56a7cb8a51a7564501984da1cb58685ca74fb4b834bf2211c3d7",
+      "lines": 60
+    },
+    "surah_cutter/gui/dashboard_view.py": {
+      "sha256": "d0fbcaa2b6e55920b114a5ad30478888e26a371af8e329f0abf373c049532995",
+      "lines": 422
+    },
+    "surah_cutter/gui/review_view.py": {
+      "sha256": "460ccb5ba78690bcf4e555b14e395352f7b960914183543259605ef77036b2c4",
+      "lines": 718
+    },
+    "surah_cutter/selfcheck.py": {
+      "sha256": "a07974f96b6a2d155a7efdfe23bbafed28085223a671db2a9dc29c9d9dc21c77",
+      "lines": 34
+    },
+    "surah_cutter/tools/__init__.py": {
+      "sha256": "e8644a92dcad8c8728c304d81caf03e8306d5e82c7e9b76854bcc12d9ed59eca",
+      "lines": 6
+    },
+    "surah_cutter/tools/export_onnx.py": {
+      "sha256": "e58d7436a5bb9b8a9a16b8603f09b0260f0d6b6abe4aba80142e28c6c01a01fc",
+      "lines": 212
+    },
+    "surah_cutter/webgui/__init__.py": {
+      "sha256": "3742b6eb505bb22e7184b4ce72d2a9ee7d31fe79574406a46bd11a9eee21aa42",
+      "lines": 6
+    },
+    "surah_cutter/webgui/launch.py": {
+      "sha256": "e13b8e623a1f0cd8bdd8e753b0a94fa6b9466ac7d03a6ea36f6235dd2471201b",
+      "lines": 123
+    },
+    "surah_cutter/webgui/projects.py": {
+      "sha256": "9147f0fce4179c5a7987ea954e9db704d13fe704d95b4977578fff3773b1c182",
+      "lines": 91
+    },
+    "surah_cutter/webgui/server.py": {
+      "sha256": "8b5217fa59b7700c49b2f8c4f60736a6749783ecaebcb9fe3cc04ae529b7f5c7",
+      "lines": 1602
+    },
+    "surah_cutter/webgui/settings.py": {
+      "sha256": "19cf4cbd4bc6340eae4c198e3318c4bcc3e58c60159dcd9ac13c55834ef6709c",
+      "lines": 94
+    },
+    "surah_cutter/webgui/state.py": {
+      "sha256": "8388a3da4390430992cd232b8fd4a7013f89fc35043b25777ef5f831970cd239",
+      "lines": 219
+    },
+    "surah_cutter/webgui/static/app.js": {
+      "sha256": "e08d7af68262b24d9dfacb0c3b805889616d331c08df0ec69267e7d6d28d01ee",
+      "lines": 2684
+    },
+    "surah_cutter/webgui/static/i18n.js": {
+      "sha256": "c16bfef622bfc4ae847158020fc34569a75834263716e2fd42d6fa726dc68e3f",
+      "lines": 173
+    },
+    "surah_cutter/webgui/static/models.js": {
+      "sha256": "0466a6eec1406a4ec418dcadd638fa5d35a53da73b9e97557728a024a28ca8ba",
+      "lines": 128
+    },
+    "surah_cutter/webgui/static/sura-names.js": {
+      "sha256": "84e0b3146828c66415cb0d339dfcf2e7d5e9d6e3ab0cc2aeca14a4bb48628404",
+      "lines": 239
+    },
+    "surah_cutter.spec": {
+      "sha256": "8320eb8e79d6ad7b490d13b2c7af61fb228cada3ceea5b47eb17dc9e1283ec0a",
+      "lines": 154
+    },
+    "tools/bench_fast.py": {
+      "sha256": "3e18c1d174e1a18482f83f0134f03b68c7891424d9278c35b8cae02c81b92c9a",
+      "lines": 379
+    },
+    "tools/bench_models.py": {
+      "sha256": "0846fa407e2dc7ee3c270b5848f9b522f3a1f45c76e3f935150bad9cab30a9f8",
+      "lines": 70
+    },
+    "tools/build_macos.py": {
+      "sha256": "11663327b0fea8a3710832ec52b2465a86a71af488cb3aa4f81de51327fdcf04",
+      "lines": 71
+    },
+    "tools/build_model_text.py": {
+      "sha256": "30d323bc4a635fc95cfdae1199f1d3d0ecb23cb42dded9eb1909f3ed331a0bb1",
+      "lines": 56
+    },
+    "tools/fetch_runtime_models.py": {
+      "sha256": "a45335de709948382e4670911fdf8445b3d0f5e6bd90f45075448a31ea712377",
+      "lines": 37
+    },
+    "tools/prepare_models.py": {
+      "sha256": "db9a0b0a2828c012fb4ac9fd9ab14cdac4f245c096aa8b2d56a1b53d1ed8bbfd",
+      "lines": 67
+    }
+  },
+  "align_surah_fast": {
+    "line": 5503,
+    "lines": 8051
+  },
+  "create_app": {
+    "line": 205,
+    "lines": 912
+  }
+}

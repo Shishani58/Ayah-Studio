@@ -1,0 +1,327 @@
+{
+  "_id": "6391be672e563dc344159974",
+  "id": "tarteel-ai/whisper-tiny-ar-quran",
+  "private": false,
+  "pipeline_tag": "automatic-speech-recognition",
+  "library_name": "transformers",
+  "tags": [
+    "transformers",
+    "pytorch",
+    "tensorboard",
+    "whisper",
+    "automatic-speech-recognition",
+    "generated_from_trainer",
+    "license:apache-2.0",
+    "endpoints_compatible",
+    "region:us"
+  ],
+  "downloads": 1285,
+  "likes": 29,
+  "modelId": "tarteel-ai/whisper-tiny-ar-quran",
+  "author": "tarteel-ai",
+  "sha": "c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0",
+  "lastModified": "2022-12-14T09:32:40.000Z",
+  "gated": false,
+  "disabled": false,
+  "model-index": [
+    {
+      "name": "whisper-tiny-ar-quran",
+      "results": []
+    }
+  ],
+  "config": {
+    "architectures": [
+      "WhisperForConditionalGeneration"
+    ],
+    "model_type": "whisper",
+    "tokenizer_config": {
+      "bos_token": {
+        "__type": "AddedToken",
+        "content": "<|endoftext|>",
+        "lstrip": false,
+        "normalized": true,
+        "rstrip": false,
+        "single_word": false
+      },
+      "eos_token": {
+        "__type": "AddedToken",
+        "content": "<|endoftext|>",
+        "lstrip": false,
+        "normalized": true,
+        "rstrip": false,
+        "single_word": false
+      },
+      "pad_token": null,
+      "unk_token": {
+        "__type": "AddedToken",
+        "content": "",
+        "lstrip": false,
+        "normalized": true,
+        "rstrip": false,
+        "single_word": false
+      }
+    }
+  },
+  "cardData": {
+    "license": "apache-2.0",
+    "tags": [
+      "generated_from_trainer"
+    ],
+    "metrics": [
+      "wer"
+    ],
+    "model-index": [
+      {
+        "name": "whisper-tiny-ar-quran",
+        "results": []
+      }
+    ]
+  },
+  "transformersInfo": {
+    "auto_model": "AutoModelForSpeechSeq2Seq",
+    "pipeline_tag": "automatic-speech-recognition",
+    "processor": "AutoProcessor"
+  },
+  "siblings": [
+    {
+      "rfilename": ".gitattributes",
+      "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+      "size": 1477
+    },
+    {
+      "rfilename": ".gitignore",
+      "blobId": "0348ea97130c017c407fcfb6fd4003859f17b84c",
+      "size": 13
+    },
+    {
+      "rfilename": "README.md",
+      "blobId": "529d97acca70479e0448881338247728d4e9856c",
+      "size": 1963
+    },
+    {
+      "rfilename": "added_tokens.json",
+      "blobId": "47e9dd31523ecea227504afad3870da1cfe5ad81",
+      "size": 2108
+    },
+    {
+      "rfilename": "all_results.json",
+      "blobId": "b5e7ca53cf904cddb90bb7ecf85c5296bf4dc617",
+      "size": 346
+    },
+    {
+      "rfilename": "config.json",
+      "blobId": "64d5f0c3bfb412461f2e30b29c54100339805a0d",
+      "size": 999
+    },
+    {
+      "rfilename": "eval_results.json",
+      "blobId": "fd335a63c5c6a26f5d5ffa1b6f1c390b25684c6a",
+      "size": 199
+    },
+    {
+      "rfilename": "merges.txt",
+      "blobId": "3a00c89ee5e8ae0cb159a6ec838843fb2266fac6",
+      "size": 493864
+    },
+    {
+      "rfilename": "normalizer.json",
+      "blobId": "dd6ae819ad738ac1a546e9f9282ef325c33b9ea0",
+      "size": 52666
+    },
+    {
+      "rfilename": "preprocessor_config.json",
+      "blobId": "c2048dfa9fd94a052e62e908d2c4dfb18534b4d2",
+      "size": 184990
+    },
+    {
+      "rfilename": "pytorch_model.bin",
+      "blobId": "0de66dc4f26919fbaa86d5af111a492149779a29",
+      "size": 151098921,
+      "lfs": {
+        "sha256": "f26c96202427524ec015bcf25bd932414df0474e538d765c16759f1095757688",
+        "size": 151098921,
+        "pointerSize": 134
+      }
+    },
+    {
+      "rfilename": "runs/Dec08_10-23-27_tl-ml-1/1670535403.9654691/events.out.tfevents.1670535403.tl-ml-1.3160583.1",
+      "blobId": "221313110eb96b9159ade7c7694ff946d5f90b5d",
+      "size": 5799,
+      "lfs": {
+        "sha256": "84c7db873b3e4478e23c0d88f8622d135b5f29bdb90b80a65c599cab4e4489b0",
+        "size": 5799,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec08_10-23-27_tl-ml-1/events.out.tfevents.1670535403.tl-ml-1.3160583.0",
+      "blobId": "c0cf57df3ea661bb3c12daff42072914e94ec723",
+      "size": 4260,
+      "lfs": {
+        "sha256": "4206c3ed23dbb79f8515b845769fe424db8695fbada5e90fb38eb12e075e1f29",
+        "size": 4260,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec09_14-29-01_tl-ml-1/1670614149.5733354/events.out.tfevents.1670614149.tl-ml-1.3282368.1",
+      "blobId": "505759cd3fceb48f4a06fe1adcebbd0daaa1c308",
+      "size": 5799,
+      "lfs": {
+        "sha256": "e980a99661c63ddbb84e19b63ea3adbc881357d81ec6d53d512238bd6acfc732",
+        "size": 5799,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec09_14-29-01_tl-ml-1/events.out.tfevents.1670614149.tl-ml-1.3282368.0",
+      "blobId": "47335cb4bc8e4211eb98133d9ad7032f01867b6f",
+      "size": 4567,
+      "lfs": {
+        "sha256": "6d54f0b391745052325593b1f502b92203474a93bca3ce8a5ce3eb2406b2d0d2",
+        "size": 4567,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec09_18-27-27_tl-ml-1/1670628458.487376/events.out.tfevents.1670628458.tl-ml-1.480643.1",
+      "blobId": "88f1982d8f87f45894c065156862d5395f11f058",
+      "size": 5799,
+      "lfs": {
+        "sha256": "9a4d30890a92d5e0af69803184d8786fd7fb767f65ff23ec113b908c78b3a4df",
+        "size": 5799,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec09_18-27-27_tl-ml-1/events.out.tfevents.1670628458.tl-ml-1.480643.0",
+      "blobId": "f95207bf958286c1cf0ba34544cabe13eee69e75",
+      "size": 4567,
+      "lfs": {
+        "sha256": "20f92a6c6ba003c3fe965ebe06983a9247464ff0f27d32642675a4a5f49811f5",
+        "size": 4567,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec10_16-13-00_tl-ml-1/1670706787.7087123/events.out.tfevents.1670706787.tl-ml-1.3519806.1",
+      "blobId": "7182f6e49a8c667f4ca7ce00f16fc3ba2e0a2216",
+      "size": 5799,
+      "lfs": {
+        "sha256": "11f6f89afb9e3fb08a0c9d90d1aa189a106faa66793140d2b7cf8d6286095f09",
+        "size": 5799,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec10_16-13-00_tl-ml-1/events.out.tfevents.1670706787.tl-ml-1.3519806.0",
+      "blobId": "2ab28c8a78bd627de991b90aa6f6595cf46e592e",
+      "size": 13714,
+      "lfs": {
+        "sha256": "5eaf641806e0a88c917cf2f56fc07cd67c50d8aed81c15ac4eee89368ac062fe",
+        "size": 13714,
+        "pointerSize": 130
+      }
+    },
+    {
+      "rfilename": "runs/Dec12_06-35-23_tl-ml-1/1670844934.3750677/events.out.tfevents.1670844934.tl-ml-1.3357345.1",
+      "blobId": "091b1c7b8ed368a144486af18a14a45d7cb00d5a",
+      "size": 5799,
+      "lfs": {
+        "sha256": "e6e425d7e6f737ee634f8d84200df5da95d43ef5f30a492c31b4bfaef17c9bf4",
+        "size": 5799,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec12_06-35-23_tl-ml-1/events.out.tfevents.1670844934.tl-ml-1.3357345.0",
+      "blobId": "5e4af95fe358df3b48b49e3a0f2d4b5a58af44f5",
+      "size": 11496,
+      "lfs": {
+        "sha256": "a0ce447de4223b0368a847374e1094f7f573a93110c652b6a36042f99e232a9b",
+        "size": 11496,
+        "pointerSize": 130
+      }
+    },
+    {
+      "rfilename": "runs/Dec13_06-02-10_tl-ml-1/1670961273.804341/events.out.tfevents.1670961273.tl-ml-1.3676941.1",
+      "blobId": "810105d1fcff2b39906bbe2e98da69c40b0864de",
+      "size": 5799,
+      "lfs": {
+        "sha256": "844cb606ea91b94806f1debfc7f15fe02c6d642aa257aaf275cd620248ab9494",
+        "size": 5799,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec13_06-02-10_tl-ml-1/events.out.tfevents.1670961273.tl-ml-1.3676941.0",
+      "blobId": "422e5f5c0d428b18d55b5382236bfa813a1eae04",
+      "size": 39179,
+      "lfs": {
+        "sha256": "c85038489f2d4ac1b443a27484f54d311e20c0e343ce5f7a3d82c2e1238b7cea",
+        "size": 39179,
+        "pointerSize": 130
+      }
+    },
+    {
+      "rfilename": "runs/Dec13_06-02-10_tl-ml-1/events.out.tfevents.1671010359.tl-ml-1.3676941.2",
+      "blobId": "5c495d0c45dd395a67e74dd51a28d6aba1c7edbf",
+      "size": 358,
+      "lfs": {
+        "sha256": "d8d22b19d27384de38bbf12b4c2144acb04bea9945b2c1e975102589e4088dd7",
+        "size": 358,
+        "pointerSize": 128
+      }
+    },
+    {
+      "rfilename": "special_tokens_map.json",
+      "blobId": "9115b6806f75d5122486b0e1ae0279a0207199c2",
+      "size": 2064
+    },
+    {
+      "rfilename": "tokenizer_config.json",
+      "blobId": "fa31e7bfe16adb1bca088fe11ac2988380177aa1",
+      "size": 828
+    },
+    {
+      "rfilename": "train_results.json",
+      "blobId": "ac9ac0545863493d66925897e9dfe5af05dd611d",
+      "size": 168
+    },
+    {
+      "rfilename": "trainer_state.json",
+      "blobId": "265f13f49b9cc5c7666be8abf2822b3d91b5d8ab",
+      "size": 26999
+    },
+    {
+      "rfilename": "training_args.bin",
+      "blobId": "f5105c512d914d8faa89a2ada2105131d0031775",
+      "size": 3579,
+      "lfs": {
+        "sha256": "3e18076c83c081c6172cbcf0cf183ad39fbd8636ead1c2c9c75b4d4de1cfb171",
+        "size": 3579,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "vocab.json",
+      "blobId": "0f3456460629e21d559c6daa23ab6ce3644e8271",
+      "size": 1036558
+    }
+  ],
+  "spaces": [
+    "Quran-Lab/quranic-asr-leaderboard",
+    "tarteel-ai/demo-whisper-tiny-ar-quran",
+    "tarteel-ai/whisper-tiny-demo-quran",
+    "MahmoudGomaa8545/Tasmee3_Mutqin",
+    "Arwaaaa/tajweed-ai-fastapi",
+    "shani925273/surah-kawthar-asr-space",
+    "deepdml/open_universal_arabic_quranic_asr_leaderboard",
+    "kamrulhasan12345/tarteel-ai-test",
+    "sae8d/bayan-ai",
+    "hamzaadam222/tilawah-asr",
+    "Hossam0111/forqan-backend"
+  ],
+  "createdAt": "2022-12-08T10:37:27.000Z",
+  "usedStorage": 1662400036
+}

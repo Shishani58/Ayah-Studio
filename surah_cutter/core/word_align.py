@@ -5,7 +5,7 @@ from __future__ import annotations
 import numpy as np
 
 from surah_cutter.core import align
-from surah_cutter.core._ctc import forced_align, merge_repeats
+from surah_cutter.core._ctc import forced_align, aligned_segments
 from surah_cutter.data import transliteration
 from surah_cutter.data.quran_text import Word
 
@@ -43,10 +43,10 @@ def align_ayah_words(pcm, sr: int, words: list[Word]) -> list[tuple[int, int, fl
         np.ascontiguousarray(emissions[None], dtype=np.float32),
         np.asarray(targets, dtype=np.int64)[None], blank=bundle.blank_id,
     )
-    segments = [s for s in merge_repeats(path.reshape(-1).tolist(),
-                {i: i for i in range(emissions.shape[1])}) if s.label != bundle.blank_id]
-    if [s.label for s in segments] != targets:
-        raise ValueError("Не удалось сопоставить все слова. Проверьте границы аята и запись.")
+    try:
+        segments = aligned_segments(path, targets, blank=bundle.blank_id)
+    except ValueError as exc:
+        raise ValueError("Не удалось сопоставить все слова. Проверьте границы аята и запись.") from exc
     stride = align._stride_ms(len(pcm), sr, len(emissions))
     scores = scores.reshape(-1)
     rows = []

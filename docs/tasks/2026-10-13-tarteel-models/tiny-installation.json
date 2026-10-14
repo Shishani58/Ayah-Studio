@@ -1,0 +1,49 @@
+{
+  "revision": "c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0",
+  "license": "Apache-2.0",
+  "repo": "tarteel-ai/whisper-tiny-ar-quran",
+  "license_url": "https://www.apache.org/licenses/LICENSE-2.0",
+  "download_authorized": true,
+  "files": [
+    {
+      "path": "pytorch_model.bin",
+      "sha256": "f26c96202427524ec015bcf25bd932414df0474e538d765c16759f1095757688"
+    },
+    {
+      "path": "config.json",
+      "sha256": "4aa68ebec1ca833b4c28a7be8f595fa6e7493ef3b1587e2d60f6d811087ed3fa"
+    },
+    {
+      "path": "preprocessor_config.json",
+      "sha256": "9b5cd03a36fbb8a627c64d98a5b5b126ead95a77720723944487311f0110b666"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "sha256": "aca988adb9f901b2d32584a8ed22d4aabf14ab2d62397a82ab523fb11c2a4712"
+    },
+    {
+      "path": "special_tokens_map.json",
+      "sha256": "87870d95726faac1641b583cbbb6d8a0c22deab726bcaeac9bb06c350bc638b1"
+    },
+    {
+      "path": "added_tokens.json",
+      "sha256": "5687ef031827f4c9fa3e7cbdd7fd915de0d6c7c6416463a28c63cbe1cf99a07a"
+    },
+    {
+      "path": "normalizer.json",
+      "sha256": "bf1c507dc8724ca9cf9903640dacfb69dae2f00edee4f21ceba106a7392f26dd"
+    },
+    {
+      "path": "merges.txt",
+      "sha256": "78f27f801feb4283ae969d4cadacb28fc051b655647402b1a252c7079ea11c46"
+    },
+    {
+      "path": "vocab.json",
+      "sha256": "e2aa043ef015641d363d8288e7c241c85e36a5c761fb303598e0710233344387"
+    },
+    {
+      "path": "README.md",
+      "sha256": "d5cf2cdc5ee1989dda1420f0e19ae3baf986bc2a1ec02d466896066121bb4070"
+    }
+  ]
+}

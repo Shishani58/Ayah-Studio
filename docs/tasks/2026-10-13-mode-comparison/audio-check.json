@@ -1,0 +1,260 @@
+{
+  "audio": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/114.mp3",
+  "model": "quran-phonetics",
+  "checks": [
+    {
+      "mode": "fast",
+      "seconds": 1.866,
+      "written": 6,
+      "snapshot": "sura_114_fast_413526a1b0894f45a5c0d3ca3e24a9f8.json",
+      "rows": [
+        [
+          114,
+          1,
+          6010
+        ],
+        [
+          114,
+          2,
+          10170
+        ],
+        [
+          114,
+          3,
+          13120
+        ],
+        [
+          114,
+          4,
+          16040
+        ],
+        [
+          114,
+          5,
+          20460
+        ],
+        [
+          114,
+          6,
+          24880
+        ]
+      ],
+      "scores": [
+        0.4287,
+        0.977,
+        0.589,
+        0.995,
+        0.789,
+        0.875
+      ],
+      "model_result": [
+        {
+          "ayah": 1,
+          "time": 6010,
+          "confidence": 0.4287
+        },
+        {
+          "ayah": 2,
+          "time": 10170,
+          "confidence": 0.977
+        },
+        {
+          "ayah": 3,
+          "time": 13120,
+          "confidence": 0.589
+        },
+        {
+          "ayah": 4,
+          "time": 16040,
+          "confidence": 0.995
+        },
+        {
+          "ayah": 5,
+          "time": 20460,
+          "confidence": 0.789
+        },
+        {
+          "ayah": 6,
+          "time": 24880,
+          "confidence": 0.875
+        }
+      ],
+      "source": "onnx-ctc:quran-phonetics:revision=local-export:sha256=423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a:lag=200:backend=onnx:requested_mode=fast:actual_mode=fast:align_lag_ms=200:lag_adjust_ms=0",
+      "audio_signature": {
+        "name": "114.mp3",
+        "size": 552960,
+        "mtime_ns": 1788193858431495242
+      }
+    },
+    {
+      "mode": "full",
+      "seconds": 3.934,
+      "written": 4,
+      "snapshot": "sura_114_full_ccc02b7e618e4691a6418226913479e5.json",
+      "rows": [
+        [
+          114,
+          1,
+          6100
+        ],
+        [
+          114,
+          2,
+          10170
+        ],
+        [
+          114,
+          3,
+          13120
+        ],
+        [
+          114,
+          4,
+          16060
+        ],
+        [
+          114,
+          5,
+          20540
+        ],
+        [
+          114,
+          6,
+          24900
+        ]
+      ],
+      "scores": [
+        0.0319,
+        0.977,
+        0.589,
+        0.1959,
+        0.0586,
+        0.319
+      ],
+      "model_result": [
+        {
+          "ayah": 1,
+          "time": 6100,
+          "confidence": 0.0319
+        },
+        {
+          "ayah": 2,
+          "time": 10260,
+          "confidence": 0.1392
+        },
+        {
+          "ayah": 3,
+          "time": 13140,
+          "confidence": 0.186
+        },
+        {
+          "ayah": 4,
+          "time": 16060,
+          "confidence": 0.1959
+        },
+        {
+          "ayah": 5,
+          "time": 20540,
+          "confidence": 0.0586
+        },
+        {
+          "ayah": 6,
+          "time": 24900,
+          "confidence": 0.319
+        }
+      ],
+      "source": "onnx-ctc:quran-phonetics:revision=local-export:sha256=423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a:lag=200:backend=onnx:requested_mode=full:actual_mode=full:align_lag_ms=200:lag_adjust_ms=0",
+      "audio_signature": {
+        "name": "114.mp3",
+        "size": 552960,
+        "mtime_ns": 1788193858431495242
+      }
+    },
+    {
+      "mode": "fast",
+      "seconds": 1.147,
+      "written": 4,
+      "snapshot": "sura_114_fast_41b853a1865e443bbaa26c0a1b8a2f2f.json",
+      "rows": [
+        [
+          114,
+          1,
+          6010
+        ],
+        [
+          114,
+          2,
+          10170
+        ],
+        [
+          114,
+          3,
+          13120
+        ],
+        [
+          114,
+          4,
+          16040
+        ],
+        [
+          114,
+          5,
+          20460
+        ],
+        [
+          114,
+          6,
+          24880
+        ]
+      ],
+      "scores": [
+        0.4287,
+        0.977,
+        0.589,
+        0.995,
+        0.789,
+        0.875
+      ],
+      "model_result": [
+        {
+          "ayah": 1,
+          "time": 6010,
+          "confidence": 0.4287
+        },
+        {
+          "ayah": 2,
+          "time": 10170,
+          "confidence": 0.977
+        },
+        {
+          "ayah": 3,
+          "time": 13120,
+          "confidence": 0.589
+        },
+        {
+          "ayah": 4,
+          "time": 16040,
+          "confidence": 0.995
+        },
+        {
+          "ayah": 5,
+          "time": 20460,
+          "confidence": 0.789
+        },
+        {
+          "ayah": 6,
+          "time": 24880,
+          "confidence": 0.875
+        }
+      ],
+      "source": "onnx-ctc:quran-phonetics:revision=local-export:sha256=423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a:lag=200:backend=onnx:requested_mode=fast:actual_mode=fast:align_lag_ms=200:lag_adjust_ms=0",
+      "audio_signature": {
+        "name": "114.mp3",
+        "size": 552960,
+        "mtime_ns": 1788193858431495242
+      }
+    }
+  ],
+  "history_count": 3,
+  "user_files_unchanged": true
+}

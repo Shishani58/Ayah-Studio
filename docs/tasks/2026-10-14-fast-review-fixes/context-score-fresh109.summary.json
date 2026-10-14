@@ -1,0 +1,173 @@
+{
+  "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "source_sha256": {
+    "surah_cutter/core/align_fast.py": "0847f22065d7dd91ec49490341fd17c401bd4ecd48b049f98ad4dc627fe67b59",
+    "surah_cutter/core/align_fast_whisper.py": "cf4cd9768989f1ee0eb58b1749e22a63917f2e6f6facef8af68637886609a456",
+    "surah_cutter/core/fast_reads.py": "82ad5dbedf01636d2692fe17070a5938ff692fffced0a52d6f2fadce1283fe4b",
+    "surah_cutter/core/candidates.py": "311d6ad230f2dc2aaf9cba31431d9e8d8570a1252865e1bc8cad1fc2942bf2db",
+    "surah_cutter/core/fast_executor.py": "747886fe9527e9a7147aa952c65cd5eb5b5d4453d58d5e6c9f94052284d21ebd",
+    "surah_cutter/core/fast_adapters.py": "199345503bcc41fd4a88505f2c2ed32e0dd67075b55cafe1cc22eb71992c864f",
+    "surah_cutter/core/fast_ctc.py": "7b681cc7fd4179fcde6b7654bb986de8984b86a5e884c653148fe1b3d6daca3d",
+    "surah_cutter/core/align.py": "dd98b59bc807f9f494134880a8277a34af90fb5b2658d19ac99107195ac5d931",
+    "surah_cutter/core/emissions.py": "dde1335cf3f5641dff8cc3e4803ebdb7c61cd766dc960e3f9f163f5b3bba158a",
+    "surah_cutter/core/model_runtime.py": "f34bae23814e3a11e6230c0d5ae67b308257bef7af1cbdd56fb8dc166b0213a5",
+    "surah_cutter/core/model_worker.py": "f4cd775a0d558384c68477b485f893a44640f0892e6bf180264c51e24fd313ab",
+    "surah_cutter/core/model_store.py": "434675e4266f394a60649297311fdbbc34ac2fb3ae8f99435fc3be9016a73a23",
+    "tools/bench_fast_models.py": "611eda18abac9bca5ddc9e723cce2a8ba2e0559fcc3cf85fb7cec2ae7ab4cf33",
+    "surah_cutter/data/alignment_identity.py": "7108ade84f10e7f3aeaf2a790f256e487055c9eaa7bb3486ee549e70af81e010"
+  },
+  "canonical_sha256": "c35272ed2a80916f5665f18e150686cfe258249cdf3ad50d3ac787f8cfe3fd66",
+  "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+  "initial_pauses": {
+    "109": {
+      "audio_sha256": "cba1b5153fcaf7de463e304c229cd11979159e2db72241be873151ac995e0b78",
+      "decode_seconds": 0.08732374990358949,
+      "dsp_seconds": 0.08413949981331825,
+      "initial_pauses_sha256": "fe919da7b53fd381c762197c4344aabfc82ec5d3bacb569bca2fe5061ad5871d",
+      "duration_ms": 39680.0,
+      "decisions": [
+        {
+          "pause": {
+            "start_ms": 2460.0,
+            "end_ms": 2660.0,
+            "depth_ms": 200.0
+          },
+          "dsp_ok": true,
+          "vad_ok": true,
+          "accepted": true,
+          "reason": "intro-vad",
+          "flatness": 0.4187497657271981,
+          "zcr": 0.14517029592406477,
+          "rms_ratio": 0.2441333480396333
+        },
+        {
+          "pause": {
+            "start_ms": 10520.0,
+            "end_ms": 10920.0,
+            "depth_ms": 400.0
+          },
+          "dsp_ok": true,
+          "vad_ok": null,
+          "accepted": true,
+          "reason": "dsp",
+          "flatness": 0.45539629807317256,
+          "zcr": 0.09143005991143527,
+          "rms_ratio": 0.18311285233584026
+        },
+        {
+          "pause": {
+            "start_ms": 14500.0,
+            "end_ms": 14940.0,
+            "depth_ms": 440.0
+          },
+          "dsp_ok": true,
+          "vad_ok": null,
+          "accepted": true,
+          "reason": "dsp",
+          "flatness": 0.4806050738762033,
+          "zcr": 0.08774279973208306,
+          "rms_ratio": 0.18126081106668657
+        },
+        {
+          "pause": {
+            "start_ms": 20060.0,
+            "end_ms": 20500.0,
+            "depth_ms": 440.0
+          },
+          "dsp_ok": true,
+          "vad_ok": null,
+          "accepted": true,
+          "reason": "dsp",
+          "flatness": 0.43416794817784937,
+          "zcr": 0.1245813797722706,
+          "rms_ratio": 0.24055663256354043
+        },
+        {
+          "pause": {
+            "start_ms": 23920.0,
+            "end_ms": 24160.0,
+            "depth_ms": 240.0
+          },
+          "dsp_ok": false,
+          "vad_ok": null,
+          "accepted": false,
+          "reason": "rejected",
+          "flatness": 0.2805281303549084,
+          "zcr": 0.13494648673801768,
+          "rms_ratio": 0.34856011792102415
+        },
+        {
+          "pause": {
+            "start_ms": 24520.0,
+            "end_ms": 24920.0,
+            "depth_ms": 400.0
+          },
+          "dsp_ok": true,
+          "vad_ok": null,
+          "accepted": true,
+          "reason": "dsp",
+          "flatness": 0.5033970608953187,
+          "zcr": 0.08283407137275332,
+          "rms_ratio": 0.21034195174143688
+        },
+        {
+          "pause": {
+            "start_ms": 29860.0,
+            "end_ms": 30220.0,
+            "depth_ms": 360.0
+          },
+          "dsp_ok": true,
+          "vad_ok": null,
+          "accepted": true,
+          "reason": "dsp",
+          "flatness": 0.47450183199248414,
+          "zcr": 0.13488372093023257,
+          "rms_ratio": 0.20048245476989315
+        }
+      ]
+    }
+  },
+  "summary": {
+    "whisper-tarteel-tiny": {
+      "surahs": 1,
+      "ayahs": 6,
+      "median_ms": 52.0,
+      "p95_ms": 103.75,
+      "max_ms": 119,
+      "over500": 0,
+      "positive_conf_over500": [],
+      "sequence_violations": [],
+      "review_ayahs": 0,
+      "load_probe_seconds": 4.692288916092366,
+      "decode_seconds": 0.08732374990358949,
+      "dsp_seconds": 0.08413949981331825,
+      "inference_match_seconds": 3.157921750098467,
+      "search_seconds": 3.242061249911785,
+      "audio_ms": 22300.0,
+      "covered_audio_ms": 16580.0,
+      "total_ms": 39680.0,
+      "model_reads": 13
+    },
+    "whisper-tarteel-base": {
+      "surahs": 1,
+      "ayahs": 6,
+      "median_ms": 52.0,
+      "p95_ms": 103.75,
+      "max_ms": 119,
+      "over500": 0,
+      "positive_conf_over500": [],
+      "sequence_violations": [],
+      "review_ayahs": 0,
+      "load_probe_seconds": 4.248655500123277,
+      "decode_seconds": 0.08732374990358949,
+      "dsp_seconds": 0.08413949981331825,
+      "inference_match_seconds": 4.908476124983281,
+      "search_seconds": 4.992615624796599,
+      "audio_ms": 22300.0,
+      "covered_audio_ms": 16580.0,
+      "total_ms": 39680.0,
+      "model_reads": 13
+    }
+  }
+}

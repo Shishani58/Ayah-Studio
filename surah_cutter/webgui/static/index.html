@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="light">
+<html lang="ru" data-theme="light" data-i18n-pending>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Ayah Studio</title>
+  <style>[data-i18n-pending] body { visibility: hidden; }</style>
   <link rel="icon" href="/mark.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/style.css" />
   <link rel="stylesheet" href="/studio.css" />
@@ -45,10 +46,16 @@
         </details>
       </div>
     </div>
-    <div id="suraProgress" class="sura-progress workspace-summary hidden">
+    <div id="workspaceSummary" class="workspace-summary hidden">
+    <div id="suraProgress" class="sura-progress summary-counts hidden">
       <span id="suraProgressText">Размечено 0/0</span>
       <span id="suraProgressMeta">—</span>
-      <div class="progress sura-progress-bar" aria-hidden="true"><div id="suraProgressFill" class="progress-fill"></div><span id="suraProgressPct">0%</span></div>
+    </div>
+    <div id="navigationProgress" class="navigation-progress">
+      <div class="alignment-progress-meta"><span id="alignmentPosition">Подготовка…</span><span class="alignment-clock"><span id="alignmentPercent">0%</span> · <span id="alignmentElapsed" role="timer" aria-label="Время расчёта">0:00</span></span></div>
+      <div id="reviewGeneration" class="review-generation determinate" role="progressbar" aria-label="Расчёт разметки по аятам" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0"><div></div></div>
+      <span id="suraGenStatus" class="sura-gen-status" aria-live="polite"></span>
+    </div>
     </div>
     <div class="workspace-actions">
     <div class="workspace-review-actions hidden">
@@ -62,6 +69,7 @@
           <button id="alignWordsBtn" class="ghost hidden" disabled>Пересчитать слова выбранного аята</button>
           <button id="verifySelectedBtn" class="ghost" disabled>Отметить выбранный проверенным</button>
           <button id="recheckBtn" class="ghost" title="Перепроверить готовые тайм-коды: что реально слышно в каждой точке (ничего не меняет)">Перепроверить</button>
+          <button id="compareRunsBtn" class="ghost" aria-haspopup="dialog" aria-controls="comparisonDialog">Сравнить прогоны</button>
         </div>
         <div class="action-group secondary-actions">
           <button id="batchGenerateBtn" class="ghost">Разметить недостающие суры</button>
@@ -91,10 +99,6 @@
     <button id="workspaceExportBtn" class="ghost icon-btn" title="Экспорт разметки" aria-label="Экспорт разметки" disabled></button>
     </div>
   </header>
-  <div id="navigationProgress" class="navigation-progress">
-    <span id="suraGenStatus" class="sura-gen-status" aria-live="polite"></span>
-    <div id="reviewGeneration" class="review-generation" role="progressbar" aria-label="Расчёт разметки"><div></div></div>
-  </div>
   <div class="workspace-body">
   <aside id="suraSidebar" class="sura-sidebar" aria-label="Навигация по сурам"><div class="sura-sidebar-content"><h2>Суры</h2>      <div class="library-filters">
         <label class="search-field" for="suraSearch"><svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>
@@ -269,6 +273,22 @@
     <pre id="suraSavedLog" class="live-log sura-live-log hidden" tabindex="0" aria-label="Данные выбранного лога"></pre>
   </dialog>
 
+  <dialog id="comparisonDialog" aria-labelledby="comparisonTitle">
+    <header class="dialog-heading"><h2 id="comparisonTitle">Сравнение прогонов</h2><button id="closeComparisonBtn" class="icon-btn ghost" aria-label="Закрыть сравнение" autofocus>×</button></header>
+    <div class="comparison-selectors">
+      <label>Вариант А<select id="comparisonLeft" aria-label="Прогон А"></select></label>
+      <label>Вариант Б<select id="comparisonRight" aria-label="Прогон Б"></select></label>
+    </div>
+    <p id="comparisonSources" class="comparison-help"></p>
+    <p class="comparison-help">Δ = Б − А. Уверенность — оценка модели, не измеренная точность. Сравнение не меняет разметку.</p>
+    <p id="comparisonMessage" role="status"></p>
+    <p id="comparisonWarning" class="comparison-help"></p>
+    <label class="comparison-filter"><input id="comparisonDifferences" type="checkbox" /> Только различия от 500 мс</label>
+    <div class="comparison-table-wrap"><table class="comparison-table"><thead><tr><th scope="col">Аят</th><th scope="col">А · начало / уверенность</th><th scope="col">Б · начало / уверенность</th><th scope="col">Δ, мс</th></tr></thead><tbody id="comparisonRows"></tbody></table></div>
+    <p id="comparisonEmpty" class="comparison-help" role="status"></p>
+    <footer class="comparison-player"><span id="comparisonPlaying" role="status"></span><audio id="comparisonAudio" controls preload="metadata" aria-label="Прослушивание вариантов"></audio></footer>
+  </dialog>
+
   <dialog id="settingsDialog" aria-labelledby="settingsTitle">
     <header class="dialog-heading"><h2 id="settingsTitle">Настройки</h2><button id="closeSettingsBtn" class="icon-btn ghost" aria-label="Закрыть настройки">×</button></header>
     <nav class="settings-tabs" aria-label="Разделы настроек">
@@ -284,6 +304,11 @@
     </section>
     <section id="interfaceSettings" class="settings-panel hidden">
       <h3>Интерфейс</h3>
+      <fieldset class="settings-group">
+        <legend>Язык</legend>
+        <div class="settings-fields"><label for="settingsLanguage">Язык интерфейса<select id="settingsLanguage"><option value="ru" lang="ru">Русский</option><option value="en" lang="en">English</option></select></label></div>
+        <p class="settings-help">При первом запуске выбирается язык системы.</p>
+      </fieldset>
       <fieldset class="settings-group">
         <legend>Оформление</legend>
         <p class="settings-help">Изменения применяются и сохраняются автоматически.</p>
@@ -304,11 +329,16 @@
       <div id="modelList" class="model-list" aria-label="Каталог моделей"></div>
       <template id="modelHelpTemplate">
         <p class="model-meta">Замеры: Шатри, суры 112 и 114, полный режим на Mac (CPU). Ошибка — медианное отклонение начала аята от эталона. Время включает загрузку модели и проверку слов первого аята. На других записях результаты могут отличаться.</p>
-        <p class="model-meta">Для быстрого режима пока используйте Quran Phonetics. Сложные границы требуют проверки. Остальные модели доступны в полном, точном и пословном режимах.</p>
+        <p class="model-meta">Быстрый режим доступен для Quran Phonetics и экспериментальных Tarteel Tiny/Base. Сложные границы требуют проверки. Другие модели доступны в полном, точном и пословном режимах.</p>
       </template>
     </section>
     <p id="settingsMessage" class="settings-message" role="status"></p>
     </div>
+  </dialog>
+
+  <dialog id="generationChoiceDialog" aria-label="Ручные правки">
+    <button id="preserveGenerationBtn" type="button" class="primary" autofocus>Сохранить ручные правки</button>
+    <button id="overwriteGenerationBtn" type="button" class="danger">Перезаписать всё</button>
   </dialog>
 
   <dialog id="projectDialog" aria-labelledby="projectDialogTitle">
@@ -330,8 +360,10 @@
     </form>
   </dialog>
 
+  <script src="/i18n.js"></script>
   <script src="/models.js"></script>
   <script src="/sura-names.js"></script>
+  <script src="/generation.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>

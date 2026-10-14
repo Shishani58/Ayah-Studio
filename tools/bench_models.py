@@ -37,13 +37,23 @@ def main():
                     audio = args.audio_dir / f"{surah:03d}.mp3"
                     item["audio_sha256"] = hashlib.sha256(audio.read_bytes()).hexdigest()
                     item["reference_sha256"] = hashlib.sha256(args.reference.read_bytes()).hexdigest()
+                    stage = time.monotonic()
                     pcm = decode.decode(str(audio))
+                    item["decode_seconds"] = round(time.monotonic() - stage, 4)
                     words = quran_text.surah_words(surah)
+                    stage = time.monotonic()
                     bundle = align._get_onnx_bundle()
                     if hasattr(bundle.emitter, "probe"):
                         bundle.emitter.probe()
+                    item["load_probe_seconds"] = round(time.monotonic() - stage, 4)
                     trace = {}
-                    rows = align.align_surah(pcm, 16000, words, model=bundle, trace=trace)
+                    stage = time.monotonic()
+                    try:
+                        rows = align.align_surah(pcm, 16000, words, model=bundle, trace=trace)
+                    finally:
+                        item["full_seconds"] = round(time.monotonic() - stage, 4)
+                        item["source"] = model_store.source()
+                        item["trace"] = trace
                     assert [a for a, _, _ in rows] == list(range(1, quran_text.ayah_count(surah) + 1))
                     assert all(b[1] > a[1] for a, b in zip(rows, rows[1:]))
                     truth = dict(reference.execute("SELECT ayah,time FROM timings WHERE sura=?", (surah,)))
@@ -53,9 +63,11 @@ def main():
                                  "p95_ms": float(np.percentile(errors, 95)),
                                  "max_ms": max(errors), "source": model_store.source(), "trace": trace})
                     end = truth.get(2, len(pcm) // 16)
+                    stage = time.monotonic()
                     word_rows = word_align.align_ayah_words(pcm[truth[1] * 16:end * 16], 16000,
                                                            [w for w in words if w.ayah == 1])
                     item["first_ayah_words"] = word_rows
+                    item["words_seconds"] = round(time.monotonic() - stage, 4)
                 except Exception as exc:
                     item["error"] = f"{type(exc).__name__}: {exc}"
                 item["seconds"] = round(time.monotonic() - started, 3)

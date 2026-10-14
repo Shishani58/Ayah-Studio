@@ -41,6 +41,7 @@ datas = [
     (str(ROOT / "data" / "word_tr_cache.json"), "data"),
     (str(ROOT / "data" / "model_text_targets.json"), "data"),
     (str(ROOT / "surah_cutter/core/model_catalog.json"), "surah_cutter/core"),
+    (str(ROOT / "surah_cutter/core/runtime_locks"), "surah_cutter/core/runtime_locks"),
     (str(ROOT / "surah_cutter/core/model_worker.py"), "surah_cutter/core"),
     (str(ROOT / "assets" / "fonts" / "qpc_hafs.ttf"), "assets/fonts"),
     # The FastAPI single-page UI resolves this relative to server.py.

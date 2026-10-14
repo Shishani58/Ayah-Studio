@@ -7,6 +7,22 @@ import numpy as np
 from surah_cutter.core import align_fast, decode, pipeline
 
 
+def test_explicit_modes_are_not_replaced_by_reciter_reference(monkeypatch):
+    from surah_cutter.data import quran_text, references
+
+    monkeypatch.setattr(references, "find_reciter", lambda name: "reader")
+    monkeypatch.setattr(references, "load_reference", lambda name: {(114, 1): 900})
+    monkeypatch.setattr(quran_text, "surah_words", lambda surah: [])
+    monkeypatch.setattr(pipeline, "_full_align", lambda *args, **kw: [(114, 1, 100)])
+    monkeypatch.setattr(pipeline, "_fast_align", lambda *args, **kw: [(114, 1, 200)])
+    monkeypatch.setattr(pipeline, "_tiled_align", lambda *args, **kw: [(114, 1, 300)])
+    assert pipeline.process_surah("audio.mp3", 114, reciter="reader", mode="auto") == [(114, 1, 900)]
+    for mode, time in [("full", 100), ("fast", 200), ("tiled", 300)]:
+        trace = {}
+        assert pipeline.process_surah("audio.mp3", 114, reciter="reader", mode=mode, trace=trace) == [(114, 1, time)]
+        assert not trace["model_source"].startswith("reference:")
+
+
 def test_fast_align_keeps_fast_rows_on_drift(monkeypatch):
     logs: list[str] = []
     monkeypatch.setattr(decode, "DEFAULT_SR", 1000)

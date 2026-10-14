@@ -13,6 +13,12 @@ from collections import OrderedDict
 from dataclasses import dataclass
 from typing import Any, Callable
 
+from surah_cutter.core.phonetics import (
+    collapse as _collapse, common_prefix_len as _common_prefix_len,
+    common_prefix_len_collapsed as _common_prefix_len_collapsed,
+    unit_len as _unit_len, onset_similarity,
+)
+
 #: Lookahead "don't steal the next ayah's pause" gate (Phase 1c). If a near-next
 #: ayah's opening is heard distinctly better after a pause (sim margin), penalise
 #: matching that pause to the earlier ayah so the DP leaves it wasl instead of an
@@ -622,27 +628,10 @@ def _build_pause_read_plan(
     )
 
 
-def _collapse(s: str) -> str:
-    """Collapse runs of the same character (melodic vowel elongation -> 1)."""
-    out: list[str] = []
-    for c in s:
-        if not out or out[-1] != c:
-            out.append(c)
-    return "".join(out)
 
 
-def _common_prefix_len(a: str, b: str) -> int:
-    """Length of the common collapsed prefix of two transliteration strings."""
-    return _common_prefix_len_collapsed(_collapse(a), _collapse(b))
 
 
-def _common_prefix_len_collapsed(a: str, b: str) -> int:
-    common = 0
-    for ca, cb in zip(a, b):
-        if ca != cb:
-            break
-        common += 1
-    return common
 
 
 def _prefix_key(s: str) -> str:
@@ -671,9 +660,6 @@ def _onset_prefix_len(a: str, b: str) -> int:
 _LONG_VOWELS = frozenset("āīū")
 
 
-def _unit_len(s: str) -> float:
-    """Tempo-unit length of a transliteration token (long vowels count double)."""
-    return float(sum(2 if c in _LONG_VOWELS else 1 for c in s))
 
 
 def _span_ratio_quality(actual_ms: float, expected_ms: float) -> float:
@@ -1075,21 +1061,7 @@ _INTERNAL_REPEAT_MATCH_MARGIN = float(os.environ.get("SC_FAST_INTERNAL_REPEAT_MA
 
 
 def _sim(dec: str, opening: str, *, chars: int = _SIM_CHARS) -> float:
-    """Fuzzy similarity of a greedy-decoded onset to an ayah's opening tokens.
-
-    Both are collapsed (recitation stretches vowels) and capped at ``chars``
-    chars. The score is intentionally onset-aware: a decode that contains the
-    target later after a previous-ayah tail is worse than one that starts with
-    the target. Returns ``[0, 1]``.
-    """
-    chars = max(1, int(chars))
-    dec_c = _collapse(dec)[:chars]
-    opening_c = _collapse(opening)[:chars]
-    fuzzy = difflib.SequenceMatcher(None, dec_c, opening_c).ratio()
-    common = _common_prefix_len(dec_c, opening_c)
-    prefix = common / max(1, min(chars, len(opening_c)))
-    weight = min(1.0, max(0.0, _SIM_PREFIX_WEIGHT))
-    return fuzzy * (1.0 - weight) + prefix * weight
+    return onset_similarity(dec, opening, chars=chars, prefix_weight=_SIM_PREFIX_WEIGHT)
 
 
 def _tail_sim(dec: str, body: str, *, chars: int = _SIM_CHARS) -> float:
@@ -1365,11 +1337,9 @@ def _pause_center_start(pause_start_ms: float, pause_end_ms: float) -> float:
 
 
 def _default_bundle() -> Any:
-    from surah_cutter.core import align as A
+    from surah_cutter.core.align import default_bundle
 
-    if A.DEFAULT_BACKEND == "onnx":
-        return A._get_onnx_bundle()
-    return A._get_bundle(A.DEFAULT_MODEL_ID)
+    return default_bundle()
 
 
 def _match_boundaries(
@@ -5516,6 +5486,8 @@ def align_surah_fast(
     trace: dict | None = None,
     log_event: Callable[[str], None] | None = None,
     ayah_audio_dir: str | None = None,
+    ayah_progress: Callable[[int], None] | None = None,
+    pause_decisions: list | None = None,
 ) -> list[tuple[int, int, float]]:
     """Two-phase windowed forced alignment; see module docstring.
 
@@ -5542,11 +5514,8 @@ def align_surah_fast(
     Returns:
         ``[(ayah, start_ms, conf)]`` for every ayah, ``start_ms`` monotonic.
     """
-    import numpy as np
-
     from surah_cutter.core import align as A
     from surah_cutter.core import candidates
-    from surah_cutter.core._ctc import forced_align, merge_repeats
     from surah_cutter.data import transliteration
 
     if surah is None:
@@ -5554,8 +5523,22 @@ def align_surah_fast(
     if bundle is None:
         bundle = _default_bundle()
 
+    if getattr(getattr(bundle, "emitter", None), "model_id", None) in ("whisper-tarteel-tiny", "whisper-tarteel-base"):
+        from surah_cutter.core.align_fast_whisper import align_surah_fast_whisper
+
+        if ayah_audio_dir:
+            raise ValueError("Локальный FAST Tarteel пока не поддерживает внешние аятные клипы.")
+        return align_surah_fast_whisper(
+            pcm, sr, words, bundle=bundle, surah=surah, trace=trace,
+            log_event=log_event, ayah_progress=ayah_progress, pause_decisions=pause_decisions,
+        )
+
     if getattr(bundle, "text_kind", "phonetic") != "phonetic":
         raise ValueError("FAST поддерживает только Quran Phonetics. Выберите полный режим.")
+    if trace is not None:
+        trace["model_source"] = A.bundle_source(bundle)
+        trace["backend"] = "torch" if isinstance(bundle, A._Bundle) else "onnx"
+        trace["align_lag_ms"] = getattr(bundle, "lag_ms", A.ALIGN_LAG_MS)
 
     def emit(message: str) -> None:
         if log_event is not None:
@@ -5617,105 +5600,12 @@ def align_surah_fast(
     def wlen(i: int) -> float:
         return len(word_trs[i]) * rate if i < len(word_trs) else rate
 
-    # wav2vec2's conv feature-extractor needs a minimum input length.
-    min_win_ms = 800.0
+    from surah_cutter.core.fast_reads import LocalAlignmentReads
 
-    from surah_cutter.core.fast_reads import LocalAcousticReads
-
-    inv_vocab = {v: k for k, v in bundle.vocab.items()}
-    acoustic = LocalAcousticReads(pcm, sr, bundle, max_read_ms=6000.0, log_event=log_event)
+    acoustic = LocalAlignmentReads(pcm, sr, bundle, words, word_trs, log_event=log_event)
+    align_slice = acoustic.align_slice
+    greedy_decode = acoustic.greedy_decode
     review_ayahs: set[int] = set()
-
-    def emissions_for(t0_ms: float, t1_ms: float):
-        return acoustic.read(t0_ms, t1_ms)
-
-    # --- low-level: align words[i0:i1] within audio [t0_ms, t1_ms]. ----------
-    def align_slice(
-        i0: int, i1: int, t0_ms: float, t1_ms: float, basmala: bool,
-        *, check_onsets: bool = False,
-    ):
-        if t1_ms - t0_ms < min_win_ms:
-            mid = 0.5 * (t0_ms + t1_ms)
-            t0_ms, t1_ms = mid - min_win_ms / 2, mid + min_win_ms / 2
-        t0_ms = max(0.0, t0_ms)
-        t1_ms = min(total_ms, t1_ms)
-        if t1_ms - t0_ms < min_win_ms:  # near an edge: grow inward
-            if t0_ms <= 0.0:
-                t1_ms = min(total_ms, min_win_ms)
-            else:
-                t0_ms = max(0.0, total_ms - min_win_ms)
-        if i1 <= i0:  # no words
-            return None
-        sub_words = words[i0:i1]
-        sub_trs = word_trs[i0:i1]
-        basmala_trs = A._basmala_trs(transliteration) if basmala else None
-        targets, spans = A._build_targets(sub_words, sub_trs, bundle, basmala_trs)
-        if not targets:
-            return None
-        em = emissions_for(t0_ms, t1_ms)
-        if em is None:
-            return None
-        emis, base, stride, end = em
-        nf = emis.shape[0]
-        try:
-            path, fscores = forced_align(
-                np.ascontiguousarray(emis[None, :, :], dtype=np.float32),
-                np.asarray(targets, dtype=np.int64)[None, :],
-                blank=bundle.blank_id,
-            )
-        except ValueError:
-            return None  # The caller grows/retries an insufficient window.
-        path = np.asarray(path).reshape(-1)
-        fscores = np.asarray(fscores).reshape(-1)
-        segs = [
-            s for s in merge_repeats(path.tolist(), {i: i for i in range(emis.shape[1])})
-            if s.label != bundle.blank_id
-        ]
-        tspans = [(s.start, s.end) for s in segs]
-        while len(tspans) < len(targets):
-            tspans.append(tspans[-1] if tspans else (nf - 1, nf - 1))
-        # CTC emission-lag compensation, same as the full path.
-        lag = A.ALIGN_LAG_MS
-        starts, ends, confs = [], [], []
-        for (ts, te) in spans:
-            sf = tspans[ts][0] if ts < len(tspans) else nf - 1
-            ef = tspans[te - 1][1] if te > ts and te - 1 < len(tspans) else sf
-            starts.append(max(0.0, base + sf * stride - lag))
-            ends.append(max(0.0, base + ef * stride - lag))
-            seg = fscores[sf:max(sf + 1, ef + 1)]
-            confs.append(float(np.exp(seg.mean())) if seg.size else 0.0)
-        onset_checks = {}
-        if check_onsets and len(segs) == len(targets):
-            onset_checks = A._check_ayah_onsets(
-                sub_words, spans, tspans, fscores, stride, base_ms=base,
-                pauses=candidates.detect_energy_pauses(pcm, sr, use_ten_vad=False),
-            )
-            for idx, word in enumerate(sub_words):
-                if idx == 0 or sub_words[idx - 1].ayah != word.ayah:
-                    check = onset_checks[word.ayah]
-                    starts[idx] = float(check["onset_ms"])
-                    confs[idx] = check["conf"]
-        return {"starts": starts, "ends": ends, "confs": confs, "lag_ms": lag,
-                "onset_checks": onset_checks,
-                "complete": len(segs) == len(targets),
-                "base": base, "end": end, "win_ms": end - base}
-
-    # --- low-level: greedy CTC decode of [t0_ms, t1_ms] -> transliteration. ---
-    # Unlike forced alignment (which is *told* the words), greedy decode reports
-    # what the model actually *hears* — the signal that says which ayah opens
-    # right after a pause, immune to the char prior's drift.
-    def greedy_decode(t0_ms: float, t1_ms: float) -> str:
-        em = emissions_for(t0_ms, t1_ms)
-        if em is None:
-            return ""
-        ids = em[0].argmax(-1)
-        out: list[str] = []
-        prev = -1
-        for i in ids.tolist():
-            if i != prev and i != bundle.blank_id:
-                out.append(inv_vocab.get(int(i), ""))
-            prev = i
-        return "".join(out)
 
     starts_ms: dict[int, float] = {}
     confs: dict[int, float] = {}
@@ -5726,7 +5616,8 @@ def align_surah_fast(
     # ===================================================================== #
     # Phase 1a — detect pauses (cheap, no neural).                           #
     # ===================================================================== #
-    pause_decisions = candidates.pause_pipeline_decisions(pcm, sr, surah=surah)
+    pause_decisions = (pause_decisions if pause_decisions is not None
+                       else candidates.pause_pipeline_decisions(pcm, sr, surah=surah))
     pause_diag = {d.pause: d for d in pause_decisions}
 
     def pause_tier(d: candidates.PauseDecision) -> str:
@@ -5785,6 +5676,8 @@ def align_surah_fast(
     # local evidence returns review rows rather than reading the entire intro.
     basmala = surah not in (1, 9)
     fa1 = ayah_words[ayah_list[0]][0]
+    if ayah_progress is not None:
+        ayah_progress(ayah_list[0])
     intro = 6500.0 if basmala else 150.0
     opening_pause = next((d.pause for d in pause_decisions
                           if d.accepted and d.reason in {"intro-vad-tight", "intro-vad"}), None)
@@ -9521,6 +9414,8 @@ def align_surah_fast(
     for ai in range(1, len(ayah_list)):
         a = ayah_list[ai]
         fa = ayah_words[a][0]
+        if ayah_progress is not None:
+            ayah_progress(a)
         c0, from_pause = place[a]
         timing_locked = pause_match_by_ayah.get(a, {}).get("timing_lock") == "short_low_sim_start"
 

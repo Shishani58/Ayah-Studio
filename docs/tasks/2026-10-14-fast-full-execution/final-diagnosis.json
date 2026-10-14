@@ -1,0 +1,58 @@
+{
+  "quran-phonetics": {
+    "stop_reasons": {
+      "unresolved_local_block": 4,
+      "no_local_evidence": 15,
+      "unresolved_adjacent_block": 9,
+      "future_outside_bounded_block": 11,
+      "incomplete_distinguishing_phrase": 1
+    },
+    "kinds": {
+      "first_onset": 1,
+      "estimate": 976,
+      "pause": 9
+    },
+    "exact_prefix_reads": 10,
+    "exact_prefix_low_quality": 0,
+    "first_confirmed": 9,
+    "local_model_seconds": 13.713069673394784,
+    "extra_dsp_seconds": 7.448945248965174
+  },
+  "whisper-tarteel-base": {
+    "stop_reasons": {
+      "unresolved_adjacent_block": 11,
+      "future_outside_bounded_block": 4,
+      "incomplete_distinguishing_phrase": 2,
+      "unsupported_wasl_timing": 7,
+      "ambiguous_phrase": 4
+    },
+    "kinds": {
+      "estimate": 778,
+      "pause": 208
+    },
+    "exact_prefix_reads": 247,
+    "exact_prefix_low_quality": 32,
+    "first_confirmed": 33,
+    "local_model_seconds": 174.25462887785397,
+    "extra_dsp_seconds": 7.416629287879914
+  },
+  "whisper-tarteel-tiny": {
+    "stop_reasons": {
+      "unresolved_adjacent_block": 13,
+      "no_local_evidence": 1,
+      "future_outside_bounded_block": 4,
+      "unsupported_wasl_timing": 6,
+      "incomplete_distinguishing_phrase": 5,
+      "ambiguous_phrase": 4
+    },
+    "kinds": {
+      "estimate": 854,
+      "pause": 132
+    },
+    "exact_prefix_reads": 189,
+    "exact_prefix_low_quality": 50,
+    "first_confirmed": 31,
+    "local_model_seconds": 76.03051650198177,
+    "extra_dsp_seconds": 8.138546832837164
+  }
+}

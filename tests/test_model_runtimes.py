@@ -8,7 +8,7 @@ import numpy as np
 import pytest
 
 from surah_cutter.core import align, model_runtime, model_store, word_align
-from surah_cutter.core.model_worker import Acoustic
+from surah_cutter.core.model_worker import Acoustic, WhisperTextOverflow
 from surah_cutter.data import quran_text
 from surah_cutter.webgui import server
 
@@ -18,7 +18,8 @@ def test_inference_renderings_cover_canonical_words_without_reordering():
     for surah in range(1, 115):
         words = quran_text.surah_words(surah)
         originals = [(w.index, w.text, w.ayah) for w in words]
-        for model in ("muaalem", "fastconformer", "mms-arabic", "whisper-quran", "whisper-small"):
+        for model in ("muaalem", "fastconformer", "mms-arabic", "whisper-quran", "whisper-small",
+                      "whisper-tarteel-tiny", "whisper-tarteel-base"):
             rendered = model_runtime.inference_words(words, model)
             assert len(rendered) == len(words)
             assert all(text.strip() for text in rendered)
@@ -34,6 +35,48 @@ def test_mismatched_word_index_is_rejected():
     word = quran_text.Word(114, 1, "foreign text", 0)
     with pytest.raises(ValueError, match="Порядок"):
         model_runtime.inference_words([word], "fastconformer")
+
+
+@pytest.mark.parametrize("model_id", ["whisper-tarteel-tiny", "whisper-tarteel-base"])
+def test_tarteel_uses_vocalized_targets_and_pinned_generation_metadata(model_id):
+    import unicodedata
+
+    words = quran_text.surah_words(112)
+    rendered = model_runtime.inference_words(words, model_id)
+    assert any(unicodedata.category(c) == "Mn" for c in rendered[0])
+    entry = model_store.spec(model_id)
+    assert all(f["sha256"] and len(f["sha256"]) == 64 for f in entry["files"])
+    assert not any(f["path"] == "training_args.bin" for f in entry["files"])
+    assert entry["generation_config"]["alignment_heads"]
+    assert len(entry["generation_config_source"]["revision"]) == 40
+
+
+def test_tarteel_full_shrinks_audio_on_token_overflow_without_truncating_text():
+    from contextlib import nullcontext
+
+    acoustic = Acoustic.__new__(Acoustic)
+    acoustic.model_id = "whisper-tarteel-tiny"
+    acoustic.torch = SimpleNamespace(inference_mode=nullcontext)
+    class Processor:
+        def __call__(self, *a, **kw):
+            return SimpleNamespace(input_features=None, attention_mask=None)
+
+        def batch_decode(self, *a, **kw):
+            return ["one two three four"]
+
+    acoustic.processor = Processor()
+    acoustic.model = SimpleNamespace(generate=lambda *a, **kw: None)
+    seen = []
+
+    def overflow(pcm, words, **kw):
+        seen.append((len(pcm) // 16000, list(words)))
+        raise WhisperTextOverflow("token budget")
+
+    acoustic.whisper_clip = overflow
+    words = ["one", "two", "three", "four"]
+    with pytest.raises(WhisperTextOverflow):
+        acoustic.whisper_align(np.zeros(35 * 16000), words, strict_words=False)
+    assert seen == [(30, words), (20, words), (10, words)]
 
 
 def test_all_open_models_route_to_their_own_weights(tmp_path, monkeypatch):
@@ -54,7 +97,8 @@ def test_all_open_models_route_to_their_own_weights(tmp_path, monkeypatch):
         assert path.exists()
 
 
-@pytest.mark.parametrize("model_id", ["muaalem", "whisper-large-v3", "fastconformer-arabic"])
+@pytest.mark.parametrize("model_id", ["muaalem", "whisper-large-v3", "fastconformer-arabic",
+                                      "whisper-tarteel-tiny", "whisper-tarteel-base"])
 def test_selection_probes_requested_model_before_saving(model_id, tmp_path, monkeypatch):
     monkeypatch.setattr(model_store, "ACTIVE_ID", "quran-phonetics")
     monkeypatch.setattr(align, "_ONNX_CACHE", {})
@@ -70,15 +114,20 @@ def test_selection_probes_requested_model_before_saving(model_id, tmp_path, monk
 
     monkeypatch.setattr(model_store, "load_emitter", load)
     monkeypatch.setattr(server.settings, "update", lambda **kw: seen.append(kw))
+    monkeypatch.setattr(server.settings, "load", lambda: {"mode": "fast"})
     monkeypatch.setattr(model_runtime, "release_runtimes", lambda **kw: None)
     select = next(r.endpoint for r in server.app.routes if r.path == "/api/models/{model_id}/select")
     select(model_id)
-    assert seen == ["probe", {"strict": True, "alignment_model": model_id, "mode": "full"}]
+    expected = {"strict": True, "alignment_model": model_id}
+    if model_id not in ("whisper-tarteel-tiny", "whisper-tarteel-base"):
+        expected["mode"] = "full"
+    assert seen == ["probe", expected]
     assert model_store.ACTIVE_ID == model_id
 
 
 def test_public_catalog_keeps_only_shortlist_without_deleting_archived_specs():
-    expected = {"quran-phonetics", "muaalem", "fastconformer-arabic", "whisper-large-v3"}
+    expected = {"quran-phonetics", "muaalem", "fastconformer-arabic", "whisper-large-v3",
+                "whisper-tarteel-tiny", "whisper-tarteel-base"}
     assert {item["id"] for item in model_store.listing()["models"]} == expected
     assert all(item["description"] and item["benchmark_summary"] for item in model_store.available_catalog())
     assert model_store.spec("whisper-medium")["hidden"]
@@ -179,7 +228,7 @@ def test_whisper_refuses_nonadvancing_overlap_instead_of_looping():
 
     class Processor:
         def __call__(self, *args, **kwargs):
-            return SimpleNamespace(input_features=None)
+            return SimpleNamespace(input_features=None, attention_mask=None)
 
         def batch_decode(self, *args, **kwargs):
             return ["one two three four"]

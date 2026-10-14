@@ -1,0 +1,29 @@
+[
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 114,
+    "audio_sha256": "958819e2a43c6f02d397432b208398599f1c10dd7c08f19401ee3676550bf064",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "decode_seconds": 0.0926,
+    "error": "ValueError: Не удалось загрузить модель: Error(s) in loading state_dict for WhisperForConditionalGeneration:\n\tMissing key(s) in state_dict: \"proj_out.weight\". ",
+    "seconds": 4.536
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 112,
+    "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "decode_seconds": 0.035,
+    "error": "ValueError: Не удалось загрузить модель: Error(s) in loading state_dict for WhisperForConditionalGeneration:\n\tMissing key(s) in state_dict: \"proj_out.weight\". ",
+    "seconds": 3.013
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 78,
+    "audio_sha256": "6b5e524700d4139920eead0a5b10544a73ccb0c79f1e9d04df8e2d1f385d7024",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "decode_seconds": 0.2559,
+    "error": "ValueError: Не удалось загрузить модель: Error(s) in loading state_dict for WhisperForConditionalGeneration:\n\tMissing key(s) in state_dict: \"proj_out.weight\". ",
+    "seconds": 3.389
+  }
+]

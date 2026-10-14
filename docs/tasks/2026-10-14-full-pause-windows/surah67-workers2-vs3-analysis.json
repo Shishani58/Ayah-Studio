@@ -1,0 +1,59 @@
+{
+  "surah": 67,
+  "duration_s": 393.378,
+  "summary": {
+    "pause:20:2:0": {
+      "runs": 3,
+      "full_s_values": [
+        15.6843848337885,
+        14.625468209153041,
+        20.87603341601789
+      ],
+      "full_s_median": 15.6843848337885,
+      "peak_rss_mib_max": 1539.90625,
+      "peak_rss_mib_values": [
+        1537.5,
+        1539.90625,
+        1510.34375
+      ],
+      "errors": {
+        "n": 30,
+        "median_ms": 68.0,
+        "p95_ms": 133.49999999999997,
+        "max_ms": 370.0,
+        "over500": 0
+      },
+      "failures": []
+    },
+    "pause:20:3:0": {
+      "runs": 3,
+      "full_s_values": [
+        13.84738020785153,
+        13.097866707947105,
+        15.83444037497975
+      ],
+      "full_s_median": 13.84738020785153,
+      "peak_rss_mib_max": 1737.265625,
+      "peak_rss_mib_values": [
+        1729.28125,
+        1737.265625,
+        1654.40625
+      ],
+      "errors": {
+        "n": 30,
+        "median_ms": 68.0,
+        "p95_ms": 133.49999999999997,
+        "max_ms": 370.0,
+        "over500": 0
+      },
+      "failures": []
+    }
+  },
+  "time_reduction_percent": 11.712315436047927,
+  "rss_increase_percent": 12.816324045700833,
+  "emissions_identical_across_all6": true,
+  "rows_identical_across_all6": true,
+  "review_identical_across_all6": true,
+  "windows_identical_across_all6": true,
+  "source_or_data_changes": []
+}

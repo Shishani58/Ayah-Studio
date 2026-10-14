@@ -1,0 +1,2391 @@
+[
+  {
+    "audio_sha256": "85d84d3493461230443bb5f5d7e8c0eb70adb0be2e780f75b71435527a788ee5",
+    "decode_seconds": 0.0667914159130305,
+    "dsp_seconds": 0.07544095907360315,
+    "initial_pauses_sha256": "26ed7c92b06409de80bdedca690f4e728dabd6c5d7043254b002ff2214092d3f",
+    "duration_ms": 23484.0625,
+    "model": "quran-phonetics",
+    "surah": 108,
+    "seconds": 0.48574166698381305,
+    "search_seconds": 0.5611826260574162,
+    "rows": [
+      [
+        1,
+        0,
+        0.0
+      ],
+      [
+        2,
+        7488,
+        0.0
+      ],
+      [
+        3,
+        15316,
+        0.0
+      ]
+    ],
+    "trace": {
+      "fast_version": "sequential-fast-v2-experimental-1",
+      "fast_run_key": "5fd7b4bdfd7ae74f5a2abcf44acb2f7be2792784265feb165682be95eba6cdff",
+      "run_snapshot": {
+        "algorithm": "sequential-fast-v2-experimental-1",
+        "adapter": "ctc-independent-words-v1",
+        "model": "quran-phonetics",
+        "revision": "423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a",
+        "policy": {
+          "speech_ms": [
+            1300,
+            2500,
+            4000
+          ],
+          "max_candidates": 8,
+          "cache_bytes": 33554432,
+          "ctc_quality": 0.25,
+          "asr_quality": 0.6,
+          "max_block_ayahs": 2
+        },
+        "lag_ms": 200,
+        "text_sha256": "561609de88cbae18f9e8854a5be9006b7489ee917734c5d709067d70f0194a91",
+        "pcm_sha256": "60010e7be055ca28e0c3de9d553fbc1ba14b9c06fd89a758ddfd69075e1e8746",
+        "sample_rate": 16000,
+        "dsp_version": "pause-pipeline-v1",
+        "decode": "ffmpeg-mono-float32-16000",
+        "normalization": "ctc-independent-words-v1",
+        "limits": {
+          "max_read_ms": 6000,
+          "coverage": 0.65,
+          "input_ratio": 2.0
+        }
+      },
+      "model_source": "quran-phonetics:revision=423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a:adapter=ctc-independent-words-v1",
+      "total_ms": 23484.0625,
+      "duration_ms": 23484.0625,
+      "transitions": [
+        {
+          "state": "PREPARE",
+          "ayah": null
+        },
+        {
+          "state": "DETECT_PAUSES",
+          "ayah": null
+        },
+        {
+          "state": "LOCATE_FIRST",
+          "ayah": 1
+        },
+        {
+          "state": "PLAN_PHRASE",
+          "ayah": 1
+        },
+        {
+          "state": "PLAN_PHRASE",
+          "ayah": 1,
+          "phrase": [
+            "inā",
+            "aʿṭaynāka"
+          ],
+          "canonical_word_indices": [
+            0,
+            1
+          ],
+          "ambiguous": false
+        },
+        {
+          "state": "SELECT_CANDIDATE",
+          "ayah": 1,
+          "candidate": -1,
+          "kind": "first_onset"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 1,
+          "candidate": -1,
+          "window_ms": [
+            150.0,
+            1450.0
+          ],
+          "reason": "minimal_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 1,
+          "candidate": -1,
+          "complete_units": 0,
+          "needed_units": 2,
+          "quality": 0.9987812712788582,
+          "observed": [
+            "bis'milā"
+          ]
+        },
+        {
+          "state": "SELECT_CANDIDATE",
+          "ayah": 1,
+          "candidate": 0,
+          "kind": "pause"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 1,
+          "candidate": 0,
+          "window_ms": [
+            2460.0,
+            3960.0
+          ],
+          "reason": "minimal_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 1,
+          "candidate": 0,
+          "complete_units": 0,
+          "needed_units": 2,
+          "quality": 0.9437344755445208,
+          "observed": [
+            "h'mānir"
+          ]
+        },
+        {
+          "state": "SELECT_CANDIDATE",
+          "ayah": 1,
+          "candidate": 1,
+          "kind": "pause"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 1,
+          "candidate": 1,
+          "window_ms": [
+            5720.0,
+            7620.0
+          ],
+          "reason": "minimal_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 1,
+          "candidate": 1,
+          "complete_units": 1,
+          "needed_units": 2,
+          "quality": 0.9998017102479935,
+          "observed": [
+            "inā"
+          ]
+        },
+        {
+          "state": "EXPAND_LOCAL",
+          "ayah": 1,
+          "reason": "incomplete_distinguishing_phrase"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 1,
+          "candidate": 1,
+          "window_ms": [
+            5720.0,
+            8820.0
+          ],
+          "reason": "incomplete_distinguishing_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 1,
+          "candidate": 1,
+          "complete_units": 0,
+          "needed_units": 2,
+          "quality": 0.9669639691710472,
+          "observed": [
+            "ināakhi"
+          ]
+        },
+        {
+          "state": "SELECT_CANDIDATE",
+          "ayah": 1,
+          "candidate": 2,
+          "kind": "pause"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 1,
+          "candidate": 2,
+          "window_ms": [
+            10460.0,
+            12140.0
+          ],
+          "reason": "minimal_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 1,
+          "candidate": 2,
+          "complete_units": 0,
+          "needed_units": 2,
+          "quality": 0.8251493126153946,
+          "observed": [
+            "faṣalilirubi"
+          ]
+        },
+        {
+          "state": "SELECT_CANDIDATE",
+          "ayah": 1,
+          "candidate": 3,
+          "kind": "pause"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 1,
+          "candidate": 3,
+          "window_ms": [
+            13220.0,
+            14840.0
+          ],
+          "reason": "minimal_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 1,
+          "candidate": 3,
+          "complete_units": 0,
+          "needed_units": 2,
+          "quality": 0.99530029296875,
+          "observed": [
+            "ina"
+          ]
+        },
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 1,
+          "reason": "incomplete_distinguishing_phrase"
+        },
+        {
+          "state": "VALIDATE",
+          "ayah": null
+        },
+        {
+          "state": "RESULT_READY",
+          "ayah": null
+        }
+      ],
+      "dsp_seconds": 3.4999102354049683e-06,
+      "phase1_pauses": [
+        {
+          "start_ms": 2460.0,
+          "end_ms": 2660.0,
+          "center_ms": 2560.0
+        },
+        {
+          "start_ms": 5720.0,
+          "end_ms": 6320.0,
+          "center_ms": 6020.0
+        },
+        {
+          "start_ms": 10460.0,
+          "end_ms": 10840.0,
+          "center_ms": 10650.0
+        },
+        {
+          "start_ms": 13220.0,
+          "end_ms": 13540.0,
+          "center_ms": 13380.0
+        }
+      ],
+      "acoustic_reads": [
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            150.0,
+            1450.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 0,
+          "reason": "ayah=1:first_onset:minimal_phrase",
+          "requested_window_ms": [
+            150.0,
+            1450.0
+          ],
+          "samples": [
+            2400,
+            23200
+          ],
+          "observed": {
+            "units": [
+              "bis'milā"
+            ],
+            "positions_ms": [
+              0.0
+            ],
+            "quality": 0.9987812712788582,
+            "truncated": false,
+            "text": "bis'milā"
+          },
+          "seconds": 0.03697916609235108
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            2460.0,
+            3960.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 1,
+          "reason": "ayah=1:pause:minimal_phrase",
+          "requested_window_ms": [
+            2460.0,
+            3960.0
+          ],
+          "samples": [
+            39360,
+            63360
+          ],
+          "observed": {
+            "units": [
+              "h'mānir"
+            ],
+            "positions_ms": [
+              0.0
+            ],
+            "quality": 0.9437344755445208,
+            "truncated": false,
+            "text": "h'mānir"
+          },
+          "seconds": 0.03958199988119304
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            5720.0,
+            7620.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 2,
+          "reason": "ayah=1:pause:minimal_phrase",
+          "requested_window_ms": [
+            5720.0,
+            7620.0
+          ],
+          "samples": [
+            91520,
+            121920
+          ],
+          "observed": {
+            "units": [
+              "inā"
+            ],
+            "positions_ms": [
+              507.44680851063833
+            ],
+            "quality": 0.9998017102479935,
+            "truncated": false,
+            "text": "innā"
+          },
+          "seconds": 0.05167758418247104
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            5720.0,
+            8820.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 3,
+          "reason": "ayah=1:pause:incomplete_distinguishing_phrase",
+          "requested_window_ms": [
+            5720.0,
+            8820.0
+          ],
+          "samples": [
+            91520,
+            141120
+          ],
+          "observed": {
+            "units": [
+              "ināakhi"
+            ],
+            "positions_ms": [
+              504.5454545454546
+            ],
+            "quality": 0.9669639691710472,
+            "truncated": false,
+            "text": "innāakhi"
+          },
+          "seconds": 0.08374170796014369
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            10460.0,
+            12140.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 4,
+          "reason": "ayah=1:pause:minimal_phrase",
+          "requested_window_ms": [
+            10460.0,
+            12140.0
+          ],
+          "samples": [
+            167360,
+            194240
+          ],
+          "observed": {
+            "units": [
+              "faṣalilirubi"
+            ],
+            "positions_ms": [
+              164.33734939759034
+            ],
+            "quality": 0.8251493126153946,
+            "truncated": false,
+            "text": "faṣalilirubi"
+          },
+          "seconds": 0.04441120894625783
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            13220.0,
+            14840.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 5,
+          "reason": "ayah=1:pause:minimal_phrase",
+          "requested_window_ms": [
+            13220.0,
+            14840.0
+          ],
+          "samples": [
+            211520,
+            237440
+          ],
+          "observed": {
+            "units": [
+              "ina"
+            ],
+            "positions_ms": [
+              205.0
+            ],
+            "quality": 0.99530029296875,
+            "truncated": false,
+            "text": "inna"
+          },
+          "seconds": 0.04230183293111622
+        }
+      ],
+      "boundaries": [
+        {
+          "ayah": 1,
+          "start_ms": 0,
+          "evidence_kind": "estimate",
+          "confidence": 0.0,
+          "review_reason": "incomplete_distinguishing_phrase",
+          "read_id": null,
+          "proof": null
+        },
+        {
+          "ayah": 2,
+          "start_ms": 7488,
+          "evidence_kind": "estimate",
+          "confidence": 0.0,
+          "review_reason": "blocked_by_unresolved_ayah",
+          "read_id": null,
+          "proof": null
+        },
+        {
+          "ayah": 3,
+          "start_ms": 15316,
+          "evidence_kind": "estimate",
+          "confidence": 0.0,
+          "review_reason": "blocked_by_unresolved_ayah",
+          "read_id": null,
+          "proof": null
+        }
+      ],
+      "ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 0,
+          "conf": 0.0,
+          "reliable": false
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 7488,
+          "conf": 0.0,
+          "reliable": false
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 15316,
+          "conf": 0.0,
+          "reliable": false
+        }
+      ],
+      "review_required_ayahs": [
+        1,
+        2,
+        3
+      ],
+      "pause_matches": [
+        {
+          "ayah": 1,
+          "from_pause": false,
+          "onset_ms": 0,
+          "conf": 0.0,
+          "boundary_evidence": "estimate"
+        },
+        {
+          "ayah": 2,
+          "from_pause": false,
+          "onset_ms": 7488,
+          "conf": 0.0,
+          "boundary_evidence": "estimate"
+        },
+        {
+          "ayah": 3,
+          "from_pause": false,
+          "onset_ms": 15316,
+          "conf": 0.0,
+          "boundary_evidence": "estimate"
+        }
+      ],
+      "n_pause": 0,
+      "n_wasl": 0,
+      "bounded_ctc_fallback": null,
+      "emission_passes": 6,
+      "emissions_frames": 0,
+      "denied_acoustic_reads": [],
+      "audio_ms": 11100.0,
+      "covered_audio_ms": 9200.0,
+      "coverage": 0.39175504664067384,
+      "acoustic_intervals_ms": [
+        [
+          150.0,
+          1450.0
+        ],
+        [
+          2460.0,
+          3960.0
+        ],
+        [
+          5720.0,
+          8820.0
+        ],
+        [
+          10460.0,
+          12140.0
+        ],
+        [
+          13220.0,
+          14840.0
+        ]
+      ],
+      "cache_hits": 0,
+      "cache_bytes": 2319,
+      "peak_cache_bytes": 2319,
+      "cache_evictions": 0,
+      "local_read_limits": {
+        "cache_limit_bytes": 33554432,
+        "max_read_ms": 6000.0,
+        "max_coverage": 0.65,
+        "max_audio_ratio": 2.0
+      },
+      "inference_seconds": 0.2986934999935329
+    },
+    "source": "quran-phonetics:revision=423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a:adapter=ctc-independent-words-v1",
+    "sequence_violations": [],
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "errors_ms": [
+      6020,
+      3144,
+      1886
+    ],
+    "median_ms": 3144.0,
+    "p95_ms": 5732.4,
+    "max_ms": 6020
+  },
+  {
+    "audio_sha256": "85d84d3493461230443bb5f5d7e8c0eb70adb0be2e780f75b71435527a788ee5",
+    "decode_seconds": 0.0667914159130305,
+    "dsp_seconds": 0.07544095907360315,
+    "initial_pauses_sha256": "26ed7c92b06409de80bdedca690f4e728dabd6c5d7043254b002ff2214092d3f",
+    "duration_ms": 23484.0625,
+    "model": "whisper-tarteel-tiny",
+    "surah": 108,
+    "seconds": 1.9598150830715895,
+    "search_seconds": 2.0352560421451926,
+    "rows": [
+      [
+        1,
+        6020,
+        0.9963592886924744
+      ],
+      [
+        2,
+        10650,
+        0.9698800444602966
+      ],
+      [
+        3,
+        13380,
+        0.9989609122276306
+      ]
+    ],
+    "trace": {
+      "fast_version": "sequential-fast-v2-experimental-1",
+      "fast_run_key": "6171f011a3f06ac8d1daaf7d0e24801ffdb6f7fa3a9a3c67d1614a16782f443c",
+      "run_snapshot": {
+        "algorithm": "sequential-fast-v2-experimental-1",
+        "adapter": "tarteel-independent-words-v1",
+        "model": "whisper-tarteel-tiny",
+        "revision": "c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0",
+        "policy": {
+          "speech_ms": [
+            1300,
+            2500,
+            4000
+          ],
+          "max_candidates": 8,
+          "cache_bytes": 33554432,
+          "ctc_quality": 0.25,
+          "asr_quality": 0.6,
+          "max_block_ayahs": 2
+        },
+        "lag_ms": 0,
+        "text_sha256": "bc043cbe6bbcbf9dd89381d0a1bb6786cf4ff663184aaa40871e3c13741b1dbd",
+        "pcm_sha256": "60010e7be055ca28e0c3de9d553fbc1ba14b9c06fd89a758ddfd69075e1e8746",
+        "sample_rate": 16000,
+        "dsp_version": "pause-pipeline-v1",
+        "decode": "ffmpeg-mono-float32-16000",
+        "normalization": "tarteel-independent-words-v1",
+        "limits": {
+          "max_read_ms": 6000,
+          "coverage": 0.65,
+          "input_ratio": 2.0
+        }
+      },
+      "model_source": "whisper-tarteel-tiny:revision=c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0:adapter=tarteel-independent-words-v1",
+      "total_ms": 23484.0625,
+      "duration_ms": 23484.0625,
+      "transitions": [
+        {
+          "state": "PREPARE",
+          "ayah": null
+        },
+        {
+          "state": "DETECT_PAUSES",
+          "ayah": null
+        },
+        {
+          "state": "LOCATE_FIRST",
+          "ayah": 1
+        },
+        {
+          "state": "PLAN_PHRASE",
+          "ayah": 1
+        },
+        {
+          "state": "PLAN_PHRASE",
+          "ayah": 1,
+          "phrase": [
+            "انا",
+            "اعطيناك"
+          ],
+          "canonical_word_indices": [
+            0,
+            1
+          ],
+          "ambiguous": false
+        },
+        {
+          "state": "SELECT_CANDIDATE",
+          "ayah": 1,
+          "candidate": -1,
+          "kind": "first_onset"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 1,
+          "candidate": -1,
+          "window_ms": [
+            150.0,
+            1450.0
+          ],
+          "reason": "minimal_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 1,
+          "candidate": -1,
+          "complete_units": 0,
+          "needed_units": 2,
+          "quality": 0.9725697636604309,
+          "observed": [
+            "بسم",
+            "الله"
+          ]
+        },
+        {
+          "state": "SELECT_CANDIDATE",
+          "ayah": 1,
+          "candidate": 0,
+          "kind": "pause"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 1,
+          "candidate": 0,
+          "window_ms": [
+            2460.0,
+            3960.0
+          ],
+          "reason": "minimal_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 1,
+          "candidate": 0,
+          "complete_units": 0,
+          "needed_units": 2,
+          "quality": 0.7934005260467529,
+          "observed": [
+            "ما",
+            "نر"
+          ]
+        },
+        {
+          "state": "SELECT_CANDIDATE",
+          "ayah": 1,
+          "candidate": 1,
+          "kind": "pause"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 1,
+          "candidate": 1,
+          "window_ms": [
+            5720.0,
+            7620.0
+          ],
+          "reason": "minimal_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 1,
+          "candidate": 1,
+          "complete_units": 1,
+          "needed_units": 2,
+          "quality": 0.9991294145584106,
+          "observed": [
+            "انا"
+          ]
+        },
+        {
+          "state": "EXPAND_LOCAL",
+          "ayah": 1,
+          "reason": "incomplete_distinguishing_phrase"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 1,
+          "candidate": 1,
+          "window_ms": [
+            5720.0,
+            8820.0
+          ],
+          "reason": "incomplete_distinguishing_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 1,
+          "candidate": 1,
+          "complete_units": 1,
+          "needed_units": 2,
+          "quality": 0.9515341520309448,
+          "observed": [
+            "انا",
+            "اعطي"
+          ]
+        },
+        {
+          "state": "EXPAND_LOCAL",
+          "ayah": 1,
+          "reason": "incomplete_distinguishing_phrase"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 1,
+          "candidate": 1,
+          "window_ms": [
+            5720.0,
+            10320.0
+          ],
+          "reason": "incomplete_distinguishing_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 1,
+          "candidate": 1,
+          "complete_units": 2,
+          "needed_units": 2,
+          "quality": 0.9963592886924744,
+          "observed": [
+            "انا",
+            "اعطيناك",
+            "الكوثر"
+          ]
+        },
+        {
+          "state": "CONFIRMED",
+          "ayah": 1,
+          "evidence": "pause",
+          "start_ms": 6020
+        },
+        {
+          "state": "ADVANCE",
+          "ayah": 1
+        },
+        {
+          "state": "PLAN_PHRASE",
+          "ayah": 2
+        },
+        {
+          "state": "PLAN_PHRASE",
+          "ayah": 2,
+          "phrase": [
+            "فصل",
+            "لربك"
+          ],
+          "canonical_word_indices": [
+            3,
+            4
+          ],
+          "ambiguous": false
+        },
+        {
+          "state": "SELECT_CANDIDATE",
+          "ayah": 2,
+          "candidate": 2,
+          "kind": "pause"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 2,
+          "candidate": 2,
+          "window_ms": [
+            10460.0,
+            12140.0
+          ],
+          "reason": "minimal_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 2,
+          "candidate": 2,
+          "complete_units": 1,
+          "needed_units": 2,
+          "quality": 0.9981474876403809,
+          "observed": [
+            "فصل",
+            "لرب"
+          ]
+        },
+        {
+          "state": "EXPAND_LOCAL",
+          "ayah": 2,
+          "reason": "incomplete_distinguishing_phrase"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 2,
+          "candidate": 2,
+          "window_ms": [
+            10460.0,
+            13340.0
+          ],
+          "reason": "incomplete_distinguishing_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 2,
+          "candidate": 2,
+          "complete_units": 2,
+          "needed_units": 2,
+          "quality": 0.9698800444602966,
+          "observed": [
+            "فصل",
+            "لربك",
+            "والحرب"
+          ]
+        },
+        {
+          "state": "CONFIRMED",
+          "ayah": 2,
+          "evidence": "pause",
+          "start_ms": 10650
+        },
+        {
+          "state": "ADVANCE",
+          "ayah": 2
+        },
+        {
+          "state": "PLAN_PHRASE",
+          "ayah": 3
+        },
+        {
+          "state": "PLAN_PHRASE",
+          "ayah": 3,
+          "phrase": [
+            "ان",
+            "شانئك"
+          ],
+          "canonical_word_indices": [
+            6,
+            7
+          ],
+          "ambiguous": false
+        },
+        {
+          "state": "SELECT_CANDIDATE",
+          "ayah": 3,
+          "candidate": 3,
+          "kind": "pause"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 3,
+          "candidate": 3,
+          "window_ms": [
+            13220.0,
+            14840.0
+          ],
+          "reason": "minimal_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 3,
+          "candidate": 3,
+          "complete_units": 1,
+          "needed_units": 2,
+          "quality": 0.7057416439056396,
+          "observed": [
+            "ان",
+            "شك"
+          ]
+        },
+        {
+          "state": "EXPAND_LOCAL",
+          "ayah": 3,
+          "reason": "incomplete_distinguishing_phrase"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 3,
+          "candidate": 3,
+          "window_ms": [
+            13220.0,
+            16040.0
+          ],
+          "reason": "incomplete_distinguishing_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 3,
+          "candidate": 3,
+          "complete_units": 2,
+          "needed_units": 2,
+          "quality": 0.9989609122276306,
+          "observed": [
+            "ان",
+            "شانئك",
+            "هو"
+          ]
+        },
+        {
+          "state": "CONFIRMED",
+          "ayah": 3,
+          "evidence": "pause",
+          "start_ms": 13380
+        },
+        {
+          "state": "ADVANCE",
+          "ayah": 3
+        },
+        {
+          "state": "VALIDATE",
+          "ayah": null
+        },
+        {
+          "state": "RESULT_READY",
+          "ayah": null
+        }
+      ],
+      "dsp_seconds": 5.417037755250931e-06,
+      "phase1_pauses": [
+        {
+          "start_ms": 2460.0,
+          "end_ms": 2660.0,
+          "center_ms": 2560.0
+        },
+        {
+          "start_ms": 5720.0,
+          "end_ms": 6320.0,
+          "center_ms": 6020.0
+        },
+        {
+          "start_ms": 10460.0,
+          "end_ms": 10840.0,
+          "center_ms": 10650.0
+        },
+        {
+          "start_ms": 13220.0,
+          "end_ms": 13540.0,
+          "center_ms": 13380.0
+        }
+      ],
+      "acoustic_reads": [
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            150.0,
+            1450.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 0,
+          "reason": "ayah=1:first_onset:minimal_phrase",
+          "requested_window_ms": [
+            150.0,
+            1450.0
+          ],
+          "samples": [
+            2400,
+            23200
+          ],
+          "observed": {
+            "units": [
+              "بسم",
+              "الله"
+            ],
+            "positions_ms": null,
+            "quality": 0.9725697636604309,
+            "truncated": false,
+            "text": "بِسْمِ اللَّهِ"
+          },
+          "seconds": 0.1914312920998782
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            2460.0,
+            3960.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 1,
+          "reason": "ayah=1:pause:minimal_phrase",
+          "requested_window_ms": [
+            2460.0,
+            3960.0
+          ],
+          "samples": [
+            39360,
+            63360
+          ],
+          "observed": {
+            "units": [
+              "ما",
+              "نر"
+            ],
+            "positions_ms": null,
+            "quality": 0.7934005260467529,
+            "truncated": false,
+            "text": "مَا نِرَّ"
+          },
+          "seconds": 0.16293333400972188
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            5720.0,
+            7620.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 2,
+          "reason": "ayah=1:pause:minimal_phrase",
+          "requested_window_ms": [
+            5720.0,
+            7620.0
+          ],
+          "samples": [
+            91520,
+            121920
+          ],
+          "observed": {
+            "units": [
+              "انا"
+            ],
+            "positions_ms": null,
+            "quality": 0.9991294145584106,
+            "truncated": false,
+            "text": "إِنَّا"
+          },
+          "seconds": 0.14809254184365273
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            5720.0,
+            8820.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 3,
+          "reason": "ayah=1:pause:incomplete_distinguishing_phrase",
+          "requested_window_ms": [
+            5720.0,
+            8820.0
+          ],
+          "samples": [
+            91520,
+            141120
+          ],
+          "observed": {
+            "units": [
+              "انا",
+              "اعطي"
+            ],
+            "positions_ms": null,
+            "quality": 0.9515341520309448,
+            "truncated": false,
+            "text": "إِنَّا أَعْطِي"
+          },
+          "seconds": 0.20283304201439023
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            5720.0,
+            10320.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 4,
+          "reason": "ayah=1:pause:incomplete_distinguishing_phrase",
+          "requested_window_ms": [
+            5720.0,
+            10320.0
+          ],
+          "samples": [
+            91520,
+            165120
+          ],
+          "observed": {
+            "units": [
+              "انا",
+              "اعطيناك",
+              "الكوثر"
+            ],
+            "positions_ms": null,
+            "quality": 0.9963592886924744,
+            "truncated": false,
+            "text": "إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ"
+          },
+          "seconds": 0.31399791594594717
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            10460.0,
+            12140.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 5,
+          "reason": "ayah=2:pause:minimal_phrase",
+          "requested_window_ms": [
+            10460.0,
+            12140.0
+          ],
+          "samples": [
+            167360,
+            194240
+          ],
+          "observed": {
+            "units": [
+              "فصل",
+              "لرب"
+            ],
+            "positions_ms": null,
+            "quality": 0.9981474876403809,
+            "truncated": false,
+            "text": "فَصَلِّ لِرَبِّ"
+          },
+          "seconds": 0.1984963750001043
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            10460.0,
+            13340.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 6,
+          "reason": "ayah=2:pause:incomplete_distinguishing_phrase",
+          "requested_window_ms": [
+            10460.0,
+            13340.0
+          ],
+          "samples": [
+            167360,
+            213440
+          ],
+          "observed": {
+            "units": [
+              "فصل",
+              "لربك",
+              "والحرب"
+            ],
+            "positions_ms": null,
+            "quality": 0.9698800444602966,
+            "truncated": false,
+            "text": "فَصَلِّ لِرَبِّكَ وَالْحَرْبِ"
+          },
+          "seconds": 0.2906030840240419
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            13220.0,
+            14840.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 7,
+          "reason": "ayah=3:pause:minimal_phrase",
+          "requested_window_ms": [
+            13220.0,
+            14840.0
+          ],
+          "samples": [
+            211520,
+            237440
+          ],
+          "observed": {
+            "units": [
+              "ان",
+              "شك"
+            ],
+            "positions_ms": null,
+            "quality": 0.7057416439056396,
+            "truncated": false,
+            "text": "إِنَّ شَكَ"
+          },
+          "seconds": 0.17514079180546105
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            13220.0,
+            16040.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 8,
+          "reason": "ayah=3:pause:incomplete_distinguishing_phrase",
+          "requested_window_ms": [
+            13220.0,
+            16040.0
+          ],
+          "samples": [
+            211520,
+            256640
+          ],
+          "observed": {
+            "units": [
+              "ان",
+              "شانئك",
+              "هو"
+            ],
+            "positions_ms": null,
+            "quality": 0.9989609122276306,
+            "truncated": false,
+            "text": "إِنَّ شَانِئَكَ هُوَ"
+          },
+          "seconds": 0.23508724989369512
+        }
+      ],
+      "boundaries": [
+        {
+          "ayah": 1,
+          "start_ms": 6020,
+          "evidence_kind": "pause",
+          "confidence": 0.9963592886924744,
+          "review_reason": null,
+          "read_id": 4,
+          "proof": {
+            "phrase": [
+              "انا",
+              "اعطيناك"
+            ],
+            "complete": true,
+            "ambiguous": false,
+            "competitors_checked": true,
+            "competitor_count": 9,
+            "offset": 0,
+            "quality_metric": "asr_token_probability",
+            "pause_ms": [
+              5720.0,
+              6320.0
+            ],
+            "pause_id": 1
+          }
+        },
+        {
+          "ayah": 2,
+          "start_ms": 10650,
+          "evidence_kind": "pause",
+          "confidence": 0.9698800444602966,
+          "review_reason": null,
+          "read_id": 6,
+          "proof": {
+            "phrase": [
+              "فصل",
+              "لربك"
+            ],
+            "complete": true,
+            "ambiguous": false,
+            "competitors_checked": true,
+            "competitor_count": 9,
+            "offset": 0,
+            "quality_metric": "asr_token_probability",
+            "pause_ms": [
+              10460.0,
+              10840.0
+            ],
+            "pause_id": 2
+          }
+        },
+        {
+          "ayah": 3,
+          "start_ms": 13380,
+          "evidence_kind": "pause",
+          "confidence": 0.9989609122276306,
+          "review_reason": null,
+          "read_id": 8,
+          "proof": {
+            "phrase": [
+              "ان",
+              "شانئك"
+            ],
+            "complete": true,
+            "ambiguous": false,
+            "competitors_checked": true,
+            "competitor_count": 9,
+            "offset": 0,
+            "quality_metric": "asr_token_probability",
+            "pause_ms": [
+              13220.0,
+              13540.0
+            ],
+            "pause_id": 3
+          }
+        }
+      ],
+      "ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 6020,
+          "conf": 0.9963592886924744,
+          "reliable": true
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 10650,
+          "conf": 0.9698800444602966,
+          "reliable": true
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 13380,
+          "conf": 0.9989609122276306,
+          "reliable": true
+        }
+      ],
+      "review_required_ayahs": [],
+      "pause_matches": [
+        {
+          "ayah": 1,
+          "from_pause": true,
+          "onset_ms": 6020,
+          "conf": 0.9963592886924744,
+          "boundary_evidence": "pause",
+          "pause_start_ms": 5720.0,
+          "pause_end_ms": 6320.0
+        },
+        {
+          "ayah": 2,
+          "from_pause": true,
+          "onset_ms": 10650,
+          "conf": 0.9698800444602966,
+          "boundary_evidence": "pause",
+          "pause_start_ms": 10460.0,
+          "pause_end_ms": 10840.0
+        },
+        {
+          "ayah": 3,
+          "from_pause": true,
+          "onset_ms": 13380,
+          "conf": 0.9989609122276306,
+          "boundary_evidence": "pause",
+          "pause_start_ms": 13220.0,
+          "pause_end_ms": 13540.0
+        }
+      ],
+      "n_pause": 3,
+      "n_wasl": 0,
+      "bounded_ctc_fallback": null,
+      "emission_passes": 9,
+      "emissions_frames": 0,
+      "denied_acoustic_reads": [],
+      "audio_ms": 21400.0,
+      "covered_audio_ms": 12980.0,
+      "coverage": 0.5527152723256464,
+      "acoustic_intervals_ms": [
+        [
+          150.0,
+          1450.0
+        ],
+        [
+          2460.0,
+          3960.0
+        ],
+        [
+          5720.0,
+          10320.0
+        ],
+        [
+          10460.0,
+          16040.0
+        ]
+      ],
+      "cache_hits": 0,
+      "cache_bytes": 4501,
+      "peak_cache_bytes": 4501,
+      "cache_evictions": 0,
+      "local_read_limits": {
+        "cache_limit_bytes": 33554432,
+        "max_read_ms": 6000.0,
+        "max_coverage": 0.65,
+        "max_audio_ratio": 2.0
+      },
+      "inference_seconds": 1.9186156266368926
+    },
+    "source": "whisper-tarteel-tiny:revision=c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0:adapter=tarteel-independent-words-v1",
+    "sequence_violations": [],
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "errors_ms": [
+      0,
+      18,
+      50
+    ],
+    "median_ms": 18.0,
+    "p95_ms": 46.8,
+    "max_ms": 50
+  },
+  {
+    "audio_sha256": "85d84d3493461230443bb5f5d7e8c0eb70adb0be2e780f75b71435527a788ee5",
+    "decode_seconds": 0.0667914159130305,
+    "dsp_seconds": 0.07544095907360315,
+    "initial_pauses_sha256": "26ed7c92b06409de80bdedca690f4e728dabd6c5d7043254b002ff2214092d3f",
+    "duration_ms": 23484.0625,
+    "model": "whisper-tarteel-base",
+    "surah": 108,
+    "seconds": 3.5343220841605216,
+    "search_seconds": 3.609763043234125,
+    "rows": [
+      [
+        1,
+        6020,
+        0.999931812286377
+      ],
+      [
+        2,
+        10650,
+        0.9999924898147583
+      ],
+      [
+        3,
+        13380,
+        0.9993850588798523
+      ]
+    ],
+    "trace": {
+      "fast_version": "sequential-fast-v2-experimental-1",
+      "fast_run_key": "0f6796c5d243a067e01081d8b8a5840a44d78bc683267d843e48bc9e57be0532",
+      "run_snapshot": {
+        "algorithm": "sequential-fast-v2-experimental-1",
+        "adapter": "tarteel-independent-words-v1",
+        "model": "whisper-tarteel-base",
+        "revision": "5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c",
+        "policy": {
+          "speech_ms": [
+            1300,
+            2500,
+            4000
+          ],
+          "max_candidates": 8,
+          "cache_bytes": 33554432,
+          "ctc_quality": 0.25,
+          "asr_quality": 0.6,
+          "max_block_ayahs": 2
+        },
+        "lag_ms": 0,
+        "text_sha256": "bc043cbe6bbcbf9dd89381d0a1bb6786cf4ff663184aaa40871e3c13741b1dbd",
+        "pcm_sha256": "60010e7be055ca28e0c3de9d553fbc1ba14b9c06fd89a758ddfd69075e1e8746",
+        "sample_rate": 16000,
+        "dsp_version": "pause-pipeline-v1",
+        "decode": "ffmpeg-mono-float32-16000",
+        "normalization": "tarteel-independent-words-v1",
+        "limits": {
+          "max_read_ms": 6000,
+          "coverage": 0.65,
+          "input_ratio": 2.0
+        }
+      },
+      "model_source": "whisper-tarteel-base:revision=5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c:adapter=tarteel-independent-words-v1",
+      "total_ms": 23484.0625,
+      "duration_ms": 23484.0625,
+      "transitions": [
+        {
+          "state": "PREPARE",
+          "ayah": null
+        },
+        {
+          "state": "DETECT_PAUSES",
+          "ayah": null
+        },
+        {
+          "state": "LOCATE_FIRST",
+          "ayah": 1
+        },
+        {
+          "state": "PLAN_PHRASE",
+          "ayah": 1
+        },
+        {
+          "state": "PLAN_PHRASE",
+          "ayah": 1,
+          "phrase": [
+            "انا",
+            "اعطيناك"
+          ],
+          "canonical_word_indices": [
+            0,
+            1
+          ],
+          "ambiguous": false
+        },
+        {
+          "state": "SELECT_CANDIDATE",
+          "ayah": 1,
+          "candidate": -1,
+          "kind": "first_onset"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 1,
+          "candidate": -1,
+          "window_ms": [
+            150.0,
+            1450.0
+          ],
+          "reason": "minimal_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 1,
+          "candidate": -1,
+          "complete_units": 0,
+          "needed_units": 2,
+          "quality": 0.9992988705635071,
+          "observed": [
+            "بسم",
+            "الله"
+          ]
+        },
+        {
+          "state": "SELECT_CANDIDATE",
+          "ayah": 1,
+          "candidate": 0,
+          "kind": "pause"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 1,
+          "candidate": 0,
+          "window_ms": [
+            2460.0,
+            3960.0
+          ],
+          "reason": "minimal_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 1,
+          "candidate": 0,
+          "complete_units": 0,
+          "needed_units": 2,
+          "quality": 0.8752374053001404,
+          "observed": [
+            "الرحمن"
+          ]
+        },
+        {
+          "state": "SELECT_CANDIDATE",
+          "ayah": 1,
+          "candidate": 1,
+          "kind": "pause"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 1,
+          "candidate": 1,
+          "window_ms": [
+            5720.0,
+            7620.0
+          ],
+          "reason": "minimal_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 1,
+          "candidate": 1,
+          "complete_units": 1,
+          "needed_units": 2,
+          "quality": 0.9969812631607056,
+          "observed": [
+            "انا"
+          ]
+        },
+        {
+          "state": "EXPAND_LOCAL",
+          "ayah": 1,
+          "reason": "incomplete_distinguishing_phrase"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 1,
+          "candidate": 1,
+          "window_ms": [
+            5720.0,
+            8820.0
+          ],
+          "reason": "incomplete_distinguishing_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 1,
+          "candidate": 1,
+          "complete_units": 1,
+          "needed_units": 2,
+          "quality": 0.9709038138389587,
+          "observed": [
+            "انا",
+            "اعطينا"
+          ]
+        },
+        {
+          "state": "EXPAND_LOCAL",
+          "ayah": 1,
+          "reason": "incomplete_distinguishing_phrase"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 1,
+          "candidate": 1,
+          "window_ms": [
+            5720.0,
+            10320.0
+          ],
+          "reason": "incomplete_distinguishing_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 1,
+          "candidate": 1,
+          "complete_units": 2,
+          "needed_units": 2,
+          "quality": 0.999931812286377,
+          "observed": [
+            "انا",
+            "اعطيناك",
+            "الكوثر"
+          ]
+        },
+        {
+          "state": "CONFIRMED",
+          "ayah": 1,
+          "evidence": "pause",
+          "start_ms": 6020
+        },
+        {
+          "state": "ADVANCE",
+          "ayah": 1
+        },
+        {
+          "state": "PLAN_PHRASE",
+          "ayah": 2
+        },
+        {
+          "state": "PLAN_PHRASE",
+          "ayah": 2,
+          "phrase": [
+            "فصل",
+            "لربك"
+          ],
+          "canonical_word_indices": [
+            3,
+            4
+          ],
+          "ambiguous": false
+        },
+        {
+          "state": "SELECT_CANDIDATE",
+          "ayah": 2,
+          "candidate": 2,
+          "kind": "pause"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 2,
+          "candidate": 2,
+          "window_ms": [
+            10460.0,
+            12140.0
+          ],
+          "reason": "minimal_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 2,
+          "candidate": 2,
+          "complete_units": 1,
+          "needed_units": 2,
+          "quality": 0.9948250651359558,
+          "observed": [
+            "فصل",
+            "لرب"
+          ]
+        },
+        {
+          "state": "EXPAND_LOCAL",
+          "ayah": 2,
+          "reason": "incomplete_distinguishing_phrase"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 2,
+          "candidate": 2,
+          "window_ms": [
+            10460.0,
+            13340.0
+          ],
+          "reason": "incomplete_distinguishing_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 2,
+          "candidate": 2,
+          "complete_units": 2,
+          "needed_units": 2,
+          "quality": 0.9999924898147583,
+          "observed": [
+            "فصل",
+            "لربك",
+            "وانحر"
+          ]
+        },
+        {
+          "state": "CONFIRMED",
+          "ayah": 2,
+          "evidence": "pause",
+          "start_ms": 10650
+        },
+        {
+          "state": "ADVANCE",
+          "ayah": 2
+        },
+        {
+          "state": "PLAN_PHRASE",
+          "ayah": 3
+        },
+        {
+          "state": "PLAN_PHRASE",
+          "ayah": 3,
+          "phrase": [
+            "ان",
+            "شانئك"
+          ],
+          "canonical_word_indices": [
+            6,
+            7
+          ],
+          "ambiguous": false
+        },
+        {
+          "state": "SELECT_CANDIDATE",
+          "ayah": 3,
+          "candidate": 3,
+          "kind": "pause"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 3,
+          "candidate": 3,
+          "window_ms": [
+            13220.0,
+            14840.0
+          ],
+          "reason": "minimal_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 3,
+          "candidate": 3,
+          "complete_units": 1,
+          "needed_units": 2,
+          "quality": 0.9966821074485779,
+          "observed": [
+            "ان"
+          ]
+        },
+        {
+          "state": "EXPAND_LOCAL",
+          "ayah": 3,
+          "reason": "incomplete_distinguishing_phrase"
+        },
+        {
+          "state": "READ_LOCAL",
+          "ayah": 3,
+          "candidate": 3,
+          "window_ms": [
+            13220.0,
+            16040.0
+          ],
+          "reason": "incomplete_distinguishing_phrase"
+        },
+        {
+          "state": "EVALUATE",
+          "ayah": 3,
+          "candidate": 3,
+          "complete_units": 2,
+          "needed_units": 2,
+          "quality": 0.9993850588798523,
+          "observed": [
+            "ان",
+            "شانئك",
+            "هو"
+          ]
+        },
+        {
+          "state": "CONFIRMED",
+          "ayah": 3,
+          "evidence": "pause",
+          "start_ms": 13380
+        },
+        {
+          "state": "ADVANCE",
+          "ayah": 3
+        },
+        {
+          "state": "VALIDATE",
+          "ayah": null
+        },
+        {
+          "state": "RESULT_READY",
+          "ayah": null
+        }
+      ],
+      "dsp_seconds": 5.417037755250931e-06,
+      "phase1_pauses": [
+        {
+          "start_ms": 2460.0,
+          "end_ms": 2660.0,
+          "center_ms": 2560.0
+        },
+        {
+          "start_ms": 5720.0,
+          "end_ms": 6320.0,
+          "center_ms": 6020.0
+        },
+        {
+          "start_ms": 10460.0,
+          "end_ms": 10840.0,
+          "center_ms": 10650.0
+        },
+        {
+          "start_ms": 13220.0,
+          "end_ms": 13540.0,
+          "center_ms": 13380.0
+        }
+      ],
+      "acoustic_reads": [
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            150.0,
+            1450.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 0,
+          "reason": "ayah=1:first_onset:minimal_phrase",
+          "requested_window_ms": [
+            150.0,
+            1450.0
+          ],
+          "samples": [
+            2400,
+            23200
+          ],
+          "observed": {
+            "units": [
+              "بسم",
+              "الله"
+            ],
+            "positions_ms": null,
+            "quality": 0.9992988705635071,
+            "truncated": false,
+            "text": "بِسْمِ اللَّهِ"
+          },
+          "seconds": 0.3425194590818137
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            2460.0,
+            3960.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 1,
+          "reason": "ayah=1:pause:minimal_phrase",
+          "requested_window_ms": [
+            2460.0,
+            3960.0
+          ],
+          "samples": [
+            39360,
+            63360
+          ],
+          "observed": {
+            "units": [
+              "الرحمن"
+            ],
+            "positions_ms": null,
+            "quality": 0.8752374053001404,
+            "truncated": false,
+            "text": "الرَّحْمَنِ"
+          },
+          "seconds": 0.32517283293418586
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            5720.0,
+            7620.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 2,
+          "reason": "ayah=1:pause:minimal_phrase",
+          "requested_window_ms": [
+            5720.0,
+            7620.0
+          ],
+          "samples": [
+            91520,
+            121920
+          ],
+          "observed": {
+            "units": [
+              "انا"
+            ],
+            "positions_ms": null,
+            "quality": 0.9969812631607056,
+            "truncated": false,
+            "text": "إِنَّا"
+          },
+          "seconds": 0.26959762489423156
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            5720.0,
+            8820.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 3,
+          "reason": "ayah=1:pause:incomplete_distinguishing_phrase",
+          "requested_window_ms": [
+            5720.0,
+            8820.0
+          ],
+          "samples": [
+            91520,
+            141120
+          ],
+          "observed": {
+            "units": [
+              "انا",
+              "اعطينا"
+            ],
+            "positions_ms": null,
+            "quality": 0.9709038138389587,
+            "truncated": false,
+            "text": "إِنَّا أَعْطَيْنَا"
+          },
+          "seconds": 0.4214204160962254
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            5720.0,
+            10320.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 4,
+          "reason": "ayah=1:pause:incomplete_distinguishing_phrase",
+          "requested_window_ms": [
+            5720.0,
+            10320.0
+          ],
+          "samples": [
+            91520,
+            165120
+          ],
+          "observed": {
+            "units": [
+              "انا",
+              "اعطيناك",
+              "الكوثر"
+            ],
+            "positions_ms": null,
+            "quality": 0.999931812286377,
+            "truncated": false,
+            "text": "إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ"
+          },
+          "seconds": 0.5847871250007302
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            10460.0,
+            12140.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 5,
+          "reason": "ayah=2:pause:minimal_phrase",
+          "requested_window_ms": [
+            10460.0,
+            12140.0
+          ],
+          "samples": [
+            167360,
+            194240
+          ],
+          "observed": {
+            "units": [
+              "فصل",
+              "لرب"
+            ],
+            "positions_ms": null,
+            "quality": 0.9948250651359558,
+            "truncated": false,
+            "text": "فَصَلِّ لِرَبِّ"
+          },
+          "seconds": 0.3865832919254899
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            10460.0,
+            13340.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 6,
+          "reason": "ayah=2:pause:incomplete_distinguishing_phrase",
+          "requested_window_ms": [
+            10460.0,
+            13340.0
+          ],
+          "samples": [
+            167360,
+            213440
+          ],
+          "observed": {
+            "units": [
+              "فصل",
+              "لربك",
+              "وانحر"
+            ],
+            "positions_ms": null,
+            "quality": 0.9999924898147583,
+            "truncated": false,
+            "text": "فَصَلِّ لِرَبِّكَ وَانْحَرْ"
+          },
+          "seconds": 0.5256249168887734
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            13220.0,
+            14840.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 7,
+          "reason": "ayah=3:pause:minimal_phrase",
+          "requested_window_ms": [
+            13220.0,
+            14840.0
+          ],
+          "samples": [
+            211520,
+            237440
+          ],
+          "observed": {
+            "units": [
+              "ان"
+            ],
+            "positions_ms": null,
+            "quality": 0.9966821074485779,
+            "truncated": false,
+            "text": "إِنَّ"
+          },
+          "seconds": 0.25348712503910065
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            13220.0,
+            16040.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 8,
+          "reason": "ayah=3:pause:incomplete_distinguishing_phrase",
+          "requested_window_ms": [
+            13220.0,
+            16040.0
+          ],
+          "samples": [
+            211520,
+            256640
+          ],
+          "observed": {
+            "units": [
+              "ان",
+              "شانئك",
+              "هو"
+            ],
+            "positions_ms": null,
+            "quality": 0.9993850588798523,
+            "truncated": false,
+            "text": "إِنَّ شَانِئَكَ هُوَ"
+          },
+          "seconds": 0.4159160000272095
+        }
+      ],
+      "boundaries": [
+        {
+          "ayah": 1,
+          "start_ms": 6020,
+          "evidence_kind": "pause",
+          "confidence": 0.999931812286377,
+          "review_reason": null,
+          "read_id": 4,
+          "proof": {
+            "phrase": [
+              "انا",
+              "اعطيناك"
+            ],
+            "complete": true,
+            "ambiguous": false,
+            "competitors_checked": true,
+            "competitor_count": 9,
+            "offset": 0,
+            "quality_metric": "asr_token_probability",
+            "pause_ms": [
+              5720.0,
+              6320.0
+            ],
+            "pause_id": 1
+          }
+        },
+        {
+          "ayah": 2,
+          "start_ms": 10650,
+          "evidence_kind": "pause",
+          "confidence": 0.9999924898147583,
+          "review_reason": null,
+          "read_id": 6,
+          "proof": {
+            "phrase": [
+              "فصل",
+              "لربك"
+            ],
+            "complete": true,
+            "ambiguous": false,
+            "competitors_checked": true,
+            "competitor_count": 9,
+            "offset": 0,
+            "quality_metric": "asr_token_probability",
+            "pause_ms": [
+              10460.0,
+              10840.0
+            ],
+            "pause_id": 2
+          }
+        },
+        {
+          "ayah": 3,
+          "start_ms": 13380,
+          "evidence_kind": "pause",
+          "confidence": 0.9993850588798523,
+          "review_reason": null,
+          "read_id": 8,
+          "proof": {
+            "phrase": [
+              "ان",
+              "شانئك"
+            ],
+            "complete": true,
+            "ambiguous": false,
+            "competitors_checked": true,
+            "competitor_count": 9,
+            "offset": 0,
+            "quality_metric": "asr_token_probability",
+            "pause_ms": [
+              13220.0,
+              13540.0
+            ],
+            "pause_id": 3
+          }
+        }
+      ],
+      "ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 6020,
+          "conf": 0.999931812286377,
+          "reliable": true
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 10650,
+          "conf": 0.9999924898147583,
+          "reliable": true
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 13380,
+          "conf": 0.9993850588798523,
+          "reliable": true
+        }
+      ],
+      "review_required_ayahs": [],
+      "pause_matches": [
+        {
+          "ayah": 1,
+          "from_pause": true,
+          "onset_ms": 6020,
+          "conf": 0.999931812286377,
+          "boundary_evidence": "pause",
+          "pause_start_ms": 5720.0,
+          "pause_end_ms": 6320.0
+        },
+        {
+          "ayah": 2,
+          "from_pause": true,
+          "onset_ms": 10650,
+          "conf": 0.9999924898147583,
+          "boundary_evidence": "pause",
+          "pause_start_ms": 10460.0,
+          "pause_end_ms": 10840.0
+        },
+        {
+          "ayah": 3,
+          "from_pause": true,
+          "onset_ms": 13380,
+          "conf": 0.9993850588798523,
+          "boundary_evidence": "pause",
+          "pause_start_ms": 13220.0,
+          "pause_end_ms": 13540.0
+        }
+      ],
+      "n_pause": 3,
+      "n_wasl": 0,
+      "bounded_ctc_fallback": null,
+      "emission_passes": 9,
+      "emissions_frames": 0,
+      "denied_acoustic_reads": [],
+      "audio_ms": 21400.0,
+      "covered_audio_ms": 12980.0,
+      "coverage": 0.5527152723256464,
+      "acoustic_intervals_ms": [
+        [
+          150.0,
+          1450.0
+        ],
+        [
+          2460.0,
+          3960.0
+        ],
+        [
+          5720.0,
+          10320.0
+        ],
+        [
+          10460.0,
+          16040.0
+        ]
+      ],
+      "cache_hits": 0,
+      "cache_bytes": 4502,
+      "peak_cache_bytes": 4502,
+      "cache_evictions": 0,
+      "local_read_limits": {
+        "cache_limit_bytes": 33554432,
+        "max_read_ms": 6000.0,
+        "max_coverage": 0.65,
+        "max_audio_ratio": 2.0
+      },
+      "inference_seconds": 3.52510879188776
+    },
+    "source": "whisper-tarteel-base:revision=5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c:adapter=tarteel-independent-words-v1",
+    "sequence_violations": [],
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "errors_ms": [
+      0,
+      18,
+      50
+    ],
+    "median_ms": 18.0,
+    "p95_ms": 46.8,
+    "max_ms": 50
+  }
+]

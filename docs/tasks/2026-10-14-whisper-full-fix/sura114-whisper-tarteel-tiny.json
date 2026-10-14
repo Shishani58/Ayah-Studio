@@ -1,0 +1,138 @@
+{
+  "surah": 114,
+  "source": "attention-dtw:whisper-tarteel-tiny:revision=c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:commit-before=window-6:token-budget-shrink=20,10:context=1word:teacher-forcing:language=ar:full-adapter=pause-retry-spelled-letters-v1:pause-retry=3:next-prefix-confirmed:muqattaat=spoken-names:generation-config=openai/whisper-tiny@169d4a4341b33bc18d8881c4b69c2e104e1cc0af:sha256=a5d5325911f16e74001a72fa13d6e208eee51548f994646de1f4b4cc8b35b512:target=imlaey-vocalized:runtime={}",
+  "duration_seconds": 34.56,
+  "pcm_sha256": "8310a641350af41bce047ca9e27764f194f36ca6bfa919efd4f64faa8e0c4ab5",
+  "reads": [
+    {
+      "offset_seconds": 0.0,
+      "duration_seconds": 30.0,
+      "word_count": 24,
+      "first": "بِسْمِ",
+      "last": "وَالنَّاسِ"
+    },
+    {
+      "offset_seconds": 23.04,
+      "duration_seconds": 11.52,
+      "word_count": 5,
+      "first": "صُدُورِ",
+      "last": "وَالنَّاسِ"
+    }
+  ],
+  "word_rows": [
+    [
+      6580,
+      0.9998733401298523
+    ],
+    [
+      7000,
+      0.9996693730354309
+    ],
+    [
+      7680,
+      0.9998918175697327
+    ],
+    [
+      9100,
+      0.9997676610946655
+    ],
+    [
+      10640,
+      0.995455265045166
+    ],
+    [
+      12340,
+      0.9990973472595215
+    ],
+    [
+      13540,
+      0.6247844696044922
+    ],
+    [
+      15300,
+      0.9884169697761536
+    ],
+    [
+      16840,
+      0.9952841401100159
+    ],
+    [
+      17200,
+      0.7999473214149475
+    ],
+    [
+      17860,
+      0.9780189394950867
+    ],
+    [
+      18820,
+      0.9990532398223877
+    ],
+    [
+      21120,
+      0.8221800327301025
+    ],
+    [
+      21860,
+      0.8797130584716797
+    ],
+    [
+      22740,
+      0.9994814991950989
+    ],
+    [
+      23280,
+      0.6006980538368225
+    ],
+    [
+      24180,
+      0.9994120597839355
+    ],
+    [
+      25280,
+      0.9701349139213562
+    ],
+    [
+      25800,
+      0.9999459385871887
+    ],
+    [
+      27280,
+      0.9931426048278809
+    ]
+  ],
+  "ayah_rows": [
+    [
+      1,
+      6580,
+      0.9998733401298523
+    ],
+    [
+      2,
+      10640,
+      0.995455265045166
+    ],
+    [
+      3,
+      13540,
+      0.6247844696044922
+    ],
+    [
+      4,
+      16840,
+      0.9952841401100159
+    ],
+    [
+      5,
+      21120,
+      0.8221800327301025
+    ],
+    [
+      6,
+      25280,
+      0.9701349139213562
+    ]
+  ],
+  "ok": true,
+  "elapsed_seconds": 9.640558084007353
+}

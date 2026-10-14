@@ -1,0 +1,736 @@
+[
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 114,
+    "audio_sha256": "958819e2a43c6f02d397432b208398599f1c10dd7c08f19401ee3676550bf064",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "decode_seconds": 0.0845,
+    "load_probe_seconds": 3.5011,
+    "full_seconds": 2.1534,
+    "rows": [
+      [
+        1,
+        6580,
+        0.49980518221855164
+      ],
+      [
+        2,
+        10020,
+        3.9882539226709923e-07
+      ],
+      [
+        3,
+        10820,
+        0.0
+      ],
+      [
+        4,
+        16060,
+        1.5969852029229514e-05
+      ],
+      [
+        5,
+        20980,
+        1.4928663404134568e-05
+      ],
+      [
+        6,
+        25020,
+        0.0005186081398278475
+      ]
+    ],
+    "absolute_errors_ms": [
+      541,
+      243,
+      2351,
+      82,
+      430,
+      90
+    ],
+    "median_ms": 336.5,
+    "p95_ms": 1898.5,
+    "max_ms": 2351,
+    "source": "attention-dtw:whisper-tarteel-tiny:revision=c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:commit-before=24:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-tiny@169d4a4341b33bc18d8881c4b69c2e104e1cc0af:sha256=a5d5325911f16e74001a72fa13d6e208eee51548f994646de1f4b4cc8b35b512:target=imlaey-plain:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+    "trace": {
+      "mode": "full",
+      "backend": "whisper-attention-dtw",
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 6580,
+          "conf": 0.49980518221855164,
+          "reliable": true
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 10020,
+          "conf": 3.9882539226709923e-07,
+          "reliable": false
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 10820,
+          "conf": 0.0,
+          "reliable": false
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 16060,
+          "conf": 1.5969852029229514e-05,
+          "reliable": false
+        },
+        {
+          "ayah": 5,
+          "onset_ms": 20980,
+          "conf": 1.4928663404134568e-05,
+          "reliable": false
+        },
+        {
+          "ayah": 6,
+          "onset_ms": 25020,
+          "conf": 0.0005186081398278475,
+          "reliable": false
+        }
+      ]
+    },
+    "first_ayah_words": [
+      [
+        0,
+        600,
+        7.686431899855961e-07
+      ],
+      [
+        1,
+        780,
+        0.2682924270629883
+      ],
+      [
+        2,
+        1560,
+        6.975779979256913e-05
+      ],
+      [
+        3,
+        2540,
+        0.26813873648643494
+      ]
+    ],
+    "words_seconds": 0.1459,
+    "seconds": 5.906
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 112,
+    "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "decode_seconds": 0.0731,
+    "load_probe_seconds": 0.1656,
+    "full_seconds": 0.2337,
+    "rows": [
+      [
+        1,
+        6580,
+        0.4999716281890869
+      ],
+      [
+        2,
+        8900,
+        7.553311434094212e-07
+      ],
+      [
+        3,
+        10700,
+        5.183449047763133e-07
+      ],
+      [
+        4,
+        13320,
+        0.0006184916710481048
+      ]
+    ],
+    "absolute_errors_ms": [
+      486,
+      145,
+      163,
+      210
+    ],
+    "median_ms": 186.5,
+    "p95_ms": 444.5999999999999,
+    "max_ms": 486,
+    "source": "attention-dtw:whisper-tarteel-tiny:revision=c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:commit-before=24:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-tiny@169d4a4341b33bc18d8881c4b69c2e104e1cc0af:sha256=a5d5325911f16e74001a72fa13d6e208eee51548f994646de1f4b4cc8b35b512:target=imlaey-plain:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+    "trace": {
+      "mode": "full",
+      "backend": "whisper-attention-dtw",
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 6580,
+          "conf": 0.4999716281890869,
+          "reliable": true
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 8900,
+          "conf": 7.553311434094212e-07,
+          "reliable": false
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 10700,
+          "conf": 5.183449047763133e-07,
+          "reliable": false
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 13320,
+          "conf": 0.0006184916710481048,
+          "reliable": false
+        }
+      ]
+    },
+    "first_ayah_words": [
+      [
+        0,
+        540,
+        9.201709758599463e-07
+      ],
+      [
+        1,
+        600,
+        3.2363416391234523e-09
+      ],
+      [
+        2,
+        700,
+        0.00034097241587005556
+      ],
+      [
+        3,
+        1700,
+        0.0017131799831986427
+      ]
+    ],
+    "words_seconds": 0.132,
+    "seconds": 0.611
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 78,
+    "audio_sha256": "6b5e524700d4139920eead0a5b10544a73ccb0c79f1e9d04df8e2d1f385d7024",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "decode_seconds": 0.2788,
+    "load_probe_seconds": 0.1405,
+    "full_seconds": 21.2464,
+    "rows": [
+      [
+        1,
+        6860,
+        0.2607665956020355
+      ],
+      [
+        2,
+        12240,
+        1.4054988284328829e-08
+      ],
+      [
+        3,
+        16400,
+        1.0808496320180438e-08
+      ],
+      [
+        4,
+        21240,
+        6.0282007325440645e-05
+      ],
+      [
+        5,
+        24660,
+        8.962346328189597e-05
+      ],
+      [
+        6,
+        29180,
+        0.016310477629303932
+      ],
+      [
+        7,
+        32460,
+        0.01404955517500639
+      ],
+      [
+        8,
+        36600,
+        0.1409878432750702
+      ],
+      [
+        9,
+        41020,
+        0.00020458725339267403
+      ],
+      [
+        10,
+        45300,
+        7.914108550721721e-07
+      ],
+      [
+        11,
+        49260,
+        0.04404454305768013
+      ],
+      [
+        12,
+        54360,
+        0.00013581399980466813
+      ],
+      [
+        13,
+        59880,
+        0.027193425223231316
+      ],
+      [
+        14,
+        65100,
+        0.18326574563980103
+      ],
+      [
+        15,
+        73120,
+        5.231850082054734e-05
+      ],
+      [
+        16,
+        79040,
+        0.008684785105288029
+      ],
+      [
+        17,
+        84160,
+        5.6148974181269296e-06
+      ],
+      [
+        18,
+        89780,
+        0.49199655652046204
+      ],
+      [
+        19,
+        96920,
+        0.1654621809720993
+      ],
+      [
+        20,
+        104180,
+        0.0010677664540708065
+      ],
+      [
+        21,
+        110140,
+        3.4535776649136096e-05
+      ],
+      [
+        22,
+        117320,
+        0.3980591893196106
+      ],
+      [
+        23,
+        121060,
+        0.25170835852622986
+      ],
+      [
+        24,
+        127380,
+        1.2680486349836428e-07
+      ],
+      [
+        25,
+        134420,
+        0.042701270431280136
+      ],
+      [
+        26,
+        139680,
+        0.17662912607192993
+      ],
+      [
+        27,
+        144500,
+        4.899720806861296e-07
+      ],
+      [
+        28,
+        151440,
+        0.0006124980864115059
+      ],
+      [
+        29,
+        156460,
+        0.481302946805954
+      ],
+      [
+        30,
+        161860,
+        0.24730251729488373
+      ],
+      [
+        31,
+        168580,
+        9.317103035755281e-07
+      ],
+      [
+        32,
+        172900,
+        0.4703456163406372
+      ],
+      [
+        33,
+        177340,
+        0.20154771208763123
+      ],
+      [
+        34,
+        180680,
+        0.1406962275505066
+      ],
+      [
+        35,
+        184100,
+        7.312256684599561e-07
+      ],
+      [
+        36,
+        192200,
+        0.2528105080127716
+      ],
+      [
+        37,
+        201660,
+        0.02432531863451004
+      ],
+      [
+        38,
+        213780,
+        0.041432786732912064
+      ],
+      [
+        39,
+        230920,
+        9.540525934426114e-05
+      ],
+      [
+        40,
+        242000,
+        0.4997222125530243
+      ]
+    ],
+    "absolute_errors_ms": [
+      700,
+      326,
+      185,
+      318,
+      515,
+      380,
+      658,
+      214,
+      826,
+      679,
+      743,
+      691,
+      355,
+      380,
+      132,
+      568,
+      685,
+      397,
+      624,
+      660,
+      598,
+      471,
+      359,
+      1277,
+      457,
+      411,
+      579,
+      1194,
+      264,
+      346,
+      570,
+      272,
+      305,
+      306,
+      309,
+      1284,
+      1297,
+      447,
+      472,
+      702
+    ],
+    "median_ms": 471.5,
+    "p95_ms": 1277.35,
+    "max_ms": 1297,
+    "source": "attention-dtw:whisper-tarteel-tiny:revision=c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:commit-before=24:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-tiny@169d4a4341b33bc18d8881c4b69c2e104e1cc0af:sha256=a5d5325911f16e74001a72fa13d6e208eee51548f994646de1f4b4cc8b35b512:target=imlaey-plain:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+    "trace": {
+      "mode": "full",
+      "backend": "whisper-attention-dtw",
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 6860,
+          "conf": 0.2607665956020355,
+          "reliable": true
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 12240,
+          "conf": 1.4054988284328829e-08,
+          "reliable": false
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 16400,
+          "conf": 1.0808496320180438e-08,
+          "reliable": false
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 21240,
+          "conf": 6.0282007325440645e-05,
+          "reliable": false
+        },
+        {
+          "ayah": 5,
+          "onset_ms": 24660,
+          "conf": 8.962346328189597e-05,
+          "reliable": false
+        },
+        {
+          "ayah": 6,
+          "onset_ms": 29180,
+          "conf": 0.016310477629303932,
+          "reliable": false
+        },
+        {
+          "ayah": 7,
+          "onset_ms": 32460,
+          "conf": 0.01404955517500639,
+          "reliable": false
+        },
+        {
+          "ayah": 8,
+          "onset_ms": 36600,
+          "conf": 0.1409878432750702,
+          "reliable": false
+        },
+        {
+          "ayah": 9,
+          "onset_ms": 41020,
+          "conf": 0.00020458725339267403,
+          "reliable": false
+        },
+        {
+          "ayah": 10,
+          "onset_ms": 45300,
+          "conf": 7.914108550721721e-07,
+          "reliable": false
+        },
+        {
+          "ayah": 11,
+          "onset_ms": 49260,
+          "conf": 0.04404454305768013,
+          "reliable": false
+        },
+        {
+          "ayah": 12,
+          "onset_ms": 54360,
+          "conf": 0.00013581399980466813,
+          "reliable": false
+        },
+        {
+          "ayah": 13,
+          "onset_ms": 59880,
+          "conf": 0.027193425223231316,
+          "reliable": false
+        },
+        {
+          "ayah": 14,
+          "onset_ms": 65100,
+          "conf": 0.18326574563980103,
+          "reliable": false
+        },
+        {
+          "ayah": 15,
+          "onset_ms": 73120,
+          "conf": 5.231850082054734e-05,
+          "reliable": false
+        },
+        {
+          "ayah": 16,
+          "onset_ms": 79040,
+          "conf": 0.008684785105288029,
+          "reliable": false
+        },
+        {
+          "ayah": 17,
+          "onset_ms": 84160,
+          "conf": 5.6148974181269296e-06,
+          "reliable": false
+        },
+        {
+          "ayah": 18,
+          "onset_ms": 89780,
+          "conf": 0.49199655652046204,
+          "reliable": true
+        },
+        {
+          "ayah": 19,
+          "onset_ms": 96920,
+          "conf": 0.1654621809720993,
+          "reliable": false
+        },
+        {
+          "ayah": 20,
+          "onset_ms": 104180,
+          "conf": 0.0010677664540708065,
+          "reliable": false
+        },
+        {
+          "ayah": 21,
+          "onset_ms": 110140,
+          "conf": 3.4535776649136096e-05,
+          "reliable": false
+        },
+        {
+          "ayah": 22,
+          "onset_ms": 117320,
+          "conf": 0.3980591893196106,
+          "reliable": true
+        },
+        {
+          "ayah": 23,
+          "onset_ms": 121060,
+          "conf": 0.25170835852622986,
+          "reliable": true
+        },
+        {
+          "ayah": 24,
+          "onset_ms": 127380,
+          "conf": 1.2680486349836428e-07,
+          "reliable": false
+        },
+        {
+          "ayah": 25,
+          "onset_ms": 134420,
+          "conf": 0.042701270431280136,
+          "reliable": false
+        },
+        {
+          "ayah": 26,
+          "onset_ms": 139680,
+          "conf": 0.17662912607192993,
+          "reliable": false
+        },
+        {
+          "ayah": 27,
+          "onset_ms": 144500,
+          "conf": 4.899720806861296e-07,
+          "reliable": false
+        },
+        {
+          "ayah": 28,
+          "onset_ms": 151440,
+          "conf": 0.0006124980864115059,
+          "reliable": false
+        },
+        {
+          "ayah": 29,
+          "onset_ms": 156460,
+          "conf": 0.481302946805954,
+          "reliable": true
+        },
+        {
+          "ayah": 30,
+          "onset_ms": 161860,
+          "conf": 0.24730251729488373,
+          "reliable": false
+        },
+        {
+          "ayah": 31,
+          "onset_ms": 168580,
+          "conf": 9.317103035755281e-07,
+          "reliable": false
+        },
+        {
+          "ayah": 32,
+          "onset_ms": 172900,
+          "conf": 0.4703456163406372,
+          "reliable": true
+        },
+        {
+          "ayah": 33,
+          "onset_ms": 177340,
+          "conf": 0.20154771208763123,
+          "reliable": false
+        },
+        {
+          "ayah": 34,
+          "onset_ms": 180680,
+          "conf": 0.1406962275505066,
+          "reliable": false
+        },
+        {
+          "ayah": 35,
+          "onset_ms": 184100,
+          "conf": 7.312256684599561e-07,
+          "reliable": false
+        },
+        {
+          "ayah": 36,
+          "onset_ms": 192200,
+          "conf": 0.2528105080127716,
+          "reliable": true
+        },
+        {
+          "ayah": 37,
+          "onset_ms": 201660,
+          "conf": 0.02432531863451004,
+          "reliable": false
+        },
+        {
+          "ayah": 38,
+          "onset_ms": 213780,
+          "conf": 0.041432786732912064,
+          "reliable": false
+        },
+        {
+          "ayah": 39,
+          "onset_ms": 230920,
+          "conf": 9.540525934426114e-05,
+          "reliable": false
+        },
+        {
+          "ayah": 40,
+          "onset_ms": 242000,
+          "conf": 0.4997222125530243,
+          "reliable": true
+        }
+      ]
+    },
+    "first_ayah_words": [
+      [
+        0,
+        940,
+        2.318599945283495e-05
+      ],
+      [
+        1,
+        1960,
+        0.23251062631607056
+      ]
+    ],
+    "words_seconds": 0.24,
+    "seconds": 21.919
+  }
+]

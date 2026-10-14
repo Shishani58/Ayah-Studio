@@ -1,0 +1,238 @@
+{
+  "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "source_sha256": {
+    "surah_cutter/core/align_fast.py": "0847f22065d7dd91ec49490341fd17c401bd4ecd48b049f98ad4dc627fe67b59",
+    "surah_cutter/core/align_fast_whisper.py": "cf4cd9768989f1ee0eb58b1749e22a63917f2e6f6facef8af68637886609a456",
+    "surah_cutter/core/fast_reads.py": "75f9802e31636c280d542bbb0dae60aa8517a13c0f69583227016d7421e6ff9a",
+    "surah_cutter/core/candidates.py": "311d6ad230f2dc2aaf9cba31431d9e8d8570a1252865e1bc8cad1fc2942bf2db",
+    "surah_cutter/core/fast_executor.py": "e32691a8c3f8407b8af6242c851011ee141fcf14b3f8b58a993c2b19e9852b75",
+    "surah_cutter/core/fast_adapters.py": "01c1d5a87283923af6e7314b5ea4614dbd9c24be9e495fa12b6ba9d3f6f90899",
+    "surah_cutter/core/fast_ctc.py": "09d6f3efe618242836cd54320001c86f5f2539d66862a479753ef00582b8f2aa",
+    "surah_cutter/core/align.py": "2687df9e71ef6f1ecde6e3ee6f759e854e32a856ce5c9bc1672c078cf3c863ec",
+    "surah_cutter/core/emissions.py": "a972f5f0f6efac8c5af6ed88fc355dedbcb592478b1adebab21aff32e1323013",
+    "surah_cutter/core/model_runtime.py": "f34bae23814e3a11e6230c0d5ae67b308257bef7af1cbdd56fb8dc166b0213a5",
+    "surah_cutter/core/model_worker.py": "4e0ce10388781f48b1ca3a8725f09f8086b8b5bbe6c9130fc690566d4e5213ec",
+    "surah_cutter/core/model_store.py": "434675e4266f394a60649297311fdbbc34ac2fb3ae8f99435fc3be9016a73a23",
+    "tools/bench_fast_models.py": "611eda18abac9bca5ddc9e723cce2a8ba2e0559fcc3cf85fb7cec2ae7ab4cf33",
+    "surah_cutter/data/alignment_identity.py": "7108ade84f10e7f3aeaf2a790f256e487055c9eaa7bb3486ee549e70af81e010"
+  },
+  "canonical_sha256": "c35272ed2a80916f5665f18e150686cfe258249cdf3ad50d3ac787f8cfe3fd66",
+  "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+  "initial_pauses": {
+    "108": {
+      "audio_sha256": "85d84d3493461230443bb5f5d7e8c0eb70adb0be2e780f75b71435527a788ee5",
+      "decode_seconds": 0.04482604190707207,
+      "dsp_seconds": 0.07206770894117653,
+      "initial_pauses_sha256": "26ed7c92b06409de80bdedca690f4e728dabd6c5d7043254b002ff2214092d3f",
+      "duration_ms": 23484.0625,
+      "decisions": [
+        {
+          "pause": {
+            "start_ms": 2460.0,
+            "end_ms": 2660.0,
+            "depth_ms": 200.0
+          },
+          "dsp_ok": true,
+          "vad_ok": true,
+          "accepted": true,
+          "reason": "intro-vad",
+          "flatness": 0.4187497657271981,
+          "zcr": 0.14517029592406477,
+          "rms_ratio": 0.3021022979073851
+        },
+        {
+          "pause": {
+            "start_ms": 5720.0,
+            "end_ms": 6320.0,
+            "depth_ms": 600.0
+          },
+          "dsp_ok": true,
+          "vad_ok": null,
+          "accepted": true,
+          "reason": "weak-dsp",
+          "flatness": 0.31671387851871474,
+          "zcr": 0.07415826111663588,
+          "rms_ratio": 0.0610874370069073
+        },
+        {
+          "pause": {
+            "start_ms": 10460.0,
+            "end_ms": 10840.0,
+            "depth_ms": 380.0
+          },
+          "dsp_ok": true,
+          "vad_ok": null,
+          "accepted": true,
+          "reason": "dsp",
+          "flatness": 0.44087569385726877,
+          "zcr": 0.10144927536231885,
+          "rms_ratio": 0.2486631369494373
+        },
+        {
+          "pause": {
+            "start_ms": 13220.0,
+            "end_ms": 13540.0,
+            "depth_ms": 320.0
+          },
+          "dsp_ok": true,
+          "vad_ok": null,
+          "accepted": true,
+          "reason": "dsp",
+          "flatness": 0.4130808748796212,
+          "zcr": 0.11719567492152075,
+          "rms_ratio": 0.2572495139506009
+        }
+      ]
+    },
+    "109": {
+      "audio_sha256": "cba1b5153fcaf7de463e304c229cd11979159e2db72241be873151ac995e0b78",
+      "decode_seconds": 0.052296875044703484,
+      "dsp_seconds": 0.08314741705544293,
+      "initial_pauses_sha256": "fe919da7b53fd381c762197c4344aabfc82ec5d3bacb569bca2fe5061ad5871d",
+      "duration_ms": 39680.0,
+      "decisions": [
+        {
+          "pause": {
+            "start_ms": 2460.0,
+            "end_ms": 2660.0,
+            "depth_ms": 200.0
+          },
+          "dsp_ok": true,
+          "vad_ok": true,
+          "accepted": true,
+          "reason": "intro-vad",
+          "flatness": 0.4187497657271981,
+          "zcr": 0.14517029592406477,
+          "rms_ratio": 0.2441333480396333
+        },
+        {
+          "pause": {
+            "start_ms": 10520.0,
+            "end_ms": 10920.0,
+            "depth_ms": 400.0
+          },
+          "dsp_ok": true,
+          "vad_ok": null,
+          "accepted": true,
+          "reason": "dsp",
+          "flatness": 0.45539629807317256,
+          "zcr": 0.09143005991143527,
+          "rms_ratio": 0.18311285233584026
+        },
+        {
+          "pause": {
+            "start_ms": 14500.0,
+            "end_ms": 14940.0,
+            "depth_ms": 440.0
+          },
+          "dsp_ok": true,
+          "vad_ok": null,
+          "accepted": true,
+          "reason": "dsp",
+          "flatness": 0.4806050738762033,
+          "zcr": 0.08774279973208306,
+          "rms_ratio": 0.18126081106668657
+        },
+        {
+          "pause": {
+            "start_ms": 20060.0,
+            "end_ms": 20500.0,
+            "depth_ms": 440.0
+          },
+          "dsp_ok": true,
+          "vad_ok": null,
+          "accepted": true,
+          "reason": "dsp",
+          "flatness": 0.43416794817784937,
+          "zcr": 0.1245813797722706,
+          "rms_ratio": 0.24055663256354043
+        },
+        {
+          "pause": {
+            "start_ms": 23920.0,
+            "end_ms": 24160.0,
+            "depth_ms": 240.0
+          },
+          "dsp_ok": false,
+          "vad_ok": null,
+          "accepted": false,
+          "reason": "rejected",
+          "flatness": 0.2805281303549084,
+          "zcr": 0.13494648673801768,
+          "rms_ratio": 0.34856011792102415
+        },
+        {
+          "pause": {
+            "start_ms": 24520.0,
+            "end_ms": 24920.0,
+            "depth_ms": 400.0
+          },
+          "dsp_ok": true,
+          "vad_ok": null,
+          "accepted": true,
+          "reason": "dsp",
+          "flatness": 0.5033970608953187,
+          "zcr": 0.08283407137275332,
+          "rms_ratio": 0.21034195174143688
+        },
+        {
+          "pause": {
+            "start_ms": 29860.0,
+            "end_ms": 30220.0,
+            "depth_ms": 360.0
+          },
+          "dsp_ok": true,
+          "vad_ok": null,
+          "accepted": true,
+          "reason": "dsp",
+          "flatness": 0.47450183199248414,
+          "zcr": 0.13488372093023257,
+          "rms_ratio": 0.20048245476989315
+        }
+      ]
+    }
+  },
+  "summary": {
+    "whisper-tarteel-tiny": {
+      "surahs": 2,
+      "ayahs": 9,
+      "median_ms": 49.0,
+      "p95_ms": 94.59999999999998,
+      "max_ms": 119,
+      "over500": 0,
+      "positive_conf_over500": [],
+      "sequence_violations": [],
+      "review_ayahs": 0,
+      "load_probe_seconds": 5.739281082991511,
+      "decode_seconds": 0.09712291695177555,
+      "dsp_seconds": 0.15521512599661946,
+      "inference_match_seconds": 6.779556165914983,
+      "search_seconds": 6.934771291911602,
+      "audio_ms": 32300.0,
+      "covered_audio_ms": 25080.0,
+      "total_ms": 63164.0625,
+      "model_reads": 19
+    },
+    "whisper-tarteel-base": {
+      "surahs": 2,
+      "ayahs": 9,
+      "median_ms": 49.0,
+      "p95_ms": 94.59999999999998,
+      "max_ms": 119,
+      "over500": 0,
+      "positive_conf_over500": [],
+      "sequence_violations": [],
+      "review_ayahs": 0,
+      "load_probe_seconds": 5.318046957952902,
+      "decode_seconds": 0.09712291695177555,
+      "dsp_seconds": 0.15521512599661946,
+      "inference_match_seconds": 12.434199333190918,
+      "search_seconds": 12.589414459187537,
+      "audio_ms": 32300.0,
+      "covered_audio_ms": 25080.0,
+      "total_ms": 63164.0625,
+      "model_reads": 19
+    }
+  }
+}

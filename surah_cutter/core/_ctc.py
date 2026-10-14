@@ -76,8 +76,9 @@ def forced_align(log_probs, targets, blank: int = 0):
     if n_st > 1:
         dp[1] = emis[0, ext[1]]
 
-    back = np.zeros((t_len, n_st), dtype=np.int64)
-    back[0] = np.arange(n_st)
+    # Each predecessor differs by only 0, 1 or 2 states. Store that choice,
+    # not a full int64 state index (8x smaller, with identical tie breaking).
+    back = np.zeros((t_len, n_st), dtype=np.uint8)
     idx = np.arange(n_st)
 
     for t in range(1, t_len):
@@ -91,7 +92,7 @@ def forced_align(log_probs, targets, blank: int = 0):
         choice = np.argmax(stacked, axis=0)  # 0:stay 1:-1 2:-2
         best = stacked[choice, idx]
         dp = best + emis[t, ext]
-        back[t] = idx - choice
+        back[t] = choice
 
     if max(dp[n_st - 1], dp[n_st - 2]) <= _NEG / 2:
         raise ValueError("CTC target sequence cannot fit in audio")
@@ -101,7 +102,7 @@ def forced_align(log_probs, targets, blank: int = 0):
         if t % 64 == 0:
             check_cancelled()
         states[t] = s
-        s = back[t, s]
+        s -= int(back[t, s])
 
     path = ext[states]
     scores = emis[np.arange(t_len), path]
@@ -206,4 +207,13 @@ def merge_repeats(path, id_map=None):
         label = seq[i] if id_map is None else id_map.get(seq[i], seq[i])
         segments.append(Segment(int(label), i, j))
         i = j + 1
+    return segments
+
+
+def aligned_segments(path, targets, *, blank: int = 0) -> list[Segment]:
+    """Require one non-blank segment for every fixed target, in exact order."""
+    segments = [segment for segment in merge_repeats(np.asarray(path).reshape(-1))
+                if segment.label != blank]
+    if [segment.label for segment in segments] != list(targets):
+        raise ValueError("Не удалось сопоставить полный текст с аудио")
     return segments

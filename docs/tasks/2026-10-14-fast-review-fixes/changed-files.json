@@ -1,0 +1,175 @@
+{
+  "baseline": "/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/surah-fast-fixes-baseline-11s_70li",
+  "owned_code_tests_shared_docs": {
+    "surah_cutter/core/fast_executor.py": {
+      "baseline_sha256": "011ceae6dbcbf616c33bb44b3737d9008d9471f656160baa980c5a03654ef97a",
+      "current_sha256": "747886fe9527e9a7147aa952c65cd5eb5b5d4453d58d5e6c9f94052284d21ebd"
+    },
+    "surah_cutter/core/fast_adapters.py": {
+      "baseline_sha256": "b0ddbef55a949d16b67fd93176357d560e69496b487c5dab5b924711905ff6f5",
+      "current_sha256": "199345503bcc41fd4a88505f2c2ed32e0dd67075b55cafe1cc22eb71992c864f"
+    },
+    "surah_cutter/core/fast_ctc.py": {
+      "baseline_sha256": null,
+      "current_sha256": "7b681cc7fd4179fcde6b7654bb986de8984b86a5e884c653148fe1b3d6daca3d"
+    },
+    "surah_cutter/core/fast_reads.py": {
+      "baseline_sha256": "dac0750d35dcfdeb6a16ba9f7fa63626aac8bf3a14885873fe56c7b61b6b5306",
+      "current_sha256": "82ad5dbedf01636d2692fe17070a5938ff692fffced0a52d6f2fadce1283fe4b"
+    },
+    "surah_cutter/core/emissions.py": {
+      "baseline_sha256": null,
+      "current_sha256": "dde1335cf3f5641dff8cc3e4803ebdb7c61cd766dc960e3f9f163f5b3bba158a"
+    },
+    "surah_cutter/core/model_runtime.py": {
+      "baseline_sha256": "b3fcd968b87b94a524ccf288c4b73d48e3f6714cfcecdc78412aac2f0b99a9dd",
+      "current_sha256": "f34bae23814e3a11e6230c0d5ae67b308257bef7af1cbdd56fb8dc166b0213a5"
+    },
+    "surah_cutter/core/model_worker.py": {
+      "baseline_sha256": "c48c9a0cbee71f54c7e9e87aba19dc539f4bb485d160ca1b287d5185ee14daa7",
+      "current_sha256": "f4cd775a0d558384c68477b485f893a44640f0892e6bf180264c51e24fd313ab"
+    },
+    "tests/test_fast_executor.py": {
+      "baseline_sha256": "856937c31f04483ed9db729625be2174b227b2cfedc8abe7724009260bc8c7c7",
+      "current_sha256": "8b70cccc828e50175986de890fe1b63ce24b165c9e546f78dd8b394b95046441"
+    },
+    "tests/test_fast_review_fixes.py": {
+      "baseline_sha256": null,
+      "current_sha256": "eaacddd11689c7679d2bde0c2d071e776a676c2cda2b149b3a17c433bbef0b7e"
+    },
+    "tools/bench_fast_models.py": {
+      "baseline_sha256": "e96474e314eb389177413a4885c623e1b2c13222c150d17f6407483bcac3c294",
+      "current_sha256": "611eda18abac9bca5ddc9e723cce2a8ba2e0559fcc3cf85fb7cec2ae7ab4cf33"
+    },
+    "docs/project.md": {
+      "baseline_sha256": "19a581c094d7ef642dfbfa6260d6879a6808bf185ad9dddad20cc553631f1fdb",
+      "current_sha256": "02ef11b32aa20a4cc1af57ff1a92c144c420ccfd58e517114f0330c118f0da4f"
+    },
+    "docs/STATUS.md": {
+      "baseline_sha256": "246cacb2492c49f8e60049fce8fbd9ab93077b86ee04e97ff8bdc7c2dabce31a",
+      "current_sha256": "7e71c4d99fa801c3837e2933e805f44fac1de8bb1aa90e7fcb9048ffb7022837"
+    }
+  },
+  "new_code_tests": [
+    "surah_cutter/core/fast_ctc.py",
+    "tests/test_fast_review_fixes.py"
+  ],
+  "owned_task_artifacts": [
+    "docs/tasks/2026-10-14-fast-review-fixes/analyze.py",
+    "docs/tasks/2026-10-14-fast-review-fixes/attribution-smoke.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/attribution-smoke.summary.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/base79-26-diagnosis.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/context-score-fresh109.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/context-score-fresh109.summary.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/corpus-before-hint-fix.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/corpus-before-hint-fix.summary.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/corpus-final.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/corpus-final.summary.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/corpus-score-replay.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/ctc-onset-probe.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/ctc_onset_probe.py",
+    "docs/tasks/2026-10-14-fast-review-fixes/edges-final.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/likelihood-probe.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/likelihood_probe.py",
+    "docs/tasks/2026-10-14-fast-review-fixes/local-corpus.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/local-corpus.summary.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/local-diagnostic-ctc.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/local-sparse.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/local-sparse.summary.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/paired-analysis.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/protected-check.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/report.md",
+    "docs/tasks/2026-10-14-fast-review-fixes/score_replay.py",
+    "docs/tasks/2026-10-14-fast-review-fixes/source-4-to-5.diff",
+    "docs/tasks/2026-10-14-fast-review-fixes/source-4-to-5.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/speech-edge-smoke.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/speech-edge-smoke.summary.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/task.md",
+    "docs/tasks/2026-10-14-fast-review-fixes/temporal-preroll-probe.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/temporal-probe.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/temporal_preroll_probe.py",
+    "docs/tasks/2026-10-14-fast-review-fixes/temporal_probe.py"
+  ],
+  "shared_docs_ownership": "Only FAST section in project.md and new FAST review-fixes STATUS addition; other concurrent FULL sections excluded.",
+  "shared_worker_ownership": "ASR selected-token metadata and immutable loaded identity only; existing FULL timing/recovery changes predate this task.",
+  "emissions_baseline_note": "Not in 15-file task snapshot; only immutable runtime identity constructor/load metadata additions belong to this task.",
+  "unchanged_from_task_baseline": [
+    "surah_cutter/core/pipeline.py",
+    "surah_cutter/core/model_catalog.json",
+    "surah_cutter/data/alignment_identity.py",
+    "surah_cutter/data/project_db.py",
+    "tests/test_alignment_identity.py"
+  ],
+  "excluded_parallel_change": "alignment_result.py FULL policy source fields; other dirty files and independent-* artifacts belong to other work.",
+  "frozen_algorithm": "sequential-fast-v3-experimental-sparse-4",
+  "acoustic_freeze_start_utc": "2026-10-14 01:10:11 UTC",
+  "owned_artifact_sha256": {
+    "docs/tasks/2026-10-14-fast-review-fixes/analyze.py": "ced68e75976f163c9dd503528a70863c3d35efa82039e3f5757d7748aff65c6a",
+    "docs/tasks/2026-10-14-fast-review-fixes/attribution-smoke.json": "b8f65493001fa033c5aa8396475604bb37a8083f569947cab5fbe24e828d935c",
+    "docs/tasks/2026-10-14-fast-review-fixes/attribution-smoke.summary.json": "dead588812084dc1be5421d32c60dbd87e3f5547f4789cd90622959301a1f166",
+    "docs/tasks/2026-10-14-fast-review-fixes/base79-26-diagnosis.json": "d53612102d6ab87b33660134db52a194da05d732d7f577a9c9d2e19fdf78fd7d",
+    "docs/tasks/2026-10-14-fast-review-fixes/context-score-fresh109.json": "0db92f9efb8b248663d25c9daa1239587cf8d57f8906579b282b101de013bd22",
+    "docs/tasks/2026-10-14-fast-review-fixes/context-score-fresh109.summary.json": "8c00b2ef298adc76a75b39ac7e1449746f0b84147cd04bc9438fbfe364c78fad",
+    "docs/tasks/2026-10-14-fast-review-fixes/corpus-before-hint-fix.json": "102e1f84e9280ea0f8814c636adf165f82b9c8e47f364a5fe3d87e04b12af887",
+    "docs/tasks/2026-10-14-fast-review-fixes/corpus-before-hint-fix.summary.json": "e40a004b12c87f2e5ab94efbcbfedfe27e4d5eb006b882a13e961ddd3703ec5e",
+    "docs/tasks/2026-10-14-fast-review-fixes/corpus-final.json": "353779fc6dda48c0c4b9d5132dac3938770f07c8f92da24a2c469854472d30d1",
+    "docs/tasks/2026-10-14-fast-review-fixes/corpus-final.summary.json": "bbac914bc49a5e08356427a6ca74d59d23c3ca7839842df0b991b0c66bfd3f14",
+    "docs/tasks/2026-10-14-fast-review-fixes/corpus-score-replay.json": "486517268f8c83905e692eeeb2ea3e9352c7ea151a8d0ccf2ad3b1d087e486e0",
+    "docs/tasks/2026-10-14-fast-review-fixes/ctc-onset-probe.json": "2916903cf9e70601f163194daa7543488396f3eb476301a81ee5fa684a85b4bd",
+    "docs/tasks/2026-10-14-fast-review-fixes/ctc_onset_probe.py": "3f13007679e93cab2345669bfa841793dd33eae69383f957400c21b85138a396",
+    "docs/tasks/2026-10-14-fast-review-fixes/edges-final.json": "61b6ceba8f4c5af7a2d1e0619b9fc995693e4a32e61b1eafb443d3990cb3c560",
+    "docs/tasks/2026-10-14-fast-review-fixes/likelihood-probe.json": "622a4c83bb79c0ff5dfee565d03c46834b5b2e940625d5480122b6257e9370eb",
+    "docs/tasks/2026-10-14-fast-review-fixes/likelihood_probe.py": "c9f4479fbcc2cdd4594ce06e11305bda1b86dd116a8627c6f2a1e8fab54b73a2",
+    "docs/tasks/2026-10-14-fast-review-fixes/local-corpus.json": "c9ef9e509d27ec0d8957c041602a196b7399449977d59e880283121818ecad34",
+    "docs/tasks/2026-10-14-fast-review-fixes/local-corpus.summary.json": "7eca7ceb3d70e6bbfd7c9cd7e1a961b67f156e4aa4a4053faef261026fee5f8a",
+    "docs/tasks/2026-10-14-fast-review-fixes/local-diagnostic-ctc.json": "bd95a6b171fff441f04dd1daf15666a6325cb835d1349cb05f7e94296c65a870",
+    "docs/tasks/2026-10-14-fast-review-fixes/local-sparse.json": "c7013fc7efbea2cab2c39be91644d5b8104ed9d22a9bf397e0d13c7a3d9c8b66",
+    "docs/tasks/2026-10-14-fast-review-fixes/local-sparse.summary.json": "0b1e832b5ddaf81b3682514c2eea74111a0fc42d5a5133e9cd63d64f4a8db590",
+    "docs/tasks/2026-10-14-fast-review-fixes/paired-analysis.json": "99ab27e865d1be892f6f1999e88b2f68117885c4aaff7999ce2f4a18a410191d",
+    "docs/tasks/2026-10-14-fast-review-fixes/protected-check.json": "0af0d660414d9a85338278e990cf08d564e583281aafa19d5f2140872ca721fd",
+    "docs/tasks/2026-10-14-fast-review-fixes/report.md": "04ab47696486be71d2aeef8778db59afb45e5401445d8f6514e2d4f83f28342b",
+    "docs/tasks/2026-10-14-fast-review-fixes/score_replay.py": "f36d07bc52625ff07896f42718eec87afd7b40760ffee0d3ca390ca65765241c",
+    "docs/tasks/2026-10-14-fast-review-fixes/source-4-to-5.diff": "73bf395b8cc6b8da2a3dcbc49f2a8914f502080341a02286cb01d685ee79e6f0",
+    "docs/tasks/2026-10-14-fast-review-fixes/source-4-to-5.json": "fcb942ab0fb67347b74ce126aeefc75e3d3eba03342c209d51d4f7bf38fb758d",
+    "docs/tasks/2026-10-14-fast-review-fixes/speech-edge-smoke.json": "4b00cf401b3544c216e66008669ec3a7b84e7ca852d7e9d3018694c9af30f0a1",
+    "docs/tasks/2026-10-14-fast-review-fixes/speech-edge-smoke.summary.json": "e490822192466b85104966d97ac1506aea008f349c8b00b09c1e4de50af280d1",
+    "docs/tasks/2026-10-14-fast-review-fixes/task.md": "9f54ee8b0e0c41b0b2ccc36a0dc0c1b3413e3a9bdc3cb4e3f6b1990e6e5eda8f",
+    "docs/tasks/2026-10-14-fast-review-fixes/temporal-preroll-probe.json": "e8ea39d44ccaa48cf0dbe0fbe456fba13f05c78ec766f97a5787eb5e8f2a5469",
+    "docs/tasks/2026-10-14-fast-review-fixes/temporal-probe.json": "f2ebc6bf95e1b9c392a19e4d1b905327eed68733c6c035c743b874a23660ec37",
+    "docs/tasks/2026-10-14-fast-review-fixes/temporal_preroll_probe.py": "965352f4527ce2310168a942f4906fc630f18aab9f8bc255378f0ff60e1b533a",
+    "docs/tasks/2026-10-14-fast-review-fixes/temporal_probe.py": "6a6904d6230b96fc6148cf46f443d65e11a5e04b735ac1b44b8d17320b4a65c6"
+  },
+  "parent_owned_independent_refs": [
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-artifact-check.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-artifact-check.py",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-attribution-check.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-attribution-check.py",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-beam-check.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-beam-check.py",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-checklist.md",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-context-check.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-context-check.py",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-derived-check.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-derived-check.py",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-edge-check.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-edge-check.py",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-fresh-check.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-fresh.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-fresh.summary.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-identity-check.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-identity-check.py",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-prefix-check.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-prefix-check.py",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-prefix-proof-check.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-prefix-proof-check.py",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-protected-check.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-review.md",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-sparse-check.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-sparse-check.py",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-temporal-check.json",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-temporal-check.py",
+    "docs/tasks/2026-10-14-fast-review-fixes/independent-verification.json"
+  ],
+  "current_algorithm": "sequential-fast-v3-experimental-sparse-5",
+  "post_freeze_difference": "Only contextual aggregate confidence / validator upper bounds / VERSION; source-4-to-5.diff + scalar replay + fresh109 captured. Raw138 not rekeyed."
+}

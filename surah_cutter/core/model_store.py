@@ -13,7 +13,10 @@ import urllib.parse
 import urllib.request
 import uuid
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from functools import lru_cache
 from pathlib import Path
+
+from surah_cutter.resources import external_model_path, resource_path
 
 ROOT = Path.home() / ".surah-cutter" / "models"
 _LOCK = threading.RLock()
@@ -53,13 +56,14 @@ def is_installed(item: dict) -> bool:
 
 
 def runtime_path(model_id: str) -> Path | None:
-    from surah_cutter.core import align
-
     if model_id == "quran-phonetics":
-        path = Path(align._DEFAULT_ONNX_MODEL)
+        path = Path(os.environ.get("SURAH_CUTTER_ONNX_MODEL") or
+                    external_model_path("wav2vec2-quran-phonetics.onnx"))
         return path if path.is_file() else None
     if model_id == "quran-phonetics-fp32":
-        path = Path(align._DEFAULT_ONNX_MODEL).with_name("wav2vec2-quran-phonetics.fp32.onnx")
+        path = Path(os.environ.get("SURAH_CUTTER_ONNX_MODEL") or
+                    external_model_path("wav2vec2-quran-phonetics.onnx"))
+        path = path.with_name("wav2vec2-quran-phonetics.fp32.onnx")
         return path if path.is_file() else None
     item = spec(model_id)
     if model_id == "arabic-ctc" and is_installed(item):
@@ -72,7 +76,8 @@ def runtime_path(model_id: str) -> Path | None:
         if model_id.startswith("fastconformer"):
             return installed_path(item) / next(f["path"] for f in item["files"] if f["path"].endswith(".nemo"))
         if model_id.startswith("whisper-") or model_id == "mms-arabic":
-            return installed_path(item) / "model.safetensors"
+            return installed_path(item) / next(f["path"] for f in item["files"]
+                                                if f["path"] in ("model.safetensors", "pytorch_model.bin"))
     return None
 
 
@@ -82,15 +87,34 @@ def active_kind() -> str:
     return "whisper" if ACTIVE_ID.startswith("whisper-") else "arabic"
 
 
+def supports_fast(model_id: str | None = None) -> bool:
+    return (model_id or ACTIVE_ID) in ("quran-phonetics", "quran-phonetics-fp32", "whisper-tarteel-tiny", "whisper-tarteel-base")
+
+
 def lag_ms() -> int:
-    from surah_cutter.core import align
-
-    return align.ALIGN_LAG_MS if active_kind() == "phonetic" else 0
+    return int(os.environ.get("SURAH_CUTTER_ALIGN_LAG_MS", "200")) if active_kind() == "phonetic" else 0
 
 
-def source() -> str:
+@lru_cache(maxsize=8)
+def _model_sha256(path: str, size: int, mtime_ns: int, ctime_ns: int, inode: int) -> str:
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def source(*, mode: str | None = None) -> str:
     if ACTIVE_ID in ("quran-phonetics", "quran-phonetics-fp32"):
-        revision = "local-export"
+        model = runtime_path(ACTIVE_ID)
+        if model is None:
+            revision = "local-export:missing"
+        else:
+            stat = model.stat()
+            digest = _model_sha256(
+                str(model), stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns, stat.st_ino,
+            )
+            revision = f"local-export:sha256={digest}"
     else:
         revision = spec(ACTIVE_ID)["revision"]
     if ACTIVE_ID in ("quran-phonetics", "quran-phonetics-fp32", "arabic-ctc"):
@@ -99,15 +123,30 @@ def source() -> str:
 
     versions = next((e.runtime_versions for e in _WORKERS.values() if e.model_id == ACTIVE_ID), {})
     method = "attention-dtw" if active_kind() == "whisper" else "ctc"
-    text_cache = Path(__file__).resolve().parents[2] / "data/model_text_targets.json"
+    text_cache = resource_path("data", "model_text_targets.json")
     text_sha = hashlib.sha256(text_cache.read_bytes()).hexdigest() if text_cache.is_file() else "missing"
     flags = "hafs:madd=4:waqf=ayah" if ACTIVE_ID == "muaalem" else "window=30:context=2:batch=1"
     if active_kind() == "whisper":
-        flags = "window=30:commit-before=24:context=1word:teacher-forcing:language=ar"
-    if ACTIVE_ID in ("fastconformer-arabic", "mms-arabic") or (active_kind() == "whisper" and ACTIVE_ID != "whisper-quran"):
+        from surah_cutter.core.model_worker import WHISPER_FULL_VERSION
+
+        flags = "window=30:commit-before=window-6:window-retry=20,10:reset-window=30:context=1word:teacher-forcing:language=ar"
+        flags += f":full-adapter={WHISPER_FULL_VERSION}:pause-retry=3:next-prefix-confirmed:muqattaat=spoken-names"
+        metadata = spec(ACTIVE_ID).get("generation_config_source")
+        if metadata:
+            flags += f":generation-config={metadata['repo']}@{metadata['revision']}:sha256={metadata['sha256']}"
+    if ACTIVE_ID in ("whisper-tarteel-tiny", "whisper-tarteel-base"):
+        flags += ":target=imlaey-vocalized"
+    elif ACTIVE_ID in ("fastconformer-arabic", "mms-arabic") or (active_kind() == "whisper" and ACTIVE_ID != "whisper-quran"):
         flags += ":target=imlaey-plain"
     if ACTIVE_ID.startswith("fastconformer"):
         flags += ":bpe=exact-spelling-variants"
+    if mode == "fast" and ACTIVE_ID in ("whisper-tarteel-tiny", "whisper-tarteel-base"):
+        from surah_cutter.core.align_fast_whisper import FAST_VERSION, SETTINGS
+
+        method = "local-asr-pause"
+        flags = (f"mode=fast:local-adapter={FAST_VERSION}:language=ar:target=imlaey-vocalized:"
+                 f"settings={json.dumps(SETTINGS, sort_keys=True, separators=(',', ':'))}:"
+                 "max-read-ms=6000:coverage<=0.65:input<=2:greedy:cache=true:max-new-tokens=64")
     return (f"{method}:{ACTIVE_ID}:revision={revision}:adapter={ADAPTER_VERSION}:lag=0:"
             f"text={text_sha}:flags={flags}:"
             f"runtime={json.dumps(versions, sort_keys=True, separators=(',', ':'))}")
@@ -115,13 +154,15 @@ def source() -> str:
 
 def load_emitter(model_id: str):
     """Load the selected weights, never substitute another acoustic model."""
-    from surah_cutter.core import align, emissions
+    from surah_cutter.core import emissions
 
     path = runtime_path(model_id)
     if path is None:
         raise ValueError("Сначала скачайте модель.")
     if model_id in ("quran-phonetics", "quran-phonetics-fp32", "arabic-ctc"):
-        vocab = str(align._DEFAULT_ONNX_MODEL) + ".vocab.json" if model_id == "quran-phonetics-fp32" else None
+        vocab = (str(Path(os.environ.get("SURAH_CUTTER_ONNX_MODEL") or
+                          external_model_path("wav2vec2-quran-phonetics.onnx"))) + ".vocab.json"
+                 if model_id == "quran-phonetics-fp32" else None)
         return emissions.load_emitter(path, vocab_path=vocab)
     from surah_cutter.core.model_runtime import load_runtime
 
@@ -136,6 +177,7 @@ def listing() -> dict:
             ready = runtime_path(item["id"]) is not None
             job = dict(_JOBS.get(item["id"], {}))
             items.append({k: v for k, v in item.items() if k != "files"} | {
+                "supports_fast": supports_fast(item["id"]),
                 "size": sum(f["size"] for f in item["files"]),
                 "runtime_size": (runtime_path(item["id"]).stat().st_size
                                  if item["id"] in ("quran-phonetics", "arabic-ctc")

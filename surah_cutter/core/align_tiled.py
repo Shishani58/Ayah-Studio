@@ -77,6 +77,8 @@ def align_surah_tiled(
     trace: dict | None = None,
     log_event: Callable[[str], None] | None = None,
     check_onsets: bool = False,
+    ayah_progress: Callable[[int], None] | None = None,
+    parallel_full: bool = False,
 ) -> list[tuple[int, int, float]]:
     """Tiled exact forced alignment; see the module docstring.
 
@@ -93,8 +95,8 @@ def align_surah_tiled(
     import numpy as np
 
     from surah_cutter.core import align as A
-    from surah_cutter.core._ctc import forced_align, forced_align_banded, merge_repeats
-    from surah_cutter.core.align_fast import _default_bundle, _unit_len
+    from surah_cutter.core._ctc import forced_align, forced_align_banded, aligned_segments
+    from surah_cutter.core.phonetics import unit_len as _unit_len
     from surah_cutter.data import reference_prior, transliteration
 
     if not words:
@@ -102,10 +104,15 @@ def align_surah_tiled(
     if surah is None:
         surah = words[0].surah
     if bundle is None:
-        bundle = _default_bundle()
+        bundle = A.default_bundle()
+    if trace is not None:
+        trace["model_source"] = A.bundle_source(bundle)
+        trace["backend"] = ("torch" if isinstance(bundle, A._Bundle) else
+                            getattr(getattr(bundle, "emitter", None), "model_id", "onnx"))
+        trace["align_lag_ms"] = getattr(bundle, "lag_ms", A.ALIGN_LAG_MS)
     if getattr(bundle, "text_kind", "phonetic") == "whisper":
         return A.align_surah(pcm, sr, words, model=bundle, surah=surah,
-                             trace=trace, log_event=log_event)
+                             trace=trace, log_event=log_event, ayah_progress=ayah_progress)
 
     def emit(message: str) -> None:
         if log_event is not None:
@@ -150,7 +157,9 @@ def align_surah_tiled(
     emit(
         f"Сура {surah}: tiled, чтение аудио всей суры {total_ms / 1000.0:.2f} сек."
     )
-    full_emissions = A._emissions(bundle, np.ascontiguousarray(pcm, dtype=np.float32), np)
+    audio = np.ascontiguousarray(pcm, dtype=np.float32)
+    full_emissions = (A._full_emissions(bundle, audio, np, trace=trace) if parallel_full else
+                      A._emissions(bundle, audio, np))
     full_n_frames = int(full_emissions.shape[0])
     full_stride = A._stride_ms(len(pcm), sr, full_n_frames)
     onset_pauses = []
@@ -177,7 +186,7 @@ def align_surah_tiled(
         sub_trs = word_trs[w0:w1]
         basmala_trs = A._basmala_trs(transliteration) if basmala else None
         targets, spans = A._build_targets(sub_words, sub_trs, bundle, basmala_trs)
-        if not targets:
+        if not targets or any(end <= start for start, end in spans):
             return None
         f0 = sample_to_frame(s0)
         f1 = sample_to_frame(s1)
@@ -202,13 +211,11 @@ def align_surah_tiled(
                 return None  # Grow the chunk rather than fabricate a partial tail.
         path = np.asarray(path).reshape(-1)
         fscores = np.asarray(fscores).reshape(-1)
-        segs = [
-            s for s in merge_repeats(path.tolist(), {k: k for k in range(emis.shape[1])})
-            if s.label != bundle.blank_id
-        ]
-        tspans = [(s.start, s.end) for s in segs]
-        if [s.label for s in segs] != targets:
+        try:
+            segs = aligned_segments(path, targets, blank=bundle.blank_id)
+        except ValueError:
             return None
+        tspans = [(s.start, s.end) for s in segs]
         starts: list[float] = []
         confs: list[float] = []
         last = base
@@ -243,6 +250,8 @@ def align_surah_tiled(
 
     i = 0  # index into ayah_list of the next ayah to TRUST
     while i < n_ayahs:
+        if ayah_progress is not None:
+            ayah_progress(ayah_list[i])
         # Trusted span [i, j): accumulate ayahs under the token / duration budget.
         j = i
         tok = 0
@@ -315,6 +324,8 @@ def align_surah_tiled(
         for k in range(i, j):  # trust [i, j) only; context onsets discarded
             a = ayah_list[k]
             fw = ayah_words[a][0]
+            if ayah_progress is not None:
+                ayah_progress(a)
             idx = fw - w_lc
             if 0 <= idx < len(slice_starts):
                 starts_ms[a] = slice_starts[idx]

@@ -1,0 +1,104 @@
+{
+  "verified_local_passes": 49,
+  "timing_conventions": [
+    {
+      "model": "whisper-tarteel-tiny",
+      "case": "crop5720_silence0",
+      "independent_identity": true,
+      "existing_ms": 1020,
+      "alternative_ms": 0
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "case": "crop5720_silence200",
+      "independent_identity": true,
+      "existing_ms": 1040,
+      "alternative_ms": 0
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "case": "crop5720_silence1200",
+      "independent_identity": true,
+      "existing_ms": 2220,
+      "alternative_ms": 0
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "case": "crop6320_silence0",
+      "independent_identity": true,
+      "existing_ms": 720,
+      "alternative_ms": 0
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "case": "crop6320_silence200",
+      "independent_identity": true,
+      "existing_ms": 940,
+      "alternative_ms": 0
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "case": "crop6320_silence1200",
+      "independent_identity": true,
+      "existing_ms": 1940,
+      "alternative_ms": 0
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "case": "basmala_negative",
+      "independent_identity": false,
+      "existing_ms": 680,
+      "alternative_ms": 0
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "case": "crop5720_silence0",
+      "independent_identity": true,
+      "existing_ms": 1040,
+      "alternative_ms": 0
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "case": "crop5720_silence200",
+      "independent_identity": true,
+      "existing_ms": 1240,
+      "alternative_ms": 0
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "case": "crop5720_silence1200",
+      "independent_identity": true,
+      "existing_ms": 2240,
+      "alternative_ms": 0
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "case": "crop6320_silence0",
+      "independent_identity": true,
+      "existing_ms": 420,
+      "alternative_ms": 0
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "case": "crop6320_silence200",
+      "independent_identity": true,
+      "existing_ms": 640,
+      "alternative_ms": 0
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "case": "crop6320_silence1200",
+      "independent_identity": true,
+      "existing_ms": 1640,
+      "alternative_ms": 0
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "case": "basmala_negative",
+      "independent_identity": false,
+      "existing_ms": 420,
+      "alternative_ms": 0
+    }
+  ],
+  "no_word_onset_ground_truth": true
+}

@@ -1,0 +1,517 @@
+{
+  "_id": "63925140f58eb1504ca2ce46",
+  "id": "tarteel-ai/whisper-base-ar-quran",
+  "private": false,
+  "pipeline_tag": "automatic-speech-recognition",
+  "library_name": "transformers",
+  "tags": [
+    "transformers",
+    "pytorch",
+    "tensorboard",
+    "whisper",
+    "automatic-speech-recognition",
+    "generated_from_trainer",
+    "license:apache-2.0",
+    "endpoints_compatible",
+    "region:us"
+  ],
+  "downloads": 21358,
+  "likes": 186,
+  "modelId": "tarteel-ai/whisper-base-ar-quran",
+  "author": "tarteel-ai",
+  "sha": "5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c",
+  "lastModified": "2022-12-13T16:49:54.000Z",
+  "gated": false,
+  "disabled": false,
+  "model-index": [
+    {
+      "name": "whisper-base-ar-quran",
+      "results": []
+    }
+  ],
+  "config": {
+    "architectures": [
+      "WhisperForConditionalGeneration"
+    ],
+    "model_type": "whisper",
+    "tokenizer_config": {
+      "bos_token": {
+        "__type": "AddedToken",
+        "content": "<|endoftext|>",
+        "lstrip": false,
+        "normalized": true,
+        "rstrip": false,
+        "single_word": false
+      },
+      "eos_token": {
+        "__type": "AddedToken",
+        "content": "<|endoftext|>",
+        "lstrip": false,
+        "normalized": true,
+        "rstrip": false,
+        "single_word": false
+      },
+      "pad_token": null,
+      "unk_token": {
+        "__type": "AddedToken",
+        "content": "",
+        "lstrip": false,
+        "normalized": true,
+        "rstrip": false,
+        "single_word": false
+      }
+    }
+  },
+  "cardData": {
+    "license": "apache-2.0",
+    "tags": [
+      "generated_from_trainer"
+    ],
+    "metrics": [
+      "wer"
+    ],
+    "model-index": [
+      {
+        "name": "whisper-base-ar-quran",
+        "results": []
+      }
+    ]
+  },
+  "transformersInfo": {
+    "auto_model": "AutoModelForSpeechSeq2Seq",
+    "pipeline_tag": "automatic-speech-recognition",
+    "processor": "AutoProcessor"
+  },
+  "siblings": [
+    {
+      "rfilename": ".gitattributes",
+      "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+      "size": 1477
+    },
+    {
+      "rfilename": ".gitignore",
+      "blobId": "0348ea97130c017c407fcfb6fd4003859f17b84c",
+      "size": 13
+    },
+    {
+      "rfilename": "README.md",
+      "blobId": "4cb03e2787c80fbcaaa544b014c93d63ab2de083",
+      "size": 2678
+    },
+    {
+      "rfilename": "added_tokens.json",
+      "blobId": "47e9dd31523ecea227504afad3870da1cfe5ad81",
+      "size": 2108
+    },
+    {
+      "rfilename": "all_results.json",
+      "blobId": "4a2de4c62eadd6e3ff6862d10376b08ce6de0328",
+      "size": 348
+    },
+    {
+      "rfilename": "config.json",
+      "blobId": "1f06d14e407846deac348b77323cbd978239d2b0",
+      "size": 1000
+    },
+    {
+      "rfilename": "eval_results.json",
+      "blobId": "99d23e9c4a1e025d3dbfce98e4fd4a2d8447ff91",
+      "size": 198
+    },
+    {
+      "rfilename": "merges.txt",
+      "blobId": "3a00c89ee5e8ae0cb159a6ec838843fb2266fac6",
+      "size": 493864
+    },
+    {
+      "rfilename": "normalizer.json",
+      "blobId": "dd6ae819ad738ac1a546e9f9282ef325c33b9ea0",
+      "size": 52666
+    },
+    {
+      "rfilename": "preprocessor_config.json",
+      "blobId": "c2048dfa9fd94a052e62e908d2c4dfb18534b4d2",
+      "size": 184990
+    },
+    {
+      "rfilename": "pytorch_model.bin",
+      "blobId": "038126bf1c66e520a5e4d802baa7020fc4f07f8b",
+      "size": 290458721,
+      "lfs": {
+        "sha256": "ec75894993a4570a237b2b1c19fd8a448f1e8f6e083cfab699574f7be53874fa",
+        "size": 290458721,
+        "pointerSize": 134
+      }
+    },
+    {
+      "rfilename": "runs/Dec08_21-03-47_ip-26-0-169-222/1670533447.9618533/events.out.tfevents.1670533447.ip-26-0-169-222.916845.1",
+      "blobId": "2ae0010018c8e609ae45da37beedbc3a15f9e916",
+      "size": 5968,
+      "lfs": {
+        "sha256": "5dae9a26503f1f71ab692fee3ee23d91a5c2c8942ff171ebe80afc30b85c828e",
+        "size": 5968,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec08_21-03-47_ip-26-0-169-222/events.out.tfevents.1670533447.ip-26-0-169-222.916845.0",
+      "blobId": "b48c9612804d5f6ea14825cb2e9bbce166498e06",
+      "size": 4512,
+      "lfs": {
+        "sha256": "1d59e8ad07cd2d126336872278dd23ac0abe92a3161c1624df7122491cff8b67",
+        "size": 4512,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec09_23-54-58_ip-26-0-168-139/1670630109.0616114/events.out.tfevents.1670630109.ip-26-0-168-139.1537794.1",
+      "blobId": "3f713b99b7392f35d16b8952f70d2671ba3aafb3",
+      "size": 5968,
+      "lfs": {
+        "sha256": "50fb7298457de5f1090005da04f418b87b7a91af9029f42d41c99aa71962b0dd",
+        "size": 5968,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec09_23-54-58_ip-26-0-168-139/events.out.tfevents.1670630109.ip-26-0-168-139.1537794.0",
+      "blobId": "ee7daee9fc96eb2f191f2759e1d843fea2d9cc3f",
+      "size": 4359,
+      "lfs": {
+        "sha256": "a67e080a2b1d9e9ef3734add9828aa50d94128d2ed74a132e3d930628dda3851",
+        "size": 4359,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec10_00-01-02_ip-26-0-168-139/1670630472.0450218/events.out.tfevents.1670630472.ip-26-0-168-139.1546777.1",
+      "blobId": "5832de7a6eeea727af7c2de7fb67ab7ed4bdacef",
+      "size": 5968,
+      "lfs": {
+        "sha256": "ebd0123a5e9c90d5ca0c613d923385f59ecc31837a823bdb87180363be752881",
+        "size": 5968,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec10_00-01-02_ip-26-0-168-139/events.out.tfevents.1670630472.ip-26-0-168-139.1546777.0",
+      "blobId": "42649e26edfe02f4652e50b8b572a3733b822a05",
+      "size": 4360,
+      "lfs": {
+        "sha256": "8e32b095525d8bccaafe6adbd2186bc20b28950423e2b36d31adf2b7d8f409be",
+        "size": 4360,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec10_00-05-20_ip-26-0-168-139/1670630729.1031175/events.out.tfevents.1670630729.ip-26-0-168-139.1550390.1",
+      "blobId": "630d7d09b8f2c091a84d60e1299a6eae57aad8da",
+      "size": 5968,
+      "lfs": {
+        "sha256": "9687a84c8778f36be3b9dddc75ba28d8cd0c134f811361a5db47f029b4b9d626",
+        "size": 5968,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec10_00-05-20_ip-26-0-168-139/events.out.tfevents.1670630729.ip-26-0-168-139.1550390.0",
+      "blobId": "a314de777e336bfe8610c25b348da5a456f41a5b",
+      "size": 4360,
+      "lfs": {
+        "sha256": "410ce655067d5ef34f44549016fba26e26d26fbce90d8a6d8b6a9cddb80b20d3",
+        "size": 4360,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec10_00-36-47_ip-26-0-129-52/1670632617.9499032/events.out.tfevents.1670632617.ip-26-0-129-52.1669386.1",
+      "blobId": "03c1eb37efb3149f32a81c83bf06166ec5bd0ac2",
+      "size": 5967,
+      "lfs": {
+        "sha256": "dbf4a450e1954b842e9858866ba45f0f41a1bb066ff9654eda2dcf2aad3ff817",
+        "size": 5967,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec10_00-36-47_ip-26-0-129-52/events.out.tfevents.1670632617.ip-26-0-129-52.1669386.0",
+      "blobId": "dc72a0ba60a00b2b931119a17900096d269e8bc7",
+      "size": 4664,
+      "lfs": {
+        "sha256": "f65e744d69e68c61caa4b0938d5156a1d1b0d1564821efd36b4e34d2fbb08df5",
+        "size": 4664,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec10_00-50-00_ip-26-0-129-52/1670633410.9369895/events.out.tfevents.1670633410.ip-26-0-129-52.1693596.1",
+      "blobId": "f90ef5bb2a9f6d3ddac94364c1b120d77616a8bf",
+      "size": 5967,
+      "lfs": {
+        "sha256": "58660ec99ea41776cf84f7a2ecc13b7ac0ab418c004c0a32d3994bef38d1d426",
+        "size": 5967,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec10_00-50-00_ip-26-0-129-52/events.out.tfevents.1670633410.ip-26-0-129-52.1693596.0",
+      "blobId": "c9a83b2b08a0d2fd2e0c354813a25aa5d6c26f08",
+      "size": 4664,
+      "lfs": {
+        "sha256": "9e5faa519d9721bcacd0c9a836cbf97cc23034ce6b755771a0faee214e38f20f",
+        "size": 4664,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec10_10-44-25_ip-26-0-129-52/1670669078.0822697/events.out.tfevents.1670669078.ip-26-0-129-52.1907186.1",
+      "blobId": "8588872339e0a9094816817164dbc60d85a1eac1",
+      "size": 5967,
+      "lfs": {
+        "sha256": "2a6fe76055d154fc9f7dbb0b0c79886459640b1c4254e2328491caf50328703a",
+        "size": 5967,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec10_10-44-25_ip-26-0-129-52/events.out.tfevents.1670669078.ip-26-0-129-52.1907186.0",
+      "blobId": "865665e3b0330abe1ed4d116576020b0d5c67a8f",
+      "size": 4664,
+      "lfs": {
+        "sha256": "2a047108df29cf6ce6952fea758f540705ea514d065473fd249eabd4e1f077c0",
+        "size": 4664,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec10_13-15-09_ip-26-0-129-52/1670678120.2629774/events.out.tfevents.1670678120.ip-26-0-129-52.2033601.1",
+      "blobId": "7b70067760e37ec9bbf0c36243d41906a8ff05e1",
+      "size": 5967,
+      "lfs": {
+        "sha256": "a8dbda2bad9ff25627db4bb42348e616080ccada0dc9f699e5754531dbfe652a",
+        "size": 5967,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec10_13-15-09_ip-26-0-129-52/events.out.tfevents.1670678120.ip-26-0-129-52.2033601.0",
+      "blobId": "54cdce6bc682247c67724badb0f23927a7a5a7a0",
+      "size": 7482,
+      "lfs": {
+        "sha256": "911bef8520568dddf637f55259266eb5452be8f0f9f80cb6af805d578ce8e80e",
+        "size": 7482,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec10_20-55-34_ip-26-0-129-52/1670705746.458125/events.out.tfevents.1670705746.ip-26-0-129-52.2377118.1",
+      "blobId": "150054e5f249d75cb2b61ffc7ca570f9c4d9f6d3",
+      "size": 5967,
+      "lfs": {
+        "sha256": "53b845a348798af00cff637284af6f0f9825ed49e84c3d4b419905d5fcce6ba2",
+        "size": 5967,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec10_20-55-34_ip-26-0-129-52/events.out.tfevents.1670705746.ip-26-0-129-52.2377118.0",
+      "blobId": "04cf8ddb0e8f30fedd5d275b2883275bd4a6009a",
+      "size": 5441,
+      "lfs": {
+        "sha256": "1b1d5d0b2795ffaa4011b159ae82f26134d16ecef555d43e5a12b63913ff8167",
+        "size": 5441,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec10_21-26-37_ip-26-0-129-52/1670707607.913721/events.out.tfevents.1670707607.ip-26-0-129-52.2460006.1",
+      "blobId": "f94b3c43160a4f8e672ae2615b5d83da9e4696a7",
+      "size": 5967,
+      "lfs": {
+        "sha256": "b45d9c56377b128152f68843668704acca76557a858aea9118a08d26b903da3e",
+        "size": 5967,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec10_21-26-37_ip-26-0-129-52/events.out.tfevents.1670707607.ip-26-0-129-52.2460006.0",
+      "blobId": "9083986c3f721979c75f019c2082829a6b3d892c",
+      "size": 5755,
+      "lfs": {
+        "sha256": "393d0cfc4ea21f03c060db3953de894fd88b411e84798e748e5945e32a489b4b",
+        "size": 5755,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec10_22-00-04_ip-26-0-129-52/1670709617.6007733/events.out.tfevents.1670709617.ip-26-0-129-52.2546168.1",
+      "blobId": "24e9730ffea174a28030fcc8fb26610a87a20020",
+      "size": 5967,
+      "lfs": {
+        "sha256": "8e958d2ec8aeba4f243c54ce853f61d788d9685b99f5e3a28eb97cc77e83e07e",
+        "size": 5967,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec10_22-00-04_ip-26-0-129-52/events.out.tfevents.1670709617.ip-26-0-129-52.2546168.0",
+      "blobId": "7fb508b1250209a3c1ed804c0d66806ba0ec07d5",
+      "size": 6229,
+      "lfs": {
+        "sha256": "89855dac6da13ea85f5da389a5f51dab07828c499165977e015c00d5874404da",
+        "size": 6229,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec12_11-34-40_ip-26-0-168-139/1670844895.4120195/events.out.tfevents.1670844895.ip-26-0-168-139.3098999.1",
+      "blobId": "5e7a070774b8e3bbaa9ea9c32690d78d344ebf2e",
+      "size": 5968,
+      "lfs": {
+        "sha256": "108c7e6ff25efb0c8eafeeca83fd036cf5238d8dd7c6c1a06479453345f06f49",
+        "size": 5968,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "runs/Dec12_11-34-40_ip-26-0-168-139/events.out.tfevents.1670844895.ip-26-0-168-139.3098999.0",
+      "blobId": "1be2e29b0ffce5838691b6818444b1c3f5e08d5c",
+      "size": 42456,
+      "lfs": {
+        "sha256": "6226bb5cb85094e9ac55fb1dae138931b086b5dfe7d2f687a4b9281c10322c72",
+        "size": 42456,
+        "pointerSize": 130
+      }
+    },
+    {
+      "rfilename": "runs/Dec12_11-34-40_ip-26-0-168-139/events.out.tfevents.1670950102.ip-26-0-168-139.3098999.2",
+      "blobId": "45ce4250ff6da2c18dfcfe645a68219e499e067b",
+      "size": 358,
+      "lfs": {
+        "sha256": "35240ef56f8cf2289264f5f6c96e8fa08a4232327e47de56457255b4c8354ddf",
+        "size": 358,
+        "pointerSize": 128
+      }
+    },
+    {
+      "rfilename": "special_tokens_map.json",
+      "blobId": "9115b6806f75d5122486b0e1ae0279a0207199c2",
+      "size": 2064
+    },
+    {
+      "rfilename": "tokenizer_config.json",
+      "blobId": "c15547505bf16c82579169b2629a3dbb7aa0ddff",
+      "size": 827
+    },
+    {
+      "rfilename": "train_results.json",
+      "blobId": "69f167a134aeb7f2fa0ce0bbd5a8ce3c57572251",
+      "size": 170
+    },
+    {
+      "rfilename": "trainer_state.json",
+      "blobId": "b5ce79cef6f9b67849eac2dffbd742eb899881af",
+      "size": 29373
+    },
+    {
+      "rfilename": "training_args.bin",
+      "blobId": "4358a1d6bc7886d88812f176355ebdbc87bf8768",
+      "size": 3643,
+      "lfs": {
+        "sha256": "91c6a8514089dbd3f3c1004bb6219bbeb8d96a44f7da0161c1bcdbe3ec8b2485",
+        "size": 3643,
+        "pointerSize": 129
+      }
+    },
+    {
+      "rfilename": "vocab.json",
+      "blobId": "0f3456460629e21d559c6daa23ab6ce3644e8271",
+      "size": 1036558
+    }
+  ],
+  "spaces": [
+    "tardellirs/model-pulse",
+    "emanforhelp/model-pulse",
+    "eduagarcia/multilingual-tokenizer-leaderboard",
+    "Quran-Lab/quranic-asr-leaderboard",
+    "OsamaO/QuaranTajweedV1",
+    "tarteel-ai/demo-whisper-base-ar-quran",
+    "tarteel-ai/whisper-base-demo-quran",
+    "ics-dev1/speech-to-text-quran",
+    "firmanpraa/speech-to-text-quran",
+    "papasega/ASR-Arabe-MT-2-French",
+    "zaidk-10/tarteel-ai-whisper-base-ar-quran",
+    "engsaleh22/Ola-IqraEval-App",
+    "yansari/arabic-word-recognition",
+    "GamerRegalia/tajweed-analyzer",
+    "Omarshoura1/Quran-segmentation-transcription-Shoura",
+    "mFAIZIIII/qurancompanion-ai",
+    "Ahmed9n8n/quran-alignment",
+    "hashcovid/quran",
+    "hashcovid/quran_audio",
+    "Tutanka01/demo-whisper-base-ar-quran",
+    "elina12/tarteel",
+    "asaderu-ai/quran",
+    "elina12/tarteel-test",
+    "dhextras/tarteel-ai-whisper-base-ar-quran",
+    "zaidk-10/Quran_speech_recognition",
+    "thesnak/AI-TARTEEL-QURAN",
+    "emisatti/tarteel-ai-whisper-base-ar-quran",
+    "ha-ar/tarteel-ai-whisper-base-ar-quran",
+    "fletec/speech-to-text-quran",
+    "Abdelrahman123/ASR-Demo",
+    "rabah2025/rabah-tarteel-ai",
+    "Hasan99/Quran_transciption",
+    "ali-ghamdan/whisper-base-demo-quran",
+    "v-e-n-o-m/quran-transcription-api",
+    "amermismar/whisper-quran-docker",
+    "ha-ar/QuaranTajweedV1",
+    "AbobakrIbrahim/whisper-base-demo-quran",
+    "AbobakrIbrahim/demo-whisper-base-ar-quran",
+    "weahatemate/quran-speech-api",
+    "fatema44/riwaq",
+    "nsakib161/ishraq-quran-backend",
+    "yatta95/quran-whisper-test",
+    "aboalaa1472/demo-whisper-base-ar-quran",
+    "mark-muhammad/ASR-Quran",
+    "alihassanshahid/whisper-fastapi",
+    "sae8d/ishraq-quran-backend",
+    "sae8d/quran-transcription-api",
+    "yatta95/quran-arabic-asr",
+    "itsOmair/quran-transcribe",
+    "akstein/tarteel-quran-api",
+    "facilitator999/quranforyunus",
+    "Fawwy/ai-subtitled-quran",
+    "mahmoudsaber0/ai-subtitled-quran",
+    "Shaksphere/iqra-asr",
+    "Ittiba/ITTIBA",
+    "Isfaaq/iqamah-quran-ai",
+    "seb786/quran-asr",
+    "iqbalaesthetic/basira-live-tarteel",
+    "wave101828228/hafalan",
+    "seb786/noorstars-tarteel-stt",
+    "mohammadfaizan/mihrab-quran-whisper",
+    "YunusZJ/QTE",
+    "wabdelsa/quranpractice-whisper",
+    "Khaledso/tilawa-backend",
+    "ckroot2009/ayat_finder",
+    "Madasti/Tarteel",
+    "saadkhatlan/misbah-asr",
+    "luthviar/quran-whisper-demo",
+    "abuabddullah/quranwave-asr",
+    "Tilawa/ayah-erkennung",
+    "Deviocorp/taib-quran-asr",
+    "hamzaadam222/tilawah-asr",
+    "abrh123/tarteel-asr",
+    "RecitQuran/warch-asr-test",
+    "acibZ/quranic-recitation-stt",
+    "fclk1982/kuran",
+    "fclk1982/kuran-tarteel",
+    "Hossam0111/forqan-backend",
+    "Aichan7/whisper-backend",
+    "yxqo41main/mm",
+    "Baaip/Hifzhub-ahlulquran"
+  ],
+  "createdAt": "2022-12-08T21:04:00.000Z",
+  "usedStorage": 6100236232
+}

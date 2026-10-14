@@ -12,8 +12,14 @@ worker; this module imports only PySide6 + pure-Python ``data`` helpers.
 
 from __future__ import annotations
 
-import re
 from pathlib import Path
+import threading
+
+from surah_cutter.data.project_state import (
+    complete_suras,
+    discover_audio,
+    surah_from_name as surah_from_filename,  # noqa: F401 — compatibility API
+)
 
 from PySide6.QtCore import QObject, Qt, QThread, Signal
 from PySide6.QtWidgets import (
@@ -35,10 +41,6 @@ _DB_CODE = "surah-cutter"
 _DB_VERSION = 1
 
 # Audio extensions accepted in the chosen folder (one file = one sura).
-_AUDIO_EXTS = (".mp3", ".m4a", ".ogg", ".flac", ".wav")
-
-# Surah-number prefix: leading digits of the filename stem (001 / 01 / 1).
-_NUM_RE = re.compile(r"^(\d{1,3})")
 
 # Status -> (label, background colour). Pure presentation.
 _STATUS_STYLE = {
@@ -46,19 +48,6 @@ _STATUS_STYLE = {
     "processed": ("auto", "#7a5a1a"),
     "verified": ("✓", "#1f5f2f"),
 }
-
-
-def surah_from_filename(name: str) -> int | None:
-    """Derive a 1..114 surah number from a filename, or ``None``.
-
-    Matches the leading digit run of the stem (``003.mp3``/``03_x.m4a``/``3`` →
-    3). Returns ``None`` when there is no leading number or it is out of range.
-    """
-    m = _NUM_RE.match(Path(name).stem)
-    if not m:
-        return None
-    n = int(m.group(1))
-    return n if 1 <= n <= 114 else None
 
 
 def _surah_status(reviews: dict[int, list[str]], ayah_count: int, surah: int) -> str:
@@ -80,7 +69,7 @@ class GenerationWorker(QObject):
     """Runs ``process_surah`` over an audio folder, writing timings to the DB.
 
     Lives in a worker ``QThread``. Heavy imports happen inside :meth:`run`.
-    Resumable in spirit: suras already present in ``done_suras`` are skipped,
+    Resumable in spirit: canonically complete suras in ``done_suras`` are skipped,
     and ``write_timings`` MERGEs (edited/verified ayahs are never clobbered).
     """
 
@@ -95,39 +84,41 @@ class GenerationWorker(QObject):
         db_path: str,
         done_suras: set[int],
         reciter: str | None = None,
+        mode: str = "auto",
     ) -> None:
         super().__init__()
         self._audio_dir = audio_dir
         self._db_path = db_path
         self._done = set(done_suras)
         self._reciter = reciter
-        self._cancel = False
+        self._mode = mode
+        self._cancel = threading.Event()
 
     def cancel(self) -> None:
-        """Request cancellation; honoured between suras."""
-        self._cancel = True
+        """Request cancellation in model reads and before the SQLite commit."""
+        self._cancel.set()
 
     def run(self) -> None:
         """Process each audio file in the folder; emit progress as we go."""
+        from surah_cutter.core.cancellation import GenerationCancelled, cancellation_scope
+
         try:
-            self._run()
+            with cancellation_scope(self._cancel):
+                self._run()
+        except GenerationCancelled:
+            self.finished.emit("Cancelled. Previously saved surahs are preserved.")
         except Exception as exc:  # surface to UI rather than crash the thread
             self.error.emit(str(exc))
 
     def _run(self) -> None:
         # Lazy: opening the DB is light, but keep all real work out of import.
         from surah_cutter.core.pipeline import process_surah
+        from surah_cutter.core.cancellation import GenerationCancelled
+        from surah_cutter.data.alignment_result import write_alignment_result, write_unsaved_diagnostics
         from surah_cutter.data.project_db import ProjectDB
 
         folder = Path(self._audio_dir)
-        files: list[tuple[int, Path]] = []
-        for path in sorted(folder.iterdir()):
-            if path.suffix.lower() not in _AUDIO_EXTS:
-                continue
-            surah = surah_from_filename(path.name)
-            if surah is None:
-                continue
-            files.append((surah, path))
+        files = list(discover_audio(folder).items())
 
         total = len(files)
         if total == 0:
@@ -138,19 +129,44 @@ class GenerationWorker(QObject):
         skipped = 0
         with ProjectDB.open(self._db_path, _DB_CODE, _DB_VERSION) as db:
             for i, (surah, path) in enumerate(files):
-                if self._cancel:
+                if self._cancel.is_set():
                     self.finished.emit(f"Cancelled after {written} surah(s).")
                     return
-                if surah in self._done:
+                if self._mode == "fast":
+                    from surah_cutter.data.alignment_identity import fast_resume_suras
+
+                    # Until a prepared current snapshot is available, never
+                    # infer FAST identity from canonical completeness alone.
+                    done = fast_resume_suras(self._db_path)
+                else:
+                    done = self._done
+                if surah in done:
                     skipped += 1
                     self.progress.emit(i + 1, total, f"Skip surah {surah} (done)")
                     continue
                 self.progress.emit(i + 1, total, f"Aligning surah {surah}…")
-                rows = process_surah(str(path), surah, reciter=self._reciter)
-                db.write_timings(rows, source="auto")
+                trace: dict = {}
+                try:
+                    rows = process_surah(str(path), surah, reciter=self._reciter,
+                                         mode=self._mode, trace=trace)
+                    save_result = write_alignment_result(
+                        db, rows, trace=trace, requested_mode=self._mode, db_path=self._db_path,
+                    )
+                except (Exception, GenerationCancelled) as exc:
+                    write_unsaved_diagnostics(
+                        db_path=self._db_path, surah=surah, requested_mode=self._mode,
+                        trace=trace, outcome="cancelled" if isinstance(exc, GenerationCancelled) else "failed",
+                        error=exc,
+                    )
+                    raise
                 written += 1
                 self.surah_done.emit(surah)
                 self.progress.emit(i + 1, total, f"Wrote surah {surah}")
+                if save_result.diagnostics_error:
+                    self.progress.emit(
+                        i + 1, total,
+                        f"Saved surah {surah}; diagnostics error: {save_result.diagnostics_error}",
+                    )
 
         self.finished.emit(f"Done: {written} written, {skipped} skipped.")
 
@@ -290,13 +306,8 @@ class DashboardView(QWidget):
         """Find the audio file in the chosen folder whose name maps to ``surah``."""
         if not self._audio_dir:
             return None
-        folder = Path(self._audio_dir)
-        for path in sorted(folder.iterdir()):
-            if path.suffix.lower() not in _AUDIO_EXTS:
-                continue
-            if surah_from_filename(path.name) == surah:
-                return str(path)
-        return None
+        path = discover_audio(self._audio_dir).get(surah)
+        return str(path) if path is not None else None
 
     def _request_review(self, surah: int) -> None:
         """Resolve DB + audio for ``surah`` and emit :data:`review_requested`."""
@@ -347,7 +358,7 @@ class DashboardView(QWidget):
 
     def _done_suras(self) -> set[int]:
         """Suras with any existing timing (skipped on resume)."""
-        return set(self._read_reviews())
+        return complete_suras(self._db_path, self._counts)
 
     # -- generation lifecycle ---------------------------------------------
 

@@ -1,0 +1,114 @@
+[
+  {
+    "model": "whisper-tarteel-tiny",
+    "revision": "c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0",
+    "words": 77432,
+    "tokenizer_size": 50364,
+    "decoder_vocab_size": 51865,
+    "implicit_timestamp_tokens": 1501,
+    "max_word_tokens": 21,
+    "prefix_tokens": [
+      50258,
+      50272,
+      50359,
+      50363
+    ],
+    "mel_bins": 80,
+    "decoder_layers": 4,
+    "decoder_heads": 6,
+    "alignment_heads": [
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tied_output": true,
+    "loader": "torch.load(weights_only=True); strict state_dict",
+    "generation_config_source": {
+      "repo": "openai/whisper-tiny",
+      "revision": "169d4a4341b33bc18d8881c4b69c2e104e1cc0af",
+      "path": "generation_config.json",
+      "sha256": "a5d5325911f16e74001a72fa13d6e208eee51548f994646de1f4b4cc8b35b512"
+    }
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "revision": "5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c",
+    "words": 77432,
+    "tokenizer_size": 50364,
+    "decoder_vocab_size": 51865,
+    "implicit_timestamp_tokens": 1501,
+    "max_word_tokens": 21,
+    "prefix_tokens": [
+      50258,
+      50272,
+      50359,
+      50363
+    ],
+    "mel_bins": 80,
+    "decoder_layers": 6,
+    "decoder_heads": 8,
+    "alignment_heads": [
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        2
+      ],
+      [
+        4,
+        3
+      ],
+      [
+        4,
+        7
+      ],
+      [
+        5,
+        1
+      ],
+      [
+        5,
+        2
+      ],
+      [
+        5,
+        4
+      ],
+      [
+        5,
+        6
+      ]
+    ],
+    "tied_output": true,
+    "loader": "torch.load(weights_only=True); strict state_dict",
+    "generation_config_source": {
+      "repo": "openai/whisper-base",
+      "revision": "e37978b90ca9030d5170a5c07aadb050351a65bb",
+      "path": "generation_config.json",
+      "sha256": "444b3f636d2fff89dd9ecf549e2a085b61f7ff0fa0246d4628bac6a3b8cc9ba4"
+    }
+  }
+]

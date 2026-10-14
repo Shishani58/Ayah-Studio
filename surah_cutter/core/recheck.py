@@ -76,7 +76,7 @@ def recheck_surah(
         One dict per ayah (ordered by ayah):
         ``{ayah, time, score, verdict, match_ayah, match_score, hint}`` where
         ``score`` is the self-similarity ``[0,1]``, ``verdict`` is one of
-        ``"ok" | "shift" | "no_time"``, and ``match_ayah`` / ``match_score`` /
+        ``"ok" | "shift" | "no_time" | "insufficient_evidence"``, and ``match_ayah`` / ``match_score`` /
         ``hint`` describe a better-matching neighbour when one exists (``hint``
         empty for ``ok``). ``score`` is informational only — the verdict is
         purely relative (see the module docstring on why no absolute floor works).
@@ -84,15 +84,18 @@ def recheck_surah(
     import numpy as np
 
     from surah_cutter.core import align as A
-    from surah_cutter.core.align_fast import _default_bundle, _sim
+    from surah_cutter.core.phonetics import onset_similarity as _sim
     from surah_cutter.data import transliteration
 
     if not words:
         return []
+    if sr != A.EXPECTED_SR:
+        raise ValueError(f"recheck_surah expects {A.EXPECTED_SR} Hz PCM, got {sr}")
+    total_ms = len(pcm) * 1000.0 / sr
     if surah is None:
         surah = words[0].surah
     if bundle is None:
-        bundle = _default_bundle()
+        bundle = A.default_bundle()
     if getattr(bundle, "text_kind", "phonetic") != "phonetic":
         raise ValueError("Проверка фонетических начал доступна только для Quran Phonetics.")
 
@@ -112,7 +115,8 @@ def recheck_surah(
     }
 
     # One emissions pass over the whole sura; per-ayah decodes slice its frames.
-    emissions = A._emissions(bundle, np.ascontiguousarray(pcm, dtype=np.float32), np)
+    emissions = (A._emissions(bundle, np.ascontiguousarray(pcm, dtype=np.float32), np)
+                 if len(pcm) else np.empty((0, len(bundle.vocab)), dtype=np.float32))
     n_frames = int(emissions.shape[0])
     stride_ms = A._stride_ms(len(pcm), sr, n_frames)
     inv_vocab = {v: k for k, v in bundle.vocab.items()}
@@ -129,7 +133,9 @@ def recheck_surah(
         prev = -1
         for i in ids.tolist():
             if i != prev and i != blank_id:
-                out.append(inv_vocab.get(int(i), ""))
+                token = inv_vocab.get(int(i), "")
+                if not token.startswith(("<", "[")):
+                    out.append(token)
             prev = i
         return "".join(out)
 
@@ -143,7 +149,16 @@ def recheck_surah(
             })
             continue
 
-        dec = greedy(t - _DECODE_LEAD_MS, t - _DECODE_LEAD_MS + _DECODE_WIN_MS)
+        valid_time = type(t) is int and 0 <= t < total_ms
+        dec = (greedy(t - _DECODE_LEAD_MS, t - _DECODE_LEAD_MS + _DECODE_WIN_MS)
+               if valid_time else "")
+        if not any(char.isalnum() for char in dec) or not openings.get(a):
+            results.append({
+                "ayah": a, "time": t, "score": 0.0, "verdict": "insufficient_evidence",
+                "match_ayah": None, "match_score": 0.0,
+                "hint": "недостаточно акустических данных",
+            })
+            continue
         self_sim = _sim(dec, openings.get(a, ""))
 
         # Relative test: does a nearby ayah's opening match what's heard better?
@@ -180,9 +195,10 @@ def recheck_surah(
 
 def summarize(results: list[dict[str, Any]]) -> dict[str, int]:
     """Count verdicts for the UI summary line."""
-    out = {"ok": 0, "shift": 0, "no_time": 0}
+    out = {"ok": 0, "shift": 0, "no_time": 0, "insufficient_evidence": 0}
     for r in results:
         out[r["verdict"]] = out.get(r["verdict"], 0) + 1
     out["checked"] = out["ok"] + out["shift"]
     out["suspect"] = out["shift"]
+    out["unchecked"] = out["no_time"] + out["insufficient_evidence"]
     return out

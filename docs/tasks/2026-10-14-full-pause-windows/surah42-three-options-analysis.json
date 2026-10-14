@@ -1,0 +1,157 @@
+{
+  "surah": 42,
+  "duration_s": 992.4440625,
+  "summary": {
+    "fixed:30:1:0": {
+      "runs": 3,
+      "full_s_values": [
+        71.59581620804965,
+        69.56235712510534,
+        56.31224104203284
+      ],
+      "full_s_median": 69.56235712510534,
+      "emissions_s_median": 64.49932800000533,
+      "alignment_s_median": 5.172811917029321,
+      "peak_rss_mib_values": [
+        1262.625,
+        1303.6875,
+        1532.25
+      ],
+      "peak_rss_mib_max": 1532.25,
+      "errors": {
+        "n": 53,
+        "median_ms": 66.0,
+        "p95_ms": 127.79999999999998,
+        "max_ms": 830.0,
+        "over500": 1
+      },
+      "mean_absolute_error_ms": 83.73584905660377,
+      "large_errors": [
+        {
+          "ayah": 1,
+          "before_error_ms": -830,
+          "after_error_ms": -830,
+          "review": true
+        }
+      ],
+      "new_large_errors": [],
+      "removed_large_errors": [],
+      "large_errors_unflagged": [],
+      "review_count": 35,
+      "emissions_identical_within_case": true,
+      "rows_and_flags_identical_within_case": true,
+      "failures": [],
+      "window_count": 0,
+      "pause_cuts": null,
+      "fallback_cuts": null,
+      "max_accuracy_regression_ms": 0
+    },
+    "pause:8:2:0": {
+      "runs": 3,
+      "full_s_values": [
+        62.71982691716403,
+        49.99583383393474,
+        46.1134442910552
+      ],
+      "full_s_median": 49.99583383393474,
+      "emissions_s_median": 45.10443591699004,
+      "alignment_s_median": 4.96200737496838,
+      "peak_rss_mib_values": [
+        1052.71875,
+        1325.859375,
+        1266.015625
+      ],
+      "peak_rss_mib_max": 1325.859375,
+      "errors": {
+        "n": 53,
+        "median_ms": 74.0,
+        "p95_ms": 127.39999999999999,
+        "max_ms": 591.0,
+        "over500": 1
+      },
+      "mean_absolute_error_ms": 80.37735849056604,
+      "large_errors": [
+        {
+          "ayah": 33,
+          "before_error_ms": 29,
+          "after_error_ms": -591,
+          "review": true
+        }
+      ],
+      "new_large_errors": [
+        {
+          "ayah": 33,
+          "before_error_ms": 29,
+          "after_error_ms": -591,
+          "review": true
+        }
+      ],
+      "removed_large_errors": [
+        {
+          "ayah": 1,
+          "before_error_ms": -830,
+          "after_error_ms": 110,
+          "review": true
+        }
+      ],
+      "large_errors_unflagged": [],
+      "review_count": 33,
+      "emissions_identical_within_case": true,
+      "rows_and_flags_identical_within_case": true,
+      "failures": [],
+      "window_count": 124,
+      "pause_cuts": 103,
+      "fallback_cuts": 20,
+      "max_accuracy_regression_ms": 562,
+      "time_reduction_vs_current_percent": 28.12803375248042
+    },
+    "pause:20:3:0": {
+      "runs": 3,
+      "full_s_values": [
+        65.71514741610736,
+        47.83313583396375,
+        41.7182417078875
+      ],
+      "full_s_median": 47.83313583396375,
+      "emissions_s_median": 42.34422195912339,
+      "alignment_s_median": 5.488913874840364,
+      "peak_rss_mib_values": [
+        1633.25,
+        1774.59375,
+        1825.984375
+      ],
+      "peak_rss_mib_max": 1825.984375,
+      "errors": {
+        "n": 53,
+        "median_ms": 66.0,
+        "p95_ms": 127.39999999999999,
+        "max_ms": 810.0,
+        "over500": 1
+      },
+      "mean_absolute_error_ms": 83.01886792452831,
+      "large_errors": [
+        {
+          "ayah": 1,
+          "before_error_ms": -830,
+          "after_error_ms": -810,
+          "review": true
+        }
+      ],
+      "new_large_errors": [],
+      "removed_large_errors": [],
+      "large_errors_unflagged": [],
+      "review_count": 37,
+      "emissions_identical_within_case": true,
+      "rows_and_flags_identical_within_case": true,
+      "failures": [],
+      "window_count": 49,
+      "pause_cuts": 47,
+      "fallback_cuts": 1,
+      "max_accuracy_regression_ms": 20,
+      "time_reduction_vs_current_percent": 31.237039958353307
+    }
+  },
+  "source_or_data_changes": [],
+  "model_hashes_match": true,
+  "audio_hashes_match": true
+}

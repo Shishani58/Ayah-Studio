@@ -1,0 +1,35 @@
+{
+  "results": [
+    {
+      "model": "whisper-tarteel-tiny",
+      "http_status": 200,
+      "saved": {
+        "language": "ru",
+        "alignment_model": "whisper-tarteel-tiny",
+        "mode": "full"
+      },
+      "probe_seconds": 4.454094584099948,
+      "protected_ayahs": true,
+      "protected_words": true,
+      "source": "attention-dtw:whisper-tarteel-tiny:revision=c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:commit-before=window-6:token-budget-shrink=20,10:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-tiny@169d4a4341b33bc18d8881c4b69c2e104e1cc0af:sha256=a5d5325911f16e74001a72fa13d6e208eee51548f994646de1f4b4cc8b35b512:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}"
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "http_status": 200,
+      "saved": {
+        "language": "ru",
+        "alignment_model": "whisper-tarteel-base",
+        "mode": "full"
+      },
+      "probe_seconds": 4.1199664999730885,
+      "protected_ayahs": true,
+      "protected_words": true,
+      "source": "attention-dtw:whisper-tarteel-base:revision=5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:commit-before=window-6:token-budget-shrink=20,10:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-base@e37978b90ca9030d5170a5c07aadb050351a65bb:sha256=444b3f636d2fff89dd9ecf549e2a085b61f7ff0fa0246d4628bac6a3b8cc9ba4:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}"
+    }
+  ],
+  "protected_sha256": {
+    "/Users/ayub/Developer/surah-cutter/data/quran_mushaf.db": "c35272ed2a80916f5665f18e150686cfe258249cdf3ad50d3ac787f8cfe3fd66",
+    "/Users/ayub/Developer/surah-cutter/data/references/abu_bakr_ash_shatri.db": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "/Users/ayub/.surah-cutter/settings.json": "7ef4621adc66b04f11b8d74e9f755641bdf56172d5d34f61d11b4ac27b1ea448"
+  }
+}

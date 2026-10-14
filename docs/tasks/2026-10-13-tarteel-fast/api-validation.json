@@ -1,0 +1,29 @@
+{
+  "selected": "whisper-tarteel-base",
+  "mode": "fast",
+  "settings": {
+    "alignment_model": "whisper-tarteel-base",
+    "mode": "fast",
+    "language": "ru"
+  },
+  "generation": {
+    "started": true,
+    "suras": [
+      114
+    ],
+    "mode": "fast",
+    "job_id": "f84de6c893924e3c9b5f94f2c316d1fb"
+  },
+  "done": {
+    "type": "done",
+    "completed": 1
+  },
+  "seconds": 4.400080041959882,
+  "edited_verified_preserved": true,
+  "auto_source": "local-asr-pause:whisper-tarteel-base:revision=5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=mode=fast:local-adapter=tarteel-pause-v1:language=ar:target=imlaey-vocalized:settings={\"lag_ms\":0,\"max_phrase_words\":6,\"min_margin\":0.12,\"min_similarity\":0.9,\"min_token_confidence\":0.6,\"pre_roll_ms\":200,\"speech_ms\":[1300,2500,4000]}:max-read-ms=6000:coverage<=0.65:input<=2:greedy:cache=true:max-new-tokens=64:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}:backend=whisper-local-asr:requested_mode=fast:actual_mode=fast:align_lag_ms=0:lag_adjust_ms=0",
+  "protected_sha256": {
+    "/Users/ayub/Developer/surah-cutter/data/quran_mushaf.db": "c35272ed2a80916f5665f18e150686cfe258249cdf3ad50d3ac787f8cfe3fd66",
+    "/Users/ayub/Developer/surah-cutter/data/references/abu_bakr_ash_shatri.db": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "/Users/ayub/.surah-cutter/settings.json": "ae0656422b1f3297ba10172347a6e8cb3fb7d0c56cdf03a858798d643d152fb0"
+  }
+}

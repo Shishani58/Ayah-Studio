@@ -9,7 +9,13 @@
   [lafzize](https://sr.ht/~rehandaphedar/lafzize/).
 - **Acoustic models** — Hugging Face community (e.g. `TBOGamer22/wav2vec2-quran-phonetics`,
   MMS forced aligner), Silero VAD.
+- **Tarteel Whisper Quran** — [Tiny](https://huggingface.co/tarteel-ai/whisper-tiny-ar-quran)
+  and [Base](https://huggingface.co/tarteel-ai/whisper-base-ar-quran), Apache-2.0.
+  Explicit generation/alignment metadata from the original OpenAI Tiny/Base,
+  with source revisions and SHA256 recorded in `core/model_catalog.json`.
 - **Font** — KFGQPC HAFS Uthmanic Script.
+- **Surah navigation names** — [Tanzil Quran Metadata](https://tanzil.net/docs/Quran_Metadata),
+  including English transliterations. These labels do not supply Quran text or ayah counts.
 
 Pull in upstream attributions when redistributing. See [LICENSE](../LICENSE).
 

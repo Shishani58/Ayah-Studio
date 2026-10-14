@@ -1,0 +1,71 @@
+{
+  "source_matches": {
+    "surah_cutter/core/align_fast.py": true,
+    "surah_cutter/core/align_fast_whisper.py": true,
+    "surah_cutter/core/fast_reads.py": true,
+    "surah_cutter/core/candidates.py": true,
+    "surah_cutter/core/fast_executor.py": true,
+    "surah_cutter/core/fast_adapters.py": true,
+    "surah_cutter/core/fast_ctc.py": true,
+    "surah_cutter/core/align.py": true,
+    "surah_cutter/core/emissions.py": true,
+    "surah_cutter/core/model_runtime.py": true,
+    "surah_cutter/core/model_worker.py": true,
+    "surah_cutter/core/model_store.py": true,
+    "tools/bench_fast_models.py": true,
+    "surah_cutter/data/alignment_identity.py": true
+  },
+  "unique_run_keys": 138,
+  "metrics": {
+    "quran-phonetics": {
+      "records": 46,
+      "ayahs": 1475,
+      "confirmed": 33,
+      "over500": [],
+      "median_ms": 6120.0,
+      "p95_ms": 76362.09999999998,
+      "max_ms": 108982
+    },
+    "whisper-tarteel-tiny": {
+      "records": 46,
+      "ayahs": 1475,
+      "confirmed": 305,
+      "over500": [],
+      "median_ms": 5800.0,
+      "p95_ms": 52945.59999999999,
+      "max_ms": 79350
+    },
+    "whisper-tarteel-base": {
+      "records": 46,
+      "ayahs": 1475,
+      "confirmed": 404,
+      "over500": [
+        [
+          79,
+          26,
+          508
+        ]
+      ],
+      "median_ms": 3896.0,
+      "p95_ms": 56848.99999999999,
+      "max_ms": 87014
+    }
+  },
+  "paired": {
+    "quran-phonetics": {
+      "pairs": 37,
+      "legacy_confirmed": 276,
+      "new_confirmed": 28
+    },
+    "whisper-tarteel-tiny": {
+      "pairs": 37,
+      "legacy_confirmed": 395,
+      "new_confirmed": 230
+    },
+    "whisper-tarteel-base": {
+      "pairs": 37,
+      "legacy_confirmed": 411,
+      "new_confirmed": 302
+    }
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "source_sha256": {
+    "surah_cutter/core/align_fast.py": "0847f22065d7dd91ec49490341fd17c401bd4ecd48b049f98ad4dc627fe67b59",
+    "surah_cutter/core/align_fast_whisper.py": "cf4cd9768989f1ee0eb58b1749e22a63917f2e6f6facef8af68637886609a456",
+    "surah_cutter/core/fast_reads.py": "491e45fef780d5faadf09981193339ae963a34d796b48f20269dcd9a634db1de",
+    "surah_cutter/core/candidates.py": "311d6ad230f2dc2aaf9cba31431d9e8d8570a1252865e1bc8cad1fc2942bf2db",
+    "surah_cutter/core/fast_executor.py": "9a31b8514c9fe2a41e17f10dd874d33464c18a894d81434af87202b91501ddda",
+    "surah_cutter/core/fast_adapters.py": "3f6a8652322e66b3f2ee463500e0580b872d7d7242e782b1e4048be4e079be13",
+    "surah_cutter/core/align.py": "2687df9e71ef6f1ecde6e3ee6f759e854e32a856ce5c9bc1672c078cf3c863ec",
+    "surah_cutter/core/emissions.py": "0c6ab12bd86f65161cc9bf5a3d13ae38604a7142e30ca8248b9f092737793f4f",
+    "surah_cutter/core/model_runtime.py": "b3fcd968b87b94a524ccf288c4b73d48e3f6714cfcecdc78412aac2f0b99a9dd",
+    "surah_cutter/core/model_worker.py": "f58dca5e2a764d7eb8a71fae110d1aa55a6e29de69b21e4dcea3a7cbec86a0ac",
+    "surah_cutter/core/model_store.py": "434675e4266f394a60649297311fdbbc34ac2fb3ae8f99435fc3be9016a73a23"
+  },
+  "canonical_sha256": "c35272ed2a80916f5665f18e150686cfe258249cdf3ad50d3ac787f8cfe3fd66",
+  "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+  "initial_pauses": {
+    "108": {
+      "audio_sha256": "85d84d3493461230443bb5f5d7e8c0eb70adb0be2e780f75b71435527a788ee5",
+      "decode_seconds": 0.0667914159130305,
+      "dsp_seconds": 0.07544095907360315,
+      "initial_pauses_sha256": "26ed7c92b06409de80bdedca690f4e728dabd6c5d7043254b002ff2214092d3f",
+      "duration_ms": 23484.0625,
+      "decisions": [
+        {
+          "pause": {
+            "start_ms": 2460.0,
+            "end_ms": 2660.0,
+            "depth_ms": 200.0
+          },
+          "dsp_ok": true,
+          "vad_ok": true,
+          "accepted": true,
+          "reason": "intro-vad",
+          "flatness": 0.4187497657271981,
+          "zcr": 0.14517029592406477,
+          "rms_ratio": 0.3021022979073851
+        },
+        {
+          "pause": {
+            "start_ms": 5720.0,
+            "end_ms": 6320.0,
+            "depth_ms": 600.0
+          },
+          "dsp_ok": true,
+          "vad_ok": null,
+          "accepted": true,
+          "reason": "weak-dsp",
+          "flatness": 0.31671387851871474,
+          "zcr": 0.07415826111663588,
+          "rms_ratio": 0.0610874370069073
+        },
+        {
+          "pause": {
+            "start_ms": 10460.0,
+            "end_ms": 10840.0,
+            "depth_ms": 380.0
+          },
+          "dsp_ok": true,
+          "vad_ok": null,
+          "accepted": true,
+          "reason": "dsp",
+          "flatness": 0.44087569385726877,
+          "zcr": 0.10144927536231885,
+          "rms_ratio": 0.2486631369494373
+        },
+        {
+          "pause": {
+            "start_ms": 13220.0,
+            "end_ms": 13540.0,
+            "depth_ms": 320.0
+          },
+          "dsp_ok": true,
+          "vad_ok": null,
+          "accepted": true,
+          "reason": "dsp",
+          "flatness": 0.4130808748796212,
+          "zcr": 0.11719567492152075,
+          "rms_ratio": 0.2572495139506009
+        }
+      ]
+    }
+  },
+  "summary": {
+    "quran-phonetics": {
+      "surahs": 1,
+      "ayahs": 3,
+      "median_ms": 3144.0,
+      "p95_ms": 5732.4,
+      "max_ms": 6020,
+      "over500": 3,
+      "positive_conf_over500": [],
+      "sequence_violations": [],
+      "review_ayahs": 3,
+      "load_probe_seconds": 0.14057454210706055,
+      "decode_seconds": 0.0667914159130305,
+      "dsp_seconds": 0.07544095907360315,
+      "inference_match_seconds": 0.48574166698381305,
+      "search_seconds": 0.5611826260574162,
+      "audio_ms": 11100.0,
+      "covered_audio_ms": 9200.0,
+      "total_ms": 23484.0625,
+      "model_reads": 6
+    },
+    "whisper-tarteel-tiny": {
+      "surahs": 1,
+      "ayahs": 3,
+      "median_ms": 18.0,
+      "p95_ms": 46.8,
+      "max_ms": 50,
+      "over500": 0,
+      "positive_conf_over500": [],
+      "sequence_violations": [],
+      "review_ayahs": 0,
+      "load_probe_seconds": 3.7551161251030862,
+      "decode_seconds": 0.0667914159130305,
+      "dsp_seconds": 0.07544095907360315,
+      "inference_match_seconds": 1.9598150830715895,
+      "search_seconds": 2.0352560421451926,
+      "audio_ms": 21400.0,
+      "covered_audio_ms": 12980.0,
+      "total_ms": 23484.0625,
+      "model_reads": 9
+    },
+    "whisper-tarteel-base": {
+      "surahs": 1,
+      "ayahs": 3,
+      "median_ms": 18.0,
+      "p95_ms": 46.8,
+      "max_ms": 50,
+      "over500": 0,
+      "positive_conf_over500": [],
+      "sequence_violations": [],
+      "review_ayahs": 0,
+      "load_probe_seconds": 3.7604936661664397,
+      "decode_seconds": 0.0667914159130305,
+      "dsp_seconds": 0.07544095907360315,
+      "inference_match_seconds": 3.5343220841605216,
+      "search_seconds": 3.609763043234125,
+      "audio_ms": 21400.0,
+      "covered_audio_ms": 12980.0,
+      "total_ms": 23484.0625,
+      "model_reads": 9
+    }
+  }
+}

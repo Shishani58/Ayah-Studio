@@ -1,0 +1,36 @@
+--- frozen-sparse4/fast_executor.py
++++ sparse5/fast_executor.py
+@@ -16,7 +16,7 @@
+ from surah_cutter.core.fast_adapters import make_adapter, representation_sha, loaded_implementation_sha
+ from surah_cutter.core.fast_reads import LocalEvidenceReads
+ 
+-VERSION = "sequential-fast-v3-experimental-sparse-4"
++VERSION = "sequential-fast-v3-experimental-sparse-5"
+ 
+ 
+ @dataclass(frozen=True)
+@@ -423,6 +423,7 @@
+                         or context_obs.get("truncated", True)
+                         or tuple(context_obs.get("units", ())[-len(tail):]) != tail
+                         or len(quality) != len(tail) or min(quality) < threshold
++                        or boundary.confidence > min(quality)
+                         or not all(math.isfinite(q) for q in quality)):
+                     raise ValueError("unheard_previous_context")
+         elif boundary.evidence_kind in ("first_onset", "wasl"):
+@@ -438,7 +439,7 @@
+                     raise ValueError("unidentified_wasl_context")
+                 tail_quality = observed.get("unit_quality", ())[offset-len(tail):offset]
+                 if (len(tail_quality) != len(tail) or any(not math.isfinite(q) for q in tail_quality)
+-                        or min(tail_quality) < threshold):
++                        or min(tail_quality) < threshold or boundary.confidence > min(tail_quality)):
+                     raise ValueError("weak_wasl_tail")
+                 if groups is not None and word_ends is not None:
+                     previous = boundary.ayah - 1
+@@ -742,6 +743,7 @@
+                                         and tuple(context_obs.units[-len(tail):]) == tail
+                                         and min(context_obs.unit_quality[-len(tail):], default=0.) >= threshold):
+                                     context_read_id = reads.last_read_id
++                                    phrase_quality = min(phrase_quality, min(context_obs.unit_quality[-len(tail):]))
+                                     break
+                             if context_read_id is None:
+                                 reason = "unproved_repeated_owner_context"

@@ -8,30 +8,14 @@ dataset ``Buraaq/quran-md-words`` (per-word rows, with audio + text columns).
 
 To forced-align the *known* Quran text we need each word's transliteration in
 exactly that convention. Rather than reimplement Arabic->Latin G2P, we reuse the
-dataset's own ``word_tr`` strings. This module, **lazily on first use**:
+dataset's own ``word_tr`` strings. The vendored cache is validated against every
+canonical word before use. Rebuilding from the source dataset is a
+development-only operation.
 
-1. downloads the dataset's parquet shards via ``huggingface_hub`` (text columns
-   only — we never read the audio bytes);
-2. defensively locates the surah / ayah / word-order columns and the
-   transliteration column (schema names are not pre-confirmed; we probe
-   plausible variants at runtime);
-3. builds a ``(surah, ayah, word_index_in_ayah) -> word_tr`` map and caches it to
-   a small JSON under ``models/`` so subsequent runs are offline + instant;
-4. exposes :func:`surah_word_tr`, aligned 1:1 with
-   :func:`surah_cutter.data.quran_text.surah_words`.
-
-Pure-ish: heavy deps (``huggingface_hub``, ``pyarrow``) are imported lazily
-inside functions so ``core``/``data`` import without them. ``quran_text`` is the
-only intra-package dependency and is stdlib-only.
-
-Reconciliation (documented fallback): the canonical word order/count is the
-mushaf DB (:func:`quran_text.surah_words`). We key the dataset map by
-``(surah, ayah)`` plus the word's 0-based index *within its ayah*. If the
-dataset's per-ayah segmentation disagrees with the mushaf word count for an
-ayah, we still return one transliteration per mushaf word, padding any missing
-tail positions with ``""`` (empty -> contributes no tokens, only a word
-delimiter). This keeps the returned list strictly 1:1 with ``surah_words`` so
-the aligner's word grouping never desynchronises.
+The source joins ``بَعۡدَ مَا`` in 2:181, 8:6 and 13:37. The reproducible
+reconciliation below splits only those exact source strings at the canonical
+boundary, preserving their transliteration characters. Every other count or
+empty-target mismatch fails closed; no padding or inferred transliteration.
 """
 
 from __future__ import annotations
@@ -43,12 +27,14 @@ from functools import lru_cache
 from pathlib import Path
 
 from surah_cutter.data import quran_text
+from surah_cutter.resources import resource_path
 
 __all__ = [
     "DATASET_REPO",
     "CACHE_PATH",
     "surah_word_tr",
     "build_cache",
+    "reconcile_map",
 ]
 
 #: HF dataset the model's vocabulary/transliterations come from.
@@ -59,7 +45,7 @@ DATASET_REPO = "Buraaq/quran-md-words"
 #: users never download the 2 GB source dataset (nor need pyarrow/huggingface_hub
 #: at runtime). Rebuilding it from the dataset (build_cache) is a dev-only task.
 #: transliteration.py -> data/ -> surah_cutter/ -> <repo>/data/
-CACHE_PATH = Path(__file__).resolve().parents[2] / "data" / "word_tr_cache.json"
+CACHE_PATH = resource_path("data", "word_tr_cache.json")
 
 # Candidate column names (lower-cased) probed at runtime; the dataset schema is
 # not pre-confirmed, so we accept plausible variants and pick the first match.
@@ -115,63 +101,98 @@ def surah_word_tr(
 
     The i-th returned string is the model-vocabulary transliteration of the
     i-th word of :func:`quran_text.surah_words(surah)` (same recitation order).
-    Missing entries (segmentation mismatch, unknown word) come back as ``""``;
-    the caller treats ``""`` as "no acoustic tokens, just a word delimiter".
-
-    The dataset map is built + cached on first use (network on first run only).
+    Missing, empty or differently segmented entries raise ``ValueError``.
+    Loading the shipped cache is offline; rebuilding it is explicit.
     """
     words = quran_text.surah_words(surah, db_path=db_path)
-    mapping = _cached_map(cache_path)
-
-    # Group mushaf words by ayah, preserving recitation order, to assign each a
-    # 0-based index within its ayah (the key dimension we reconcile on).
+    mapping = _cached_map(cache_path, db_path)
     out: list[str] = []
-    per_ayah_pos: dict[int, int] = {}
-    for w in words:
-        pos = per_ayah_pos.get(w.ayah, 0)
-        per_ayah_pos[w.ayah] = pos + 1
-        tr_list = mapping.get(f"{surah}:{w.ayah}")
-        if tr_list is not None and pos < len(tr_list):
-            out.append(tr_list[pos])
-        else:
-            out.append("")
+    for ayah in dict.fromkeys(w.ayah for w in words):
+        out.extend(mapping[f"{surah}:{ayah}"])
     return out
 
 
 # --- cache plumbing -------------------------------------------------------
 
 
-@lru_cache(maxsize=4)
-def _cached_map(cache_path: str | Path = CACHE_PATH) -> dict[str, list[str]]:
-    """Load the transliteration map, building (and persisting) it if absent.
+# Source segmentation exceptions, using 0-based positions within each ayah.
+# These split the original target, without generating new Latin characters.
+_JOINED_WORDS = {
+    "2:181": (2, "baʿdamā"),
+    "8:6": (3, "baʿda mā"),
+    "13:37": (7, "baʿdamā"),
+}
 
-    Returns a dict ``"sura:ayah" -> [word_tr, ...]`` (ayah word order). The
-    ``lru_cache`` keeps it in memory for the process after the first load.
+
+def reconcile_map(
+    mapping: dict[str, list[str]],
+    *,
+    db_path: str | Path = quran_text.DEFAULT_DB_PATH,
+) -> dict[str, list[str]]:
+    """Reconcile known source joins and validate all canonical word targets.
+
+    Idempotent, so both the source-derived map and an already rebuilt cache
+    can be checked using the same code. Never mutates the input or Quran DB.
     """
-    path = Path(cache_path)
-    if path.exists():
-        try:
-            with path.open("r", encoding="utf-8") as fh:
-                raw = json.load(fh)
-            # JSON keys are strings already; values are lists of strings.
-            return {str(k): list(v) for k, v in raw.items()}
-        except (json.JSONDecodeError, OSError, ValueError):
-            # Corrupt cache -> rebuild from source.
-            pass
-    return build_cache(cache_path=path)
+    if not isinstance(mapping, dict):
+        raise ValueError("Transliteration cache must be an ayah mapping")
+    canonical: dict[str, list[str]] = {}
+    for surah in quran_text.surah_ayah_counts(db_path):
+        for word in quran_text.surah_words(surah, db_path=db_path):
+            canonical.setdefault(f"{surah}:{word.ayah}", []).append(word.text)
+    if mapping.keys() != canonical.keys():
+        raise ValueError("Transliteration cache does not contain the canonical ayah set")
+    result = {}
+    for key, words in canonical.items():
+        targets = mapping[key]
+        if not isinstance(targets, list) or any(
+            not isinstance(tr, str) or not tr.strip() for tr in targets
+        ):
+            raise ValueError(f"Empty or invalid transliteration target in {key}")
+        targets = list(targets)
+        if len(targets) != len(words) and key in _JOINED_WORDS:
+            position, joined = _JOINED_WORDS[key]
+            if (len(targets) == len(words) - 1
+                    and words[position:position + 2] == ["بَعۡدَ", "مَا"]
+                    and targets[position] == joined):
+                targets[position:position + 1] = [joined[:5], joined[5:].strip()]
+        if len(targets) != len(words):
+            raise ValueError(
+                f"Transliteration segmentation mismatch in {key}: "
+                f"{len(targets)} targets for {len(words)} canonical words"
+            )
+        result[key] = targets
+    return result
+
+
+@lru_cache(maxsize=4)
+def _cached_map(
+    cache_path: str | Path = CACHE_PATH,
+    db_path: str | Path = quran_text.DEFAULT_DB_PATH,
+) -> dict[str, list[str]]:
+    """Read and validate the shipped cache, without implicit network/rebuild."""
+    with Path(cache_path).open("r", encoding="utf-8") as fh:
+        raw = json.load(fh)
+    return reconcile_map(raw, db_path=db_path)
 
 
 def build_cache(
     *,
     cache_path: str | Path = CACHE_PATH,
+    source_path: str | Path | None = None,
 ) -> dict[str, list[str]]:
-    """Download the dataset, build the transliteration map, and persist it.
+    """Build, reconcile and persist a fully validated transliteration map.
 
-    Network + parquet read happen here (lazy heavy imports). Writes the map to
-    ``cache_path`` as JSON and returns it. Safe to call directly to warm the
-    cache offline-prep style.
+    ``source_path`` reuses source-derived JSON for an offline reproducible build.
+    Otherwise download the dataset's text columns (lazy development dependencies).
+    Invalid input is rejected before the destination cache is replaced.
     """
-    mapping = _build_map_from_dataset()
+    if source_path is None:
+        raw = _build_map_from_dataset()
+    else:
+        with Path(source_path).open("r", encoding="utf-8") as fh:
+            raw = json.load(fh)
+    mapping = reconcile_map(raw)
     path = Path(cache_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")

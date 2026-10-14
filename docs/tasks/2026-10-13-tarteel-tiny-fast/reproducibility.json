@@ -1,0 +1,68 @@
+{
+  "model": {
+    "id": "whisper-tarteel-tiny",
+    "repo": "tarteel-ai/whisper-tiny-ar-quran",
+    "revision": "c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0",
+    "generation_config_source": {
+      "repo": "openai/whisper-tiny",
+      "revision": "169d4a4341b33bc18d8881c4b69c2e104e1cc0af",
+      "path": "generation_config.json",
+      "sha256": "a5d5325911f16e74001a72fa13d6e208eee51548f994646de1f4b4cc8b35b512"
+    }
+  },
+  "files": {
+    "pytorch_model.bin": {
+      "size": 151098921,
+      "sha256": "f26c96202427524ec015bcf25bd932414df0474e538d765c16759f1095757688"
+    },
+    "config.json": {
+      "size": 999,
+      "sha256": "4aa68ebec1ca833b4c28a7be8f595fa6e7493ef3b1587e2d60f6d811087ed3fa"
+    },
+    "preprocessor_config.json": {
+      "size": 184990,
+      "sha256": "9b5cd03a36fbb8a627c64d98a5b5b126ead95a77720723944487311f0110b666"
+    },
+    "tokenizer_config.json": {
+      "size": 828,
+      "sha256": "aca988adb9f901b2d32584a8ed22d4aabf14ab2d62397a82ab523fb11c2a4712"
+    },
+    "special_tokens_map.json": {
+      "size": 2064,
+      "sha256": "87870d95726faac1641b583cbbb6d8a0c22deab726bcaeac9bb06c350bc638b1"
+    },
+    "added_tokens.json": {
+      "size": 2108,
+      "sha256": "5687ef031827f4c9fa3e7cbdd7fd915de0d6c7c6416463a28c63cbe1cf99a07a"
+    },
+    "normalizer.json": {
+      "size": 52666,
+      "sha256": "bf1c507dc8724ca9cf9903640dacfb69dae2f00edee4f21ceba106a7392f26dd"
+    },
+    "merges.txt": {
+      "size": 493864,
+      "sha256": "78f27f801feb4283ae969d4cadacb28fc051b655647402b1a252c7079ea11c46"
+    },
+    "vocab.json": {
+      "size": 1036558,
+      "sha256": "e2aa043ef015641d363d8288e7c241c85e36a5c761fb303598e0710233344387"
+    },
+    "README.md": {
+      "size": 1963,
+      "sha256": "d5cf2cdc5ee1989dda1420f0e19ae3baf986bc2a1ec02d466896066121bb4070"
+    }
+  },
+  "python": "3.14.7",
+  "packages": {
+    "numpy": "2.5.0",
+    "onnxruntime": "1.27.0",
+    "imageio-ffmpeg": "0.6.0"
+  },
+  "environment": {},
+  "flags": "CPU; batch=1; Tiny/Base Torch threads=4; lag Tarteel=0, Quran Phonetics=200",
+  "protected_sha256": {
+    "/Users/ayub/Developer/surah-cutter/data/quran_mushaf.db": "c35272ed2a80916f5665f18e150686cfe258249cdf3ad50d3ac787f8cfe3fd66",
+    "/Users/ayub/Developer/surah-cutter/data/references/abu_bakr_ash_shatri.db": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "/Users/ayub/.surah-cutter/settings.json": "ae0656422b1f3297ba10172347a6e8cb3fb7d0c56cdf03a858798d643d152fb0"
+  }
+}

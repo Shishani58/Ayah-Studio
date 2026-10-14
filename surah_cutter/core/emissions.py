@@ -91,6 +91,7 @@ class OnnxEmitter:
         "_input_name",
         "_output_name",
         "_do_normalize",
+        "_loaded_runtime_identity",
     )
 
     def __init__(
@@ -100,6 +101,7 @@ class OnnxEmitter:
         *,
         blank_id: int,
         do_normalize: bool = True,
+        weights_sha256: str | None = None,
     ) -> None:
         self.session = session
         self.vocab = vocab
@@ -111,6 +113,25 @@ class OnnxEmitter:
         outputs = session.get_outputs()
         self._input_name = inputs[0].name
         self._output_name = outputs[0].name
+        import json
+        from importlib import metadata
+
+        options = session.get_session_options() if hasattr(session, "get_session_options") else None
+        self._loaded_runtime_identity = json.dumps({
+            "weights_sha256": weights_sha256, "vocab": dict(vocab), "blank_id": blank_id,
+            "do_normalize": do_normalize, "input_name": self._input_name,
+            "output_name": self._output_name, "providers": session.get_providers() if hasattr(session, "get_providers") else [],
+            "onnxruntime": metadata.version("onnxruntime"), "numpy": np.__version__,
+            "session_options": {name: str(getattr(options, name)) for name in
+                ("graph_optimization_level", "execution_mode", "intra_op_num_threads", "inter_op_num_threads")}
+                if options is not None else {},
+        }, sort_keys=True, allow_nan=False)
+
+    @property
+    def runtime_identity(self):
+        import json
+
+        return json.loads(self._loaded_runtime_identity)
 
     def emissions(
         self,
@@ -153,6 +174,10 @@ def load_emitter(model_path: str | Path, *, vocab_path: str | Path | None = None
     import onnxruntime as ort  # lazy heavy dep
 
     model_path = Path(model_path)
+    import hashlib
+
+    before = model_path.stat()
+    weights_sha256 = hashlib.sha256(model_path.read_bytes()).hexdigest()
     vocab, do_normalize = _load_sidecar(model_path, vocab_path)
     blank_id = _resolve_blank_id(vocab)
 
@@ -164,7 +189,10 @@ def load_emitter(model_path: str | Path, *, vocab_path: str | Path | None = None
         sess_options=sess_options,
         providers=["CPUExecutionProvider"],
     )
-    return OnnxEmitter(session, vocab, blank_id=blank_id, do_normalize=do_normalize)
+    if model_path.stat() != before:
+        raise ValueError("Model weights changed during loading")
+    return OnnxEmitter(session, vocab, blank_id=blank_id, do_normalize=do_normalize,
+                       weights_sha256=weights_sha256)
 
 
 def generate_emissions(
@@ -191,6 +219,10 @@ def generate_emissions(
     """
     if audio_waveform.ndim != 1:
         raise ValueError("audio_waveform must be a 1-D mono array")
+    if window_s <= 0 or context_s < 0 or batch_size <= 0:
+        raise ValueError("window and batch must be positive; context must be nonnegative")
+    if audio_waveform.size == 0:
+        raise ValueError("audio_waveform must contain samples")
 
     wav = np.ascontiguousarray(audio_waveform, dtype=np.float32)
     if do_normalize:
@@ -212,23 +244,19 @@ def generate_emissions(
     padded = np.pad(wav, (context, context + extension), mode="constant")
 
     num_windows = (padded.shape[0] - 2 * context) // window
-    input_windows = np.stack(
-        [
-            padded[i * window : i * window + window + 2 * context]
-            for i in range(num_windows)
-        ]
-    ).astype(np.float32)
-
     ctx_frames = _time_to_frame(context_s)
 
     emissions_chunks: list[np.ndarray] = []
     for i in range(0, num_windows, batch_size):
-        batch = input_windows[i : i + batch_size]
+        batch = np.stack([
+            padded[j * window:j * window + window + 2 * context]
+            for j in range(i, min(num_windows, i + batch_size))
+        ])
         logits = _run(session, batch, input_name, output_name)  # (B, Tw, V)
         # Trim the context frames off each window so the kept frames are exactly
         # the ``window``-second core; the ``+ 1`` keeps the seam aligned with the
         # reference implementation's framing.
-        trimmed = logits[:, ctx_frames : -ctx_frames + 1, :]
+        trimmed = logits[:, ctx_frames:-ctx_frames + 1, :] if ctx_frames else logits
         emissions_chunks.append(trimmed)
 
     emissions = np.concatenate(emissions_chunks, axis=0)  # (num_windows, Tc, V)

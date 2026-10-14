@@ -1,0 +1,362 @@
+[
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 114,
+    "audio_sha256": "958819e2a43c6f02d397432b208398599f1c10dd7c08f19401ee3676550bf064",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "decode_seconds": 0.0787,
+    "load_probe_seconds": 4.0798,
+    "full_seconds": 3.378,
+    "source": "attention-dtw:whisper-tarteel-tiny:revision=c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=20:commit-before=14:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-tiny@169d4a4341b33bc18d8881c4b69c2e104e1cc0af:sha256=a5d5325911f16e74001a72fa13d6e208eee51548f994646de1f4b4cc8b35b512:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+    "trace": {
+      "model_source": "attention-dtw:whisper-tarteel-tiny:revision=c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=20:commit-before=14:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-tiny@169d4a4341b33bc18d8881c4b69c2e104e1cc0af:sha256=a5d5325911f16e74001a72fa13d6e208eee51548f994646de1f4b4cc8b35b512:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}"
+    },
+    "error": "ValueError: Whisper не нашёл достаточных опор в каноническом тексте.",
+    "seconds": 7.542
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 112,
+    "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "decode_seconds": 0.0446,
+    "load_probe_seconds": 0.1224,
+    "full_seconds": 1.3611,
+    "source": "attention-dtw:whisper-tarteel-tiny:revision=c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=20:commit-before=14:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-tiny@169d4a4341b33bc18d8881c4b69c2e104e1cc0af:sha256=a5d5325911f16e74001a72fa13d6e208eee51548f994646de1f4b4cc8b35b512:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+    "trace": {
+      "model_source": "attention-dtw:whisper-tarteel-tiny:revision=c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=20:commit-before=14:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-tiny@169d4a4341b33bc18d8881c4b69c2e104e1cc0af:sha256=a5d5325911f16e74001a72fa13d6e208eee51548f994646de1f4b4cc8b35b512:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+      "mode": "full",
+      "backend": "whisper-attention-dtw",
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 6580,
+          "conf": 0.9999724626541138,
+          "reliable": true
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 9420,
+          "conf": 0.8352949023246765,
+          "reliable": true
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 11140,
+          "conf": 0.9964666366577148,
+          "reliable": true
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 13840,
+          "conf": 0.833199679851532,
+          "reliable": true
+        }
+      ]
+    },
+    "rows": [
+      [
+        1,
+        6580,
+        0.9999724626541138
+      ],
+      [
+        2,
+        9420,
+        0.8352949023246765
+      ],
+      [
+        3,
+        11140,
+        0.9964666366577148
+      ],
+      [
+        4,
+        13840,
+        0.833199679851532
+      ]
+    ],
+    "absolute_errors_ms": [
+      486,
+      665,
+      277,
+      310
+    ],
+    "median_ms": 398.0,
+    "p95_ms": 638.15,
+    "max_ms": 665,
+    "first_ayah_words": [
+      [
+        0,
+        540,
+        0.7499966621398926
+      ],
+      [
+        1,
+        840,
+        0.9997682571411133
+      ],
+      [
+        2,
+        1560,
+        0.9999672174453735
+      ],
+      [
+        3,
+        1960,
+        0.9992694854736328
+      ]
+    ],
+    "words_seconds": 0.0952,
+    "seconds": 1.643
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 78,
+    "audio_sha256": "6b5e524700d4139920eead0a5b10544a73ccb0c79f1e9d04df8e2d1f385d7024",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "decode_seconds": 0.2473,
+    "load_probe_seconds": 0.1013,
+    "full_seconds": 5.8766,
+    "source": "attention-dtw:whisper-tarteel-tiny:revision=c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=20:commit-before=14:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-tiny@169d4a4341b33bc18d8881c4b69c2e104e1cc0af:sha256=a5d5325911f16e74001a72fa13d6e208eee51548f994646de1f4b4cc8b35b512:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+    "trace": {
+      "model_source": "attention-dtw:whisper-tarteel-tiny:revision=c3d7e624af5c81bef25a10a2af3a5a84cb4dd0f0:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=20:commit-before=14:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-tiny@169d4a4341b33bc18d8881c4b69c2e104e1cc0af:sha256=a5d5325911f16e74001a72fa13d6e208eee51548f994646de1f4b4cc8b35b512:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}"
+    },
+    "error": "ValueError: Слишком много текста для одного окна Whisper.",
+    "seconds": 6.233
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 114,
+    "audio_sha256": "958819e2a43c6f02d397432b208398599f1c10dd7c08f19401ee3676550bf064",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "decode_seconds": 0.0452,
+    "load_probe_seconds": 3.8571,
+    "full_seconds": 4.054,
+    "source": "attention-dtw:whisper-tarteel-base:revision=5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=20:commit-before=14:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-base@e37978b90ca9030d5170a5c07aadb050351a65bb:sha256=444b3f636d2fff89dd9ecf549e2a085b61f7ff0fa0246d4628bac6a3b8cc9ba4:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+    "trace": {
+      "model_source": "attention-dtw:whisper-tarteel-base:revision=5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=20:commit-before=14:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-base@e37978b90ca9030d5170a5c07aadb050351a65bb:sha256=444b3f636d2fff89dd9ecf549e2a085b61f7ff0fa0246d4628bac6a3b8cc9ba4:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+      "mode": "full",
+      "backend": "whisper-attention-dtw",
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 6420,
+          "conf": 0.9980559349060059,
+          "reliable": true
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 10580,
+          "conf": 0.9999880194664001,
+          "reliable": true
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 13460,
+          "conf": 0.5016325116157532,
+          "reliable": true
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 16380,
+          "conf": 0.9999995231628418,
+          "reliable": true
+        },
+        {
+          "ayah": 5,
+          "onset_ms": 20840,
+          "conf": 0.9999763369560242,
+          "reliable": true
+        },
+        {
+          "ayah": 6,
+          "onset_ms": 25200,
+          "conf": 0.7500078678131104,
+          "reliable": true
+        }
+      ]
+    },
+    "rows": [
+      [
+        1,
+        6420,
+        0.9980559349060059
+      ],
+      [
+        2,
+        10580,
+        0.9999880194664001
+      ],
+      [
+        3,
+        13460,
+        0.5016325116157532
+      ],
+      [
+        4,
+        16380,
+        0.9999995231628418
+      ],
+      [
+        5,
+        20840,
+        0.9999763369560242
+      ],
+      [
+        6,
+        25200,
+        0.7500078678131104
+      ]
+    ],
+    "absolute_errors_ms": [
+      381,
+      317,
+      289,
+      238,
+      290,
+      270
+    ],
+    "median_ms": 289.5,
+    "p95_ms": 365.0,
+    "max_ms": 381,
+    "first_ayah_words": [
+      [
+        0,
+        400,
+        0.7500009536743164
+      ],
+      [
+        1,
+        800,
+        0.9999781847000122
+      ],
+      [
+        2,
+        1540,
+        0.9999993443489075
+      ],
+      [
+        3,
+        2820,
+        0.9999958276748657
+      ]
+    ],
+    "words_seconds": 0.1895,
+    "seconds": 8.154
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 112,
+    "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "decode_seconds": 0.0379,
+    "load_probe_seconds": 0.2258,
+    "full_seconds": 3.1196,
+    "source": "attention-dtw:whisper-tarteel-base:revision=5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=20:commit-before=14:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-base@e37978b90ca9030d5170a5c07aadb050351a65bb:sha256=444b3f636d2fff89dd9ecf549e2a085b61f7ff0fa0246d4628bac6a3b8cc9ba4:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+    "trace": {
+      "model_source": "attention-dtw:whisper-tarteel-base:revision=5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=20:commit-before=14:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-base@e37978b90ca9030d5170a5c07aadb050351a65bb:sha256=444b3f636d2fff89dd9ecf549e2a085b61f7ff0fa0246d4628bac6a3b8cc9ba4:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+      "mode": "full",
+      "backend": "whisper-attention-dtw",
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 6440,
+          "conf": 0.9980812072753906,
+          "reliable": true
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 9080,
+          "conf": 0.972734808921814,
+          "reliable": true
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 11080,
+          "conf": 0.9999879002571106,
+          "reliable": true
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 13820,
+          "conf": 0.8333337306976318,
+          "reliable": true
+        }
+      ]
+    },
+    "rows": [
+      [
+        1,
+        6440,
+        0.9980812072753906
+      ],
+      [
+        2,
+        9080,
+        0.972734808921814
+      ],
+      [
+        3,
+        11080,
+        0.9999879002571106
+      ],
+      [
+        4,
+        13820,
+        0.8333337306976318
+      ]
+    ],
+    "absolute_errors_ms": [
+      346,
+      325,
+      217,
+      290
+    ],
+    "median_ms": 307.5,
+    "p95_ms": 342.84999999999997,
+    "max_ms": 346,
+    "first_ayah_words": [
+      [
+        0,
+        340,
+        0.7500014305114746
+      ],
+      [
+        1,
+        720,
+        0.9999884366989136
+      ],
+      [
+        2,
+        1140,
+        0.9999889135360718
+      ],
+      [
+        3,
+        1860,
+        0.9999942779541016
+      ]
+    ],
+    "words_seconds": 0.2254,
+    "seconds": 3.618
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 78,
+    "audio_sha256": "6b5e524700d4139920eead0a5b10544a73ccb0c79f1e9d04df8e2d1f385d7024",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "decode_seconds": 0.2645,
+    "load_probe_seconds": 0.2331,
+    "full_seconds": 13.4734,
+    "source": "attention-dtw:whisper-tarteel-base:revision=5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=20:commit-before=14:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-base@e37978b90ca9030d5170a5c07aadb050351a65bb:sha256=444b3f636d2fff89dd9ecf549e2a085b61f7ff0fa0246d4628bac6a3b8cc9ba4:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}",
+    "trace": {
+      "model_source": "attention-dtw:whisper-tarteel-base:revision=5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=20:commit-before=14:context=1word:teacher-forcing:language=ar:generation-config=openai/whisper-base@e37978b90ca9030d5170a5c07aadb050351a65bb:sha256=444b3f636d2fff89dd9ecf549e2a085b61f7ff0fa0246d4628bac6a3b8cc9ba4:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"uroman\":\"1.3.1.1\"}"
+    },
+    "error": "ValueError: Слишком много текста для одного окна Whisper.",
+    "seconds": 13.98
+  }
+]

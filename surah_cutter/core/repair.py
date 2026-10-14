@@ -30,14 +30,13 @@ def repair_surah_timings(
 
     from surah_cutter.core import align as A
     from surah_cutter.core import recheck
-    from surah_cutter.core._ctc import forced_align, merge_repeats
-    from surah_cutter.core.align_fast import _default_bundle
+    from surah_cutter.core._ctc import forced_align, aligned_segments
     from surah_cutter.data import transliteration
 
     if surah is None:
         surah = words[0].surah
     if bundle is None:
-        bundle = _default_bundle()
+        bundle = A.default_bundle()
     frozen = frozen or set()
 
     timings = {ayah: start for _s, ayah, start in rows}
@@ -79,7 +78,7 @@ def repair_surah_timings(
         basmala = lo_i == 0 and surah not in (1, 9)
         basmala_trs = A._basmala_trs(transliteration) if basmala else None
         targets, spans = A._build_targets(sub_words, sub_trs, bundle, basmala_trs)
-        if not targets:
+        if not targets or any(end <= start for start, end in spans):
             return {}
 
         emis = A._emissions(bundle, np.ascontiguousarray(pcm[s0:s1], dtype=np.float32), np)
@@ -98,13 +97,11 @@ def repair_surah_timings(
             return {}  # A too-short local window cannot justify moving a mark.
         path = np.asarray(path).reshape(-1)
         fscores = np.asarray(fscores).reshape(-1)
-        segs = [
-            s for s in merge_repeats(path.tolist(), {k: k for k in range(emis.shape[1])})
-            if s.label != bundle.blank_id
-        ]
+        try:
+            segs = aligned_segments(path, targets, blank=bundle.blank_id)
+        except ValueError:
+            return {}
         tspans = [(s.start, s.end) for s in segs]
-        while len(tspans) < len(targets):
-            tspans.append(tspans[-1] if tspans else (nf - 1, nf - 1))
 
         out: dict[int, tuple[int, float]] = {}
         for a in ayahs[lo_i : hi_i + 1]:

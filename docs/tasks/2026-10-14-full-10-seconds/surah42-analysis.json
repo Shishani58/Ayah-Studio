@@ -1,0 +1,103 @@
+{
+  "groups": {
+    "3": {
+      "full_times_s": [
+        39.5032301240135,
+        35.36790666682646
+      ],
+      "mean_full_s": 37.43556839541998,
+      "peak_rss_mib": [
+        1656.71875,
+        1773.0
+      ],
+      "max_peak_rss_mib": 1773.0
+    },
+    "4": {
+      "full_times_s": [
+        33.068138791946694,
+        33.530723416944966
+      ],
+      "mean_full_s": 33.29943110444583,
+      "peak_rss_mib": [
+        2040.09375,
+        1875.359375
+      ],
+      "max_peak_rss_mib": 2040.09375
+    }
+  },
+  "errors": {
+    "n": 53,
+    "median_ms": 74.0,
+    "p95_ms": 140.19999999999996,
+    "max_ms": 810.0,
+    "over500": 2
+  },
+  "mean_abs_error_ms": 94.71698113207547,
+  "new_large_errors_vs_saved20": [
+    {
+      "ayah": 33,
+      "error10_ms": -591,
+      "error20_ms": -11,
+      "flagged": true
+    }
+  ],
+  "large_errors": [
+    {
+      "ayah": 1,
+      "error_ms": -810,
+      "flagged": true
+    },
+    {
+      "ayah": 33,
+      "error_ms": -591,
+      "flagged": true
+    }
+  ],
+  "review_added_vs20": [],
+  "review_removed_vs20": [
+    13,
+    18,
+    24,
+    35,
+    49
+  ],
+  "max_absolute_error_regression_vs20_ms": 580,
+  "windows": 94,
+  "window_range_s": [
+    5.02,
+    27.66
+  ],
+  "all_cuts_in_accepted_pauses": true,
+  "all_outputs_identical_across_repeats_and_workers": true,
+  "all_53_ayahs_ordered": true,
+  "source_snapshot_matches_start_manifest": true,
+  "sources_changed_after_start": [
+    "surah_cutter/core/emissions.py"
+  ],
+  "saved20_reference": "docs/tasks/2026-10-14-full-15-seconds/surah42-comparison.json",
+  "saved20_mean_full_s": 35.00118702102918,
+  "saved20_stats": {
+    "n": 53,
+    "median_ms": 66.0,
+    "p95_ms": 127.39999999999999,
+    "max_ms": 810.0,
+    "over500": 1
+  },
+  "saved20_source_changes_to_new": {
+    "surah_cutter/core/emissions.py": {
+      "previous": "a651c130ceac9d6b8b53581db1637790b5b26d2089309f5fce10020e28502524",
+      "new": "a972f5f0f6efac8c5af6ed88fc355dedbcb592478b1adebab21aff32e1323013"
+    }
+  },
+  "4_vs3_time_reduction_percent": 11.048683025953942,
+  "source_changes_details": [
+    {
+      "path": "surah_cutter/core/emissions.py",
+      "mtime": 1791936460.5075753,
+      "sha256_after": "dde1335cf3f5641dff8cc3e4803ebdb7c61cd766dc960e3f9f163f5b3bba158a",
+      "changed_after_all_cases_completed": true
+    }
+  ],
+  "last_case_completed_epoch": 1791936448.9075198,
+  "all_source_changes_after_measured_runs": true
+}

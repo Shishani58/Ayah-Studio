@@ -1,0 +1,2108 @@
+{
+  "case": "strong:30:1:0",
+  "load_s": 0.15208408399485052,
+  "surahs": [
+    {
+      "surah": 80,
+      "repeat": 0,
+      "audio_sha256": "01cbc697f10e8cb67347e83e42cc9bfd46dacf646655940921a7ce78f1f519e9",
+      "duration_s": 188.088,
+      "decode_s": 0.20199929107911885,
+      "emissions_s": 9.058118874905631,
+      "alignment_s": 0.596667333971709,
+      "full_s": 9.65478620887734,
+      "emissions_sha256": "f8b117131f10ebbc79b5a189566cd36ceece6da2d74ff7dd545663ebcac2b53f",
+      "frames": 9405,
+      "windows": {
+        "window_s": 30,
+        "context_s": 2,
+        "workers": 1,
+        "batch_size": 1,
+        "dsp_s": 0.03578516701236367,
+        "windows": [
+          {
+            "start_ms": 0.0,
+            "end_ms": 33760.0,
+            "read_start_ms": 0.0,
+            "read_end_ms": 35760.0,
+            "input_samples": 604160,
+            "frames": 1688,
+            "cut_reason": "pause"
+          },
+          {
+            "start_ms": 33760.0,
+            "end_ms": 64880.0,
+            "read_start_ms": 31760.0,
+            "read_end_ms": 66880.0,
+            "input_samples": 561920,
+            "frames": 1556,
+            "cut_reason": "pause"
+          },
+          {
+            "start_ms": 64880.0,
+            "end_ms": 96320.0,
+            "read_start_ms": 62880.0,
+            "read_end_ms": 98320.0,
+            "input_samples": 567040,
+            "frames": 1572,
+            "cut_reason": "pause"
+          },
+          {
+            "start_ms": 96320.0,
+            "end_ms": 122760.0,
+            "read_start_ms": 94320.0,
+            "read_end_ms": 124760.0,
+            "input_samples": 487040,
+            "frames": 1322,
+            "cut_reason": "pause"
+          },
+          {
+            "start_ms": 122760.0,
+            "end_ms": 151920.0,
+            "read_start_ms": 120760.0,
+            "read_end_ms": 153920.0,
+            "input_samples": 530560,
+            "frames": 1458,
+            "cut_reason": "pause"
+          },
+          {
+            "start_ms": 151920.0,
+            "end_ms": 188088.0,
+            "read_start_ms": 149920.0,
+            "read_end_ms": 188088.0,
+            "input_samples": 642880,
+            "frames": 1809,
+            "cut_reason": "end"
+          }
+        ],
+        "max_window_s": 60,
+        "pause_policy": "strong-dsp-v1",
+        "min_pause_ms": 300.0,
+        "pause_decisions": [
+          {
+            "start_ms": 5060.0,
+            "end_ms": 5500.0,
+            "center_ms": 5280.0,
+            "duration_ms": 440.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.24066883948397302,
+              "zcr": 0.14177271712435813,
+              "rms_ratio": 0.08927828367119146
+            }
+          },
+          {
+            "start_ms": 12560.0,
+            "end_ms": 13080.0,
+            "center_ms": 12820.0,
+            "duration_ms": 520.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.31775373667340306,
+              "zcr": 0.1495051224170863,
+              "rms_ratio": 0.12268199873923274
+            }
+          },
+          {
+            "start_ms": 22720.0,
+            "end_ms": 23240.0,
+            "center_ms": 22980.0,
+            "duration_ms": 520.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.34644843775597206,
+              "zcr": 0.10019100538287898,
+              "rms_ratio": 0.1435941900452684
+            }
+          },
+          {
+            "start_ms": 33440.0,
+            "end_ms": 34080.0,
+            "center_ms": 33760.0,
+            "duration_ms": 640.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.4023260543704813,
+              "zcr": 0.13673655423883319,
+              "rms_ratio": 0.13492103594303032
+            }
+          },
+          {
+            "start_ms": 44240.0,
+            "end_ms": 44700.0,
+            "center_ms": 44470.0,
+            "duration_ms": 460.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.4200049638141394,
+              "zcr": 0.15357366117941237,
+              "rms_ratio": 0.11267295936933548
+            }
+          },
+          {
+            "start_ms": 53240.0,
+            "end_ms": 53780.0,
+            "center_ms": 53510.0,
+            "duration_ms": 540.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.40555261929621295,
+              "zcr": 0.12288205296923836,
+              "rms_ratio": 0.10475427147477179
+            }
+          },
+          {
+            "start_ms": 64620.0,
+            "end_ms": 65160.0,
+            "center_ms": 64890.0,
+            "duration_ms": 540.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.46882756580890966,
+              "zcr": 0.1325875966441849,
+              "rms_ratio": 0.079226733694518
+            }
+          },
+          {
+            "start_ms": 69720.0,
+            "end_ms": 70080.0,
+            "center_ms": 69900.0,
+            "duration_ms": 360.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.41062603693041877,
+              "zcr": 0.10573643410852714,
+              "rms_ratio": 0.16666329807854532
+            }
+          },
+          {
+            "start_ms": 77040.0,
+            "end_ms": 77520.0,
+            "center_ms": 77280.0,
+            "duration_ms": 480.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.4933543535803411,
+              "zcr": 0.1246337175229537,
+              "rms_ratio": 0.07276985361811572
+            }
+          },
+          {
+            "start_ms": 84180.0,
+            "end_ms": 84700.0,
+            "center_ms": 84440.0,
+            "duration_ms": 520.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.36751041131982387,
+              "zcr": 0.09463448515367251,
+              "rms_ratio": 0.17605343252977576
+            }
+          },
+          {
+            "start_ms": 90660.0,
+            "end_ms": 91200.0,
+            "center_ms": 90930.0,
+            "duration_ms": 540.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.4428748054398949,
+              "zcr": 0.11498601743707847,
+              "rms_ratio": 0.16960252250682015
+            }
+          },
+          {
+            "start_ms": 96120.0,
+            "end_ms": 96520.0,
+            "center_ms": 96320.0,
+            "duration_ms": 400.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.3741927776286084,
+              "zcr": 0.11096639749934879,
+              "rms_ratio": 0.1579361152739558
+            }
+          },
+          {
+            "start_ms": 101220.0,
+            "end_ms": 101680.0,
+            "center_ms": 101450.0,
+            "duration_ms": 460.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.41814815153375934,
+              "zcr": 0.0793915399041467,
+              "rms_ratio": 0.10386594327699733
+            }
+          },
+          {
+            "start_ms": 106980.0,
+            "end_ms": 107360.0,
+            "center_ms": 107170.0,
+            "duration_ms": 380.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.3341833879532053,
+              "zcr": 0.15146348394430237,
+              "rms_ratio": 0.15877241791643537
+            }
+          },
+          {
+            "start_ms": 115760.0,
+            "end_ms": 116260.0,
+            "center_ms": 116010.0,
+            "duration_ms": 500.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.45265833685848694,
+              "zcr": 0.1503952932524361,
+              "rms_ratio": 0.10084732445274472
+            }
+          },
+          {
+            "start_ms": 119080.0,
+            "end_ms": 119400.0,
+            "center_ms": 119240.0,
+            "duration_ms": 320.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.34379856149562055,
+              "zcr": 0.129752354377398,
+              "rms_ratio": 0.21465201689449726
+            }
+          },
+          {
+            "start_ms": 122600.0,
+            "end_ms": 122940.0,
+            "center_ms": 122770.0,
+            "duration_ms": 340.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.3827886816507485,
+              "zcr": 0.14088669950738916,
+              "rms_ratio": 0.20302678671264393
+            }
+          },
+          {
+            "start_ms": 130220.0,
+            "end_ms": 130600.0,
+            "center_ms": 130410.0,
+            "duration_ms": 380.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.4062248405309112,
+              "zcr": 0.12219380505825518,
+              "rms_ratio": 0.0834343272063742
+            }
+          },
+          {
+            "start_ms": 141540.0,
+            "end_ms": 141940.0,
+            "center_ms": 141740.0,
+            "duration_ms": 400.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.4800531614980679,
+              "zcr": 0.09846314144308414,
+              "rms_ratio": 0.1476150351086408
+            }
+          },
+          {
+            "start_ms": 147280.0,
+            "end_ms": 147640.0,
+            "center_ms": 147460.0,
+            "duration_ms": 360.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.3944513985568211,
+              "zcr": 0.11038759689922481,
+              "rms_ratio": 0.16995577411415436
+            }
+          },
+          {
+            "start_ms": 151700.0,
+            "end_ms": 152120.0,
+            "center_ms": 151910.0,
+            "duration_ms": 420.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.4832113935729858,
+              "zcr": 0.11853811012262563,
+              "rms_ratio": 0.1442612267614685
+            }
+          },
+          {
+            "start_ms": 164100.0,
+            "end_ms": 164600.0,
+            "center_ms": 164350.0,
+            "duration_ms": 500.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.44579631697762406,
+              "zcr": 0.12502298216583932,
+              "rms_ratio": 0.16463462777746468
+            }
+          },
+          {
+            "start_ms": 171780.0,
+            "end_ms": 172340.0,
+            "center_ms": 172060.0,
+            "duration_ms": 560.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.5328388197641014,
+              "zcr": 0.13439599937490232,
+              "rms_ratio": 0.11885664057203758
+            }
+          },
+          {
+            "start_ms": 179540.0,
+            "end_ms": 179920.0,
+            "center_ms": 179730.0,
+            "duration_ms": 380.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.43728893099676136,
+              "zcr": 0.10855356635407787,
+              "rms_ratio": 0.10685265804560189
+            }
+          }
+        ],
+        "short_clip": false,
+        "inference_s": 9.016159291844815,
+        "pause_cuts": 5,
+        "fallback_cuts": 0,
+        "algorithm": "qpc-full-pause-v1",
+        "review_policy": "qpc-pause-review-v1",
+        "review_min_token_conf": 0.05,
+        "review_long_pause_ms": 700,
+        "review_late_ms": 200
+      },
+      "rows": [
+        [
+          1,
+          5280,
+          0.1935
+        ],
+        [
+          2,
+          8399,
+          0.0
+        ],
+        [
+          3,
+          12919,
+          0.9805
+        ],
+        [
+          4,
+          18239,
+          0.0036
+        ],
+        [
+          5,
+          23139,
+          0.5691
+        ],
+        [
+          6,
+          26338,
+          0.0142
+        ],
+        [
+          7,
+          29778,
+          0.4071
+        ],
+        [
+          8,
+          33938,
+          0.0476
+        ],
+        [
+          9,
+          38878,
+          0.0014
+        ],
+        [
+          10,
+          40617,
+          0.0026
+        ],
+        [
+          11,
+          44477,
+          0.4141
+        ],
+        [
+          12,
+          49337,
+          0.2374
+        ],
+        [
+          13,
+          53557,
+          0.0045
+        ],
+        [
+          14,
+          56596,
+          0.0785
+        ],
+        [
+          15,
+          59936,
+          0.001
+        ],
+        [
+          16,
+          62176,
+          0.1042
+        ],
+        [
+          17,
+          64956,
+          0.2874
+        ],
+        [
+          18,
+          69956,
+          0.1527
+        ],
+        [
+          19,
+          72575,
+          0.982
+        ],
+        [
+          20,
+          77315,
+          0.1487
+        ],
+        [
+          21,
+          80455,
+          0.0615
+        ],
+        [
+          22,
+          84495,
+          0.2201
+        ],
+        [
+          23,
+          90974,
+          0.2292
+        ],
+        [
+          24,
+          96314,
+          0.1514
+        ],
+        [
+          25,
+          101574,
+          0.0394
+        ],
+        [
+          26,
+          107133,
+          0.0875
+        ],
+        [
+          27,
+          110993,
+          0.01
+        ],
+        [
+          28,
+          116093,
+          0.1023
+        ],
+        [
+          29,
+          119232,
+          0.0786
+        ],
+        [
+          30,
+          122772,
+          0.3516
+        ],
+        [
+          31,
+          126092,
+          0.0605
+        ],
+        [
+          32,
+          130432,
+          0.0124
+        ],
+        [
+          33,
+          134351,
+          0.1857
+        ],
+        [
+          34,
+          141811,
+          0.3003
+        ],
+        [
+          35,
+          147451,
+          0.1265
+        ],
+        [
+          36,
+          151910,
+          0.0772
+        ],
+        [
+          37,
+          156370,
+          0.4223
+        ],
+        [
+          38,
+          164389,
+          0.1696
+        ],
+        [
+          39,
+          168669,
+          0.1443
+        ],
+        [
+          40,
+          172189,
+          0.0747
+        ],
+        [
+          41,
+          177209,
+          0.0892
+        ],
+        [
+          42,
+          179809,
+          0.3459
+        ]
+      ],
+      "raw_review": [
+        1,
+        2,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        31,
+        32,
+        33,
+        35,
+        36,
+        38,
+        39,
+        40,
+        41
+      ],
+      "onset_checks": [
+        {
+          "ayah": 1,
+          "raw_onset_ms": 4580,
+          "onset_ms": 5280,
+          "conf": 0.1935,
+          "first_token_conf": 0.0001,
+          "reliable": false,
+          "repaired": true,
+          "reason": "weak-prefix-across-pause",
+          "token_confs": [
+            0.0001,
+            0.8481,
+            0.9105,
+            0.4955,
+            0.8227,
+            0.7907
+          ],
+          "pause_start_ms": 5060.0,
+          "pause_end_ms": 5500.0
+        },
+        {
+          "ayah": 2,
+          "raw_onset_ms": 8399,
+          "onset_ms": 8399,
+          "conf": 0.0,
+          "first_token_conf": 0.0,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "ayah": 3,
+          "raw_onset_ms": 12919,
+          "onset_ms": 12919,
+          "conf": 0.9805,
+          "first_token_conf": 0.9998,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9998,
+            0.9959,
+            0.9726,
+            0.9471
+          ]
+        },
+        {
+          "ayah": 4,
+          "raw_onset_ms": 18239,
+          "onset_ms": 18239,
+          "conf": 0.0036,
+          "first_token_conf": 0.4642,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.4642,
+            0.0
+          ]
+        },
+        {
+          "ayah": 5,
+          "raw_onset_ms": 23139,
+          "onset_ms": 23139,
+          "conf": 0.5691,
+          "first_token_conf": 0.7574,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.7574,
+            0.198,
+            0.8104,
+            0.8633
+          ]
+        },
+        {
+          "ayah": 6,
+          "raw_onset_ms": 26338,
+          "onset_ms": 26338,
+          "conf": 0.0142,
+          "first_token_conf": 0.3074,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.3074,
+            0.0001,
+            0.0001,
+            0.1997,
+            0.0003,
+            0.984,
+            0.5272
+          ]
+        },
+        {
+          "ayah": 7,
+          "raw_onset_ms": 29778,
+          "onset_ms": 29778,
+          "conf": 0.4071,
+          "first_token_conf": 0.0183,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0183,
+            0.6668,
+            0.9584,
+            0.9977
+          ]
+        },
+        {
+          "ayah": 8,
+          "raw_onset_ms": 33938,
+          "onset_ms": 33938,
+          "conf": 0.0476,
+          "first_token_conf": 0.9856,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.9856,
+            0.9942,
+            0.0011,
+            0.0258,
+            0.0011,
+            0.0173,
+            0.9909
+          ]
+        },
+        {
+          "ayah": 9,
+          "raw_onset_ms": 38878,
+          "onset_ms": 38878,
+          "conf": 0.0014,
+          "first_token_conf": 0.0,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0,
+            0.0002,
+            0.086,
+            0.0009,
+            0.0015,
+            0.084
+          ]
+        },
+        {
+          "ayah": 10,
+          "raw_onset_ms": 40617,
+          "onset_ms": 40617,
+          "conf": 0.0026,
+          "first_token_conf": 0.0156,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0156,
+            0.0001,
+            0.0006,
+            0.0678,
+            0.0,
+            0.9962,
+            0.0023
+          ]
+        },
+        {
+          "ayah": 11,
+          "raw_onset_ms": 44477,
+          "onset_ms": 44477,
+          "conf": 0.4141,
+          "first_token_conf": 0.9892,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9892,
+            0.8776,
+            0.2693,
+            0.0697,
+            0.5419
+          ]
+        },
+        {
+          "ayah": 12,
+          "raw_onset_ms": 49337,
+          "onset_ms": 49337,
+          "conf": 0.2374,
+          "first_token_conf": 0.9949,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.9949,
+            0.9873,
+            0.9857,
+            0.2695,
+            0.0007
+          ]
+        },
+        {
+          "ayah": 13,
+          "raw_onset_ms": 53557,
+          "onset_ms": 53557,
+          "conf": 0.0045,
+          "first_token_conf": 0.9964,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.9964,
+            0.0
+          ]
+        },
+        {
+          "ayah": 14,
+          "raw_onset_ms": 56596,
+          "onset_ms": 56596,
+          "conf": 0.0785,
+          "first_token_conf": 0.0103,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0103,
+            0.5882,
+            0.0035,
+            0.367,
+            0.7903,
+            0.0076,
+            0.68,
+            0.9823,
+            0.0507,
+            0.0008
+          ]
+        },
+        {
+          "ayah": 15,
+          "raw_onset_ms": 59936,
+          "onset_ms": 59936,
+          "conf": 0.001,
+          "first_token_conf": 0.0,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0,
+            0.0026,
+            0.0003,
+            0.3194,
+            0.087,
+            0.0001,
+            0.0
+          ]
+        },
+        {
+          "ayah": 16,
+          "raw_onset_ms": 62176,
+          "onset_ms": 62176,
+          "conf": 0.1042,
+          "first_token_conf": 0.9914,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.9914,
+            0.9859,
+            0.9996,
+            0.8925,
+            0.936,
+            0.0001,
+            0.0027
+          ]
+        },
+        {
+          "ayah": 17,
+          "raw_onset_ms": 64956,
+          "onset_ms": 64956,
+          "conf": 0.2874,
+          "first_token_conf": 0.0003,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0003,
+            0.9992,
+            0.9664,
+            0.9766,
+            0.9457,
+            0.7616
+          ]
+        },
+        {
+          "ayah": 18,
+          "raw_onset_ms": 69956,
+          "onset_ms": 69956,
+          "conf": 0.1527,
+          "first_token_conf": 0.0086,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0086,
+            0.9747,
+            0.0669
+          ]
+        },
+        {
+          "ayah": 19,
+          "raw_onset_ms": 72575,
+          "onset_ms": 72575,
+          "conf": 0.982,
+          "first_token_conf": 0.9959,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9959,
+            0.9786,
+            0.9752
+          ]
+        },
+        {
+          "ayah": 20,
+          "raw_onset_ms": 77315,
+          "onset_ms": 77315,
+          "conf": 0.1487,
+          "first_token_conf": 0.9964,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.9964,
+            0.0003,
+            0.9996,
+            0.2378,
+            0.198,
+            0.9108
+          ]
+        },
+        {
+          "ayah": 21,
+          "raw_onset_ms": 80455,
+          "onset_ms": 80455,
+          "conf": 0.0615,
+          "first_token_conf": 0.3069,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.3069,
+            0.0023,
+            0.9982,
+            0.0017,
+            0.9712,
+            0.0455
+          ]
+        },
+        {
+          "ayah": 22,
+          "raw_onset_ms": 84495,
+          "onset_ms": 84495,
+          "conf": 0.2201,
+          "first_token_conf": 0.9954,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.9954,
+            0.0004,
+            0.9996,
+            0.2912,
+            0.9836,
+            0.9874
+          ]
+        },
+        {
+          "ayah": 23,
+          "raw_onset_ms": 90974,
+          "onset_ms": 90974,
+          "conf": 0.2292,
+          "first_token_conf": 0.8856,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.8856,
+            0.9567,
+            0.998,
+            0.0031,
+            0.0132
+          ]
+        },
+        {
+          "ayah": 24,
+          "raw_onset_ms": 96314,
+          "onset_ms": 96314,
+          "conf": 0.1514,
+          "first_token_conf": 0.049,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.049,
+            0.9812,
+            0.3744,
+            0.1915,
+            0.6688,
+            0.0064,
+            0.0,
+            0.8588,
+            0.7551,
+            0.9045
+          ]
+        },
+        {
+          "ayah": 25,
+          "raw_onset_ms": 101574,
+          "onset_ms": 101574,
+          "conf": 0.0394,
+          "first_token_conf": 0.2155,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.2155,
+            0.0001,
+            0.9996,
+            0.1187
+          ]
+        },
+        {
+          "ayah": 26,
+          "raw_onset_ms": 107133,
+          "onset_ms": 107133,
+          "conf": 0.0875,
+          "first_token_conf": 0.9953,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.9953,
+            0.0018,
+            0.9994,
+            0.0,
+            0.7104,
+            0.9777
+          ]
+        },
+        {
+          "ayah": 27,
+          "raw_onset_ms": 110993,
+          "onset_ms": 110993,
+          "conf": 0.01,
+          "first_token_conf": 0.0,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0,
+            0.0,
+            0.0001,
+            0.0003,
+            0.0001,
+            0.9813,
+            0.8738,
+            0.4872,
+            0.996,
+            0.9998
+          ]
+        },
+        {
+          "ayah": 28,
+          "raw_onset_ms": 116093,
+          "onset_ms": 116093,
+          "conf": 0.1023,
+          "first_token_conf": 0.9878,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.9878,
+            0.8438,
+            0.0006,
+            0.0064,
+            0.0001,
+            0.8043,
+            0.9931,
+            0.3126,
+            0.0534
+          ]
+        },
+        {
+          "ayah": 29,
+          "raw_onset_ms": 119232,
+          "onset_ms": 119232,
+          "conf": 0.0786,
+          "first_token_conf": 0.9989,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.9989,
+            0.9646,
+            0.5963,
+            0.7729,
+            0.3954,
+            0.1094,
+            0.0003,
+            0.0003,
+            0.8774,
+            0.0001
+          ]
+        },
+        {
+          "ayah": 30,
+          "raw_onset_ms": 122772,
+          "onset_ms": 122772,
+          "conf": 0.3516,
+          "first_token_conf": 0.9781,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word-token",
+          "token_confs": [
+            0.9781,
+            0.9951,
+            0.0519,
+            0.9977,
+            0.1642,
+            0.9706,
+            0.5614,
+            0.0026,
+            0.8955
+          ],
+          "review_policy": "qpc-pause-review-v1"
+        },
+        {
+          "ayah": 31,
+          "raw_onset_ms": 126092,
+          "onset_ms": 126092,
+          "conf": 0.0605,
+          "first_token_conf": 0.0031,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0031,
+            0.2628,
+            0.0007,
+            0.0024,
+            0.997,
+            0.9872,
+            0.0293,
+            0.5197,
+            0.8848,
+            0.6818,
+            0.0002
+          ]
+        },
+        {
+          "ayah": 32,
+          "raw_onset_ms": 130432,
+          "onset_ms": 130432,
+          "conf": 0.0124,
+          "first_token_conf": 0.2325,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.2325,
+            0.9993,
+            0.9987,
+            0.971,
+            0.0,
+            0.0001,
+            0.0002
+          ]
+        },
+        {
+          "ayah": 33,
+          "raw_onset_ms": 134351,
+          "onset_ms": 134351,
+          "conf": 0.1857,
+          "first_token_conf": 0.9875,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.9875,
+            0.7524,
+            0.9868,
+            0.6698,
+            0.2656,
+            0.0003,
+            0.0028
+          ]
+        },
+        {
+          "ayah": 34,
+          "raw_onset_ms": 141811,
+          "onset_ms": 141811,
+          "conf": 0.3003,
+          "first_token_conf": 0.4491,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word-token",
+          "token_confs": [
+            0.4491,
+            0.7936,
+            0.0053,
+            0.9538,
+            0.5148
+          ],
+          "review_policy": "qpc-pause-review-v1"
+        },
+        {
+          "ayah": 35,
+          "raw_onset_ms": 147451,
+          "onset_ms": 147451,
+          "conf": 0.1265,
+          "first_token_conf": 0.5021,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.5021,
+            0.9535,
+            0.9721,
+            0.9868,
+            0.3269,
+            0.9825,
+            0.0558,
+            0.0007,
+            0.0
+          ]
+        },
+        {
+          "ayah": 36,
+          "raw_onset_ms": 151910,
+          "onset_ms": 151910,
+          "conf": 0.0772,
+          "first_token_conf": 0.0518,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0518,
+            0.8479,
+            0.2117,
+            0.3895,
+            0.0018,
+            0.8159,
+            0.9902,
+            0.9962,
+            0.6605,
+            0.0,
+            0.0014,
+            0.0094
+          ]
+        },
+        {
+          "ayah": 37,
+          "raw_onset_ms": 156370,
+          "onset_ms": 156370,
+          "conf": 0.4223,
+          "first_token_conf": 0.9947,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word-token",
+          "token_confs": [
+            0.9947,
+            0.0914,
+            0.9556,
+            0.9915,
+            0.4094,
+            0.766,
+            0.0167
+          ],
+          "review_policy": "qpc-pause-review-v1"
+        },
+        {
+          "ayah": 38,
+          "raw_onset_ms": 164389,
+          "onset_ms": 164389,
+          "conf": 0.1696,
+          "first_token_conf": 0.7663,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.7663,
+            0.9867,
+            0.7806,
+            0.1351,
+            0.7935,
+            0.1102,
+            0.0002
+          ]
+        },
+        {
+          "ayah": 39,
+          "raw_onset_ms": 168669,
+          "onset_ms": 168669,
+          "conf": 0.1443,
+          "first_token_conf": 0.2175,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.2175,
+            0.8182,
+            0.0004,
+            0.2911,
+            0.9985,
+            0.9993,
+            0.0962,
+            0.1396,
+            0.0185
+          ]
+        },
+        {
+          "ayah": 40,
+          "raw_onset_ms": 172189,
+          "onset_ms": 172189,
+          "conf": 0.0747,
+          "first_token_conf": 0.0152,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0152,
+            0.8909,
+            0.0395,
+            0.8261,
+            0.0004,
+            0.7161,
+            0.8502,
+            0.028,
+            0.0002
+          ]
+        },
+        {
+          "ayah": 41,
+          "raw_onset_ms": 177209,
+          "onset_ms": 177209,
+          "conf": 0.0892,
+          "first_token_conf": 0.0526,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0526,
+            0.9961,
+            0.0021,
+            0.9835,
+            0.7538,
+            0.1025,
+            0.3885,
+            0.0016,
+            0.0668
+          ]
+        },
+        {
+          "ayah": 42,
+          "raw_onset_ms": 179809,
+          "onset_ms": 179809,
+          "conf": 0.3459,
+          "first_token_conf": 0.998,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word-token",
+          "token_confs": [
+            0.998,
+            0.9916,
+            0.9932,
+            0.0019,
+            0.9074,
+            0.9979
+          ],
+          "review_policy": "qpc-pause-review-v1"
+        }
+      ],
+      "review": [
+        1,
+        2,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42
+      ],
+      "errors_ms": [
+        100,
+        88,
+        -43,
+        235,
+        28,
+        -130,
+        -112,
+        -37,
+        -415,
+        -136,
+        -70,
+        -103,
+        -51,
+        -87,
+        -7,
+        -181,
+        -104,
+        -15,
+        -141,
+        -43,
+        -81,
+        -106,
+        -65,
+        -90,
+        53,
+        -42,
+        -825,
+        -58,
+        -35,
+        -65,
+        -67,
+        -39,
+        -103,
+        32,
+        -2,
+        -104,
+        -124,
+        -88,
+        -100,
+        -26,
+        -82,
+        1
+      ],
+      "stats": {
+        "n": 42,
+        "median_ms": 81.5,
+        "p95_ms": 232.29999999999978,
+        "max_ms": 825.0,
+        "over500": 1
+      },
+      "seam_errors_ms": [
+        -37,
+        -104,
+        -90,
+        -65,
+        -104
+      ]
+    },
+    {
+      "surah": 98,
+      "repeat": 0,
+      "audio_sha256": "ed0dff4f6de5d0c795aaf5f8fc0b6da2c8b79c4059e58a1c318876e19062c965",
+      "duration_s": 113.856,
+      "decode_s": 0.12816645787097514,
+      "emissions_s": 5.371844457928091,
+      "alignment_s": 0.18172504100948572,
+      "full_s": 5.553569498937577,
+      "emissions_sha256": "314d0ba06f40fbd408b46299af6c69efb2b74271bb7ed32976a57516e5ab36fa",
+      "frames": 5693,
+      "windows": {
+        "window_s": 30,
+        "context_s": 2,
+        "workers": 1,
+        "batch_size": 1,
+        "dsp_s": 0.010448041139170527,
+        "windows": [
+          {
+            "start_ms": 0.0,
+            "end_ms": 26280.0,
+            "read_start_ms": 0.0,
+            "read_end_ms": 28280.0,
+            "input_samples": 484480,
+            "frames": 1314,
+            "cut_reason": "pause"
+          },
+          {
+            "start_ms": 26280.0,
+            "end_ms": 58600.0,
+            "read_start_ms": 24280.0,
+            "read_end_ms": 60600.0,
+            "input_samples": 581120,
+            "frames": 1616,
+            "cut_reason": "pause"
+          },
+          {
+            "start_ms": 58600.0,
+            "end_ms": 84740.0,
+            "read_start_ms": 56600.0,
+            "read_end_ms": 86740.0,
+            "input_samples": 482240,
+            "frames": 1307,
+            "cut_reason": "pause"
+          },
+          {
+            "start_ms": 84740.0,
+            "end_ms": 113856.0,
+            "read_start_ms": 82740.0,
+            "read_end_ms": 113856.0,
+            "input_samples": 529920,
+            "frames": 1456,
+            "cut_reason": "end"
+          }
+        ],
+        "max_window_s": 60,
+        "pause_policy": "strong-dsp-v1",
+        "min_pause_ms": 300.0,
+        "pause_decisions": [
+          {
+            "start_ms": 15980.0,
+            "end_ms": 16760.0,
+            "center_ms": 16370.0,
+            "duration_ms": 780.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.42730532194947896,
+              "zcr": 0.12602076822260308,
+              "rms_ratio": 0.07364051523876372
+            }
+          },
+          {
+            "start_ms": 22760.0,
+            "end_ms": 23200.0,
+            "center_ms": 22980.0,
+            "duration_ms": 440.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.39315197223483783,
+              "zcr": 0.09823621344050011,
+              "rms_ratio": 0.16242455031446704
+            }
+          },
+          {
+            "start_ms": 26080.0,
+            "end_ms": 26460.0,
+            "center_ms": 26270.0,
+            "duration_ms": 380.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.39517874459080465,
+              "zcr": 0.09974424552429667,
+              "rms_ratio": 0.1854375991640991
+            }
+          },
+          {
+            "start_ms": 36280.0,
+            "end_ms": 36880.0,
+            "center_ms": 36580.0,
+            "duration_ms": 600.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.4975110221118669,
+              "zcr": 0.09319505611592556,
+              "rms_ratio": 0.10560836869038245
+            }
+          },
+          {
+            "start_ms": 48940.0,
+            "end_ms": 49800.0,
+            "center_ms": 49370.0,
+            "duration_ms": 860.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.49283973820487714,
+              "zcr": 0.107598892758282,
+              "rms_ratio": 0.09148528315936755
+            }
+          },
+          {
+            "start_ms": 58400.0,
+            "end_ms": 58800.0,
+            "center_ms": 58600.0,
+            "duration_ms": 400.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.4119426654601669,
+              "zcr": 0.0830945558739255,
+              "rms_ratio": 0.09518585173882525
+            }
+          },
+          {
+            "start_ms": 70060.0,
+            "end_ms": 70540.0,
+            "center_ms": 70300.0,
+            "duration_ms": 480.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.5030766518725014,
+              "zcr": 0.11564758741941786,
+              "rms_ratio": 0.08646797884705207
+            }
+          },
+          {
+            "start_ms": 74920.0,
+            "end_ms": 75480.0,
+            "center_ms": 75200.0,
+            "duration_ms": 560.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.41322231475188853,
+              "zcr": 0.09923425535239881,
+              "rms_ratio": 0.15225577887558148
+            }
+          },
+          {
+            "start_ms": 84460.0,
+            "end_ms": 85020.0,
+            "center_ms": 84740.0,
+            "duration_ms": 560.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.3916136835676045,
+              "zcr": 0.10126582278481013,
+              "rms_ratio": 0.11172043049513945
+            }
+          },
+          {
+            "start_ms": 95300.0,
+            "end_ms": 95920.0,
+            "center_ms": 95610.0,
+            "duration_ms": 620.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.4225590755571544,
+              "zcr": 0.1250169860035331,
+              "rms_ratio": 0.07075559631836947
+            }
+          },
+          {
+            "start_ms": 103440.0,
+            "end_ms": 104020.0,
+            "center_ms": 103730.0,
+            "duration_ms": 580.0,
+            "accepted": true,
+            "metrics": {
+              "flatness": 0.38763562249796285,
+              "zcr": 0.15895222503348713,
+              "rms_ratio": 0.08768146933579558
+            }
+          }
+        ],
+        "short_clip": false,
+        "inference_s": 5.3594283340498805,
+        "pause_cuts": 3,
+        "fallback_cuts": 0,
+        "algorithm": "qpc-full-pause-v1",
+        "review_policy": "qpc-pause-review-v1",
+        "review_min_token_conf": 0.05,
+        "review_long_pause_ms": 700,
+        "review_late_ms": 200
+      },
+      "rows": [
+        [
+          1,
+          5440,
+          0.3489
+        ],
+        [
+          2,
+          16619,
+          0.1309
+        ],
+        [
+          3,
+          22979,
+          0.0483
+        ],
+        [
+          4,
+          26299,
+          0.178
+        ],
+        [
+          5,
+          36719,
+          0.8849
+        ],
+        [
+          6,
+          58798,
+          0.0026
+        ],
+        [
+          7,
+          75457,
+          0.0003
+        ],
+        [
+          8,
+          84857,
+          0.0803
+        ]
+      ],
+      "raw_review": [
+        2,
+        3,
+        4,
+        6,
+        7,
+        8
+      ],
+      "onset_checks": [
+        {
+          "ayah": 1,
+          "raw_onset_ms": 5440,
+          "onset_ms": 5440,
+          "conf": 0.3489,
+          "first_token_conf": 0.9781,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9781,
+            0.6197,
+            0.0701
+          ]
+        },
+        {
+          "ayah": 2,
+          "raw_onset_ms": 16619,
+          "onset_ms": 16619,
+          "conf": 0.1309,
+          "first_token_conf": 0.7464,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.7464,
+            0.9989,
+            0.9926,
+            0.0014,
+            0.9986,
+            0.9797,
+            0.0006
+          ]
+        },
+        {
+          "ayah": 3,
+          "raw_onset_ms": 22979,
+          "onset_ms": 22979,
+          "conf": 0.0483,
+          "first_token_conf": 0.022,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.022,
+            0.0288,
+            0.0092,
+            0.9401
+          ]
+        },
+        {
+          "ayah": 4,
+          "raw_onset_ms": 26299,
+          "onset_ms": 26299,
+          "conf": 0.178,
+          "first_token_conf": 0.034,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.034,
+            0.993,
+            0.9989,
+            0.0053
+          ]
+        },
+        {
+          "ayah": 5,
+          "raw_onset_ms": 36719,
+          "onset_ms": 36719,
+          "conf": 0.8849,
+          "first_token_conf": 0.9362,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9362,
+            0.891,
+            0.9982,
+            0.7311
+          ]
+        },
+        {
+          "ayah": 6,
+          "raw_onset_ms": 58798,
+          "onset_ms": 58798,
+          "conf": 0.0026,
+          "first_token_conf": 0.0002,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0002,
+            0.0173,
+            0.0001,
+            0.1385
+          ]
+        },
+        {
+          "ayah": 7,
+          "raw_onset_ms": 75457,
+          "onset_ms": 75457,
+          "conf": 0.0003,
+          "first_token_conf": 0.0004,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0004,
+            0.0215,
+            0.0,
+            0.0001
+          ]
+        },
+        {
+          "ayah": 8,
+          "raw_onset_ms": 84857,
+          "onset_ms": 84857,
+          "conf": 0.0803,
+          "first_token_conf": 0.9969,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.9969,
+            0.9999,
+            0.9668,
+            0.9988,
+            0.0053,
+            0.0018,
+            0.0005,
+            0.0295
+          ]
+        }
+      ],
+      "review": [
+        2,
+        3,
+        4,
+        6,
+        7,
+        8
+      ],
+      "errors_ms": [
+        260,
+        37,
+        -19,
+        19,
+        26,
+        94,
+        97,
+        -15
+      ],
+      "stats": {
+        "n": 8,
+        "median_ms": 31.5,
+        "p95_ms": 202.9499999999999,
+        "max_ms": 260.0,
+        "over500": 0
+      },
+      "seam_errors_ms": [
+        19,
+        94,
+        -15
+      ]
+    },
+    {
+      "surah": 112,
+      "repeat": 0,
+      "audio_sha256": "a58bccb959151791597f0e750784260429fedc8c685e20c45d0429368ca2e8db",
+      "duration_s": 19.128,
+      "decode_s": 0.03658624994568527,
+      "emissions_s": 0.685592875117436,
+      "alignment_s": 0.01241687498986721,
+      "full_s": 0.6980097501073033,
+      "emissions_sha256": "fc9784e4bad6eb53f64fc4a785aa782b76170e87051500733addc4a9c53f2c02",
+      "frames": 956,
+      "windows": {
+        "window_s": 30,
+        "context_s": 2,
+        "workers": 1,
+        "batch_size": 1,
+        "dsp_s": 0.0,
+        "windows": [
+          {
+            "start_ms": 0,
+            "end_ms": 19128.0,
+            "cut_reason": "end",
+            "frames": 956
+          }
+        ],
+        "max_window_s": 60,
+        "pause_policy": "strong-dsp-v1",
+        "inference_s": 0.6855127920862287,
+        "short_clip": true,
+        "algorithm": "qpc-full-pause-v1",
+        "review_policy": "qpc-pause-review-v1",
+        "review_min_token_conf": 0.05,
+        "review_long_pause_ms": 700,
+        "review_late_ms": 200
+      },
+      "rows": [
+        [
+          1,
+          5542,
+          0.8177
+        ],
+        [
+          2,
+          7803,
+          0.0109
+        ],
+        [
+          3,
+          10124,
+          0.1616
+        ],
+        [
+          4,
+          12465,
+          0.2916
+        ]
+      ],
+      "raw_review": [
+        2,
+        3
+      ],
+      "onset_checks": [
+        {
+          "ayah": 1,
+          "raw_onset_ms": 5542,
+          "onset_ms": 5542,
+          "conf": 0.8177,
+          "first_token_conf": 0.4678,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.4678,
+            0.9676,
+            0.9312
+          ]
+        },
+        {
+          "ayah": 2,
+          "raw_onset_ms": 7803,
+          "onset_ms": 7803,
+          "conf": 0.0109,
+          "first_token_conf": 0.001,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.001,
+            0.3354,
+            0.0012,
+            0.9779,
+            0.0026,
+            0.0062,
+            0.0
+          ]
+        },
+        {
+          "ayah": 3,
+          "raw_onset_ms": 10124,
+          "onset_ms": 10124,
+          "conf": 0.1616,
+          "first_token_conf": 0.9991,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.9991,
+            0.9933,
+            0.0043
+          ]
+        },
+        {
+          "ayah": 4,
+          "raw_onset_ms": 12465,
+          "onset_ms": 12465,
+          "conf": 0.2916,
+          "first_token_conf": 0.972,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word-token",
+          "token_confs": [
+            0.972,
+            0.9112,
+            0.9987,
+            0.3585,
+            0.0021
+          ],
+          "review_policy": "qpc-pause-review-v1"
+        }
+      ],
+      "review": [
+        2,
+        3,
+        4
+      ],
+      "errors_ms": [
+        212,
+        -80,
+        -3,
+        -28
+      ],
+      "stats": {
+        "n": 4,
+        "median_ms": 54.0,
+        "p95_ms": 192.19999999999996,
+        "max_ms": 212.0,
+        "over500": 0
+      },
+      "seam_errors_ms": []
+    }
+  ],
+  "failures": [],
+  "reference": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi/saad_al_ghamidi.db",
+  "production_guards": true,
+  "onnxruntime": "1.27.0",
+  "model_sha256": "423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a",
+  "vocab_sha256": "f5fe50ab7854e135e10b07a932429fabbd20403071fc0c159890f309a0dee7ee",
+  "meta_sha256": "ebd4b7cbb55c16c6927e59119a10ce2f03d2b12b03223a8d5b505bd465dee3fc",
+  "host": {
+    "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
+    "cpu_count": 10,
+    "python": "3.14.7 (main, Aug  7 2026, 02:15:30) [Clang 22.1.3 ]"
+  },
+  "reference_sha256": "4fdb78de213c4c9763e820d932c7d3420e65f32b48ea2aa2411defc5a8e57de3",
+  "peak_rss_mib": 1509.84375,
+  "errors": {
+    "n": 54,
+    "median_ms": 75.0,
+    "p95_ms": 243.74999999999986,
+    "max_ms": 825.0,
+    "over500": 1
+  },
+  "full_s": 15.90636545792222
+}
