@@ -93,7 +93,7 @@ def validate(rows, trace, expected):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--experimental", action="store_true", help="Explicit sequential FAST v2 harness; never a fallback")
+    parser.add_argument("--experimental", action="store_true", help="Compatibility alias for the shared FAST executor")
     parser.add_argument("--models", nargs="+", default=["quran-phonetics", "whisper-tarteel-base"])
     parser.add_argument("--surahs", nargs="+", type=int, default=list(range(78, 115)))
     parser.add_argument("--audio-dir", type=Path, required=True)
@@ -103,7 +103,7 @@ def main():
     assert all(model_store.supports_fast(m) for m in args.models)
     root = Path(__file__).resolve().parents[1]
     paths = [root / "surah_cutter/core" / f for f in (
-        "align_fast.py", "align_fast_whisper.py", "fast_reads.py", "candidates.py",
+        "align_fast.py", "fast_reads.py", "candidates.py",
         "fast_executor.py", "fast_adapters.py", "fast_ctc.py", "align.py", "emissions.py", "model_runtime.py", "model_worker.py", "model_store.py",
     )]
     source_sha = {str(p.relative_to(root)): _sha(p) for p in paths}

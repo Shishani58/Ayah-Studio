@@ -1,0 +1,42 @@
+{
+  "base_commit": "aac8f3a",
+  "isolated_snapshot": "/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/unified-fast-final-0vdx02o7",
+  "pytest": {
+    "passed": 595,
+    "skipped": 7,
+    "seconds": 10.12
+  },
+  "ruff": "passed",
+  "real_cases": 6,
+  "actual_dispatches": 52,
+  "manual_protection": "edited/verified preserved in all six temporary projects",
+  "protected_files_unchanged": 49,
+  "owned_source_matches_tested_snapshot": {
+    "surah_cutter/core/align_fast.py": true,
+    "surah_cutter/core/align_tiled.py": "only FAST documentation comment staged; parallel FULL kwargs excluded",
+    "surah_cutter/core/fast_executor.py": true,
+    "surah_cutter/core/fast_reads.py": true,
+    "surah_cutter/core/model_store.py": true,
+    "surah_cutter/core/pipeline.py": true,
+    "surah_cutter/webgui/server.py": true,
+    "tests/test_fast_executor.py": true,
+    "tests/test_fast_read_accounting.py": true,
+    "tests/test_fast_reads.py": true,
+    "tests/test_pipeline.py": true,
+    "tests/test_tarteel_fast.py": true,
+    "tests/test_fast_default.py": true,
+    "tests/test_phonetics.py": true,
+    "tools/bench_fast.py": true,
+    "tools/bench_fast_models.py": true
+  },
+  "normalization_after_verification": "EOF whitespace only in test_fast_reads.py",
+  "frozen_selfcheck": {
+    "suras": 114,
+    "ayahs": 6236,
+    "models": "ok",
+    "ffmpeg": "ok",
+    "assets": "ok"
+  },
+  "codesign_verify": "passed",
+  "bundle_legacy_audit": "unified executor present; legacy module/matcher/readers absent"
+}

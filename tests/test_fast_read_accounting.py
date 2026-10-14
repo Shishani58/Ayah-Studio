@@ -4,9 +4,9 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
-from surah_cutter.core import align
 from surah_cutter.core.cancellation import GenerationCancelled, cancellation_scope
-from surah_cutter.core.fast_reads import LocalAcousticReads, LocalWhisperReads
+from surah_cutter.core.fast_adapters import Observation
+from surah_cutter.core.fast_reads import LocalEvidenceReads
 
 
 @pytest.fixture(params=["ctc", "whisper"])
@@ -18,21 +18,15 @@ def local_reader(request, monkeypatch):
         calls.append(len(pcm))
         if behavior.callback:
             behavior.callback()
-        if request.param == "ctc":
-            return np.zeros((len(pcm) // 20, 3), dtype=np.float32)
-        return {"text": "test", "token_confidence": 0.95, "truncated": False}
+        return Observation(("test",), None, .95, unit_quality=(.95,), frames=len(pcm) // 20)
 
     pcm = np.zeros(20_000)
-    if request.param == "ctc":
-        monkeypatch.setattr(align, "_emissions", lambda bundle, pcm, np_module: infer(pcm))
-        reads = LocalAcousticReads(pcm, 1000, SimpleNamespace())
-        read = reads.read
-    else:
-        emitter = SimpleNamespace(recognize_local=lambda pcm, **kwargs: infer(pcm))
-        reads = LocalWhisperReads(pcm, 1000, emitter)
+    adapter = SimpleNamespace(observe=lambda local, sr, **kwargs: infer(local),
+                              metric="ctc_greedy_probability" if request.param == "ctc" else "asr_token_probability")
+    reads = LocalEvidenceReads(pcm, 1000, adapter)
 
-        def read(start, end):
-            return reads.read(start, end, reason="test")
+    def read(start, end):
+        return reads.read(start, end, reason="test")
     return reads, read, calls, behavior
 
 
@@ -58,8 +52,7 @@ def test_failed_retries_are_charged_and_eventually_denied(local_reader):
     assert reads.diagnostics()["acoustic_intervals_ms"] == [[2000, 6000]]
     assert reads.denied[-1]["reason"] == "inference_budget"
     assert all(call["outcome"] == "failed" for call in reads.calls)
-    assert reads.cache == []
-    assert not getattr(reads, "results", {})
+    assert reads.observations == {}
 
 
 def test_failed_distinct_reads_still_limit_coverage(local_reader):
@@ -93,8 +86,7 @@ def test_cancelled_inference_is_charged_but_not_cached(local_reader, raises):
         read(2000, 4000)
     assert reads.audio_ms == reads.covered_ms == 2000
     assert reads.calls[0]["outcome"] == "cancelled"
-    assert reads.cache == []
-    assert not getattr(reads, "results", {})
+    assert reads.observations == {}
 
     event.clear()
     behavior.callback = None

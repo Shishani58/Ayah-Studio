@@ -2046,3 +2046,23 @@ parent full 784 passed/7 skipped (opt-in audio tests),104 independent probes; Ru
 49 protected assets unchanged. Ограничения/исторические iterations/команды/SHA:
 [report](tasks/2026-10-14-fast-review-fixes/report.md),
 [changed-files](tasks/2026-10-14-fast-review-fixes/changed-files.json).
+
+## Штатный единый FAST без legacy — 2026-10-14
+
+По прямому выбору пользователя FAST GUI/CLI/API и auto, выбравший FAST,
+переведены на общий fast_executor CTC/Tarteel. Старые matcher/Tarteel loops,
+их readers и тесты удалённого алгоритма убраны; общие phonetics helpers и
+проверки бюджетов/отмены перенесены на действующий LocalEvidenceReads.
+Сравнения и исходный код сохраняются в git aac8f3a, runtime fallback отсутствует.
+Bundle фиксируется до decode; auto FAST не меняет доказанные timestamps
+lag-калибровкой/полным repair. Debug log показывает новую версию/transitions.
+Внешние аятные клипы требуют отдельного fingerprint режима.
+
+Это пользовательская активация при известном M5 FAIL, а не прохождение gates:
+покрытие остаётся недостаточным, Base79:26 +508ms и некалиброванный ASR timing
+сохранены как ограничения. Формат БД и ручная разметка не менялись.
+Итог:595passed/7opt-in skips,Ruff clean;6real default pipeline cases/52actual
+passes,edited/verified сохранены во временных БД. Изолированный snapshot
+исключает параллельные незавершённые FULL изменения. Локальный macOS bundle
+обновлён; frozen self-check114/6236,models/FFmpeg/assets и codesign прошли,
+legacy отсутствует в PYZ. [task](tasks/2026-10-14-unified-fast-default/task.md).

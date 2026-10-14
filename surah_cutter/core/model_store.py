@@ -141,11 +141,10 @@ def source(*, mode: str | None = None) -> str:
     if ACTIVE_ID.startswith("fastconformer"):
         flags += ":bpe=exact-spelling-variants"
     if mode == "fast" and ACTIVE_ID in ("whisper-tarteel-tiny", "whisper-tarteel-base"):
-        from surah_cutter.core.align_fast_whisper import FAST_VERSION, SETTINGS
+        from surah_cutter.core.fast_executor import VERSION
 
-        method = "local-asr-pause"
-        flags = (f"mode=fast:local-adapter={FAST_VERSION}:language=ar:target=imlaey-vocalized:"
-                 f"settings={json.dumps(SETTINGS, sort_keys=True, separators=(',', ':'))}:"
+        method = "local-asr"
+        flags = (f"mode=fast:algorithm={VERSION}:language=ar:target=imlaey-vocalized:"
                  "max-read-ms=6000:coverage<=0.65:input<=2:greedy:cache=true:max-new-tokens=64")
     return (f"{method}:{ACTIVE_ID}:revision={revision}:adapter={ADAPTER_VERSION}:lag=0:"
             f"text={text_sha}:flags={flags}:"

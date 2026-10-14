@@ -1,4 +1,4 @@
-"""Bench the two-phase fast aligner vs full vs ground truth (Shatri juz).
+"""Bench shared sequential FAST vs full vs ground truth (Shatri juz).
 
 Run: python -m tools.bench_fast 093 100 080 087 090 078
 Presets:  (no args) → the curated hard set; ``long`` → all suras >60 s that
@@ -6,7 +6,7 @@ actually exercise the windowed path; ``all`` → 78-114; ``corpus`` → 1-114.
 ``first77`` → 1-77, for a reproducible split full-corpus audit.
 Add ``fast-only`` to skip the full reference (it never changes — only the fast
 path is under iteration), roughly halving wall time. Audio dir via $SHATRI_DIR.
-Use ``--ayah-audio-dir PATH`` to audit opt-in exact-recording clips too.
+External ayah clips belong to fingerprint mode, not shared FAST.
 Use ``--diagnose-candidates`` to print the ranked pause/ayah alternatives near
 each reference error of at least one second.
 """
@@ -23,8 +23,8 @@ from surah_cutter.data import quran_text, references
 AUDIO = Path(os.environ.get("SHATRI_DIR", str(Path.home() / "Desktop" / "Abu_Bakr_Ash-Shatri")))
 REF = references.load_reference("abu_bakr_ash_shatri")
 
-# Suras <60 s fall back to the full path (align_fast._FAST_MIN_MS) → no fast
-# signal. These are the ones that DO exercise the windowed path; the default is a
+# Historical duration grouping; shared FAST never falls back to FULL.
+# The default is a
 # curated subset spanning the failure modes (78/83 melodic off-by-one, 80 clean
 # high-coverage, 87 the canonical broken sura, 89 wasl-heavy, 98 ~18 s ayahs).
 LONG = [78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 96, 98]

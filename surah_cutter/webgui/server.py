@@ -972,14 +972,16 @@ def create_app(*, restore_settings: bool = True) -> FastAPI:
         audio = STATE.audio_for(surah)
         if audio is None:
             raise HTTPException(404, f"no audio for sura {surah}")
-        from surah_cutter.core import align_fast, candidates, decode
+        from surah_cutter.core import align, align_fast, candidates, decode
 
         words = quran_text.surah_words(surah)
+        bundle = align.default_bundle()
         pcm = decode.decode(str(audio))
         decisions = candidates.pause_pipeline_decisions(pcm, decode.DEFAULT_SR, surah=surah)
         trace: dict[str, Any] = {}
         rows = align_fast.align_surah_fast(
-            pcm, decode.DEFAULT_SR, words, surah=surah, trace=trace
+            pcm, decode.DEFAULT_SR, words, bundle=bundle, surah=surah,
+            trace=trace, pause_decisions=decisions,
         )
         return {
             "surah": surah,
@@ -1642,6 +1644,8 @@ def _format_fast_log(
         "",
         f"1. Паузы: energy нашёл {total}; DSP/VAD принял {accepted}; отклонил {rejected}.",
     ]
+    if trace.get("fast_version"):
+        lines.insert(1, f"Алгоритм: {trace['fast_version']}")
     budget = trace.get("pause_budget") or {}
     if budget:
         lines.append(
@@ -1688,6 +1692,11 @@ def _format_fast_log(
     ]
     events = trace.get("pause_sequence_events") or []
     shown = 0
+    if not events:
+        for event in trace.get("transitions", []):
+            if event["state"] in ("CONFIRMED", "REVIEW_REQUIRED", "EXPAND_LOCAL", "RESOLVE_BLOCK"):
+                lines.append(f"   {event['state']} ayah={event.get('ayah')} reason={event.get('reason', '')}")
+                shown += 1
     extra_count = sum(1 for e in events if e.get("action") == "extra")
     for e in events:
         if e.get("action") in ("extra", "early_pool"):
@@ -1741,7 +1750,7 @@ def _format_fast_log(
         ayah = r.get("ayah")
         delta = r.get("delta_ms")
         delta_s = "" if delta is None else f" delta={delta:+.0f}ms"
-        words = r.get("words") or r.get("text") or ""
+        words = r.get("words") or r.get("text") or (r.get("observed") or {}).get("text") or ""
         if len(words) > 160:
             words = words[:157] + "..."
         lines.append(
@@ -1761,7 +1770,8 @@ def _format_fast_log(
         t = by_ayah.get(ayah, {})
         m = by_match.get(ayah, {})
         src = "pause" if t.get("from_pause", m.get("from_pause")) else ("anchor" if ayah == 1 else "wasl/interp")
-        if trace.get("backend") == "whisper-local-asr" and not m.get("from_pause"):
+        if (m.get("boundary_evidence") == "estimate"
+                or trace.get("backend") == "whisper-local-asr" and not m.get("from_pause")):
             src = "prior/review"
         lines.append(
             f"   ayah {ayah:03d}: {time_ms}ms conf={conf:.3f} src={src} "

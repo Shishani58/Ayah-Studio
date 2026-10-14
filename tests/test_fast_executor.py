@@ -264,7 +264,8 @@ def test_tempo_region_is_a_selection_hint_not_proof():
     assert rows[2][2] == 0
 
 
-def test_experimental_pipeline_never_falls_back(monkeypatch):
+@pytest.mark.parametrize("experimental", [False, True])
+def test_fast_pipeline_never_falls_back(monkeypatch, experimental):
     from surah_cutter.core import align_fast, fast_executor, pipeline, decode, model_store
     monkeypatch.setattr(model_store, "ACTIVE_ID", "quran-phonetics")
     monkeypatch.setattr(decode, "decode", lambda _: np.ones(160000, dtype=np.float32))
@@ -275,10 +276,10 @@ def test_experimental_pipeline_never_falls_back(monkeypatch):
     def forbidden(*args, **kwargs):
         pytest.fail("legacy fallback")
     monkeypatch.setattr(fast_executor, "align_surah_sequential", experimental)
-    monkeypatch.setattr(align_fast, "align_surah_fast", forbidden)
+    monkeypatch.setattr(align_fast, "align_surah_fast_legacy", forbidden, raising=False)
     monkeypatch.setattr(pipeline, "_full_align", forbidden)
     with pytest.raises(RuntimeError, match="new failed"):
-        pipeline.process_surah("test.mp3", 112, mode="fast", experimental_fast=True)
+        pipeline.process_surah("test.mp3", 112, mode="fast", experimental_fast=experimental)
     assert calls == ["new"]
 
 
@@ -411,17 +412,7 @@ def test_ctc_word_seams_preserve_repeated_characters(tmp_path, monkeypatch):
     assert heard.frames == len(ids)
 
 
-def test_legacy_ctc_cache_does_not_change_behavior_before_gates(monkeypatch):
-    from surah_cutter.core import align
-    from surah_cutter.core.fast_reads import LocalAcousticReads
-    monkeypatch.setattr(align, "_emissions", lambda *args: np.zeros((10, 3), dtype=np.float32))
-    reads = LocalAcousticReads(np.zeros(160000, dtype=np.float32), 16000, SimpleNamespace())
-    reads.read(1000, 2000)
-    reads.read(1000, 2000)
-    assert reads.cache_limit_bytes is None and len(reads.calls) == 1
-
-
-def test_experimental_pipeline_to_transaction_keeps_manual_and_identity(tmp_path, monkeypatch):
+def test_fast_pipeline_to_transaction_keeps_manual_and_identity(tmp_path, monkeypatch):
     import json
     from pathlib import Path
     from surah_cutter.core import align, candidates, decode, fast_executor, model_store, pipeline
@@ -441,7 +432,7 @@ def test_experimental_pipeline_to_transaction_keeps_manual_and_identity(tmp_path
         db.set_status(112, 1, "verified")
         original_review = db.get_review(112, 1)
         trace = {}
-        rows = pipeline.process_surah("fake.mp3", 112, mode="fast", experimental_fast=True,
+        rows = pipeline.process_surah("fake.mp3", 112, mode="fast",
                                       project_db=db, trace=trace)
         assert rows[0] == (112, 1, 1160) and trace["generated_rows"][0] == (112, 1, 1100)
         result = write_alignment_result(db, rows, trace=trace, requested_mode="fast", db_path=path)
@@ -531,7 +522,8 @@ def test_adjacent_block_with_weak_previous_tail_stops_for_review():
     assert trace["transitions"][-1]["state"] == "RESULT_READY"
 
 
-def test_experimental_pipeline_captures_bundle_before_decode(monkeypatch):
+@pytest.mark.parametrize("experimental", [False, True])
+def test_fast_pipeline_captures_bundle_before_decode(monkeypatch, experimental):
     from surah_cutter.core import align, decode, fast_executor, model_store, pipeline
     monkeypatch.setattr(model_store, "ACTIVE_ID", "quran-phonetics")
     monkeypatch.setattr(align, "default_bundle", lambda: SimpleNamespace(model=model_store.ACTIVE_ID))
@@ -543,7 +535,7 @@ def test_experimental_pipeline_captures_bundle_before_decode(monkeypatch):
         return [(1, 100, .9)]
     monkeypatch.setattr(decode, "decode", decode_and_change_selection)
     monkeypatch.setattr(fast_executor, "align_surah_sequential", execute)
-    assert pipeline._fast_align("test.mp3", 112, quran_text.surah_words(112), experimental=True) == [(112, 1, 100)]
+    assert pipeline._fast_align("test.mp3", 112, quran_text.surah_words(112), experimental=experimental) == [(112, 1, 100)]
 
 
 def test_vad_identity_changes_with_silero_and_optional_ten_assets(tmp_path, monkeypatch):

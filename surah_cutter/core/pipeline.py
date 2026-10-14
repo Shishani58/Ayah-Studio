@@ -13,8 +13,8 @@ Three paths today:
    when the cheap stage is unreliable (missing/ambiguous pauses, or the pause
    count disagrees with the ayah count). Full-sura alignment is the accuracy
    fallback.
-4. **Fast** (``mode='fast'``) — decode once, place rough boundaries from pause
-   onsets, then refine each ayah start with short growing NN windows.
+4. **Fast** (``mode='fast'``) — one sequential executor proves local boundaries
+   with CTC/Tarteel adapters; unresolved ayahs remain explicit review estimates.
 5. **Tiled** (``mode='tiled'``) — exact chunked CTC for long suras.
 6. **Full** (``mode='full'``) — always decode + run the forced aligner over the
    sura's whole known word sequence (the original Phase-3 path).
@@ -90,6 +90,8 @@ def process_surah(
         log_event: Optional realtime logger for human-readable per-sura
             diagnostics.
         ayah_progress: Called with the current ayah during the alignment pass.
+        experimental_fast: Compatibility flag for the now-standard shared FAST.
+            Still requires explicit ``mode='fast'``; never selects legacy.
 
     Returns:
         Rows ``(sura, ayah, start_ms)``, one per ayah of the sura, ordered by
@@ -204,6 +206,7 @@ def _auto_align(
     """Decode once, choose the safest practical mode, then lag-calibrate."""
     from surah_cutter.core import align, align_fast, align_tiled, decode, lag
 
+    bundle = align.default_bundle()
     pcm = decode.decode(audio_path)
     progress_kwargs = {"ayah_progress": ayah_progress} if ayah_progress is not None else {}
     sr = decode.DEFAULT_SR
@@ -218,7 +221,8 @@ def _auto_align(
         selected = "fast"
         _emit_log(log_event, "Auto выбрал fast: паузы + короткие нейро-окна")
         ar = align_fast.align_surah_fast(
-            pcm, sr, words, surah=surah, trace=trace, log_event=log_event, **progress_kwargs
+            pcm, sr, words, bundle=bundle, surah=surah, trace=trace,
+            log_event=log_event, **progress_kwargs
         )
     else:
         selected = "tiled"
@@ -228,11 +232,13 @@ def _auto_align(
         )
 
     rows = [(surah, ayah, start_ms) for ayah, start_ms, _conf in ar]
-    rows, lag_adjust = lag.calibrate_rows_to_pauses(
-        pcm, sr, rows, surah=surah, frozen=frozen
-    )
-    _emit_log(log_event, f"Калибровка лага по паузам: {lag_adjust:+.0f} мс")
-    repair_enabled = AUTO_REPAIR
+    lag_adjust = 0
+    if selected != "fast":
+        rows, lag_adjust = lag.calibrate_rows_to_pauses(
+            pcm, sr, rows, surah=surah, frozen=frozen
+        )
+        _emit_log(log_event, f"Калибровка лага по паузам: {lag_adjust:+.0f} мс")
+    repair_enabled = AUTO_REPAIR and selected != "fast"
     if repair_enabled:
         from surah_cutter.core import repair
 
@@ -314,21 +320,16 @@ def _fast_align(
     ayah_progress: Callable[[int], None] | None = None,
     experimental: bool = False,
 ) -> list[tuple[int, int, int]]:
-    """Decode + two-phase fast alignment; one row per ayah."""
-    from surah_cutter.core import align_fast, decode
+    """Capture the selected bundle, decode, then run the shared FAST executor."""
+    from surah_cutter.core import align, align_fast, decode
 
-    kwargs = {}
-    if experimental:
-        from surah_cutter.core import align
-        if ayah_audio_dir:
-            raise ValueError("experimental FAST does not move pause marks by fingerprints")
-        # Selection changes during a long decode cannot replace this run's bundle.
-        kwargs["bundle"] = align.default_bundle()
+    if ayah_audio_dir:
+        raise ValueError("Единый FAST не поддерживает внешние аятные клипы. Выберите режим fingerprint.")
+    # Selection changes during a long decode cannot replace this run's bundle.
+    kwargs = {"bundle": align.default_bundle()}
     pcm = decode.decode(audio_path)
     if ayah_progress is not None:
         kwargs["ayah_progress"] = ayah_progress
-    if ayah_audio_dir:
-        kwargs["ayah_audio_dir"] = ayah_audio_dir
     executor = align_fast.align_surah_fast
     if experimental:
         from surah_cutter.core.fast_executor import align_surah_sequential

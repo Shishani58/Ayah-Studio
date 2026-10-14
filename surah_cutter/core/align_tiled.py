@@ -130,7 +130,7 @@ def align_surah_tiled(
     ayah_list = list(ayah_words.keys())
     n_ayahs = len(ayah_list)
 
-    # Tempo units (long vowels ×2 — recited longer; see align_fast._unit_len).
+    # Tempo units (long vowels ×2 — recited longer; see phonetics.unit_len).
     # This remains the fallback prior when bundled reference timings are absent
     # or incomplete for a sura.
     text_wunit = {

@@ -1,4 +1,4 @@
-"""Experimental sequential FAST v2. Production stays on legacy until corpus gates.
+"""Shared sequential FAST for CTC and Tarteel, with conservative local proofs.
 
 Only this executor chooses candidates, phrases, recovery, and boundary ownership.
 Adapters never receive the recording, pause list, ayah cursor, or a writer.
@@ -16,7 +16,7 @@ from surah_cutter.core.cancellation import GenerationCancelled, check_cancelled
 from surah_cutter.core.fast_adapters import make_adapter, representation_sha, loaded_implementation_sha
 from surah_cutter.core.fast_reads import LocalEvidenceReads
 
-VERSION = "sequential-fast-v3-experimental-sparse-5"
+VERSION = "sequential-fast-v3-sparse-5"
 
 
 @dataclass(frozen=True)
