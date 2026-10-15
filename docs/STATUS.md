@@ -2621,3 +2621,10 @@ diff-check и AGENTS/CLAUDE sync — OK. Исторические диагнос
 Тестовые загрузки изолированы; словарь phonetics сохранён как fixture.
 Устранено зависание очистки FFmpeg на Python 3.12 (kill + drain stdout).
 Чистый snapshot без моделей: 734 passed, 8 skipped. Релиз 0.3.1 через tag CI.
+
+
+Релиз **0.3.1 опубликован**: commit `78c8881`,
+[страница](https://github.com/Shishani58/Ayah-Studio/releases/tag/v0.3.1),
+[CI 38793508570](https://github.com/Shishani58/Ayah-Studio/actions/runs/38793508570)
+полностью success. DMG/Windows ZIP скачаны, SHA-256 совпали с опубликованными
+суммами и GitHub digest; hdiutil verify и ZIP CRC/EXE/_internal — OK.

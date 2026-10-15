@@ -11,8 +11,8 @@ build/dist исключены. GitHub CLI не авторизован; push че
 
 - [x] Обновить версию и описание.
 - [x] Ruff, pytest, JS и diff-check.
-- [ ] Коммит, push main и тег v0.3.0.
-- [ ] Дождаться CI и проверить опубликованные assets.
+- [x] Коммит, push main и тег v0.3.0.
+- [x] Дождаться CI и проверить опубликованные assets.
 
 Ruff: архивные снимки docs/tasks исключены из линтинга; production/tools/tests
 проверяются полностью. Исходные снимки сохранены для воспроизводимости.
@@ -33,3 +33,17 @@ node tests/webgui_async.cjs, diff-check, AGENTS/CLAUDE cmp — OK.
 Чистый snapshot после исправлений: 734 passed, 8 skipped (9,54 с).
 Исправленный выпуск: 0.3.1; старый tag не переписывается.
 Параллельные изменения после 3dc2864 в этот выпуск не включаются.
+
+Публикация завершена:
+- release commit `78c8881`, tag `v0.3.1`, main/tag в origin;
+- https://github.com/Shishani58/Ayah-Studio/releases/tag/v0.3.1
+- CI https://github.com/Shishani58/Ayah-Studio/actions/runs/38793508570
+  checks/models/macOS/Windows/release — success;
+- оба установщика и .sha256 скачаны целиком в dist; SHA-256 совпали
+  с GitHub digest и опубликованными checksum-файлами;
+- DMG hdiutil verify, Windows ZIP CRC/EXE/_internal — OK.
+Детальные размеры/хеши: published-assets.json. Новые изменения других задач
+после исходного snapshot оставлены в рабочей папке и не входят в релиз.
+Нотарификация Apple/Windows Authenticode отсутствуют, как и в прежнем выпуске.
+Блокеров публикации нет. Docs updated: release metadata/README/packaging,
+STATUS, этот task и published-assets.json.
