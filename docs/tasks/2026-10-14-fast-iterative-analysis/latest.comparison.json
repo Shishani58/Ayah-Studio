@@ -1,0 +1,156 @@
+{
+  "left": "integrated.json",
+  "right": "latest.json",
+  "records": [
+    {
+      "model": "quran-phonetics",
+      "surah": 1,
+      "rows_equal": true,
+      "boundaries_equal": true,
+      "reads_equal": true,
+      "reviews_equal": true,
+      "seconds_before": 0.7488473339471966,
+      "seconds_after": 0.7223247911315411
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 55,
+      "rows_equal": true,
+      "boundaries_equal": true,
+      "reads_equal": true,
+      "reviews_equal": true,
+      "seconds_before": 1.2583128339610994,
+      "seconds_after": 1.2550983750261366
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 112,
+      "rows_equal": true,
+      "boundaries_equal": true,
+      "reads_equal": true,
+      "reviews_equal": true,
+      "seconds_before": 0.4331469589378685,
+      "seconds_after": 0.43651454197242856
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 1,
+      "rows_equal": true,
+      "boundaries_equal": true,
+      "reads_equal": true,
+      "reviews_equal": true,
+      "seconds_before": 1.2865383750759065,
+      "seconds_after": 1.2935182920191437
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 55,
+      "rows_equal": true,
+      "boundaries_equal": true,
+      "reads_equal": true,
+      "reviews_equal": true,
+      "seconds_before": 8.804463249864057,
+      "seconds_after": 8.891214833129197
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 112,
+      "rows_equal": true,
+      "boundaries_equal": true,
+      "reads_equal": true,
+      "reviews_equal": true,
+      "seconds_before": 1.5219014580361545,
+      "seconds_after": 1.5482706250622869
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 1,
+      "rows_equal": true,
+      "boundaries_equal": true,
+      "reads_equal": true,
+      "reviews_equal": true,
+      "seconds_before": 2.455577624961734,
+      "seconds_after": 2.4553106669336557
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 55,
+      "rows_equal": true,
+      "boundaries_equal": true,
+      "reads_equal": true,
+      "reviews_equal": true,
+      "seconds_before": 15.8876923751086,
+      "seconds_after": 15.788141499971971
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 112,
+      "rows_equal": true,
+      "boundaries_equal": true,
+      "reads_equal": true,
+      "reviews_equal": true,
+      "seconds_before": 2.451490208040923,
+      "seconds_after": 2.4282436249777675
+    }
+  ],
+  "unpaired_cases": [],
+  "models": {
+    "quran-phonetics": {
+      "cases": 3,
+      "seconds_before": 2.4403071268461645,
+      "seconds_after": 2.4139377081301063,
+      "saved_percent": 1.0805778676775732,
+      "rows_all_equal": true,
+      "boundaries_all_equal": true,
+      "reads_all_equal": true
+    },
+    "whisper-tarteel-base": {
+      "cases": 3,
+      "seconds_before": 20.794760208111256,
+      "seconds_after": 20.671695791883394,
+      "saved_percent": 0.5918049306471898,
+      "rows_all_equal": true,
+      "boundaries_all_equal": true,
+      "reads_all_equal": true
+    },
+    "whisper-tarteel-tiny": {
+      "cases": 3,
+      "seconds_before": 11.612903082976118,
+      "seconds_after": 11.733003750210628,
+      "saved_percent": -1.0342002027948654,
+      "rows_all_equal": true,
+      "boundaries_all_equal": true,
+      "reads_all_equal": true
+    }
+  },
+  "profile": {
+    "baseline.profile": {
+      "plan_phrase": {
+        "calls": 6271,
+        "cumulative_seconds": 1.067636048
+      },
+      "_competing_prefix": {
+        "calls": 257,
+        "cumulative_seconds": 1.110768578
+      },
+      "prefix_scores": {
+        "calls": 81,
+        "cumulative_seconds": 0.749419327
+      }
+    },
+    "proposal.profile": {
+      "_competing_prefix": {
+        "calls": 257,
+        "cumulative_seconds": 0.045910128
+      },
+      "plan_phrase": {
+        "calls": 983,
+        "cumulative_seconds": 0.12043363400000001
+      },
+      "prefix_scores": {
+        "calls": 81,
+        "cumulative_seconds": 0.044469962
+      }
+    }
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "boundary": {
+    "ayah": 26,
+    "start_ms": 115750,
+    "evidence_kind": "pause",
+    "confidence": 0.9998680527243202,
+    "review_reason": null,
+    "read_id": 40,
+    "proof": {
+      "phrase": [
+        "ان",
+        "في"
+      ],
+      "complete": true,
+      "ambiguous": false,
+      "competitors_checked": true,
+      "offset": 0,
+      "quality_metric": "asr_token_probability",
+      "pause_ms": [
+        115320.0,
+        116180.0
+      ],
+      "pause_id": 28,
+      "sparse_anchor": true,
+      "unresolved_ayahs": [
+        25
+      ]
+    }
+  },
+  "read": {
+    "phase": "independent-local",
+    "window_ms": [
+      115980.0,
+      118680.0
+    ],
+    "frames": 0,
+    "outcome": "completed",
+    "id": 40,
+    "reason": "ayah=25:pause:incomplete_distinguishing_phrase",
+    "requested_window_ms": [
+      115980.0,
+      118680.0
+    ],
+    "samples": [
+      1855680,
+      1898880
+    ],
+    "observed": {
+      "units": [
+        "ان",
+        "في",
+        "ذلك"
+      ],
+      "positions_ms": null,
+      "quality": 0.9998797178268433,
+      "truncated": false,
+      "text": "إِنَّ فِي ذَلِكَ",
+      "unit_quality": [
+        0.9998680527243202,
+        0.9999722250068926,
+        0.9991176767595608
+      ],
+      "frames": 0,
+      "attribution": [
+        {
+          "word": "ان",
+          "raw_word": "إِنَّ",
+          "selected_indices": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "token_ids": [
+            28814,
+            11082,
+            1863,
+            11703,
+            6808
+          ],
+          "probabilities": [
+            0.9998680527243202,
+            0.9999849798550975,
+            0.9999991655356624,
+            0.9999850990607846,
+            0.9999291946990259
+          ]
+        },
+        {
+          "word": "في",
+          "raw_word": "فِي",
+          "selected_indices": [
+            5,
+            6,
+            7
+          ],
+          "token_ids": [
+            6156,
+            11082,
+            1829
+          ],
+          "probabilities": [
+            0.9999794964234012,
+            0.9999722250068926,
+            0.999984503032491
+          ]
+        },
+        {
+          "word": "ذلك",
+          "raw_word": "ذَلِكَ",
+          "selected_indices": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "token_ids": [
+            29910,
+            6808,
+            1211,
+            11082,
+            4117,
+            6808
+          ],
+          "probabilities": [
+            0.999712907280604,
+            0.99991262722786,
+            0.9991176767595608,
+            0.9999903441405488,
+            0.9999871255623688,
+            0.99992609570002
+          ]
+        }
+      ],
+      "hypotheses": [],
+      "null_log_probability": null,
+      "posterior_sha256": null,
+      "stride_ms": 0.0
+    },
+    "seconds": 0.20383991720154881
+  },
+  "geometry": {
+    "pause_id": 28,
+    "interval_ms": [
+      115320.0,
+      116180.0
+    ],
+    "accepted": true,
+    "reason": "measured_dsp_interval",
+    "first_quarter_rms": 0.015901988372206688,
+    "last_quarter_rms": 0.0042979358695447445,
+    "within_quarter_variation": 0.0016176038238219915,
+    "midpoint_interval_radius_ms": 430.0,
+    "quiet_stationarity": false,
+    "timing_status": "uncalibrated_pause_midpoint",
+    "temporal_probability": null
+  },
+  "scope": "retained independent text proof; new >500 time deviation; no timestamp modification"
+}

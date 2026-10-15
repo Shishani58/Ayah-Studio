@@ -1,0 +1,86 @@
+{
+  "seam": {
+    "units": [
+      "ء",
+      "ِ",
+      "ي",
+      "ي",
+      "َ",
+      "ا",
+      "ا",
+      "ك",
+      "َ"
+    ],
+    "tail": [
+      "د",
+      "د",
+      "ِ",
+      "ۦ",
+      "ۦ",
+      "ۦ",
+      "ۦ",
+      "ن"
+    ],
+    "combined": [
+      "د",
+      "د",
+      "ِ",
+      "ۦ",
+      "ۦ",
+      "ۦ",
+      "ۦ",
+      "ن",
+      "ء",
+      "ِ",
+      "ي",
+      "ي",
+      "َ",
+      "ا",
+      "ا",
+      "ك",
+      "َ"
+    ],
+    "ambiguous": false,
+    "start_unit": 13
+  },
+  "tail_occurrences": [
+    2
+  ],
+  "opening_offset": 10,
+  "matched_opening_units": 6,
+  "observed_opening": [
+    "ء",
+    "ِ",
+    "ي",
+    "ي",
+    "َ",
+    "ا"
+  ],
+  "required_opening": [
+    "ء",
+    "ِ",
+    "ي",
+    "ي",
+    "َ",
+    "ا",
+    "ا",
+    "ك",
+    "َ"
+  ],
+  "edge": {
+    "edge_ms": 22832.625,
+    "speech_fraction": [
+      1.0,
+      1.0
+    ],
+    "rms_cutoff": 0.05052860251751563,
+    "observed_units": 6,
+    "required_units": 9,
+    "complete_competitor_owners": []
+  },
+  "current_window_ms": [
+    17332.625,
+    22832.625
+  ],
+  "max_same_start_end_ms": 23332.625
+}

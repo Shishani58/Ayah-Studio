@@ -1,0 +1,221 @@
+{
+  "kind": "historical evidence arithmetic, not fresh inference or replay",
+  "source_artifacts_sha256": {
+    "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-14-fast-review-fixes/corpus-final.json": "353779fc6dda48c0c4b9d5132dac3938770f07c8f92da24a2c469854472d30d1",
+    "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-14-fast-full-execution/corpus-legacy.json": "8a73bde22029e240e23b7d5fc326e4f8d7755ab831b163b1cb75c85a045bf69e"
+  },
+  "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+  "records_checked": 138,
+  "models": {
+    "quran-phonetics": {
+      "historical_sparse4_full46": {
+        "ayahs": 1475,
+        "confirmed": 33,
+        "all_over500": 1379,
+        "confirmed_over500": []
+      },
+      "historical_sparse4_paired37": {
+        "ayahs": 564,
+        "confirmed": 28,
+        "all_over500": 490,
+        "confirmed_over500": []
+      },
+      "historical_legacy37": {
+        "ayahs": 564,
+        "confirmed": 276,
+        "all_over500": 107,
+        "confirmed_over500": [
+          [
+            78,
+            28,
+            554
+          ],
+          [
+            80,
+            37,
+            672
+          ],
+          [
+            84,
+            10,
+            903
+          ],
+          [
+            87,
+            3,
+            2955
+          ],
+          [
+            87,
+            4,
+            1374
+          ],
+          [
+            104,
+            7,
+            1223
+          ]
+        ]
+      },
+      "estimate_reasons": {
+        "unresolved_local_block": 23,
+        "blocked_by_unresolved_ayah": 1379,
+        "incomplete_distinguishing_phrase": 21,
+        "unresolved_before_unique_anchor": 18,
+        "no_local_evidence": 1
+      }
+    },
+    "whisper-tarteel-base": {
+      "historical_sparse4_full46": {
+        "ayahs": 1475,
+        "confirmed": 404,
+        "all_over500": 997,
+        "confirmed_over500": [
+          [
+            79,
+            26,
+            508
+          ]
+        ]
+      },
+      "historical_sparse4_paired37": {
+        "ayahs": 564,
+        "confirmed": 302,
+        "all_over500": 219,
+        "confirmed_over500": [
+          [
+            79,
+            26,
+            508
+          ]
+        ]
+      },
+      "historical_legacy37": {
+        "ayahs": 564,
+        "confirmed": 411,
+        "all_over500": 64,
+        "confirmed_over500": [
+          [
+            78,
+            28,
+            554
+          ],
+          [
+            78,
+            36,
+            654
+          ],
+          [
+            78,
+            37,
+            657
+          ],
+          [
+            80,
+            37,
+            672
+          ],
+          [
+            81,
+            15,
+            607
+          ],
+          [
+            83,
+            10,
+            558
+          ],
+          [
+            83,
+            13,
+            628
+          ],
+          [
+            83,
+            31,
+            513
+          ],
+          [
+            84,
+            10,
+            903
+          ]
+        ]
+      },
+      "estimate_reasons": {
+        "unresolved_before_unique_anchor": 39,
+        "unsupported_wasl_timing": 21,
+        "blocked_by_unresolved_ayah": 1009,
+        "incomplete_distinguishing_phrase": 1,
+        "ambiguous_phrase": 1
+      }
+    },
+    "whisper-tarteel-tiny": {
+      "historical_sparse4_full46": {
+        "ayahs": 1475,
+        "confirmed": 305,
+        "all_over500": 1087,
+        "confirmed_over500": []
+      },
+      "historical_sparse4_paired37": {
+        "ayahs": 564,
+        "confirmed": 230,
+        "all_over500": 276,
+        "confirmed_over500": []
+      },
+      "historical_legacy37": {
+        "ayahs": 564,
+        "confirmed": 395,
+        "all_over500": 70,
+        "confirmed_over500": [
+          [
+            78,
+            28,
+            554
+          ],
+          [
+            78,
+            36,
+            654
+          ],
+          [
+            78,
+            37,
+            657
+          ],
+          [
+            80,
+            37,
+            672
+          ],
+          [
+            81,
+            15,
+            607
+          ],
+          [
+            83,
+            10,
+            558
+          ],
+          [
+            83,
+            13,
+            628
+          ],
+          [
+            83,
+            31,
+            513
+          ]
+        ]
+      },
+      "estimate_reasons": {
+        "unresolved_before_unique_anchor": 44,
+        "unsupported_wasl_timing": 27,
+        "blocked_by_unresolved_ayah": 1098,
+        "ambiguous_phrase": 1
+      }
+    }
+  }
+}

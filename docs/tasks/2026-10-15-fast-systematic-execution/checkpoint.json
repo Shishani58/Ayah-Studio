@@ -1,0 +1,27 @@
+{
+  "stage": "M0",
+  "head": "37f3309f76fa077651239fe4892575de3b5d1fa6",
+  "roots": {
+    "baseline": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/baseline",
+    "prototype": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/prototype"
+  },
+  "processes": [
+    {
+      "label": "baseline-a",
+      "pid": 20816,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/baseline-a.log",
+      "status": "completed",
+      "exit": 1
+    },
+    {
+      "label": "baseline-a2",
+      "pid": 21076,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/baseline-a2.log",
+      "status": "running"
+    }
+  ],
+  "hypotheses": {},
+  "next": "Compare source to measured sparse12; fresh baseline."
+}

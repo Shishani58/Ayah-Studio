@@ -1,0 +1,64 @@
+{
+  "left": "integrated.json",
+  "right": "latest.json",
+  "unpaired_cases": [],
+  "models": {
+    "quran-phonetics": {
+      "cases": 3,
+      "seconds_before": 2.4403071268461645,
+      "seconds_after": 2.4139377081301063,
+      "saved_percent": 1.0805778676775732,
+      "rows_all_equal": true,
+      "boundaries_all_equal": true,
+      "reads_all_equal": true
+    },
+    "whisper-tarteel-base": {
+      "cases": 3,
+      "seconds_before": 20.794760208111256,
+      "seconds_after": 20.671695791883394,
+      "saved_percent": 0.5918049306471898,
+      "rows_all_equal": true,
+      "boundaries_all_equal": true,
+      "reads_all_equal": true
+    },
+    "whisper-tarteel-tiny": {
+      "cases": 3,
+      "seconds_before": 11.612903082976118,
+      "seconds_after": 11.733003750210628,
+      "saved_percent": -1.0342002027948654,
+      "rows_all_equal": true,
+      "boundaries_all_equal": true,
+      "reads_all_equal": true
+    }
+  },
+  "profile": {
+    "baseline.profile": {
+      "plan_phrase": {
+        "calls": 6271,
+        "cumulative_seconds": 1.067636048
+      },
+      "_competing_prefix": {
+        "calls": 257,
+        "cumulative_seconds": 1.110768578
+      },
+      "prefix_scores": {
+        "calls": 81,
+        "cumulative_seconds": 0.749419327
+      }
+    },
+    "proposal.profile": {
+      "_competing_prefix": {
+        "calls": 257,
+        "cumulative_seconds": 0.045910128
+      },
+      "plan_phrase": {
+        "calls": 983,
+        "cumulative_seconds": 0.12043363400000001
+      },
+      "prefix_scores": {
+        "calls": 81,
+        "cumulative_seconds": 0.044469962
+      }
+    }
+  }
+}

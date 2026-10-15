@@ -1,0 +1,536 @@
+{
+  "model": "whisper-tarteel-base",
+  "revision": "5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c",
+  "versions": {
+    "torch": "2.8.0",
+    "transformers": "4.57.3",
+    "numpy": "2.4.6"
+  },
+  "load_s": 6.249751291936263,
+  "decoder": "autoregressive-greedy",
+  "known_text_supplied": false,
+  "cases": [
+    {
+      "reciter": "abu_bakr_ash_shatri",
+      "surah": 1,
+      "audio": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/001.mp3",
+      "audio_sha256": "6dedf8c3b88d2cd12c992710839443abebf26e7ef1fcea696acc8961b5836571",
+      "total_ms": 59010.625,
+      "reference_text": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ الرَّحْمَٰنِ الرَّحِيمِ مَالِكِ يَوْمِ الدِّينِ إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
+      "reference_ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 100,
+          "text": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 6508,
+          "text": "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ"
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 11561,
+          "text": "الرَّحْمَٰنِ الرَّحِيمِ"
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 16000,
+          "text": "مَالِكِ يَوْمِ الدِّينِ"
+        },
+        {
+          "ayah": 5,
+          "onset_ms": 21536,
+          "text": "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ"
+        },
+        {
+          "ayah": 6,
+          "onset_ms": 27850,
+          "text": "اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ"
+        },
+        {
+          "ayah": 7,
+          "onset_ms": 33403,
+          "text": "صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ"
+        }
+      ],
+      "id": "abu_bakr_ash_shatri-1-full",
+      "kind": "FULL-ASR",
+      "start_ms": 0,
+      "end_ms": 59010.625,
+      "text": "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ الرَّحْمَنِ الرَّحِيمِ مَالِكِ يَوْمِ الدِّينِ إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينَ إِهْدِنَ الصِّرَاطَ لَا يَحِلَّنُونَ مَا الْمُسْتَقِيمَ صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
+      "elapsed_s": 5.116227000020444
+    },
+    {
+      "reciter": "abu_bakr_ash_shatri",
+      "surah": 1,
+      "audio": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/001.mp3",
+      "audio_sha256": "6dedf8c3b88d2cd12c992710839443abebf26e7ef1fcea696acc8961b5836571",
+      "total_ms": 59010.625,
+      "reference_text": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ الرَّحْمَٰنِ الرَّحِيمِ مَالِكِ يَوْمِ الدِّينِ إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
+      "reference_ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 100,
+          "text": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 6508,
+          "text": "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ"
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 11561,
+          "text": "الرَّحْمَٰنِ الرَّحِيمِ"
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 16000,
+          "text": "مَالِكِ يَوْمِ الدِّينِ"
+        },
+        {
+          "ayah": 5,
+          "onset_ms": 21536,
+          "text": "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ"
+        },
+        {
+          "ayah": 6,
+          "onset_ms": 27850,
+          "text": "اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ"
+        },
+        {
+          "ayah": 7,
+          "onset_ms": 33403,
+          "text": "صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ"
+        }
+      ],
+      "id": "abu_bakr_ash_shatri-1-local",
+      "kind": "LOCAL-ASR",
+      "start_ms": 6300,
+      "end_ms": 10300,
+      "text": "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+      "elapsed_s": 0.8221130829770118
+    },
+    {
+      "reciter": "abu_bakr_ash_shatri",
+      "surah": 1,
+      "audio": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/001.mp3",
+      "audio_sha256": "6dedf8c3b88d2cd12c992710839443abebf26e7ef1fcea696acc8961b5836571",
+      "total_ms": 59010.625,
+      "reference_text": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ الرَّحْمَٰنِ الرَّحِيمِ مَالِكِ يَوْمِ الدِّينِ إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
+      "reference_ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 100,
+          "text": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 6508,
+          "text": "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ"
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 11561,
+          "text": "الرَّحْمَٰنِ الرَّحِيمِ"
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 16000,
+          "text": "مَالِكِ يَوْمِ الدِّينِ"
+        },
+        {
+          "ayah": 5,
+          "onset_ms": 21536,
+          "text": "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ"
+        },
+        {
+          "ayah": 6,
+          "onset_ms": 27850,
+          "text": "اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ"
+        },
+        {
+          "ayah": 7,
+          "onset_ms": 33403,
+          "text": "صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ"
+        }
+      ],
+      "id": "shatri-1-local-shift600",
+      "kind": "LOCAL-ASR-shift",
+      "start_ms": 6300,
+      "end_ms": 10300,
+      "padding_ms": 600,
+      "text": "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+      "elapsed_s": 0.8821962079964578
+    },
+    {
+      "reciter": "saad_al_ghamidi",
+      "surah": 112,
+      "audio": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi/112.mp3",
+      "audio_sha256": "a58bccb959151791597f0e750784260429fedc8c685e20c45d0429368ca2e8db",
+      "total_ms": 19128.0,
+      "reference_text": "قُلْ هُوَ اللَّهُ أَحَدٌ اللَّهُ الصَّمَدُ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ",
+      "reference_ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 5330,
+          "text": "قُلْ هُوَ اللَّهُ أَحَدٌ"
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 7883,
+          "text": "اللَّهُ الصَّمَدُ"
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 10127,
+          "text": "لَمْ يَلِدْ وَلَمْ يُولَدْ"
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 12493,
+          "text": "وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ"
+        }
+      ],
+      "id": "saad_al_ghamidi-112-full",
+      "kind": "FULL-ASR",
+      "start_ms": 0,
+      "end_ms": 19128.0,
+      "text": "قُلْ هُوَ اللَّهُ أَحَدٌ اللَّهُ الصَّمَدُ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ",
+      "elapsed_s": 2.0102578750811517
+    },
+    {
+      "reciter": "saad_al_ghamidi",
+      "surah": 112,
+      "audio": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi/112.mp3",
+      "audio_sha256": "a58bccb959151791597f0e750784260429fedc8c685e20c45d0429368ca2e8db",
+      "total_ms": 19128.0,
+      "reference_text": "قُلْ هُوَ اللَّهُ أَحَدٌ اللَّهُ الصَّمَدُ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ",
+      "reference_ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 5330,
+          "text": "قُلْ هُوَ اللَّهُ أَحَدٌ"
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 7883,
+          "text": "اللَّهُ الصَّمَدُ"
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 10127,
+          "text": "لَمْ يَلِدْ وَلَمْ يُولَدْ"
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 12493,
+          "text": "وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ"
+        }
+      ],
+      "id": "saad_al_ghamidi-112-local",
+      "kind": "LOCAL-ASR",
+      "start_ms": 0,
+      "end_ms": 6000,
+      "text": "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ",
+      "elapsed_s": 0.7722024170216173
+    },
+    {
+      "reciter": "mohammed_siddiq_al_minshawi",
+      "surah": 112,
+      "audio": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mohammed_siddiq_al_minshawi/112.mp3",
+      "audio_sha256": "f28c4886847ac4d7cb5fb48d377ffc1e62bc7108578e1f9c89b293174340a260",
+      "total_ms": 21942.875,
+      "reference_text": "قُلْ هُوَ اللَّهُ أَحَدٌ اللَّهُ الصَّمَدُ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ",
+      "reference_ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 4600,
+          "text": "قُلْ هُوَ اللَّهُ أَحَدٌ"
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 7947,
+          "text": "اللَّهُ الصَّمَدُ"
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 10600,
+          "text": "لَمْ يَلِدْ وَلَمْ يُولَدْ"
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 14027,
+          "text": "وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ"
+        }
+      ],
+      "id": "mohammed_siddiq_al_minshawi-112-full",
+      "kind": "FULL-ASR",
+      "start_ms": 0,
+      "end_ms": 21942.875,
+      "text": "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم قُلْ هُوَ اللَّهُ أَحَدٌ أَاللَّهُ الصَّمَدُ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ",
+      "elapsed_s": 2.6310354999732226
+    },
+    {
+      "reciter": "mohammed_siddiq_al_minshawi",
+      "surah": 112,
+      "audio": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mohammed_siddiq_al_minshawi/112.mp3",
+      "audio_sha256": "f28c4886847ac4d7cb5fb48d377ffc1e62bc7108578e1f9c89b293174340a260",
+      "total_ms": 21942.875,
+      "reference_text": "قُلْ هُوَ اللَّهُ أَحَدٌ اللَّهُ الصَّمَدُ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ",
+      "reference_ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 4600,
+          "text": "قُلْ هُوَ اللَّهُ أَحَدٌ"
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 7947,
+          "text": "اللَّهُ الصَّمَدُ"
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 10600,
+          "text": "لَمْ يَلِدْ وَلَمْ يُولَدْ"
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 14027,
+          "text": "وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ"
+        }
+      ],
+      "id": "mohammed_siddiq_al_minshawi-112-local",
+      "kind": "LOCAL-ASR",
+      "start_ms": 0,
+      "end_ms": 6000,
+      "text": "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم قُلْ هُوَ",
+      "elapsed_s": 1.249088249867782
+    },
+    {
+      "reciter": "mahmoud_khalil_al_hussary",
+      "surah": 112,
+      "audio": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mahmoud_khalil_al_hussary/112.mp3",
+      "audio_sha256": "c6d2edaa89cf4dfc52e1ae969cf491ac02061854bd5e63b927126536cff64223",
+      "total_ms": 40724.9375,
+      "reference_text": "قُلْ هُوَ اللَّهُ أَحَدٌ اللَّهُ الصَّمَدُ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ",
+      "reference_ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 7928,
+          "text": "قُلْ هُوَ اللَّهُ أَحَدٌ"
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 13724,
+          "text": "اللَّهُ الصَّمَدُ"
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 18803,
+          "text": "لَمْ يَلِدْ وَلَمْ يُولَدْ"
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 24728,
+          "text": "وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ"
+        }
+      ],
+      "id": "mahmoud_khalil_al_hussary-112-full",
+      "kind": "FULL-ASR",
+      "start_ms": 0,
+      "end_ms": 40724.9375,
+      "text": "قُلْ هُوَ اللَّهُ أَحَدٌ قَالُوا اصْطَمَدْ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُنْ لَهُ كُفُوًا جَمِيلًا أَحَدٌ",
+      "elapsed_s": 2.714233750011772
+    },
+    {
+      "reciter": "mahmoud_khalil_al_hussary",
+      "surah": 112,
+      "audio": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mahmoud_khalil_al_hussary/112.mp3",
+      "audio_sha256": "c6d2edaa89cf4dfc52e1ae969cf491ac02061854bd5e63b927126536cff64223",
+      "total_ms": 40724.9375,
+      "reference_text": "قُلْ هُوَ اللَّهُ أَحَدٌ اللَّهُ الصَّمَدُ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ",
+      "reference_ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 7928,
+          "text": "قُلْ هُوَ اللَّهُ أَحَدٌ"
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 13724,
+          "text": "اللَّهُ الصَّمَدُ"
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 18803,
+          "text": "لَمْ يَلِدْ وَلَمْ يُولَدْ"
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 24728,
+          "text": "وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ"
+        }
+      ],
+      "id": "mahmoud_khalil_al_hussary-112-local",
+      "kind": "LOCAL-ASR",
+      "start_ms": 0,
+      "end_ms": 6000,
+      "text": "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ",
+      "elapsed_s": 0.694469999987632
+    },
+    {
+      "reciter": "abdul_basit_mujawwad",
+      "surah": 112,
+      "audio": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/abdul_basit_mujawwad/112.mp3",
+      "audio_sha256": "ca5edf5bf9ac40ad56a4800db792b287368b41ad6015e9c354aa1a0cb5ef5a7a",
+      "total_ms": 50129.0,
+      "reference_text": "قُلْ هُوَ اللَّهُ أَحَدٌ اللَّهُ الصَّمَدُ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ",
+      "reference_ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 9493,
+          "text": "قُلْ هُوَ اللَّهُ أَحَدٌ"
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 17116,
+          "text": "اللَّهُ الصَّمَدُ"
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 22554,
+          "text": "لَمْ يَلِدْ وَلَمْ يُولَدْ"
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 29681,
+          "text": "وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ"
+        }
+      ],
+      "id": "abdul_basit_mujawwad-112-full",
+      "kind": "FULL-ASR",
+      "start_ms": 0,
+      "end_ms": 50129.0,
+      "text": "قُلْ هُوَ اللَّهُ أَحَدٌ أَاللَّهُ الصَّمَدُ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ",
+      "elapsed_s": 2.2909322078339756
+    },
+    {
+      "reciter": "abdul_basit_mujawwad",
+      "surah": 112,
+      "audio": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/abdul_basit_mujawwad/112.mp3",
+      "audio_sha256": "ca5edf5bf9ac40ad56a4800db792b287368b41ad6015e9c354aa1a0cb5ef5a7a",
+      "total_ms": 50129.0,
+      "reference_text": "قُلْ هُوَ اللَّهُ أَحَدٌ اللَّهُ الصَّمَدُ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ",
+      "reference_ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 9493,
+          "text": "قُلْ هُوَ اللَّهُ أَحَدٌ"
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 17116,
+          "text": "اللَّهُ الصَّمَدُ"
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 22554,
+          "text": "لَمْ يَلِدْ وَلَمْ يُولَدْ"
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 29681,
+          "text": "وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ"
+        }
+      ],
+      "id": "abdul_basit_mujawwad-112-local",
+      "kind": "LOCAL-ASR",
+      "start_ms": 0,
+      "end_ms": 6000,
+      "text": "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ",
+      "elapsed_s": 0.8128597079776227
+    },
+    {
+      "reciter": "abu_bakr_ash_shatri",
+      "surah": 112,
+      "audio": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/112.mp3",
+      "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a",
+      "total_ms": 23484.0625,
+      "reference_text": "قُلْ هُوَ اللَّهُ أَحَدٌ اللَّهُ الصَّمَدُ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ",
+      "reference_ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 6094,
+          "text": "قُلْ هُوَ اللَّهُ أَحَدٌ"
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 8755,
+          "text": "اللَّهُ الصَّمَدُ"
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 10863,
+          "text": "لَمْ يَلِدْ وَلَمْ يُولَدْ"
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 13530,
+          "text": "وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ"
+        }
+      ],
+      "id": "abu_bakr_ash_shatri-112-full",
+      "kind": "FULL-ASR",
+      "start_ms": 0,
+      "end_ms": 23484.0625,
+      "text": "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم قُلْ هُوَ اللَّهُ أَحَدٌ اللَّهُ الصَّمَدُ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ",
+      "elapsed_s": 2.0728329580742866
+    },
+    {
+      "reciter": "abu_bakr_ash_shatri",
+      "surah": 112,
+      "audio": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/112.mp3",
+      "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a",
+      "total_ms": 23484.0625,
+      "reference_text": "قُلْ هُوَ اللَّهُ أَحَدٌ اللَّهُ الصَّمَدُ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ",
+      "reference_ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 6094,
+          "text": "قُلْ هُوَ اللَّهُ أَحَدٌ"
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 8755,
+          "text": "اللَّهُ الصَّمَدُ"
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 10863,
+          "text": "لَمْ يَلِدْ وَلَمْ يُولَدْ"
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 13530,
+          "text": "وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ"
+        }
+      ],
+      "id": "abu_bakr_ash_shatri-112-local",
+      "kind": "LOCAL-ASR",
+      "start_ms": 0,
+      "end_ms": 6000,
+      "text": "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ",
+      "elapsed_s": 0.7167734170798212
+    },
+    {
+      "id": "silence-4s",
+      "kind": "SILENCE",
+      "start_ms": 0,
+      "end_ms": 4000,
+      "text": "وَالْمُؤْمِنِينَ",
+      "elapsed_s": 0.5599606658797711
+    }
+  ]
+}

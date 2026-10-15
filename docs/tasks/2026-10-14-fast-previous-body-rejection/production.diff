@@ -1,0 +1,60 @@
+--- before
++++ production
+@@ -13,10 +13,10 @@
+ import numpy as np
+ 
+ from surah_cutter.core.cancellation import GenerationCancelled, check_cancelled
+-from surah_cutter.core.fast_adapters import make_adapter, representation_sha, loaded_implementation_sha
++from surah_cutter.core.fast_adapters import make_adapter, representation_sha, loaded_implementation_sha, arabic_units
+ from surah_cutter.core.fast_reads import LocalEvidenceReads
+ 
+-VERSION = "sequential-fast-v3-sparse-9"
++VERSION = "sequential-fast-v3-sparse-10"
+ 
+ 
+ @dataclass(frozen=True)
+@@ -982,6 +982,44 @@
+                         # Context reads must not replace the opening's provenance.
+                         boundary = Boundary(ayah, ms, kind, phrase_quality, read_id=opening_id, proof=proof)
+                         break
++                    if (confirmed and confirmed[-1].ayah == ayah - 1 and not obs.truncated
++                            and len(canonical_ends[ayah]) > 1
++                            and len(phrase) > canonical_ends[ayah][0]):
++                        first_end = canonical_ends[ayah][0]
++                        first_word = groups[ayah][:first_end]
++                        previous_ayah = confirmed[-1].ayah
++                        previous_ends = canonical_ends[previous_ayah]
++                        rival = None
++                        if _prefix(obs.units, first_word) == len(first_word):
++                            for word_index in range(1, len(previous_ends) - 1):
++                                start_unit = previous_ends[word_index - 1]
++                                end_first, end_second = previous_ends[word_index:word_index + 2]
++                                previous_first = groups[previous_ayah][start_unit:end_first]
++                                previous_second = groups[previous_ayah][end_first:end_second]
++                                current_second = groups[ayah][first_end:canonical_ends[ayah][1]]
++                                alternative = previous_first + previous_second
++                                quality = obs.unit_quality[:len(alternative)]
++                                if (previous_first == first_word and previous_second != current_second
++                                        and words[word_map[previous_ayah][start_unit]].text == words[word_map[ayah][0]].text
++                                        and words[word_map[previous_ayah][end_first]].text != words[word_map[ayah][first_end]].text
++                                        and arabic_units(words[word_map[previous_ayah][end_first]].text)
++                                        != arabic_units(words[word_map[ayah][first_end]].text)
++                                        and _prefix(obs.units, alternative) == len(alternative)
++                                        and len(quality) == len(alternative)
++                                        and all(math.isfinite(q) for q in quality)
++                                        and min(quality, default=0.) >= threshold
++                                        and _strong_continuation_conflict(obs.units, obs.unit_quality,
++                                                                         groups[ayah], first_end, threshold)):
++                                    rival = {"ayah": previous_ayah, "start_unit": start_unit,
++                                             "units": alternative, "min_quality": min(quality)}
++                                    break
++                        if rival:
++                            reason = "decoded_previous_ayah_body"
++                            event("DECLINE_CANDIDATE", ayah, candidate=index, reason=reason, rival=rival,
++                                  read_id=opening_id)
++                            had_prefix = False
++                            blocked_prefix = False
++                            break
+                     future_expansion = None
+                     if pause is not None and obs.units:
+                         for future_ayah in ayahs:

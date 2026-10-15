@@ -1,0 +1,202 @@
+[
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 65,
+    "ayah": 1,
+    "read_id": 4,
+    "word_indices": [
+      9,
+      10
+    ],
+    "canonical_words": [
+      "وَٱتَّقُواْ",
+      "ٱللَّهَ"
+    ],
+    "body_units": [
+      "واتقوا",
+      "الله"
+    ],
+    "min_quality": 0.8997632526555944,
+    "read_window_ms": [
+      24640.0,
+      26140.0
+    ],
+    "positions_available": false,
+    "scope": "body search cue only, no current onset"
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 65,
+    "ayah": 1,
+    "read_id": 7,
+    "word_indices": [
+      23,
+      24
+    ],
+    "canonical_words": [
+      "وَتِلۡكَ",
+      "حُدُودُ"
+    ],
+    "body_units": [
+      "وتلك",
+      "حدود"
+    ],
+    "min_quality": 0.7898461798205106,
+    "read_window_ms": [
+      43300.0,
+      44800.0
+    ],
+    "positions_available": false,
+    "scope": "body search cue only, no current onset"
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 98,
+    "ayah": 5,
+    "read_id": 11,
+    "word_indices": [
+      45,
+      46
+    ],
+    "canonical_words": [
+      "وَذَٰلِكَ",
+      "دِينُ"
+    ],
+    "body_units": [
+      "وذلك",
+      "دين"
+    ],
+    "min_quality": 0.7862660537229891,
+    "read_window_ms": [
+      49860.0,
+      51360.0
+    ],
+    "positions_available": false,
+    "scope": "body search cue only, no current onset"
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 79,
+    "ayah": 20,
+    "read_id": 33,
+    "word_indices": [
+      67,
+      68
+    ],
+    "canonical_words": [
+      "ٱلۡأٓيَةَ",
+      "ٱلۡكُبۡرَىٰ"
+    ],
+    "body_units": [
+      "الاية",
+      "الكبرى"
+    ],
+    "min_quality": 0.9970065823570118,
+    "read_window_ms": [
+      91840.0,
+      96040.0
+    ],
+    "positions_available": false,
+    "scope": "body search cue only, no current onset"
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 59,
+    "ayah": 10,
+    "read_id": 42,
+    "word_indices": [
+      213,
+      214
+    ],
+    "canonical_words": [
+      "وَلَا",
+      "تَجۡعَلۡ"
+    ],
+    "body_units": [
+      "ولا",
+      "تجعل"
+    ],
+    "min_quality": 0.9786976034919708,
+    "read_window_ms": [
+      254300.0,
+      255800.0
+    ],
+    "positions_available": false,
+    "scope": "body search cue only, no current onset"
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 65,
+    "ayah": 1,
+    "read_id": 4,
+    "word_indices": [
+      9,
+      10
+    ],
+    "canonical_words": [
+      "وَٱتَّقُواْ",
+      "ٱللَّهَ"
+    ],
+    "body_units": [
+      "واتقوا",
+      "الله"
+    ],
+    "min_quality": 0.9297863780658012,
+    "read_window_ms": [
+      24640.0,
+      26140.0
+    ],
+    "positions_available": false,
+    "scope": "body search cue only, no current onset"
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 98,
+    "ayah": 8,
+    "read_id": 21,
+    "word_indices": [
+      78,
+      79
+    ],
+    "canonical_words": [
+      "تَجۡرِي",
+      "مِن"
+    ],
+    "body_units": [
+      "تجري",
+      "من"
+    ],
+    "min_quality": 0.9356772970049266,
+    "read_window_ms": [
+      89460.0,
+      90960.0
+    ],
+    "positions_available": false,
+    "scope": "body search cue only, no current onset"
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 98,
+    "ayah": 8,
+    "read_id": 22,
+    "word_indices": [
+      85,
+      86
+    ],
+    "canonical_words": [
+      "رَّضِيَ",
+      "ٱللَّهُ"
+    ],
+    "body_units": [
+      "رضي",
+      "الله"
+    ],
+    "min_quality": 0.998733457702467,
+    "read_window_ms": [
+      96300.0,
+      97800.0
+    ],
+    "positions_available": false,
+    "scope": "body search cue only, no current onset"
+  }
+]

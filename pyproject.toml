@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ayah-studio"
-version = "0.2.0"
+version = "0.3.0"
 description = "Generate per-ayah timecodes for Qur'an recitation audio, with visual/audio verification."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -82,5 +82,7 @@ packages = ["surah_cutter"]
 "assets/fonts/qpc_hafs.ttf" = "surah_cutter/bundled/assets/fonts/qpc_hafs.ttf"
 
 [tool.ruff]
+# Historical diagnostic snapshots are evidence, not maintained application code.
+extend-exclude = ["docs/tasks"]
 line-length = 100
 target-version = "py310"

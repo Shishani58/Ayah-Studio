@@ -1,0 +1,120 @@
+{
+  "scope": "mixed-run diagnostic only; no boundary accepted",
+  "rows": [
+    {
+      "surah": 1,
+      "ayah": 5,
+      "old_error_ms": 145,
+      "full_previous": 0,
+      "extended": false
+    },
+    {
+      "surah": 2,
+      "ayah": 4,
+      "old_error_ms": 505,
+      "full_previous": 0,
+      "extended": false
+    },
+    {
+      "surah": 2,
+      "ayah": 9,
+      "old_error_ms": 1012,
+      "full_previous": 0,
+      "extended": false
+    },
+    {
+      "surah": 2,
+      "ayah": 10,
+      "old_error_ms": 2217,
+      "full_previous": 1,
+      "extended": true,
+      "endpoint_ms": 121338.20895522388,
+      "observed_right_margin_ms": 241.79104477612418,
+      "mixed_midpoint_ms": 122701,
+      "mixed_error_ms": 855,
+      "endpoint_shift_ms": -1.4684641309577273
+    },
+    {
+      "surah": 2,
+      "ayah": 18,
+      "old_error_ms": 1476,
+      "full_previous": 1,
+      "extended": true,
+      "endpoint_ms": 252118.20895522388,
+      "observed_right_margin_ms": 241.79104477612418,
+      "mixed_midpoint_ms": 253029,
+      "mixed_error_ms": 565,
+      "endpoint_shift_ms": -1.4684641309722792
+    },
+    {
+      "surah": 2,
+      "ayah": 23,
+      "old_error_ms": 1335,
+      "full_previous": 1,
+      "extended": false,
+      "endpoint_ms": 381657.4193548387,
+      "observed_right_margin_ms": 322.5806451612734,
+      "mixed_midpoint_ms": 382530,
+      "mixed_error_ms": 462
+    },
+    {
+      "surah": 2,
+      "ayah": 25,
+      "old_error_ms": 980,
+      "full_previous": 0,
+      "extended": false
+    },
+    {
+      "surah": 32,
+      "ayah": 11,
+      "old_error_ms": 1892,
+      "full_previous": 1,
+      "extended": false,
+      "endpoint_ms": 142598.38709677418,
+      "observed_right_margin_ms": 201.61290322581772,
+      "mixed_midpoint_ms": 143851,
+      "mixed_error_ms": 640
+    },
+    {
+      "surah": 32,
+      "ayah": 16,
+      "old_error_ms": 566,
+      "full_previous": 0,
+      "extended": false
+    },
+    {
+      "surah": 32,
+      "ayah": 20,
+      "old_error_ms": 1063,
+      "full_previous": 1,
+      "extended": false,
+      "endpoint_ms": 272699.03225806454,
+      "observed_right_margin_ms": 120.9677419354557,
+      "mixed_midpoint_ms": 273450,
+      "mixed_error_ms": 312
+    },
+    {
+      "surah": 55,
+      "ayah": 26,
+      "old_error_ms": 251,
+      "full_previous": 1,
+      "extended": true,
+      "endpoint_ms": 138257.91044776118,
+      "observed_right_margin_ms": 282.0895522388164,
+      "mixed_midpoint_ms": 139480,
+      "mixed_error_ms": -971,
+      "endpoint_shift_ms": -1.4443909484834876
+    },
+    {
+      "surah": 77,
+      "ayah": 30,
+      "old_error_ms": 337,
+      "full_previous": 1,
+      "extended": false,
+      "endpoint_ms": 113857.41935483871,
+      "observed_right_margin_ms": 322.580645161288,
+      "mixed_midpoint_ms": 114659,
+      "mixed_error_ms": -465
+    }
+  ]
+}

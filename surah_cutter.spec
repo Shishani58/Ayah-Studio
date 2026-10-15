@@ -148,7 +148,7 @@ if sys.platform == "darwin":
         info_plist={
             "CFBundleName": "Ayah Studio",
             "CFBundleDisplayName": "Ayah Studio",
-            "CFBundleShortVersionString": "0.2.0",
+            "CFBundleShortVersionString": "0.3.0",
             "NSHighResolutionCapable": True,
             "LSApplicationCategoryType": "public.app-category.music",
         },

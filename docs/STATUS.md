@@ -1,5 +1,21 @@
 # STATUS — что сделано и что осталось
 
+## Середина паузы в QPC FULL — 2026-10-15
+
+После штатного выравнивания обычный и bounded QPC FULL переносят границу
+в центр единственной DSP-подтверждённой межаятной паузы с CTC evidence обеих
+сторон. Первый аят, слабые начала и уже исправленные локальной проверкой
+границы сохраняются. Confidence и защита edited/verified сохранены.
+Policy `qpc-pause-center-v4` позволяет пересчитать прежние auto-метки.
+Проверка: свежий FULL Шатри1/112/114; шесть записей1/83/95/112/114/42
+с кешированными основными emissions, включая992с bounded FULL.
+18 из114 границ перенесены, число аятов и порядок сохранены.
+720 pytest passed/8 skipped; scoped Ruff/diff-check, AGENTS sync — OK.
+Сравнение114границ с прежним эталоном: медиана62.5→66мс,
+среднее97.82→110.99мс, >500мс4→5 (новый42:20:14→610мс).
+Полный корпус и прослушивание не выполнены.
+[Реализация и проверка](tasks/2026-10-15-full-pause-center/task.md).
+
 ## Единый FAST: эксперимент реализован, M5 не пройден — 2026-10-14
 
 Один sequential executor, независимые CTC/Tiny/Base adapters, общий budget/cache,
@@ -2066,3 +2082,534 @@ passes,edited/verified сохранены во временных БД. Изол
 исключает параллельные незавершённые FULL изменения. Локальный macOS bundle
 обновлён; frozen self-check114/6236,models/FFmpeg/assets и codesign прошли,
 legacy отсутствует в PYZ. [task](tasks/2026-10-14-unified-fast-default/task.md).
+
+## FULL: локальная перепроверка слабого начала — 2026-10-14
+
+Воспроизведены12 файлов четырёх чтецов (точныеSHA emissions/rows прежнего
+аудита), Шатри42/83/95/112; отдельноFP32 иcontext1/4 на пяти файлах.
+Слабый первый токен до локальной паузы и пропуск этой паузы глобальным DSP
+исправлены коротким DSP-recheck только вQPC FULL/bounded FULL. Нужны уверенный
+суффикс того же первого слова и единственная принятая пауза; crop<=6с,
+confidence/review сохраняются, дополнительных model reads нет. Политика
+`qpc-local-weak-prefix-v1` записывается вtrace/source.20×3/context2/cuts прежние.
+
+Шатри42:1−810→+110мс,78:1−860→+80мс,89:5−544→−54мс. Дополнительный
+парный аудит67/78–114:594 границы. Вместе647Шатри+216 других=863 уникальных
+начала/51 файл:80→77 крупных расхождений,3 устранённых/0 новых/0 нефлагированных.
+У четырёх чтецов0/0/12/52 крупных расхождения остались; смысл раннейGT-точки
+в длинной паузе и слабыйCTC-путьmujawwad не смешаны с подтверждённым исправлением.
+Пользователь делегировал выбор соглашения: сохранён контракт начала речи,
+массовый перенос для совпадения сGT отклонён. Слуховая проверка человеком
+не выполнена;10 waveform/WAV-примеров сохранены. Полный114-сурный корпус не проверен.
+
+602passed/7opt-in skipped,44целевыхpassed,Ruff own paths clean; свежийFULL42
+совпал с cached production replay. ПользовательскиеБД/текст/ручная разметка
+не изменены, чужиеFAST-правки сохранены. [Отчёт и артефакты](tasks/2026-10-14-full-accuracy/report.md).
+
+Дополнительная проверка по замечанию пользователя: свежийFULL ФатихиШатри
+даёт1:2−1169мс (5339 противGT6508), first-token confidence.8975; другие
+шесть границ в пределах63мс. Причина этого конкретного случая пока не установлена.
+Артефактfatiha-shatri.json; прежние863 начала Фатиху не включали. Исправлены
+три частных ошибки, весьFULL исправленным не объявляется.
+
+Токенный аудитФатихи: `al-ḥamdu` размещён черезDSP-паузу5780–6620мс:
+`a`5539мс/.8975, `l`6719мс/.9966. Старт=первыйтокен−200мс; weak-prefix
+guard не срабатывает из-за высокойfirst confidence. Механизм неверной
+ранней метки установлен, происхождение раннего звука без прослушивания
+не доказано. Артефактfatiha-token-audit.json; код при этом разборе не менялся.
+
+На том жеШатри001 выполнено прямоеFULL-сравнение установленных альтернатив:
+Muaalem/Large-v3/Tarteel Base max220/430/459мс,0>500, противQPC1169/1>500.
+При этом QPC median37 меньше123/232/304мс. FastConformer не загрузился из-за
+ml_dtypes.float4_e2m1fn: это runtime-отказ, не результат точности. JSON/source/
+trace сохранены вfull-accuracy/fatiha-model-comparison.json. Настройки/default
+и пользовательскиеБД не менялись; для нового default нужна более широкая
+парная проверка FULL. Историческое основание QPC —CPU/FAST и короткие112/114,
+не доказанное широкое превосходствоFULL.
+
+
+## Независимое ревью штатного FAST — 2026-10-14
+
+После завершения миграции (HEAD37f3309) доказаны: auto-resume пропускает старые
+auto FAST без current key; UI summary/debug читает legacy trace и показывает
+unresolved=0/пустые reads; auto→FAST не сохраняет immutable history; FP32 имеет
+неверный model label при сохранённом weights SHA. Код/данные этим ревью не менялись.
+
+Собственный suite602passed/7skipped (включает параллельные FULL-тесты), Ruff/diff-check;
+49data SHA неизменны. Исторические138records/парный37 пересчитаны независимо:
+coverage FAIL сохраняется.3свежих CTC local reads1:2 с pre-roll200/400/600мс
+дали одинаковый missing-a — простой pre-roll fix не доказан. Native app/listening/
+ASR timing/другой чтец не проверены.
+[Находки](tasks/2026-10-14-fast-independent-current-review/review.md),
+[план с критериями](tasks/2026-10-14-fast-independent-current-review/plan.md).
+
+
+## Причины FAST и соответствие алгоритму — 2026-10-14
+
+Адресное продолжение ревью: CTC1:2 пропускает initial-a уже в acoustic output
+(p≈.0022–.0035, blank≈.996–.998).4 real A/B INT8/FP32×local/global normalization
+не устранили missing-a. Найден пропущенный recovery: contextual pause proof
+включается только при static ambiguous, а для похожего начала с поздним
+различающим словом Tarteel не пробует доступный previous-tail. Fake repro passed.
+Шаг10 center соблюдён; общая претензия к внутренним паузам отозвана. Base79:26
+geometry остаётся unlistened; simple threshold fix не доказан. Tiny/Base local
+RPC не возвращает word times: нужен реализованный local alignment, прежние
+attention timing probes не прошли shift check. Всего7 fresh local calls,
+без FULL/production edits/DB writes; Ruff/diff-check.
+[Причины, код и конкретные исправления](tasks/2026-10-14-fast-algorithm-cause-review/report.md).
+
+
+## Исследование независимого Quran ASR — 2026-10-14
+
+Проверены mohammed FastConformer RNN-T/CTC greedy и Tarteel Base без передачи
+эталона: 42 финальных cases, 6 FULL-записей пяти чтецов, local/shift/silence.
+На 104 canonical словах с явным исключением распознанного префикса басмалы112:
+RNN-T5/104, CTC11/104, Base13/104 ошибок; это маленький probe, не широкий benchmark.
+RNN-T — первый доступный кандидат на ASR-адаптер, но default не меняется:
+Фатиха7 начал median144/max519мс, word ends нестабильны в shift check;
+локальные crop и разные чтецы дают пропуски. FULL/local/words универсальность
+не доказана. Новый Muno FastConformer gated, Qwen aligner Arabic не заявлен.
+Штатный NeMo падает на ml_dtypes/ONNX; probe использовал отдельный временный
+ml_dtypes0.6.0 без изменения окружения приложения. Production/DB/settings/weights
+не менялись; Ruff own scripts clean. [Вывод, первичные источники и воспроизводимость]
+(tasks/2026-10-14-asr-model-selection/report.md).
+
+## Частичное исправление FAST отдельным агентом — 2026-10-14
+
+Добавлены ограниченное восстановление повреждённого CTC opening через
+независимо услышанное дополнительное целое слово и проверка previous-tail
+для похожего, но неполного opening без word timing. Неудачный tail сохраняет
+исходное расширение; сильное противоречащее продолжение запрещает короткое
+подтверждение. Геометрия проверяется и для пауз ≤1000 мс; text confidence
+явно не считается вероятностью точности времени. Полный проход FAST запрещён.
+
+Реальный CTC 1:2, спорная Base 79:26, надёжный Tiny/Base word timing и
+калибровка temporal confidence остаются открытыми. На трёх парных real controls
+подтверждения не изменились; прирост покрытия не доказан.
+Исполнитель: pytest 635 passed / 8 skipped, FAST 104 passed.
+Независимо: четыре baseline/current regression cases, Ruff/diff-check passed;
+49 защищённых data SHA неизменны. Без commit/push и DB writes.
+[Результат и ограничения](tasks/2026-10-14-fast-algorithm-gap-fixes/report.md),
+[независимая проверка](tasks/2026-10-14-fast-fix-supervision/review.md).
+
+## Итерационный анализ FAST и узкие оптимизации — 2026-10-14
+
+158 валидных model/surah прогонов CTC/Tiny/Base,5403 строки/2495 настоящих
+локальных model calls; согласованные10 сур и дополнительная полная2.
+30 первоначальных случаев отклонены source guard из-за параллельных изменений;
+дальше использованы изолированные source snapshots/manifest/archive/JSON/log.
+
+В fast_executor sparse-7 добавлены preflight target probability до scoring
+всех CTC rivals (отказ только ниже обоих gates, scalar причина сохраняется)
+и компактный кеш неизменных textual plans без полных competitor списков.
+Парные30cases/825rows полностью совпали по времени/confidence/proofs/reads;
+планов6271→983, profiling competing_prefix1.111→.046с. Отдельный CTC11-сурный
+integration pair17.00→13.21с,561строка точно совпала; одиночный замер скорости.
+Общее profiled wall acceleration не объявляется из-за сторонней нагрузки.
+
+Window experiments1800/3000/4000 и1000/2000/4000 не внедрены: больше proofs
+у одной модели не гарантирует сохранности другой. Wide Tiny добавил80:37+672мс
+при confidence.694 — temporal geometry disagreement, без прослушивания.
+CTC пропуски звуков, ранняя остановка с estimates и ASR timing=False остаются
+разными открытыми проблемами; улучшение точности нашей оптимизацией не заявляется.
+FAST ceilings6s/65%/200% соблюдены, FULL/DB/default model не менялись этой задачей.
+
+Один заключительный pytest631passed/8skipped; Ruff own paths/diff-check чисты.
+[Отчёт, причины и сохранённые попытки](tasks/2026-10-14-fast-iterative-analysis/report.md).
+
+## FAST sparse-8: пустой DSP region и следующий anchor — 2026-10-14
+
+Дополнительные100model/surah прогонов,4391строка/1819local calls. Factorial Base
+1.0/1.3×2.0/2.5s отвергнут:short_initial84→96 proofs,15lost/27added,+672ms
+confident80:37;short_expansion84→84;short_both84→85,15lost/16added.
+10weak marks observations разобраны по BPE bytes; quality policy не ослаблена.
+
+На77:16 GT внутри tempo region, но нет ни одной принятой DSP-паузы и ни одного
+model read. Sparse-8 для timing=False/≥2anchors/пустого region пробует один
+допустимый DSP-кандидат справа в пределах двух predicted spans; прежние proofs,
+validator и budgets обязательны. Следующая пауза относится к18;16/17 остаются
+review, не получают ложное время. CTC сохраняет собственный wasl path.
+
+33парных cases:10сур+полная2 для каждой модели. Base86→92 proofs,6 новых
+на77 (18/19/21–24),max ошибка155ms;0потерь/изменений старых/новых confident>500.
+Ошибки>500460→447,mostly estimates. Phonetics/Tiny точно прежние2/68proofs.
+Base время85.90→92.11s,+7.2% за дополнительную работу; ускорение не заявляется.
+Final77×3 повторяет prototype rows/proofs/dispatches. Ceilings6/65%/200% соблюдены.
+
+Ruff/diff-check чисты;4новых unit checks подготовлены, pytest не повторялся до
+общего финала цели. Основные ограничения CTC/ASR timing/temporal geometry открыты.
+[Отчёт и причины](tasks/2026-10-14-fast-base-window-analysis/report.md).
+
+## FAST: Muaalem local probe и незавершённый native crop — 2026-10-14
+
+Installed Muaalem независимым local greedy даёт full `ءَلحَمدُ` на3 input
+1.5/2.1/3.0s; QPC initial-a отсутствует. Shift+200ms→161.2,error38.8ms,
+silence/wrong-target controls отвергают full word. Это local evidence, не
+широкая temporal calibration. Static phoneme ownership/partition проверены.
+
+В isolated adapter1/32/1128/41proofs,0confident>500.1:5 fixed native5.5s crop
+обрывает strong previous-tail+6/9opening units; DSP speech edge1/1. Доп500ms
+до6s даёт full seam,minQ.880,time21693 (+157ms). Isolated sparse-9 prototype:
+1=7/7,112=4/4,32=0;11proofs,max308ms,старые8сохранены. Runtime/default/Muaalem
+FAST support не активированы; основной production sparse-8 не менялся этим probe.
+
+Исправлен backend classifier dispatch_spy:уCTC RuntimeEmitter тоже существует
+recognize_local, но считать надоemissions. Ошибочные3reads без корректногоspy
+не объявлены валидными; initial control JSON случайно overwritten, replay
+помечен fresh control, checkpoint/output safeguards добавлены. Полные логи сохранены.
+
+Corpus-edge10+2+79 завершён:12cases/607rows/344calls,116proofs,491review,
+157.55s inference+matcher. Найден unsafe owner55:14−50310ms:реальные3→4
+`خلق الإنسان` совпадают с phonetic14 при wasl; planner различает одинаковые
+canonical words из-за waqf/madd4 hypothesis3. Нужен canonical word identity
+floor/variant-safe rivals, не threshold fix.79:26+508ms сохраняется. Новая
+модель/prototype **не активированы**. Pytest не повторялся;2spy checks подготовлены.
+[Промежуточный отчёт, причины/неудачи и следующий шаг](tasks/2026-10-14-fast-muaalem-local-analysis/report.md).
+
+Canonical-floor prospective12cases/607rows/343reads устранил55:14−50310ms:
+нужны3canonical words, а реально слышны3→4«خلق الإنسان علم».115остальных proofs
+сохранены, потеря только ложного14; новые confident outliers0,79:26+508 остаётся.
+Runtime/planner activation ещё нет: prototype process-local. Следующий blocker
+55:3 —left-tail Quran ожидает4madd units, raw содержит2; нельзя подменить звук
+fixed target. Нужны явные wasl/waqf/madd variants и общий canonical owner floor.
+Полные артефакты/проверка сохранности —identity-floor-comparison.json в том же отчёте.
+
+## FULL: Фатиха и парное сравнение QPC/Muaalem — 2026-10-14
+
+Исправлены реальные времена: ФатихаШатри1:2 5339→6483мс (GT6508,−1169→−25),
+mujawwad98:7 166571→173500мс после локального подтверждения Muaalem конца
+предыдущего и различающего начала следующего аята. У второго GT169383 внутри
+паузы168340–173600: абсолютная ошибка выросла2812→4117мс, но звук предыдущего
+аята больше не попадает в начало следующего. Это не скрыто в метриках.
+QPC strong20×3/context2/global norm сохраняется. Policy `qpc-phrase-boundary-v3`,
+каждое дополнительное чтение/модель/revision/ошибка/отмена в trace/source.
+Muaalem — редкая локальная проверка установленным runtime, без автоскачивания
+и смены выбранной модели; отсутствие runtime даёт явную ошибку. FAST не менялся
+этой задачей. FULL resume пересчитывает auto старой модели/policy, ручные защищены.
+
+Production52файла/870начал: >500мс78→77, новых0, median69,5→69мс;
+5дополнительных чтений/19,660с аудио. Свежие полные Фатиха/mujawwad98 совпали.
+Парное сравнение21файл/430начал: QPC94мс/72>500 против Muaalem228,5мс/80>500;
+замена default не обоснована. Muaalem67:30 выбирает позднюю фразу (+14423мс);
+независимое ASR подтверждает одинаковое начало в двух участках, вероятное
+повторение требует слуховой оценки. Человеческое прослушивание не заявляется.
+653passed/8opt-in skipped, scoped Ruff clean; пользовательские БД не записывались,
+коммитов нет. Остальные77расхождений и полный корпус114сур не разрешены.
+[Отчёт и аудио](tasks/2026-10-14-full-boundary-proof/report.md).
+
+## FAST: варианты длительности и фактическое начало crop — 2026-10-14
+
+Статические варианты Muaalem madd2/4/6: вариант4 совпал с native mappings
+на12сурах; глобальные2/6 ухудшают1/55, поэтому отклонены. Изолированная
+нормализация только long-vowel runs с min всех raw scores дала115→162proofs,
+но потеряла77:12/13: уменьшение lexical units сдвинуло прогноз и обрезало tail.
+После разделения lexical/tempo weights и исправления sampled onset полный
+повтор12cases/607ayahs/579actual reads дал115→194proofs,79added,0lost;
+новых confident>500ms нет, прежняя79:26+508 остаётся. Покрытие≤57,37%,
+input ratio≤96,58%, каждый crop≤6s. Поиск196,13→292,34s: ускорения нет.
+
+Строгий validator выявил самостоятельный общий баг: requested start
+129755,335775ms отличался от sample-rounded129755,3125, и55:25 получал
+132004 вместо132003ms. В production FAST исправлены только3onset calculations
+от фактического начала прочитанного окна; версия sparse-9. Muaalem FAST,
+normalization/raw-tempo и native edge extension остаются диагностическими
+прототипами. Pytest не запускался; regression test подготовлен, scoped Ruff clean.
+Парные supported-model controls и общий финальный pytest ещё впереди;
+также остаются named-letter32/2,65 и temporal79:26.
+[Отчёт, неудачные попытки и все логи](tasks/2026-10-14-fast-pronunciation-variants/report.md).
+
+Свежий paired sparse8/9: supported3models×agreed10+полная2×before/after,
+66cases/3366rows/1048actual calls. Времена/confidence/окна полностью совпали:
+QPC2→2proofs, Tiny68→68, Base92→92, потерь/новых outliers0. Source diff
+только3sample-origin calculations+version. Scoped Ruff clean, pytest не запускался.
+Early-stop после двух одинаковых strong mismatches отвергнут:55:30 третьим
+окном восстанавливает гласную и доказывает границу. Это полезный context effect.
+
+Declared whole alif-name (native original-character mapping0:5) открыл
+Muaalem32:0→18proofs/67reads, coverage24,55%, ≤5,5s/read. Новый reference
+outlier32:11+1867ms оставлен в метриках:GT143211 в полной тишине, энергия нового
+слова145080, native onset145078. Сохранены proof/DSP/audio; человеческое
+прослушивание не заявляется. Нужен общий timing convention, не подгонка к GT.
+Prototype не активирован; длинная2 и общий named-name scope ещё впереди.
+[Парные логи, причины и аудио32:11](tasks/2026-10-14-fast-sampled-onset-controls/report.md).
+
+FAST named-opening long: declared alif открыл полную2 (0→3proofs,13reads,
+0confident>500). Остановка4 — нужный DSP candidate не читался из-за ненадёжного
+midpoint. Три независимых right-edge reads дали full20phones/min0,526.
+Изолированный `pause_native_onset` доказывает native sample-origin timing,
+не midpoint, без forced/noisy/contextual/future-midpoint shortcuts.
+Свежий12case/607row corpus:194→233proofs,39added,0lost;739reads,
+coverage≤57,152%, input≤97,251%, crop≤5,5s. Поиск292,34→359,38s: ускорения нет.
+Шесть новых reference outliers>500(32:11/16/20,2:4/9/10), старый79:26+508
+остаётся. GT2спорных границ находится в слабом сигнале, native onset возле
+роста энергии; RMS не доказывает temporal корректность. Proof/DSP/audio сохранены.
+Production activation закрыта до temporal policy/calibration; pytest не запускался.
+Дальше2:18: длинный повторяющийся canonical prefix, mismatch возле nasal run и
+обрезанный previous tail; нельзя удалять согласные или снижать quality.
+Static native mappings подтвердили13alif openings, audio-tested пока2/32.
+[Полный отчёт, source guards и все попытки](tasks/2026-10-14-fast-named-opening-long/report.md).
+
+FAST heard-context expansion:2:18 repeated opening требует6слов, но unique
+`يبصرون + صم` seam короче. Fresh previous2,5s read full tail/min0,653;
+one4,2s head read восстановил connected10/min0,634 после2,7s decoder errors.
+Waqf shortcut/удаление consonants/снижение thresholds не применены.
+Изолированный sparse13 разрешает finite expansion только по реально услышанному
+distinct context, подтверждает full connected seam и отдельно валидируетnative
+previous-context provenance. Полная2:14→36proofs/0lost; fresh merged12:
+233→255/0lost,891actual calls,coverage≤57,279%,input≤97,073%,crop≤5,5s.
+Поиск359,38→427,25s: ускорения нет.4новых temporal outliers2:18/21/23/25;
+activation закрыта до temporal проверки, pytest не запускался.
+Следующая причина42: decoder correctly reads previous41body`ولا تشتروا`,
+но target`ولا تلبسوا`; shared first word ошибочно вызываетfatal prefix blocking.
+Full two-word rival/min0,479 сохранён; narrow candidate deflection ещё предстоит.
+[Отчёт, prospective raw data и причина42](tasks/2026-10-14-fast-intra-ayah-waqf/report.md).
+
+FAST sparse10 production: full strong previous-body rival отклоняет candidate
+с общим первым словом, не подтверждая current. Canonical second-word letters
+должны различаться; partial/weak/same-letter варианты остаются защищены.
+Prospective Mua12:255→273proofs/18added/0lost/0new>500; полная2 36→42,
+59 9→21.3declines, прекращены ненужные final extensions. Calls891→983,
+поиск427,25→468,00s из-за дополнительной полезной работы, не ускорение корпуса.
+Перед переносом fresh supported4variants(INT8/FP32/Tiny/Base)×12×before/after:
+96cases/4856rows/1442calls, все строки/dispatches совпали, потерь/новых ошибок0.
+Tighter letter guard проверен predicate-only replay, не новым neural прогоном.
+4regression checks подготовлены; pytest не запускался, scoped Ruff clean.
+Native/context/Muaalem prototypes не активированы; прежние temporal outliers
+и repeated48 остаются, следующий этап ещё нужен.
+[Отчёт, frozen sources и все парные логи](tasks/2026-10-14-fast-previous-body-rejection/report.md).
+
+
+FAST isolated sparse15 late future search: после отказа прежних current recoveries
+частичный cue служит только поиску независимого globally distinct будущего аята.
+Fresh полные12:273→294proofs/21added/0lost/0changed;2 42→50,32 23→29,80 33→40.
+Якоря48→49,24→25,34→36; пропущенные аяты остаются review сconfidence0.
+Calls983→1060,search468,00→499,96s: ускорения нет. Actual crop≤5,5s,
+coverage≤61,614%,input≤99,386%;67source guards сохранены.
+Новые temporal outliers2:53+576/80:37abs672: полная фраза, но широкий
+нестационарный DSP midpoint. Production sparse10 unchanged; activation требует
+решения temporal policy и supported-model controls. Pytest не запускался.
+Следующая причина2:57 — decoded ض вместо ظ и лишний ل, без исправления текста.
+[Отчёт и все попытки](tasks/2026-10-14-fast-late-future-anchor/report.md).
+
+
+FAST temporal attribution sparse15:294proofs median73,5/p95 390,35ms,
+13outliers; это не метрики всех607строк.268pause midpoint median64,5ms,
+4outliers;12experimental native_onset median996ms/9outliers;13wasl0outliers.
+Глобальная замена midpoint на observed first phoneme ухудшает median202,5ms/
+16outliers и отвергнута.9fresh bounded calls изучили7wide midpoint pauses:
+CTC-gap joint2:53/80:37 даёт397/413ms вместо576/672, но2:44mixed replay
+ухудшается316→486ms;4/7joint windows incomplete. Production unchanged,
+native temporal policy ещё не решена. Все данные/логи/source hashes сохранены,
+pytest не запускался, scoped Ruff clean.
+[Атрибуция, контроль и отвергнутые решения](tasks/2026-10-14-fast-temporal-attribution/report.md).
+
+
+FAST native left-context controls:12experimental native_onset boundaries,
+17fresh bounded calls(12×2,5s+3×2,7s+2×4s). Full previous last word7→9/12.
+Right-edge extensions стабильны<1,5ms; left exact-suffix expansions восстановили
+обрезанные1:5/2:9 без измененияcanonical phones. Mixed CTC-gap midpoint помогает
+2:9/23,32:20, но удачные1:5/55:26 ухудшает до-856/-971ms; глобальный перенос
+отвергнут. Остальные mismatches не дают права удалить/заменитьphones.
+Native/Mua activation ещё закрыта; production unchanged, pytest не запускался,
+source67guards/scoped Ruff clean. Physical speech endpoints ещё не доказаны.
+[Все попытки, причины crop/mismatch и отрицательные контроли](tasks/2026-10-14-fast-native-left-context/report.md).
+
+
+FAST production DSP RMS reuse: measured1169whole-recording RMS recomputations
+всуре2 устранены, O(P*N)→O(N)whole reduction. Fresh frozen12 DSP:
+1697PauseDecision/metrics точносовпали,37,955→1,253s;2 36,407→0,568s.
+Fresh full2 sparse10 diagnostic profile:286rows/5proofs/23actual calls,
+всеtimestamps/proofs/geometry/transitions/dispatches сохранились;search57,72→21,06s.
+Acoustic runtime20s unchanged, Mua support неактивирован. Main candidates.py
+перенесён поbytes guard, existingtestmock обновлён, regression подготовлена.
+Scoped Ruff clean; pytest не запускался. ПервыйcProfile precedence mistake
+иmacOSpath guard failure явносохранены; private sparse15 метрики не подменены.
+[Профили, полныйparity иисходники](tasks/2026-10-14-fast-cpu-profile/report.md).
+
+
+FAST integrated DSP+private sparse15 fresh12:607rows/294proofs/1060actualcalls,
+всеtimes/proofs/geometry/transitions/dispatches/errorarrays exactunchanged;
+source67guards, crop≤5,5s/coverage≤61,614%/input≤99,386%. Search499,964→457,998s,
+DSP38,232→1,285s;inferencevariation4,47s отдельно от DSPspeedup.
+Previous-tail190calls/73,49s:44ladder даютfulltail послеinitial suffix<3units,
+поэтомуearlystop поweakshortsuffix отвергнут. Pytest не запускался.
+Следующаяпричина2:57:wrongfirstword, ноretainedwasl exactuniquecanonical pair
+«عليكم الغمام»/min0,918237. Можноисследоватьbodycue дляfuture58/59 search,
+неподтверждаяonset57. Production unchanged thisturn, Mua/native неактивированы.
+[Полныйfreshкорпус, sourceguards иконтрпримеры](tasks/2026-10-14-fast-dsp-integrated-corpus/report.md).
+
+
+FAST private sparse17bodyfuture:2:57 strongunique«عليكم الغمام» onlysearchcue.
+Diagnostic singleforecast8calls noanchor; balancedtwoforecasts7calls proves59
+min.51423, DSPmidpoint+69ms. Freshfull2:50→57/7added/0lost/old50rows unchanged,
+57/58/62/63review0; body57→59,62→64, progressuntil67. Calls302→385,
+search145,40→190,53s; no speedupclaim. New2:60+986ms belongsprivate nativeonset
+atdecayingtail; temporalproblem persists. Mainunchanged, pytest notrun.
+Other11job95663stilllive; fullcorpuscomparison pending, source67frozen.
+[Диагностика, privateprototype и runningjob](tasks/2026-10-14-fast-body-future-cue/report.md).
+
+
+FAST bodyfuture privatefull12completed:294→301proofs/7added/0lost,
+oldconfirmations unchanged,other11rows/dispatches exact. Source67guards,
+1143actualcalls,search506,59s vs458,00s;new60nativeoutlier+986ms remains.
+NoBODYlastayahreads. SupportedASRbodycues eligibleTiny98:5/79:20,Base59:10.
+FreshBase59diagnostic4calls nofuture. Newconcreteadapterbug:raw«أَلَمْ» becomes
+normalized«الم» beforeobserve'sletteraliasexpansion, whilecanonicalrepresent
+retainsordinaryword. Needrawwordownership before expansion;model'sترين/تر
+error separate. Mainunchanged,pytestnotrun.
+[Корпус иприоритетследующейпричины](tasks/2026-10-14-fast-body-future-cue/report.md),
+[СвежийASRdiagnostic](tasks/2026-10-14-fast-asr-body-future/report.md).
+
+
+FAST production Tarteel v4 raw alias ownership: «أَلَمْ» сохраняет роль обычного
+слова; решение о названиях букв выполняется до потери хамзы. Bare/named ALM,
+selected UTF-8 BPE ownership и вероятности сохранены; worker/FULL/CTC unchanged.
+Перед переносом fresh4models×12×before/after:96cases/4856rows/1495actualcalls.
+CTC INT8/FP32 иTiny exactrows/dispatches; Base114→130/16added/0lost/0changedprior/
+0new>500. Новые59:11–17,19–24 и77:25,27,28, errors10–447ms; old79:26+508 remains.
+Base calls273→326/search103,39→122,39s из-за продолжения по новым границам.
+Source/production byte guards и scoped Ruff passed;5регрессий подготовлены,
+pytest не запускался. Canonical DB/manual statuses не менялись.
+[Причина, все парные прогоны и перенос](tasks/2026-10-14-fast-asr-raw-ownership/report.md).
+
+## FULL 2:220: повтор хвоста и смысл confidence — 2026-10-14
+
+Read-only диагностика пользовательского прогона Шатри: повтор окончания219-го
+подтверждён независимымTarteel/QPC. FULL target содержит один экземпляр,
+поэтому220 начинается внутри повтора:4843477мс,conf0/weak-onset.
+Fresh replay совпал; диагностический учёт повтора даёт4845857мс (−53мсGT),
+остальные215–223неизменны. Guards не запускаются: оба токена первого слова
+слабые и нет паузы внутри него. Confidence — геометрическое среднее фонем
+первого слова:187/286низких, медиана20,4% приmedian absGT78,5мс.
+Автоматическое исправление не внедрялось; код/БД/default не изменялись.
+[Причина, независимая проверка и ограничения](tasks/2026-10-14-full-2-220-cause/report.md).
+
+## Отображение сигнала начала вместо смешанного confidence — 2026-10-14
+
+WebGUI/API/read-only snapshots различаютfirst_token_conf («Звук начала»)
+иconfidence первого слова (tooltip). Нет калибровки/поднятияpercent или
+измененияtimings/БД/FAST; auto не становитсяverified. Matchingaudio/time/source/
+conf обязателен; manual/stale/moved/conflicting evidence не наследуется.
+286из286метокШатри2 прочитаны без измененийБД;218:44,8→99,7% звука,220:0%.
+84целевыхpytest/NodeUIpassed,Ruff/JSsyntax/diffclean. Нужен перезапускGUI,
+повторныйFULL не нужен. [Детали и ограничения](tasks/2026-10-14-onset-confidence/report.md).
+
+
+FAST supportedASRbodyfuture privateprobe: correctedthreshold0,6 localdiags
+79→22/2calls/+14ms,98→6/3calls/+12ms. V1copied0,25mistake preserved/rerun.
+Fresh4models×12×before/after:96cases/4856rows/1568calls. CTC/FP32/Base exact,
+Tiny84→90/6added/0lost/0changedprior. Tinysearch48,23→52,55s/calls217→237.
+New79:26+508matchesoldBase508DSPmidpoint, textq0,999868≠temporalassurance;
+branchnotactivated. Current20/21and5remainreview0. Allsource67guards/Ruff passed,
+pytestnotrun/mainexecutorunchanged. Next: headcrop/preroll and79:26physicaltiming.
+[Полныеконтроли ипричины](tasks/2026-10-14-fast-asr-body-future-tiny/report.md).
+
+Общийsuite этой проверки:676passed/8skipped/1failed вFASTsampled-onset
+fixture (ожидалactual!=requested, оба24084); также падает изолированно.
+FASTкод этой задачей не менялся, общийsuite не объявленчистым.
+
+## Уверенность именно в положении начала — 2026-10-15
+
+После уточнения пользователя вариант «Звук начала» заменён оценкой границы.
+Подтверждение требует принятой локальной проверки фразы и паузы с совпадающим
+временем. Обычное CTC и близкий край паузы дают предварительную оценку;
+слабое начало, длинная пауза и предупреждение повторной проверки — сомнительную.
+При недостатке или несовпадении данных оценка отсутствует. Проценты фонем
+больше не обозначают точность времени.
+
+286 меток Шатри 2: 178 предварительных, 74 сомнительных, 34 без оценки;
+220-й сомнительный. Фатиха 1:2 и Mujawwad 98:7 подтверждены сохранёнными
+локальными доказательствами. БД, времена, FAST и модели не изменялись.
+Нужен перезапуск GUI; повторный FULL не требуется.
+
+86 целевых pytest и Node UI прошли; Ruff, JS syntax и diff-check чистые.
+Общий набор: 678 passed, 8 skipped, 1 известный сбой FAST sampled-onset
+(ожидается actual != requested, оба 24084 мс). Общий набор не объявлен чистым.
+[Основания оценки и ограничения](tasks/2026-10-14-boundary-confidence/report.md).
+
+
+FAST production sparse11-head-boundary: независимыйstrongunique body разрешает
+same-pause перечитывание, еслипервыйASRword содержитcanonicalstemслишнимокончанием
+(98:5«وماء»). Confirmation толькоnewfullhead≥ASR0,6,никакойправкибукв/времени.
+Диагностика6calls отделилаpostcontext отpreroll; Base/Tiny samecrop0,981/0,489
+показалмодельнуюнеуверенность79:20. Fresh4×12×2:96cases/4856rows, CTC/FP32/Base
+exactrows/dispatches; Tiny84→87,new98:5/6/7errors78/12/44ms,0lost/0new>500.
+Mainbyteguard/67+67sourceguards/Ruffpassed;4регрессииподготовлены,pytestне запускался.
+Bodyfuture/79:26+508всёещёprivate; manual/reference DBs unchanged.
+[Причина ифакторныеконтроли](tasks/2026-10-14-fast-head-crop-diagnostic/report.md),
+[Перенос ипарныйкорпус](tasks/2026-10-15-fast-head-word-boundary/report.md).
+
+
+## Завершение серии FAST — 2026-10-15
+
+Финальный общий запуск после всех FAST-изменений: **683 passed, 8 skipped**,
+ошибок нет. Исправлен недискриминирующий sampled-onset fixture; ранее
+описанный сбой закрыт. Ruff FAST-файлов, diff-check и AGENTS/CLAUDE cmp чистые.
+Это единственный общий финальный запуск тестов данной серии.
+
+Приняты: повторное использование RMS, сохранение исходного ASR-написания
+перед alias expansion, узкие исправления executor и same-pause head recheck.
+Два последних свежих парных корпуса по 96 случаев дали Base +16 и Tiny +3
+подтверждения без потерь и изменений прежних, без новых ошибок >500 мс.
+DSP на 12 сурах: 37,955 → 1,253 с при точном совпадении 1697 решений.
+
+Последние диагностические контроли отвергли общий VAD-midpoint перенос:
+79:26 улучшается, но другие паузы ухудшаются. На Tiny 77:7 даже более длинное
+локальное чтение сохраняет split «إن ما» вместо «إنما»; автоматическое
+склеивание без проверки неоднозначностей не добавлено. Эти ограничения,
+79:20 Tiny и прежний Base 79:26 +508 мс остаются открытыми. Body-future и
+Muaalem остаются исследовательскими; БД и модельные defaults не изменялись.
+
+[Итог, изменённые файлы, журналы и ограничения](tasks/2026-10-15-fast-final-verification/report.md).
+
+
+## FAST: split первого ASR-слова — 2026-10-15
+
+Sparse12 исправляет Tiny77:7 без изменения canonical:«إن ما» сверяется по
+полным буквам и всем исходным selected tokens; proof требует минимум2 целых
+canonical words, симметричных конкурентов/внутренних начал и прежнего порога0,6.
+Уникальный split head разрешает лишь конечное расширение той же паузы;
+повторы/aliases/неясная attribution/сильное противоречие отклоняются.
+Validator повторно проверяет ledger; времён из текста не выводит.
+
+Свежие4×12×2: Tiny87→105 подтверждений,18 новых ошибок2–447мс,
+медиана42,5мс; прежние подтверждения не потеряны/не изменены, новых>500мс нет.
+Остальные47случаев имеют точные rows/dispatches. Tiny calls231→260;
+3повтора77: executor median2,195→9,071с — рост покрытия стоит времени.
+Гамиди80/98/112×4×2: все12пар совпали, но нового split-положительного случая
+там нет; полная переносимость не доказана. Лимиты6s/65%/200% соблюдены.
+
+Энергетический midpoint на контролях отвергнут:79:26+508→+518…618мс;
+reference не содержит методики физической разметки, listening не выполнен.
+Base79:26+508мс без review и Tiny79:20 остаются открытыми.
+Финальный общий pytest704passed/8skipped,21новый контроль; scoped Ruff чистый,
+1247 ASR observations replay совпали, JSON proof принят validator,
+48 protected DB SHA/AGENTS sync неизменны. FULL/UI/defaults не менялись задачей.
+[Отчёт,baseline,всеопытыилоги](tasks/2026-10-15-fast-next-iteration/report.md).
+
+
+## План системного исследования FAST — 2026-10-15
+
+Подготовлен план исполнения в другом чате с функцией «Цель»: M0–M7,
+реестр H1–H8, контракт identity/search cue/time, причинные проверки CTC,
+bootstrap/recovery, отдельная временная ветка, межчтецовый и широкий corpus gates.
+Повторный read-only анализ sparse12: у каждого CTC10/12сур без опоры,
+120/111calls и100/91prefix rejections; denied reads0. Beam/posterior уже есть,
+поэтому план не предлагает их повторное добавление. Проверено наличие audio/DB
+четырёх других чтецов80/98/112. Внешние первичные источники и ограничения
+приведены в research.md. Это подготовка, новые model calls/pytest/production
+изменения не выполнялись. Готовое поручение включает создание цели без
+навязанного token budget и сохранение прогресса/логов.
+[Полный план](tasks/2026-10-15-fast-systematic-research/plan.md),
+[исследование](tasks/2026-10-15-fast-systematic-research/research.md),
+[поручение для нового чата](tasks/2026-10-15-fast-systematic-research/handoff.md).
+
+
+## Релиз 0.3.0 — 2026-10-15
+
+Подготовлен выпуск накопленных FAST/FULL изменений, onset confidence и UI.
+Версии и ссылки macOS/Windows обновлены до 0.3.0. Локально: 734 passed,
+8 opt-in skipped; Ruff приложения, tools и tests, JS syntax/async regressions,
+diff-check и AGENTS/CLAUDE sync — OK. Исторические диагностические снимки
+`docs/tasks` сохранены и исключены из Ruff. Публикация через tag CI GitHub.
+Подробности: [release task](tasks/2026-10-15-release-0.3.0/task.md).

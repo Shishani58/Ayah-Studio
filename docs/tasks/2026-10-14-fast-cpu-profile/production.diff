@@ -1,0 +1,36 @@
+--- before/candidates.py
++++ after/candidates.py
+@@ -303,10 +303,14 @@
+     if not energy:
+         return []
+ 
++    import numpy as np
++
++    audio = np.asarray(pcm, dtype=np.float32).reshape(-1)
++    audio_rms = float(np.sqrt(np.mean(audio * audio))) if audio.size else 1e-10
+     decisions: list[PauseDecision] = []
+     intro_basmala = surah not in (None, 1, 9)
+     for idx, (p, weak) in enumerate(energy):
+-        dsp = _dsp_pause_metrics(pcm, sr, p)
++        dsp = _dsp_pause_metrics(pcm, sr, p, audio_rms=audio_rms)
+         dsp_ok = _dsp_accepts_pause(dsp) or (weak and _dsp_accepts_weak_pause(dsp, p))
+         vad_ok: bool | None = None
+         reason = "weak-dsp" if weak else "dsp"
+@@ -412,7 +416,7 @@
+     return _best_overlapping(pause, ten + vad) is not None
+ 
+ 
+-def _dsp_pause_metrics(pcm, sr: int, pause: Pause) -> dict[str, float]:
++def _dsp_pause_metrics(pcm, sr: int, pause: Pause, *, audio_rms: float | None = None) -> dict[str, float]:
+     """Cheap DSP features for an energy pause shelf."""
+     import numpy as np
+ 
+@@ -434,7 +438,7 @@
+     seg = seg - float(np.mean(seg))
+     eps = 1e-10
+     rms = float(np.sqrt(np.mean(seg * seg)))
+-    all_rms = float(np.sqrt(np.mean(audio * audio))) if audio.size else eps
++    all_rms = audio_rms if audio_rms is not None else (float(np.sqrt(np.mean(audio * audio))) if audio.size else eps)
+     rms_ratio = rms / max(all_rms, eps)
+ 
+     max_fft = min(seg.size, 2048)

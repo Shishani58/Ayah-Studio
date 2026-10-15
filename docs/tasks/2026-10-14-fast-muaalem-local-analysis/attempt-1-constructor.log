@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-14-fast-muaalem-local-analysis/probe.py", line 40, in <module>
+    adapter = MuaalemLocal(bundle)
+  File "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-14-fast-muaalem-local-analysis/probe.py", line 22, in __init__
+    super().__init__(selected)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_adapters.py", line 101, in __init__
+    raise ValueError("FAST requires an identifiable installed CTC model")
+ValueError: FAST requires an identifiable installed CTC model

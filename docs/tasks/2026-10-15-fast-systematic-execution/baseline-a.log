@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "<string>", line 13, in <module>
+    runpy.run_path(str(root/'tools/bench_fast_models.py'),run_name='__main__')
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen runpy>", line 294, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/baseline/tools/bench_fast_models.py", line 214, in <module>
+    main()
+    ~~~~^^
+  File "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/baseline/tools/bench_fast_models.py", line 138, in main
+    bundle = align._get_onnx_bundle()
+  File "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/baseline/surah_cutter/core/align.py", line 863, in _get_onnx_bundle
+    raise FileNotFoundError(
+    ...<2 lines>...
+    )
+FileNotFoundError: ONNX alignment model not found at '/Users/ayub/.surah-cutter/models/wav2vec2-quran-phonetics.onnx'. Export it first:
+    python -m surah_cutter.tools.export_onnx

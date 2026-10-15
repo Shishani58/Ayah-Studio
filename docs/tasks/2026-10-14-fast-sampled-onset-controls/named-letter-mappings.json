@@ -1,0 +1,117 @@
+{
+  "cases": [
+    {
+      "surah": 2,
+      "canonical_words": [
+        "الٓمٓ"
+      ],
+      "model_text": "الٓمٓ",
+      "phones": "ءَلِفلَااااااممممِۦۦۦۦۦۦم",
+      "mapping": [
+        {
+          "char": "ا",
+          "pos": [
+            0,
+            5
+          ],
+          "deleted": false,
+          "phones": "ءَلِف"
+        },
+        {
+          "char": "ل",
+          "pos": [
+            5,
+            13
+          ],
+          "deleted": false,
+          "phones": "لَاااااا"
+        },
+        {
+          "char": "ٓ",
+          "pos": [
+            13,
+            13
+          ],
+          "deleted": true,
+          "phones": ""
+        },
+        {
+          "char": "م",
+          "pos": [
+            13,
+            25
+          ],
+          "deleted": false,
+          "phones": "ممممِۦۦۦۦۦۦم"
+        },
+        {
+          "char": "ٓ",
+          "pos": [
+            25,
+            25
+          ],
+          "deleted": true,
+          "phones": ""
+        }
+      ]
+    },
+    {
+      "surah": 32,
+      "canonical_words": [
+        "الٓمٓ"
+      ],
+      "model_text": "الٓمٓ",
+      "phones": "ءَلِفلَااااااممممِۦۦۦۦۦۦم",
+      "mapping": [
+        {
+          "char": "ا",
+          "pos": [
+            0,
+            5
+          ],
+          "deleted": false,
+          "phones": "ءَلِف"
+        },
+        {
+          "char": "ل",
+          "pos": [
+            5,
+            13
+          ],
+          "deleted": false,
+          "phones": "لَاااااا"
+        },
+        {
+          "char": "ٓ",
+          "pos": [
+            13,
+            13
+          ],
+          "deleted": true,
+          "phones": ""
+        },
+        {
+          "char": "م",
+          "pos": [
+            13,
+            25
+          ],
+          "deleted": false,
+          "phones": "ممممِۦۦۦۦۦۦم"
+        },
+        {
+          "char": "ٓ",
+          "pos": [
+            25,
+            25
+          ],
+          "deleted": true,
+          "phones": ""
+        }
+      ]
+    }
+  ],
+  "text_targets_sha256": "c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a",
+  "canonical_sha256": "c35272ed2a80916f5665f18e150686cfe258249cdf3ad50d3ac787f8cfe3fd66",
+  "scope": "static package character mappings only; no neural forwards"
+}

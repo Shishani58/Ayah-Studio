@@ -1,0 +1,647 @@
+[
+  {
+    "model": "fastconformer",
+    "decoder": "rnnt",
+    "load_s": 9.476134000113234,
+    "full": [
+      {
+        "id": "abu_bakr_ash_shatri-1-full",
+        "ref_words": 29,
+        "raw_errors": 0,
+        "errors": 0,
+        "removed_basmala_words": 0,
+        "elapsed_s": 1.8706299590412527,
+        "ayah_onsets": [
+          {
+            "ayah": 1,
+            "onset_ms": 400.0,
+            "error_ms": 300.0
+          },
+          {
+            "ayah": 2,
+            "onset_ms": 6800.0,
+            "error_ms": 292.0
+          },
+          {
+            "ayah": 3,
+            "onset_ms": 12080.0,
+            "error_ms": 519.0
+          },
+          {
+            "ayah": 4,
+            "onset_ms": 16080.000000000002,
+            "error_ms": 80.00000000000182
+          },
+          {
+            "ayah": 5,
+            "onset_ms": 21680.0,
+            "error_ms": 144.0
+          },
+          {
+            "ayah": 6,
+            "onset_ms": 27920.0,
+            "error_ms": 70.0
+          },
+          {
+            "ayah": 7,
+            "onset_ms": 33520.0,
+            "error_ms": 117.0
+          }
+        ]
+      },
+      {
+        "id": "saad_al_ghamidi-112-full",
+        "ref_words": 15,
+        "raw_errors": 6,
+        "errors": 2,
+        "removed_basmala_words": 4,
+        "elapsed_s": 0.9513622920494527,
+        "ayah_onsets": [
+          {
+            "ayah": 1,
+            "onset_ms": 5760.0,
+            "error_ms": 430.0
+          },
+          {
+            "ayah": 3,
+            "onset_ms": 10400.0,
+            "error_ms": 273.0
+          },
+          {
+            "ayah": 4,
+            "onset_ms": 12720.0,
+            "error_ms": 227.0
+          }
+        ]
+      },
+      {
+        "id": "mohammed_siddiq_al_minshawi-112-full",
+        "ref_words": 15,
+        "raw_errors": 6,
+        "errors": 2,
+        "removed_basmala_words": 4,
+        "elapsed_s": 0.631721458863467,
+        "ayah_onsets": [
+          {
+            "ayah": 1,
+            "onset_ms": 4880.0,
+            "error_ms": 280.0
+          },
+          {
+            "ayah": 3,
+            "onset_ms": 11040.000000000002,
+            "error_ms": 440.0000000000018
+          },
+          {
+            "ayah": 4,
+            "onset_ms": 14480.0,
+            "error_ms": 453.0
+          }
+        ]
+      },
+      {
+        "id": "mahmoud_khalil_al_hussary-112-full",
+        "ref_words": 15,
+        "raw_errors": 4,
+        "errors": 0,
+        "removed_basmala_words": 4,
+        "elapsed_s": 0.9606682499870658,
+        "ayah_onsets": [
+          {
+            "ayah": 1,
+            "onset_ms": 8640.0,
+            "error_ms": 712.0
+          },
+          {
+            "ayah": 2,
+            "onset_ms": 15120.000000000002,
+            "error_ms": 1396.0000000000018
+          },
+          {
+            "ayah": 3,
+            "onset_ms": 19360.0,
+            "error_ms": 557.0
+          },
+          {
+            "ayah": 4,
+            "onset_ms": 25040.0,
+            "error_ms": 312.0
+          }
+        ]
+      },
+      {
+        "id": "abdul_basit_mujawwad-112-full",
+        "ref_words": 15,
+        "raw_errors": 4,
+        "errors": 0,
+        "removed_basmala_words": 4,
+        "elapsed_s": 3.356030958937481,
+        "ayah_onsets": [
+          {
+            "ayah": 1,
+            "onset_ms": 11760.0,
+            "error_ms": 2267.0
+          },
+          {
+            "ayah": 2,
+            "onset_ms": 18560.0,
+            "error_ms": 1444.0
+          },
+          {
+            "ayah": 3,
+            "onset_ms": 23840.0,
+            "error_ms": 1286.0
+          },
+          {
+            "ayah": 4,
+            "onset_ms": 31280.0,
+            "error_ms": 1599.0
+          }
+        ]
+      },
+      {
+        "id": "abu_bakr_ash_shatri-112-full",
+        "ref_words": 15,
+        "raw_errors": 5,
+        "errors": 1,
+        "removed_basmala_words": 4,
+        "elapsed_s": 1.0371596671175212,
+        "ayah_onsets": [
+          {
+            "ayah": 1,
+            "onset_ms": 6160.0,
+            "error_ms": 66.0
+          },
+          {
+            "ayah": 2,
+            "onset_ms": 9200.000000000002,
+            "error_ms": 445.0000000000018
+          },
+          {
+            "ayah": 3,
+            "onset_ms": 10960.0,
+            "error_ms": 97.0
+          },
+          {
+            "ayah": 4,
+            "onset_ms": 13680.0,
+            "error_ms": 150.0
+          }
+        ]
+      }
+    ],
+    "local": [
+      {
+        "id": "abu_bakr_ash_shatri-1-local",
+        "text": "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+        "elapsed_s": 0.7238117079250515
+      },
+      {
+        "id": "shatri-1-local-shift600",
+        "text": "الحمد لله رب العالمين",
+        "elapsed_s": 0.9804339169058949
+      },
+      {
+        "id": "saad_al_ghamidi-112-local",
+        "text": "بسم الله الرحمن الرحيم",
+        "elapsed_s": 0.4918222080450505
+      },
+      {
+        "id": "mohammed_siddiq_al_minshawi-112-local",
+        "text": "بسم الله الرحمن الرحيم",
+        "elapsed_s": 0.46335149998776615
+      },
+      {
+        "id": "mahmoud_khalil_al_hussary-112-local",
+        "text": "",
+        "elapsed_s": 0.43993008392862976
+      },
+      {
+        "id": "abdul_basit_mujawwad-112-local",
+        "text": "بسم الله الرحمن الرحيم",
+        "elapsed_s": 1.0460974590387195
+      },
+      {
+        "id": "abu_bakr_ash_shatri-112-local",
+        "text": "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم",
+        "elapsed_s": 0.8954875830095261
+      }
+    ],
+    "silence": [
+      {
+        "text": "",
+        "words": 0
+      }
+    ],
+    "shift": [
+      {
+        "word": "الحمد",
+        "same_word": true,
+        "start_residual_ms": -40.0,
+        "end_residual_ms": -280.0
+      },
+      {
+        "word": "لله",
+        "same_word": true,
+        "start_residual_ms": 120.0,
+        "end_residual_ms": -360.0
+      },
+      {
+        "word": "رب",
+        "same_word": true,
+        "start_residual_ms": 40.0,
+        "end_residual_ms": -359.99999999999955
+      },
+      {
+        "word": "العالمين",
+        "same_word": true,
+        "start_residual_ms": -39.999999999999545,
+        "end_residual_ms": -680.0
+      }
+    ],
+    "full_wer_pct": 4.8076923076923075,
+    "full_reference_words": 104,
+    "fatiha_timing": {
+      "count": 7,
+      "median_ms": 144.0,
+      "max_ms": 519.0,
+      "over500": 1
+    }
+  },
+  {
+    "model": "fastconformer-ctc",
+    "decoder": "ctc",
+    "load_s": 12.813594124978408,
+    "full": [
+      {
+        "id": "abu_bakr_ash_shatri-1-full",
+        "ref_words": 29,
+        "raw_errors": 0,
+        "errors": 0,
+        "removed_basmala_words": 0,
+        "elapsed_s": 2.774710541823879,
+        "ayah_onsets": [
+          {
+            "ayah": 1,
+            "onset_ms": 320.0,
+            "error_ms": 220.0
+          },
+          {
+            "ayah": 2,
+            "onset_ms": 4480.0,
+            "error_ms": -2028.0
+          },
+          {
+            "ayah": 3,
+            "onset_ms": 10000.0,
+            "error_ms": -1561.0
+          },
+          {
+            "ayah": 4,
+            "onset_ms": 14160.0,
+            "error_ms": -1840.0
+          },
+          {
+            "ayah": 5,
+            "onset_ms": 18560.0,
+            "error_ms": -2976.0
+          },
+          {
+            "ayah": 6,
+            "onset_ms": 26560.000000000004,
+            "error_ms": -1289.9999999999964
+          },
+          {
+            "ayah": 7,
+            "onset_ms": 31520.0,
+            "error_ms": -1883.0
+          }
+        ]
+      },
+      {
+        "id": "saad_al_ghamidi-112-full",
+        "ref_words": 15,
+        "raw_errors": 4,
+        "errors": 0,
+        "removed_basmala_words": 4,
+        "elapsed_s": 0.9115869998931885,
+        "ayah_onsets": [
+          {
+            "ayah": 1,
+            "onset_ms": 2800.0000000000005,
+            "error_ms": -2529.9999999999995
+          },
+          {
+            "ayah": 2,
+            "onset_ms": 7520.000000000001,
+            "error_ms": -362.9999999999991
+          },
+          {
+            "ayah": 3,
+            "onset_ms": 9520.0,
+            "error_ms": -607.0
+          },
+          {
+            "ayah": 4,
+            "onset_ms": 12400.0,
+            "error_ms": -93.0
+          }
+        ]
+      },
+      {
+        "id": "mohammed_siddiq_al_minshawi-112-full",
+        "ref_words": 15,
+        "raw_errors": 4,
+        "errors": 0,
+        "removed_basmala_words": 4,
+        "elapsed_s": 0.9086094589438289,
+        "ayah_onsets": [
+          {
+            "ayah": 1,
+            "onset_ms": 3520.0,
+            "error_ms": -1080.0
+          },
+          {
+            "ayah": 2,
+            "onset_ms": 7040.0,
+            "error_ms": -907.0
+          },
+          {
+            "ayah": 3,
+            "onset_ms": 10160.0,
+            "error_ms": -440.0
+          },
+          {
+            "ayah": 4,
+            "onset_ms": 13520.0,
+            "error_ms": -507.0
+          }
+        ]
+      },
+      {
+        "id": "mahmoud_khalil_al_hussary-112-full",
+        "ref_words": 15,
+        "raw_errors": 4,
+        "errors": 0,
+        "removed_basmala_words": 4,
+        "elapsed_s": 1.1269008328672498,
+        "ayah_onsets": [
+          {
+            "ayah": 1,
+            "onset_ms": 5520.000000000001,
+            "error_ms": -2407.999999999999
+          },
+          {
+            "ayah": 2,
+            "onset_ms": 12480.0,
+            "error_ms": -1244.0
+          },
+          {
+            "ayah": 3,
+            "onset_ms": 17520.0,
+            "error_ms": -1283.0
+          },
+          {
+            "ayah": 4,
+            "onset_ms": 23440.0,
+            "error_ms": -1288.0
+          }
+        ]
+      },
+      {
+        "id": "abdul_basit_mujawwad-112-full",
+        "ref_words": 15,
+        "raw_errors": 10,
+        "errors": 10,
+        "removed_basmala_words": 0,
+        "elapsed_s": 3.0082103330641985,
+        "ayah_onsets": [
+          {
+            "ayah": 1,
+            "onset_ms": 5200.0,
+            "error_ms": -4293.0
+          },
+          {
+            "ayah": 2,
+            "onset_ms": 15360.0,
+            "error_ms": -1756.0
+          }
+        ]
+      },
+      {
+        "id": "abu_bakr_ash_shatri-112-full",
+        "ref_words": 15,
+        "raw_errors": 5,
+        "errors": 1,
+        "removed_basmala_words": 4,
+        "elapsed_s": 1.672358375042677,
+        "ayah_onsets": [
+          {
+            "ayah": 1,
+            "onset_ms": 4400.0,
+            "error_ms": -1694.0
+          },
+          {
+            "ayah": 2,
+            "onset_ms": 8400.0,
+            "error_ms": -355.0
+          },
+          {
+            "ayah": 3,
+            "onset_ms": 10560.0,
+            "error_ms": -303.0
+          },
+          {
+            "ayah": 4,
+            "onset_ms": 13120.000000000002,
+            "error_ms": -409.9999999999982
+          }
+        ]
+      }
+    ],
+    "local": [
+      {
+        "id": "abu_bakr_ash_shatri-1-local",
+        "text": "الْحمُْ لِلَّهِ رَبِّ الْعَِينَ",
+        "elapsed_s": 1.418454916914925
+      },
+      {
+        "id": "shatri-1-local-shift600",
+        "text": "الحمد لله رب العالمين",
+        "elapsed_s": 0.7708622079808265
+      },
+      {
+        "id": "saad_al_ghamidi-112-local",
+        "text": "بسم الرحمن الرحيم",
+        "elapsed_s": 0.6640986248385161
+      },
+      {
+        "id": "mohammed_siddiq_al_minshawi-112-local",
+        "text": "بسم الله الرحمن الرحيم",
+        "elapsed_s": 0.8062654999084771
+      },
+      {
+        "id": "mahmoud_khalil_al_hussary-112-local",
+        "text": "م الرحيم الرحمن",
+        "elapsed_s": 0.5315255408640951
+      },
+      {
+        "id": "abdul_basit_mujawwad-112-local",
+        "text": "بسم الله الرحمن الرحيم",
+        "elapsed_s": 1.6731737919617444
+      },
+      {
+        "id": "abu_bakr_ash_shatri-112-local",
+        "text": "بِسم اللَّهِ الرح الرَّح",
+        "elapsed_s": 0.8786112500820309
+      }
+    ],
+    "silence": [
+      {
+        "text": "ت",
+        "words": 1
+      }
+    ],
+    "shift": [
+      {
+        "word": "الحمد",
+        "same_word": false,
+        "start_residual_ms": -40.0,
+        "end_residual_ms": -280.0
+      },
+      {
+        "word": "لله",
+        "same_word": true,
+        "start_residual_ms": -280.0,
+        "end_residual_ms": -520.0
+      },
+      {
+        "word": "رب",
+        "same_word": true,
+        "start_residual_ms": -520.0,
+        "end_residual_ms": -360.0
+      },
+      {
+        "word": "العالمين",
+        "same_word": false,
+        "start_residual_ms": -360.0,
+        "end_residual_ms": -760.0
+      }
+    ],
+    "full_wer_pct": 10.576923076923077,
+    "full_reference_words": 104,
+    "fatiha_timing": {
+      "count": 7,
+      "median_ms": 1840.0,
+      "max_ms": 2976.0,
+      "over500": 6
+    }
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "decoder": "autoregressive-greedy",
+    "load_s": 6.249751291936263,
+    "full": [
+      {
+        "id": "abu_bakr_ash_shatri-1-full",
+        "ref_words": 29,
+        "raw_errors": 8,
+        "errors": 8,
+        "removed_basmala_words": 0,
+        "elapsed_s": 5.116227000020444,
+        "ayah_onsets": []
+      },
+      {
+        "id": "saad_al_ghamidi-112-full",
+        "ref_words": 15,
+        "raw_errors": 0,
+        "errors": 0,
+        "removed_basmala_words": 0,
+        "elapsed_s": 2.0102578750811517,
+        "ayah_onsets": []
+      },
+      {
+        "id": "mohammed_siddiq_al_minshawi-112-full",
+        "ref_words": 15,
+        "raw_errors": 5,
+        "errors": 1,
+        "removed_basmala_words": 4,
+        "elapsed_s": 2.6310354999732226,
+        "ayah_onsets": []
+      },
+      {
+        "id": "mahmoud_khalil_al_hussary-112-full",
+        "ref_words": 15,
+        "raw_errors": 3,
+        "errors": 3,
+        "removed_basmala_words": 0,
+        "elapsed_s": 2.714233750011772,
+        "ayah_onsets": []
+      },
+      {
+        "id": "abdul_basit_mujawwad-112-full",
+        "ref_words": 15,
+        "raw_errors": 1,
+        "errors": 1,
+        "removed_basmala_words": 0,
+        "elapsed_s": 2.2909322078339756,
+        "ayah_onsets": []
+      },
+      {
+        "id": "abu_bakr_ash_shatri-112-full",
+        "ref_words": 15,
+        "raw_errors": 4,
+        "errors": 0,
+        "removed_basmala_words": 4,
+        "elapsed_s": 2.0728329580742866,
+        "ayah_onsets": []
+      }
+    ],
+    "local": [
+      {
+        "id": "abu_bakr_ash_shatri-1-local",
+        "text": "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+        "elapsed_s": 0.8221130829770118
+      },
+      {
+        "id": "shatri-1-local-shift600",
+        "text": "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+        "elapsed_s": 0.8821962079964578
+      },
+      {
+        "id": "saad_al_ghamidi-112-local",
+        "text": "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ",
+        "elapsed_s": 0.7722024170216173
+      },
+      {
+        "id": "mohammed_siddiq_al_minshawi-112-local",
+        "text": "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم قُلْ هُوَ",
+        "elapsed_s": 1.249088249867782
+      },
+      {
+        "id": "mahmoud_khalil_al_hussary-112-local",
+        "text": "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ",
+        "elapsed_s": 0.694469999987632
+      },
+      {
+        "id": "abdul_basit_mujawwad-112-local",
+        "text": "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ",
+        "elapsed_s": 0.8128597079776227
+      },
+      {
+        "id": "abu_bakr_ash_shatri-112-local",
+        "text": "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ",
+        "elapsed_s": 0.7167734170798212
+      }
+    ],
+    "silence": [
+      {
+        "text": "وَالْمُؤْمِنِينَ",
+        "words": 1
+      }
+    ],
+    "shift": [],
+    "full_wer_pct": 12.5,
+    "full_reference_words": 104
+  }
+]

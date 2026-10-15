@@ -1,0 +1,27 @@
+{
+  "audio_sha256": "3b423fbe3e9c2ccbbd0e89d9edce0f40e7dfa81410bfc1ad6b0216076f7d861b",
+  "window_ms": [
+    112820.0,
+    117680.0
+  ],
+  "scope": "VAD/DSP only, no known text or reference provided",
+  "detectors": [
+    {
+      "name": "silero",
+      "pauses": [
+        {
+          "start_ms": 2080.0,
+          "end_ms": 3360.0,
+          "depth_ms": 1280.0,
+          "absolute_start_ms": 114900.0,
+          "absolute_end_ms": 116180.0,
+          "absolute_midpoint_ms": 115540.0
+        }
+      ]
+    },
+    {
+      "name": "ten",
+      "unavailable": "TEN VAD is not installed. Install optional extra: surah-cutter[ten-vad]"
+    }
+  ]
+}

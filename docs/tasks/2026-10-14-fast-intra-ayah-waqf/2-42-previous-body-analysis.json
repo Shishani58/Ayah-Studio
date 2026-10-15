@@ -1,0 +1,118 @@
+{
+  "requested_ayah": 42,
+  "previous_confirmed_ayah": 41,
+  "requested_words": [
+    [
+      618,
+      "وَلَا"
+    ],
+    [
+      619,
+      "تَلۡبِسُواْ"
+    ]
+  ],
+  "shared_first_word_units": [
+    "و",
+    "َ",
+    "ل",
+    "َ",
+    "ا"
+  ],
+  "findings": [
+    {
+      "read_id": 227,
+      "window": [
+        809500.0,
+        811000.0
+      ],
+      "rivals": []
+    },
+    {
+      "read_id": 228,
+      "window": [
+        809500.0,
+        812200.0
+      ],
+      "rivals": [
+        {
+          "owner_ayah": 41,
+          "start_unit": 82,
+          "canonical_words": [
+            [
+              611,
+              "وَلَا"
+            ],
+            [
+              612,
+              "تَشۡتَرُواْ"
+            ]
+          ],
+          "whole_two_word_units": [
+            "و",
+            "َ",
+            "ل",
+            "َ",
+            "ا",
+            "ت",
+            "َ",
+            "ش",
+            "ت",
+            "َ",
+            "ر",
+            "ُ",
+            "ۥ"
+          ],
+          "min_quality": 0.478590726852417
+        }
+      ]
+    },
+    {
+      "read_id": 229,
+      "window": [
+        809500.0,
+        813700.0
+      ],
+      "rivals": [
+        {
+          "owner_ayah": 41,
+          "start_unit": 82,
+          "canonical_words": [
+            [
+              611,
+              "وَلَا"
+            ],
+            [
+              612,
+              "تَشۡتَرُواْ"
+            ]
+          ],
+          "whole_two_word_units": [
+            "و",
+            "َ",
+            "ل",
+            "َ",
+            "ا",
+            "ت",
+            "َ",
+            "ش",
+            "ت",
+            "َ",
+            "ر",
+            "ُ",
+            "ۥ"
+          ],
+          "min_quality": 0.4956875145435333
+        }
+      ]
+    },
+    {
+      "read_id": 230,
+      "window": [
+        821489.875,
+        826989.875
+      ],
+      "rivals": []
+    }
+  ],
+  "scope": "offline evidence only; a shared first word never established the requested owner"
+}

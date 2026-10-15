@@ -1,0 +1,150 @@
+[
+  {
+    "surah": 1,
+    "ayah": 2,
+    "audio_sha256": "6dedf8c3b88d2cd12c992710839443abebf26e7ef1fcea696acc8961b5836571",
+    "crop_ms": [
+      3780.0,
+      8620.0
+    ],
+    "dsp_pause_ms": [
+      5780.0,
+      6620.0
+    ],
+    "original_ms": 6200,
+    "hypotheses": [
+      {
+        "peak_fraction": 0.01,
+        "threshold": 0.004118491429835558,
+        "previous_energy_end_ms": 6200.0,
+        "current_energy_start_ms": 6200.0,
+        "midpoint_ms": 6200.0
+      },
+      {
+        "peak_fraction": 0.02,
+        "threshold": 0.008236982859671116,
+        "previous_energy_end_ms": 6200.0,
+        "current_energy_start_ms": 6360.0,
+        "midpoint_ms": 6280.0
+      },
+      {
+        "peak_fraction": 0.05,
+        "threshold": 0.020592456683516502,
+        "previous_energy_end_ms": 5900.0,
+        "current_energy_start_ms": 6620.0,
+        "midpoint_ms": 6260.0
+      }
+    ]
+  },
+  {
+    "surah": 73,
+    "ayah": 20,
+    "audio_sha256": "11ae3bc3799cb039f6f937cb45b7706782545e240acb43725b05c750c828688c",
+    "crop_ms": [
+      137440.0,
+      142240.0
+    ],
+    "dsp_pause_ms": [
+      139440.0,
+      140240.0
+    ],
+    "original_ms": 139840,
+    "hypotheses": [
+      {
+        "peak_fraction": 0.01,
+        "threshold": 0.003448264440521598,
+        "previous_energy_end_ms": 139840.0,
+        "current_energy_start_ms": 139840.0,
+        "midpoint_ms": 139840.0
+      },
+      {
+        "peak_fraction": 0.02,
+        "threshold": 0.006896528881043196,
+        "previous_energy_end_ms": 139840.0,
+        "current_energy_start_ms": 139840.0,
+        "midpoint_ms": 139840.0
+      },
+      {
+        "peak_fraction": 0.05,
+        "threshold": 0.017241323366761208,
+        "previous_energy_end_ms": 139480.0,
+        "current_energy_start_ms": 140240.0,
+        "midpoint_ms": 139860.0
+      }
+    ]
+  },
+  {
+    "surah": 77,
+    "ayah": 25,
+    "audio_sha256": "8bee860fa86f33e1b8d8b28236d125766f3133d32e8c77eff2baee2e6e4f2e10",
+    "crop_ms": [
+      82820.0,
+      88020.0
+    ],
+    "dsp_pause_ms": [
+      84820.0,
+      86020.0
+    ],
+    "original_ms": 85420,
+    "hypotheses": [
+      {
+        "peak_fraction": 0.01,
+        "threshold": 0.0033241882920265198,
+        "previous_energy_end_ms": 85420.0,
+        "current_energy_start_ms": 85420.0,
+        "midpoint_ms": 85420.0
+      },
+      {
+        "peak_fraction": 0.02,
+        "threshold": 0.0066483765840530396,
+        "previous_energy_end_ms": 85320.0,
+        "current_energy_start_ms": 85420.0,
+        "midpoint_ms": 85370.0
+      },
+      {
+        "peak_fraction": 0.05,
+        "threshold": 0.0166209414601326,
+        "previous_energy_end_ms": 85080.0,
+        "current_energy_start_ms": 86020.0,
+        "midpoint_ms": 85550.0
+      }
+    ]
+  },
+  {
+    "surah": 79,
+    "ayah": 26,
+    "audio_sha256": "3b423fbe3e9c2ccbbd0e89d9edce0f40e7dfa81410bfc1ad6b0216076f7d861b",
+    "crop_ms": [
+      113320.0,
+      118180.0
+    ],
+    "dsp_pause_ms": [
+      115320.0,
+      116180.0
+    ],
+    "original_ms": 115750,
+    "hypotheses": [
+      {
+        "peak_fraction": 0.01,
+        "threshold": 0.0033439870458096266,
+        "previous_energy_end_ms": 115760.0,
+        "current_energy_start_ms": 115760.0,
+        "midpoint_ms": 115760.0
+      },
+      {
+        "peak_fraction": 0.02,
+        "threshold": 0.006687974091619253,
+        "previous_energy_end_ms": 115760.0,
+        "current_energy_start_ms": 115760.0,
+        "midpoint_ms": 115760.0
+      },
+      {
+        "peak_fraction": 0.05,
+        "threshold": 0.016719935461878777,
+        "previous_energy_end_ms": 115540.0,
+        "current_energy_start_ms": 116180.0,
+        "midpoint_ms": 115860.0
+      }
+    ]
+  }
+]

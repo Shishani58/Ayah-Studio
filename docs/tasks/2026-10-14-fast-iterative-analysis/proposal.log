@@ -1,0 +1,92 @@
+quran-phonetics 1 0.76 review 6 coverage 0.115 calls 4
+quran-phonetics 32 0.96 review 30 coverage 0.021 calls 7
+quran-phonetics 55 1.49 review 78 coverage 0.03 calls 14
+quran-phonetics 59 1.05 review 24 coverage 0.024 calls 10
+quran-phonetics 65 1.22 review 12 coverage 0.044 calls 12
+quran-phonetics 73 0.59 review 20 coverage 0.029 calls 5
+quran-phonetics 77 1.0 review 50 coverage 0.045 calls 8
+quran-phonetics 80 1.26 review 42 coverage 0.095 calls 13
+quran-phonetics 98 1.69 review 7 coverage 0.249 calls 18
+quran-phonetics 112 0.48 review 4 coverage 0.361 calls 6
+whisper-tarteel-tiny 1 1.31 review 5 coverage 0.131 calls 6
+whisper-tarteel-tiny 32 1.17 review 30 coverage 0.016 calls 5
+whisper-tarteel-tiny 55 9.11 review 59 coverage 0.12 calls 45
+whisper-tarteel-tiny 59 3.87 review 21 coverage 0.045 calls 17
+whisper-tarteel-tiny 65 1.83 review 12 coverage 0.031 calls 8
+whisper-tarteel-tiny 73 7.54 review 3 coverage 0.221 calls 36
+whisper-tarteel-tiny 77 2.21 review 44 coverage 0.065 calls 10
+whisper-tarteel-tiny 80 4.08 review 33 coverage 0.138 calls 21
+whisper-tarteel-tiny 98 2.58 review 4 coverage 0.159 calls 12
+whisper-tarteel-tiny 112 1.58 review 0 coverage 0.348 calls 6
+whisper-tarteel-base 1 2.45 review 5 coverage 0.131 calls 6
+whisper-tarteel-base 32 1.54 review 30 coverage 0.013 calls 4
+whisper-tarteel-base 55 16.02 review 59 coverage 0.115 calls 43
+whisper-tarteel-base 59 18.59 review 16 coverage 0.126 calls 48
+whisper-tarteel-base 65 2.96 review 12 coverage 0.031 calls 8
+whisper-tarteel-base 73 12.07 review 1 coverage 0.215 calls 34
+whisper-tarteel-base 77 7.76 review 35 coverage 0.128 calls 20
+whisper-tarteel-base 80 8.29 review 32 coverage 0.146 calls 23
+whisper-tarteel-base 98 8.23 review 1 coverage 0.288 calls 23
+whisper-tarteel-base 112 2.46 review 0 coverage 0.348 calls 6
+{
+  "quran-phonetics": {
+    "surahs": 10,
+    "ayahs": 275,
+    "median_ms": 4465.0,
+    "p95_ms": 10924.1,
+    "max_ms": 16308,
+    "over500": 253,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 273,
+    "load_probe_seconds": 0.20141279185190797,
+    "decode_seconds": 2.476563626434654,
+    "dsp_seconds": 1.5489629579242319,
+    "inference_match_seconds": 10.49482137686573,
+    "search_seconds": 12.043784334789962,
+    "audio_ms": 207600.0,
+    "covered_audio_ms": 131980.0,
+    "total_ms": 2703751.9375,
+    "model_reads": 97
+  },
+  "whisper-tarteel-tiny": {
+    "surahs": 10,
+    "ayahs": 275,
+    "median_ms": 3706.0,
+    "p95_ms": 13460.2,
+    "max_ms": 16980,
+    "over500": 198,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 211,
+    "load_probe_seconds": 3.689329250017181,
+    "decode_seconds": 2.476563626434654,
+    "dsp_seconds": 1.5489629579242319,
+    "inference_match_seconds": 35.27284187497571,
+    "search_seconds": 36.82180483289994,
+    "audio_ms": 281130.0,
+    "covered_audio_ms": 229320.0,
+    "total_ms": 2703751.9375,
+    "model_reads": 166
+  },
+  "whisper-tarteel-base": {
+    "surahs": 10,
+    "ayahs": 275,
+    "median_ms": 1936.0,
+    "p95_ms": 13460.2,
+    "max_ms": 16980,
+    "over500": 178,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 191,
+    "load_probe_seconds": 4.166006417013705,
+    "decode_seconds": 2.476563626434654,
+    "dsp_seconds": 1.5489629579242319,
+    "inference_match_seconds": 80.36268491717055,
+    "search_seconds": 81.91164787509479,
+    "audio_ms": 363130.0,
+    "covered_audio_ms": 296820.0,
+    "total_ms": 2703751.9375,
+    "model_reads": 215
+  }
+}

@@ -102,20 +102,40 @@ async function generationRaces() {
 }
 function confidenceAndModes() {
   const c = harness(['timingConfidence', 'suraNeedsGeneration', 'applyTimingStatus']);
-  for (const [value, level] of [[0, 'low'], [0.32, 'low'], [0.33, 'medium'], [0.65, 'medium'],
-    [0.66, 'high'], [1, 'high'], [null, 'unknown'], [NaN, 'unknown'], [Infinity, 'unknown'],
-    [-0.1, 'unknown'], [1.1, 'unknown'], ['0.9', 'unknown']]) {
-    assert.equal(c.timingConfidence({time: 100, confidence: value, status: 'auto'}).level, level);
+  for (const value of [0, .32, .33, .65, .66, 1, null, NaN, Infinity, -.1, 1.1, '0.9']) {
+    assert.equal(c.timingConfidence({time: 100, confidence: value, status: 'auto'}).level, 'unknown');
   }
   for (const extra of [{stale: true}, {status: 'edited'}, {time: null}]) {
-    assert.equal(c.timingConfidence({time: 100, confidence: 0.9, ...extra}).level, 'unknown');
+    assert.equal(c.timingConfidence({time: 100, confidence: .99,
+      onset_evidence: {first_sound: .99, boundary: {level: 'high', reason: 'local-phrase-and-pause'}},
+      ...extra}).level, 'unknown');
   }
-  assert.match(c.timingConfidence({time: 100, confidence: 0}).label, /0/);
+  const supported = c.timingConfidence({time: 100, confidence: .99,
+    onset_evidence: {first_sound: .99, boundary: {level: 'medium', reason: 'alignment-only'}}});
+  assert.equal(supported.level, 'medium');
+  assert.equal(supported.label, 'Начало: предварительное');
+  assert.doesNotMatch(supported.label, /%/);
+  assert.match(supported.title, /независимо не проверено/);
+  const local = c.timingConfidence({time: 100, confidence: .01,
+    onset_evidence: {first_sound: .99, boundary: {level: 'high', reason: 'local-phrase-and-pause'}}});
+  assert.equal(local.level, 'high');
+  assert.equal(local.label, 'Начало: подтверждено');
+  const weak = c.timingConfidence({time: 100, confidence: 0,
+    onset_evidence: {first_sound: .0002, boundary: {level: 'low', reason: 'weak-onset'}}});
+  assert.equal(weak.level, 'low');
+  assert.equal(weak.label, 'Начало: сомнительное');
+  const ambiguous = c.timingConfidence({time: 100, confidence: .99,
+    onset_evidence: {first_sound: .99, boundary: {level: 'low', reason: 'late-onset-in-pause'}}});
+  assert.equal(ambiguous.level, 'low');
+  assert.match(c.timingConfidence({time: 100, confidence: .99}).label, /нет оценки/);
+  assert.equal(c.timingConfidence({time: 100, status: 'verified', confidence: null}).label, 'Начало: проверено');
+  assert.equal(c.timingConfidence({time: 100, status: 'verified', confidence: .99}, true).label, 'Начало: сомнительное');
   const badge = {dataset: {}}, row = {dataset: {}, querySelector: selector => selector === '.timing-confidence' ? badge : null};
-  c.applyTimingStatus(row, {time: 100, confidence: 0.9, status: 'auto'});
-  assert.equal(row.dataset.timingStatus, 'uncertain'); // confidence never verifies a row
-  assert.equal(badge.dataset.level, 'high'); assert.match(badge.textContent, /90/);
-  c.applyTimingStatus(row, {time: 100, confidence: 0.9, status: 'edited'});
+  c.applyTimingStatus(row, {time: 100, status: 'auto', confidence: .99,
+    onset_evidence: {boundary: {level: 'high', reason: 'local-phrase-and-pause'}}});
+  assert.equal(row.dataset.timingStatus, 'uncertain'); // model confirmation never verifies a row
+  assert.equal(badge.dataset.level, 'high'); assert.equal(badge.textContent, 'Начало: подтверждено');
+  c.applyTimingStatus(row, {time: 100, confidence: .99, status: 'edited'});
   assert.equal(badge.dataset.level, 'unknown');
   let mode = 'full'; c.selectedMode = () => mode;
   assert.equal(c.suraNeedsGeneration({status: 'processed', alignment_modes: ['fast']}), true);

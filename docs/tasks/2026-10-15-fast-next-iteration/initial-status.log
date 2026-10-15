@@ -1,0 +1,70 @@
+ M docs/STATUS.md
+ M docs/full-performance.md
+ M docs/project.md
+ M surah_cutter/core/align.py
+ M surah_cutter/core/align_tiled.py
+ M surah_cutter/core/candidates.py
+ M surah_cutter/core/fast_adapters.py
+ M surah_cutter/core/fast_executor.py
+ M surah_cutter/core/full_windows.py
+ M surah_cutter/data/alignment_identity.py
+ M surah_cutter/data/alignment_result.py
+ M surah_cutter/data/alignment_runs.py
+ M surah_cutter/gui/dashboard_view.py
+ M surah_cutter/webgui/server.py
+ M surah_cutter/webgui/static/app.js
+ M surah_cutter/webgui/static/i18n.js
+ M tests/test_alignment_audio.py
+ M tests/test_candidates.py
+ M tests/test_webgui_server.py
+ M tests/webgui_async.cjs
+ M tools/bench_fast_models.py
+?? docs/tasks/2026-10-14-asr-model-selection/
+?? docs/tasks/2026-10-14-boundary-confidence/
+?? docs/tasks/2026-10-14-fast-algorithm-cause-review/
+?? docs/tasks/2026-10-14-fast-algorithm-gap-fixes/
+?? docs/tasks/2026-10-14-fast-asr-body-future-tiny/
+?? docs/tasks/2026-10-14-fast-asr-body-future/
+?? docs/tasks/2026-10-14-fast-asr-raw-ownership/
+?? docs/tasks/2026-10-14-fast-base-window-analysis/
+?? docs/tasks/2026-10-14-fast-body-future-cue/
+?? docs/tasks/2026-10-14-fast-cpu-profile/
+?? docs/tasks/2026-10-14-fast-dsp-integrated-corpus/
+?? docs/tasks/2026-10-14-fast-fix-supervision/
+?? docs/tasks/2026-10-14-fast-head-crop-diagnostic/
+?? docs/tasks/2026-10-14-fast-independent-current-review/
+?? docs/tasks/2026-10-14-fast-intra-ayah-waqf/
+?? docs/tasks/2026-10-14-fast-iterative-analysis/
+?? docs/tasks/2026-10-14-fast-late-future-anchor/
+?? docs/tasks/2026-10-14-fast-muaalem-local-analysis/
+?? docs/tasks/2026-10-14-fast-named-opening-long/
+?? docs/tasks/2026-10-14-fast-native-left-context/
+?? docs/tasks/2026-10-14-fast-previous-body-rejection/
+?? docs/tasks/2026-10-14-fast-pronunciation-variants/
+?? docs/tasks/2026-10-14-fast-sampled-onset-controls/
+?? docs/tasks/2026-10-14-fast-temporal-attribution/
+?? docs/tasks/2026-10-14-full-2-220-cause/
+?? docs/tasks/2026-10-14-full-accuracy/
+?? docs/tasks/2026-10-14-full-boundary-proof/
+?? docs/tasks/2026-10-14-onset-confidence/
+?? docs/tasks/2026-10-15-fast-final-verification/
+?? docs/tasks/2026-10-15-fast-head-word-boundary/
+?? docs/tasks/2026-10-15-fast-next-iteration/
+?? docs/tasks/2026-10-15-fast-sampled-onset-fixture/
+?? docs/tasks/2026-10-15-fast-split-head-diagnostic/
+?? docs/tasks/2026-10-15-fast-temporal-79-26/
+?? surah_cutter/core/full_boundary.py
+?? surah_cutter/data/onset_evidence.py
+?? tests/test_asr_raw_ownership.py
+?? tests/test_bench_fast_models_spy.py
+?? tests/test_fast_algorithm_gaps.py
+?? tests/test_fast_empty_region.py
+?? tests/test_fast_head_boundary.py
+?? tests/test_fast_previous_body.py
+?? tests/test_fast_sampled_onset.py
+?? tests/test_full_boundary_verifier.py
+?? tests/test_full_local_pause.py
+?? tests/test_full_phrase_boundary.py
+?? tests/test_full_resume.py
+?? tests/test_onset_evidence.py
+?? tests/test_pause_rms_reuse.py

@@ -1,0 +1,164 @@
+[
+  {
+    "surah": 2,
+    "state": "DECLINE_CANDIDATE",
+    "ayah": 42,
+    "candidate": 108,
+    "reason": "decoded_previous_ayah_body",
+    "rival": {
+      "ayah": 41,
+      "start_unit": 82,
+      "units": [
+        "و",
+        "َ",
+        "ل",
+        "َ",
+        "ا",
+        "ت",
+        "َ",
+        "ش",
+        "ت",
+        "َ",
+        "ر",
+        "ُ",
+        "ۥ"
+      ],
+      "min_quality": 0.478590726852417
+    },
+    "read_id": 228
+  },
+  {
+    "surah": 2,
+    "state": "LATE_FUTURE_SEARCH",
+    "ayah": 48,
+    "cue_pause_id": 120,
+    "forecast_ms": 908709.6996527778,
+    "region_ms": [
+      892221.9399305555,
+      939624.2491319445
+    ],
+    "candidates": [
+      121,
+      122,
+      123,
+      124,
+      125,
+      126
+    ],
+    "scope": "current remains unresolved; globally distinct future only"
+  },
+  {
+    "surah": 2,
+    "state": "LATE_FUTURE_PROVED",
+    "ayah": 48,
+    "future_ayah": 49,
+    "read_id": 263
+  },
+  {
+    "surah": 32,
+    "state": "LATE_FUTURE_SEARCH",
+    "ayah": 24,
+    "cue_pause_id": 50,
+    "forecast_ms": 353388.7994891443,
+    "region_ms": [
+      341933.75989782886,
+      374866.9987228608
+    ],
+    "candidates": [
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "scope": "current remains unresolved; globally distinct future only"
+  },
+  {
+    "surah": 32,
+    "state": "LATE_FUTURE_PROVED",
+    "ayah": 24,
+    "future_ayah": 25,
+    "read_id": 94
+  },
+  {
+    "surah": 59,
+    "state": "DECLINE_CANDIDATE",
+    "ayah": 12,
+    "candidate": 34,
+    "reason": "decoded_previous_ayah_body",
+    "rival": {
+      "ayah": 11,
+      "start_unit": 84,
+      "units": [
+        "ل",
+        "َ",
+        "ء",
+        "ِ",
+        "ن",
+        "ء",
+        "ُ",
+        "خ",
+        "ر",
+        "ِ",
+        "ج",
+        "ڇ",
+        "ت",
+        "ُ",
+        "م"
+      ],
+      "min_quality": 0.9179779291152954
+    },
+    "read_id": 70
+  },
+  {
+    "surah": 59,
+    "state": "DECLINE_CANDIDATE",
+    "ayah": 23,
+    "candidate": 60,
+    "reason": "decoded_previous_ayah_body",
+    "rival": {
+      "ayah": 22,
+      "start_unit": 61,
+      "units": [
+        "ه",
+        "ُ",
+        "و",
+        "َ",
+        "ر",
+        "ر",
+        "َ",
+        "ح",
+        "م",
+        "َ",
+        "ا",
+        "ن",
+        "ُ"
+      ],
+      "min_quality": 0.8713956475257874
+    },
+    "read_id": 123
+  },
+  {
+    "surah": 80,
+    "state": "LATE_FUTURE_SEARCH",
+    "ayah": 34,
+    "cue_pause_id": 39,
+    "forecast_ms": 148099.28315412186,
+    "region_ms": [
+      144339.85663082436,
+      155148.20788530467
+    ],
+    "candidates": [
+      40,
+      41
+    ],
+    "scope": "current remains unresolved; globally distinct future only"
+  },
+  {
+    "surah": 80,
+    "state": "LATE_FUTURE_PROVED",
+    "ayah": 34,
+    "future_ayah": 36,
+    "read_id": 79
+  }
+]

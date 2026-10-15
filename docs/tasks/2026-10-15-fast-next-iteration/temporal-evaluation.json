@@ -1,0 +1,193 @@
+{
+  "controls": [
+    {
+      "surah": 1,
+      "ayah": 2,
+      "audio_sha256": "6dedf8c3b88d2cd12c992710839443abebf26e7ef1fcea696acc8961b5836571",
+      "crop_ms": [
+        3780.0,
+        8620.0
+      ],
+      "dsp_pause_ms": [
+        5780.0,
+        6620.0
+      ],
+      "original_ms": 6200,
+      "hypotheses": [
+        {
+          "peak_fraction": 0.01,
+          "threshold": 0.004118491429835558,
+          "previous_energy_end_ms": 6200.0,
+          "current_energy_start_ms": 6200.0,
+          "midpoint_ms": 6200.0,
+          "signed_error_ms": -308.0
+        },
+        {
+          "peak_fraction": 0.02,
+          "threshold": 0.008236982859671116,
+          "previous_energy_end_ms": 6200.0,
+          "current_energy_start_ms": 6360.0,
+          "midpoint_ms": 6280.0,
+          "signed_error_ms": -228.0
+        },
+        {
+          "peak_fraction": 0.05,
+          "threshold": 0.020592456683516502,
+          "previous_energy_end_ms": 5900.0,
+          "current_energy_start_ms": 6620.0,
+          "midpoint_ms": 6260.0,
+          "signed_error_ms": -248.0
+        }
+      ],
+      "reference_ms": 6508,
+      "original_signed_error_ms": -308,
+      "reference_fraction_in_dsp_pause": 0.8666666666666667
+    },
+    {
+      "surah": 73,
+      "ayah": 20,
+      "audio_sha256": "11ae3bc3799cb039f6f937cb45b7706782545e240acb43725b05c750c828688c",
+      "crop_ms": [
+        137440.0,
+        142240.0
+      ],
+      "dsp_pause_ms": [
+        139440.0,
+        140240.0
+      ],
+      "original_ms": 139840,
+      "hypotheses": [
+        {
+          "peak_fraction": 0.01,
+          "threshold": 0.003448264440521598,
+          "previous_energy_end_ms": 139840.0,
+          "current_energy_start_ms": 139840.0,
+          "midpoint_ms": 139840.0,
+          "signed_error_ms": -275.0
+        },
+        {
+          "peak_fraction": 0.02,
+          "threshold": 0.006896528881043196,
+          "previous_energy_end_ms": 139840.0,
+          "current_energy_start_ms": 139840.0,
+          "midpoint_ms": 139840.0,
+          "signed_error_ms": -275.0
+        },
+        {
+          "peak_fraction": 0.05,
+          "threshold": 0.017241323366761208,
+          "previous_energy_end_ms": 139480.0,
+          "current_energy_start_ms": 140240.0,
+          "midpoint_ms": 139860.0,
+          "signed_error_ms": -255.0
+        }
+      ],
+      "reference_ms": 140115,
+      "original_signed_error_ms": -275,
+      "reference_fraction_in_dsp_pause": 0.84375
+    },
+    {
+      "surah": 77,
+      "ayah": 25,
+      "audio_sha256": "8bee860fa86f33e1b8d8b28236d125766f3133d32e8c77eff2baee2e6e4f2e10",
+      "crop_ms": [
+        82820.0,
+        88020.0
+      ],
+      "dsp_pause_ms": [
+        84820.0,
+        86020.0
+      ],
+      "original_ms": 85420,
+      "hypotheses": [
+        {
+          "peak_fraction": 0.01,
+          "threshold": 0.0033241882920265198,
+          "previous_energy_end_ms": 85420.0,
+          "current_energy_start_ms": 85420.0,
+          "midpoint_ms": 85420.0,
+          "signed_error_ms": -447.0
+        },
+        {
+          "peak_fraction": 0.02,
+          "threshold": 0.0066483765840530396,
+          "previous_energy_end_ms": 85320.0,
+          "current_energy_start_ms": 85420.0,
+          "midpoint_ms": 85370.0,
+          "signed_error_ms": -497.0
+        },
+        {
+          "peak_fraction": 0.05,
+          "threshold": 0.0166209414601326,
+          "previous_energy_end_ms": 85080.0,
+          "current_energy_start_ms": 86020.0,
+          "midpoint_ms": 85550.0,
+          "signed_error_ms": -317.0
+        }
+      ],
+      "reference_ms": 85867,
+      "original_signed_error_ms": -447,
+      "reference_fraction_in_dsp_pause": 0.8725
+    },
+    {
+      "surah": 79,
+      "ayah": 26,
+      "audio_sha256": "3b423fbe3e9c2ccbbd0e89d9edce0f40e7dfa81410bfc1ad6b0216076f7d861b",
+      "crop_ms": [
+        113320.0,
+        118180.0
+      ],
+      "dsp_pause_ms": [
+        115320.0,
+        116180.0
+      ],
+      "original_ms": 115750,
+      "hypotheses": [
+        {
+          "peak_fraction": 0.01,
+          "threshold": 0.0033439870458096266,
+          "previous_energy_end_ms": 115760.0,
+          "current_energy_start_ms": 115760.0,
+          "midpoint_ms": 115760.0,
+          "signed_error_ms": 518.0
+        },
+        {
+          "peak_fraction": 0.02,
+          "threshold": 0.006687974091619253,
+          "previous_energy_end_ms": 115760.0,
+          "current_energy_start_ms": 115760.0,
+          "midpoint_ms": 115760.0,
+          "signed_error_ms": 518.0
+        },
+        {
+          "peak_fraction": 0.05,
+          "threshold": 0.016719935461878777,
+          "previous_energy_end_ms": 115540.0,
+          "current_energy_start_ms": 116180.0,
+          "midpoint_ms": 115860.0,
+          "signed_error_ms": 618.0
+        }
+      ],
+      "reference_ms": 115242,
+      "original_signed_error_ms": 508,
+      "reference_fraction_in_dsp_pause": -0.09069767441860466
+    }
+  ],
+  "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+  "catalog_sha256": "b20a2906586ced76a8f8d68e6a7bdb6fcf03da39d4c174702c32dd5b26fba849",
+  "catalog_entry": {
+    "id": 41,
+    "country": "sa",
+    "name": "Абу Бакр аш-Шатри",
+    "url_template": "https://quran-audio.quranacademy.org/by-surah/Abu_Bakr_Ash-Shatri/{sura}.mp3",
+    "recitation_type": null,
+    "recitation_speed": null,
+    "timecodes_db_url": "https://cdn.quranacademy.org/mobile-app/reciters/timecodes/abu_bakr_ash_shatri.db",
+    "timecodes_version": 1
+  },
+  "metadata_tables": [
+    "timings(sura,ayah,time)",
+    "db_version(code,version)"
+  ],
+  "semantics": "App contract calls time start of ayah; DB/catalog contain no annotation method, listener identity or physical landmark definition. Waveform thresholds are diagnostic, not ground truth. No listening performed."
+}

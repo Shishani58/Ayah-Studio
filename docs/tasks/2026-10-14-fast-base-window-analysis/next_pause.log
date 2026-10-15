@@ -1,0 +1,95 @@
+quran-phonetics 1 0.72 review 6 coverage 0.115 calls 6
+quran-phonetics 32 0.79 review 30 coverage 0.021 calls 7
+quran-phonetics 55 1.25 review 78 coverage 0.03 calls 14
+quran-phonetics 59 0.86 review 24 coverage 0.024 calls 10
+quran-phonetics 65 1.03 review 12 coverage 0.044 calls 12
+quran-phonetics 73 0.5 review 20 coverage 0.029 calls 5
+quran-phonetics 77 0.87 review 50 coverage 0.045 calls 8
+quran-phonetics 80 1.1 review 42 coverage 0.095 calls 13
+quran-phonetics 98 1.52 review 7 coverage 0.249 calls 18
+quran-phonetics 112 0.43 review 4 coverage 0.361 calls 6
+quran-phonetics 2 4.02 review 286 coverage 0.001 calls 5
+whisper-tarteel-tiny 1 1.29 review 5 coverage 0.131 calls 6
+whisper-tarteel-tiny 32 1.05 review 30 coverage 0.016 calls 5
+whisper-tarteel-tiny 55 8.73 review 59 coverage 0.117 calls 44
+whisper-tarteel-tiny 59 4.18 review 21 coverage 0.05 calls 19
+whisper-tarteel-tiny 65 1.76 review 12 coverage 0.031 calls 8
+whisper-tarteel-tiny 73 7.49 review 3 coverage 0.221 calls 36
+whisper-tarteel-tiny 77 2.17 review 44 coverage 0.065 calls 10
+whisper-tarteel-tiny 80 4.1 review 33 coverage 0.138 calls 21
+whisper-tarteel-tiny 98 2.54 review 4 coverage 0.159 calls 12
+whisper-tarteel-tiny 112 1.51 review 0 coverage 0.348 calls 6
+whisper-tarteel-tiny 2 6.37 review 282 coverage 0.003 calls 16
+whisper-tarteel-base 1 2.44 review 5 coverage 0.131 calls 6
+whisper-tarteel-base 32 1.44 review 30 coverage 0.013 calls 4
+whisper-tarteel-base 55 15.62 review 59 coverage 0.113 calls 42
+whisper-tarteel-base 59 18.1 review 16 coverage 0.126 calls 47
+whisper-tarteel-base 65 2.86 review 12 coverage 0.031 calls 8
+whisper-tarteel-base 73 12.03 review 1 coverage 0.215 calls 34
+whisper-tarteel-base 77 14.37 review 29 coverage 0.206 calls 35
+whisper-tarteel-base 80 8.14 review 32 coverage 0.146 calls 23
+whisper-tarteel-base 98 8.11 review 1 coverage 0.288 calls 23
+whisper-tarteel-base 112 2.43 review 0 coverage 0.348 calls 6
+whisper-tarteel-base 2 6.57 review 284 coverage 0.002 calls 9
+{
+  "quran-phonetics": {
+    "surahs": 11,
+    "ayahs": 561,
+    "median_ms": 7747.0,
+    "p95_ms": 97044.0,
+    "max_ms": 108982,
+    "over500": 536,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 559,
+    "load_probe_seconds": 0.21699037496000528,
+    "decode_seconds": 8.529250167077407,
+    "dsp_seconds": 38.0700685842894,
+    "inference_match_seconds": 13.0781665018294,
+    "search_seconds": 51.1482350861188,
+    "audio_ms": 223400.0,
+    "covered_audio_ms": 138680.0,
+    "total_ms": 9790328.25,
+    "model_reads": 104
+  },
+  "whisper-tarteel-tiny": {
+    "surahs": 11,
+    "ayahs": 561,
+    "median_ms": 10325.0,
+    "p95_ms": 69760.0,
+    "max_ms": 79350,
+    "over500": 479,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 493,
+    "load_probe_seconds": 4.087733707856387,
+    "decode_seconds": 8.529250167077407,
+    "dsp_seconds": 38.0700685842894,
+    "inference_match_seconds": 41.20118787372485,
+    "search_seconds": 79.27125645801425,
+    "audio_ms": 316630.0,
+    "covered_audio_ms": 251920.0,
+    "total_ms": 9790328.25,
+    "model_reads": 183
+  },
+  "whisper-tarteel-base": {
+    "surahs": 11,
+    "ayahs": 561,
+    "median_ms": 10450.0,
+    "p95_ms": 76073.0,
+    "max_ms": 85790,
+    "over500": 447,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 469,
+    "load_probe_seconds": 4.681472209049389,
+    "decode_seconds": 8.529250167077407,
+    "dsp_seconds": 38.0700685842894,
+    "inference_match_seconds": 92.11379670910537,
+    "search_seconds": 130.18386529339477,
+    "audio_ms": 405440.0,
+    "covered_audio_ms": 326220.0,
+    "total_ms": 9790328.25,
+    "model_reads": 237
+  }
+}

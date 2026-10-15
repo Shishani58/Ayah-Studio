@@ -1,0 +1,321 @@
+{
+  "qpc_all": {
+    "all": {
+      "before": {
+        "n": 870,
+        "median_ms": 69.5,
+        "p95_ms": 1010.0499999999995,
+        "max_ms": 4331,
+        "over500": 78
+      },
+      "after": {
+        "n": 870,
+        "median_ms": 69.0,
+        "p95_ms": 1002.6499999999999,
+        "max_ms": 4331,
+        "over500": 77
+      },
+      "unflagged_after": 0
+    },
+    "abu_bakr_ash_shatri": {
+      "before": {
+        "n": 654,
+        "median_ms": 59.0,
+        "p95_ms": 231.90000000000032,
+        "max_ms": 1196,
+        "over500": 14
+      },
+      "after": {
+        "n": 654,
+        "median_ms": 58.5,
+        "p95_ms": 223.10000000000014,
+        "max_ms": 1196,
+        "over500": 13
+      },
+      "unflagged_after": 0
+    },
+    "saad_al_ghamidi": {
+      "before": {
+        "n": 54,
+        "median_ms": 68.5,
+        "p95_ms": 164.74999999999986,
+        "max_ms": 240,
+        "over500": 0
+      },
+      "after": {
+        "n": 54,
+        "median_ms": 68.5,
+        "p95_ms": 164.74999999999986,
+        "max_ms": 240,
+        "over500": 0
+      },
+      "unflagged_after": 0
+    },
+    "mohammed_siddiq_al_minshawi": {
+      "before": {
+        "n": 54,
+        "median_ms": 108.5,
+        "p95_ms": 253.59999999999957,
+        "max_ms": 343,
+        "over500": 0
+      },
+      "after": {
+        "n": 54,
+        "median_ms": 108.5,
+        "p95_ms": 253.59999999999957,
+        "max_ms": 343,
+        "over500": 0
+      },
+      "unflagged_after": 0
+    },
+    "mahmoud_khalil_al_hussary": {
+      "before": {
+        "n": 54,
+        "median_ms": 235.0,
+        "p95_ms": 985.799999999998,
+        "max_ms": 1483,
+        "over500": 12
+      },
+      "after": {
+        "n": 54,
+        "median_ms": 235.0,
+        "p95_ms": 985.799999999998,
+        "max_ms": 1483,
+        "over500": 12
+      },
+      "unflagged_after": 0
+    },
+    "abdul_basit_mujawwad": {
+      "before": {
+        "n": 54,
+        "median_ms": 1484.5,
+        "p95_ms": 3844.6999999999975,
+        "max_ms": 4331,
+        "over500": 52
+      },
+      "after": {
+        "n": 54,
+        "median_ms": 1484.5,
+        "p95_ms": 4122.25,
+        "max_ms": 4331,
+        "over500": 52
+      },
+      "unflagged_after": 0
+    }
+  },
+  "comparison": {
+    "all": {
+      "files": 21,
+      "qpc": {
+        "n": 430,
+        "median_ms": 94.0,
+        "p95_ms": 1797.4499999999982,
+        "max_ms": 4331,
+        "over500": 72
+      },
+      "muaalem": {
+        "n": 430,
+        "median_ms": 228.5,
+        "p95_ms": 1975.1499999999976,
+        "max_ms": 14423,
+        "over500": 80
+      },
+      "muaalem_unflagged_large": 80
+    },
+    "abu_bakr_ash_shatri": {
+      "files": 9,
+      "qpc": {
+        "n": 214,
+        "median_ms": 63.5,
+        "p95_ms": 340.0,
+        "max_ms": 1088,
+        "over500": 8
+      },
+      "muaalem": {
+        "n": 214,
+        "median_ms": 187.5,
+        "p95_ms": 454.54999999999916,
+        "max_ms": 14423,
+        "over500": 11
+      },
+      "muaalem_unflagged_large": 11
+    },
+    "saad_al_ghamidi": {
+      "files": 3,
+      "qpc": {
+        "n": 54,
+        "median_ms": 68.5,
+        "p95_ms": 164.74999999999986,
+        "max_ms": 240,
+        "over500": 0
+      },
+      "muaalem": {
+        "n": 54,
+        "median_ms": 132.5,
+        "p95_ms": 387.3499999999999,
+        "max_ms": 432,
+        "over500": 0
+      },
+      "muaalem_unflagged_large": 0
+    },
+    "mohammed_siddiq_al_minshawi": {
+      "files": 3,
+      "qpc": {
+        "n": 54,
+        "median_ms": 108.5,
+        "p95_ms": 253.59999999999957,
+        "max_ms": 343,
+        "over500": 0
+      },
+      "muaalem": {
+        "n": 54,
+        "median_ms": 289.0,
+        "p95_ms": 348.0,
+        "max_ms": 414,
+        "over500": 0
+      },
+      "muaalem_unflagged_large": 0
+    },
+    "mahmoud_khalil_al_hussary": {
+      "files": 3,
+      "qpc": {
+        "n": 54,
+        "median_ms": 235.0,
+        "p95_ms": 985.799999999998,
+        "max_ms": 1483,
+        "over500": 12
+      },
+      "muaalem": {
+        "n": 54,
+        "median_ms": 305.0,
+        "p95_ms": 1034.7999999999988,
+        "max_ms": 1678,
+        "over500": 16
+      },
+      "muaalem_unflagged_large": 16
+    },
+    "abdul_basit_mujawwad": {
+      "files": 3,
+      "qpc": {
+        "n": 54,
+        "median_ms": 1484.5,
+        "p95_ms": 4122.25,
+        "max_ms": 4331,
+        "over500": 52
+      },
+      "muaalem": {
+        "n": 54,
+        "median_ms": 1630.0,
+        "p95_ms": 4089.999999999999,
+        "max_ms": 4497,
+        "over500": 53
+      },
+      "muaalem_unflagged_large": 53
+    }
+  },
+  "qpc_changes": [
+    {
+      "reciter": "abu_bakr_ash_shatri",
+      "surah": 1,
+      "ayah": 2,
+      "before_ms": -1169,
+      "after_ms": -25
+    },
+    {
+      "reciter": "abdul_basit_mujawwad",
+      "surah": 98,
+      "ayah": 7,
+      "before_ms": -2812,
+      "after_ms": 4117
+    }
+  ],
+  "qpc_new_large": [],
+  "model_new_large": [
+    {
+      "reciter": "abu_bakr_ash_shatri",
+      "surah": 78,
+      "ayah": 19,
+      "qpc_error_ms": 340,
+      "muaalem_error_ms": 554,
+      "muaalem_flagged": false
+    },
+    {
+      "reciter": "abu_bakr_ash_shatri",
+      "surah": 89,
+      "ayah": 24,
+      "qpc_error_ms": 403,
+      "muaalem_error_ms": 653,
+      "muaalem_flagged": false
+    },
+    {
+      "reciter": "abu_bakr_ash_shatri",
+      "surah": 67,
+      "ayah": 30,
+      "qpc_error_ms": -36,
+      "muaalem_error_ms": 14423,
+      "muaalem_flagged": false
+    },
+    {
+      "reciter": "mahmoud_khalil_al_hussary",
+      "surah": 98,
+      "ayah": 1,
+      "qpc_error_ms": 336,
+      "muaalem_error_ms": 517,
+      "muaalem_flagged": false
+    },
+    {
+      "reciter": "mahmoud_khalil_al_hussary",
+      "surah": 98,
+      "ayah": 2,
+      "qpc_error_ms": 343,
+      "muaalem_error_ms": 546,
+      "muaalem_flagged": false
+    },
+    {
+      "reciter": "mahmoud_khalil_al_hussary",
+      "surah": 98,
+      "ayah": 4,
+      "qpc_error_ms": 425,
+      "muaalem_error_ms": 630,
+      "muaalem_flagged": false
+    },
+    {
+      "reciter": "mahmoud_khalil_al_hussary",
+      "surah": 80,
+      "ayah": 19,
+      "qpc_error_ms": 407,
+      "muaalem_error_ms": 615,
+      "muaalem_flagged": false
+    },
+    {
+      "reciter": "mahmoud_khalil_al_hussary",
+      "surah": 80,
+      "ayah": 40,
+      "qpc_error_ms": 323,
+      "muaalem_error_ms": 541,
+      "muaalem_flagged": false
+    },
+    {
+      "reciter": "abdul_basit_mujawwad",
+      "surah": 80,
+      "ayah": 36,
+      "qpc_error_ms": 436,
+      "muaalem_error_ms": 652,
+      "muaalem_flagged": false
+    }
+  ],
+  "model_removed_large": [
+    {
+      "reciter": "mahmoud_khalil_al_hussary",
+      "surah": 98,
+      "ayah": 3,
+      "qpc_error_ms": 864,
+      "muaalem_error_ms": 308,
+      "muaalem_flagged": false
+    }
+  ],
+  "failures": [],
+  "production_matches_probe": true,
+  "extra_reads": 5,
+  "extra_audio_ms": 19660.0
+}

@@ -1,0 +1,94 @@
+[
+  {
+    "surah": 1,
+    "ayah": 2,
+    "reference_ms": 6508,
+    "old_signed_error_ms": -308,
+    "start_range_ms": 80.0,
+    "end_range_ms": 16.0,
+    "single_frame_stable": false,
+    "controls": [
+      {
+        "left_context_ms": 1200,
+        "signed_error_ms": -856.0
+      },
+      {
+        "left_context_ms": 2500,
+        "signed_error_ms": -860.0
+      },
+      {
+        "left_context_ms": 4000,
+        "signed_error_ms": -888.0
+      }
+    ]
+  },
+  {
+    "surah": 73,
+    "ayah": 20,
+    "reference_ms": 140115,
+    "old_signed_error_ms": -275,
+    "start_range_ms": 28.0,
+    "end_range_ms": 20.0,
+    "single_frame_stable": true,
+    "controls": [
+      {
+        "left_context_ms": 1200,
+        "signed_error_ms": -451.0
+      },
+      {
+        "left_context_ms": 2500,
+        "signed_error_ms": -455.0
+      },
+      {
+        "left_context_ms": 4000,
+        "signed_error_ms": -467.0
+      }
+    ]
+  },
+  {
+    "surah": 77,
+    "ayah": 25,
+    "reference_ms": 85867,
+    "old_signed_error_ms": -447,
+    "start_range_ms": 880.0,
+    "end_range_ms": 16.0,
+    "single_frame_stable": false,
+    "controls": [
+      {
+        "left_context_ms": 1200,
+        "signed_error_ms": -439.0
+      },
+      {
+        "left_context_ms": 2500,
+        "signed_error_ms": -443.0
+      },
+      {
+        "left_context_ms": 4000,
+        "signed_error_ms": -871.0
+      }
+    ]
+  },
+  {
+    "surah": 79,
+    "ayah": 26,
+    "reference_ms": 115242,
+    "old_signed_error_ms": 508,
+    "start_range_ms": 16.0,
+    "end_range_ms": 20.0,
+    "single_frame_stable": true,
+    "controls": [
+      {
+        "left_context_ms": 1200,
+        "signed_error_ms": 302.0
+      },
+      {
+        "left_context_ms": 2500,
+        "signed_error_ms": 298.0
+      },
+      {
+        "left_context_ms": 4000,
+        "signed_error_ms": 302.0
+      }
+    ]
+  }
+]

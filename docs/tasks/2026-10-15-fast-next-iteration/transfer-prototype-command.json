@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "/Users/ayub/Developer/surah-cutter/.venv/bin/python",
+    "-u",
+    "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-next-_hxeh055-split/tools/bench_fast_models.py",
+    "--models",
+    "quran-phonetics",
+    "quran-phonetics-fp32",
+    "whisper-tarteel-tiny",
+    "whisper-tarteel-base",
+    "--surahs",
+    "80",
+    "98",
+    "112",
+    "--audio-dir",
+    "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi",
+    "--reference",
+    "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi/saad_al_ghamidi.db",
+    "--output",
+    "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-next-iteration/transfer-prototype.json"
+  ],
+  "cwd": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-next-_hxeh055-split",
+  "PYTHONPATH": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-next-_hxeh055-split"
+}

@@ -1,0 +1,24 @@
+muaalem 1 4.16 review 5 coverage 0.181 calls 8
+muaalem 55 3.43 review 78 coverage 0.018 calls 7
+{
+  "muaalem": {
+    "surahs": 2,
+    "ayahs": 85,
+    "median_ms": 5357.0,
+    "p95_ms": 10478.2,
+    "max_ms": 11017,
+    "over500": 81,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 83,
+    "load_probe_seconds": 4.375657917000353,
+    "decode_seconds": 0.547238748986274,
+    "dsp_seconds": 0.3699783750344068,
+    "inference_match_seconds": 7.592432375065982,
+    "search_seconds": 7.962410750100389,
+    "audio_ms": 36700.0,
+    "covered_audio_ms": 19816.375,
+    "total_ms": 564192.6875,
+    "model_reads": 15
+  }
+}

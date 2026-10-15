@@ -1,0 +1,172 @@
+--- 
++++ 
+@@ -16,7 +16,7 @@
+ from surah_cutter.core.fast_adapters import make_adapter, representation_sha, loaded_implementation_sha, arabic_units
+ from surah_cutter.core.fast_reads import LocalEvidenceReads
+ 
+-VERSION = "sequential-fast-v3-sparse-11-head-boundary"
++VERSION = "sequential-fast-v3-sparse-12-split-opening"
+ 
+ 
+ @dataclass(frozen=True)
+@@ -194,6 +194,72 @@
+                 and min(observation.unit_quality[start:end], default=0.) >= threshold):
+             return "exact_later_word_noisy_opening"
+     return None
++
++
++def _split_opening(obs, groups, ends, ayah, threshold):
++    """Confirm exact letters across a split ASR head, preserving token evidence.
++
++    A unique complete first word can authorize finite context expansion. Proof
++    additionally needs two whole canonical words, symmetric char-prefix rivals
++    at every word start, and all contributing selected tokens above threshold.
++    Word segmentation supplies identity only; the DSP pause supplies timing.
++    """
++    target = groups[ayah]
++    # Only plain one-unit canonical words. Named letters need their own proof.
++    if ends[ayah] != list(range(1, len(target) + 1)) or len(target) < 2 or obs.truncated:
++        return None, False
++    units, qualities, attrs = obs.units, obs.unit_quality, obs.attribution
++    if len(units) != len(qualities) or len(attrs) != len(units):
++        return None, False
++    joined, first_count = '', None
++    for i, unit in enumerate(units):
++        joined += unit
++        if joined == target[0]:
++            first_count = i + 1
++            break
++        if not target[0].startswith(joined):
++            return None, False
++    if first_count is None or first_count < 2 or len(target[0]) < 3:
++        return None, False
++    def strong(count):
++        for u, q, a in zip(units[:count], qualities[:count], attrs[:count]):
++            ps = a.get('probabilities', ())
++            if (not math.isfinite(q) or q < threshold or a.get('word') != u
++                    or 'spoken_alias' in a or 'unsupported' in a or not ps
++                    or len(a.get('selected_indices', ())) != len(ps)
++                    or any(not math.isfinite(p) or not threshold <= p <= 1 for p in ps)
++                    or q != min(ps)):
++                return False
++        return True
++    if not strong(first_count):
++        return None, False
++    starts = [(a, i, ''.join(text[i:])) for a, text in groups.items()
++              for i in [0] + ends[a][:-1] if (a, i) != (ayah, 0)]
++    # No partial first-word identity can authorize scanning repeated owners.
++    if any(text.startswith(target[0]) for _, _, text in starts):
++        return None, False
++    # At least TWO whole canonical words; exact source unit endpoints only.
++    for count in range(2, len(target) + 1):
++        text = ''.join(target[:count])
++        if any(other.startswith(text) for _, _, other in starts):
++            continue
++        observed = ''
++        for n, unit in enumerate(units, 1):
++            observed += unit
++            if observed == text and strong(n):
++                return {'phrase': target[:count], 'segmented_opening': {
++                    'source_count': n, 'first_source_count': first_count,
++                    'source_units': list(units[:n]), 'selected_indices': sorted({i for a in attrs[:n] for i in a['selected_indices']}),
++                    'competitor_count': len(starts), 'onset_supported': False}}, True
++            if not text.startswith(observed):
++                break
++    # A strong contradictory next unit is not excused as word segmentation.
++    rest = ''.join(units[first_count:])
++    expected = ''.join(target[1:])
++    if rest and not expected.startswith(rest):
++        if any(q >= threshold for q in qualities[first_count:]):
++            return None, False
++    return None, True
+ 
+ 
+ def _noisy_opening(observation, groups, word_ends, ayah, threshold):
+@@ -468,7 +534,21 @@
+         offset = proof.get("offset", 0)
+         phrase = tuple(proof.get("phrase", ()))
+         recovery = proof.get("opening_recovery")
+-        if recovery:
++        segmented = proof.get("segmented_opening")
++        if segmented:
++            from surah_cutter.core.fast_adapters import Observation
++            if (boundary.evidence_kind != "pause" or groups is None or word_ends is None
++                    or offset != 0 or recovery or proof.get("contextual_owner")
++                    or "prefix_comparison_id" in proof or "decoder_hypothesis" in proof):
++                raise ValueError("unsupported_segmented_proof")
++            decoded = Observation(tuple(observed["units"]), None, observed["quality"],
++                observed["truncated"], unit_quality=tuple(observed["unit_quality"]),
++                attribution=tuple(observed.get("attribution", ())))
++            expected, _ = _split_opening(decoded, groups, word_ends, boundary.ayah, threshold)
++            if not expected or expected["segmented_opening"] != segmented or expected["phrase"] != phrase:
++                raise ValueError("unheard_segmented_phrase")
++            quality = observed["unit_quality"][:segmented["source_count"]]
++        elif recovery:
+             from surah_cutter.core.fast_adapters import Observation
+             if (boundary.evidence_kind != "pause" or groups is None or word_ends is None
+                     or offset != 0 or "prefix_comparison_id" in proof or "decoder_hypothesis" in proof
+@@ -486,7 +566,7 @@
+             raise ValueError("unheard_discriminating_phrase")
+         else:
+             quality = observed.get("unit_quality", ())[offset:offset + len(phrase)]
+-        if ((not recovery and len(quality) != len(phrase)) or not quality or any(not math.isfinite(q) for q in quality)
++        if ((not recovery and not segmented and len(quality) != len(phrase)) or not quality or any(not math.isfinite(q) for q in quality)
+                 or min(quality) < threshold or boundary.confidence > min(quality)):
+             raise ValueError("weak_discriminating_unit")
+         if groups is not None:
+@@ -498,7 +578,7 @@
+                 if _strong_continuation_conflict(observed["units"][offset:], observed["unit_quality"][offset:],
+                                                  groups[boundary.ayah], len(phrase), threshold):
+                     raise ValueError("contradictory_contextual_continuation")
+-            elif not recovery and (phrase != planned["units"] or planned["ambiguous"]):
++            elif not recovery and not segmented and (phrase != planned["units"] or planned["ambiguous"]):
+                 raise ValueError("non_distinguishing_phrase")
+             if "spoken_owner_units" in proof:
+                 if canonical_ends is None:
+@@ -869,6 +949,10 @@
+                             obs, phrase, groups, ayah, word_ends, adapter, reads.calls[opening_id], policy, threshold)
+                         beam_proof.update(prefix_proof)
+                     complete = _prefix(obs.units, phrase)
++                    segmented_proof, segmented_expansion = (None, False)
++                    if (pause and not adapter.timing and complete != len(phrase)
++                            and not beam_proof and not plan.get("contextual_owner")):
++                        segmented_proof, segmented_expansion = _split_opening(obs, groups, word_ends, ayah, threshold)
+                     noisy_proof, noisy_expansion = (None, False)
+                     if (pause and adapter.metric == "ctc_greedy_probability"
+                             and complete != len(phrase) and not beam_proof and not plan.get("contextual_owner")):
+@@ -925,6 +1009,8 @@
+                         alias_conflict |= any(expected != actual and obs.unit_quality[i] >= threshold
+                                               for i, (expected, actual) in enumerate(zip(spoken_owner, obs.units)))
+                     phrase_quality = min(obs.unit_quality[:len(phrase)], default=0.)
++                    if segmented_proof:
++                        phrase_quality = min(obs.unit_quality[:segmented_proof["segmented_opening"]["source_count"]])
+                     if noisy_proof:
+                         recovery = noisy_proof["opening_recovery"]
+                         i = recovery["additional_word_offset"]
+@@ -933,7 +1019,7 @@
+                           needed_units=len(phrase), quality=obs.quality, observed=obs.units,
+                           identity_recovery=noisy_proof,
+                           onset_supported=False if noisy_proof else None)
+-                    if ((complete == len(phrase) or noisy_proof) and not plan["ambiguous"] and not obs.truncated
++                    if ((complete == len(phrase) or noisy_proof or segmented_proof) and not plan["ambiguous"] and not obs.truncated
+                             and phrase_quality >= threshold and not alias_conflict):
+                         context_read_id = alternative_context_read_id
+                         if alternative_context_quality is not None:
+@@ -966,6 +1052,8 @@
+                                  "offset": 0, "quality_metric": adapter.metric, **beam_proof}
+                         if noisy_proof:
+                             proof.update(noisy_proof)
++                        if segmented_proof:
++                            proof.update(segmented_proof)
+                         if spoken_owner:
+                             proof["spoken_owner_units"] = spoken_owner
+                         if context_read_id is not None:
+@@ -1052,6 +1140,8 @@
+                         if future:
+                             break
+                     expansion = _expansion_evidence(obs, phrase, word_ends[ayah], threshold, groups, ayah, word_ends)
++                    if not expansion and segmented_expansion:
++                        expansion = "split_head_requires_whole_continuation"
+                     if not expansion and noisy_expansion:
+                         expansion = "noisy_opening_additional_whole_word"
+                     if noisy_expansion and step == 0:

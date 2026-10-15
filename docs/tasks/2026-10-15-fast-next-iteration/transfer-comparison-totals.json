@@ -1,0 +1,86 @@
+[
+  {
+    "model": "quran-phonetics",
+    "before": 2,
+    "after": 2,
+    "lost": 0,
+    "changed": 0,
+    "added": 0,
+    "new_outliers": 0,
+    "calls": [
+      23,
+      23
+    ],
+    "inference_s": [
+      1.7428715405985713,
+      1.7927234582602978
+    ],
+    "executor_s": [
+      2.250352416187525,
+      2.3302753751631826
+    ]
+  },
+  {
+    "model": "quran-phonetics-fp32",
+    "before": 2,
+    "after": 2,
+    "lost": 0,
+    "changed": 0,
+    "added": 0,
+    "new_outliers": 0,
+    "calls": [
+      23,
+      23
+    ],
+    "inference_s": [
+      2.496716915629804,
+      2.5088702091015875
+    ],
+    "executor_s": [
+      2.888341583777219,
+      2.8984002079814672
+    ]
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "before": 7,
+    "after": 7,
+    "lost": 0,
+    "changed": 0,
+    "added": 0,
+    "new_outliers": 0,
+    "calls": [
+      20,
+      20
+    ],
+    "inference_s": [
+      3.84385366528295,
+      3.8444235399365425
+    ],
+    "executor_s": [
+      4.272845543222502,
+      4.260511416941881
+    ]
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "before": 11,
+    "after": 11,
+    "lost": 0,
+    "changed": 0,
+    "added": 0,
+    "new_outliers": 0,
+    "calls": [
+      32,
+      32
+    ],
+    "inference_s": [
+      11.885038791457191,
+      11.816689959261566
+    ],
+    "executor_s": [
+      12.284154248889536,
+      12.207376956939697
+    ]
+  }
+]

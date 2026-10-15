@@ -1,4 +1,4 @@
-"""FAST provenance and conservative resume checks, without selecting a model.
+"""Alignment provenance and conservative resume checks, without selecting a model.
 
 The caller must supply the identity of the prepared adapter/bundle and effective
 settings. Reading ACTIVE_ID here would describe a selection, not the model that
@@ -124,5 +124,47 @@ def fast_resume_suras(
             modes = [part.partition("=")[2] for part in parts if part.startswith("requested_mode=")]
             keys.append(saved_keys[0] if len(saved_keys) == 1 and modes == ["fast"] else None)
         if all(key == current for key in keys):
+            done.add(surah)
+    return done
+
+
+def full_resume_suras(db_path, *, model_id: str, onset_policy: str | None = None, counts=None) -> set[int]:
+    """Do not reuse old FULL auto rows after a model/boundary-policy change."""
+    if db_path is None or not Path(db_path).is_file():
+        return set()
+    with sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True) as conn:
+        try:
+            rows = conn.execute(
+                "SELECT t.sura,t.ayah,t.time,r.status,r.source FROM timings t "
+                "LEFT JOIN review_meta r ON r.sura=t.sura AND r.ayah=t.ayah "
+                "ORDER BY t.sura,t.ayah"
+            ).fetchall()
+        except sqlite3.OperationalError:
+            return set()
+    expected = counts if counts is not None else surah_ayah_counts()
+    grouped = {}
+    for surah, ayah, time, status, source in rows:
+        grouped.setdefault(surah, []).append((ayah, time, status, source))
+    done = set()
+    for surah, items in grouped.items():
+        count = expected.get(surah)
+        if type(surah) is not int or count is None or [r[0] for r in items] != list(range(1, count + 1)):
+            continue
+        times = [r[1] for r in items]
+        if (any(type(r[0]) is not int for r in items) or any(type(t) is not int or t < 0 for t in times)
+                or any(a >= b for a, b in zip(times, times[1:]))):
+            continue
+        auto_sources = [source for _, _, status, source in items if status not in ("edited", "verified")]
+        current = True
+        for source in auto_sources:
+            parts = source.split(":") if isinstance(source, str) else []
+            modes = [part.partition("=")[2] for part in parts if part.startswith("requested_mode=")]
+            policies = [part.partition("=")[2] for part in parts if part.startswith("full_onset_policy=")]
+            if (len(parts) < 2 or parts[1] != model_id or modes != ["full"]
+                    or (model_id in ("quran-phonetics", "quran-phonetics-fp32")
+                        and (not onset_policy or policies != [onset_policy]))):
+                current = False
+                break
+        if current:
             done.add(surah)
     return done

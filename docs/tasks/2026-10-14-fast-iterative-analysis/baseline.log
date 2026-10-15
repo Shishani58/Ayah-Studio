@@ -1,0 +1,40 @@
+quran-phonetics 1 0.73 review 6 coverage 0.115 calls 4
+quran-phonetics 32 1.08 review 30 coverage 0.021 calls 7
+quran-phonetics 55 2.07 review 78 coverage 0.03 calls 14
+quran-phonetics 59 1.19 review 24 coverage 0.024 calls 10
+quran-phonetics 65 1.56 review 12 coverage 0.044 calls 12
+quran-phonetics 73 0.67 review 20 coverage 0.029 calls 5
+quran-phonetics 77 1.23 review 50 coverage 0.045 calls 8
+quran-phonetics 80 1.65 review 42 coverage 0.095 calls 13
+quran-phonetics 98 2.12 review 7 coverage 0.249 calls 18
+quran-phonetics 112 0.57 review 4 coverage 0.361 calls 6
+whisper-tarteel-tiny 1 1.59 review 5 coverage 0.131 calls 6
+whisper-tarteel-tiny 32 1.4 review 30 coverage 0.016 calls 5
+whisper-tarteel-tiny 55 11.82 review 59 coverage 0.12 calls 45
+whisper-tarteel-tiny 59 4.85 review 21 coverage 0.045 calls 17
+whisper-tarteel-tiny 65 2.21 review 12 coverage 0.031 calls 8
+whisper-tarteel-tiny 73 9.27 review 3 coverage 0.221 calls 36
+whisper-tarteel-tiny 77 2.76 review 44 coverage 0.065 calls 10
+whisper-tarteel-tiny 80 5.24 review 33 coverage 0.138 calls 21
+whisper-tarteel-tiny 98 3.14 review 4 coverage 0.159 calls 12
+whisper-tarteel-tiny 112 1.77 review 0 coverage 0.348 calls 6
+whisper-tarteel-base 1 2.86 review 5 coverage 0.131 calls 6
+whisper-tarteel-base 32 2.0 review 30 coverage 0.013 calls 4
+whisper-tarteel-base 55 20.25 review 59 coverage 0.115 calls 43
+whisper-tarteel-base 59 31.12 review 16 coverage 0.126 calls 48
+whisper-tarteel-base 65 5.13 review 12 coverage 0.031 calls 8
+whisper-tarteel-base 73 17.99 review 1 coverage 0.215 calls 34
+whisper-tarteel-base 77 12.4 review 35 coverage 0.128 calls 20
+whisper-tarteel-base 80 12.66 review 32 coverage 0.146 calls 23
+whisper-tarteel-base 98 12.84 review 1 coverage 0.288 calls 23
+whisper-tarteel-base 112 3.65 review 0 coverage 0.348 calls 6
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/ayub/Developer/surah-cutter/tools/bench_fast_models.py", line 211, in <module>
+    main()
+    ~~~~^^
+  File "/Users/ayub/Developer/surah-cutter/tools/bench_fast_models.py", line 198, in main
+    assert source_sha == {str(p.relative_to(root)): _sha(p) for p in paths}, "Inference source changed during benchmark"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Inference source changed during benchmark

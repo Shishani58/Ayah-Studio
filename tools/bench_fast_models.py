@@ -34,7 +34,10 @@ def dispatch_spy(bundle, pcm):
         assert 0 < len(local) <= 96000 and len(local) < len(pcm)
         calls.append({"samples": len(local), "sha256": hashlib.sha256(
             memoryview(np.ascontiguousarray(local, dtype=np.float32))).hexdigest()})
-    if hasattr(bundle.emitter, "recognize_local"):
+    # RuntimeEmitter exposes recognize_local for every model family. Muaalem
+    # and other CTC runtimes still call emissions, never the Whisper method.
+    if (getattr(bundle.emitter, "model_id", "").startswith("whisper-")
+            and hasattr(bundle.emitter, "recognize_local")):
         cls = type(bundle.emitter)
         original = cls.recognize_local
         def recognize(emitter, local, **kwargs):

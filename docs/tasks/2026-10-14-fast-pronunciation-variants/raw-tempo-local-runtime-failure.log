@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-14-fast-pronunciation-variants/collapse_raw_tempo_probe.py", line 76, in <module>
+    runpy.run_path(str(parent / "identity_floor_probe.py"), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-14-fast-muaalem-local-analysis/identity_floor_probe.py", line 92, in <module>
+    main()
+  File "/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/muaalem-raw-tempo-hwrrjcz8/source/tools/bench_fast_models.py", line 122, in main
+    pcm = decode.decode(str(audio))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/muaalem-raw-tempo-hwrrjcz8/source/surah_cutter/core/decode.py", line 39, in decode
+    _ffmpeg_exe(),
+    ^^^^^^^^^^^^^
+  File "/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/muaalem-raw-tempo-hwrrjcz8/source/surah_cutter/core/decode.py", line 26, in _ffmpeg_exe
+    import imageio_ffmpeg
+ModuleNotFoundError: No module named 'imageio_ffmpeg'

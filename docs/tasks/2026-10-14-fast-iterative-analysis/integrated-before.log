@@ -1,0 +1,33 @@
+quran-phonetics 1 0.73 review 6 coverage 0.115 calls 6
+quran-phonetics 32 0.92 review 30 coverage 0.021 calls 7
+quran-phonetics 55 1.49 review 78 coverage 0.03 calls 14
+quran-phonetics 59 1.0 review 24 coverage 0.024 calls 10
+quran-phonetics 65 1.36 review 12 coverage 0.044 calls 12
+quran-phonetics 73 0.55 review 20 coverage 0.029 calls 5
+quran-phonetics 77 0.98 review 50 coverage 0.045 calls 8
+quran-phonetics 80 1.21 review 42 coverage 0.095 calls 13
+quran-phonetics 98 1.64 review 7 coverage 0.249 calls 18
+quran-phonetics 112 0.44 review 4 coverage 0.361 calls 6
+quran-phonetics 2 6.67 review 286 coverage 0.001 calls 5
+{
+  "quran-phonetics": {
+    "surahs": 11,
+    "ayahs": 561,
+    "median_ms": 7747.0,
+    "p95_ms": 97044.0,
+    "max_ms": 108982,
+    "over500": 536,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 559,
+    "load_probe_seconds": 0.2304189580027014,
+    "decode_seconds": 8.485753207001835,
+    "dsp_seconds": 38.027942915447056,
+    "inference_match_seconds": 16.99896287568845,
+    "search_seconds": 55.026905791135505,
+    "audio_ms": 223400.0,
+    "covered_audio_ms": 138680.0,
+    "total_ms": 9790328.25,
+    "model_reads": 104
+  }
+}

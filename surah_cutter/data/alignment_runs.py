@@ -37,6 +37,11 @@ def load_run(log_folder: Path, surah: int, run_id: str) -> dict[str, Any]:
         scores = {str(a["ayah"]): a.get("conf") for a in payload.get("trace", {}).get("ayahs", []) if "ayah" in a}
     rows = []
     seen = set()
+    from surah_cutter.data.onset_evidence import onset_evidence
+
+    trace = payload.get("trace", {})
+    checks = {c["ayah"]: c for c in trace.get("ayahs", []) if isinstance(c, dict) and "ayah" in c}
+    persisted = {r["ayah"]: r for r in payload.get("persisted_review", [])}
     for row in payload.get("rows", []):
         if (not isinstance(row, (list, tuple)) or len(row) != 3
                 or any(type(v) is not int for v in row)
@@ -47,7 +52,13 @@ def load_run(log_folder: Path, surah: int, run_id: str) -> dict[str, Any]:
         score = scores.get(str(row[1]))
         if type(score) not in (int, float) or not math.isfinite(score) or not 0 <= score <= 1:
             score = None
-        rows.append({"ayah": row[1], "time": row[2], "confidence": score})
+        evidence = onset_evidence(checks.get(row[1]), row[2], score, trace=trace)
+        if not payload.get("raw_model_result") and persisted.get(row[1], {}).get("source") == "manual":
+            evidence = None
+        item = {"ayah": row[1], "time": row[2], "confidence": score}
+        if evidence is not None:
+            item["onset_evidence"] = evidence
+        rows.append(item)
     if not rows:
         raise ValueError("Пустой результат")
     rows.sort(key=lambda item: item["ayah"])

@@ -11,10 +11,10 @@ Your audio stays on your computer. The app interface is in Russian.
 
 ## Install
 
-| Platform | Download 0.2.0 |
+| Platform | Download 0.3.0 |
 | --- | --- |
-| macOS · Apple Silicon | [DMG](https://github.com/Shishani58/Ayah-Studio/releases/download/v0.2.0/Ayah-Studio-0.2.0-macOS-arm64.dmg) |
-| Windows · x64 | [ZIP with ready-to-run EXE](https://github.com/Shishani58/Ayah-Studio/releases/download/v0.2.0/Ayah-Studio-0.2.0-Windows-x64.zip) |
+| macOS · Apple Silicon | [DMG](https://github.com/Shishani58/Ayah-Studio/releases/download/v0.3.0/Ayah-Studio-0.3.0-macOS-arm64.dmg) |
+| Windows · x64 | [ZIP with ready-to-run EXE](https://github.com/Shishani58/Ayah-Studio/releases/download/v0.3.0/Ayah-Studio-0.3.0-Windows-x64.zip) |
 
 For **Apple Silicon Macs** (M1 or newer). Open the DMG, drag **Ayah Studio**
 to **Applications**, eject the disk and launch the app. Python and the default model are bundled. Optional models can be downloaded in Settings.

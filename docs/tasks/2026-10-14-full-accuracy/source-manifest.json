@@ -1,0 +1,16 @@
+{
+  "production": {
+    "surah_cutter/core/align.py": "2a1760f4474cf281f8c48e4d39b223e12b3be03a26f548740f0bb01cfbacb430",
+    "surah_cutter/core/align_tiled.py": "2599c45ad9576503343cc58e5d260b2e09c8d065d6f7b35f79cb656b6d48bd60",
+    "surah_cutter/core/full_windows.py": "fc1a22bf294fc72b2bdd7001eb8561e34793f9a4a55ce66b5f254a92c27810a7",
+    "surah_cutter/data/alignment_result.py": "47b724c8d2b12af5f3ae4946db93fea1dfcd824f20b41485d38951af0dc691e4",
+    "tests/test_full_local_pause.py": "f4ac1fc8c6c04f0ae91c2c37f2c0ffe4ebd339a392529c6cd0f62ef4e388695f"
+  },
+  "models": {
+    "models/wav2vec2-quran-phonetics.onnx": "423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a",
+    "models/wav2vec2-quran-phonetics.fp32.onnx": "5b2e9c350371feb5bb520acd0a09c7372c80915fce4e2f2e3df48cb803da87e3",
+    "models/wav2vec2-quran-phonetics.onnx.vocab.json": "f5fe50ab7854e135e10b07a932429fabbd20403071fc0c159890f309a0dee7ee"
+  },
+  "decision": "Human delegated pause policy choice: retain speech-start contract; no GT-based early shift.",
+  "frozen_runtime_unchanged": true
+}

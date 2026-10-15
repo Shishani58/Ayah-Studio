@@ -1,0 +1,1650 @@
+{
+  "results": [
+    {
+      "runtime": {
+        "model": "whisper-tarteel-tiny",
+        "weights_sha256": "f26c96202427524ec015bcf25bd932414df0474e538d765c16759f1095757688",
+        "heads": [
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            5
+          ]
+        ]
+      },
+      "silence_ms": 0,
+      "asr": {
+        "text": "إِنَّا أَعْطَى",
+        "token_confidence": 0.9886506199836731,
+        "min_token_confidence": 0.9200578331947327,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -0.000219321038457565,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -6.437094270950183e-05,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -0.00012158608296886086,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -2.539125671319198e-05,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -1.2159273865108844e-05,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.0017027654685080051,
+            "bytes": [
+              216,
+              167
+            ]
+          },
+          {
+            "id": 5551,
+            "log_probability": -0.010344932787120342,
+            "bytes": [
+              32,
+              216,
+              163
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.0006935574929229915,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3615,
+            "log_probability": -0.006768159102648497,
+            "bytes": [
+              216,
+              185
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -2.062299427052494e-05,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 9566,
+            "log_probability": -0.01927093416452408,
+            "bytes": [
+              216,
+              183
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.08331874758005142,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 7578,
+            "log_probability": -0.036885689944028854,
+            "bytes": [
+              217,
+              137
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "expected_words": [
+        "إِنَّآ",
+        "أَعۡطَيۡنَٰكَ"
+      ],
+      "independently_heard": false,
+      "candidates": {
+        "heard_target": {
+          "token_axis_absorberTrue": [
+            1320,
+            2980
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            2980
+          ],
+          "time_axis_absorberTrue": [
+            760,
+            2900
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            2900
+          ],
+          "attention_peak": [
+            1340,
+            2900
+          ]
+        },
+        "wrong_target": {
+          "token_axis_absorberTrue": [
+            0,
+            2980
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            2980
+          ],
+          "time_axis_absorberTrue": [
+            0,
+            1060
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            1060
+          ],
+          "attention_peak": [
+            0,
+            0
+          ]
+        }
+      },
+      "ledger": {
+        "emission_passes": 3,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.2766298330388963
+          },
+          {
+            "phase": "candidate_alignment_same_local_crop",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.14341958286240697
+          },
+          {
+            "phase": "wrong_text_negative",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.1113247498869896
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 9000.0,
+        "covered_audio_ms": 3000.0,
+        "coverage": 0.1688802885038262,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            3000.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "actual_dispatches": [
+        {
+          "phase": "independent_asr",
+          "samples": 48000,
+          "sha256": "97eea26c8404608e2edfcc34de75855981114fc5aaca97409e34e6ef542897da"
+        },
+        {
+          "phase": "candidate_alignment_same_local_crop",
+          "samples": 48000,
+          "sha256": "97eea26c8404608e2edfcc34de75855981114fc5aaca97409e34e6ef542897da"
+        },
+        {
+          "phase": "wrong_text_negative",
+          "samples": 48000,
+          "sha256": "97eea26c8404608e2edfcc34de75855981114fc5aaca97409e34e6ef542897da"
+        }
+      ]
+    },
+    {
+      "runtime": {
+        "model": "whisper-tarteel-tiny",
+        "weights_sha256": "f26c96202427524ec015bcf25bd932414df0474e538d765c16759f1095757688",
+        "heads": [
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            5
+          ]
+        ]
+      },
+      "silence_ms": 200,
+      "asr": {
+        "text": "إِنَّا أَعْطَى",
+        "token_confidence": 0.9812450408935547,
+        "min_token_confidence": 0.8603671193122864,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -0.0001294529065489769,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -0.00012742661056108773,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -7.807903602952138e-05,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -8.046303264563903e-05,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -1.4781842764932662e-05,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.004279503133147955,
+            "bytes": [
+              216,
+              167
+            ]
+          },
+          {
+            "id": 5551,
+            "log_probability": -0.015166323632001877,
+            "bytes": [
+              32,
+              216,
+              163
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.0006729483720846474,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3615,
+            "log_probability": -0.01860676147043705,
+            "bytes": [
+              216,
+              185
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -2.539125671319198e-05,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 9566,
+            "log_probability": -0.03251507133245468,
+            "bytes": [
+              216,
+              183
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.15039607882499695,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 7578,
+            "log_probability": -0.042636942118406296,
+            "bytes": [
+              217,
+              137
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "expected_words": [
+        "إِنَّآ",
+        "أَعۡطَيۡنَٰكَ"
+      ],
+      "independently_heard": false,
+      "candidates": {
+        "heard_target": {
+          "token_axis_absorberTrue": [
+            1520,
+            3180
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            3180
+          ],
+          "time_axis_absorberTrue": [
+            960,
+            3120
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            3120
+          ],
+          "attention_peak": [
+            1540,
+            3100
+          ]
+        },
+        "wrong_target": {
+          "token_axis_absorberTrue": [
+            0,
+            3100
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            3100
+          ],
+          "time_axis_absorberTrue": [
+            0,
+            1240
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            1240
+          ],
+          "attention_peak": [
+            0,
+            0
+          ]
+        }
+      },
+      "ledger": {
+        "emission_passes": 3,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.22847929084673524
+          },
+          {
+            "phase": "candidate_alignment_same_local_crop",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.12174824997782707
+          },
+          {
+            "phase": "wrong_text_negative",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.11908562504686415
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 9600.0,
+        "covered_audio_ms": 3200.0,
+        "coverage": 0.17813342611115943,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            3200.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "actual_dispatches": [
+        {
+          "phase": "independent_asr",
+          "samples": 51200,
+          "sha256": "0ef3e9bf503d135d6d7f3896c2e568c4f3a58f82abcda365545dba3315492eca"
+        },
+        {
+          "phase": "candidate_alignment_same_local_crop",
+          "samples": 51200,
+          "sha256": "0ef3e9bf503d135d6d7f3896c2e568c4f3a58f82abcda365545dba3315492eca"
+        },
+        {
+          "phase": "wrong_text_negative",
+          "samples": 51200,
+          "sha256": "0ef3e9bf503d135d6d7f3896c2e568c4f3a58f82abcda365545dba3315492eca"
+        }
+      ]
+    },
+    {
+      "runtime": {
+        "model": "whisper-tarteel-tiny",
+        "weights_sha256": "f26c96202427524ec015bcf25bd932414df0474e538d765c16759f1095757688",
+        "heads": [
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            5
+          ]
+        ]
+      },
+      "silence_ms": 400,
+      "asr": {
+        "text": "إِنَّا أَعْطَى",
+        "token_confidence": 0.989134669303894,
+        "min_token_confidence": 0.9457326531410217,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -0.00013553177996072918,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -0.00013982271775603294,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -4.815939246327616e-05,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -3.2782016205601394e-05,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -1.1444026313256472e-05,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.0006711614551022649,
+            "bytes": [
+              216,
+              167
+            ]
+          },
+          {
+            "id": 5551,
+            "log_probability": -0.008511457592248917,
+            "bytes": [
+              32,
+              216,
+              163
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.0009869233472272754,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3615,
+            "log_probability": -0.0032564965076744556,
+            "bytes": [
+              216,
+              185
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -1.537788011773955e-05,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 9566,
+            "log_probability": -0.050505828112363815,
+            "bytes": [
+              216,
+              183
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.05579535290598869,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 7578,
+            "log_probability": -0.03246487304568291,
+            "bytes": [
+              217,
+              137
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "expected_words": [
+        "إِنَّآ",
+        "أَعۡطَيۡنَٰكَ"
+      ],
+      "independently_heard": false,
+      "candidates": {
+        "heard_target": {
+          "token_axis_absorberTrue": [
+            1720,
+            3340
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            3340
+          ],
+          "time_axis_absorberTrue": [
+            1160,
+            3300
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            3300
+          ],
+          "attention_peak": [
+            1740,
+            3300
+          ]
+        },
+        "wrong_target": {
+          "token_axis_absorberTrue": [
+            0,
+            3380
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            3380
+          ],
+          "time_axis_absorberTrue": [
+            0,
+            1460
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            1460
+          ],
+          "attention_peak": [
+            0,
+            0
+          ]
+        }
+      },
+      "ledger": {
+        "emission_passes": 3,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              3400.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.22843966679647565
+          },
+          {
+            "phase": "candidate_alignment_same_local_crop",
+            "window_ms": [
+              0.0,
+              3400.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.12731816689483821
+          },
+          {
+            "phase": "wrong_text_negative",
+            "window_ms": [
+              0.0,
+              3400.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.11520808399654925
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 10200.0,
+        "covered_audio_ms": 3400.0,
+        "coverage": 0.18718279569892474,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            3400.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "actual_dispatches": [
+        {
+          "phase": "independent_asr",
+          "samples": 54400,
+          "sha256": "6259603c487e88a2cffcd6d195d40446203f3826a9ea0626083f0f35bcd770c6"
+        },
+        {
+          "phase": "candidate_alignment_same_local_crop",
+          "samples": 54400,
+          "sha256": "6259603c487e88a2cffcd6d195d40446203f3826a9ea0626083f0f35bcd770c6"
+        },
+        {
+          "phase": "wrong_text_negative",
+          "samples": 54400,
+          "sha256": "6259603c487e88a2cffcd6d195d40446203f3826a9ea0626083f0f35bcd770c6"
+        }
+      ]
+    },
+    {
+      "runtime": {
+        "model": "whisper-tarteel-base",
+        "weights_sha256": "ec75894993a4570a237b2b1c19fd8a448f1e8f6e083cfab699574f7be53874fa",
+        "heads": [
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            7
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            6
+          ]
+        ]
+      },
+      "silence_ms": 0,
+      "asr": {
+        "text": "إِنَّا أَعْطَى",
+        "token_confidence": 0.9992110133171082,
+        "min_token_confidence": 0.9896495342254639,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -3.099436753473128e-06,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -1.1920928244535389e-07,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.00019143179815728217,
+            "bytes": [
+              216,
+              167
+            ]
+          },
+          {
+            "id": 5551,
+            "log_probability": -3.302042750874534e-05,
+            "bytes": [
+              32,
+              216,
+              163
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -4.410734163684538e-06,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3615,
+            "log_probability": -1.1324817933200393e-05,
+            "bytes": [
+              216,
+              185
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -2.7418097943154862e-06,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 9566,
+            "log_probability": -0.0001971527235582471,
+            "bytes": [
+              216,
+              183
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.00019941726350225508,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 7578,
+            "log_probability": -0.010404394008219242,
+            "bytes": [
+              217,
+              137
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "expected_words": [
+        "إِنَّآ",
+        "أَعۡطَيۡنَٰكَ"
+      ],
+      "independently_heard": false,
+      "candidates": {
+        "heard_target": {
+          "token_axis_absorberTrue": [
+            940,
+            2700
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            2700
+          ],
+          "time_axis_absorberTrue": [
+            720,
+            2720
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            2720
+          ],
+          "attention_peak": [
+            620,
+            2740
+          ]
+        },
+        "wrong_target": {
+          "token_axis_absorberTrue": [
+            0,
+            1800
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            1800
+          ],
+          "time_axis_absorberTrue": [
+            720,
+            1600
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            1600
+          ],
+          "attention_peak": [
+            740,
+            0
+          ]
+        }
+      },
+      "ledger": {
+        "emission_passes": 3,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.4693235419690609
+          },
+          {
+            "phase": "candidate_alignment_same_local_crop",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.23928608419373631
+          },
+          {
+            "phase": "wrong_text_negative",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.23734487500041723
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 9000.0,
+        "covered_audio_ms": 3000.0,
+        "coverage": 0.1688802885038262,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            3000.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "actual_dispatches": [
+        {
+          "phase": "independent_asr",
+          "samples": 48000,
+          "sha256": "97eea26c8404608e2edfcc34de75855981114fc5aaca97409e34e6ef542897da"
+        },
+        {
+          "phase": "candidate_alignment_same_local_crop",
+          "samples": 48000,
+          "sha256": "97eea26c8404608e2edfcc34de75855981114fc5aaca97409e34e6ef542897da"
+        },
+        {
+          "phase": "wrong_text_negative",
+          "samples": 48000,
+          "sha256": "97eea26c8404608e2edfcc34de75855981114fc5aaca97409e34e6ef542897da"
+        }
+      ]
+    },
+    {
+      "runtime": {
+        "model": "whisper-tarteel-base",
+        "weights_sha256": "ec75894993a4570a237b2b1c19fd8a448f1e8f6e083cfab699574f7be53874fa",
+        "heads": [
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            7
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            6
+          ]
+        ]
+      },
+      "silence_ms": 200,
+      "asr": {
+        "text": "إِنَّا أَعْطَى",
+        "token_confidence": 0.9993127584457397,
+        "min_token_confidence": 0.9914284348487854,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -2.9802276912960224e-06,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -1.1920928244535389e-07,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -1.1920928244535389e-07,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.0002898749662563205,
+            "bytes": [
+              216,
+              167
+            ]
+          },
+          {
+            "id": 5551,
+            "log_probability": -9.655486064730212e-05,
+            "bytes": [
+              32,
+              216,
+              163
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -5.8412379075889476e-06,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3615,
+            "log_probability": -9.059865078597795e-06,
+            "bytes": [
+              216,
+              185
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -3.933898824470816e-06,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 9566,
+            "log_probability": -0.00040570611599832773,
+            "bytes": [
+              216,
+              183
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.00019762947340495884,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 7578,
+            "log_probability": -0.008608493953943253,
+            "bytes": [
+              217,
+              137
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "expected_words": [
+        "إِنَّآ",
+        "أَعۡطَيۡنَٰكَ"
+      ],
+      "independently_heard": false,
+      "candidates": {
+        "heard_target": {
+          "token_axis_absorberTrue": [
+            980,
+            2920
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            2920
+          ],
+          "time_axis_absorberTrue": [
+            920,
+            2920
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            2920
+          ],
+          "attention_peak": [
+            820,
+            2940
+          ]
+        },
+        "wrong_target": {
+          "token_axis_absorberTrue": [
+            0,
+            2140
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            2140
+          ],
+          "time_axis_absorberTrue": [
+            920,
+            1760
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            1760
+          ],
+          "attention_peak": [
+            940,
+            440
+          ]
+        }
+      },
+      "ledger": {
+        "emission_passes": 3,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.45989012508653104
+          },
+          {
+            "phase": "candidate_alignment_same_local_crop",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.2882942920550704
+          },
+          {
+            "phase": "wrong_text_negative",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.22651866707019508
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 9600.0,
+        "covered_audio_ms": 3200.0,
+        "coverage": 0.17813342611115943,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            3200.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "actual_dispatches": [
+        {
+          "phase": "independent_asr",
+          "samples": 51200,
+          "sha256": "0ef3e9bf503d135d6d7f3896c2e568c4f3a58f82abcda365545dba3315492eca"
+        },
+        {
+          "phase": "candidate_alignment_same_local_crop",
+          "samples": 51200,
+          "sha256": "0ef3e9bf503d135d6d7f3896c2e568c4f3a58f82abcda365545dba3315492eca"
+        },
+        {
+          "phase": "wrong_text_negative",
+          "samples": 51200,
+          "sha256": "0ef3e9bf503d135d6d7f3896c2e568c4f3a58f82abcda365545dba3315492eca"
+        }
+      ]
+    },
+    {
+      "runtime": {
+        "model": "whisper-tarteel-base",
+        "weights_sha256": "ec75894993a4570a237b2b1c19fd8a448f1e8f6e083cfab699574f7be53874fa",
+        "heads": [
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            7
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            6
+          ]
+        ]
+      },
+      "silence_ms": 400,
+      "asr": {
+        "text": "إِنَّا أَعْطَى",
+        "token_confidence": 0.9994205236434937,
+        "min_token_confidence": 0.9925752878189087,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -2.50339189733495e-06,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -1.1920928244535389e-07,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -1.1920928244535389e-07,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.0001586549769854173,
+            "bytes": [
+              216,
+              167
+            ]
+          },
+          {
+            "id": 5551,
+            "log_probability": -7.378782902378589e-05,
+            "bytes": [
+              32,
+              216,
+              163
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -3.814689989667386e-06,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3615,
+            "log_probability": -5.602820692729438e-06,
+            "bytes": [
+              216,
+              185
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -1.9073468138230965e-06,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 9566,
+            "log_probability": -0.00021038226259406656,
+            "bytes": [
+              216,
+              183
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.00019870213873218745,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 7578,
+            "log_probability": -0.007452425081282854,
+            "bytes": [
+              217,
+              137
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "expected_words": [
+        "إِنَّآ",
+        "أَعۡطَيۡنَٰكَ"
+      ],
+      "independently_heard": false,
+      "candidates": {
+        "heard_target": {
+          "token_axis_absorberTrue": [
+            1220,
+            3120
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            3120
+          ],
+          "time_axis_absorberTrue": [
+            1120,
+            3120
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            3120
+          ],
+          "attention_peak": [
+            1020,
+            3140
+          ]
+        },
+        "wrong_target": {
+          "token_axis_absorberTrue": [
+            20,
+            2180
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            2180
+          ],
+          "time_axis_absorberTrue": [
+            1120,
+            1980
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            1980
+          ],
+          "attention_peak": [
+            1140,
+            260
+          ]
+        }
+      },
+      "ledger": {
+        "emission_passes": 3,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              3400.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.41339795803651214
+          },
+          {
+            "phase": "candidate_alignment_same_local_crop",
+            "window_ms": [
+              0.0,
+              3400.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.23109954106621444
+          },
+          {
+            "phase": "wrong_text_negative",
+            "window_ms": [
+              0.0,
+              3400.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.22554820799268782
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 10200.0,
+        "covered_audio_ms": 3400.0,
+        "coverage": 0.18718279569892474,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            3400.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "actual_dispatches": [
+        {
+          "phase": "independent_asr",
+          "samples": 54400,
+          "sha256": "6259603c487e88a2cffcd6d195d40446203f3826a9ea0626083f0f35bcd770c6"
+        },
+        {
+          "phase": "candidate_alignment_same_local_crop",
+          "samples": 54400,
+          "sha256": "6259603c487e88a2cffcd6d195d40446203f3826a9ea0626083f0f35bcd770c6"
+        },
+        {
+          "phase": "wrong_text_negative",
+          "samples": 54400,
+          "sha256": "6259603c487e88a2cffcd6d195d40446203f3826a9ea0626083f0f35bcd770c6"
+        }
+      ]
+    }
+  ],
+  "known_word_onsets": "No independent listening annotations available; shift controls do not establish accuracy.",
+  "capability_enabled": false
+}

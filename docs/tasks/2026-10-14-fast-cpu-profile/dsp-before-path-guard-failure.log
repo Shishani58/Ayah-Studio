@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-14-fast-cpu-profile/bench_dsp.py", line 19, in <module>
+    assert Path(candidates.__file__).resolve() == source / "surah_cutter/core/candidates.py"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

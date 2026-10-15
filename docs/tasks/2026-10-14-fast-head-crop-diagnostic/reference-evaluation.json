@@ -1,0 +1,26 @@
+{
+  "scope": "reference evaluation only after local diagnostics; no timestampwritten",
+  "surah": 98,
+  "ayah": 5,
+  "pause_midpoint_ms": 35290,
+  "reference_ms": 35212,
+  "signed_error_ms": 78,
+  "pure_post_context_head": {
+    "preroll_ms": 200,
+    "speech_ms": 4000,
+    "units": [
+      "وما",
+      "امروا",
+      "الا",
+      "ليعبد"
+    ],
+    "unit_quality": [
+      0.9994532476874897,
+      0.9976535196206563,
+      0.9996891987939148,
+      0.993215649495564
+    ],
+    "complete": true,
+    "proof": true
+  }
+}

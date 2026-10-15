@@ -1,0 +1,38 @@
+--- before
++++ after
+@@ -16,7 +16,7 @@
+ from surah_cutter.core.fast_adapters import make_adapter, representation_sha, loaded_implementation_sha
+ from surah_cutter.core.fast_reads import LocalEvidenceReads
+ 
+-VERSION = "sequential-fast-v3-sparse-8"
++VERSION = "sequential-fast-v3-sparse-9"
+ 
+ 
+ @dataclass(frozen=True)
+@@ -975,7 +975,7 @@
+                             ms = round(pause.center_ms)
+                             proof.update(pause_ms=[pause.start_ms, pause.end_ms], pause_id=index)
+                         else:
+-                            ms = round(start + obs.positions_ms[0])
++                            ms = round(reads.calls[opening_id]["window_ms"][0] + obs.positions_ms[0])
+                         if ms <= previous:
+                             reason = "quantized_boundary_collision"
+                             break
+@@ -1063,7 +1063,7 @@
+                         if len(offsets) == 1 and not plan["ambiguous"]:
+                             offset = offsets[0]
+                             quality = min(obs.unit_quality[offset:offset + len(combined)], default=0.)
+-                            ms = round(start + obs.positions_ms[offset])
++                            ms = round(reads.calls[reads.last_read_id]["window_ms"][0] + obs.positions_ms[offset])
+                             if quality >= threshold and previous < ms < round(pause.center_ms):
+                                 proof = {"phrase": phrase, "complete": True, "ambiguous": False,
+                                          "competitors_checked": True, "offset": offset,
+@@ -1125,7 +1125,7 @@
+                         occurrences = [i for i in range(len(obs.units)) if obs.units[i:i + len(combined)] == combined]
+                         if len(occurrences) == 1:
+                             offset = occurrences[0] + len(tail)
+-                            ms = round(start + obs.positions_ms[offset])
++                            ms = round(reads.calls[reads.last_read_id]["window_ms"][0] + obs.positions_ms[offset])
+                             phrase_quality = min(obs.unit_quality[occurrences[0]:offset + len(wasl_phrase)], default=0.)
+                             if (previous < ms < duration and phrase_quality >= threshold
+                                     and (not seam_plan or not _strong_continuation_conflict(

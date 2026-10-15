@@ -29,6 +29,7 @@ FULL_WORKERS = 3
 FULL_MAX_WINDOW_S = 60
 FULL_POLICY = "qpc-full-pause-v1"
 FULL_REVIEW_POLICY = "qpc-pause-review-v1"
+FULL_ONSET_POLICY = "qpc-local-pause-lead-v5"
 
 
 def detect_strong_pauses(pcm: np.ndarray, *, trace: dict | None = None):

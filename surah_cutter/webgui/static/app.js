@@ -1065,6 +1065,7 @@ function renderComparison() {
         button.onclick = () => playComparison(side === 0 ? left : right, item.ayah, side === 0 ? "A" : "B");
         const score = document.createElement("span"), estimate = timingConfidence(item);
         score.className = "timing-confidence"; score.dataset.level = estimate.level; score.textContent = estimate.label;
+        score.title = estimate.title;
         td.append(button, score);
       } else td.textContent = t("Нет метки");
       tr.append(td);
@@ -1696,15 +1697,40 @@ async function reloadSura() {
   if (R.current < 0 && cur >= 0) setCurrent(cur);
 }
 
-function timingConfidence(item) {
-  const value = item.confidence;
-  if (item.time == null || item.stale || item.status === "edited"
-      || typeof value !== "number" || !Number.isFinite(value) || value < 0 || value > 1) {
-    return { level: "unknown", label: t("Уверенность: нет оценки") };
+function timingConfidence(item, suspect = false) {
+  const unknown = { level: "unknown", label: t("Начало: нет оценки"),
+    title: t("Положение начала отдельно не проверено. Процент распознавания слова не измеряет точность времени.") };
+  if (item.time == null || item.stale || item.status === "edited") return unknown;
+  if (suspect) {
+    return { level: "low", label: t("Начало: сомнительное"),
+      title: t("Повторная проверка отметила эту границу как сомнительную. Проверьте начало на слух.") };
   }
-  const level = value >= 0.66 ? "high" : value >= 0.33 ? "medium" : "low";
-  const percent = new Intl.NumberFormat(uiLanguage, { style: "percent", maximumFractionDigits: 1 }).format(value);
-  return { level, label: t`Уверенность: ${percent}` };
+  if (item.status === "verified") {
+    return { level: "high", label: t("Начало: проверено"),
+      title: t("Метка отмечена как проверенная при ревью.") };
+  }
+  const evidence = item.onset_evidence;
+  const boundary = evidence && evidence.boundary;
+  const labels = { high: t("Начало: подтверждено"), medium: t("Начало: предварительное"),
+    low: t("Начало: сомнительное"), unknown: unknown.label };
+  const reasons = {
+    "local-phrase-and-pause": t("Начальная фраза и положение границы проверены локально по речи и паузе."),
+    "alignment-only": t("Выравнивание согласовано с текстом, но положение начала независимо не проверено."),
+    "pause-edge-only": t("Метка близка к краю речевой паузы, но принадлежность начала аяту отдельно не подтверждена."),
+    "pause-rechecked": t("Положение скорректировано по паузе; начальная фраза отдельно не подтверждена."),
+    "weak-onset": t("В выбранной позиции нет достаточной акустической поддержки начала."),
+    "late-onset-in-pause": t("Метка попала в неоднозначную часть длинной паузы."),
+    "missing-local-proof": t("Для перенесённой метки нет сохранённого локального подтверждения."),
+    "insufficient-timing-evidence": unknown.title,
+  };
+  const level = boundary && Object.hasOwn(labels, boundary.level) ? boundary.level : "unknown";
+  let title = boundary ? reasons[boundary.reason] || unknown.title : unknown.title;
+  title += " " + t("Это оценка оснований для границы, а не измеренная погрешность времени. Проверьте начало на слух.");
+  const format = value => new Intl.NumberFormat(uiLanguage, { style: "percent", maximumFractionDigits: 1 }).format(value);
+  const valid = value => typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 1;
+  if (evidence && valid(evidence.first_sound)) title += t` Сигнал первого звука: ${format(evidence.first_sound)}.`;
+  if (valid(item.confidence)) title += t` Оценка распознавания: ${format(item.confidence)}.`;
+  return { level, label: labels[level], title };
 }
 
 function applyTimingStatus(row, item, suspect = false) {
@@ -1715,10 +1741,10 @@ function applyTimingStatus(row, item, suspect = false) {
   row.dataset.timingStatus = status;
   const confidence = row.querySelector(".timing-confidence");
   if (confidence) {
-    const estimate = timingConfidence(item);
+    const estimate = timingConfidence(item, suspect);
     confidence.dataset.level = estimate.level;
     confidence.textContent = estimate.label;
-    confidence.title = t("Оценка модели, не гарантия точности. Проверьте начало на слух.");
+    confidence.title = estimate.title;
   }
   const number = row.querySelector(".a-num");
   if (number) {

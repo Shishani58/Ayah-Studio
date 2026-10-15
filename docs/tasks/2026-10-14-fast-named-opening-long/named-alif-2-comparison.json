@@ -1,0 +1,66 @@
+{
+  "inputs": [
+    "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-14-fast-pronunciation-variants/sampled-onset-corpus.json",
+    "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-14-fast-named-opening-long/named-alif-2.json"
+  ],
+  "cases": [
+    {
+      "surah": 2,
+      "old": 0,
+      "new": 3,
+      "new_calls": 13,
+      "coverage": 0.003160905776247506,
+      "max_actual_read_ms": 5500.0,
+      "input_ratio": 0.0041769112043270615
+    }
+  ],
+  "lost": [],
+  "added": [
+    [
+      2,
+      1,
+      [
+        1,
+        5770,
+        0.9209795594215393
+      ]
+    ],
+    [
+      2,
+      2,
+      [
+        2,
+        14890,
+        0.5358231663703918
+      ]
+    ],
+    [
+      2,
+      3,
+      [
+        3,
+        22880,
+        0.5029696822166443
+      ]
+    ]
+  ],
+  "confident_outliers": [],
+  "totals": {
+    "old": {
+      "cases": 1,
+      "rows": 286,
+      "proofs": 0,
+      "calls": 5,
+      "inference_seconds": 2.3776408748235554,
+      "search_seconds": 45.983805500203744
+    },
+    "new": {
+      "cases": 1,
+      "rows": 286,
+      "proofs": 3,
+      "calls": 13,
+      "inference_seconds": 5.747030083555728,
+      "search_seconds": 48.96696462482214
+    }
+  }
+}

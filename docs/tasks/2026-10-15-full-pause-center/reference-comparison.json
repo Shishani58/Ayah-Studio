@@ -1,0 +1,200 @@
+{
+  "per_surah": [
+    {
+      "surah": 1,
+      "before": {
+        "n": 7,
+        "median_ms": 26.0,
+        "mean_ms": 31.428571428571427,
+        "p95_ms": 56.399999999999984,
+        "max_ms": 63,
+        "over500": 0
+      },
+      "after": {
+        "n": 7,
+        "median_ms": 37.0,
+        "mean_ms": 46.285714285714285,
+        "p95_ms": 109.89999999999995,
+        "max_ms": 130,
+        "over500": 0
+      }
+    },
+    {
+      "surah": 83,
+      "before": {
+        "n": 36,
+        "median_ms": 77.5,
+        "mean_ms": 149.94444444444446,
+        "p95_ms": 823.5,
+        "max_ms": 924,
+        "over500": 3
+      },
+      "after": {
+        "n": 36,
+        "median_ms": 67.5,
+        "mean_ms": 147.5,
+        "p95_ms": 823.5,
+        "max_ms": 924,
+        "over500": 3
+      }
+    },
+    {
+      "surah": 95,
+      "before": {
+        "n": 8,
+        "median_ms": 90.0,
+        "mean_ms": 178.5,
+        "p95_ms": 589.7499999999997,
+        "max_ms": 840,
+        "over500": 1
+      },
+      "after": {
+        "n": 8,
+        "median_ms": 90.0,
+        "mean_ms": 177.75,
+        "p95_ms": 588.6999999999996,
+        "max_ms": 840,
+        "over500": 1
+      }
+    },
+    {
+      "surah": 112,
+      "before": {
+        "n": 4,
+        "median_ms": 40.0,
+        "mean_ms": 47.0,
+        "p95_ms": 82.64999999999998,
+        "max_ms": 90,
+        "over500": 0
+      },
+      "after": {
+        "n": 4,
+        "median_ms": 40.0,
+        "mean_ms": 37.75,
+        "p95_ms": 51.199999999999996,
+        "max_ms": 53,
+        "over500": 0
+      }
+    },
+    {
+      "surah": 114,
+      "before": {
+        "n": 6,
+        "median_ms": 20.5,
+        "mean_ms": 32.833333333333336,
+        "p95_ms": 76.75,
+        "max_ms": 82,
+        "over500": 0
+      },
+      "after": {
+        "n": 6,
+        "median_ms": 40.5,
+        "mean_ms": 42.833333333333336,
+        "p95_ms": 91.75,
+        "max_ms": 102,
+        "over500": 0
+      }
+    },
+    {
+      "surah": 42,
+      "before": {
+        "n": 53,
+        "median_ms": 66.0,
+        "mean_ms": 70.18867924528301,
+        "p95_ms": 123.8,
+        "max_ms": 154,
+        "over500": 0
+      },
+      "after": {
+        "n": 53,
+        "median_ms": 84.0,
+        "mean_ms": 97.90566037735849,
+        "p95_ms": 239.59999999999994,
+        "max_ms": 610,
+        "over500": 1
+      }
+    }
+  ],
+  "all": {
+    "before": {
+      "n": 114,
+      "median_ms": 62.5,
+      "mean_ms": 97.8157894736842,
+      "p95_ms": 189.89999999999992,
+      "max_ms": 924,
+      "over500": 4
+    },
+    "after": {
+      "n": 114,
+      "median_ms": 66.0,
+      "mean_ms": 110.99122807017544,
+      "p95_ms": 307.44999999999925,
+      "max_ms": 924,
+      "over500": 5
+    }
+  },
+  "moved": {
+    "before": {
+      "n": 18,
+      "median_ms": 63.5,
+      "mean_ms": 69.61111111111111,
+      "p95_ms": 158.64999999999995,
+      "max_ms": 185,
+      "over500": 0
+    },
+    "after": {
+      "n": 18,
+      "median_ms": 110.5,
+      "mean_ms": 153.05555555555554,
+      "p95_ms": 422.99999999999966,
+      "max_ms": 610,
+      "over500": 1
+    }
+  },
+  "new_over500": [
+    {
+      "surah": 42,
+      "ayah": 20,
+      "reference_ms": 383440,
+      "before_ms": 383454,
+      "after_ms": 382830
+    }
+  ],
+  "large_after": [
+    {
+      "surah": 83,
+      "ayah": 10,
+      "reference_ms": 50072,
+      "before_ms": 50897,
+      "after_ms": 50897
+    },
+    {
+      "surah": 83,
+      "ayah": 13,
+      "reference_ms": 66392,
+      "before_ms": 67316,
+      "after_ms": 67316
+    },
+    {
+      "surah": 83,
+      "ayah": 31,
+      "reference_ms": 170927,
+      "before_ms": 171750,
+      "after_ms": 171750
+    },
+    {
+      "surah": 95,
+      "ayah": 8,
+      "reference_ms": 40475,
+      "before_ms": 41315,
+      "after_ms": 41315
+    },
+    {
+      "surah": 42,
+      "ayah": 20,
+      "reference_ms": 383440,
+      "before_ms": 383454,
+      "after_ms": 382830
+    }
+  ]
+}

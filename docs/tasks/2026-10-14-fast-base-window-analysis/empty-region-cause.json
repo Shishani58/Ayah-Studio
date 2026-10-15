@@ -1,0 +1,24 @@
+{
+  "surah": 77,
+  "ayah": 16,
+  "forecast": {
+    "state": "SELECT_CANDIDATE",
+    "ayah": 16,
+    "forecast_ms": 47075.16483516483,
+    "region_ms": [
+      44423.03296703297,
+      52047.91208791209
+    ]
+  },
+  "reference_ms": 48141,
+  "next_dsp_pause": {
+    "start_ms": 54060.0,
+    "end_ms": 54300.0,
+    "center_ms": 54180.0
+  },
+  "target_model_reads": [],
+  "reference_inside_region": true,
+  "next_pause_nearest_reference_ayah": 18,
+  "next_pause_nearest_reference_ms": 54335,
+  "conclusion": "target16 has no accepted DSP pause; first following accepted pause is near ayah18, so any sparse anchor leaves16/17 unresolved"
+}

@@ -1,0 +1,64 @@
+quran-phonetics 1 0.71 review 6 coverage 0.115 calls 6
+quran-phonetics 32 0.8 review 30 coverage 0.021 calls 7
+quran-phonetics 55 1.29 review 78 coverage 0.03 calls 14
+quran-phonetics 59 1.0 review 24 coverage 0.024 calls 10
+quran-phonetics 65 1.04 review 12 coverage 0.044 calls 12
+quran-phonetics 73 0.5 review 20 coverage 0.029 calls 5
+quran-phonetics 77 0.86 review 50 coverage 0.045 calls 8
+quran-phonetics 80 1.1 review 42 coverage 0.095 calls 13
+quran-phonetics 98 1.5 review 7 coverage 0.249 calls 18
+quran-phonetics 112 0.43 review 4 coverage 0.361 calls 6
+quran-phonetics 2 3.91 review 286 coverage 0.001 calls 5
+whisper-tarteel-tiny 1 1.32 review 5 coverage 0.131 calls 6
+whisper-tarteel-tiny 32 1.04 review 30 coverage 0.016 calls 5
+whisper-tarteel-tiny 55 8.71 review 59 coverage 0.117 calls 44
+whisper-tarteel-tiny 59 4.18 review 21 coverage 0.05 calls 19
+whisper-tarteel-tiny 65 1.71 review 12 coverage 0.031 calls 8
+whisper-tarteel-tiny 73 7.43 review 3 coverage 0.221 calls 36
+whisper-tarteel-tiny 77 2.15 review 44 coverage 0.065 calls 10
+whisper-tarteel-tiny 80 4.03 review 33 coverage 0.138 calls 21
+whisper-tarteel-tiny 98 2.55 review 4 coverage 0.159 calls 12
+whisper-tarteel-tiny 112 1.53 review 0 coverage 0.348 calls 6
+whisper-tarteel-tiny 2 6.11 review 282 coverage 0.003 calls 16
+{
+  "quran-phonetics": {
+    "surahs": 11,
+    "ayahs": 561,
+    "median_ms": 7747.0,
+    "p95_ms": 97044.0,
+    "max_ms": 108982,
+    "over500": 536,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 559,
+    "load_probe_seconds": 0.21059958380647004,
+    "decode_seconds": 8.52287625009194,
+    "dsp_seconds": 37.94529391708784,
+    "inference_match_seconds": 13.16036137426272,
+    "search_seconds": 51.10565529135056,
+    "audio_ms": 223400.0,
+    "covered_audio_ms": 138680.0,
+    "total_ms": 9790328.25,
+    "model_reads": 104
+  },
+  "whisper-tarteel-tiny": {
+    "surahs": 11,
+    "ayahs": 561,
+    "median_ms": 10325.0,
+    "p95_ms": 69760.0,
+    "max_ms": 79350,
+    "over500": 479,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 493,
+    "load_probe_seconds": 3.9641229999251664,
+    "decode_seconds": 8.52287625009194,
+    "dsp_seconds": 37.94529391708784,
+    "inference_match_seconds": 40.76020600134507,
+    "search_seconds": 78.7054999184329,
+    "audio_ms": 316630.0,
+    "covered_audio_ms": 251920.0,
+    "total_ms": 9790328.25,
+    "model_reads": 183
+  }
+}

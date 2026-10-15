@@ -1,0 +1,80 @@
+--- surah_cutter/core/fast_executor.py
++++ surah_cutter/core/fast_executor.py
+@@ -16,7 +16,7 @@
+ from surah_cutter.core.fast_adapters import make_adapter, representation_sha, loaded_implementation_sha
+ from surah_cutter.core.fast_reads import LocalEvidenceReads
+ 
+-VERSION = "sequential-fast-v3-sparse-6"
++VERSION = "sequential-fast-v3-sparse-7"
+ 
+ 
+ @dataclass(frozen=True)
+@@ -286,6 +286,23 @@
+     if observation.posterior is None or not hasattr(adapter, "vocab"):
+         return observation, {}, False
+     from surah_cutter.core.fast_ctc import prefix_scores, prefix_path
++    if not phrase or any(unit not in adapter.vocab for unit in phrase):
++        return observation, {}, False
++    # Neither proof nor expansion can survive a target below BOTH gates.
++    # Score it before constructing/scoring every canonical rival. This uses
++    # the same local posterior and never relaxes the residual/quality checks.
++    expected = prefix_scores(observation.posterior,
++                             [tuple(adapter.vocab[u] for u in phrase)], adapter.blank_id)[0]
++    if not math.isfinite(expected) or expected < math.log(min(
++            policy.ctc_prefix_probability, policy.ctc_expansion_probability)):
++        read.setdefault("prefix_rejections", []).append({
++            "units": phrase, "reason": "target_below_proof_and_expansion_gates",
++            "expected_log_probability": expected if math.isfinite(expected) else None,
++            "proof_probability": policy.ctc_prefix_probability,
++            "expansion_probability": policy.ctc_expansion_probability,
++            "posterior_sha256": observation.posterior_sha256,
++        })
++        return observation, {}, False
+     alternatives = [(ayah, 0, phrase)]
+     for owner, units in groups.items():
+         stream = units + groups.get(owner + 1, ())
+@@ -679,6 +696,17 @@
+         word_ends.setdefault(word.ayah, []).extend(base + end for end in ends)
+         canonical_ends.setdefault(word.ayah, []).append(base + len(units))
+     groups = {a: tuple(units) for a, units in groups.items()}
++    plans = {}
++
++    def planned_opening(ayah):
++        # Text is immutable within this run. Retain the small result, not a
++        # separate full-surah competitor list for every ayah (long-surah RAM).
++        if ayah not in plans:
++            planned = plan_phrase(groups, ayah, word_ends)
++            planned["competitor_count"] = len(planned.pop("competitors"))
++            plans[ayah] = planned
++        return plans[ayah]
++
+     from pathlib import Path
+     dsp_config = {name: value for name, value in vars(candidates).items()
+                   if name.isupper() and isinstance(value, (str, bool, int, float))}
+@@ -750,7 +778,7 @@
+             if confirmed and ayah <= confirmed[-1].ayah:
+                 continue  # already validated and atomically published by RESOLVE_BLOCK
+             event("PLAN_PHRASE", ayah)
+-            plan = plan_phrase(groups, ayah, word_ends)
++            plan = planned_opening(ayah)
+             seam = plan_seam(groups, ayah, word_ends) if plan["ambiguous"] and confirmed else None
+             if seam:
+                 plan = {**plan, **seam, "contextual_owner": True}
+@@ -875,7 +903,7 @@
+                             reason = "unsupported_first_onset_timing"
+                             break
+                         proof = {"phrase": phrase, "complete": True, "ambiguous": False,
+-                                 "competitors_checked": True, "competitor_count": len(plan["competitors"]),
++                                 "competitors_checked": True, "competitor_count": plan["competitor_count"],
+                                  "offset": 0, "quality_metric": adapter.metric, **beam_proof}
+                         if noisy_proof:
+                             proof.update(noisy_proof)
+@@ -900,7 +928,7 @@
+                         for future_ayah in ayahs:
+                             if future_ayah <= ayah:
+                                 continue
+-                            next_plan = plan_phrase(groups, future_ayah, word_ends)
++                            next_plan = planned_opening(future_ayah)
+                             next_phrase = next_plan["units"]
+                             next_obs, future_proof = _beam_view(obs, next_phrase, threshold, policy.beam_log_margin)
+                             next_owner = rendered[word_map[future_ayah][0]]

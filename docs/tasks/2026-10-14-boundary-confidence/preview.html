@@ -1,0 +1,32 @@
+<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Оценка положения начала</title><style>body{font-family:system-ui;margin:24px;background:#f8fafb;color:#203331}main{max-width:720px;margin:auto}article{margin:16px 0;background:white;padding:18px;border:1px solid #dbe6e2;border-radius:12px}.arabic{font-size:24px;line-height:1.8;text-align:right} .scores{display:flex;gap:12px;flex-wrap:wrap;font-size:13px}.old{color:#777}.timing-confidence[data-level="high"]{color:#16824e}.timing-confidence[data-level="medium"]{color:#876100}.timing-confidence[data-level="low"]{color:#b54235}p.note{color:#526561;font-size:13px}</style><main><h1>Оценка положения начала</h1><p>Оценка относится к границе. Проценты распознавания остаются в пояснении.</p><div id="cases"></div><p class="note">Подтверждение моделью не заменяет ручное ревью.</p></main><script>const uiLanguage="ru";const t=(v,...values)=>typeof v==="string"?v:v.reduce((s,p,i)=>s+p+(values[i]??""),"");function timingConfidence(item) {
+  const unknown = { level: "unknown", label: t("Начало: нет оценки"),
+    title: t("Положение начала отдельно не проверено. Процент распознавания слова не измеряет точность времени.") };
+  if (item.time == null || item.stale || item.status === "edited") return unknown;
+  if (item.status === "verified") {
+    return { level: "high", label: t("Начало: проверено"),
+      title: t("Метка отмечена как проверенная при ревью.") };
+  }
+  const evidence = item.onset_evidence;
+  const boundary = evidence && evidence.boundary;
+  const labels = { high: t("Начало: подтверждено"), medium: t("Начало: предварительное"),
+    low: t("Начало: сомнительное"), unknown: unknown.label };
+  const reasons = {
+    "local-phrase-and-pause": t("Начальная фраза и положение границы проверены локально по речи и паузе."),
+    "alignment-only": t("Выравнивание согласовано с текстом, но положение начала независимо не проверено."),
+    "pause-edge-only": t("Метка близка к краю речевой паузы, но принадлежность начала аяту отдельно не подтверждена."),
+    "pause-rechecked": t("Положение скорректировано по паузе; начальная фраза отдельно не подтверждена."),
+    "weak-onset": t("В выбранной позиции нет достаточной акустической поддержки начала."),
+    "late-onset-in-pause": t("Метка попала в неоднозначную часть длинной паузы."),
+    "missing-local-proof": t("Для перенесённой метки нет сохранённого локального подтверждения."),
+    "insufficient-timing-evidence": unknown.title,
+  };
+  const level = boundary && Object.hasOwn(labels, boundary.level) ? boundary.level : "unknown";
+  let title = boundary ? reasons[boundary.reason] || unknown.title : unknown.title;
+  title += " " + t("Это оценка оснований для границы, а не измеренная погрешность времени. Проверьте начало на слух.");
+  const format = value => new Intl.NumberFormat(uiLanguage, { style: "percent", maximumFractionDigits: 1 }).format(value);
+  const valid = value => typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 1;
+  if (evidence && valid(evidence.first_sound)) title += t` Сигнал первого звука: ${format(evidence.first_sound)}.`;
+  if (valid(item.confidence)) title += t` Оценка распознавания: ${format(item.confidence)}.`;
+  return { level, label: labels[level], title };
+}
+const cases=[{"ayah": "1:2", "time": 6483, "confidence": 0.5305, "onset_evidence": {"first_sound": 0.0022, "word": 0.5305, "boundary_warning": false, "boundary": {"level": "high", "reason": "local-phrase-and-pause"}}, "text": "ٱلۡحَمۡدُ لِلَّهِ رَبِّ ٱلۡعَٰلَمِينَ"}, {"ayah": 218, "time": 4793798, "status": "auto", "confidence": 0.4479, "onset_evidence": {"first_sound": 0.9967, "word": 0.4479, "boundary_warning": false, "boundary": {"level": "unknown", "reason": "insufficient-timing-evidence"}}, "text": "إِنَّ ٱلَّذِينَ ءَامَنُواْ وَٱلَّذِينَ هَاجَرُواْ وَجَٰهَدُواْ فِي سَبِيلِ ٱللَّهِ أُوْلَٰٓئِكَ يَرۡجُونَ رَحۡمَتَ ٱللَّهِۚ وَٱللَّهُ غَفُورٞ رَّحِيمٞ"}, {"ayah": 219, "time": 4815677, "status": "auto", "confidence": 0.5082, "onset_evidence": {"first_sound": 0.5452, "word": 0.5082, "boundary_warning": false, "boundary": {"level": "medium", "reason": "pause-edge-only"}}, "text": "۞ يَسۡـَٔلُونَكَ عَنِ ٱلۡخَمۡرِ وَٱلۡمَيۡسِرِۖ قُلۡ فِيهِمَآ إِثۡمٞ كَبِيرٞ وَمَنَٰفِعُ لِلنَّاسِ وَإِثۡمُهُمَآ أَكۡبَرُ مِن نَّفۡعِهِمَاۗ وَيَسۡـَٔلُونَكَ مَاذَا يُنفِقُونَۖ قُلِ ٱلۡعَفۡوَۗ كَذَٰلِكَ يُبَيِّنُ ٱللَّهُ لَكُمُ ٱلۡأٓيَٰتِ لَعَلَّكُمۡ تَتَفَكَّرُونَ"}, {"ayah": 220, "time": 4843477, "status": "auto", "confidence": 0.0, "onset_evidence": {"first_sound": 0.0002, "word": 0.0, "boundary_warning": false, "boundary": {"level": "low", "reason": "weak-onset"}}, "text": "فِي ٱلدُّنۡيَا وَٱلۡأٓخِرَةِۗ وَيَسۡـَٔلُونَكَ عَنِ ٱلۡيَتَٰمَىٰۖ قُلۡ إِصۡلَاحٞ لَّهُمۡ خَيۡرٞۖ وَإِن تُخَالِطُوهُمۡ فَإِخۡوَٰنُكُمۡۚ وَٱللَّهُ يَعۡلَمُ ٱلۡمُفۡسِدَ مِنَ ٱلۡمُصۡلِحِۚ وَلَوۡ شَآءَ ٱللَّهُ لَأَعۡنَتَكُمۡۚ إِنَّ ٱللَّهَ عَزِيزٌ حَكِيمٞ"}, {"ayah": 221, "time": 4872457, "status": "auto", "confidence": 0.9959, "onset_evidence": {"first_sound": 0.9996, "word": 0.9959, "boundary_warning": false, "boundary": {"level": "medium", "reason": "alignment-only"}}, "text": "وَلَا تَنكِحُواْ ٱلۡمُشۡرِكَٰتِ حَتَّىٰ يُؤۡمِنَّۚ وَلَأَمَةٞ مُّؤۡمِنَةٌ خَيۡرٞ مِّن مُّشۡرِكَةٖ وَلَوۡ أَعۡجَبَتۡكُمۡۗ وَلَا تُنكِحُواْ ٱلۡمُشۡرِكِينَ حَتَّىٰ يُؤۡمِنُواْۚ وَلَعَبۡدٞ مُّؤۡمِنٌ خَيۡرٞ مِّن مُّشۡرِكٖ وَلَوۡ أَعۡجَبَكُمۡۗ أُوْلَٰٓئِكَ يَدۡعُونَ إِلَى ٱلنَّارِۖ وَٱللَّهُ يَدۡعُوٓاْ إِلَى ٱلۡجَنَّةِ وَٱلۡمَغۡفِرَةِ بِإِذۡنِهِۦۖ وَيُبَيِّنُ ءَايَٰتِهِۦ لِلنَّاسِ لَعَلَّهُمۡ يَتَذَكَّرُونَ"}];for(const item of cases){const e=timingConfidence(item);const a=document.createElement('article');const h=document.createElement('b');h.textContent='Аят '+item.ayah;const text=document.createElement('p');text.className='arabic';text.dir='rtl';text.textContent=item.text;const scores=document.createElement('div');scores.className='scores';const score=document.createElement('span');score.className='timing-confidence';score.dataset.level=e.level;score.textContent=e.label;score.title=e.title;scores.append(score);a.append(h,text,scores);document.querySelector('#cases').append(a);}</script></html>

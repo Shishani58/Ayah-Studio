@@ -1,0 +1,34 @@
+--- 
++++ 
+@@ -16,7 +16,7 @@
+ from surah_cutter.core.fast_adapters import make_adapter, representation_sha, loaded_implementation_sha, arabic_units
+ from surah_cutter.core.fast_reads import LocalEvidenceReads
+ 
+-VERSION = "sequential-fast-v3-sparse-12-split-probe"
++VERSION = "sequential-fast-v3-sparse-12-split-opening"
+ 
+ 
+ @dataclass(frozen=True)
+@@ -197,6 +197,13 @@
+ 
+ 
+ def _split_opening(obs, groups, ends, ayah, threshold):
++    """Confirm exact letters across a split ASR head, preserving token evidence.
++
++    A unique complete first word can authorize finite context expansion. Proof
++    additionally needs two whole canonical words, symmetric char-prefix rivals
++    at every word start, and all contributing selected tokens above threshold.
++    Word segmentation supplies identity only; the DSP pause supplies timing.
++    """
+     target = groups[ayah]
+     # Only plain one-unit canonical words. Named letters need their own proof.
+     if ends[ayah] != list(range(1, len(target) + 1)) or len(target) < 2 or obs.truncated:
+@@ -242,7 +249,7 @@
+             if observed == text and strong(n):
+                 return {'phrase': target[:count], 'segmented_opening': {
+                     'source_count': n, 'first_source_count': first_count,
+-                    'source_units': units[:n], 'selected_indices': sorted({i for a in attrs[:n] for i in a['selected_indices']}),
++                    'source_units': list(units[:n]), 'selected_indices': sorted({i for a in attrs[:n] for i in a['selected_indices']}),
+                     'competitor_count': len(starts), 'onset_supported': False}}, True
+             if not text.startswith(observed):
+                 break

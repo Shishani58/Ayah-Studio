@@ -1,0 +1,122 @@
+{
+  "scope": "diagnostic only; no production boundaries",
+  "cases": [
+    {
+      "surah": 1,
+      "ayah": 5,
+      "original_error_ms": 145,
+      "full_previous": 1,
+      "previous_support_end_ms": 19680.0,
+      "current_support_ms": 21681,
+      "gap_midpoint_error_ms": -856,
+      "gt_fraction_in_ctc_gap": 0.927536231884058,
+      "right_margin_ms": 480.0
+    },
+    {
+      "surah": 2,
+      "ayah": 4,
+      "original_error_ms": 505,
+      "full_previous": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 9,
+      "original_error_ms": 1012,
+      "full_previous": 1,
+      "previous_support_end_ms": 107640.0,
+      "current_support_ms": 109362,
+      "gap_midpoint_error_ms": 151,
+      "gt_fraction_in_ctc_gap": 0.41231126596980255,
+      "right_margin_ms": 440.0
+    },
+    {
+      "surah": 2,
+      "ayah": 10,
+      "original_error_ms": 2217,
+      "full_previous": 1,
+      "previous_support_end_ms": 121338.20895522388,
+      "current_support_ms": 124063,
+      "gap_midpoint_error_ms": 855,
+      "gt_fraction_in_ctc_gap": 0.18635962774086612,
+      "right_margin_ms": 241.79104477612418
+    },
+    {
+      "surah": 2,
+      "ayah": 18,
+      "original_error_ms": 1476,
+      "full_previous": 1,
+      "previous_support_end_ms": 252118.20895522388,
+      "current_support_ms": 253940,
+      "gap_midpoint_error_ms": 565,
+      "gt_fraction_in_ctc_gap": 0.18980829100442617,
+      "right_margin_ms": 241.79104477612418
+    },
+    {
+      "surah": 2,
+      "ayah": 23,
+      "original_error_ms": 1335,
+      "full_previous": 1,
+      "previous_support_end_ms": 381657.4193548387,
+      "current_support_ms": 383403,
+      "gap_midpoint_error_ms": 462,
+      "gt_fraction_in_ctc_gap": 0.2352115018572173,
+      "right_margin_ms": 322.5806451612734
+    },
+    {
+      "surah": 2,
+      "ayah": 25,
+      "original_error_ms": 980,
+      "full_previous": 0
+    },
+    {
+      "surah": 32,
+      "ayah": 11,
+      "original_error_ms": 1892,
+      "full_previous": 1,
+      "previous_support_end_ms": 142598.38709677418,
+      "current_support_ms": 145103,
+      "gap_midpoint_error_ms": 640,
+      "gt_fraction_in_ctc_gap": 0.24459384619347865,
+      "right_margin_ms": 201.61290322581772
+    },
+    {
+      "surah": 32,
+      "ayah": 16,
+      "original_error_ms": 566,
+      "full_previous": 0
+    },
+    {
+      "surah": 32,
+      "ayah": 20,
+      "original_error_ms": 1063,
+      "full_previous": 1,
+      "previous_support_end_ms": 272699.03225806454,
+      "current_support_ms": 274201,
+      "gap_midpoint_error_ms": 312,
+      "gt_fraction_in_ctc_gap": 0.2922617641373549,
+      "right_margin_ms": 120.9677419354557
+    },
+    {
+      "surah": 55,
+      "ayah": 26,
+      "original_error_ms": 251,
+      "full_previous": 1,
+      "previous_support_end_ms": 138257.91044776118,
+      "current_support_ms": 140702,
+      "gap_midpoint_error_ms": -971,
+      "gt_fraction_in_ctc_gap": 0.8973032719811429,
+      "right_margin_ms": 282.0895522388164
+    },
+    {
+      "surah": 77,
+      "ayah": 30,
+      "original_error_ms": 337,
+      "full_previous": 1,
+      "previous_support_end_ms": 113857.41935483871,
+      "current_support_ms": 115461,
+      "gap_midpoint_error_ms": -465,
+      "gt_fraction_in_ctc_gap": 0.7898453058679162,
+      "right_margin_ms": 322.580645161288
+    }
+  ]
+}

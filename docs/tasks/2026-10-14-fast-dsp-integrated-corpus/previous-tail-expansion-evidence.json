@@ -1,0 +1,4557 @@
+{
+  "scope": "retained corpus diagnosis, no new inference or tests",
+  "counts": {
+    "not_full": 99,
+    "no_strong_edge_suffix": 151,
+    "full": 85,
+    "explicit_edge_suffix": 33,
+    "target_not_retained": 6
+  },
+  "reads": [
+    {
+      "surah": 1,
+      "ayah": 3,
+      "read_id": 4,
+      "window_ms": [
+        10040.0,
+        11340.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ل",
+        "ع",
+        "َ",
+        "ا",
+        "ل",
+        "َ",
+        "م",
+        "ِ",
+        "ۦ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 1,
+      "ayah": 3,
+      "read_id": 5,
+      "window_ms": [
+        8840.0,
+        11340.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ل",
+        "ع",
+        "َ",
+        "ا",
+        "ل",
+        "َ",
+        "م",
+        "ِ",
+        "ۦ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 4,
+      "read_id": 10,
+      "window_ms": [
+        32460.0,
+        33760.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ي",
+        "ُ",
+        "ں",
+        "ں",
+        "ں",
+        "ف",
+        "ِ",
+        "ق",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 1
+    },
+    {
+      "surah": 2,
+      "ayah": 4,
+      "read_id": 11,
+      "window_ms": [
+        31260.0,
+        33760.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ي",
+        "ُ",
+        "ں",
+        "ں",
+        "ں",
+        "ف",
+        "ِ",
+        "ق",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 4,
+      "read_id": 12,
+      "window_ms": [
+        29760.0,
+        33760.0
+      ],
+      "duration_ms": 4000.0,
+      "target": [
+        "ي",
+        "ُ",
+        "ں",
+        "ں",
+        "ں",
+        "ف",
+        "ِ",
+        "ق",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 8,
+      "read_id": 25,
+      "window_ms": [
+        90800.0,
+        92100.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ع",
+        "َ",
+        "ظ",
+        "ِ",
+        "ۦ",
+        "م"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 4
+    },
+    {
+      "surah": 2,
+      "ayah": 8,
+      "read_id": 26,
+      "window_ms": [
+        89600.0,
+        92100.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ع",
+        "َ",
+        "ظ",
+        "ِ",
+        "ۦ",
+        "م"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 10,
+      "read_id": 31,
+      "window_ms": [
+        120080.0,
+        121380.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ي",
+        "َ",
+        "ش",
+        "ع",
+        "ُ",
+        "ر",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 1
+    },
+    {
+      "surah": 2,
+      "ayah": 10,
+      "read_id": 32,
+      "window_ms": [
+        118880.0,
+        121380.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ي",
+        "َ",
+        "ش",
+        "ع",
+        "ُ",
+        "ر",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 11,
+      "read_id": 37,
+      "window_ms": [
+        136320.0,
+        137620.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ي",
+        "َ",
+        "ك",
+        "ذ",
+        "ِ",
+        "ب",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 5
+    },
+    {
+      "surah": 2,
+      "ayah": 11,
+      "read_id": 38,
+      "window_ms": [
+        135120.0,
+        137620.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ي",
+        "َ",
+        "ك",
+        "ذ",
+        "ِ",
+        "ب",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 12,
+      "read_id": 40,
+      "window_ms": [
+        146920.0,
+        148220.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "م",
+        "ُ",
+        "ص",
+        "ل",
+        "ِ",
+        "ح",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 2
+    },
+    {
+      "surah": 2,
+      "ayah": 12,
+      "read_id": 41,
+      "window_ms": [
+        145720.0,
+        148220.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "م",
+        "ُ",
+        "ص",
+        "ل",
+        "ِ",
+        "ح",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 1
+    },
+    {
+      "surah": 2,
+      "ayah": 13,
+      "read_id": 43,
+      "window_ms": [
+        156900.0,
+        158200.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ي",
+        "َ",
+        "ش",
+        "ع",
+        "ُ",
+        "ر",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 2
+    },
+    {
+      "surah": 2,
+      "ayah": 13,
+      "read_id": 44,
+      "window_ms": [
+        155700.0,
+        158200.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ي",
+        "َ",
+        "ش",
+        "ع",
+        "ُ",
+        "ر",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 16,
+      "read_id": 59,
+      "window_ms": [
+        213320.0,
+        214620.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ي",
+        "َ",
+        "ع",
+        "م",
+        "َ",
+        "ه",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 2
+    },
+    {
+      "surah": 2,
+      "ayah": 16,
+      "read_id": 60,
+      "window_ms": [
+        212120.0,
+        214620.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ي",
+        "َ",
+        "ع",
+        "م",
+        "َ",
+        "ه",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 18,
+      "read_id": 70,
+      "window_ms": [
+        250860.0,
+        252160.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ي",
+        "ُ",
+        "ب",
+        "ڇ",
+        "ص",
+        "ِ",
+        "ر",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 4
+    },
+    {
+      "surah": 2,
+      "ayah": 18,
+      "read_id": 71,
+      "window_ms": [
+        249660.0,
+        252160.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ي",
+        "ُ",
+        "ب",
+        "ڇ",
+        "ص",
+        "ِ",
+        "ر",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 19,
+      "read_id": 76,
+      "window_ms": [
+        260760.0,
+        262060.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ي",
+        "َ",
+        "ر",
+        "ج",
+        "ِ",
+        "ع",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 1
+    },
+    {
+      "surah": 2,
+      "ayah": 19,
+      "read_id": 77,
+      "window_ms": [
+        259560.0,
+        262060.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ي",
+        "َ",
+        "ر",
+        "ج",
+        "ِ",
+        "ع",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 21,
+      "read_id": 86,
+      "window_ms": [
+        321280.0,
+        322580.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ق",
+        "َ",
+        "د",
+        "ِ",
+        "ۦ",
+        "ر"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 21,
+      "read_id": 87,
+      "window_ms": [
+        320080.0,
+        322580.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ق",
+        "َ",
+        "د",
+        "ِ",
+        "ۦ",
+        "ر"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 22,
+      "read_id": 90,
+      "window_ms": [
+        338080.0,
+        339380.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ت",
+        "َ",
+        "ت",
+        "ت",
+        "َ",
+        "ق",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 1
+    },
+    {
+      "surah": 2,
+      "ayah": 22,
+      "read_id": 91,
+      "window_ms": [
+        336880.0,
+        339380.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ت",
+        "َ",
+        "ت",
+        "ت",
+        "َ",
+        "ق",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 23,
+      "read_id": 101,
+      "window_ms": [
+        380680.0,
+        381980.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ت",
+        "َ",
+        "ع",
+        "ل",
+        "َ",
+        "م",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 1
+    },
+    {
+      "surah": 2,
+      "ayah": 23,
+      "read_id": 102,
+      "window_ms": [
+        379480.0,
+        381980.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ت",
+        "َ",
+        "ع",
+        "ل",
+        "َ",
+        "م",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 24,
+      "read_id": 107,
+      "window_ms": [
+        410020.0,
+        411320.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ص",
+        "َ",
+        "ا",
+        "د",
+        "ِ",
+        "ق",
+        "ِ",
+        "ۦ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 24,
+      "read_id": 108,
+      "window_ms": [
+        408820.0,
+        411320.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ص",
+        "َ",
+        "ا",
+        "د",
+        "ِ",
+        "ق",
+        "ِ",
+        "ۦ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 26,
+      "read_id": 131,
+      "window_ms": [
+        476160.0,
+        477460.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "خ",
+        "َ",
+        "ا",
+        "ل",
+        "ِ",
+        "د",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 26,
+      "read_id": 132,
+      "window_ms": [
+        474960.0,
+        477460.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "خ",
+        "َ",
+        "ا",
+        "ل",
+        "ِ",
+        "د",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 27,
+      "read_id": 148,
+      "window_ms": [
+        519300.0,
+        520600.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ل",
+        "ف",
+        "َ",
+        "ا",
+        "س",
+        "ِ",
+        "ق",
+        "ِ",
+        "ۦ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 27,
+      "read_id": 149,
+      "window_ms": [
+        518100.0,
+        520600.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ل",
+        "ف",
+        "َ",
+        "ا",
+        "س",
+        "ِ",
+        "ق",
+        "ِ",
+        "ۦ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 28,
+      "read_id": 158,
+      "window_ms": [
+        542340.0,
+        543640.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ل",
+        "خ",
+        "َ",
+        "ا",
+        "س",
+        "ِ",
+        "ر",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 28,
+      "read_id": 159,
+      "window_ms": [
+        541140.0,
+        543640.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ل",
+        "خ",
+        "َ",
+        "ا",
+        "س",
+        "ِ",
+        "ر",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 33,
+      "read_id": 182,
+      "window_ms": [
+        642140.0,
+        643440.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ل",
+        "ح",
+        "َ",
+        "ك",
+        "ِ",
+        "ۦ",
+        "م"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 33,
+      "read_id": 183,
+      "window_ms": [
+        640940.0,
+        643440.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ل",
+        "ح",
+        "َ",
+        "ك",
+        "ِ",
+        "ۦ",
+        "م"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 34,
+      "read_id": 191,
+      "window_ms": [
+        674040.0,
+        675340.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ت",
+        "َ",
+        "ك",
+        "ت",
+        "ُ",
+        "م",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 34,
+      "read_id": 192,
+      "window_ms": [
+        672840.0,
+        675340.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ت",
+        "َ",
+        "ك",
+        "ت",
+        "ُ",
+        "م",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 35,
+      "read_id": 196,
+      "window_ms": [
+        692300.0,
+        693600.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ل",
+        "ك",
+        "َ",
+        "ا",
+        "ف",
+        "ِ",
+        "ر",
+        "ِ",
+        "ۦ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 35,
+      "read_id": 197,
+      "window_ms": [
+        691100.0,
+        693600.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ل",
+        "ك",
+        "َ",
+        "ا",
+        "ف",
+        "ِ",
+        "ر",
+        "ِ",
+        "ۦ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 40,
+      "read_id": 221,
+      "window_ms": [
+        779540.0,
+        780840.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "خ",
+        "َ",
+        "ا",
+        "ل",
+        "ِ",
+        "د",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 1
+    },
+    {
+      "surah": 2,
+      "ayah": 40,
+      "read_id": 222,
+      "window_ms": [
+        778340.0,
+        780840.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "خ",
+        "َ",
+        "ا",
+        "ل",
+        "ِ",
+        "د",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 42,
+      "read_id": 233,
+      "window_ms": [
+        816520.0,
+        817820.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ف",
+        "َ",
+        "ت",
+        "ت",
+        "َ",
+        "ق",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 1
+    },
+    {
+      "surah": 2,
+      "ayah": 42,
+      "read_id": 234,
+      "window_ms": [
+        815320.0,
+        817820.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ف",
+        "َ",
+        "ت",
+        "ت",
+        "َ",
+        "ق",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 43,
+      "read_id": 237,
+      "window_ms": [
+        824400.0,
+        825700.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ت",
+        "َ",
+        "ع",
+        "ل",
+        "َ",
+        "م",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 7
+    },
+    {
+      "surah": 2,
+      "ayah": 43,
+      "read_id": 238,
+      "window_ms": [
+        823200.0,
+        825700.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ت",
+        "َ",
+        "ع",
+        "ل",
+        "َ",
+        "م",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 46,
+      "read_id": 247,
+      "window_ms": [
+        859100.0,
+        860400.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ل",
+        "خ",
+        "َ",
+        "ا",
+        "ش",
+        "ِ",
+        "ع",
+        "ِ",
+        "ۦ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 46,
+      "read_id": 248,
+      "window_ms": [
+        857900.0,
+        860400.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ل",
+        "خ",
+        "َ",
+        "ا",
+        "ش",
+        "ِ",
+        "ع",
+        "ِ",
+        "ۦ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 9
+    },
+    {
+      "surah": 2,
+      "ayah": 46,
+      "read_id": 249,
+      "window_ms": [
+        856400.0,
+        860400.0
+      ],
+      "duration_ms": 4000.0,
+      "target": [
+        "ل",
+        "خ",
+        "َ",
+        "ا",
+        "ش",
+        "ِ",
+        "ع",
+        "ِ",
+        "ۦ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 1
+    },
+    {
+      "surah": 2,
+      "ayah": 47,
+      "read_id": 251,
+      "window_ms": [
+        870820.0,
+        872120.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ر",
+        "َ",
+        "ا",
+        "ج",
+        "ِ",
+        "ع",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 4
+    },
+    {
+      "surah": 2,
+      "ayah": 47,
+      "read_id": 252,
+      "window_ms": [
+        869620.0,
+        872120.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ر",
+        "َ",
+        "ا",
+        "ج",
+        "ِ",
+        "ع",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 50,
+      "read_id": 267,
+      "window_ms": [
+        934180.0,
+        935480.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ع",
+        "َ",
+        "ظ",
+        "ِ",
+        "ۦ",
+        "م"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 4
+    },
+    {
+      "surah": 2,
+      "ayah": 50,
+      "read_id": 268,
+      "window_ms": [
+        932980.0,
+        935480.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ع",
+        "َ",
+        "ظ",
+        "ِ",
+        "ۦ",
+        "م"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 51,
+      "read_id": 270,
+      "window_ms": [
+        946300.0,
+        947600.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ت",
+        "َ",
+        "ں",
+        "ں",
+        "ں",
+        "ظ",
+        "ُ",
+        "ر",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 1
+    },
+    {
+      "surah": 2,
+      "ayah": 51,
+      "read_id": 271,
+      "window_ms": [
+        945100.0,
+        947600.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ت",
+        "َ",
+        "ں",
+        "ں",
+        "ں",
+        "ظ",
+        "ُ",
+        "ر",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 52,
+      "read_id": 273,
+      "window_ms": [
+        959420.0,
+        960720.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ظ",
+        "َ",
+        "ا",
+        "ل",
+        "ِ",
+        "م",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 1
+    },
+    {
+      "surah": 2,
+      "ayah": 52,
+      "read_id": 274,
+      "window_ms": [
+        958220.0,
+        960720.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ظ",
+        "َ",
+        "ا",
+        "ل",
+        "ِ",
+        "م",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 54,
+      "read_id": 281,
+      "window_ms": [
+        977420.0,
+        978720.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ت",
+        "َ",
+        "ه",
+        "ت",
+        "َ",
+        "د",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 1
+    },
+    {
+      "surah": 2,
+      "ayah": 54,
+      "read_id": 282,
+      "window_ms": [
+        976220.0,
+        978720.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ت",
+        "َ",
+        "ه",
+        "ت",
+        "َ",
+        "د",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 55,
+      "read_id": 288,
+      "window_ms": [
+        1007220.0,
+        1008520.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ر",
+        "ر",
+        "َ",
+        "ح",
+        "ِ",
+        "ۦ",
+        "م"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 2
+    },
+    {
+      "surah": 2,
+      "ayah": 55,
+      "read_id": 289,
+      "window_ms": [
+        1006020.0,
+        1008520.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ر",
+        "ر",
+        "َ",
+        "ح",
+        "ِ",
+        "ۦ",
+        "م"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 32,
+      "ayah": 3,
+      "read_id": 6,
+      "window_ms": [
+        21840.0,
+        23140.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ل",
+        "ع",
+        "َ",
+        "ا",
+        "ل",
+        "َ",
+        "م",
+        "ِ",
+        "ۦ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 6
+    },
+    {
+      "surah": 32,
+      "ayah": 3,
+      "read_id": 7,
+      "window_ms": [
+        20640.0,
+        23140.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ل",
+        "ع",
+        "َ",
+        "ا",
+        "ل",
+        "َ",
+        "م",
+        "ِ",
+        "ۦ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 32,
+      "ayah": 6,
+      "read_id": 21,
+      "window_ms": [
+        88120.0,
+        89420.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ت",
+        "َ",
+        "ع",
+        "ُ",
+        "د",
+        "د",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 4
+    },
+    {
+      "surah": 32,
+      "ayah": 6,
+      "read_id": 22,
+      "window_ms": [
+        86920.0,
+        89420.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ت",
+        "َ",
+        "ع",
+        "ُ",
+        "د",
+        "د",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 32,
+      "ayah": 9,
+      "read_id": 29,
+      "window_ms": [
+        113440.0,
+        114740.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "م",
+        "م",
+        "م",
+        "م",
+        "َ",
+        "ه",
+        "ِ",
+        "ۦ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 32,
+      "ayah": 9,
+      "read_id": 30,
+      "window_ms": [
+        112240.0,
+        114740.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "م",
+        "م",
+        "م",
+        "م",
+        "َ",
+        "ه",
+        "ِ",
+        "ۦ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 32,
+      "ayah": 11,
+      "read_id": 39,
+      "window_ms": [
+        141500.0,
+        142800.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ك",
+        "َ",
+        "ا",
+        "ف",
+        "ِ",
+        "ر",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 32,
+      "ayah": 11,
+      "read_id": 40,
+      "window_ms": [
+        140300.0,
+        142800.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ك",
+        "َ",
+        "ا",
+        "ف",
+        "ِ",
+        "ر",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 32,
+      "ayah": 17,
+      "read_id": 56,
+      "window_ms": [
+        232880.0,
+        234180.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ي",
+        "ُ",
+        "ں",
+        "ں",
+        "ں",
+        "ف",
+        "ِ",
+        "ق",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 32,
+      "ayah": 17,
+      "read_id": 57,
+      "window_ms": [
+        231680.0,
+        234180.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ي",
+        "ُ",
+        "ں",
+        "ں",
+        "ں",
+        "ف",
+        "ِ",
+        "ق",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 32,
+      "ayah": 17,
+      "read_id": 58,
+      "window_ms": [
+        230180.0,
+        234180.0
+      ],
+      "duration_ms": 4000.0,
+      "target": [
+        "ي",
+        "ُ",
+        "ں",
+        "ں",
+        "ں",
+        "ف",
+        "ِ",
+        "ق",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 32,
+      "ayah": 24,
+      "read_id": 85,
+      "window_ms": [
+        337520.0,
+        338820.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ء",
+        "ِ",
+        "س",
+        "ر",
+        "َ",
+        "ا",
+        "ء",
+        "ِ",
+        "ۦ",
+        "ل"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 32,
+      "ayah": 24,
+      "read_id": 86,
+      "window_ms": [
+        336320.0,
+        338820.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ء",
+        "ِ",
+        "س",
+        "ر",
+        "َ",
+        "ا",
+        "ء",
+        "ِ",
+        "ۦ",
+        "ل"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 32,
+      "ayah": 24,
+      "read_id": 87,
+      "window_ms": [
+        334820.0,
+        338820.0
+      ],
+      "duration_ms": 4000.0,
+      "target": [
+        "ء",
+        "ِ",
+        "س",
+        "ر",
+        "َ",
+        "ا",
+        "ء",
+        "ِ",
+        "ۦ",
+        "ل"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 32,
+      "ayah": 26,
+      "read_id": 98,
+      "window_ms": [
+        366820.0,
+        368120.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ي",
+        "َ",
+        "خ",
+        "ت",
+        "َ",
+        "ل",
+        "ِ",
+        "ف",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 1
+    },
+    {
+      "surah": 32,
+      "ayah": 26,
+      "read_id": 99,
+      "window_ms": [
+        365620.0,
+        368120.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ي",
+        "َ",
+        "خ",
+        "ت",
+        "َ",
+        "ل",
+        "ِ",
+        "ف",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 32,
+      "ayah": 27,
+      "read_id": 102,
+      "window_ms": [
+        382480.0,
+        383780.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ي",
+        "َ",
+        "س",
+        "م",
+        "َ",
+        "ع",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 1
+    },
+    {
+      "surah": 32,
+      "ayah": 27,
+      "read_id": 103,
+      "window_ms": [
+        381280.0,
+        383780.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ي",
+        "َ",
+        "س",
+        "م",
+        "َ",
+        "ع",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 55,
+      "ayah": 2,
+      "read_id": 10,
+      "window_ms": [
+        7500.0,
+        8800.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ء",
+        "َ",
+        "ر",
+        "ر",
+        "َ",
+        "ح",
+        "م",
+        "َ",
+        "ا",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 55,
+      "ayah": 2,
+      "read_id": 11,
+      "window_ms": [
+        6300.0,
+        8800.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ء",
+        "َ",
+        "ر",
+        "ر",
+        "َ",
+        "ح",
+        "م",
+        "َ",
+        "ا",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 7
+    },
+    {
+      "surah": 55,
+      "ayah": 2,
+      "read_id": 12,
+      "window_ms": [
+        5810.0,
+        8800.0
+      ],
+      "duration_ms": 2990.0,
+      "target": [
+        "ء",
+        "َ",
+        "ر",
+        "ر",
+        "َ",
+        "ح",
+        "م",
+        "َ",
+        "ا",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 55,
+      "ayah": 3,
+      "read_id": 14,
+      "window_ms": [
+        10380.0,
+        11680.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ل",
+        "ق",
+        "ُ",
+        "ر",
+        "ء",
+        "َ",
+        "ا",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 3
+    },
+    {
+      "surah": 55,
+      "ayah": 3,
+      "read_id": 15,
+      "window_ms": [
+        9180.0,
+        11680.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ل",
+        "ق",
+        "ُ",
+        "ر",
+        "ء",
+        "َ",
+        "ا",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 55,
+      "ayah": 3,
+      "read_id": 16,
+      "window_ms": [
+        9000.0,
+        11680.0
+      ],
+      "duration_ms": 2680.0,
+      "target": [
+        "ل",
+        "ق",
+        "ُ",
+        "ر",
+        "ء",
+        "َ",
+        "ا",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 55,
+      "ayah": 13,
+      "read_id": 37,
+      "window_ms": [
+        53720.0,
+        55020.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "و",
+        "َ",
+        "ر",
+        "ر",
+        "َ",
+        "ي",
+        "ح",
+        "َ",
+        "ا",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 5
+    },
+    {
+      "surah": 55,
+      "ayah": 13,
+      "read_id": 38,
+      "window_ms": [
+        52520.0,
+        55020.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "و",
+        "َ",
+        "ر",
+        "ر",
+        "َ",
+        "ي",
+        "ح",
+        "َ",
+        "ا",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 55,
+      "ayah": 14,
+      "read_id": 40,
+      "window_ms": [
+        60640.0,
+        61940.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ت",
+        "ُ",
+        "ك",
+        "َ",
+        "ذ",
+        "ذ",
+        "ِ",
+        "ب",
+        "َ",
+        "ا",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 55,
+      "ayah": 14,
+      "read_id": 41,
+      "window_ms": [
+        59440.0,
+        61940.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ت",
+        "ُ",
+        "ك",
+        "َ",
+        "ذ",
+        "ذ",
+        "ِ",
+        "ب",
+        "َ",
+        "ا",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 55,
+      "ayah": 16,
+      "read_id": 47,
+      "window_ms": [
+        78200.0,
+        79500.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ن",
+        "ن",
+        "ن",
+        "ن",
+        "َ",
+        "ا",
+        "ر"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 4
+    },
+    {
+      "surah": 55,
+      "ayah": 16,
+      "read_id": 48,
+      "window_ms": [
+        77000.0,
+        79500.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ن",
+        "ن",
+        "ن",
+        "ن",
+        "َ",
+        "ا",
+        "ر"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 55,
+      "ayah": 18,
+      "read_id": 52,
+      "window_ms": [
+        89440.0,
+        90740.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ل",
+        "م",
+        "َ",
+        "غ",
+        "ر",
+        "ِ",
+        "ب",
+        "َ",
+        "ي",
+        "ي",
+        "ي",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 55,
+      "ayah": 18,
+      "read_id": 53,
+      "window_ms": [
+        88240.0,
+        90740.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ل",
+        "م",
+        "َ",
+        "غ",
+        "ر",
+        "ِ",
+        "ب",
+        "َ",
+        "ي",
+        "ي",
+        "ي",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 55,
+      "ayah": 18,
+      "read_id": 54,
+      "window_ms": [
+        86740.0,
+        90740.0
+      ],
+      "duration_ms": 4000.0,
+      "target": [
+        "ل",
+        "م",
+        "َ",
+        "غ",
+        "ر",
+        "ِ",
+        "ب",
+        "َ",
+        "ي",
+        "ي",
+        "ي",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 55,
+      "ayah": 21,
+      "read_id": 59,
+      "window_ms": [
+        105160.0,
+        106460.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ي",
+        "َ",
+        "ب",
+        "ڇ",
+        "غ",
+        "ِ",
+        "ي",
+        "َ",
+        "ا",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 4
+    },
+    {
+      "surah": 55,
+      "ayah": 21,
+      "read_id": 60,
+      "window_ms": [
+        103960.0,
+        106460.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ي",
+        "َ",
+        "ب",
+        "ڇ",
+        "غ",
+        "ِ",
+        "ي",
+        "َ",
+        "ا",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 55,
+      "ayah": 23,
+      "read_id": 66,
+      "window_ms": [
+        116840.0,
+        118140.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ل",
+        "ل",
+        "ُ",
+        "ء",
+        "ل",
+        "ُ",
+        "ء",
+        "ُ",
+        "و",
+        "َ",
+        "ل",
+        "م",
+        "َ",
+        "ر",
+        "ج",
+        "َ",
+        "ا",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 4
+    },
+    {
+      "surah": 55,
+      "ayah": 23,
+      "read_id": 67,
+      "window_ms": [
+        115640.0,
+        118140.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ل",
+        "ل",
+        "ُ",
+        "ء",
+        "ل",
+        "ُ",
+        "ء",
+        "ُ",
+        "و",
+        "َ",
+        "ل",
+        "م",
+        "َ",
+        "ر",
+        "ج",
+        "َ",
+        "ا",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 12
+    },
+    {
+      "surah": 55,
+      "ayah": 23,
+      "read_id": 68,
+      "window_ms": [
+        114140.0,
+        118140.0
+      ],
+      "duration_ms": 4000.0,
+      "target": [
+        "ل",
+        "ل",
+        "ُ",
+        "ء",
+        "ل",
+        "ُ",
+        "ء",
+        "ُ",
+        "و",
+        "َ",
+        "ل",
+        "م",
+        "َ",
+        "ر",
+        "ج",
+        "َ",
+        "ا",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 55,
+      "ayah": 28,
+      "read_id": 79,
+      "window_ms": [
+        150280.0,
+        151580.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "و",
+        "َ",
+        "ل",
+        "ء",
+        "ِ",
+        "ك",
+        "ر",
+        "َ",
+        "ا",
+        "م"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 3
+    },
+    {
+      "surah": 55,
+      "ayah": 28,
+      "read_id": 80,
+      "window_ms": [
+        149080.0,
+        151580.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "و",
+        "َ",
+        "ل",
+        "ء",
+        "ِ",
+        "ك",
+        "ر",
+        "َ",
+        "ا",
+        "م"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 55,
+      "ayah": 30,
+      "read_id": 87,
+      "window_ms": [
+        166100.0,
+        167400.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ش",
+        "َ",
+        "ء",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 55,
+      "ayah": 32,
+      "read_id": 93,
+      "window_ms": [
+        177200.0,
+        178500.0
+      ],
+      "duration_ms": 1300.0,
+      "target": null,
+      "target_retained": false
+    },
+    {
+      "surah": 55,
+      "ayah": 32,
+      "read_id": 94,
+      "window_ms": [
+        176000.0,
+        178500.0
+      ],
+      "duration_ms": 2500.0,
+      "target": null,
+      "target_retained": false
+    },
+    {
+      "surah": 55,
+      "ayah": 32,
+      "read_id": 95,
+      "window_ms": [
+        174500.0,
+        178500.0
+      ],
+      "duration_ms": 4000.0,
+      "target": null,
+      "target_retained": false
+    },
+    {
+      "surah": 59,
+      "ayah": 4,
+      "read_id": 18,
+      "window_ms": [
+        71860.0,
+        73160.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ن",
+        "ن",
+        "ن",
+        "ن",
+        "َ",
+        "ا",
+        "ر"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 59,
+      "ayah": 4,
+      "read_id": 19,
+      "window_ms": [
+        70660.0,
+        73160.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ن",
+        "ن",
+        "ن",
+        "ن",
+        "َ",
+        "ا",
+        "ر"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 4
+    },
+    {
+      "surah": 59,
+      "ayah": 4,
+      "read_id": 20,
+      "window_ms": [
+        69160.0,
+        73160.0
+      ],
+      "duration_ms": 4000.0,
+      "target": [
+        "ن",
+        "ن",
+        "ن",
+        "ن",
+        "َ",
+        "ا",
+        "ر"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 1
+    },
+    {
+      "surah": 59,
+      "ayah": 12,
+      "read_id": 67,
+      "window_ms": [
+        274080.0,
+        275380.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ل",
+        "َ",
+        "ك",
+        "َ",
+        "ا",
+        "ذ",
+        "ِ",
+        "ب",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 59,
+      "ayah": 12,
+      "read_id": 68,
+      "window_ms": [
+        272880.0,
+        275380.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ل",
+        "َ",
+        "ك",
+        "َ",
+        "ا",
+        "ذ",
+        "ِ",
+        "ب",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 59,
+      "ayah": 12,
+      "read_id": 69,
+      "window_ms": [
+        271380.0,
+        275380.0
+      ],
+      "duration_ms": 4000.0,
+      "target": [
+        "ل",
+        "َ",
+        "ك",
+        "َ",
+        "ا",
+        "ذ",
+        "ِ",
+        "ب",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 59,
+      "ayah": 14,
+      "read_id": 80,
+      "window_ms": [
+        329100.0,
+        330400.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ي",
+        "َ",
+        "ف",
+        "ق",
+        "َ",
+        "ه",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 7
+    },
+    {
+      "surah": 59,
+      "ayah": 14,
+      "read_id": 81,
+      "window_ms": [
+        327900.0,
+        330400.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ي",
+        "َ",
+        "ف",
+        "ق",
+        "َ",
+        "ه",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 59,
+      "ayah": 16,
+      "read_id": 93,
+      "window_ms": [
+        364940.0,
+        366240.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ء",
+        "َ",
+        "ل",
+        "ِ",
+        "ۦ",
+        "م"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 1
+    },
+    {
+      "surah": 59,
+      "ayah": 16,
+      "read_id": 94,
+      "window_ms": [
+        363740.0,
+        366240.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ء",
+        "َ",
+        "ل",
+        "ِ",
+        "ۦ",
+        "م"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 59,
+      "ayah": 22,
+      "read_id": 120,
+      "window_ms": [
+        471840.0,
+        473140.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ي",
+        "َ",
+        "ت",
+        "َ",
+        "ف",
+        "َ",
+        "ك",
+        "ك",
+        "َ",
+        "ر",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 6
+    },
+    {
+      "surah": 59,
+      "ayah": 22,
+      "read_id": 121,
+      "window_ms": [
+        470640.0,
+        473140.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ي",
+        "َ",
+        "ت",
+        "َ",
+        "ف",
+        "َ",
+        "ك",
+        "ك",
+        "َ",
+        "ر",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 59,
+      "ayah": 23,
+      "read_id": 125,
+      "window_ms": [
+        483880.0,
+        485180.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ر",
+        "ر",
+        "َ",
+        "ح",
+        "ِ",
+        "ۦ",
+        "م"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 1
+    },
+    {
+      "surah": 59,
+      "ayah": 23,
+      "read_id": 126,
+      "window_ms": [
+        482680.0,
+        485180.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ر",
+        "ر",
+        "َ",
+        "ح",
+        "ِ",
+        "ۦ",
+        "م"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 59,
+      "ayah": 24,
+      "read_id": 134,
+      "window_ms": [
+        507140.0,
+        508440.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ي",
+        "ُ",
+        "ش",
+        "ر",
+        "ِ",
+        "ك",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 1
+    },
+    {
+      "surah": 59,
+      "ayah": 24,
+      "read_id": 135,
+      "window_ms": [
+        505940.0,
+        508440.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ي",
+        "ُ",
+        "ش",
+        "ر",
+        "ِ",
+        "ك",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 73,
+      "ayah": 6,
+      "read_id": 16,
+      "window_ms": [
+        26760.0,
+        28060.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ث",
+        "َ",
+        "ق",
+        "ِ",
+        "ۦ",
+        "ل",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 73,
+      "ayah": 6,
+      "read_id": 17,
+      "window_ms": [
+        25560.0,
+        28060.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ث",
+        "َ",
+        "ق",
+        "ِ",
+        "ۦ",
+        "ل",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 73,
+      "ayah": 12,
+      "read_id": 26,
+      "window_ms": [
+        66520.0,
+        67820.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ق",
+        "َ",
+        "ل",
+        "ِ",
+        "ۦ",
+        "ل",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 73,
+      "ayah": 14,
+      "read_id": 30,
+      "window_ms": [
+        78760.0,
+        80060.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ء",
+        "َ",
+        "ل",
+        "ِ",
+        "ۦ",
+        "م",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 7
+    },
+    {
+      "surah": 73,
+      "ayah": 14,
+      "read_id": 31,
+      "window_ms": [
+        77560.0,
+        80060.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ء",
+        "َ",
+        "ل",
+        "ِ",
+        "ۦ",
+        "م",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 73,
+      "ayah": 15,
+      "read_id": 33,
+      "window_ms": [
+        87100.0,
+        88400.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "م",
+        "م",
+        "م",
+        "م",
+        "َ",
+        "ه",
+        "ِ",
+        "ۦ",
+        "ل",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 73,
+      "ayah": 15,
+      "read_id": 34,
+      "window_ms": [
+        85900.0,
+        88400.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "م",
+        "م",
+        "م",
+        "م",
+        "َ",
+        "ه",
+        "ِ",
+        "ۦ",
+        "ل",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 73,
+      "ayah": 15,
+      "read_id": 35,
+      "window_ms": [
+        84400.0,
+        88400.0
+      ],
+      "duration_ms": 4000.0,
+      "target": [
+        "م",
+        "م",
+        "م",
+        "م",
+        "َ",
+        "ه",
+        "ِ",
+        "ۦ",
+        "ل",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 77,
+      "ayah": 9,
+      "read_id": 19,
+      "window_ms": [
+        26200.0,
+        27500.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ط",
+        "ُ",
+        "م",
+        "ِ",
+        "س",
+        "َ",
+        "ت"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 77,
+      "ayah": 9,
+      "read_id": 20,
+      "window_ms": [
+        25010.0,
+        27500.0
+      ],
+      "duration_ms": 2490.0,
+      "target": [
+        "ط",
+        "ُ",
+        "م",
+        "ِ",
+        "س",
+        "َ",
+        "ت"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 77,
+      "ayah": 10,
+      "read_id": 23,
+      "window_ms": [
+        29040.0,
+        30340.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ف",
+        "ُ",
+        "ر",
+        "ِ",
+        "ج",
+        "َ",
+        "ت"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 77,
+      "ayah": 10,
+      "read_id": 24,
+      "window_ms": [
+        27840.0,
+        30340.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ف",
+        "ُ",
+        "ر",
+        "ِ",
+        "ج",
+        "َ",
+        "ت"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 77,
+      "ayah": 10,
+      "read_id": 25,
+      "window_ms": [
+        27730.0,
+        30340.0
+      ],
+      "duration_ms": 2610.0,
+      "target": [
+        "ف",
+        "ُ",
+        "ر",
+        "ِ",
+        "ج",
+        "َ",
+        "ت"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 77,
+      "ayah": 11,
+      "read_id": 27,
+      "window_ms": [
+        31540.0,
+        32840.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ن",
+        "ُ",
+        "س",
+        "ِ",
+        "ف",
+        "َ",
+        "ت"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 77,
+      "ayah": 15,
+      "read_id": 37,
+      "window_ms": [
+        42260.0,
+        43560.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ل",
+        "ف",
+        "َ",
+        "ص",
+        "ل"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 77,
+      "ayah": 19,
+      "read_id": 43,
+      "window_ms": [
+        56540.0,
+        57840.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ب",
+        "ِ",
+        "ل",
+        "م",
+        "ُ",
+        "ج",
+        "ڇ",
+        "ر",
+        "ِ",
+        "م",
+        "ِ",
+        "ۦ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 77,
+      "ayah": 19,
+      "read_id": 44,
+      "window_ms": [
+        55340.0,
+        57840.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ب",
+        "ِ",
+        "ل",
+        "م",
+        "ُ",
+        "ج",
+        "ڇ",
+        "ر",
+        "ِ",
+        "م",
+        "ِ",
+        "ۦ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 77,
+      "ayah": 24,
+      "read_id": 51,
+      "window_ms": [
+        78520.0,
+        79820.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ل",
+        "ق",
+        "َ",
+        "ا",
+        "د",
+        "ِ",
+        "ر",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 6
+    },
+    {
+      "surah": 77,
+      "ayah": 24,
+      "read_id": 52,
+      "window_ms": [
+        77320.0,
+        79820.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ل",
+        "ق",
+        "َ",
+        "ا",
+        "د",
+        "ِ",
+        "ر",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 1
+    },
+    {
+      "surah": 77,
+      "ayah": 28,
+      "read_id": 62,
+      "window_ms": [
+        101880.0,
+        103180.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ف",
+        "ُ",
+        "ر",
+        "َ",
+        "ا",
+        "ت",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 7
+    },
+    {
+      "surah": 77,
+      "ayah": 28,
+      "read_id": 63,
+      "window_ms": [
+        100680.0,
+        103180.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ف",
+        "ُ",
+        "ر",
+        "َ",
+        "ا",
+        "ت",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 2
+    },
+    {
+      "surah": 77,
+      "ayah": 29,
+      "read_id": 66,
+      "window_ms": [
+        106320.0,
+        107620.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ل",
+        "ل",
+        "ِ",
+        "ل",
+        "م",
+        "ُ",
+        "ك",
+        "َ",
+        "ذ",
+        "ذ",
+        "ِ",
+        "ب",
+        "ِ",
+        "ۦ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 77,
+      "ayah": 29,
+      "read_id": 67,
+      "window_ms": [
+        105120.0,
+        107620.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ل",
+        "ل",
+        "ِ",
+        "ل",
+        "م",
+        "ُ",
+        "ك",
+        "َ",
+        "ذ",
+        "ذ",
+        "ِ",
+        "ب",
+        "ِ",
+        "ۦ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 77,
+      "ayah": 30,
+      "read_id": 69,
+      "window_ms": [
+        112880.0,
+        114180.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ت",
+        "ُ",
+        "ك",
+        "َ",
+        "ذ",
+        "ذ",
+        "ِ",
+        "ب",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 4
+    },
+    {
+      "surah": 77,
+      "ayah": 30,
+      "read_id": 70,
+      "window_ms": [
+        111680.0,
+        114180.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ت",
+        "ُ",
+        "ك",
+        "َ",
+        "ذ",
+        "ذ",
+        "ِ",
+        "ب",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 77,
+      "ayah": 31,
+      "read_id": 73,
+      "window_ms": [
+        119460.0,
+        120760.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ش",
+        "ُ",
+        "ع",
+        "َ",
+        "ب",
+        "ڇ"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 77,
+      "ayah": 34,
+      "read_id": 79,
+      "window_ms": [
+        132660.0,
+        133960.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ص",
+        "ُ",
+        "ف",
+        "ر"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 77,
+      "ayah": 34,
+      "read_id": 80,
+      "window_ms": [
+        131460.0,
+        133960.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ص",
+        "ُ",
+        "ف",
+        "ر"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 77,
+      "ayah": 36,
+      "read_id": 84,
+      "window_ms": [
+        141780.0,
+        143080.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ي",
+        "َ",
+        "ں",
+        "ں",
+        "ں",
+        "ط",
+        "ِ",
+        "ق",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 5
+    },
+    {
+      "surah": 77,
+      "ayah": 36,
+      "read_id": 85,
+      "window_ms": [
+        140580.0,
+        143080.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ي",
+        "َ",
+        "ں",
+        "ں",
+        "ں",
+        "ط",
+        "ِ",
+        "ق",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 77,
+      "ayah": 37,
+      "read_id": 88,
+      "window_ms": [
+        146440.0,
+        147740.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ف",
+        "َ",
+        "ي",
+        "َ",
+        "ع",
+        "ت",
+        "َ",
+        "ذ",
+        "ِ",
+        "ر",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 6
+    },
+    {
+      "surah": 77,
+      "ayah": 37,
+      "read_id": 89,
+      "window_ms": [
+        145240.0,
+        147740.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ف",
+        "َ",
+        "ي",
+        "َ",
+        "ع",
+        "ت",
+        "َ",
+        "ذ",
+        "ِ",
+        "ر",
+        "ُ",
+        "ۥ",
+        "ن"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 77,
+      "ayah": 40,
+      "read_id": 95,
+      "window_ms": [
+        160500.0,
+        161800.0
+      ],
+      "duration_ms": 1300.0,
+      "target": null,
+      "target_retained": false
+    },
+    {
+      "surah": 77,
+      "ayah": 40,
+      "read_id": 96,
+      "window_ms": [
+        159300.0,
+        161800.0
+      ],
+      "duration_ms": 2500.0,
+      "target": null,
+      "target_retained": false
+    },
+    {
+      "surah": 77,
+      "ayah": 40,
+      "read_id": 97,
+      "window_ms": [
+        157800.0,
+        161800.0
+      ],
+      "duration_ms": 4000.0,
+      "target": null,
+      "target_retained": false
+    },
+    {
+      "surah": 79,
+      "ayah": 6,
+      "read_id": 18,
+      "window_ms": [
+        21900.0,
+        23200.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ء",
+        "َ",
+        "م",
+        "ر",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 79,
+      "ayah": 16,
+      "read_id": 37,
+      "window_ms": [
+        67080.0,
+        68380.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "م",
+        "ُ",
+        "ۥ",
+        "س",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 79,
+      "ayah": 16,
+      "read_id": 38,
+      "window_ms": [
+        65880.0,
+        68380.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "م",
+        "ُ",
+        "ۥ",
+        "س",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 79,
+      "ayah": 26,
+      "read_id": 56,
+      "window_ms": [
+        114020.0,
+        115320.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "و",
+        "َ",
+        "ل",
+        "ء",
+        "ُ",
+        "ۥ",
+        "ل",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 3
+    },
+    {
+      "surah": 79,
+      "ayah": 26,
+      "read_id": 57,
+      "window_ms": [
+        112820.0,
+        115320.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "و",
+        "َ",
+        "ل",
+        "ء",
+        "ُ",
+        "ۥ",
+        "ل",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 79,
+      "ayah": 34,
+      "read_id": 71,
+      "window_ms": [
+        156720.0,
+        158020.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "و",
+        "َ",
+        "ل",
+        "ِ",
+        "ء",
+        "َ",
+        "ن",
+        "ع",
+        "َ",
+        "ا",
+        "م",
+        "ِ",
+        "ك",
+        "ُ",
+        "م"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 8
+    },
+    {
+      "surah": 79,
+      "ayah": 34,
+      "read_id": 72,
+      "window_ms": [
+        155520.0,
+        158020.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "و",
+        "َ",
+        "ل",
+        "ِ",
+        "ء",
+        "َ",
+        "ن",
+        "ع",
+        "َ",
+        "ا",
+        "م",
+        "ِ",
+        "ك",
+        "ُ",
+        "م"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 1
+    },
+    {
+      "surah": 79,
+      "ayah": 35,
+      "read_id": 77,
+      "window_ms": [
+        166380.0,
+        167680.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ل",
+        "ك",
+        "ُ",
+        "ب",
+        "ڇ",
+        "ر",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 79,
+      "ayah": 35,
+      "read_id": 78,
+      "window_ms": [
+        165180.0,
+        167680.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ل",
+        "ك",
+        "ُ",
+        "ب",
+        "ڇ",
+        "ر",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 79,
+      "ayah": 39,
+      "read_id": 88,
+      "window_ms": [
+        187080.0,
+        188380.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "د",
+        "د",
+        "ُ",
+        "ن",
+        "ي",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 6
+    },
+    {
+      "surah": 79,
+      "ayah": 39,
+      "read_id": 89,
+      "window_ms": [
+        185880.0,
+        188380.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "د",
+        "د",
+        "ُ",
+        "ن",
+        "ي",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 79,
+      "ayah": 44,
+      "read_id": 99,
+      "window_ms": [
+        218560.0,
+        219860.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ذ",
+        "ِ",
+        "ك",
+        "ر",
+        "َ",
+        "ا",
+        "ه",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 6
+    },
+    {
+      "surah": 79,
+      "ayah": 44,
+      "read_id": 100,
+      "window_ms": [
+        217360.0,
+        219860.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ذ",
+        "ِ",
+        "ك",
+        "ر",
+        "َ",
+        "ا",
+        "ه",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 80,
+      "ayah": 2,
+      "read_id": 5,
+      "window_ms": [
+        7260.0,
+        8560.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "و",
+        "َ",
+        "ت",
+        "َ",
+        "و",
+        "َ",
+        "ل",
+        "ل",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 8
+    },
+    {
+      "surah": 80,
+      "ayah": 2,
+      "read_id": 6,
+      "window_ms": [
+        6060.0,
+        8560.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "و",
+        "َ",
+        "ت",
+        "َ",
+        "و",
+        "َ",
+        "ل",
+        "ل",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 80,
+      "ayah": 3,
+      "read_id": 8,
+      "window_ms": [
+        12000.0,
+        13300.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ل",
+        "ء",
+        "َ",
+        "ع",
+        "م",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 80,
+      "ayah": 10,
+      "read_id": 22,
+      "window_ms": [
+        40320.0,
+        41620.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ي",
+        "َ",
+        "خ",
+        "ش",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 80,
+      "ayah": 11,
+      "read_id": 24,
+      "window_ms": [
+        44280.0,
+        45580.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ت",
+        "َ",
+        "ل",
+        "َ",
+        "ه",
+        "ه",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 80,
+      "ayah": 11,
+      "read_id": 25,
+      "window_ms": [
+        43080.0,
+        45580.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ت",
+        "َ",
+        "ل",
+        "َ",
+        "ه",
+        "ه",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 80,
+      "ayah": 20,
+      "read_id": 41,
+      "window_ms": [
+        80620.0,
+        81920.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ف",
+        "َ",
+        "ق",
+        "َ",
+        "د",
+        "د",
+        "َ",
+        "ر",
+        "َ",
+        "ه"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 9
+    },
+    {
+      "surah": 80,
+      "ayah": 20,
+      "read_id": 42,
+      "window_ms": [
+        79420.0,
+        81920.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ف",
+        "َ",
+        "ق",
+        "َ",
+        "د",
+        "د",
+        "َ",
+        "ر",
+        "َ",
+        "ه"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 80,
+      "ayah": 23,
+      "read_id": 48,
+      "window_ms": [
+        92860.0,
+        94160.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ء",
+        "َ",
+        "ں",
+        "ں",
+        "ں",
+        "ش",
+        "َ",
+        "ر",
+        "َ",
+        "ه"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 5
+    },
+    {
+      "surah": 80,
+      "ayah": 23,
+      "read_id": 49,
+      "window_ms": [
+        91660.0,
+        94160.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ء",
+        "َ",
+        "ں",
+        "ں",
+        "ں",
+        "ش",
+        "َ",
+        "ر",
+        "َ",
+        "ه"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 80,
+      "ayah": 26,
+      "read_id": 54,
+      "window_ms": [
+        109540.0,
+        110840.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ص",
+        "َ",
+        "ب",
+        "ب",
+        "َ",
+        "ا"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 80,
+      "ayah": 34,
+      "read_id": 71,
+      "window_ms": [
+        141840.0,
+        143140.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ص",
+        "ص",
+        "َ",
+        "ا",
+        "خ",
+        "خ",
+        "َ",
+        "ه"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 80,
+      "ayah": 34,
+      "read_id": 72,
+      "window_ms": [
+        140640.0,
+        143140.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "ص",
+        "ص",
+        "َ",
+        "ا",
+        "خ",
+        "خ",
+        "َ",
+        "ه"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 80,
+      "ayah": 34,
+      "read_id": 73,
+      "window_ms": [
+        139140.0,
+        143140.0
+      ],
+      "duration_ms": 4000.0,
+      "target": [
+        "ص",
+        "ص",
+        "َ",
+        "ا",
+        "خ",
+        "خ",
+        "َ",
+        "ه"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 98,
+      "ayah": 3,
+      "read_id": 6,
+      "window_ms": [
+        21500.0,
+        22800.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "م",
+        "م",
+        "م",
+        "م",
+        "ُ",
+        "ط",
+        "َ",
+        "ه",
+        "ه",
+        "َ",
+        "ر",
+        "َ",
+        "ه"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 98,
+      "ayah": 3,
+      "read_id": 7,
+      "window_ms": [
+        20300.0,
+        22800.0
+      ],
+      "duration_ms": 2500.0,
+      "target": [
+        "م",
+        "م",
+        "م",
+        "م",
+        "ُ",
+        "ط",
+        "َ",
+        "ه",
+        "ه",
+        "َ",
+        "ر",
+        "َ",
+        "ه"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 98,
+      "ayah": 3,
+      "read_id": 8,
+      "window_ms": [
+        18800.0,
+        22800.0
+      ],
+      "duration_ms": 4000.0,
+      "target": [
+        "م",
+        "م",
+        "م",
+        "م",
+        "ُ",
+        "ط",
+        "َ",
+        "ه",
+        "ه",
+        "َ",
+        "ر",
+        "َ",
+        "ه"
+      ],
+      "target_retained": true,
+      "full_tail": false,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 98,
+      "ayah": 5,
+      "read_id": 14,
+      "window_ms": [
+        33800.0,
+        35100.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ل",
+        "ب",
+        "َ",
+        "ي",
+        "ي",
+        "ِ",
+        "ن",
+        "َ",
+        "ه"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 98,
+      "ayah": 6,
+      "read_id": 21,
+      "window_ms": [
+        51480.0,
+        52780.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ل",
+        "ق",
+        "َ",
+        "ي",
+        "ي",
+        "ِ",
+        "م",
+        "َ",
+        "ه"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    },
+    {
+      "surah": 98,
+      "ayah": 7,
+      "read_id": 29,
+      "window_ms": [
+        70200.0,
+        71500.0
+      ],
+      "duration_ms": 1300.0,
+      "target": [
+        "ل",
+        "ب",
+        "َ",
+        "ر",
+        "ِ",
+        "ي",
+        "ي",
+        "َ",
+        "ه"
+      ],
+      "target_retained": true,
+      "full_tail": true,
+      "edge_suffix_units": 0
+    }
+  ]
+}

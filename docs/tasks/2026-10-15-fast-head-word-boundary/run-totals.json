@@ -1,0 +1,50 @@
+[
+  {
+    "model": "quran-phonetics",
+    "variant": "before",
+    "calls": 120,
+    "search_seconds": 15.627091460628435
+  },
+  {
+    "model": "quran-phonetics",
+    "variant": "after",
+    "calls": 120,
+    "search_seconds": 15.742304628016427
+  },
+  {
+    "model": "quran-phonetics-fp32",
+    "variant": "before",
+    "calls": 111,
+    "search_seconds": 18.43161200126633
+  },
+  {
+    "model": "quran-phonetics-fp32",
+    "variant": "after",
+    "calls": 111,
+    "search_seconds": 18.36845487798564
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "variant": "before",
+    "calls": 217,
+    "search_seconds": 48.68454675027169
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "variant": "after",
+    "calls": 231,
+    "search_seconds": 51.88860891526565
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "variant": "before",
+    "calls": 326,
+    "search_seconds": 125.38272533100098
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "variant": "after",
+    "calls": 326,
+    "search_seconds": 127.03263866947964
+  }
+]

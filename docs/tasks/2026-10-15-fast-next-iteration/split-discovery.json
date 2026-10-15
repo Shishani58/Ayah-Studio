@@ -1,0 +1,25 @@
+[
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 77,
+    "read_id": 9,
+    "reason": "ayah=7:pause:minimal_phrase",
+    "window_ms": [
+      21580.0,
+      23080.0
+    ],
+    "units": [
+      "ان",
+      "ما",
+      "تريد"
+    ],
+    "candidates": [
+      {
+        "ayah": 7,
+        "first": "انما",
+        "source_count": 2,
+        "min_quality": 0.8310730613370559
+      }
+    ]
+  }
+]

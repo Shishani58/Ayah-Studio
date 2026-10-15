@@ -359,8 +359,18 @@ def align_surah(
         words, word_token_spans, target_spans, frame_scores, stride_ms, pauses=pauses,
         lag_ms=getattr(bundle, "lag_ms", ALIGN_LAG_MS),
         ayah_progress=ayah_progress,
+        pcm=pcm if pause_full else None, sr=sr,
     )
     if pause_full:
+        from surah_cutter.core.full_boundary import recheck_split_words
+
+        recheck_split_words(bundle, pcm, sr, words, word_token_spans, target_spans,
+                            frame_scores, stride_ms, checks, pauses, trace=trace, log_event=log_event)
+        from surah_cutter.core.full_pause_center import position_boundaries, record_edges
+
+        record_edges(checks, words, word_token_spans, target_spans, frame_scores, stride_ms,
+                     intro=bool(basmala_trs), targets=targets, delim_id=bundle.delim_id)
+        position_boundaries(checks, pcm, sr, trace=trace)
         _review_pause_full_onsets(checks.values(), trace["full_windows"])
     rows = [(a, checks[a]["onset_ms"], checks[a]["conf"]) for a, _, _ in rows]
     if any(right[1] <= left[1] for left, right in zip(rows, rows[1:])):
@@ -381,6 +391,9 @@ def align_surah(
                     "weak-onset": "начало слова не подтверждено, требуется ревью",
                     "weak-word": "слово распознано неуверенно, требуется ревью",
                     "weak-prefix-across-pause": "слабое начало перепроверено по паузе",
+                    "weak-prefix-across-local-pause": "слабое начало перепроверено по локальной паузе",
+                    "split-word-local-recheck": "начало слова перепроверено по целой локальной фразе",
+                    "split-word-muaalem-proof": "начало фразы подтверждено локальной проверкой Muaalem",
                     "weak-word-token": "звук первого слова не подтверждён, требуется ревью",
                     "late-onset-in-pause": "сомнительное начало в длинной паузе, требуется ревью",
                 }.get(check["reason"], check["reason"])
@@ -397,6 +410,7 @@ def _check_ayah_onsets(
     words, word_token_spans, target_spans, frame_scores, stride_ms,
     *, pauses, base_ms: float = 0.0, lag_ms: int | None = None,
     ayah_progress: Any | None = None,
+    pcm=None, sr: int = EXPECTED_SR,
 ) -> dict[int, dict]:
     """Check first-word evidence without letting blank frames hide weak tokens.
 
@@ -446,11 +460,34 @@ def _check_ayah_onsets(
                         if base_ms + sf * stride_ms < p.end_ms
                     )
                 ]
+                local = False
+                if not supported and pcm is not None and 300 <= strong_ms - first_ms <= 4000:
+                    # Whole-recording noise percentiles can hide a quiet gap.
+                    # Recheck only the weak prefix's neighbourhood, with a
+                    # strict DSP gate; this does not call an acoustic model.
+                    from surah_cutter.core import candidates
+
+                    lo = max(0, round((first_ms - 1000) * sr / 1000))
+                    hi = min(len(pcm), round((strong_ms + 1000) * sr / 1000))
+                    offset = lo * 1000 / sr
+                    for decision in candidates.pause_pipeline_decisions(pcm[lo:hi], sr):
+                        if not decision.accepted:
+                            continue
+                        p = decision.pause
+                        start, end = offset + p.start_ms, offset + p.end_ms
+                        if (first_ms < start < end <= strong_ms and all(
+                            c < 0.25 for (sf, _), c in zip(spans, token_confs)
+                            if base_ms + sf * stride_ms < end
+                        )):
+                            supported.append(candidates.Pause(start, end, end - start))
+                    local = bool(supported)
+                    check["local_pause_crop_ms"] = [offset, hi * 1000 / sr]
                 if len(supported) == 1:
                     pause = supported[0]
                     check.update({
                         "onset_ms": round(pause.center_ms), "repaired": True,
-                        "reason": "weak-prefix-across-pause",
+                        "reason": ("weak-prefix-across-local-pause" if local else
+                                   "weak-prefix-across-pause"),
                         "pause_start_ms": pause.start_ms, "pause_end_ms": pause.end_ms,
                     })
         checks[word.ayah] = check
@@ -475,7 +512,8 @@ def _full_emissions(bundle: Any, pcm, np, *, trace: dict | None = None) -> Any:
     from surah_cutter.core import full_windows
 
     window_trace = {"algorithm": full_windows.FULL_POLICY,
-                    "review_policy": full_windows.FULL_REVIEW_POLICY}
+                    "review_policy": full_windows.FULL_REVIEW_POLICY,
+                    "onset_policy": full_windows.FULL_ONSET_POLICY}
     if trace is not None:
         trace["full_windows"] = window_trace
     matrix = full_windows.generate_pause_emissions(
@@ -491,7 +529,8 @@ def _review_pause_full_onsets(checks, windows: dict, *, log_event=None) -> None:
     """Conservative FULL warnings; never move a boundary or change confidence.
 
     High mean word probability can hide an unsupported phoneme. A late mark
-    inside a long silence is also ambiguous despite high CTC probability.
+    inside a long silence is also ambiguous despite high CTC probability,
+    unless local DSP deliberately positioned a capped lead inside that silence.
     These gates address the observed unflagged 83:10/95:8 without ayah IDs,
     reference timings, extra inference, or changing FAST's onset checker.
     """
@@ -505,7 +544,7 @@ def _review_pause_full_onsets(checks, windows: dict, *, log_event=None) -> None:
         reason = None
         if tokens and min(tokens) < windows["review_min_token_conf"]:
             reason = "weak-word-token"
-        else:
+        elif check.get("pause_center_reason") != "positioned":
             onset = check["onset_ms"]
             if any(p["duration_ms"] >= windows["review_long_pause_ms"]
                    and p["start_ms"] <= onset <= p["end_ms"]
@@ -726,10 +765,11 @@ def _ayah_rows(
 
 
 def _span_confidence(scores, start_frame: int, end_frame: int) -> float:
-    """Mean per-frame probability over ``[start_frame, end_frame]`` -> ``[0,1]``.
+    """Geometric mean path probability over inclusive frames -> ``[0,1]``.
 
     ``scores`` holds per-frame log-probs from the forced path; we exponentiate
-    and average. Empty/degenerate spans yield ``0.0``.
+    and average in log space. This is not calibrated timing confidence.
+    Empty/degenerate spans yield ``0.0``.
     """
     import math
 

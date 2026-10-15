@@ -1,24 +1,23 @@
-## Ayah Studio 0.2.0
+## Ayah Studio 0.3.0
 
 Разметка аудио Корана по аятам и словам — локально на вашем компьютере.
 
-- Обновлённый редактор: навигация по сурам, компактные меню времени и статуса.
-- Светлая и тёмная темы, настройки с автосохранением, список проектов.
-- Скорость, остановка после аята/слова и повтор в плеере.
-- Остановка разметки прерывает текущий расчёт, сохраняя завершённые результаты.
-- FAST ищет паузы и проверяет небольшие локальные участки; скрытого полного прохода нет.
-- FULL и разметка слов; каталог Quran Phonetics, Muaalem, FastConformer Arabic, Whisper Large-v3.
+- Единый FAST: поиск пауз и локальные проверки границ с журналом прочитанных участков.
+- Улучшены проверки первого слова и разделённых ASR-слов; повторно используется RMS аудио.
+- FULL: локальная проверка границ, выбор центра паузы и возобновление расчёта.
+- Оценка уверенности начала аята и подсказки для ручного ревью.
+- Выбор ASR-моделей, русский и английский интерфейс.
 - Ручные и проверенные метки сохраняются при перегенерации.
 
-**macOS Apple Silicon:** скачайте `Ayah-Studio-0.2.0-macOS-arm64.dmg`
+**macOS Apple Silicon:** скачайте `Ayah-Studio-0.3.0-macOS-arm64.dmg`
 и перенесите приложение в **Applications / Программы**.
 
-**Windows x64:** скачайте `Ayah-Studio-0.2.0-Windows-x64.zip`, распакуйте
+**Windows x64:** скачайте `Ayah-Studio-0.3.0-Windows-x64.zip`, распакуйте
 целиком и запустите **Ayah Studio.exe**. Папка `_internal` должна оставаться
 рядом. Нужен [Microsoft WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/).
 
 Python устанавливать не нужно. Базовая модель включена; дополнительные
-модели скачиваются отдельно по выбору. FAST доступен для базовой модели.
+модели скачиваются отдельно по выбору. Доступность режима зависит от выбранной модели.
 Файлы `.sha256` содержат контрольные суммы.
 
 Автоматические тайм-коды проверяйте на слух. Сборка macOS без нотарификации
@@ -26,12 +25,13 @@ Apple ([инструкция запуска](https://support.apple.com/ru-ru/102
 
 ---
 
-**Ayah Studio 0.2.0:** updated ayah/word editor, light/dark themes, project
-management, playback controls and optional alignment models. Fast mode uses
-pause detection and local acoustic checks. Manual/verified timings survive regeneration.
+**Ayah Studio 0.3.0:** unified local FAST with improved head-word checks,
+FULL boundary verification and pause centering, onset confidence review,
+ASR model selection and Russian/English interface. Manual and verified timings
+survive regeneration.
 
 **macOS Apple Silicon:** open the DMG and drag Ayah Studio to Applications.
 **Windows x64:** extract the complete ZIP and launch Ayah Studio.exe; keep
 `_internal` alongside it. WebView2 Runtime is required. Python and the default
-model are bundled; optional models download separately. The interface is in Russian.
+model are bundled; optional models download separately. The interface supports Russian and English.
 These builds are not code-signed with distribution certificates. Review timings by ear.

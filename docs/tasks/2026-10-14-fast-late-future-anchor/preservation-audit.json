@@ -1,0 +1,140 @@
+{
+  "changed_previous_confirmations": [],
+  "new_reference_outliers": [
+    {
+      "surah": 2,
+      "ayah": 53,
+      "absolute_error_ms": 576,
+      "boundary": {
+        "ayah": 53,
+        "start_ms": 970690,
+        "evidence_kind": "pause",
+        "confidence": 0.8841537833213806,
+        "review_reason": null,
+        "read_id": 276,
+        "proof": {
+          "phrase": [
+            "و",
+            "َ",
+            "ء",
+            "ِ",
+            "ذ",
+            "ء",
+            "َ",
+            "ا",
+            "ت",
+            "َ",
+            "ي",
+            "ن",
+            "َ",
+            "ا"
+          ],
+          "complete": true,
+          "ambiguous": false,
+          "competitors_checked": true,
+          "competitor_count": 6117,
+          "offset": 0,
+          "quality_metric": "ctc_greedy_probability",
+          "pause_ms": [
+            970080.0,
+            971300.0
+          ],
+          "pause_id": 129
+        }
+      },
+      "read_window_ms": [
+        971100.0,
+        973800.0
+      ],
+      "geometry": {
+        "pause_id": 129,
+        "interval_ms": [
+          970080.0,
+          971300.0
+        ],
+        "accepted": true,
+        "reason": "measured_dsp_interval",
+        "first_quarter_rms": 0.012222770601511002,
+        "last_quarter_rms": 0.0039315614849328995,
+        "within_quarter_variation": 0.0020995879817521197,
+        "midpoint_interval_radius_ms": 610.0,
+        "quiet_stationarity": false,
+        "timing_status": "uncalibrated_pause_midpoint",
+        "temporal_probability": null
+      }
+    },
+    {
+      "surah": 80,
+      "ayah": 37,
+      "absolute_error_ms": 672,
+      "boundary": {
+        "ayah": 37,
+        "start_ms": 156610,
+        "evidence_kind": "pause",
+        "confidence": 0.6702582240104675,
+        "review_reason": null,
+        "read_id": 80,
+        "proof": {
+          "phrase": [
+            "ل",
+            "ِ",
+            "ك",
+            "ُ",
+            "ل",
+            "ل",
+            "ِ"
+          ],
+          "complete": true,
+          "ambiguous": false,
+          "competitors_checked": true,
+          "competitor_count": 132,
+          "offset": 0,
+          "quality_metric": "ctc_greedy_probability",
+          "pause_ms": [
+            156080.0,
+            157140.0
+          ],
+          "pause_id": 42
+        }
+      },
+      "read_window_ms": [
+        156940.0,
+        158440.0
+      ],
+      "geometry": {
+        "pause_id": 42,
+        "interval_ms": [
+          156080.0,
+          157140.0
+        ],
+        "accepted": true,
+        "reason": "measured_dsp_interval",
+        "first_quarter_rms": 0.009391716681420803,
+        "last_quarter_rms": 0.0029972640331834555,
+        "within_quarter_variation": 0.0014374713849043474,
+        "midpoint_interval_radius_ms": 530.0,
+        "quiet_stationarity": false,
+        "timing_status": "uncalibrated_pause_midpoint",
+        "temporal_probability": null
+      }
+    }
+  ],
+  "same_previous_body_declines": [
+    [
+      2,
+      42,
+      82
+    ],
+    [
+      59,
+      12,
+      84
+    ],
+    [
+      59,
+      23,
+      61
+    ]
+  ],
+  "comparison_note": "Initial unsorted equality assertion failed due to corpus order; sorted event identities match."
+}

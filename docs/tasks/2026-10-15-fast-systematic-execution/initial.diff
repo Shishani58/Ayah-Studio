@@ -1,0 +1,2070 @@
+diff --git a/docs/STATUS.md b/docs/STATUS.md
+index e118e5d..f6bc0ef 100644
+--- a/docs/STATUS.md
++++ b/docs/STATUS.md
+@@ -1,5 +1,21 @@
+ # STATUS — что сделано и что осталось
+ 
++## Середина паузы в QPC FULL — 2026-10-15
++
++После штатного выравнивания обычный и bounded QPC FULL переносят границу
++в центр единственной DSP-подтверждённой межаятной паузы с CTC evidence обеих
++сторон. Первый аят, слабые начала и уже исправленные локальной проверкой
++границы сохраняются. Confidence и защита edited/verified сохранены.
++Policy `qpc-pause-center-v4` позволяет пересчитать прежние auto-метки.
++Проверка: свежий FULL Шатри1/112/114; шесть записей1/83/95/112/114/42
++с кешированными основными emissions, включая992с bounded FULL.
++18 из114 границ перенесены, число аятов и порядок сохранены.
++720 pytest passed/8 skipped; scoped Ruff/diff-check, AGENTS sync — OK.
++Сравнение114границ с прежним эталоном: медиана62.5→66мс,
++среднее97.82→110.99мс, >500мс4→5 (новый42:20:14→610мс).
++Полный корпус и прослушивание не выполнены.
++[Реализация и проверка](tasks/2026-10-15-full-pause-center/task.md).
++
+ ## Единый FAST: эксперимент реализован, M5 не пройден — 2026-10-14
+ 
+ Один sequential executor, независимые CTC/Tiny/Base adapters, общий budget/cache,
+@@ -2066,3 +2082,524 @@ passes,edited/verified сохранены во временных БД. Изол
+ исключает параллельные незавершённые FULL изменения. Локальный macOS bundle
+ обновлён; frozen self-check114/6236,models/FFmpeg/assets и codesign прошли,
+ legacy отсутствует в PYZ. [task](tasks/2026-10-14-unified-fast-default/task.md).
++
++## FULL: локальная перепроверка слабого начала — 2026-10-14
++
++Воспроизведены12 файлов четырёх чтецов (точныеSHA emissions/rows прежнего
++аудита), Шатри42/83/95/112; отдельноFP32 иcontext1/4 на пяти файлах.
++Слабый первый токен до локальной паузы и пропуск этой паузы глобальным DSP
++исправлены коротким DSP-recheck только вQPC FULL/bounded FULL. Нужны уверенный
++суффикс того же первого слова и единственная принятая пауза; crop<=6с,
++confidence/review сохраняются, дополнительных model reads нет. Политика
++`qpc-local-weak-prefix-v1` записывается вtrace/source.20×3/context2/cuts прежние.
++
++Шатри42:1−810→+110мс,78:1−860→+80мс,89:5−544→−54мс. Дополнительный
++парный аудит67/78–114:594 границы. Вместе647Шатри+216 других=863 уникальных
++начала/51 файл:80→77 крупных расхождений,3 устранённых/0 новых/0 нефлагированных.
++У четырёх чтецов0/0/12/52 крупных расхождения остались; смысл раннейGT-точки
++в длинной паузе и слабыйCTC-путьmujawwad не смешаны с подтверждённым исправлением.
++Пользователь делегировал выбор соглашения: сохранён контракт начала речи,
++массовый перенос для совпадения сGT отклонён. Слуховая проверка человеком
++не выполнена;10 waveform/WAV-примеров сохранены. Полный114-сурный корпус не проверен.
++
++602passed/7opt-in skipped,44целевыхpassed,Ruff own paths clean; свежийFULL42
++совпал с cached production replay. ПользовательскиеБД/текст/ручная разметка
++не изменены, чужиеFAST-правки сохранены. [Отчёт и артефакты](tasks/2026-10-14-full-accuracy/report.md).
++
++Дополнительная проверка по замечанию пользователя: свежийFULL ФатихиШатри
++даёт1:2−1169мс (5339 противGT6508), first-token confidence.8975; другие
++шесть границ в пределах63мс. Причина этого конкретного случая пока не установлена.
++Артефактfatiha-shatri.json; прежние863 начала Фатиху не включали. Исправлены
++три частных ошибки, весьFULL исправленным не объявляется.
++
++Токенный аудитФатихи: `al-ḥamdu` размещён черезDSP-паузу5780–6620мс:
++`a`5539мс/.8975, `l`6719мс/.9966. Старт=первыйтокен−200мс; weak-prefix
++guard не срабатывает из-за высокойfirst confidence. Механизм неверной
++ранней метки установлен, происхождение раннего звука без прослушивания
++не доказано. Артефактfatiha-token-audit.json; код при этом разборе не менялся.
++
++На том жеШатри001 выполнено прямоеFULL-сравнение установленных альтернатив:
++Muaalem/Large-v3/Tarteel Base max220/430/459мс,0>500, противQPC1169/1>500.
++При этом QPC median37 меньше123/232/304мс. FastConformer не загрузился из-за
++ml_dtypes.float4_e2m1fn: это runtime-отказ, не результат точности. JSON/source/
++trace сохранены вfull-accuracy/fatiha-model-comparison.json. Настройки/default
++и пользовательскиеБД не менялись; для нового default нужна более широкая
++парная проверка FULL. Историческое основание QPC —CPU/FAST и короткие112/114,
++не доказанное широкое превосходствоFULL.
++
++
++## Независимое ревью штатного FAST — 2026-10-14
++
++После завершения миграции (HEAD37f3309) доказаны: auto-resume пропускает старые
++auto FAST без current key; UI summary/debug читает legacy trace и показывает
++unresolved=0/пустые reads; auto→FAST не сохраняет immutable history; FP32 имеет
++неверный model label при сохранённом weights SHA. Код/данные этим ревью не менялись.
++
++Собственный suite602passed/7skipped (включает параллельные FULL-тесты), Ruff/diff-check;
++49data SHA неизменны. Исторические138records/парный37 пересчитаны независимо:
++coverage FAIL сохраняется.3свежих CTC local reads1:2 с pre-roll200/400/600мс
++дали одинаковый missing-a — простой pre-roll fix не доказан. Native app/listening/
++ASR timing/другой чтец не проверены.
++[Находки](tasks/2026-10-14-fast-independent-current-review/review.md),
++[план с критериями](tasks/2026-10-14-fast-independent-current-review/plan.md).
++
++
++## Причины FAST и соответствие алгоритму — 2026-10-14
++
++Адресное продолжение ревью: CTC1:2 пропускает initial-a уже в acoustic output
++(p≈.0022–.0035, blank≈.996–.998).4 real A/B INT8/FP32×local/global normalization
++не устранили missing-a. Найден пропущенный recovery: contextual pause proof
++включается только при static ambiguous, а для похожего начала с поздним
++различающим словом Tarteel не пробует доступный previous-tail. Fake repro passed.
++Шаг10 center соблюдён; общая претензия к внутренним паузам отозвана. Base79:26
++geometry остаётся unlistened; simple threshold fix не доказан. Tiny/Base local
++RPC не возвращает word times: нужен реализованный local alignment, прежние
++attention timing probes не прошли shift check. Всего7 fresh local calls,
++без FULL/production edits/DB writes; Ruff/diff-check.
++[Причины, код и конкретные исправления](tasks/2026-10-14-fast-algorithm-cause-review/report.md).
++
++
++## Исследование независимого Quran ASR — 2026-10-14
++
++Проверены mohammed FastConformer RNN-T/CTC greedy и Tarteel Base без передачи
++эталона: 42 финальных cases, 6 FULL-записей пяти чтецов, local/shift/silence.
++На 104 canonical словах с явным исключением распознанного префикса басмалы112:
++RNN-T5/104, CTC11/104, Base13/104 ошибок; это маленький probe, не широкий benchmark.
++RNN-T — первый доступный кандидат на ASR-адаптер, но default не меняется:
++Фатиха7 начал median144/max519мс, word ends нестабильны в shift check;
++локальные crop и разные чтецы дают пропуски. FULL/local/words универсальность
++не доказана. Новый Muno FastConformer gated, Qwen aligner Arabic не заявлен.
++Штатный NeMo падает на ml_dtypes/ONNX; probe использовал отдельный временный
++ml_dtypes0.6.0 без изменения окружения приложения. Production/DB/settings/weights
++не менялись; Ruff own scripts clean. [Вывод, первичные источники и воспроизводимость]
++(tasks/2026-10-14-asr-model-selection/report.md).
++
++## Частичное исправление FAST отдельным агентом — 2026-10-14
++
++Добавлены ограниченное восстановление повреждённого CTC opening через
++независимо услышанное дополнительное целое слово и проверка previous-tail
++для похожего, но неполного opening без word timing. Неудачный tail сохраняет
++исходное расширение; сильное противоречащее продолжение запрещает короткое
++подтверждение. Геометрия проверяется и для пауз ≤1000 мс; text confidence
++явно не считается вероятностью точности времени. Полный проход FAST запрещён.
++
++Реальный CTC 1:2, спорная Base 79:26, надёжный Tiny/Base word timing и
++калибровка temporal confidence остаются открытыми. На трёх парных real controls
++подтверждения не изменились; прирост покрытия не доказан.
++Исполнитель: pytest 635 passed / 8 skipped, FAST 104 passed.
++Независимо: четыре baseline/current regression cases, Ruff/diff-check passed;
++49 защищённых data SHA неизменны. Без commit/push и DB writes.
++[Результат и ограничения](tasks/2026-10-14-fast-algorithm-gap-fixes/report.md),
++[независимая проверка](tasks/2026-10-14-fast-fix-supervision/review.md).
++
++## Итерационный анализ FAST и узкие оптимизации — 2026-10-14
++
++158 валидных model/surah прогонов CTC/Tiny/Base,5403 строки/2495 настоящих
++локальных model calls; согласованные10 сур и дополнительная полная2.
++30 первоначальных случаев отклонены source guard из-за параллельных изменений;
++дальше использованы изолированные source snapshots/manifest/archive/JSON/log.
++
++В fast_executor sparse-7 добавлены preflight target probability до scoring
++всех CTC rivals (отказ только ниже обоих gates, scalar причина сохраняется)
++и компактный кеш неизменных textual plans без полных competitor списков.
++Парные30cases/825rows полностью совпали по времени/confidence/proofs/reads;
++планов6271→983, profiling competing_prefix1.111→.046с. Отдельный CTC11-сурный
++integration pair17.00→13.21с,561строка точно совпала; одиночный замер скорости.
++Общее profiled wall acceleration не объявляется из-за сторонней нагрузки.
++
++Window experiments1800/3000/4000 и1000/2000/4000 не внедрены: больше proofs
++у одной модели не гарантирует сохранности другой. Wide Tiny добавил80:37+672мс
++при confidence.694 — temporal geometry disagreement, без прослушивания.
++CTC пропуски звуков, ранняя остановка с estimates и ASR timing=False остаются
++разными открытыми проблемами; улучшение точности нашей оптимизацией не заявляется.
++FAST ceilings6s/65%/200% соблюдены, FULL/DB/default model не менялись этой задачей.
++
++Один заключительный pytest631passed/8skipped; Ruff own paths/diff-check чисты.
++[Отчёт, причины и сохранённые попытки](tasks/2026-10-14-fast-iterative-analysis/report.md).
++
++## FAST sparse-8: пустой DSP region и следующий anchor — 2026-10-14
++
++Дополнительные100model/surah прогонов,4391строка/1819local calls. Factorial Base
++1.0/1.3×2.0/2.5s отвергнут:short_initial84→96 proofs,15lost/27added,+672ms
++confident80:37;short_expansion84→84;short_both84→85,15lost/16added.
++10weak marks observations разобраны по BPE bytes; quality policy не ослаблена.
++
++На77:16 GT внутри tempo region, но нет ни одной принятой DSP-паузы и ни одного
++model read. Sparse-8 для timing=False/≥2anchors/пустого region пробует один
++допустимый DSP-кандидат справа в пределах двух predicted spans; прежние proofs,
++validator и budgets обязательны. Следующая пауза относится к18;16/17 остаются
++review, не получают ложное время. CTC сохраняет собственный wasl path.
++
++33парных cases:10сур+полная2 для каждой модели. Base86→92 proofs,6 новых
++на77 (18/19/21–24),max ошибка155ms;0потерь/изменений старых/новых confident>500.
++Ошибки>500460→447,mostly estimates. Phonetics/Tiny точно прежние2/68proofs.
++Base время85.90→92.11s,+7.2% за дополнительную работу; ускорение не заявляется.
++Final77×3 повторяет prototype rows/proofs/dispatches. Ceilings6/65%/200% соблюдены.
++
++Ruff/diff-check чисты;4новых unit checks подготовлены, pytest не повторялся до
++общего финала цели. Основные ограничения CTC/ASR timing/temporal geometry открыты.
++[Отчёт и причины](tasks/2026-10-14-fast-base-window-analysis/report.md).
++
++## FAST: Muaalem local probe и незавершённый native crop — 2026-10-14
++
++Installed Muaalem независимым local greedy даёт full `ءَلحَمدُ` на3 input
++1.5/2.1/3.0s; QPC initial-a отсутствует. Shift+200ms→161.2,error38.8ms,
++silence/wrong-target controls отвергают full word. Это local evidence, не
++широкая temporal calibration. Static phoneme ownership/partition проверены.
++
++В isolated adapter1/32/1128/41proofs,0confident>500.1:5 fixed native5.5s crop
++обрывает strong previous-tail+6/9opening units; DSP speech edge1/1. Доп500ms
++до6s даёт full seam,minQ.880,time21693 (+157ms). Isolated sparse-9 prototype:
++1=7/7,112=4/4,32=0;11proofs,max308ms,старые8сохранены. Runtime/default/Muaalem
++FAST support не активированы; основной production sparse-8 не менялся этим probe.
++
++Исправлен backend classifier dispatch_spy:уCTC RuntimeEmitter тоже существует
++recognize_local, но считать надоemissions. Ошибочные3reads без корректногоspy
++не объявлены валидными; initial control JSON случайно overwritten, replay
++помечен fresh control, checkpoint/output safeguards добавлены. Полные логи сохранены.
++
++Corpus-edge10+2+79 завершён:12cases/607rows/344calls,116proofs,491review,
++157.55s inference+matcher. Найден unsafe owner55:14−50310ms:реальные3→4
++`خلق الإنسان` совпадают с phonetic14 при wasl; planner различает одинаковые
++canonical words из-за waqf/madd4 hypothesis3. Нужен canonical word identity
++floor/variant-safe rivals, не threshold fix.79:26+508ms сохраняется. Новая
++модель/prototype **не активированы**. Pytest не повторялся;2spy checks подготовлены.
++[Промежуточный отчёт, причины/неудачи и следующий шаг](tasks/2026-10-14-fast-muaalem-local-analysis/report.md).
++
++Canonical-floor prospective12cases/607rows/343reads устранил55:14−50310ms:
++нужны3canonical words, а реально слышны3→4«خلق الإنسان علم».115остальных proofs
++сохранены, потеря только ложного14; новые confident outliers0,79:26+508 остаётся.
++Runtime/planner activation ещё нет: prototype process-local. Следующий blocker
++55:3 —left-tail Quran ожидает4madd units, raw содержит2; нельзя подменить звук
++fixed target. Нужны явные wasl/waqf/madd variants и общий canonical owner floor.
++Полные артефакты/проверка сохранности —identity-floor-comparison.json в том же отчёте.
++
++## FULL: Фатиха и парное сравнение QPC/Muaalem — 2026-10-14
++
++Исправлены реальные времена: ФатихаШатри1:2 5339→6483мс (GT6508,−1169→−25),
++mujawwad98:7 166571→173500мс после локального подтверждения Muaalem конца
++предыдущего и различающего начала следующего аята. У второго GT169383 внутри
++паузы168340–173600: абсолютная ошибка выросла2812→4117мс, но звук предыдущего
++аята больше не попадает в начало следующего. Это не скрыто в метриках.
++QPC strong20×3/context2/global norm сохраняется. Policy `qpc-phrase-boundary-v3`,
++каждое дополнительное чтение/модель/revision/ошибка/отмена в trace/source.
++Muaalem — редкая локальная проверка установленным runtime, без автоскачивания
++и смены выбранной модели; отсутствие runtime даёт явную ошибку. FAST не менялся
++этой задачей. FULL resume пересчитывает auto старой модели/policy, ручные защищены.
++
++Production52файла/870начал: >500мс78→77, новых0, median69,5→69мс;
++5дополнительных чтений/19,660с аудио. Свежие полные Фатиха/mujawwad98 совпали.
++Парное сравнение21файл/430начал: QPC94мс/72>500 против Muaalem228,5мс/80>500;
++замена default не обоснована. Muaalem67:30 выбирает позднюю фразу (+14423мс);
++независимое ASR подтверждает одинаковое начало в двух участках, вероятное
++повторение требует слуховой оценки. Человеческое прослушивание не заявляется.
++653passed/8opt-in skipped, scoped Ruff clean; пользовательские БД не записывались,
++коммитов нет. Остальные77расхождений и полный корпус114сур не разрешены.
++[Отчёт и аудио](tasks/2026-10-14-full-boundary-proof/report.md).
++
++## FAST: варианты длительности и фактическое начало crop — 2026-10-14
++
++Статические варианты Muaalem madd2/4/6: вариант4 совпал с native mappings
++на12сурах; глобальные2/6 ухудшают1/55, поэтому отклонены. Изолированная
++нормализация только long-vowel runs с min всех raw scores дала115→162proofs,
++но потеряла77:12/13: уменьшение lexical units сдвинуло прогноз и обрезало tail.
++После разделения lexical/tempo weights и исправления sampled onset полный
++повтор12cases/607ayahs/579actual reads дал115→194proofs,79added,0lost;
++новых confident>500ms нет, прежняя79:26+508 остаётся. Покрытие≤57,37%,
++input ratio≤96,58%, каждый crop≤6s. Поиск196,13→292,34s: ускорения нет.
++
++Строгий validator выявил самостоятельный общий баг: requested start
++129755,335775ms отличался от sample-rounded129755,3125, и55:25 получал
++132004 вместо132003ms. В production FAST исправлены только3onset calculations
++от фактического начала прочитанного окна; версия sparse-9. Muaalem FAST,
++normalization/raw-tempo и native edge extension остаются диагностическими
++прототипами. Pytest не запускался; regression test подготовлен, scoped Ruff clean.
++Парные supported-model controls и общий финальный pytest ещё впереди;
++также остаются named-letter32/2,65 и temporal79:26.
++[Отчёт, неудачные попытки и все логи](tasks/2026-10-14-fast-pronunciation-variants/report.md).
++
++Свежий paired sparse8/9: supported3models×agreed10+полная2×before/after,
++66cases/3366rows/1048actual calls. Времена/confidence/окна полностью совпали:
++QPC2→2proofs, Tiny68→68, Base92→92, потерь/новых outliers0. Source diff
++только3sample-origin calculations+version. Scoped Ruff clean, pytest не запускался.
++Early-stop после двух одинаковых strong mismatches отвергнут:55:30 третьим
++окном восстанавливает гласную и доказывает границу. Это полезный context effect.
++
++Declared whole alif-name (native original-character mapping0:5) открыл
++Muaalem32:0→18proofs/67reads, coverage24,55%, ≤5,5s/read. Новый reference
++outlier32:11+1867ms оставлен в метриках:GT143211 в полной тишине, энергия нового
++слова145080, native onset145078. Сохранены proof/DSP/audio; человеческое
++прослушивание не заявляется. Нужен общий timing convention, не подгонка к GT.
++Prototype не активирован; длинная2 и общий named-name scope ещё впереди.
++[Парные логи, причины и аудио32:11](tasks/2026-10-14-fast-sampled-onset-controls/report.md).
++
++FAST named-opening long: declared alif открыл полную2 (0→3proofs,13reads,
++0confident>500). Остановка4 — нужный DSP candidate не читался из-за ненадёжного
++midpoint. Три независимых right-edge reads дали full20phones/min0,526.
++Изолированный `pause_native_onset` доказывает native sample-origin timing,
++не midpoint, без forced/noisy/contextual/future-midpoint shortcuts.
++Свежий12case/607row corpus:194→233proofs,39added,0lost;739reads,
++coverage≤57,152%, input≤97,251%, crop≤5,5s. Поиск292,34→359,38s: ускорения нет.
++Шесть новых reference outliers>500(32:11/16/20,2:4/9/10), старый79:26+508
++остаётся. GT2спорных границ находится в слабом сигнале, native onset возле
++роста энергии; RMS не доказывает temporal корректность. Proof/DSP/audio сохранены.
++Production activation закрыта до temporal policy/calibration; pytest не запускался.
++Дальше2:18: длинный повторяющийся canonical prefix, mismatch возле nasal run и
++обрезанный previous tail; нельзя удалять согласные или снижать quality.
++Static native mappings подтвердили13alif openings, audio-tested пока2/32.
++[Полный отчёт, source guards и все попытки](tasks/2026-10-14-fast-named-opening-long/report.md).
++
++FAST heard-context expansion:2:18 repeated opening требует6слов, но unique
++`يبصرون + صم` seam короче. Fresh previous2,5s read full tail/min0,653;
++one4,2s head read восстановил connected10/min0,634 после2,7s decoder errors.
++Waqf shortcut/удаление consonants/снижение thresholds не применены.
++Изолированный sparse13 разрешает finite expansion только по реально услышанному
++distinct context, подтверждает full connected seam и отдельно валидируетnative
++previous-context provenance. Полная2:14→36proofs/0lost; fresh merged12:
++233→255/0lost,891actual calls,coverage≤57,279%,input≤97,073%,crop≤5,5s.
++Поиск359,38→427,25s: ускорения нет.4новых temporal outliers2:18/21/23/25;
++activation закрыта до temporal проверки, pytest не запускался.
++Следующая причина42: decoder correctly reads previous41body`ولا تشتروا`,
++но target`ولا تلبسوا`; shared first word ошибочно вызываетfatal prefix blocking.
++Full two-word rival/min0,479 сохранён; narrow candidate deflection ещё предстоит.
++[Отчёт, prospective raw data и причина42](tasks/2026-10-14-fast-intra-ayah-waqf/report.md).
++
++FAST sparse10 production: full strong previous-body rival отклоняет candidate
++с общим первым словом, не подтверждая current. Canonical second-word letters
++должны различаться; partial/weak/same-letter варианты остаются защищены.
++Prospective Mua12:255→273proofs/18added/0lost/0new>500; полная2 36→42,
++59 9→21.3declines, прекращены ненужные final extensions. Calls891→983,
++поиск427,25→468,00s из-за дополнительной полезной работы, не ускорение корпуса.
++Перед переносом fresh supported4variants(INT8/FP32/Tiny/Base)×12×before/after:
++96cases/4856rows/1442calls, все строки/dispatches совпали, потерь/новых ошибок0.
++Tighter letter guard проверен predicate-only replay, не новым neural прогоном.
++4regression checks подготовлены; pytest не запускался, scoped Ruff clean.
++Native/context/Muaalem prototypes не активированы; прежние temporal outliers
++и repeated48 остаются, следующий этап ещё нужен.
++[Отчёт, frozen sources и все парные логи](tasks/2026-10-14-fast-previous-body-rejection/report.md).
++
++
++FAST isolated sparse15 late future search: после отказа прежних current recoveries
++частичный cue служит только поиску независимого globally distinct будущего аята.
++Fresh полные12:273→294proofs/21added/0lost/0changed;2 42→50,32 23→29,80 33→40.
++Якоря48→49,24→25,34→36; пропущенные аяты остаются review сconfidence0.
++Calls983→1060,search468,00→499,96s: ускорения нет. Actual crop≤5,5s,
++coverage≤61,614%,input≤99,386%;67source guards сохранены.
++Новые temporal outliers2:53+576/80:37abs672: полная фраза, но широкий
++нестационарный DSP midpoint. Production sparse10 unchanged; activation требует
++решения temporal policy и supported-model controls. Pytest не запускался.
++Следующая причина2:57 — decoded ض вместо ظ и лишний ل, без исправления текста.
++[Отчёт и все попытки](tasks/2026-10-14-fast-late-future-anchor/report.md).
++
++
++FAST temporal attribution sparse15:294proofs median73,5/p95 390,35ms,
++13outliers; это не метрики всех607строк.268pause midpoint median64,5ms,
++4outliers;12experimental native_onset median996ms/9outliers;13wasl0outliers.
++Глобальная замена midpoint на observed first phoneme ухудшает median202,5ms/
++16outliers и отвергнута.9fresh bounded calls изучили7wide midpoint pauses:
++CTC-gap joint2:53/80:37 даёт397/413ms вместо576/672, но2:44mixed replay
++ухудшается316→486ms;4/7joint windows incomplete. Production unchanged,
++native temporal policy ещё не решена. Все данные/логи/source hashes сохранены,
++pytest не запускался, scoped Ruff clean.
++[Атрибуция, контроль и отвергнутые решения](tasks/2026-10-14-fast-temporal-attribution/report.md).
++
++
++FAST native left-context controls:12experimental native_onset boundaries,
++17fresh bounded calls(12×2,5s+3×2,7s+2×4s). Full previous last word7→9/12.
++Right-edge extensions стабильны<1,5ms; left exact-suffix expansions восстановили
++обрезанные1:5/2:9 без измененияcanonical phones. Mixed CTC-gap midpoint помогает
++2:9/23,32:20, но удачные1:5/55:26 ухудшает до-856/-971ms; глобальный перенос
++отвергнут. Остальные mismatches не дают права удалить/заменитьphones.
++Native/Mua activation ещё закрыта; production unchanged, pytest не запускался,
++source67guards/scoped Ruff clean. Physical speech endpoints ещё не доказаны.
++[Все попытки, причины crop/mismatch и отрицательные контроли](tasks/2026-10-14-fast-native-left-context/report.md).
++
++
++FAST production DSP RMS reuse: measured1169whole-recording RMS recomputations
++всуре2 устранены, O(P*N)→O(N)whole reduction. Fresh frozen12 DSP:
++1697PauseDecision/metrics точносовпали,37,955→1,253s;2 36,407→0,568s.
++Fresh full2 sparse10 diagnostic profile:286rows/5proofs/23actual calls,
++всеtimestamps/proofs/geometry/transitions/dispatches сохранились;search57,72→21,06s.
++Acoustic runtime20s unchanged, Mua support неактивирован. Main candidates.py
++перенесён поbytes guard, existingtestmock обновлён, regression подготовлена.
++Scoped Ruff clean; pytest не запускался. ПервыйcProfile precedence mistake
++иmacOSpath guard failure явносохранены; private sparse15 метрики не подменены.
++[Профили, полныйparity иисходники](tasks/2026-10-14-fast-cpu-profile/report.md).
++
++
++FAST integrated DSP+private sparse15 fresh12:607rows/294proofs/1060actualcalls,
++всеtimes/proofs/geometry/transitions/dispatches/errorarrays exactunchanged;
++source67guards, crop≤5,5s/coverage≤61,614%/input≤99,386%. Search499,964→457,998s,
++DSP38,232→1,285s;inferencevariation4,47s отдельно от DSPspeedup.
++Previous-tail190calls/73,49s:44ladder даютfulltail послеinitial suffix<3units,
++поэтомуearlystop поweakshortsuffix отвергнут. Pytest не запускался.
++Следующаяпричина2:57:wrongfirstword, ноretainedwasl exactuniquecanonical pair
++«عليكم الغمام»/min0,918237. Можноисследоватьbodycue дляfuture58/59 search,
++неподтверждаяonset57. Production unchanged thisturn, Mua/native неактивированы.
++[Полныйfreshкорпус, sourceguards иконтрпримеры](tasks/2026-10-14-fast-dsp-integrated-corpus/report.md).
++
++
++FAST private sparse17bodyfuture:2:57 strongunique«عليكم الغمام» onlysearchcue.
++Diagnostic singleforecast8calls noanchor; balancedtwoforecasts7calls proves59
++min.51423, DSPmidpoint+69ms. Freshfull2:50→57/7added/0lost/old50rows unchanged,
++57/58/62/63review0; body57→59,62→64, progressuntil67. Calls302→385,
++search145,40→190,53s; no speedupclaim. New2:60+986ms belongsprivate nativeonset
++atdecayingtail; temporalproblem persists. Mainunchanged, pytest notrun.
++Other11job95663stilllive; fullcorpuscomparison pending, source67frozen.
++[Диагностика, privateprototype и runningjob](tasks/2026-10-14-fast-body-future-cue/report.md).
++
++
++FAST bodyfuture privatefull12completed:294→301proofs/7added/0lost,
++oldconfirmations unchanged,other11rows/dispatches exact. Source67guards,
++1143actualcalls,search506,59s vs458,00s;new60nativeoutlier+986ms remains.
++NoBODYlastayahreads. SupportedASRbodycues eligibleTiny98:5/79:20,Base59:10.
++FreshBase59diagnostic4calls nofuture. Newconcreteadapterbug:raw«أَلَمْ» becomes
++normalized«الم» beforeobserve'sletteraliasexpansion, whilecanonicalrepresent
++retainsordinaryword. Needrawwordownership before expansion;model'sترين/تر
++error separate. Mainunchanged,pytestnotrun.
++[Корпус иприоритетследующейпричины](tasks/2026-10-14-fast-body-future-cue/report.md),
++[СвежийASRdiagnostic](tasks/2026-10-14-fast-asr-body-future/report.md).
++
++
++FAST production Tarteel v4 raw alias ownership: «أَلَمْ» сохраняет роль обычного
++слова; решение о названиях букв выполняется до потери хамзы. Bare/named ALM,
++selected UTF-8 BPE ownership и вероятности сохранены; worker/FULL/CTC unchanged.
++Перед переносом fresh4models×12×before/after:96cases/4856rows/1495actualcalls.
++CTC INT8/FP32 иTiny exactrows/dispatches; Base114→130/16added/0lost/0changedprior/
++0new>500. Новые59:11–17,19–24 и77:25,27,28, errors10–447ms; old79:26+508 remains.
++Base calls273→326/search103,39→122,39s из-за продолжения по новым границам.
++Source/production byte guards и scoped Ruff passed;5регрессий подготовлены,
++pytest не запускался. Canonical DB/manual statuses не менялись.
++[Причина, все парные прогоны и перенос](tasks/2026-10-14-fast-asr-raw-ownership/report.md).
++
++## FULL 2:220: повтор хвоста и смысл confidence — 2026-10-14
++
++Read-only диагностика пользовательского прогона Шатри: повтор окончания219-го
++подтверждён независимымTarteel/QPC. FULL target содержит один экземпляр,
++поэтому220 начинается внутри повтора:4843477мс,conf0/weak-onset.
++Fresh replay совпал; диагностический учёт повтора даёт4845857мс (−53мсGT),
++остальные215–223неизменны. Guards не запускаются: оба токена первого слова
++слабые и нет паузы внутри него. Confidence — геометрическое среднее фонем
++первого слова:187/286низких, медиана20,4% приmedian absGT78,5мс.
++Автоматическое исправление не внедрялось; код/БД/default не изменялись.
++[Причина, независимая проверка и ограничения](tasks/2026-10-14-full-2-220-cause/report.md).
++
++## Отображение сигнала начала вместо смешанного confidence — 2026-10-14
++
++WebGUI/API/read-only snapshots различаютfirst_token_conf («Звук начала»)
++иconfidence первого слова (tooltip). Нет калибровки/поднятияpercent или
++измененияtimings/БД/FAST; auto не становитсяverified. Matchingaudio/time/source/
++conf обязателен; manual/stale/moved/conflicting evidence не наследуется.
++286из286метокШатри2 прочитаны без измененийБД;218:44,8→99,7% звука,220:0%.
++84целевыхpytest/NodeUIpassed,Ruff/JSsyntax/diffclean. Нужен перезапускGUI,
++повторныйFULL не нужен. [Детали и ограничения](tasks/2026-10-14-onset-confidence/report.md).
++
++
++FAST supportedASRbodyfuture privateprobe: correctedthreshold0,6 localdiags
++79→22/2calls/+14ms,98→6/3calls/+12ms. V1copied0,25mistake preserved/rerun.
++Fresh4models×12×before/after:96cases/4856rows/1568calls. CTC/FP32/Base exact,
++Tiny84→90/6added/0lost/0changedprior. Tinysearch48,23→52,55s/calls217→237.
++New79:26+508matchesoldBase508DSPmidpoint, textq0,999868≠temporalassurance;
++branchnotactivated. Current20/21and5remainreview0. Allsource67guards/Ruff passed,
++pytestnotrun/mainexecutorunchanged. Next: headcrop/preroll and79:26physicaltiming.
++[Полныеконтроли ипричины](tasks/2026-10-14-fast-asr-body-future-tiny/report.md).
++
++Общийsuite этой проверки:676passed/8skipped/1failed вFASTsampled-onset
++fixture (ожидалactual!=requested, оба24084); также падает изолированно.
++FASTкод этой задачей не менялся, общийsuite не объявленчистым.
++
++## Уверенность именно в положении начала — 2026-10-15
++
++После уточнения пользователя вариант «Звук начала» заменён оценкой границы.
++Подтверждение требует принятой локальной проверки фразы и паузы с совпадающим
++временем. Обычное CTC и близкий край паузы дают предварительную оценку;
++слабое начало, длинная пауза и предупреждение повторной проверки — сомнительную.
++При недостатке или несовпадении данных оценка отсутствует. Проценты фонем
++больше не обозначают точность времени.
++
++286 меток Шатри 2: 178 предварительных, 74 сомнительных, 34 без оценки;
++220-й сомнительный. Фатиха 1:2 и Mujawwad 98:7 подтверждены сохранёнными
++локальными доказательствами. БД, времена, FAST и модели не изменялись.
++Нужен перезапуск GUI; повторный FULL не требуется.
++
++86 целевых pytest и Node UI прошли; Ruff, JS syntax и diff-check чистые.
++Общий набор: 678 passed, 8 skipped, 1 известный сбой FAST sampled-onset
++(ожидается actual != requested, оба 24084 мс). Общий набор не объявлен чистым.
++[Основания оценки и ограничения](tasks/2026-10-14-boundary-confidence/report.md).
++
++
++FAST production sparse11-head-boundary: независимыйstrongunique body разрешает
++same-pause перечитывание, еслипервыйASRword содержитcanonicalstemслишнимокончанием
++(98:5«وماء»). Confirmation толькоnewfullhead≥ASR0,6,никакойправкибукв/времени.
++Диагностика6calls отделилаpostcontext отpreroll; Base/Tiny samecrop0,981/0,489
++показалмодельнуюнеуверенность79:20. Fresh4×12×2:96cases/4856rows, CTC/FP32/Base
++exactrows/dispatches; Tiny84→87,new98:5/6/7errors78/12/44ms,0lost/0new>500.
++Mainbyteguard/67+67sourceguards/Ruffpassed;4регрессииподготовлены,pytestне запускался.
++Bodyfuture/79:26+508всёещёprivate; manual/reference DBs unchanged.
++[Причина ифакторныеконтроли](tasks/2026-10-14-fast-head-crop-diagnostic/report.md),
++[Перенос ипарныйкорпус](tasks/2026-10-15-fast-head-word-boundary/report.md).
++
++
++## Завершение серии FAST — 2026-10-15
++
++Финальный общий запуск после всех FAST-изменений: **683 passed, 8 skipped**,
++ошибок нет. Исправлен недискриминирующий sampled-onset fixture; ранее
++описанный сбой закрыт. Ruff FAST-файлов, diff-check и AGENTS/CLAUDE cmp чистые.
++Это единственный общий финальный запуск тестов данной серии.
++
++Приняты: повторное использование RMS, сохранение исходного ASR-написания
++перед alias expansion, узкие исправления executor и same-pause head recheck.
++Два последних свежих парных корпуса по 96 случаев дали Base +16 и Tiny +3
++подтверждения без потерь и изменений прежних, без новых ошибок >500 мс.
++DSP на 12 сурах: 37,955 → 1,253 с при точном совпадении 1697 решений.
++
++Последние диагностические контроли отвергли общий VAD-midpoint перенос:
++79:26 улучшается, но другие паузы ухудшаются. На Tiny 77:7 даже более длинное
++локальное чтение сохраняет split «إن ما» вместо «إنما»; автоматическое
++склеивание без проверки неоднозначностей не добавлено. Эти ограничения,
++79:20 Tiny и прежний Base 79:26 +508 мс остаются открытыми. Body-future и
++Muaalem остаются исследовательскими; БД и модельные defaults не изменялись.
++
++[Итог, изменённые файлы, журналы и ограничения](tasks/2026-10-15-fast-final-verification/report.md).
++
++
++## FAST: split первого ASR-слова — 2026-10-15
++
++Sparse12 исправляет Tiny77:7 без изменения canonical:«إن ما» сверяется по
++полным буквам и всем исходным selected tokens; proof требует минимум2 целых
++canonical words, симметричных конкурентов/внутренних начал и прежнего порога0,6.
++Уникальный split head разрешает лишь конечное расширение той же паузы;
++повторы/aliases/неясная attribution/сильное противоречие отклоняются.
++Validator повторно проверяет ledger; времён из текста не выводит.
++
++Свежие4×12×2: Tiny87→105 подтверждений,18 новых ошибок2–447мс,
++медиана42,5мс; прежние подтверждения не потеряны/не изменены, новых>500мс нет.
++Остальные47случаев имеют точные rows/dispatches. Tiny calls231→260;
++3повтора77: executor median2,195→9,071с — рост покрытия стоит времени.
++Гамиди80/98/112×4×2: все12пар совпали, но нового split-положительного случая
++там нет; полная переносимость не доказана. Лимиты6s/65%/200% соблюдены.
++
++Энергетический midpoint на контролях отвергнут:79:26+508→+518…618мс;
++reference не содержит методики физической разметки, listening не выполнен.
++Base79:26+508мс без review и Tiny79:20 остаются открытыми.
++Финальный общий pytest704passed/8skipped,21новый контроль; scoped Ruff чистый,
++1247 ASR observations replay совпали, JSON proof принят validator,
++48 protected DB SHA/AGENTS sync неизменны. FULL/UI/defaults не менялись задачей.
++[Отчёт,baseline,всеопытыилоги](tasks/2026-10-15-fast-next-iteration/report.md).
++
++
++## План системного исследования FAST — 2026-10-15
++
++Подготовлен план исполнения в другом чате с функцией «Цель»: M0–M7,
++реестр H1–H8, контракт identity/search cue/time, причинные проверки CTC,
++bootstrap/recovery, отдельная временная ветка, межчтецовый и широкий corpus gates.
++Повторный read-only анализ sparse12: у каждого CTC10/12сур без опоры,
++120/111calls и100/91prefix rejections; denied reads0. Beam/posterior уже есть,
++поэтому план не предлагает их повторное добавление. Проверено наличие audio/DB
++четырёх других чтецов80/98/112. Внешние первичные источники и ограничения
++приведены в research.md. Это подготовка, новые model calls/pytest/production
++изменения не выполнялись. Готовое поручение включает создание цели без
++навязанного token budget и сохранение прогресса/логов.
++[Полный план](tasks/2026-10-15-fast-systematic-research/plan.md),
++[исследование](tasks/2026-10-15-fast-systematic-research/research.md),
++[поручение для нового чата](tasks/2026-10-15-fast-systematic-research/handoff.md).
+diff --git a/docs/full-performance.md b/docs/full-performance.md
+index adb41ac..e5e55c0 100644
+--- a/docs/full-performance.md
++++ b/docs/full-performance.md
+@@ -261,3 +261,21 @@ DSP-разбор показал большую роль выбора точки
+ JSON рядом с каждым task содержит все границы, ошибки, предупреждения,
+ реальные интервалы, хэши и времена отдельных процессов. Сводка хранит
+ решения и доказательства, не стенограмму разговора.
++
++## Последующее исправление точности
++
++Локальный DSP-recheck слабого префикса вQPC FULL устранил три ранних начала
++Шатри42:1/78:1/89:5, сохранив20×3/context2 и нарезку.863 уникальных начала:
++80→77 расхождений>500мс,0 новых,0 нефлагированных. Другие чтецы остаются
++с0/0/12/52 крупными расхождениями; массовая коррекция пауз отклонена из-за
++новых ошибок и другого смыслаGT. FP32/context отдельно проверены, свежий42
++подтвердил исправление. [Причины, метрики и ограничения](tasks/2026-10-14-full-accuracy/report.md).
++
++## Исправление границ после проверки Фатихи
++
++Onset policy `qpc-phrase-boundary-v3` добавляет локальное перечитывание начальной
++фразы без изменения основных strong20×3 окон. На52 файлах/870 началах5 вызовов
++(3QPC/2Muaalem),19,660с дополнительного аудио; время запуска verifier не входит
++в прежние performance-замеры. Фатиха1:2:5339→6483мс. Парные21файл/430начал:
++QPC median94мс,72>500; Muaalem228,5мс,80>500. Default сохранён.
++[Доказательства, ограничения и воспроизводимость](tasks/2026-10-14-full-boundary-proof/report.md).
+diff --git a/docs/project.md b/docs/project.md
+index a3b8112..0b356bc 100644
+--- a/docs/project.md
++++ b/docs/project.md
+@@ -41,6 +41,33 @@ readers удалены из runtime. Сохранены результаты с
+ сверяет внутренние/соседние повторы, качество каждой различающей единицы и
+ геометрию паузы/onset. Произнесённые названия начальных букв сохраняют владельца
+ канонического слова; сильное противоречащее продолжение отклоняет partial proof.
++В sparse-9 абсолютный onset считается от фактического sample-rounded начала
++прочитанного окна в ledger. Запрошенное дробное начало forecast не подменяет
++начало PCM; тот же расчёт независимо проверяет общий валидатор.
++В sparse-10 общее первое слово не удерживает неподходящий candidate, если
++независимо прочитаны полные два слова внутреннего фрагмента предыдущего
++подтверждённого аята и второе слово отличается от target по буквам, а не только
++огласовкам. Неполный/слабый rival и различающий текущий prefix остаются защищены.
++В sparse-11 ASR может локально перепроверить начало, если короткое чтение
++неверно разделило первое слово (например, «وماء»), а отдельный уже прочитанный
++уникальный фрагмент внутри того же аята уверенно определил его содержание.
++Перечитывается та же DSP-пауза с конечным контекстом; начало подтверждается
++только новым полным различающим текстом с обычным порогом качества. Время из
++внутреннего фрагмента не выводится. Неполный/слабый body и несвязанный head
++такую перепроверку не разрешают.
++В sparse-12 split первого обычного ASR-слова допускает конечное расширение
++той же паузы лишь при полном уникальном буквенном совпадении и качестве всех
++исходных selected tokens >=0,6. Подтверждение требует минимум двух целых
++канонических слов и симметричного сравнения char-prefix конкурентов на каждом
++каноническом начале слова, включая внутренние. Повторы, aliases, неясная
++attribution и сильное противоречащее продолжение отклоняются. Исходные ASR units
++не меняются; validator пересчитывает отдельный segmented proof по ledger.
++Сегментация подтверждает содержание; время остаётся DSP midpoint, onset из
++текстового совпадения не выводится. Свежие4×12×2: Tiny87→105 подтверждений,
++остальные модели без изменений; потерь/сдвигов прежних и новых>500мс нет.
++Гамиди80/98/112: все12пар rows/dispatches одинаковы, но положительного split
++примера там нет. Цена Tiny231→260calls, ускорение не заявлено.
++[Измерения и ограничения](tasks/2026-10-15-fast-next-iteration/report.md).
+ В prospective v3 sparse anchor допускается из уже прочитанного глобально
+ различающего начала: пропущенный текст остаётся confidence=0/review, без
+ дополнительного scan. Physical lookahead расширений ограничен двумя аятами,
+@@ -49,6 +76,10 @@ readers удалены из runtime. Сохранены результаты с
+ у правого края. Полный DSP interval хранится отдельно от короткого speech crop;
+ длинный затухающий речевой хвост не доказывает midpoint паузы. Cache32MiB хранит
+ posterior только до eviction; trace сохраняет scalar comparisons, не матрицы.
++DSP shelf metrics используют один неизменный float32 RMS всей записи на вызов
++pause pipeline: повторный whole-audio reduction на каждой паузе удалён.
++Полный DSP12-сурный контроль сохранил1697решений точно;36,41→0,57s DSP суры2.
++Это ускорение подготовки пауз, не изменение акустического контракта/порогов.
+ Confidence составного proof ограничен минимумом всех его essential units,
+ включая previous-tail из отдельного чтения.
+ Конечные расширения используют точные локальные fragments, независимые CTC
+@@ -109,6 +140,12 @@ fingerprint режим, несовместимый запрос отклоняе
+    Tarteel timing=False. Уже услышанный уникальный future может стать sparse
+    anchor, но пропущенные аяты остаются confidence=0/review. Необоснованные
+    метки заполняются estimates без скрытого полного чтения.
++   С sparse-8 при пустом tempo region и отсутствии word timing допускается
++   один дополнительный DSP-кандидат справа, не дальше двух прогнозируемых
++   длительностей от правого края region (`expansion_lookahead`). Это только
++   локальная гипотеза: прежние независимые opening/tail proofs и validator
++   обязательны; пропущенные аяты не становятся доказанными. CTC сохраняет
++   собственный локальный wasl recovery. Никакого scan/fallback всей суры нет.
+ 7. Пер-аятные клипы используются отдельным fingerprint режимом.
+ 8. Уверенность и флаги → ревью. Ручные edited/verified сохраняются.
+ 
+@@ -124,7 +161,10 @@ inference. `denied_acoustic_reads` объясняет отказ; `review_requir
+ 
+ Tarteel Tiny/Base используют тот же executor/паузы/planner/validator, что CTC.
+ Адаптер independently распознаёт локальный crop и сопоставляет реальные
+-selected BPE tokens с normalized words. Названия начальных букв сохраняют
++selected BPE tokens с normalized words. В v4 attribution сохраняет исходное
++написание `raw_word` до потери хамзы: обычное «أَلَمْ» не превращается в названия
++букв «الم». Решение о spoken alias использует исходное слово; BPE ownership и
++качество каждого выбранного токена сохраняются. Названия начальных букв сохраняют
+ каноническое слово. Уверенность проверяется только для essential proof units,
+ включая предыдущий контекст повторного аята. ASR не заменяет текст Корана;
+ полное выравнивание, teacher-forcing и tiled fallback не вызываются. Некалиброванные
+@@ -177,6 +217,43 @@ gate против тональных хвостов.20с — ориентир; 
+ модели/torch сохраняют собственные пути. FAST полный проход не вызывает.
+ Trace `full_windows` хранит реальные окна/metrics/решения по паузам и параметры;
+ source результата содержит window/workers/context/pause/review policy и предел.
++С2026-10-14 FULL дополнительно проверяет короткий локальный PCM возле слабого
++первого токена, если уверенный суффикс того же слова есть справа, а глобальный
++DSP пропустил паузу. Crop<=6с, разрыв300–4000мс; требуется единственная
++DSP-принятая пауза и слабость всех предшествующих токенов. Используется midpoint,
++confidence/review сохраняются. Это DSP без новых acoustic reads, только FULL;
++trace/source фиксируют `qpc-local-weak-prefix-v1`. Исправлены42:1/78:1/89:5 Шатри;
++863 начала:80→77 расхождений>500мс,0 новых. [Причины и проверка](tasks/2026-10-14-full-accuracy/report.md).
++Текущая onset policy — `qpc-phrase-boundary-v3`: дополнительно обнаруживается
++пауза внутри первого слова со сильной гласной слева. Короткое перечитывание
++QPC справа (≤6с, локальная нормализация) требует независимого greedy-начала и
++поддержки целого слова. Уверенные согласные слева отбрасывать нельзя.
++Для длинного разрыва ≥1200мс при слабом слове и неподтверждённом QPC-начале
++установленный Muaalem проверяет локально различающее начало справа и последние
++два слова предыдущего аята слева (каждый crop≤6с). Только подтверждение обеих
++сторон разрешает срез за100мс до DSP-конца паузы; одинаковые канонические
++начала/окончания не дают права переноса. Muaalem не скачивается и не выбирается
++автоматически; отсутствие установленного/готового runtime даёт явную ошибку.
++`full_boundary_reads` хранит реальные интервалы/доказательства/ошибки/отмены,
++source — policy и revision verifier. Основные strong20×3 окна не меняются.
++С2026-10-15 policy `qpc-pause-center-v4` добавляет DSP-перенос обычных
++QPC FULL границ в середину межаятной паузы после завершения выравнивания
++(включая bounded FULL; anchors участков сохраняются). Требуются подтверждённый
++первый звук следующего аята и последний подтверждённый звук последнего слова
++предыдущего аята, единственная подходящая energy-пауза и строгий DSP gate.
++Допуск CTC/DSP: до300мс снаружи и80мс внутрь краёв паузы. Непроизнесённое
++конечное огласование при waqf не считается подтверждённым звуком.
++Первый аят и границы с уже выполненным локальным исправлением не переносятся:
++старые CTC spans не доказывают новое положение. При слабом первом звуке,
++отсутствии доказательств или конфликте порядка время сохраняется; сомнительная
++близкая пауза помечается `reliable=false`. Confidence не повышается.
++Trace хранит `pre_center_onset_ms`, `pause_center_reason`, обе границы выбранной
++паузы и CTC evidence. Исходная `raw_onset_ms` сохраняется. FAST, явный tiled,
++другие модели и ручные edited/verified метки не меняются.
++Возобновление FULL пересчитывает старые auto-метки другой модели/onset policy;
++edited/verified защищены. ФатихаШатри1:2:5339→6483мс. На870 началах78→77
++расхождений>500мс; весьFULL исправленным не считается.
++[Сравнение QPC/Muaalem и аудио](tasks/2026-10-14-full-boundary-proof/report.md).
+ Консервативное FULL-ревью дополнительно помечает неподтверждённый звук первого
+ слова (token confidence<.05) и позднее начало внутри длинной паузы
+ (>=700мс, позже центра на>200мс). Эти проверки не меняют время/confidence,
+diff --git a/surah_cutter/core/align.py b/surah_cutter/core/align.py
+index 403f0f3..f25b5ee 100644
+--- a/surah_cutter/core/align.py
++++ b/surah_cutter/core/align.py
+@@ -359,8 +359,18 @@ def align_surah(
+         words, word_token_spans, target_spans, frame_scores, stride_ms, pauses=pauses,
+         lag_ms=getattr(bundle, "lag_ms", ALIGN_LAG_MS),
+         ayah_progress=ayah_progress,
++        pcm=pcm if pause_full else None, sr=sr,
+     )
+     if pause_full:
++        from surah_cutter.core.full_boundary import recheck_split_words
++
++        recheck_split_words(bundle, pcm, sr, words, word_token_spans, target_spans,
++                            frame_scores, stride_ms, checks, pauses, trace=trace, log_event=log_event)
++        from surah_cutter.core.full_pause_center import position_boundaries, record_edges
++
++        record_edges(checks, words, word_token_spans, target_spans, frame_scores, stride_ms,
++                     intro=bool(basmala_trs), targets=targets, delim_id=bundle.delim_id)
++        position_boundaries(checks, pcm, sr, trace=trace)
+         _review_pause_full_onsets(checks.values(), trace["full_windows"])
+     rows = [(a, checks[a]["onset_ms"], checks[a]["conf"]) for a, _, _ in rows]
+     if any(right[1] <= left[1] for left, right in zip(rows, rows[1:])):
+@@ -381,6 +391,9 @@ def align_surah(
+                     "weak-onset": "начало слова не подтверждено, требуется ревью",
+                     "weak-word": "слово распознано неуверенно, требуется ревью",
+                     "weak-prefix-across-pause": "слабое начало перепроверено по паузе",
++                    "weak-prefix-across-local-pause": "слабое начало перепроверено по локальной паузе",
++                    "split-word-local-recheck": "начало слова перепроверено по целой локальной фразе",
++                    "split-word-muaalem-proof": "начало фразы подтверждено локальной проверкой Muaalem",
+                     "weak-word-token": "звук первого слова не подтверждён, требуется ревью",
+                     "late-onset-in-pause": "сомнительное начало в длинной паузе, требуется ревью",
+                 }.get(check["reason"], check["reason"])
+@@ -397,6 +410,7 @@ def _check_ayah_onsets(
+     words, word_token_spans, target_spans, frame_scores, stride_ms,
+     *, pauses, base_ms: float = 0.0, lag_ms: int | None = None,
+     ayah_progress: Any | None = None,
++    pcm=None, sr: int = EXPECTED_SR,
+ ) -> dict[int, dict]:
+     """Check first-word evidence without letting blank frames hide weak tokens.
+ 
+@@ -446,11 +460,34 @@ def _check_ayah_onsets(
+                         if base_ms + sf * stride_ms < p.end_ms
+                     )
+                 ]
++                local = False
++                if not supported and pcm is not None and 300 <= strong_ms - first_ms <= 4000:
++                    # Whole-recording noise percentiles can hide a quiet gap.
++                    # Recheck only the weak prefix's neighbourhood, with a
++                    # strict DSP gate; this does not call an acoustic model.
++                    from surah_cutter.core import candidates
++
++                    lo = max(0, round((first_ms - 1000) * sr / 1000))
++                    hi = min(len(pcm), round((strong_ms + 1000) * sr / 1000))
++                    offset = lo * 1000 / sr
++                    for decision in candidates.pause_pipeline_decisions(pcm[lo:hi], sr):
++                        if not decision.accepted:
++                            continue
++                        p = decision.pause
++                        start, end = offset + p.start_ms, offset + p.end_ms
++                        if (first_ms < start < end <= strong_ms and all(
++                            c < 0.25 for (sf, _), c in zip(spans, token_confs)
++                            if base_ms + sf * stride_ms < end
++                        )):
++                            supported.append(candidates.Pause(start, end, end - start))
++                    local = bool(supported)
++                    check["local_pause_crop_ms"] = [offset, hi * 1000 / sr]
+                 if len(supported) == 1:
+                     pause = supported[0]
+                     check.update({
+                         "onset_ms": round(pause.center_ms), "repaired": True,
+-                        "reason": "weak-prefix-across-pause",
++                        "reason": ("weak-prefix-across-local-pause" if local else
++                                   "weak-prefix-across-pause"),
+                         "pause_start_ms": pause.start_ms, "pause_end_ms": pause.end_ms,
+                     })
+         checks[word.ayah] = check
+@@ -475,7 +512,8 @@ def _full_emissions(bundle: Any, pcm, np, *, trace: dict | None = None) -> Any:
+     from surah_cutter.core import full_windows
+ 
+     window_trace = {"algorithm": full_windows.FULL_POLICY,
+-                    "review_policy": full_windows.FULL_REVIEW_POLICY}
++                    "review_policy": full_windows.FULL_REVIEW_POLICY,
++                    "onset_policy": full_windows.FULL_ONSET_POLICY}
+     if trace is not None:
+         trace["full_windows"] = window_trace
+     matrix = full_windows.generate_pause_emissions(
+@@ -505,7 +543,7 @@ def _review_pause_full_onsets(checks, windows: dict, *, log_event=None) -> None:
+         reason = None
+         if tokens and min(tokens) < windows["review_min_token_conf"]:
+             reason = "weak-word-token"
+-        else:
++        elif check.get("pause_center_reason") != "positioned":
+             onset = check["onset_ms"]
+             if any(p["duration_ms"] >= windows["review_long_pause_ms"]
+                    and p["start_ms"] <= onset <= p["end_ms"]
+@@ -726,10 +764,11 @@ def _ayah_rows(
+ 
+ 
+ def _span_confidence(scores, start_frame: int, end_frame: int) -> float:
+-    """Mean per-frame probability over ``[start_frame, end_frame]`` -> ``[0,1]``.
++    """Geometric mean path probability over inclusive frames -> ``[0,1]``.
+ 
+     ``scores`` holds per-frame log-probs from the forced path; we exponentiate
+-    and average. Empty/degenerate spans yield ``0.0``.
++    and average in log space. This is not calibrated timing confidence.
++    Empty/degenerate spans yield ``0.0``.
+     """
+     import math
+ 
+diff --git a/surah_cutter/core/align_tiled.py b/surah_cutter/core/align_tiled.py
+index 0583411..b78f4cd 100644
+--- a/surah_cutter/core/align_tiled.py
++++ b/surah_cutter/core/align_tiled.py
+@@ -236,7 +236,18 @@ def align_surah_tiled(
+             checks = A._check_ayah_onsets(
+                 sub_words, spans, tspans, fscores, stride, base_ms=base, pauses=onset_pauses,
+                 lag_ms=lag,
++                pcm=pcm if parallel_full else None, sr=sr,
+             )
++            if parallel_full:
++                from surah_cutter.core.full_boundary import recheck_split_words
++
++                recheck_split_words(bundle, pcm, sr, sub_words, spans, tspans, fscores,
++                                    stride, checks, onset_pauses, base_ms=base, trace=trace,
++                                    log_event=log_event)
++                from surah_cutter.core.full_pause_center import record_edges
++
++                record_edges(checks, sub_words, spans, tspans, fscores, stride, base_ms=base,
++                             intro=basmala, targets=targets, delim_id=bundle.delim_id)
+             for idx, word in enumerate(sub_words):
+                 if idx == 0 or sub_words[idx - 1].ayah != word.ayah:
+                     starts[idx] = float(checks[word.ayah]["onset_ms"])
+@@ -361,6 +372,13 @@ def align_surah_tiled(
+ 
+         i = j
+ 
++    if parallel_full and trusted_checks:
++        from surah_cutter.core.full_pause_center import position_boundaries
++
++        position_boundaries(trusted_checks, pcm, sr, trace=trace)
++        for a, check in trusted_checks.items():
++            starts_ms[a] = check["onset_ms"]
++
+     # Assemble rows, enforce monotonic non-decreasing starts (same as the others).
+     rows: list[tuple[int, int, float]] = []
+     prev = 0
+diff --git a/surah_cutter/core/candidates.py b/surah_cutter/core/candidates.py
+index c24fadd..9813359 100644
+--- a/surah_cutter/core/candidates.py
++++ b/surah_cutter/core/candidates.py
+@@ -303,10 +303,14 @@ def pause_pipeline_decisions(
+     if not energy:
+         return []
+ 
++    import numpy as np
++
++    audio = np.asarray(pcm, dtype=np.float32).reshape(-1)
++    audio_rms = float(np.sqrt(np.mean(audio * audio))) if audio.size else 1e-10
+     decisions: list[PauseDecision] = []
+     intro_basmala = surah not in (None, 1, 9)
+     for idx, (p, weak) in enumerate(energy):
+-        dsp = _dsp_pause_metrics(pcm, sr, p)
++        dsp = _dsp_pause_metrics(pcm, sr, p, audio_rms=audio_rms)
+         dsp_ok = _dsp_accepts_pause(dsp) or (weak and _dsp_accepts_weak_pause(dsp, p))
+         vad_ok: bool | None = None
+         reason = "weak-dsp" if weak else "dsp"
+@@ -412,7 +416,7 @@ def _vad_confirms_pause(pause: Pause, ten: list[Pause], vad: list[Pause]) -> boo
+     return _best_overlapping(pause, ten + vad) is not None
+ 
+ 
+-def _dsp_pause_metrics(pcm, sr: int, pause: Pause) -> dict[str, float]:
++def _dsp_pause_metrics(pcm, sr: int, pause: Pause, *, audio_rms: float | None = None) -> dict[str, float]:
+     """Cheap DSP features for an energy pause shelf."""
+     import numpy as np
+ 
+@@ -434,7 +438,7 @@ def _dsp_pause_metrics(pcm, sr: int, pause: Pause) -> dict[str, float]:
+     seg = seg - float(np.mean(seg))
+     eps = 1e-10
+     rms = float(np.sqrt(np.mean(seg * seg)))
+-    all_rms = float(np.sqrt(np.mean(audio * audio))) if audio.size else eps
++    all_rms = audio_rms if audio_rms is not None else (float(np.sqrt(np.mean(audio * audio))) if audio.size else eps)
+     rms_ratio = rms / max(all_rms, eps)
+ 
+     max_fft = min(seg.size, 2048)
+diff --git a/surah_cutter/core/fast_adapters.py b/surah_cutter/core/fast_adapters.py
+index 312bda3..6dff440 100644
+--- a/surah_cutter/core/fast_adapters.py
++++ b/surah_cutter/core/fast_adapters.py
+@@ -61,7 +61,7 @@ def attributed_asr_units(result):
+         decoded = payload.decode("utf-8", errors="strict")
+         if arabic_units(decoded) != units:
+             raise ValueError("non-reversible selected decode")
+-        word_owners, current, byte_offset = [], set(), 0
++        word_owners, raw_words, current, raw_word, byte_offset = [], [], set(), [], 0
+         for char in decoded:
+             count = len(char.encode("utf-8"))
+             contributing = owners[byte_offset:byte_offset + count]
+@@ -71,17 +71,20 @@ def attributed_asr_units(result):
+                 if c.isspace() or not (unicodedata.category(c).startswith(("L", "M")) or c == "ـ"):
+                     if current:
+                         word_owners.append(sorted(current))
+-                        current = set()
++                        raw_words.append("".join(raw_word))
++                        current, raw_word = set(), []
+                 elif c != "ـ":
+                     current.update(contributing)
++                    raw_word.append(c)
+         if current:
+             word_owners.append(sorted(current))
++            raw_words.append("".join(raw_word))
+         if len(word_owners) != len(units) or any(not ids for ids in word_owners):
+             raise ValueError("ambiguous word attribution")
+-        attribution = tuple({"word": word, "selected_indices": ids,
++        attribution = tuple({"word": word, "raw_word": raw, "selected_indices": ids,
+                              "token_ids": [tokens[i]["id"] for i in ids],
+                              "probabilities": [probabilities[i] for i in ids]}
+-                            for word, ids in zip(units, word_owners))
++                            for word, raw, ids in zip(units, raw_words, word_owners))
+         return units, tuple(min(probabilities[i] for i in ids) for ids in word_owners), attribution
+     except (ValueError, KeyError, TypeError, OverflowError):
+         return units, (0.,) * len(units), ({"unsupported": "ambiguous_token_word_attribution"},)
+@@ -155,7 +158,7 @@ class CTCAdapter:
+ 
+ 
+ class TarteelAdapter:
+-    version = "tarteel-independent-words-v3"
++    version = "tarteel-independent-words-v4-raw-alias-ownership"
+     metric = "asr_token_probability"
+     timing = False  # recognize_local currently supplies no word timestamps
+     lag_ms = 0
+@@ -196,7 +199,8 @@ class TarteelAdapter:
+         expanded, expanded_quality, expanded_attribution = [], [], []
+         if len(attribution) == len(units):
+             for word, q, ownership in zip(units, quality, attribution):
+-                names = arabic_units(whisper_alignment_text(word))
++                # Decide letter names before hamza/diacritics are discarded.
++                names = arabic_units(whisper_alignment_text(ownership.get("raw_word", word)))
+                 for unit in names:
+                     expanded.append(unit)
+                     expanded_quality.append(q)
+diff --git a/surah_cutter/core/fast_executor.py b/surah_cutter/core/fast_executor.py
+index c80a4c8..226597f 100644
+--- a/surah_cutter/core/fast_executor.py
++++ b/surah_cutter/core/fast_executor.py
+@@ -13,15 +13,16 @@ from time import monotonic
+ import numpy as np
+ 
+ from surah_cutter.core.cancellation import GenerationCancelled, check_cancelled
+-from surah_cutter.core.fast_adapters import make_adapter, representation_sha, loaded_implementation_sha
++from surah_cutter.core.fast_adapters import make_adapter, representation_sha, loaded_implementation_sha, arabic_units
+ from surah_cutter.core.fast_reads import LocalEvidenceReads
+ 
+-VERSION = "sequential-fast-v3-sparse-5"
++VERSION = "sequential-fast-v3-sparse-12-split-opening"
+ 
+ 
+ @dataclass(frozen=True)
+ class Policy:
+     speech_ms: tuple[int, ...] = (1300, 2500, 4000)
++    noisy_speech_ms: tuple[int, ...] = (1700, 1900, 2100)
+     max_candidates: int = 8
+     first_search_ms: int = 15000
+     cache_bytes: int = 32 * 1024 * 1024
+@@ -96,6 +97,17 @@ def _prefix(observed, expected):
+     return n
+ 
+ 
++def _strong_continuation_conflict(units, quality, expected, prefix_size, threshold):
++    """A shorter proof cannot hide strongly heard contradictory continuation.
++
++    Missing or weak continuation is incomplete evidence, not a contradiction.
++    Stop at this ayah's known end: subsequent ayahs are legitimate neighbours.
++    """
++    return any(actual != wanted and math.isfinite(q) and q >= threshold
++               for actual, q, wanted in zip(units[prefix_size:], quality[prefix_size:],
++                                            expected[prefix_size:]))
++
++
+ def plan_seam(groups, ayah, word_ends):
+     """Minimal whole-word tail+opening distinct from every textual occurrence.
+ 
+@@ -184,6 +196,137 @@ def _expansion_evidence(observation, phrase, ends, threshold, groups=None, ayah=
+     return None
+ 
+ 
++def _split_opening(obs, groups, ends, ayah, threshold):
++    """Confirm exact letters across a split ASR head, preserving token evidence.
++
++    A unique complete first word can authorize finite context expansion. Proof
++    additionally needs two whole canonical words, symmetric char-prefix rivals
++    at every word start, and all contributing selected tokens above threshold.
++    Word segmentation supplies identity only; the DSP pause supplies timing.
++    """
++    target = groups[ayah]
++    # Only plain one-unit canonical words. Named letters need their own proof.
++    if ends[ayah] != list(range(1, len(target) + 1)) or len(target) < 2 or obs.truncated:
++        return None, False
++    units, qualities, attrs = obs.units, obs.unit_quality, obs.attribution
++    if len(units) != len(qualities) or len(attrs) != len(units):
++        return None, False
++    joined, first_count = '', None
++    for i, unit in enumerate(units):
++        joined += unit
++        if joined == target[0]:
++            first_count = i + 1
++            break
++        if not target[0].startswith(joined):
++            return None, False
++    if first_count is None or first_count < 2 or len(target[0]) < 3:
++        return None, False
++    def strong(count):
++        for u, q, a in zip(units[:count], qualities[:count], attrs[:count]):
++            ps = a.get('probabilities', ())
++            if (not math.isfinite(q) or q < threshold or a.get('word') != u
++                    or 'spoken_alias' in a or 'unsupported' in a or not ps
++                    or len(a.get('selected_indices', ())) != len(ps)
++                    or any(not math.isfinite(p) or not threshold <= p <= 1 for p in ps)
++                    or q != min(ps)):
++                return False
++        return True
++    if not strong(first_count):
++        return None, False
++    starts = [(a, i, ''.join(text[i:])) for a, text in groups.items()
++              for i in [0] + ends[a][:-1] if (a, i) != (ayah, 0)]
++    # No partial first-word identity can authorize scanning repeated owners.
++    if any(text.startswith(target[0]) for _, _, text in starts):
++        return None, False
++    # At least TWO whole canonical words; exact source unit endpoints only.
++    for count in range(2, len(target) + 1):
++        text = ''.join(target[:count])
++        if any(other.startswith(text) for _, _, other in starts):
++            continue
++        observed = ''
++        for n, unit in enumerate(units, 1):
++            observed += unit
++            if observed == text and strong(n):
++                return {'phrase': target[:count], 'segmented_opening': {
++                    'source_count': n, 'first_source_count': first_count,
++                    'source_units': list(units[:n]), 'selected_indices': sorted({i for a in attrs[:n] for i in a['selected_indices']}),
++                    'competitor_count': len(starts), 'onset_supported': False}}, True
++            if not text.startswith(observed):
++                break
++    # A strong contradictory next unit is not excused as word segmentation.
++    rest = ''.join(units[first_count:])
++    expected = ''.join(target[1:])
++    if rest and not expected.startswith(rest):
++        if any(q >= threshold for q in qualities[first_count:]):
++            return None, False
++    return None, True
++
++
++def _noisy_opening(observation, groups, word_ends, ayah, threshold):
++    """One missing onset unit can trigger a bounded, independent identity proof.
++
++    Never manufacture the missing unit. Require the rest of the first word at
++    the crop opening AND an additional whole word from at most two following
++    words. Both anchors must exclude every other canonical word start, allowing
++    the same single-unit omission for rivals. No forced path participates.
++    Any intervening words must match too. The omitted onset supplies no timing.
++    """
++    units, ends = groups[ayah], word_ends[ayah]
++    if len(ends) < 2 or ends[0] < 4 or observation.truncated:
++        return None, False
++    remainder = units[1:ends[0]]
++    initial_quality = observation.unit_quality[:len(remainder)]
++    if (_prefix(observation.units, remainder) != len(remainder)
++            or len(initial_quality) != len(remainder)
++            or any(not math.isfinite(q) or q < threshold for q in initial_quality)):
++        return None, False
++    rivals = []
++    for owner, text in groups.items():
++        for start in [0] + word_ends[owner][:-1]:
++            if (owner, start) == (ayah, 0):
++                continue
++            # Wrong owner and internal starts get the same tolerated defect.
++            if any(text[start + missing:start + missing + len(remainder)] == remainder
++                   for missing in (0, 1)):
++                rivals.append((owner, start))
++    if rivals:
++        return None, False
++    for word_index in range(1, min(3, len(ends))):
++        left, right = ends[word_index - 1], ends[word_index]
++        anchor = units[left:right]
++        if len(anchor) < 3:
++            continue
++        # The crop starts at the pause right edge; do not search distant repeats.
++        limit = right + 2
++        offsets = [i for i in range(len(remainder), min(len(observation.units), limit))
++                   if observation.units[i:i + len(anchor)] == anchor]
++        if len(offsets) != 1:
++            continue
++        offset = offsets[0]
++        # No arbitrary inserted or contradictory intervening speech. The
++        # tolerated defect is the initial unit only; any intervening complete
++        # canonical words must themselves be independently heard in order.
++        if observation.units[len(remainder):offset] != units[ends[0]:left]:
++            continue
++        quality = observation.unit_quality[:offset + len(anchor)]
++        if len(quality) != offset + len(anchor) or any(not math.isfinite(q) or q < threshold for q in quality):
++            continue
++        # A complete conflicting canonical opening cannot be excused as noise.
++        for owner, text in groups.items():
++            first = word_ends[owner][0]
++            if owner == ayah or _prefix(observation.units, text[:first]) != first:
++                continue
++            other = plan_phrase(groups, owner, word_ends)
++            if not other["ambiguous"] and _prefix(observation.units, other["units"]) == len(other["units"]):
++                return None, False
++        return {"phrase": units[:right], "opening_recovery": {
++            "missing_initial_units": 1, "heard_remainder": remainder,
++            "additional_word": anchor, "additional_word_index": word_index,
++            "additional_word_offset": offset, "rivals": rivals,
++            "onset_supported": False}, "completeness": "identity_anchors_only"}, True
++    return None, True
++
++
+ def _incomplete_speech_edge(pcm, sr, end_ms, observation, phrase, groups, word_ends, ayah, threshold):
+     """DSP explains a finite crop expansion, never identifies a canonical owner."""
+     if (observation.positions_ms is None or not observation.units or observation.truncated
+@@ -221,6 +364,23 @@ def _competing_prefix(observation, phrase, groups, ayah, word_ends, adapter, rea
+     if observation.posterior is None or not hasattr(adapter, "vocab"):
+         return observation, {}, False
+     from surah_cutter.core.fast_ctc import prefix_scores, prefix_path
++    if not phrase or any(unit not in adapter.vocab for unit in phrase):
++        return observation, {}, False
++    # Neither proof nor expansion can survive a target below BOTH gates.
++    # Score it before constructing/scoring every canonical rival. This uses
++    # the same local posterior and never relaxes the residual/quality checks.
++    expected = prefix_scores(observation.posterior,
++                             [tuple(adapter.vocab[u] for u in phrase)], adapter.blank_id)[0]
++    if not math.isfinite(expected) or expected < math.log(min(
++            policy.ctc_prefix_probability, policy.ctc_expansion_probability)):
++        read.setdefault("prefix_rejections", []).append({
++            "units": phrase, "reason": "target_below_proof_and_expansion_gates",
++            "expected_log_probability": expected if math.isfinite(expected) else None,
++            "proof_probability": policy.ctc_prefix_probability,
++            "expansion_probability": policy.ctc_expansion_probability,
++            "posterior_sha256": observation.posterior_sha256,
++        })
++        return observation, {}, False
+     alternatives = [(ayah, 0, phrase)]
+     for owner, units in groups.items():
+         stream = units + groups.get(owner + 1, ())
+@@ -275,20 +435,29 @@ def pause_geometry(pcm, sr, pause):
+     Keep the original DSP interval, but require review of its midpoint when
+     the interior quarter levels show a sustained audible decay.
+     """
+-    if pause.end_ms - pause.start_ms <= 1000:
+-        return {"accepted": True, "reason": "short_dsp_interval"}
+     left, right = int(pause.start_ms * sr / 1000), int(pause.end_ms * sr / 1000)
+     local = pcm[left:right]
+     frame = max(1, sr // 50)
+     count = len(local) // frame
+     if count < 8:
+-        return {"accepted": False, "reason": "unmeasurable_long_interval"}
++        return {"accepted": False, "reason": "unmeasurable_pause_interval"}
+     levels = np.sqrt(np.mean(local[:count * frame].reshape(count, frame) ** 2, axis=1))
+     quarter = max(1, count // 4)
+     beginning, ending = float(np.median(levels[:quarter])), float(np.median(levels[-quarter:]))
++    # Measure stationarity even for short pauses. Ordinary reverberant pauses
++    # commonly decline; that is not evidence of an incorrect midpoint. Preserve
++    # the existing audible 4x-decay rejection until independent listening labels
++    # establish a better temporal gate, rather than fitting a new ratio to GT.
++    deviations = np.concatenate((np.abs(levels[:quarter] - beginning),
++                                 np.abs(levels[-quarter:] - ending)))
++    variation = float(np.median(deviations)) * 1.4826
++    stationarity = beginning - ending <= max(.003, 3 * variation)
+     decay = beginning > max(.003, ending * 4)
+-    return {"accepted": not decay, "reason": "decaying_tail_midpoint_unproved" if decay else "stable_long_interval",
+-            "first_quarter_rms": beginning, "last_quarter_rms": ending}
++    return {"accepted": not decay, "reason": "decaying_tail_midpoint_unproved" if decay else "measured_dsp_interval",
++            "first_quarter_rms": beginning, "last_quarter_rms": ending,
++            "within_quarter_variation": variation, "midpoint_interval_radius_ms": (right - left) * 500 / sr,
++            "quiet_stationarity": stationarity, "timing_status": "uncalibrated_pause_midpoint",
++            "temporal_probability": None}
+ 
+ 
+ def validate_boundaries(boundaries, ayahs, duration_ms, reads, *, groups=None, word_ends=None,
+@@ -364,10 +533,40 @@ def validate_boundaries(boundaries, ayahs, duration_ms, reads, *, groups=None, w
+             observed = {**observed, **selected}
+         offset = proof.get("offset", 0)
+         phrase = tuple(proof.get("phrase", ()))
+-        if not phrase or tuple(observed["units"][offset:offset + len(phrase)]) != phrase:
++        recovery = proof.get("opening_recovery")
++        segmented = proof.get("segmented_opening")
++        if segmented:
++            from surah_cutter.core.fast_adapters import Observation
++            if (boundary.evidence_kind != "pause" or groups is None or word_ends is None
++                    or offset != 0 or recovery or proof.get("contextual_owner")
++                    or "prefix_comparison_id" in proof or "decoder_hypothesis" in proof):
++                raise ValueError("unsupported_segmented_proof")
++            decoded = Observation(tuple(observed["units"]), None, observed["quality"],
++                observed["truncated"], unit_quality=tuple(observed["unit_quality"]),
++                attribution=tuple(observed.get("attribution", ())))
++            expected, _ = _split_opening(decoded, groups, word_ends, boundary.ayah, threshold)
++            if not expected or expected["segmented_opening"] != segmented or expected["phrase"] != phrase:
++                raise ValueError("unheard_segmented_phrase")
++            quality = observed["unit_quality"][:segmented["source_count"]]
++        elif recovery:
++            from surah_cutter.core.fast_adapters import Observation
++            if (boundary.evidence_kind != "pause" or groups is None or word_ends is None
++                    or offset != 0 or "prefix_comparison_id" in proof or "decoder_hypothesis" in proof
++                    or proof.get("contextual_owner")):
++                raise ValueError("unsupported_noisy_opening_proof")
++            decoded = Observation(tuple(observed["units"]), None, observed["quality"],
++                                  observed["truncated"], unit_quality=tuple(observed["unit_quality"]))
++            expected, _ = _noisy_opening(decoded, groups, word_ends, boundary.ayah, threshold)
++            if (not expected or expected["opening_recovery"] != recovery or expected["phrase"] != phrase
++                    or proof.get("completeness") != "identity_anchors_only"):
++                raise ValueError("unheard_noisy_opening_identity")
++            i = recovery["additional_word_offset"]
++            quality = observed["unit_quality"][:i + len(recovery["additional_word"])]
++        elif not phrase or tuple(observed["units"][offset:offset + len(phrase)]) != phrase:
+             raise ValueError("unheard_discriminating_phrase")
+-        quality = observed.get("unit_quality", ())[offset:offset + len(phrase)]
+-        if (len(quality) != len(phrase) or any(not math.isfinite(q) for q in quality)
++        else:
++            quality = observed.get("unit_quality", ())[offset:offset + len(phrase)]
++        if ((not recovery and not segmented and len(quality) != len(phrase)) or not quality or any(not math.isfinite(q) for q in quality)
+                 or min(quality) < threshold or boundary.confidence > min(quality)):
+             raise ValueError("weak_discriminating_unit")
+         if groups is not None:
+@@ -376,7 +575,10 @@ def validate_boundaries(boundaries, ayahs, duration_ms, reads, *, groups=None, w
+                 seam = plan_seam(groups, boundary.ayah, word_ends)
+                 if not seam or phrase != seam["units"] or tuple(proof.get("previous_tail", ())) != seam["tail"]:
+                     raise ValueError("ambiguous_contextual_owner")
+-            elif phrase != planned["units"] or planned["ambiguous"]:
++                if _strong_continuation_conflict(observed["units"][offset:], observed["unit_quality"][offset:],
++                                                 groups[boundary.ayah], len(phrase), threshold):
++                    raise ValueError("contradictory_contextual_continuation")
++            elif not recovery and not segmented and (phrase != planned["units"] or planned["ambiguous"]):
+                 raise ValueError("non_distinguishing_phrase")
+             if "spoken_owner_units" in proof:
+                 if canonical_ends is None:
+@@ -405,8 +607,9 @@ def validate_boundaries(boundaries, ayahs, duration_ms, reads, *, groups=None, w
+                 pause = pauses[index]
+                 if [left, right] != [pause.start_ms, pause.end_ms]:
+                     raise ValueError("mutated_pause_interval")
+-                if right - left > 1000 and (pause_geometry_data is None or not pause_geometry_data[index]["accepted"]):
+-                    raise ValueError("unproved_long_pause_geometry")
++                if (pause_geometry_data is None or index >= len(pause_geometry_data)
++                        or not pause_geometry_data[index]["accepted"]):
++                    raise ValueError("unproved_pause_geometry")
+             r0, r1 = read["window_ms"]
+             expected_left = max(left, right - 200.)
+             if abs(r0 - expected_left) > .1 or r1 <= right or offset != 0:
+@@ -587,6 +790,17 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
+         word_ends.setdefault(word.ayah, []).extend(base + end for end in ends)
+         canonical_ends.setdefault(word.ayah, []).append(base + len(units))
+     groups = {a: tuple(units) for a, units in groups.items()}
++    plans = {}
++
++    def planned_opening(ayah):
++        # Text is immutable within this run. Retain the small result, not a
++        # separate full-surah competitor list for every ayah (long-surah RAM).
++        if ayah not in plans:
++            planned = plan_phrase(groups, ayah, word_ends)
++            planned["competitor_count"] = len(planned.pop("competitors"))
++            plans[ayah] = planned
++        return plans[ayah]
++
+     from pathlib import Path
+     dsp_config = {name: value for name, value in vars(candidates).items()
+                   if name.isupper() and isinstance(value, (str, bool, int, float))}
+@@ -658,7 +872,7 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
+             if confirmed and ayah <= confirmed[-1].ayah:
+                 continue  # already validated and atomically published by RESOLVE_BLOCK
+             event("PLAN_PHRASE", ayah)
+-            plan = plan_phrase(groups, ayah, word_ends)
++            plan = planned_opening(ayah)
+             seam = plan_seam(groups, ayah, word_ends) if plan["ambiguous"] and confirmed else None
+             if seam:
+                 plan = {**plan, **seam, "contextual_owner": True}
+@@ -682,8 +896,21 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
+                 forecast = previous + predicted_span
+                 left = previous + predicted_span * policy.tempo_lower_ratio
+                 right = previous + predicted_span * policy.tempo_upper_ratio
++                candidate_pool = candidates_here
+                 candidates_here = [c for c in candidates_here if left <= c[2] <= right]
+                 event("SELECT_CANDIDATE", ayah, forecast_ms=forecast, region_ms=[left, right])
++                if not candidates_here and not adapter.timing:
++                    # Without word positions the empty region cannot use wasl
++                    # recovery. One measured gap is a bounded next hypothesis;
++                    # tempo never supplies the owner proof or a timestamp.
++                    lookahead_right = right + predicted_span * policy.expansion_lookahead
++                    following = next((c for c in candidate_pool if right < c[2] <= lookahead_right
++                                      and geometry[c[1]]["accepted"]), None)
++                    if following is not None:
++                        candidates_here = [following]
++                        event("SELECT_CANDIDATE", ayah, candidate=following[1],
++                              reason="empty_tempo_region_next_dsp_pause", region_ms=[left, right],
++                              lookahead_region_ms=[right, lookahead_right])
+             boundary, blocked_prefix, future = None, False, None
+             for kind, index, start, speech_start, pause in candidates_here[:policy.max_candidates]:
+                 # Geometry belongs to DSP. Acoustic identity needs speech at
+@@ -696,7 +923,8 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
+                         continue
+                 event("SELECT_CANDIDATE", ayah, candidate=index, kind=kind)
+                 had_prefix = False
+-                for step, speech in enumerate(policy.speech_ms):
++                speech_steps = list(policy.speech_ms)
++                for step, speech in enumerate(speech_steps):
+                     end = min(duration, speech_start + speech)
+                     if end - start > 6000:
+                         reason = "insufficient_local_context"
+@@ -721,21 +949,84 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
+                             obs, phrase, groups, ayah, word_ends, adapter, reads.calls[opening_id], policy, threshold)
+                         beam_proof.update(prefix_proof)
+                     complete = _prefix(obs.units, phrase)
++                    segmented_proof, segmented_expansion = (None, False)
++                    if (pause and not adapter.timing and complete != len(phrase)
++                            and not beam_proof and not plan.get("contextual_owner")):
++                        segmented_proof, segmented_expansion = _split_opening(obs, groups, word_ends, ayah, threshold)
++                    noisy_proof, noisy_expansion = (None, False)
++                    if (pause and adapter.metric == "ctc_greedy_probability"
++                            and complete != len(phrase) and not beam_proof and not plan.get("contextual_owner")):
++                        noisy_proof, noisy_expansion = _noisy_opening(obs, groups, word_ends, ayah, threshold)
++                    # A globally distinct longer opening can still be incomplete
++                    # in this crop. Try the shorter adjoining context after that
++                    # concrete failure; pause centers do not require word timing.
++                    opening_alternative = None
++                    alternative_context_read_id = None
++                    alternative_context_quality = None
++                    if (pause and confirmed and confirmed[-1].ayah == ayah - 1
++                            and complete != len(phrase) and not plan.get("contextual_owner") and not obs.truncated):
++                        contextual = plan_seam(groups, ayah, word_ends)
++                        if (contextual and _prefix(obs.units, contextual["units"]) == len(contextual["units"])
++                                and min(obs.unit_quality[:len(contextual["units"])], default=0.) >= threshold
++                                and not _strong_continuation_conflict(obs.units, obs.unit_quality,
++                                    groups[ayah], len(contextual["units"]), threshold)):
++                            opening_alternative = (obs, plan, phrase, complete, beam_proof,
++                                                   noisy_proof, noisy_expansion)
++                            plan = {**plan, **contextual, "contextual_owner": True}
++                            phrase = plan["units"]
++                            complete = len(phrase)
++                            beam_proof = {}
++                            noisy_proof, noisy_expansion = None, False
++                            event("EXPAND_LOCAL", ayah, reason="incomplete_opening_contextual_pause",
++                                  phrase=phrase, previous_tail=plan["tail"])
++                            for context_ms in policy.speech_ms:
++                                context_start = max(previous, pause.start_ms - context_ms)
++                                context_obs = reads.read(context_start, pause.start_ms,
++                                    reason=f"ayah={ayah}:repeated_owner_previous_tail")
++                                tail = plan["tail"]
++                                if (context_obs and not context_obs.truncated
++                                        and tuple(context_obs.units[-len(tail):]) == tail
++                                        and min(context_obs.unit_quality[-len(tail):], default=0.) >= threshold):
++                                    alternative_context_read_id = reads.last_read_id
++                                    alternative_context_quality = min(context_obs.unit_quality[-len(tail):])
++                                    break
++                            if alternative_context_read_id is None:
++                                # Retain the original opening/provenance. Its
++                                # expansion and future-owner evaluations below
++                                # still run on the independent opening read.
++                                (obs, plan, phrase, complete, beam_proof,
++                                 noisy_proof, noisy_expansion) = opening_alternative
++                                event("EVALUATE", ayah,
++                                      reason="alternative_context_unproved_resume_opening",
++                                      phrase=phrase, read_id=opening_id)
+                     alias_conflict = any("spoken_alias" in item and tuple(item["source_units"]) != rendered[word_map[ayah][0]]
+                                          for item in obs.attribution[:len(phrase)])
++                    if plan.get("contextual_owner"):
++                        alias_conflict |= _strong_continuation_conflict(
++                            obs.units, obs.unit_quality, groups[ayah], len(phrase), threshold)
+                     spoken_owner = (rendered[word_map[ayah][0]] if len(proof_ends[word_map[ayah][0]]) > 1 else ())
+                     if spoken_owner:
+                         alias_conflict |= any(expected != actual and obs.unit_quality[i] >= threshold
+                                               for i, (expected, actual) in enumerate(zip(spoken_owner, obs.units)))
+                     phrase_quality = min(obs.unit_quality[:len(phrase)], default=0.)
++                    if segmented_proof:
++                        phrase_quality = min(obs.unit_quality[:segmented_proof["segmented_opening"]["source_count"]])
++                    if noisy_proof:
++                        recovery = noisy_proof["opening_recovery"]
++                        i = recovery["additional_word_offset"]
++                        phrase_quality = min(obs.unit_quality[:i + len(recovery["additional_word"])])
+                     event("EVALUATE", ayah, candidate=index, complete_units=complete,
+-                          needed_units=len(phrase), quality=obs.quality, observed=obs.units)
+-                    if (complete == len(phrase) and not plan["ambiguous"] and not obs.truncated
++                          needed_units=len(phrase), quality=obs.quality, observed=obs.units,
++                          identity_recovery=noisy_proof,
++                          onset_supported=False if noisy_proof else None)
++                    if ((complete == len(phrase) or noisy_proof or segmented_proof) and not plan["ambiguous"] and not obs.truncated
+                             and phrase_quality >= threshold and not alias_conflict):
+-                        context_read_id = None
++                        context_read_id = alternative_context_read_id
++                        if alternative_context_quality is not None:
++                            phrase_quality = min(phrase_quality, alternative_context_quality)
+                         if plan.get("contextual_owner") and pause:
+                             tail = plan["tail"]
+-                            for context_ms in policy.speech_ms:
++                            for context_ms in (() if context_read_id is not None else policy.speech_ms):
+                                 context_start = max(previous, pause.start_ms - context_ms)
+                                 context_obs = reads.read(context_start, pause.start_ms,
+                                     reason=f"ayah={ayah}:repeated_owner_previous_tail")
+@@ -757,8 +1048,12 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
+                             reason = "unsupported_first_onset_timing"
+                             break
+                         proof = {"phrase": phrase, "complete": True, "ambiguous": False,
+-                                 "competitors_checked": True, "competitor_count": len(plan["competitors"]),
++                                 "competitors_checked": True, "competitor_count": plan["competitor_count"],
+                                  "offset": 0, "quality_metric": adapter.metric, **beam_proof}
++                        if noisy_proof:
++                            proof.update(noisy_proof)
++                        if segmented_proof:
++                            proof.update(segmented_proof)
+                         if spoken_owner:
+                             proof["spoken_owner_units"] = spoken_owner
+                         if context_read_id is not None:
+@@ -768,19 +1063,57 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
+                             ms = round(pause.center_ms)
+                             proof.update(pause_ms=[pause.start_ms, pause.end_ms], pause_id=index)
+                         else:
+-                            ms = round(start + obs.positions_ms[0])
++                            ms = round(reads.calls[opening_id]["window_ms"][0] + obs.positions_ms[0])
+                         if ms <= previous:
+                             reason = "quantized_boundary_collision"
+                             break
+                         # Context reads must not replace the opening's provenance.
+                         boundary = Boundary(ayah, ms, kind, phrase_quality, read_id=opening_id, proof=proof)
+                         break
++                    if (confirmed and confirmed[-1].ayah == ayah - 1 and not obs.truncated
++                            and len(canonical_ends[ayah]) > 1
++                            and len(phrase) > canonical_ends[ayah][0]):
++                        first_end = canonical_ends[ayah][0]
++                        first_word = groups[ayah][:first_end]
++                        previous_ayah = confirmed[-1].ayah
++                        previous_ends = canonical_ends[previous_ayah]
++                        rival = None
++                        if _prefix(obs.units, first_word) == len(first_word):
++                            for word_index in range(1, len(previous_ends) - 1):
++                                start_unit = previous_ends[word_index - 1]
++                                end_first, end_second = previous_ends[word_index:word_index + 2]
++                                previous_first = groups[previous_ayah][start_unit:end_first]
++                                previous_second = groups[previous_ayah][end_first:end_second]
++                                current_second = groups[ayah][first_end:canonical_ends[ayah][1]]
++                                alternative = previous_first + previous_second
++                                quality = obs.unit_quality[:len(alternative)]
++                                if (previous_first == first_word and previous_second != current_second
++                                        and words[word_map[previous_ayah][start_unit]].text == words[word_map[ayah][0]].text
++                                        and words[word_map[previous_ayah][end_first]].text != words[word_map[ayah][first_end]].text
++                                        and arabic_units(words[word_map[previous_ayah][end_first]].text)
++                                        != arabic_units(words[word_map[ayah][first_end]].text)
++                                        and _prefix(obs.units, alternative) == len(alternative)
++                                        and len(quality) == len(alternative)
++                                        and all(math.isfinite(q) for q in quality)
++                                        and min(quality, default=0.) >= threshold
++                                        and _strong_continuation_conflict(obs.units, obs.unit_quality,
++                                                                         groups[ayah], first_end, threshold)):
++                                    rival = {"ayah": previous_ayah, "start_unit": start_unit,
++                                             "units": alternative, "min_quality": min(quality)}
++                                    break
++                        if rival:
++                            reason = "decoded_previous_ayah_body"
++                            event("DECLINE_CANDIDATE", ayah, candidate=index, reason=reason, rival=rival,
++                                  read_id=opening_id)
++                            had_prefix = False
++                            blocked_prefix = False
++                            break
+                     future_expansion = None
+                     if pause is not None and obs.units:
+                         for future_ayah in ayahs:
+                             if future_ayah <= ayah:
+                                 continue
+-                            next_plan = plan_phrase(groups, future_ayah, word_ends)
++                            next_plan = planned_opening(future_ayah)
+                             next_phrase = next_plan["units"]
+                             next_obs, future_proof = _beam_view(obs, next_phrase, threshold, policy.beam_log_margin)
+                             next_owner = rendered[word_map[future_ayah][0]]
+@@ -794,7 +1127,7 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
+                             quality = min(next_obs.unit_quality[:len(next_phrase)], default=0.)
+                             if (not next_plan["ambiguous"] and _prefix(next_obs.units, next_phrase) == len(next_phrase)
+                                     and not next_obs.truncated and quality >= threshold and not conflict):
+-                                future = (future_ayah, next_phrase, pause, index, reads.last_read_id, quality, future_proof)
++                                future = (future_ayah, next_phrase, pause, index, opening_id, quality, future_proof)
+                                 reason = ("future_ayah_without_current" if future_ayah == ayah + 1
+                                           else "future_outside_bounded_block")
+                                 break
+@@ -807,13 +1140,23 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
+                         if future:
+                             break
+                     expansion = _expansion_evidence(obs, phrase, word_ends[ayah], threshold, groups, ayah, word_ends)
++                    if not expansion and segmented_expansion:
++                        expansion = "split_head_requires_whole_continuation"
++                    if not expansion and noisy_expansion:
++                        expansion = "noisy_opening_additional_whole_word"
++                    if noisy_expansion and step == 0:
++                        # A damaged minimal opening already contains the next
++                        # word's beginning. Small finite extensions preserve
++                        # that independent observation; a jump to 2.5/4s can
++                        # change the decoder output after adding unrelated text.
++                        speech_steps[step + 1:] = [ms for ms in policy.noisy_speech_ms if ms > speech]
+                     if not expansion and posterior_expansion:
+                         expansion = "canonical_prefix_vs_unresolved_residual"
+                     current_expansion = bool(expansion)
+                     if not expansion and future_expansion:
+                         expansion = "provisional_unique_anchor_partial:" + future_expansion[1]
+                     speech_edge = None
+-                    if not expansion and step + 1 < len(policy.speech_ms):
++                    if not expansion and step + 1 < len(speech_steps):
+                         speech_edge = _incomplete_speech_edge(pcm, sr, end, obs, phrase, groups,
+                                                              word_ends, ayah, threshold)
+                         if speech_edge:
+@@ -821,7 +1164,7 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
+                     if expansion:
+                         had_prefix |= current_expansion
+                         reason = "ambiguous_phrase" if plan["ambiguous"] else "incomplete_distinguishing_phrase"
+-                        if step + 1 < len(policy.speech_ms):
++                        if step + 1 < len(speech_steps):
+                             event("EXPAND_LOCAL", ayah, reason=reason, acoustic_anchor=expansion,
+                                   speech_edge=speech_edge)
+                             continue
+@@ -848,7 +1191,7 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
+                         if len(offsets) == 1 and not plan["ambiguous"]:
+                             offset = offsets[0]
+                             quality = min(obs.unit_quality[offset:offset + len(combined)], default=0.)
+-                            ms = round(start + obs.positions_ms[offset])
++                            ms = round(reads.calls[reads.last_read_id]["window_ms"][0] + obs.positions_ms[offset])
+                             if quality >= threshold and previous < ms < round(pause.center_ms):
+                                 proof = {"phrase": phrase, "complete": True, "ambiguous": False,
+                                          "competitors_checked": True, "offset": offset,
+@@ -910,9 +1253,12 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
+                         occurrences = [i for i in range(len(obs.units)) if obs.units[i:i + len(combined)] == combined]
+                         if len(occurrences) == 1:
+                             offset = occurrences[0] + len(tail)
+-                            ms = round(start + obs.positions_ms[offset])
++                            ms = round(reads.calls[reads.last_read_id]["window_ms"][0] + obs.positions_ms[offset])
+                             phrase_quality = min(obs.unit_quality[occurrences[0]:offset + len(wasl_phrase)], default=0.)
+-                            if previous < ms < duration and phrase_quality >= threshold:
++                            if (previous < ms < duration and phrase_quality >= threshold
++                                    and (not seam_plan or not _strong_continuation_conflict(
++                                        obs.units[offset:], obs.unit_quality[offset:], groups[ayah],
++                                        len(wasl_phrase), threshold))):
+                                 proof = {"phrase": wasl_phrase, "complete": True, "ambiguous": False,
+                                          "competitors_checked": True, "offset": offset,
+                                          "previous_tail": tail, "quality_metric": adapter.metric,
+@@ -922,6 +1268,89 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
+                         reason = "unresolved_local_block"
+                 else:
+                     reason = "unsupported_wasl_timing"
++            if (boundary is None and future is None and policy.sparse_anchors
++                    and adapter.model_id in {"whisper-tarteel-tiny", "whisper-tarteel-base"}
++                    and not adapter.timing and len(confirmed) >= 2 and not plan["ambiguous"]
++                    and not plan.get("contextual_owner") and canonical_ends[ayah][0] == 1
++                    and len(phrase) > 1 and len(phrase[0]) >= 3):
++                current_words = [i for i, w in enumerate(words) if w.ayah == ayah]
++                owners = {}
++                for wi in range(len(rendered) - 1):
++                    owners.setdefault(rendered[wi] + rendered[wi + 1], []).append(wi)
++                current_reads = [r for r in reads.calls if r["reason"].startswith(f"ayah={ayah}:")
++                                 and "previous_tail" not in r["reason"]]
++                body_cue = None
++                for r in current_reads:
++                    observed = r.get("observed", {})
++                    if observed.get("truncated"):
++                        continue
++                    units, qualities = observed.get("units", ()), observed.get("unit_quality", ())
++                    for wi in current_words[1:-1]:
++                        pair = rendered[wi] + rendered[wi + 1]
++                        if owners[pair] != [wi]:
++                            continue
++                        for offset in range(len(units) - len(pair) + 1):
++                            q = qualities[offset:offset + len(pair)]
++                            if (tuple(units[offset:offset + len(pair)]) == pair
++                                    and len(q) == len(pair) and all(math.isfinite(x) for x in q)
++                                    and min(q) >= threshold and not any("spoken_alias" in a for a in
++                                        observed.get("attribution", ())[offset:offset + len(pair)])):
++                                body_cue = (r["id"], wi, pair)
++                                break
++                        if body_cue:
++                            break
++                    if body_cue:
++                        break
++                if body_cue:
++                    tried_head_candidates = set()
++                    for initial in current_reads:
++                        observed = initial.get("observed", {})
++                        units, qualities = observed.get("units", ()), observed.get("unit_quality", ())
++                        if (observed.get("truncated") or not units or not qualities or qualities[0] <= 0
++                                or not units[0].startswith(phrase[0]) or len(units[0]) <= len(phrase[0])
++                                or any("unsupported" in a for a in observed.get("attribution", ()))):
++                            continue
++                        for kind, index, _, _, pause in candidates_here[:policy.max_candidates]:
++                            if pause is None or index in tried_head_candidates or not geometry[index]["accepted"]:
++                                continue
++                            start = max(pause.start_ms, pause.end_ms - 200.)
++                            if round(initial["window_ms"][0] * sr / 1000) != round(start * sr / 1000):
++                                continue
++                            tried_head_candidates.add(index)
++                            for speech in policy.speech_ms[1:]:
++                                event("HEAD_BOUNDARY_RECHECK", ayah, candidate=index,
++                                      initial_read_id=initial["id"], body_read_id=body_cue[0],
++                                      observed_word=units[0], expected_prefix=phrase[0],
++                                      window_ms=[start, min(duration, pause.end_ms + speech)])
++                                recheck = reads.read(start, min(duration, pause.end_ms + speech),
++                                                     reason=f"ayah={ayah}:head_word_boundary_recheck")
++                                if recheck is None:
++                                    break
++                                q = recheck.unit_quality[:len(phrase)]
++                                conflict = any("spoken_alias" in a and tuple(a["source_units"]) != rendered[word_map[ayah][0]]
++                                               for a in recheck.attribution[:len(phrase)])
++                                if (_prefix(recheck.units, phrase) == len(phrase) and not recheck.truncated
++                                        and len(q) == len(phrase) and min(q) >= threshold and not conflict):
++                                    ms = round(pause.center_ms)
++                                    if ms <= previous:
++                                        break
++                                    proof = {"phrase": phrase, "complete": True, "ambiguous": False,
++                                             "competitors_checked": True, "competitor_count": plan["competitor_count"],
++                                             "offset": 0, "quality_metric": adapter.metric,
++                                             "pause_ms": [pause.start_ms, pause.end_ms], "pause_id": index,
++                                             "head_boundary_recheck": True, "body_cue_read_id": body_cue[0],
++                                             "initial_head_read_id": initial["id"]}
++                                    boundary = Boundary(ayah, ms, "pause", min(q), read_id=reads.last_read_id, proof=proof)
++                                    validate_boundaries([boundary], [ayah], duration, reads.calls,
++                                                        groups=groups, word_ends=word_ends, canonical_ends=canonical_ends,
++                                                        threshold=threshold, pauses=pauses, policy=policy, pause_geometry_data=geometry)
++                                    break
++                                if not _expansion_evidence(recheck, phrase, word_ends[ayah], threshold, groups, ayah, word_ends):
++                                    break
++                            if boundary:
++                                break
++                        if boundary:
++                            break
+             if boundary is None:
+                 if (future and policy.sparse_anchors and future[0] > ayah
+                         and (policy.max_unresolved_ayahs is None or future[0] - ayah <= policy.max_unresolved_ayahs)):
+@@ -954,6 +1383,13 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
+         validate_boundaries(result, ayahs, duration, reads.calls,
+                             groups=groups, word_ends=word_ends, canonical_ends=canonical_ends, threshold=threshold, pauses=pauses, policy=policy, pause_geometry_data=geometry)
+         trace["boundaries"] = [asdict(b) for b in result]
++        trace["confidence_semantics"] = {
++            "recognition": "minimum_independently_supported_essential_unit_score",
++            "calibrated_probability": False,
++            "temporal_probability": None,
++            "pause_timing": "midpoint_of_measured_DSP_interval_not_calibrated_probability",
++            "noisy_opening": "identity_only_missing_onset_not_reconstructed",
++        }
+         trace["ayahs"] = [{"ayah": b.ayah, "onset_ms": b.start_ms, "conf": b.confidence,
+                             "reliable": b.evidence_kind != "estimate"} for b in result]
+         trace["review_required_ayahs"] = [b.ayah for b in result if b.evidence_kind == "estimate"]
+diff --git a/surah_cutter/core/full_windows.py b/surah_cutter/core/full_windows.py
+index ca91ae7..1fd25da 100644
+--- a/surah_cutter/core/full_windows.py
++++ b/surah_cutter/core/full_windows.py
+@@ -29,6 +29,7 @@ FULL_WORKERS = 3
+ FULL_MAX_WINDOW_S = 60
+ FULL_POLICY = "qpc-full-pause-v1"
+ FULL_REVIEW_POLICY = "qpc-pause-review-v1"
++FULL_ONSET_POLICY = "qpc-local-pause-lead-v5"
+ 
+ 
+ def detect_strong_pauses(pcm: np.ndarray, *, trace: dict | None = None):
+diff --git a/surah_cutter/data/alignment_identity.py b/surah_cutter/data/alignment_identity.py
+index 5555c32..3479101 100644
+--- a/surah_cutter/data/alignment_identity.py
++++ b/surah_cutter/data/alignment_identity.py
+@@ -1,4 +1,4 @@
+-"""FAST provenance and conservative resume checks, without selecting a model.
++"""Alignment provenance and conservative resume checks, without selecting a model.
+ 
+ The caller must supply the identity of the prepared adapter/bundle and effective
+ settings. Reading ACTIVE_ID here would describe a selection, not the model that
+@@ -126,3 +126,45 @@ def fast_resume_suras(
+         if all(key == current for key in keys):
+             done.add(surah)
+     return done
++
++
++def full_resume_suras(db_path, *, model_id: str, onset_policy: str | None = None, counts=None) -> set[int]:
++    """Do not reuse old FULL auto rows after a model/boundary-policy change."""
++    if db_path is None or not Path(db_path).is_file():
++        return set()
++    with sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True) as conn:
++        try:
++            rows = conn.execute(
++                "SELECT t.sura,t.ayah,t.time,r.status,r.source FROM timings t "
++                "LEFT JOIN review_meta r ON r.sura=t.sura AND r.ayah=t.ayah "
++                "ORDER BY t.sura,t.ayah"
++            ).fetchall()
++        except sqlite3.OperationalError:
++            return set()
++    expected = counts if counts is not None else surah_ayah_counts()
++    grouped = {}
++    for surah, ayah, time, status, source in rows:
++        grouped.setdefault(surah, []).append((ayah, time, status, source))
++    done = set()
++    for surah, items in grouped.items():
++        count = expected.get(surah)
++        if type(surah) is not int or count is None or [r[0] for r in items] != list(range(1, count + 1)):
++            continue
++        times = [r[1] for r in items]
++        if (any(type(r[0]) is not int for r in items) or any(type(t) is not int or t < 0 for t in times)
++                or any(a >= b for a, b in zip(times, times[1:]))):
++            continue
++        auto_sources = [source for _, _, status, source in items if status not in ("edited", "verified")]
++        current = True
++        for source in auto_sources:
++            parts = source.split(":") if isinstance(source, str) else []
++            modes = [part.partition("=")[2] for part in parts if part.startswith("requested_mode=")]
++            policies = [part.partition("=")[2] for part in parts if part.startswith("full_onset_policy=")]
++            if (len(parts) < 2 or parts[1] != model_id or modes != ["full"]
++                    or (model_id in ("quran-phonetics", "quran-phonetics-fp32")
++                        and (not onset_policy or policies != [onset_policy]))):
++                current = False
++                break
++        if current:
++            done.add(surah)
++    return done
+diff --git a/surah_cutter/data/alignment_result.py b/surah_cutter/data/alignment_result.py
+index c0091f2..5ae9693 100644
+--- a/surah_cutter/data/alignment_result.py
++++ b/surah_cutter/data/alignment_result.py
+@@ -67,6 +67,10 @@ def result_source(trace: dict[str, Any], requested_mode: str) -> str:
+                    f":full_max_window_s={full['max_window_s']}")
+         if full.get("review_policy"):
+             source += f":full_review_policy={full['review_policy']}"
++        if full.get("onset_policy"):
++            source += f":full_onset_policy={full['onset_policy']}"
++    if trace.get("full_boundary_verifier_source"):
++        source += f":full_boundary_verifier={trace['full_boundary_verifier_source']}"
+     key = trace_run_key(trace)
+     return f"{source}:fast_run_key={key}" if key is not None else source
+ 
+diff --git a/surah_cutter/data/alignment_runs.py b/surah_cutter/data/alignment_runs.py
+index 6cca07f..6d308c4 100644
+--- a/surah_cutter/data/alignment_runs.py
++++ b/surah_cutter/data/alignment_runs.py
+@@ -37,6 +37,11 @@ def load_run(log_folder: Path, surah: int, run_id: str) -> dict[str, Any]:
+         scores = {str(a["ayah"]): a.get("conf") for a in payload.get("trace", {}).get("ayahs", []) if "ayah" in a}
+     rows = []
+     seen = set()
++    from surah_cutter.data.onset_evidence import onset_evidence
++
++    trace = payload.get("trace", {})
++    checks = {c["ayah"]: c for c in trace.get("ayahs", []) if isinstance(c, dict) and "ayah" in c}
++    persisted = {r["ayah"]: r for r in payload.get("persisted_review", [])}
+     for row in payload.get("rows", []):
+         if (not isinstance(row, (list, tuple)) or len(row) != 3
+                 or any(type(v) is not int for v in row)
+@@ -47,7 +52,13 @@ def load_run(log_folder: Path, surah: int, run_id: str) -> dict[str, Any]:
+         score = scores.get(str(row[1]))
+         if type(score) not in (int, float) or not math.isfinite(score) or not 0 <= score <= 1:
+             score = None
+-        rows.append({"ayah": row[1], "time": row[2], "confidence": score})
++        evidence = onset_evidence(checks.get(row[1]), row[2], score, trace=trace)
++        if not payload.get("raw_model_result") and persisted.get(row[1], {}).get("source") == "manual":
++            evidence = None
++        item = {"ayah": row[1], "time": row[2], "confidence": score}
++        if evidence is not None:
++            item["onset_evidence"] = evidence
++        rows.append(item)
+     if not rows:
+         raise ValueError("Пустой результат")
+     rows.sort(key=lambda item: item["ayah"])
+diff --git a/surah_cutter/gui/dashboard_view.py b/surah_cutter/gui/dashboard_view.py
+index 7095f82..cefe9f1 100644
+--- a/surah_cutter/gui/dashboard_view.py
++++ b/surah_cutter/gui/dashboard_view.py
+@@ -138,6 +138,14 @@ class GenerationWorker(QObject):
+                     # Until a prepared current snapshot is available, never
+                     # infer FAST identity from canonical completeness alone.
+                     done = fast_resume_suras(self._db_path)
++                elif self._mode == "full":
++                    from surah_cutter.core import full_windows, model_store
++                    from surah_cutter.data.alignment_identity import full_resume_suras
++
++                    done = self._done & full_resume_suras(
++                        self._db_path, model_id=model_store.ACTIVE_ID,
++                        onset_policy=full_windows.FULL_ONSET_POLICY,
++                    )
+                 else:
+                     done = self._done
+                 if surah in done:
+diff --git a/surah_cutter/webgui/server.py b/surah_cutter/webgui/server.py
+index f9d8949..46ef0f9 100644
+--- a/surah_cutter/webgui/server.py
++++ b/surah_cutter/webgui/server.py
+@@ -642,6 +642,14 @@ def create_app(*, restore_settings: bool = True) -> FastAPI:
+         counts = quran_text.surah_ayah_counts()
+         ac = counts.get(surah, 0)
+         timings, reviews = _sura_timings_reviews(surah)
++        from surah_cutter.data.onset_evidence import saved_onset_evidence
++
++        audio = STATE.audio_map.get(surah)
++        signature = None
++        if audio is not None and audio.is_file():
++            stat = audio.stat()
++            signature = {"name": audio.name, "size": stat.st_size, "mtime_ns": stat.st_mtime_ns}
++        evidence = saved_onset_evidence(STATE.db_path, surah, timings, reviews, signature)
+         ayahs = []
+         for a in range(1, ac + 1):
+             rv = reviews.get(a, {})
+@@ -650,6 +658,7 @@ def create_app(*, restore_settings: bool = True) -> FastAPI:
+                 "time": timings.get(a),
+                 "status": rv.get("status"),
+                 "confidence": rv.get("confidence") if rv.get("source") != "manual" else None,
++                "onset_evidence": evidence.get(a),
+                 "text": quran_text.ayah_text(surah, a),
+             })
+         return {
+@@ -1301,6 +1310,12 @@ def _generation_suras(payload: dict[str, Any]) -> list[int]:
+             # gate. Unknown identity must recalculate auto rows, even when a
+             # legacy source says requested_mode=fast. Protected surahs can skip.
+             done = fast_resume_suras(STATE.db_path)
++        elif mode == "full":
++            from surah_cutter.core import full_windows, model_store
++            from surah_cutter.data.alignment_identity import full_resume_suras
++
++            done = full_resume_suras(STATE.db_path, model_id=model_store.ACTIVE_ID,
++                                     onset_policy=full_windows.FULL_ONSET_POLICY)
+         else:
+             done = ({s for s, p in _word_progress().items() if p["complete"]}
+                     if mode == "words" else _processed_suras())
+diff --git a/surah_cutter/webgui/static/app.js b/surah_cutter/webgui/static/app.js
+index eec8e50..82c0ab4 100644
+--- a/surah_cutter/webgui/static/app.js
++++ b/surah_cutter/webgui/static/app.js
+@@ -1065,6 +1065,7 @@ function renderComparison() {
+         button.onclick = () => playComparison(side === 0 ? left : right, item.ayah, side === 0 ? "A" : "B");
+         const score = document.createElement("span"), estimate = timingConfidence(item);
+         score.className = "timing-confidence"; score.dataset.level = estimate.level; score.textContent = estimate.label;
++        score.title = estimate.title;
+         td.append(button, score);
+       } else td.textContent = t("Нет метки");
+       tr.append(td);
+@@ -1696,15 +1697,40 @@ async function reloadSura() {
+   if (R.current < 0 && cur >= 0) setCurrent(cur);
+ }
+ 
+-function timingConfidence(item) {
+-  const value = item.confidence;
+-  if (item.time == null || item.stale || item.status === "edited"
+-      || typeof value !== "number" || !Number.isFinite(value) || value < 0 || value > 1) {
+-    return { level: "unknown", label: t("Уверенность: нет оценки") };
+-  }
+-  const level = value >= 0.66 ? "high" : value >= 0.33 ? "medium" : "low";
+-  const percent = new Intl.NumberFormat(uiLanguage, { style: "percent", maximumFractionDigits: 1 }).format(value);
+-  return { level, label: t`Уверенность: ${percent}` };
++function timingConfidence(item, suspect = false) {
++  const unknown = { level: "unknown", label: t("Начало: нет оценки"),
++    title: t("Положение начала отдельно не проверено. Процент распознавания слова не измеряет точность времени.") };
++  if (item.time == null || item.stale || item.status === "edited") return unknown;
++  if (suspect) {
++    return { level: "low", label: t("Начало: сомнительное"),
++      title: t("Повторная проверка отметила эту границу как сомнительную. Проверьте начало на слух.") };
++  }
++  if (item.status === "verified") {
++    return { level: "high", label: t("Начало: проверено"),
++      title: t("Метка отмечена как проверенная при ревью.") };
++  }
++  const evidence = item.onset_evidence;
++  const boundary = evidence && evidence.boundary;
++  const labels = { high: t("Начало: подтверждено"), medium: t("Начало: предварительное"),
++    low: t("Начало: сомнительное"), unknown: unknown.label };
++  const reasons = {
++    "local-phrase-and-pause": t("Начальная фраза и положение границы проверены локально по речи и паузе."),
++    "alignment-only": t("Выравнивание согласовано с текстом, но положение начала независимо не проверено."),
++    "pause-edge-only": t("Метка близка к краю речевой паузы, но принадлежность начала аяту отдельно не подтверждена."),
++    "pause-rechecked": t("Положение скорректировано по паузе; начальная фраза отдельно не подтверждена."),
++    "weak-onset": t("В выбранной позиции нет достаточной акустической поддержки начала."),
++    "late-onset-in-pause": t("Метка попала в неоднозначную часть длинной паузы."),
++    "missing-local-proof": t("Для перенесённой метки нет сохранённого локального подтверждения."),
++    "insufficient-timing-evidence": unknown.title,
++  };
++  const level = boundary && Object.hasOwn(labels, boundary.level) ? boundary.level : "unknown";
++  let title = boundary ? reasons[boundary.reason] || unknown.title : unknown.title;
++  title += " " + t("Это оценка оснований для границы, а не измеренная погрешность времени. Проверьте начало на слух.");
++  const format = value => new Intl.NumberFormat(uiLanguage, { style: "percent", maximumFractionDigits: 1 }).format(value);
++  const valid = value => typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 1;
++  if (evidence && valid(evidence.first_sound)) title += t` Сигнал первого звука: ${format(evidence.first_sound)}.`;
++  if (valid(item.confidence)) title += t` Оценка распознавания: ${format(item.confidence)}.`;
++  return { level, label: labels[level], title };
+ }
+ 
+ function applyTimingStatus(row, item, suspect = false) {
+@@ -1715,10 +1741,10 @@ function applyTimingStatus(row, item, suspect = false) {
+   row.dataset.timingStatus = status;
+   const confidence = row.querySelector(".timing-confidence");
+   if (confidence) {
+-    const estimate = timingConfidence(item);
++    const estimate = timingConfidence(item, suspect);
+     confidence.dataset.level = estimate.level;
+     confidence.textContent = estimate.label;
+-    confidence.title = t("Оценка модели, не гарантия точности. Проверьте начало на слух.");
++    confidence.title = estimate.title;
+   }
+   const number = row.querySelector(".a-num");
+   if (number) {
+diff --git a/surah_cutter/webgui/static/i18n.js b/surah_cutter/webgui/static/i18n.js
+index d977da1..f95fd71 100644
+--- a/surah_cutter/webgui/static/i18n.js
++++ b/surah_cutter/webgui/static/i18n.js
+@@ -39,6 +39,24 @@ const EN = {
+   "Аят ${0} · вариант ${1}": "Ayah ${0} · variant ${1}",
+   "Не удалось воспроизвести аудио.": "Unable to play audio.",
+   "Уверенность: нет оценки": "Confidence: unavailable",
++  "Начало: нет оценки": "Start: unassessed",
++  "Начало: проверено": "Start: reviewed",
++  "Начало: подтверждено": "Start: confirmed",
++  "Начало: предварительное": "Start: provisional",
++  "Начало: сомнительное": "Start: uncertain",
++  "Повторная проверка отметила эту границу как сомнительную. Проверьте начало на слух.": "A recheck flagged this boundary as uncertain. Listen to check the start.",
++  "Метка отмечена как проверенная при ревью.": "This mark was reviewed and verified.",
++  "Положение начала отдельно не проверено. Процент распознавания слова не измеряет точность времени.": "The start position has not been checked separately. Word recognition percentages do not measure timing accuracy.",
++  "Начальная фраза и положение границы проверены локально по речи и паузе.": "The opening phrase and boundary position were checked locally against speech and a pause.",
++  "Выравнивание согласовано с текстом, но положение начала независимо не проверено.": "Alignment agrees with the text, but the start position has not been checked independently.",
++  "Метка близка к краю речевой паузы, но принадлежность начала аяту отдельно не подтверждена.": "The mark is near a speech-pause edge, but the opening's ayah identity has not been confirmed separately.",
++  "Положение скорректировано по паузе; начальная фраза отдельно не подтверждена.": "The position was adjusted using a pause; the opening phrase has not been confirmed separately.",
++  "В выбранной позиции нет достаточной акустической поддержки начала.": "There is insufficient acoustic support for the opening at the selected position.",
++  "Метка попала в неоднозначную часть длинной паузы.": "The mark falls in an ambiguous part of a long pause.",
++  "Для перенесённой метки нет сохранённого локального подтверждения.": "No saved local verification is available for the moved mark.",
++  "Это оценка оснований для границы, а не измеренная погрешность времени. Проверьте начало на слух.": "This grades the evidence for the boundary, not measured timing error. Listen to check the start.",
++  " Сигнал первого звука: ${0}.": " First-sound support: ${0}.",
++  " Оценка распознавания: ${0}.": " Recognition score: ${0}.",
+   "Уверенность: ${0}": "Confidence: ${0}",
+   "Оценка модели, не гарантия точности. Проверьте начало на слух.": "Model score, not an accuracy guarantee. Listen to check the start.",
+   "недостающих сур и сур, размеченных другим режимом": "missing surahs and surahs aligned in a different mode",
+diff --git a/tests/test_alignment_audio.py b/tests/test_alignment_audio.py
+index 23a9a41..2a0de68 100644
+--- a/tests/test_alignment_audio.py
++++ b/tests/test_alignment_audio.py
+@@ -27,6 +27,7 @@ def bundle():
+ 
+ 
+ @pytest.mark.parametrize("surah, mode, max_error_ms", [
++    (1, "full", 100),
+     (112, "full", 150), (114, "full", 150),
+     (112, "fast", 150), (114, "fast", 150),
+     (80, "fast", 800), (88, "fast", 500),
+@@ -64,8 +65,25 @@ def test_actual_alignment_starts_and_sequence(bundle, surah, mode, max_error_ms,
+     assert [a for a, _, _ in rows] == list(range(1, quran_text.ayah_count(surah) + 1))
+     assert all(left[1] < right[1] for left, right in zip(rows, rows[1:]))
+     if mode == "full":
+-        assert max(abs(ms - reference[(surah, a)]) for a, ms, _ in rows) <= max_error_ms
++        # The reference grades the former speech-edge placement. Keep that
++        # regression bound on the acoustic result, then check the new cut
++        # independently: it intentionally differs from the reference in silence.
++        checks = {c["ayah"]: c for c in trace["ayahs"]}
++        assert max(abs(checks[a]["pre_center_onset_ms"] - reference[(surah, a)])
++                   for a, _, _ in rows) <= max_error_ms
++        centered = [c for c in checks.values() if c.get("pause_center_reason") == "positioned"]
++        assert centered
++        for check in centered:
++            start, end = check["center_pause_start_ms"], check["center_pause_end_ms"]
++            assert check["onset_ms"] == round(end - min((end - start) / 2, 250))
++            assert start < check["onset_ms"] < end
+         assert trace["emission_passes"] == 1
++        if surah == 1:
++            first_word = next(c for c in trace["ayahs"] if c["ayah"] == 2)
++            assert first_word["reason"] == "split-word-local-recheck"
++            assert first_word["raw_onset_ms"] != first_word["onset_ms"]
++            assert len(trace["full_boundary_reads"]) == 1
++            assert trace["full_boundary_reads"][0]["accepted"]
+     else:
+         # A local FAST can explicitly decline proof. Large residual errors may
+         # never be advertised as reliable merely to match former full-pass tests.
+diff --git a/tests/test_candidates.py b/tests/test_candidates.py
+index f560367..10cf9a4 100644
+--- a/tests/test_candidates.py
++++ b/tests/test_candidates.py
+@@ -94,7 +94,7 @@ def test_intro_vad_cannot_expand_pause_into_sounding_audio(monkeypatch):
+     broad_vad = candidates.Pause(4600, 6310, 1710)
+     monkeypatch.setattr(candidates, "_pause_recall_candidates", lambda *a, **k:
+                         [(energy_pause, False)])
+-    monkeypatch.setattr(candidates, "_dsp_pause_metrics", lambda *a:
++    monkeypatch.setattr(candidates, "_dsp_pause_metrics", lambda *a, **k:
+                         {"flatness": 0.1, "zcr": 0.1, "rms_ratio": 0.05})
+     monkeypatch.setattr(candidates, "_dsp_accepts_pause", lambda *a: True)
+     monkeypatch.setattr(candidates, "_local_vad_pauses", lambda *a, **k: ([], [broad_vad]))
+diff --git a/tests/test_webgui_server.py b/tests/test_webgui_server.py
+index eef8967..61a456a 100644
+--- a/tests/test_webgui_server.py
++++ b/tests/test_webgui_server.py
+@@ -81,6 +81,7 @@ def test_ayah_review_status_round_trip_preserves_time(project):
+ 
+ def test_generation_reruns_changed_mode_and_keeps_manual_marks(project, monkeypatch):
+     from surah_cutter.core import pipeline
++    from surah_cutter.core import full_windows
+ 
+     calls = []
+ 
+@@ -88,14 +89,21 @@ def test_generation_reruns_changed_mode_and_keeps_manual_marks(project, monkeypa
+         mode = kwargs["mode"]
+         calls.append(mode)
+         confidence = 0.2 if mode == "fast" else 0.9
+-        kwargs["trace"].update(mode=mode, model_source="onnx-ctc:test", ayahs=[
++        kwargs["trace"].update(mode=mode, model_source="onnx-ctc:quran-phonetics", ayahs=[
+             {"ayah": a, "conf": confidence} for a in range(1, 7)
+         ])
++        if mode == "full":
++            kwargs["trace"]["full_windows"] = {
++                "algorithm": full_windows.FULL_POLICY, "window_s": 20, "workers": 3,
++                "context_s": 2, "max_window_s": 60, "onset_policy": full_windows.FULL_ONSET_POLICY,
++                "pause_policy": "strong-dsp-v1",
++            }
+         return [(surah, a, a * 1000 + (100 if mode == "full" else 0)) for a in range(1, 7)]
+ 
+     monkeypatch.setattr(pipeline, "process_surah", align)
+     monkeypatch.setattr(server._GenJob, "start", server._GenJob._run)
+     monkeypatch.setattr(server.model_store, "active_kind", lambda: "phonetic")
++    monkeypatch.setattr(server.model_store, "ACTIVE_ID", "quran-phonetics")
+     generate = endpoint("/api/generate")
+     generate({"suras": [114], "mode": "fast", "only_missing": True})
+     with ProjectDB.open(str(project.db_path), DB_CODE, DB_VERSION) as db:
+diff --git a/tests/webgui_async.cjs b/tests/webgui_async.cjs
+index 057be93..c18feed 100644
+--- a/tests/webgui_async.cjs
++++ b/tests/webgui_async.cjs
+@@ -102,20 +102,40 @@ async function generationRaces() {
+ }
+ function confidenceAndModes() {
+   const c = harness(['timingConfidence', 'suraNeedsGeneration', 'applyTimingStatus']);
+-  for (const [value, level] of [[0, 'low'], [0.32, 'low'], [0.33, 'medium'], [0.65, 'medium'],
+-    [0.66, 'high'], [1, 'high'], [null, 'unknown'], [NaN, 'unknown'], [Infinity, 'unknown'],
+-    [-0.1, 'unknown'], [1.1, 'unknown'], ['0.9', 'unknown']]) {
+-    assert.equal(c.timingConfidence({time: 100, confidence: value, status: 'auto'}).level, level);
++  for (const value of [0, .32, .33, .65, .66, 1, null, NaN, Infinity, -.1, 1.1, '0.9']) {
++    assert.equal(c.timingConfidence({time: 100, confidence: value, status: 'auto'}).level, 'unknown');
+   }
+   for (const extra of [{stale: true}, {status: 'edited'}, {time: null}]) {
+-    assert.equal(c.timingConfidence({time: 100, confidence: 0.9, ...extra}).level, 'unknown');
++    assert.equal(c.timingConfidence({time: 100, confidence: .99,
++      onset_evidence: {first_sound: .99, boundary: {level: 'high', reason: 'local-phrase-and-pause'}},
++      ...extra}).level, 'unknown');
+   }
+-  assert.match(c.timingConfidence({time: 100, confidence: 0}).label, /0/);
++  const supported = c.timingConfidence({time: 100, confidence: .99,
++    onset_evidence: {first_sound: .99, boundary: {level: 'medium', reason: 'alignment-only'}}});
++  assert.equal(supported.level, 'medium');
++  assert.equal(supported.label, 'Начало: предварительное');
++  assert.doesNotMatch(supported.label, /%/);
++  assert.match(supported.title, /независимо не проверено/);
++  const local = c.timingConfidence({time: 100, confidence: .01,
++    onset_evidence: {first_sound: .99, boundary: {level: 'high', reason: 'local-phrase-and-pause'}}});
++  assert.equal(local.level, 'high');
++  assert.equal(local.label, 'Начало: подтверждено');
++  const weak = c.timingConfidence({time: 100, confidence: 0,
++    onset_evidence: {first_sound: .0002, boundary: {level: 'low', reason: 'weak-onset'}}});
++  assert.equal(weak.level, 'low');
++  assert.equal(weak.label, 'Начало: сомнительное');
++  const ambiguous = c.timingConfidence({time: 100, confidence: .99,
++    onset_evidence: {first_sound: .99, boundary: {level: 'low', reason: 'late-onset-in-pause'}}});
++  assert.equal(ambiguous.level, 'low');
++  assert.match(c.timingConfidence({time: 100, confidence: .99}).label, /нет оценки/);
++  assert.equal(c.timingConfidence({time: 100, status: 'verified', confidence: null}).label, 'Начало: проверено');
++  assert.equal(c.timingConfidence({time: 100, status: 'verified', confidence: .99}, true).label, 'Начало: сомнительное');
+   const badge = {dataset: {}}, row = {dataset: {}, querySelector: selector => selector === '.timing-confidence' ? badge : null};
+-  c.applyTimingStatus(row, {time: 100, confidence: 0.9, status: 'auto'});
+-  assert.equal(row.dataset.timingStatus, 'uncertain'); // confidence never verifies a row
+-  assert.equal(badge.dataset.level, 'high'); assert.match(badge.textContent, /90/);
+-  c.applyTimingStatus(row, {time: 100, confidence: 0.9, status: 'edited'});
++  c.applyTimingStatus(row, {time: 100, status: 'auto', confidence: .99,
++    onset_evidence: {boundary: {level: 'high', reason: 'local-phrase-and-pause'}}});
++  assert.equal(row.dataset.timingStatus, 'uncertain'); // model confirmation never verifies a row
++  assert.equal(badge.dataset.level, 'high'); assert.equal(badge.textContent, 'Начало: подтверждено');
++  c.applyTimingStatus(row, {time: 100, confidence: .99, status: 'edited'});
+   assert.equal(badge.dataset.level, 'unknown');
+   let mode = 'full'; c.selectedMode = () => mode;
+   assert.equal(c.suraNeedsGeneration({status: 'processed', alignment_modes: ['fast']}), true);
+diff --git a/tools/bench_fast_models.py b/tools/bench_fast_models.py
+index 5664484..54554d0 100644
+--- a/tools/bench_fast_models.py
++++ b/tools/bench_fast_models.py
+@@ -34,7 +34,10 @@ def dispatch_spy(bundle, pcm):
+         assert 0 < len(local) <= 96000 and len(local) < len(pcm)
+         calls.append({"samples": len(local), "sha256": hashlib.sha256(
+             memoryview(np.ascontiguousarray(local, dtype=np.float32))).hexdigest()})
+-    if hasattr(bundle.emitter, "recognize_local"):
++    # RuntimeEmitter exposes recognize_local for every model family. Muaalem
++    # and other CTC runtimes still call emissions, never the Whisper method.
++    if (getattr(bundle.emitter, "model_id", "").startswith("whisper-")
++            and hasattr(bundle.emitter, "recognize_local")):
+         cls = type(bundle.emitter)
+         original = cls.recognize_local
+         def recognize(emitter, local, **kwargs):

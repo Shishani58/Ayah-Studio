@@ -1,0 +1,434 @@
+[
+  {
+    "model": "quran-phonetics",
+    "surah": 80,
+    "before": 0,
+    "after": 0,
+    "lost": [],
+    "changed_prior": [],
+    "added": [],
+    "new_outliers": [],
+    "calls": [
+      12,
+      12
+    ],
+    "inference_s": [
+      0.8093864589463919,
+      0.8371727911289781
+    ],
+    "executor_s": [
+      1.0943038330879062,
+      1.1351799999829382
+    ],
+    "coverage": [
+      0.08506656458678916,
+      0.08506656458678916
+    ],
+    "input_ratio": [
+      0.12813151290885116,
+      0.12813151290885116
+    ],
+    "peak_rss": [
+      511557632,
+      520257536
+    ],
+    "dispatches_equal": true,
+    "rows_equal": true
+  },
+  {
+    "model": "quran-phonetics",
+    "surah": 98,
+    "before": 1,
+    "after": 1,
+    "lost": [],
+    "changed_prior": [],
+    "added": [],
+    "new_outliers": [],
+    "calls": [
+      8,
+      8
+    ],
+    "inference_s": [
+      0.6545207484159619,
+      0.6674360008910298
+    ],
+    "executor_s": [
+      0.78491699998267,
+      0.8086839581374079
+    ],
+    "coverage": [
+      0.10852798710652052,
+      0.10852798710652052
+    ],
+    "input_ratio": [
+      0.17302557616638561,
+      0.17302557616638561
+    ],
+    "peak_rss": [
+      543145984,
+      549617664
+    ],
+    "dispatches_equal": true,
+    "rows_equal": true
+  },
+  {
+    "model": "quran-phonetics",
+    "surah": 112,
+    "before": 1,
+    "after": 1,
+    "lost": [],
+    "changed_prior": [],
+    "added": [],
+    "new_outliers": [],
+    "calls": [
+      3,
+      3
+    ],
+    "inference_s": [
+      0.2789643332362175,
+      0.2881146662402898
+    ],
+    "executor_s": [
+      0.3711315831169486,
+      0.38641141704283655
+    ],
+    "coverage": [
+      0.4149512494772062,
+      0.4149512494772062
+    ],
+    "input_ratio": [
+      0.4339188624006692,
+      0.4339188624006692
+    ],
+    "peak_rss": [
+      580714496,
+      587071488
+    ],
+    "dispatches_equal": true,
+    "rows_equal": true
+  },
+  {
+    "model": "quran-phonetics-fp32",
+    "surah": 80,
+    "before": 0,
+    "after": 0,
+    "lost": [],
+    "changed_prior": [],
+    "added": [],
+    "new_outliers": [],
+    "calls": [
+      12,
+      12
+    ],
+    "inference_s": [
+      1.1539899588096887,
+      1.1620463337749243
+    ],
+    "executor_s": [
+      1.317054957849905,
+      1.3268410409800708
+    ],
+    "coverage": [
+      0.08506656458678916,
+      0.08506656458678916
+    ],
+    "input_ratio": [
+      0.12813151290885116,
+      0.12813151290885116
+    ],
+    "peak_rss": [
+      1343094784,
+      1351942144
+    ],
+    "dispatches_equal": true,
+    "rows_equal": true
+  },
+  {
+    "model": "quran-phonetics-fp32",
+    "surah": 98,
+    "before": 1,
+    "after": 1,
+    "lost": [],
+    "changed_prior": [],
+    "added": [],
+    "new_outliers": [],
+    "calls": [
+      8,
+      8
+    ],
+    "inference_s": [
+      0.9403923328500241,
+      0.9462174160871655
+    ],
+    "executor_s": [
+      1.0749552089255303,
+      1.0779587919823825
+    ],
+    "coverage": [
+      0.10852798710652052,
+      0.10852798710652052
+    ],
+    "input_ratio": [
+      0.17302557616638561,
+      0.17302557616638561
+    ],
+    "peak_rss": [
+      1343389696,
+      1351942144
+    ],
+    "dispatches_equal": true,
+    "rows_equal": true
+  },
+  {
+    "model": "quran-phonetics-fp32",
+    "surah": 112,
+    "before": 1,
+    "after": 1,
+    "lost": [],
+    "changed_prior": [],
+    "added": [],
+    "new_outliers": [],
+    "calls": [
+      3,
+      3
+    ],
+    "inference_s": [
+      0.40233462397009134,
+      0.4006064592394978
+    ],
+    "executor_s": [
+      0.49633141700178385,
+      0.4936003750190139
+    ],
+    "coverage": [
+      0.4149512494772062,
+      0.4149512494772062
+    ],
+    "input_ratio": [
+      0.4339188624006692,
+      0.4339188624006692
+    ],
+    "peak_rss": [
+      1343389696,
+      1351942144
+    ],
+    "dispatches_equal": true,
+    "rows_equal": true
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 80,
+    "before": 2,
+    "after": 2,
+    "lost": [],
+    "changed_prior": [],
+    "added": [],
+    "new_outliers": [],
+    "calls": [
+      7,
+      7
+    ],
+    "inference_s": [
+      1.2676747059449553,
+      1.2576031649950892
+    ],
+    "executor_s": [
+      1.4658693340606987,
+      1.450010749977082
+    ],
+    "coverage": [
+      0.052422270426608825,
+      0.052422270426608825
+    ],
+    "input_ratio": [
+      0.06114159329675471,
+      0.06114159329675471
+    ],
+    "peak_rss": [
+      1343389696,
+      1351942144
+    ],
+    "dispatches_equal": true,
+    "rows_equal": true
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 98,
+    "before": 4,
+    "after": 4,
+    "lost": [],
+    "changed_prior": [],
+    "added": [],
+    "new_outliers": [],
+    "calls": [
+      11,
+      11
+    ],
+    "inference_s": [
+      2.167165959253907,
+      2.1643080837093294
+    ],
+    "executor_s": [
+      2.3003350840881467,
+      2.294676417019218
+    ],
+    "coverage": [
+      0.13367762788083193,
+      0.13367762788083193
+    ],
+    "input_ratio": [
+      0.15194631815626758,
+      0.15194631815626758
+    ],
+    "peak_rss": [
+      1343389696,
+      1351942144
+    ],
+    "dispatches_equal": true,
+    "rows_equal": true
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 112,
+    "before": 1,
+    "after": 1,
+    "lost": [],
+    "changed_prior": [],
+    "added": [],
+    "new_outliers": [],
+    "calls": [
+      2,
+      2
+    ],
+    "inference_s": [
+      0.40901300008408725,
+      0.42251229123212397
+    ],
+    "executor_s": [
+      0.5066411250736564,
+      0.515824249945581
+    ],
+    "coverage": [
+      0.1463822668339607,
+      0.1463822668339607
+    ],
+    "input_ratio": [
+      0.1463822668339607,
+      0.1463822668339607
+    ],
+    "peak_rss": [
+      1343389696,
+      1351942144
+    ],
+    "dispatches_equal": true,
+    "rows_equal": true
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 80,
+    "before": 3,
+    "after": 3,
+    "lost": [],
+    "changed_prior": [],
+    "added": [],
+    "new_outliers": [],
+    "calls": [
+      9,
+      9
+    ],
+    "inference_s": [
+      3.4529919151682407,
+      3.4413577078375965
+    ],
+    "executor_s": [
+      3.6172911659814417,
+      3.6011732909828424
+    ],
+    "coverage": [
+      0.0667772532006295,
+      0.0667772532006295
+    ],
+    "input_ratio": [
+      0.08347156650078687,
+      0.08347156650078687
+    ],
+    "peak_rss": [
+      1343389696,
+      1351942144
+    ],
+    "dispatches_equal": true,
+    "rows_equal": true
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 98,
+    "before": 7,
+    "after": 7,
+    "lost": [],
+    "changed_prior": [],
+    "added": [],
+    "new_outliers": [],
+    "calls": [
+      21,
+      21
+    ],
+    "inference_s": [
+      7.728517793351784,
+      7.683008835185319
+    ],
+    "executor_s": [
+      7.86704491591081,
+      7.819821791024879
+    ],
+    "coverage": [
+      0.2531267566048342,
+      0.2531267566048342
+    ],
+    "input_ratio": [
+      0.3223369870713884,
+      0.3223369870713884
+    ],
+    "peak_rss": [
+      1343389696,
+      1351942144
+    ],
+    "dispatches_equal": true,
+    "rows_equal": true
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 112,
+    "before": 1,
+    "after": 1,
+    "lost": [],
+    "changed_prior": [],
+    "added": [],
+    "new_outliers": [],
+    "calls": [
+      2,
+      2
+    ],
+    "inference_s": [
+      0.7035290829371661,
+      0.6923234162386507
+    ],
+    "executor_s": [
+      0.7998181669972837,
+      0.7863818749319762
+    ],
+    "coverage": [
+      0.1463822668339607,
+      0.1463822668339607
+    ],
+    "input_ratio": [
+      0.1463822668339607,
+      0.1463822668339607
+    ],
+    "peak_rss": [
+      1343389696,
+      1351942144
+    ],
+    "dispatches_equal": true,
+    "rows_equal": true
+  }
+]

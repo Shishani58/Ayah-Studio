@@ -1,0 +1,490 @@
+[
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/candidates.py",
+    "line": 415,
+    "name": "_dsp_pause_metrics",
+    "calls": 1169,
+    "self_seconds": 13.588076636,
+    "cumulative_seconds": 36.759570682
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_executor.py",
+    "line": 53,
+    "name": "plan_phrase",
+    "calls": 578,
+    "self_seconds": 1.028431254,
+    "cumulative_seconds": 2.048601456
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_executor.py",
+    "line": 69,
+    "name": "<genexpr>",
+    "calls": 5348001,
+    "self_seconds": 1.009449752,
+    "cumulative_seconds": 1.009449752
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_executor.py",
+    "line": 675,
+    "name": "align_surah_sequential",
+    "calls": 1,
+    "self_seconds": 0.744118413,
+    "cumulative_seconds": 19.963802458
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_executor.py",
+    "line": 111,
+    "name": "plan_seam",
+    "calls": 18,
+    "self_seconds": 0.32144517100000003,
+    "cumulative_seconds": 0.38424154400000005
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/candidates.py",
+    "line": 501,
+    "name": "_best_overlapping",
+    "calls": 1166,
+    "self_seconds": 0.177253088,
+    "cumulative_seconds": 0.289601423
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_ctc.py",
+    "line": 18,
+    "name": "add",
+    "calls": 93287,
+    "self_seconds": 0.09583989500000001,
+    "cumulative_seconds": 0.11243974400000001
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/candidates.py",
+    "line": 516,
+    "name": "detect_energy_pauses",
+    "calls": 2,
+    "self_seconds": 0.070940959,
+    "cumulative_seconds": 0.6211224590000001
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_ctc.py",
+    "line": 9,
+    "name": "independent_beam",
+    "calls": 23,
+    "self_seconds": 0.07042651600000001,
+    "cumulative_seconds": 0.263786752
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_ctc.py",
+    "line": 42,
+    "name": "<lambda>",
+    "calls": 80276,
+    "self_seconds": 0.049215464,
+    "cumulative_seconds": 0.049215464
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-14-fast-muaalem-local-analysis/identity_floor_probe.py",
+    "line": 23,
+    "name": "canonical_floor",
+    "calls": 292,
+    "self_seconds": 0.033350514000000005,
+    "cumulative_seconds": 0.9574530040000001
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/candidates.py",
+    "line": 955,
+    "name": "_flags_to_pauses",
+    "calls": 4,
+    "self_seconds": 0.032913944,
+    "cumulative_seconds": 0.034011001
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/decode.py",
+    "line": 31,
+    "name": "decode",
+    "calls": 1,
+    "self_seconds": 0.031868583,
+    "cumulative_seconds": 6.262408375000001
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_executor.py",
+    "line": 715,
+    "name": "planned_opening",
+    "calls": 3653,
+    "self_seconds": 0.021984508,
+    "cumulative_seconds": 2.103001562
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-14-fast-pronunciation-variants/collapse_raw_tempo_probe.py",
+    "line": 18,
+    "name": "collapse",
+    "calls": 6324,
+    "self_seconds": 0.016354094,
+    "cumulative_seconds": 0.024819018
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/candidates.py",
+    "line": 729,
+    "name": "_filter_contrasted_pauses",
+    "calls": 2,
+    "self_seconds": 0.013542208,
+    "cumulative_seconds": 0.3510265
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-14-fast-muaalem-local-analysis/identity_floor_probe.py",
+    "line": 35,
+    "name": "identity_plan",
+    "calls": 292,
+    "self_seconds": 0.012570313000000001,
+    "cumulative_seconds": 2.0992301710000003
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_executor.py",
+    "line": 1141,
+    "name": "<genexpr>",
+    "calls": 91195,
+    "self_seconds": 0.011971421000000001,
+    "cumulative_seconds": 0.016859577
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_reads.py",
+    "line": 157,
+    "name": "resident_size",
+    "calls": 19163,
+    "self_seconds": 0.011108994,
+    "cumulative_seconds": 0.024834997
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_executor.py",
+    "line": 365,
+    "name": "pause_geometry",
+    "calls": 1131,
+    "self_seconds": 0.011006922,
+    "cumulative_seconds": 0.073449054
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/candidates.py",
+    "line": 825,
+    "name": "_refine_pause_edges",
+    "calls": 3,
+    "self_seconds": 0.010598478000000001,
+    "cumulative_seconds": 0.096440708
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/candidates.py",
+    "line": 294,
+    "name": "pause_pipeline_decisions",
+    "calls": 1,
+    "self_seconds": 0.0070085170000000006,
+    "cumulative_seconds": 37.753127958
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-14-fast-muaalem-local-analysis/identity_floor_probe.py",
+    "line": 63,
+    "name": "represented",
+    "calls": 1,
+    "self_seconds": 0.005565429,
+    "cumulative_seconds": 2.404089333
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/data/quran_text.py",
+    "line": 78,
+    "name": "surah_words",
+    "calls": 2,
+    "self_seconds": 0.005324146,
+    "cumulative_seconds": 0.019900292
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_reads.py",
+    "line": 165,
+    "name": "<genexpr>",
+    "calls": 18486,
+    "self_seconds": 0.0029397750000000004,
+    "cumulative_seconds": 0.023361938000000002
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/candidates.py",
+    "line": 612,
+    "name": "detect_silero_pauses",
+    "calls": 2,
+    "self_seconds": 0.002876258,
+    "cumulative_seconds": 0.154509208
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-14-fast-pronunciation-variants/collapse_raw_tempo_probe.py",
+    "line": 50,
+    "name": "<genexpr>",
+    "calls": 6118,
+    "self_seconds": 0.002232265,
+    "cumulative_seconds": 0.024552413000000002
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-14-fast-pronunciation-variants/collapse_raw_tempo_probe.py",
+    "line": 44,
+    "name": "represent",
+    "calls": 1,
+    "self_seconds": 0.0020601110000000003,
+    "cumulative_seconds": 2.383893541
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_adapters.py",
+    "line": 116,
+    "name": "observe",
+    "calls": 23,
+    "self_seconds": 0.0020557360000000003,
+    "cumulative_seconds": 10.744938792000001
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_executor.py",
+    "line": 649,
+    "name": "first_pause_hypotheses",
+    "calls": 1,
+    "self_seconds": 0.0018132130000000002,
+    "cumulative_seconds": 0.09287370900000001
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/model_runtime.py",
+    "line": 48,
+    "name": "inference_words",
+    "calls": 1,
+    "self_seconds": 0.00174992,
+    "cumulative_seconds": 0.036039958000000004
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-14-fast-muaalem-local-analysis/identity_floor_probe.py",
+    "line": 1,
+    "name": "<module>",
+    "calls": 1,
+    "self_seconds": 0.0013590820000000002,
+    "cumulative_seconds": 72.480172041
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/align_fast.py",
+    "line": 8,
+    "name": "align_surah_fast",
+    "calls": 1,
+    "self_seconds": 0.0013055,
+    "cumulative_seconds": 19.965107958
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/candidates.py",
+    "line": 347,
+    "name": "_pause_recall_candidates",
+    "calls": 1,
+    "self_seconds": 0.00123386,
+    "cumulative_seconds": 0.9123439590000001
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/candidates.py",
+    "line": 487,
+    "name": "_optional_detector",
+    "calls": 2,
+    "self_seconds": 0.000944542,
+    "cumulative_seconds": 0.070442001
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_reads.py",
+    "line": 163,
+    "name": "<genexpr>",
+    "calls": 2846,
+    "self_seconds": 0.0008375990000000001,
+    "cumulative_seconds": 0.024560337
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_reads.py",
+    "line": 111,
+    "name": "read",
+    "calls": 23,
+    "self_seconds": 0.0008220250000000001,
+    "cumulative_seconds": 10.788626461000002
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/model_runtime.py",
+    "line": 241,
+    "name": "build_targets",
+    "calls": 1,
+    "self_seconds": 0.0006857510000000001,
+    "cumulative_seconds": 2.339527334
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_executor.py",
+    "line": 397,
+    "name": "validate_boundaries",
+    "calls": 2,
+    "self_seconds": 0.000589643,
+    "cumulative_seconds": 0.046747542
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/model_runtime.py",
+    "line": 177,
+    "name": "_deadline",
+    "calls": 52,
+    "self_seconds": 0.000533543,
+    "cumulative_seconds": 20.664959836
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/model_runtime.py",
+    "line": 235,
+    "name": "emissions",
+    "calls": 24,
+    "self_seconds": 0.0005245870000000001,
+    "cumulative_seconds": 10.898902751000001
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-14-fast-pronunciation-variants/collapse_raw_tempo_probe.py",
+    "line": 52,
+    "name": "observe",
+    "calls": 23,
+    "self_seconds": 0.00043954100000000005,
+    "cumulative_seconds": 10.748560875
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/model_runtime.py",
+    "line": 215,
+    "name": "_read_response",
+    "calls": 26,
+    "self_seconds": 0.000328287,
+    "cumulative_seconds": 20.65347625
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/model_runtime.py",
+    "line": 138,
+    "name": "__init__",
+    "calls": 1,
+    "self_seconds": 0.000225416,
+    "cumulative_seconds": 7.507924208
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/data/quran_text.py",
+    "line": 132,
+    "name": "surah_words",
+    "calls": 2,
+    "self_seconds": 0.000163876,
+    "cumulative_seconds": 0.020915917000000003
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/model_runtime.py",
+    "line": 224,
+    "name": "request",
+    "calls": 25,
+    "self_seconds": 0.000132916,
+    "cumulative_seconds": 13.179401458000001
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/align.py",
+    "line": 834,
+    "name": "_get_onnx_bundle",
+    "calls": 1,
+    "self_seconds": 0.00010546000000000001,
+    "cumulative_seconds": 7.5108566670000005
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/align.py",
+    "line": 553,
+    "name": "_emissions",
+    "calls": 23,
+    "self_seconds": 0.000101995,
+    "cumulative_seconds": 10.475610456
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/model_runtime.py",
+    "line": 258,
+    "name": "probe",
+    "calls": 1,
+    "self_seconds": 6.8207e-05,
+    "cumulative_seconds": 0.42362504100000004
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_executor.py",
+    "line": 619,
+    "name": "dsp_model_identity",
+    "calls": 1,
+    "self_seconds": 5.6291e-05,
+    "cumulative_seconds": 0.01403625
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/model_store.py",
+    "line": 1,
+    "name": "<module>",
+    "calls": 1,
+    "self_seconds": 5.516600000000001e-05,
+    "cumulative_seconds": 0.042577875
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/model_runtime.py",
+    "line": 37,
+    "name": "_text_targets",
+    "calls": 1,
+    "self_seconds": 4.804e-05,
+    "cumulative_seconds": 0.033268333000000004
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/model_store.py",
+    "line": 154,
+    "name": "load_emitter",
+    "calls": 1,
+    "self_seconds": 4.2957e-05,
+    "cumulative_seconds": 7.509602583
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/model_runtime.py",
+    "line": 290,
+    "name": "load_runtime",
+    "calls": 1,
+    "self_seconds": 3.4459e-05,
+    "cumulative_seconds": 7.507978542
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/model_runtime.py",
+    "line": 273,
+    "name": "close",
+    "calls": 1,
+    "self_seconds": 3.2002e-05,
+    "cumulative_seconds": 0.070891959
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/model_runtime.py",
+    "line": 211,
+    "name": "_receive",
+    "calls": 1,
+    "self_seconds": 3.1834e-05,
+    "cumulative_seconds": 7.4855902500000004
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-14-fast-pronunciation-variants/collapse_raw_tempo_probe.py",
+    "line": 1,
+    "name": "<module>",
+    "calls": 1,
+    "self_seconds": 1.9544e-05,
+    "cumulative_seconds": 72.481119875
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_adapters.py",
+    "line": 1,
+    "name": "<module>",
+    "calls": 1,
+    "self_seconds": 1.5082e-05,
+    "cumulative_seconds": 0.077551541
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/candidates.py",
+    "line": 386,
+    "name": "_local_vad_pauses",
+    "calls": 1,
+    "self_seconds": 1.3916e-05,
+    "cumulative_seconds": 0.070467166
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/model_runtime.py",
+    "line": 302,
+    "name": "release_runtimes",
+    "calls": 2,
+    "self_seconds": 1.3124e-05,
+    "cumulative_seconds": 0.070906208
+  },
+  {
+    "file": "/Users/ayub/Developer/surah-cutter/surah_cutter/core/decode.py",
+    "line": 24,
+    "name": "_ffmpeg_exe",
+    "calls": 1,
+    "self_seconds": 4.167e-06,
+    "cumulative_seconds": 0.017462792
+  }
+]

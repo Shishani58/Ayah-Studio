@@ -61,7 +61,7 @@ def attributed_asr_units(result):
         decoded = payload.decode("utf-8", errors="strict")
         if arabic_units(decoded) != units:
             raise ValueError("non-reversible selected decode")
-        word_owners, current, byte_offset = [], set(), 0
+        word_owners, raw_words, current, raw_word, byte_offset = [], [], set(), [], 0
         for char in decoded:
             count = len(char.encode("utf-8"))
             contributing = owners[byte_offset:byte_offset + count]
@@ -71,17 +71,20 @@ def attributed_asr_units(result):
                 if c.isspace() or not (unicodedata.category(c).startswith(("L", "M")) or c == "ـ"):
                     if current:
                         word_owners.append(sorted(current))
-                        current = set()
+                        raw_words.append("".join(raw_word))
+                        current, raw_word = set(), []
                 elif c != "ـ":
                     current.update(contributing)
+                    raw_word.append(c)
         if current:
             word_owners.append(sorted(current))
+            raw_words.append("".join(raw_word))
         if len(word_owners) != len(units) or any(not ids for ids in word_owners):
             raise ValueError("ambiguous word attribution")
-        attribution = tuple({"word": word, "selected_indices": ids,
+        attribution = tuple({"word": word, "raw_word": raw, "selected_indices": ids,
                              "token_ids": [tokens[i]["id"] for i in ids],
                              "probabilities": [probabilities[i] for i in ids]}
-                            for word, ids in zip(units, word_owners))
+                            for word, raw, ids in zip(units, raw_words, word_owners))
         return units, tuple(min(probabilities[i] for i in ids) for ids in word_owners), attribution
     except (ValueError, KeyError, TypeError, OverflowError):
         return units, (0.,) * len(units), ({"unsupported": "ambiguous_token_word_attribution"},)
@@ -155,7 +158,7 @@ class CTCAdapter:
 
 
 class TarteelAdapter:
-    version = "tarteel-independent-words-v3"
+    version = "tarteel-independent-words-v4-raw-alias-ownership"
     metric = "asr_token_probability"
     timing = False  # recognize_local currently supplies no word timestamps
     lag_ms = 0
@@ -196,7 +199,8 @@ class TarteelAdapter:
         expanded, expanded_quality, expanded_attribution = [], [], []
         if len(attribution) == len(units):
             for word, q, ownership in zip(units, quality, attribution):
-                names = arabic_units(whisper_alignment_text(word))
+                # Decide letter names before hamza/diacritics are discarded.
+                names = arabic_units(whisper_alignment_text(ownership.get("raw_word", word)))
                 for unit in names:
                     expanded.append(unit)
                     expanded_quality.append(q)

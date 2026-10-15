@@ -1,0 +1,93 @@
+{
+  "resume": {
+    "protected_or_exact_key": [],
+    "web_selected": {
+      "auto": {
+        "status": 400,
+        "detail": "no suras to process (all done or no audio)"
+      },
+      "fast": [
+        32
+      ]
+    }
+  },
+  "diagnostics": {
+    "summary": {
+      "coverage": 0.1,
+      "n_pause": 1,
+      "n_wasl": 0,
+      "n_refine_skipped": null,
+      "reliable": 1,
+      "repaired": 0,
+      "ayahs": 2,
+      "drift_detected": null,
+      "mean_conf": null,
+      "verify_sim": null,
+      "tempo_rate": null,
+      "tempo_confidence": null,
+      "tempo_observations": 0,
+      "unresolved": 0,
+      "atomic_wasl_reads": 0
+    },
+    "log": "Сура 112: fast debug log\nАлгоритм: sequential-fast-v3-sparse-5\n\n1. Паузы: energy нашёл 0; DSP/VAD принял 0; отклонил 0.\n\n2. Последовательный анализ пауз:\n   REVIEW_REQUIRED ayah=2 reason=no_local_evidence\n\n3. Нейро-чтение окон:\n\n4. Соотношение пауз и аятов:\n   ayah 001: 1100ms conf=0.990 src=anchor rough=None onset=None win=None reliable=True tempo=None span_prev=None span_next=None waqf=None/None\n   ayah 002: 4000ms conf=0.000 src=wasl/interp rough=None onset=None win=None reliable=False tempo=None span_prev=None span_next=None waqf=None/None\n\n5. Статистика нейро-чтения:\n   прочитано нейронкой: 0.00s\n   длительность суры: 0.00s\n   покрытие окнами: 0.1\n   чтений окон: 0\n   refine пропущен по подтверждённым паузам: None\n   verify extra reads: None\n\ncoverage=0.1 audio_ms_read=0 total_ms=0 n_pause=1 n_wasl=0",
+    "actual_review_count": 1
+  },
+  "cross_ayah_seam_synthetic": {
+    "plan": {
+      "units": [
+        "alpha",
+        "beta"
+      ],
+      "ambiguous": false,
+      "collisions": [],
+      "competitors": [
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ]
+      ]
+    },
+    "validator_accepted": true,
+    "actual_owner": "last word of 2 + first word of 3"
+  },
+  "canonical_cross_ayah_collisions": [],
+  "ctc_model_label": {
+    "selected_emitter": "quran-phonetics-fp32",
+    "adapter_model": "quran-phonetics",
+    "weights_identity_kept": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "auto_fast_history": {
+    "first_paths": {
+      "json": "/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-auto-history-sm8j0144/temporary.logs/sura_112_auto.json",
+      "log": "/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-auto-history-sm8j0144/temporary.logs/sura_112_auto.log"
+    },
+    "second_paths": {
+      "json": "/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-auto-history-sm8j0144/temporary.logs/sura_112_auto.json",
+      "log": "/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-auto-history-sm8j0144/temporary.logs/sura_112_auto.log"
+    },
+    "history_runs": [],
+    "latest_replaced": "second-run"
+  },
+  "source_sha256": {
+    "surah_cutter/core/fast_executor.py": "c936e8cf637cd96bd7fb62c72dbfd15d0b6f566944e32a548068b46601b294d4",
+    "surah_cutter/core/fast_adapters.py": "199345503bcc41fd4a88505f2c2ed32e0dd67075b55cafe1cc22eb71992c864f",
+    "surah_cutter/webgui/server.py": "87b634cb3d29687467109cfa46e97d92a94d37d0b0fa817e52a7b63a805a2d40",
+    "surah_cutter/gui/dashboard_view.py": "2ae2faaab044cf1c9ec6ac6d9fbfbbe4b979b9306992a30d6e017cab401c5758"
+  }
+}

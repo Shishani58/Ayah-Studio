@@ -1,0 +1,65 @@
+quran-phonetics 77 0.98 review 50 coverage 0.045 calls 8
+whisper-tarteel-tiny 77 2.17 review 44 coverage 0.065 calls 10
+whisper-tarteel-base 77 14.28 review 29 coverage 0.206 calls 35
+{
+  "quran-phonetics": {
+    "surahs": 1,
+    "ayahs": 50,
+    "median_ms": 3073.5,
+    "p95_ms": 5583.7,
+    "max_ms": 6406,
+    "over500": 47,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 50,
+    "load_probe_seconds": 0.2107107089832425,
+    "decode_seconds": 0.2206568750552833,
+    "dsp_seconds": 0.16193012497387826,
+    "inference_match_seconds": 0.9790053339675069,
+    "search_seconds": 1.1409354589413851,
+    "audio_ms": 20600.0,
+    "covered_audio_ms": 10160.0,
+    "total_ms": 223425.3125,
+    "model_reads": 8
+  },
+  "whisper-tarteel-tiny": {
+    "surahs": 1,
+    "ayahs": 50,
+    "median_ms": 4962.5,
+    "p95_ms": 7545.5,
+    "max_ms": 8467,
+    "over500": 43,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 44,
+    "load_probe_seconds": 3.1613160830456764,
+    "decode_seconds": 0.2206568750552833,
+    "dsp_seconds": 0.16193012497387826,
+    "inference_match_seconds": 2.1746599581092596,
+    "search_seconds": 2.336590083083138,
+    "audio_ms": 16000.0,
+    "covered_audio_ms": 14500.0,
+    "total_ms": 223425.3125,
+    "model_reads": 10
+  },
+  "whisper-tarteel-base": {
+    "surahs": 1,
+    "ayahs": 50,
+    "median_ms": 237.0,
+    "p95_ms": 4506.05,
+    "max_ms": 6723,
+    "over500": 20,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 29,
+    "load_probe_seconds": 4.090705417096615,
+    "decode_seconds": 0.2206568750552833,
+    "dsp_seconds": 0.16193012497387826,
+    "inference_match_seconds": 14.275447999825701,
+    "search_seconds": 14.43737812479958,
+    "audio_ms": 60810.0,
+    "covered_audio_ms": 46060.0,
+    "total_ms": 223425.3125,
+    "model_reads": 35
+  }
+}

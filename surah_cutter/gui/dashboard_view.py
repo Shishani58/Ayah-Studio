@@ -138,6 +138,14 @@ class GenerationWorker(QObject):
                     # Until a prepared current snapshot is available, never
                     # infer FAST identity from canonical completeness alone.
                     done = fast_resume_suras(self._db_path)
+                elif self._mode == "full":
+                    from surah_cutter.core import full_windows, model_store
+                    from surah_cutter.data.alignment_identity import full_resume_suras
+
+                    done = self._done & full_resume_suras(
+                        self._db_path, model_id=model_store.ACTIVE_ID,
+                        onset_policy=full_windows.FULL_ONSET_POLICY,
+                    )
                 else:
                     done = self._done
                 if surah in done:

@@ -642,6 +642,14 @@ def create_app(*, restore_settings: bool = True) -> FastAPI:
         counts = quran_text.surah_ayah_counts()
         ac = counts.get(surah, 0)
         timings, reviews = _sura_timings_reviews(surah)
+        from surah_cutter.data.onset_evidence import saved_onset_evidence
+
+        audio = STATE.audio_map.get(surah)
+        signature = None
+        if audio is not None and audio.is_file():
+            stat = audio.stat()
+            signature = {"name": audio.name, "size": stat.st_size, "mtime_ns": stat.st_mtime_ns}
+        evidence = saved_onset_evidence(STATE.db_path, surah, timings, reviews, signature)
         ayahs = []
         for a in range(1, ac + 1):
             rv = reviews.get(a, {})
@@ -650,6 +658,7 @@ def create_app(*, restore_settings: bool = True) -> FastAPI:
                 "time": timings.get(a),
                 "status": rv.get("status"),
                 "confidence": rv.get("confidence") if rv.get("source") != "manual" else None,
+                "onset_evidence": evidence.get(a),
                 "text": quran_text.ayah_text(surah, a),
             })
         return {
@@ -1301,6 +1310,12 @@ def _generation_suras(payload: dict[str, Any]) -> list[int]:
             # gate. Unknown identity must recalculate auto rows, even when a
             # legacy source says requested_mode=fast. Protected surahs can skip.
             done = fast_resume_suras(STATE.db_path)
+        elif mode == "full":
+            from surah_cutter.core import full_windows, model_store
+            from surah_cutter.data.alignment_identity import full_resume_suras
+
+            done = full_resume_suras(STATE.db_path, model_id=model_store.ACTIVE_ID,
+                                     onset_policy=full_windows.FULL_ONSET_POLICY)
         else:
             done = ({s for s, p in _word_progress().items() if p["complete"]}
                     if mode == "words" else _processed_suras())

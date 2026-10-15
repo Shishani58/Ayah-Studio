@@ -1,0 +1,432 @@
+[
+  {
+    "model": "muaalem",
+    "audio_sha256": "6dedf8c3b88d2cd12c992710839443abebf26e7ef1fcea696acc8961b5836571",
+    "load_s": 8.138910040957853,
+    "full_s": 17.756017999956384,
+    "rows": [
+      [
+        1,
+        320,
+        0.9713
+      ],
+      [
+        2,
+        6601,
+        0.9898
+      ],
+      [
+        3,
+        11722,
+        0.9791
+      ],
+      [
+        4,
+        16123,
+        0.986
+      ],
+      [
+        5,
+        21644,
+        0.9202
+      ],
+      [
+        6,
+        27965,
+        0.8989
+      ],
+      [
+        7,
+        33606,
+        0.9599
+      ]
+    ],
+    "errors_ms": [
+      220,
+      93,
+      161,
+      123,
+      108,
+      115,
+      203
+    ],
+    "trace": {
+      "model_source": "ctc:muaalem:revision=a57907844f7c72969b40bc526a57e9c9dbc8bf3f:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=hafs:madd=4:waqf=ayah:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"python\":\"3.11.15 (main, Aug  7 2026, 02:15:53) [Clang 22.1.3 ]\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"unicode\":\"14.0.0\",\"uroman\":\"1.3.1.1\"}",
+      "mode": "full",
+      "total_ms": 59010.625,
+      "emission_passes": 1,
+      "emissions_frames": 1475,
+      "backend": "muaalem",
+      "batch_size": 1,
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "raw_onset_ms": 320,
+          "onset_ms": 320,
+          "conf": 0.9713,
+          "first_token_conf": 0.9019,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9019,
+            0.9995,
+            0.9999,
+            0.9993,
+            0.9879
+          ]
+        },
+        {
+          "ayah": 2,
+          "raw_onset_ms": 6601,
+          "onset_ms": 6601,
+          "conf": 0.9898,
+          "first_token_conf": 0.9999,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9999,
+            0.9807,
+            1.0,
+            0.9688,
+            1.0,
+            1.0,
+            0.9999,
+            1.0
+          ]
+        },
+        {
+          "ayah": 3,
+          "raw_onset_ms": 11722,
+          "onset_ms": 11722,
+          "conf": 0.9791,
+          "first_token_conf": 0.9998,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9998,
+            0.9978,
+            0.9997,
+            0.8907,
+            0.9637,
+            1.0,
+            0.9999,
+            0.9922,
+            0.9923,
+            1.0,
+            0.9994,
+            0.991
+          ]
+        },
+        {
+          "ayah": 4,
+          "raw_onset_ms": 16123,
+          "onset_ms": 16123,
+          "conf": 0.986,
+          "first_token_conf": 0.9998,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9998,
+            0.9924,
+            0.9334,
+            0.9999,
+            1.0,
+            1.0,
+            0.9999,
+            0.9992
+          ]
+        },
+        {
+          "ayah": 5,
+          "raw_onset_ms": 21644,
+          "onset_ms": 21644,
+          "conf": 0.9202,
+          "first_token_conf": 0.989,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.989,
+            0.919,
+            0.8086,
+            0.9996,
+            0.9977,
+            0.9862,
+            0.8468,
+            1.0,
+            0.8696
+          ]
+        },
+        {
+          "ayah": 6,
+          "raw_onset_ms": 27965,
+          "onset_ms": 27965,
+          "conf": 0.8989,
+          "first_token_conf": 0.9838,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9838,
+            0.9993,
+            0.9999,
+            0.7553,
+            0.9999,
+            0.9987,
+            0.75
+          ]
+        },
+        {
+          "ayah": 7,
+          "raw_onset_ms": 33606,
+          "onset_ms": 33606,
+          "conf": 0.9599,
+          "first_token_conf": 0.9999,
+          "reliable": true,
+          "repaired": false,
+          "reason": "ctc",
+          "token_confs": [
+            0.9999,
+            1.0,
+            0.9999,
+            0.8937,
+            0.9734,
+            0.9998,
+            0.9907,
+            0.9222
+          ]
+        }
+      ]
+    },
+    "source": "ctc:muaalem:revision=a57907844f7c72969b40bc526a57e9c9dbc8bf3f:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=hafs:madd=4:waqf=ayah:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"python\":\"3.11.15 (main, Aug  7 2026, 02:15:53) [Clang 22.1.3 ]\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"unicode\":\"14.0.0\",\"uroman\":\"1.3.1.1\"}",
+    "median_ms": 123.0,
+    "max_ms": 220,
+    "over500": 0,
+    "elapsed_s": 26.089291042182595
+  },
+  {
+    "model": "fastconformer-arabic",
+    "audio_sha256": "6dedf8c3b88d2cd12c992710839443abebf26e7ef1fcea696acc8961b5836571",
+    "error": "ValueError: Не удалось загрузить модель: module 'ml_dtypes' has no attribute 'float4_e2m1fn'",
+    "elapsed_s": 15.10873316694051
+  },
+  {
+    "model": "whisper-large-v3",
+    "audio_sha256": "6dedf8c3b88d2cd12c992710839443abebf26e7ef1fcea696acc8961b5836571",
+    "load_s": 14.704846333013847,
+    "full_s": 45.74813258298673,
+    "rows": [
+      [
+        1,
+        280,
+        0.9990825057029724
+      ],
+      [
+        2,
+        6740,
+        0.9982969164848328
+      ],
+      [
+        3,
+        11860,
+        0.9992494583129883
+      ],
+      [
+        4,
+        16040,
+        0.9989460110664368
+      ],
+      [
+        5,
+        21140,
+        0.9901207089424133
+      ],
+      [
+        6,
+        27420,
+        0.8751500248908997
+      ],
+      [
+        7,
+        33620,
+        0.9997408986091614
+      ]
+    ],
+    "errors_ms": [
+      180,
+      232,
+      299,
+      40,
+      -396,
+      -430,
+      217
+    ],
+    "trace": {
+      "model_source": "attention-dtw:whisper-large-v3:revision=06f233fe06e710322aca913c1bc4249a0d71fce1:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:commit-before=window-6:window-retry=20,10:reset-window=30:context=1word:teacher-forcing:language=ar:full-adapter=pause-retry-spelled-letters-v2:pause-retry=3:next-prefix-confirmed:muqattaat=spoken-names:target=imlaey-plain:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"python\":\"3.11.15 (main, Aug  7 2026, 02:15:53) [Clang 22.1.3 ]\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"unicode\":\"14.0.0\",\"uroman\":\"1.3.1.1\"}",
+      "mode": "full",
+      "backend": "whisper-attention-dtw",
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 280,
+          "conf": 0.9990825057029724,
+          "reliable": true
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 6740,
+          "conf": 0.9982969164848328,
+          "reliable": true
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 11860,
+          "conf": 0.9992494583129883,
+          "reliable": true
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 16040,
+          "conf": 0.9989460110664368,
+          "reliable": true
+        },
+        {
+          "ayah": 5,
+          "onset_ms": 21140,
+          "conf": 0.9901207089424133,
+          "reliable": true
+        },
+        {
+          "ayah": 6,
+          "onset_ms": 27420,
+          "conf": 0.8751500248908997,
+          "reliable": true
+        },
+        {
+          "ayah": 7,
+          "onset_ms": 33620,
+          "conf": 0.9997408986091614,
+          "reliable": true
+        }
+      ]
+    },
+    "source": "attention-dtw:whisper-large-v3:revision=06f233fe06e710322aca913c1bc4249a0d71fce1:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:commit-before=window-6:window-retry=20,10:reset-window=30:context=1word:teacher-forcing:language=ar:full-adapter=pause-retry-spelled-letters-v2:pause-retry=3:next-prefix-confirmed:muqattaat=spoken-names:target=imlaey-plain:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"python\":\"3.11.15 (main, Aug  7 2026, 02:15:53) [Clang 22.1.3 ]\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"unicode\":\"14.0.0\",\"uroman\":\"1.3.1.1\"}",
+    "median_ms": 232.0,
+    "max_ms": 430,
+    "over500": 0,
+    "elapsed_s": 60.60573058389127
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "audio_sha256": "6dedf8c3b88d2cd12c992710839443abebf26e7ef1fcea696acc8961b5836571",
+    "load_s": 4.686313208891079,
+    "full_s": 5.497723875101656,
+    "rows": [
+      [
+        1,
+        420,
+        0.8330790400505066
+      ],
+      [
+        2,
+        6820,
+        0.9996485710144043
+      ],
+      [
+        3,
+        12020,
+        0.8028146624565125
+      ],
+      [
+        4,
+        16280,
+        0.9995489120483398
+      ],
+      [
+        5,
+        21840,
+        0.9982489347457886
+      ],
+      [
+        6,
+        28120,
+        0.7638774514198303
+      ],
+      [
+        7,
+        33700,
+        0.99985271692276
+      ]
+    ],
+    "errors_ms": [
+      320,
+      312,
+      459,
+      280,
+      304,
+      270,
+      297
+    ],
+    "trace": {
+      "model_source": "attention-dtw:whisper-tarteel-base:revision=5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:commit-before=window-6:window-retry=20,10:reset-window=30:context=1word:teacher-forcing:language=ar:full-adapter=pause-retry-spelled-letters-v2:pause-retry=3:next-prefix-confirmed:muqattaat=spoken-names:generation-config=openai/whisper-base@e37978b90ca9030d5170a5c07aadb050351a65bb:sha256=444b3f636d2fff89dd9ecf549e2a085b61f7ff0fa0246d4628bac6a3b8cc9ba4:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"python\":\"3.11.15 (main, Aug  7 2026, 02:15:53) [Clang 22.1.3 ]\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"unicode\":\"14.0.0\",\"uroman\":\"1.3.1.1\"}",
+      "mode": "full",
+      "backend": "whisper-attention-dtw",
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 420,
+          "conf": 0.8330790400505066,
+          "reliable": true
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 6820,
+          "conf": 0.9996485710144043,
+          "reliable": true
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 12020,
+          "conf": 0.8028146624565125,
+          "reliable": true
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 16280,
+          "conf": 0.9995489120483398,
+          "reliable": true
+        },
+        {
+          "ayah": 5,
+          "onset_ms": 21840,
+          "conf": 0.9982489347457886,
+          "reliable": true
+        },
+        {
+          "ayah": 6,
+          "onset_ms": 28120,
+          "conf": 0.7638774514198303,
+          "reliable": true
+        },
+        {
+          "ayah": 7,
+          "onset_ms": 33700,
+          "conf": 0.99985271692276,
+          "reliable": true
+        }
+      ]
+    },
+    "source": "attention-dtw:whisper-tarteel-base:revision=5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c:adapter=known-text-v2:lag=0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:flags=window=30:commit-before=window-6:window-retry=20,10:reset-window=30:context=1word:teacher-forcing:language=ar:full-adapter=pause-retry-spelled-letters-v2:pause-retry=3:next-prefix-confirmed:muqattaat=spoken-names:generation-config=openai/whisper-base@e37978b90ca9030d5170a5c07aadb050351a65bb:sha256=444b3f636d2fff89dd9ecf549e2a085b61f7ff0fa0246d4628bac6a3b8cc9ba4:target=imlaey-vocalized:runtime={\"numpy\":\"2.4.6\",\"onnxruntime\":\"1.23.2\",\"python\":\"3.11.15 (main, Aug  7 2026, 02:15:53) [Clang 22.1.3 ]\",\"quran-transcript\":\"0.6.4\",\"torch\":\"2.8.0\",\"torchaudio\":\"2.8.0\",\"transformers\":\"4.57.3\",\"unicode\":\"14.0.0\",\"uroman\":\"1.3.1.1\"}",
+    "median_ms": 304.0,
+    "max_ms": 459,
+    "over500": 0,
+    "elapsed_s": 10.268603707896546
+  }
+]

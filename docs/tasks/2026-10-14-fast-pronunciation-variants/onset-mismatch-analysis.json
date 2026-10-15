@@ -1,0 +1,54 @@
+[
+  {
+    "boundary": {
+      "ayah": 25,
+      "start_ms": 132004,
+      "evidence_kind": "wasl",
+      "confidence": 0.6675054430961609,
+      "review_reason": null,
+      "read_id": 73,
+      "proof": {
+        "phrase": [
+          "ف",
+          "َ",
+          "ب",
+          "ِ",
+          "ء",
+          "َ",
+          "ي",
+          "ي",
+          "ِ"
+        ],
+        "complete": true,
+        "ambiguous": false,
+        "competitors_checked": true,
+        "offset": 10,
+        "previous_tail": [
+          "ك",
+          "َ",
+          "ل",
+          "ء",
+          "َ",
+          "ع",
+          "ل",
+          "َ",
+          "ا",
+          "م"
+        ],
+        "quality_metric": "ctc_greedy_probability",
+        "contextual_owner": true
+      }
+    },
+    "actual_window": [
+      129755.3125,
+      135255.3125
+    ],
+    "requested_window": [
+      129755.33577533579,
+      135255.33577533579
+    ],
+    "relative_onset": 2248.175182481752,
+    "validator_onset": 132003,
+    "read_id": 73
+  }
+]

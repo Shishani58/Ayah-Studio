@@ -1,0 +1,7825 @@
+[
+  {
+    "reciter": "saad_al_ghamidi",
+    "policy": "baseline",
+    "stats": {
+      "n": 54,
+      "median_ms": 68.5,
+      "p95_ms": 164.74999999999986,
+      "max_ms": 240,
+      "over500": 0
+    },
+    "new": [],
+    "removed": [],
+    "moves": [],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "saad_al_ghamidi",
+    "policy": "midpoint",
+    "stats": {
+      "n": 54,
+      "median_ms": 103.0,
+      "p95_ms": 191.84999999999982,
+      "max_ms": 240,
+      "over500": 0
+    },
+    "new": [],
+    "removed": [],
+    "moves": [
+      {
+        "surah": 80,
+        "ayah": 3,
+        "before_ms": -63,
+        "after_ms": -142,
+        "onset_ms": 12899,
+        "candidate_ms": 12820
+      },
+      {
+        "surah": 80,
+        "ayah": 5,
+        "before_ms": 28,
+        "after_ms": -131,
+        "onset_ms": 23139,
+        "candidate_ms": 22980
+      },
+      {
+        "surah": 80,
+        "ayah": 8,
+        "before_ms": -37,
+        "after_ms": -215,
+        "onset_ms": 33938,
+        "candidate_ms": 33760
+      },
+      {
+        "surah": 80,
+        "ayah": 11,
+        "before_ms": -70,
+        "after_ms": -77,
+        "onset_ms": 44477,
+        "candidate_ms": 44470
+      },
+      {
+        "surah": 80,
+        "ayah": 13,
+        "before_ms": -51,
+        "after_ms": -98,
+        "onset_ms": 53557,
+        "candidate_ms": 53510
+      },
+      {
+        "surah": 80,
+        "ayah": 17,
+        "before_ms": -124,
+        "after_ms": -170,
+        "onset_ms": 64936,
+        "candidate_ms": 64890
+      },
+      {
+        "surah": 80,
+        "ayah": 18,
+        "before_ms": -15,
+        "after_ms": -71,
+        "onset_ms": 69956,
+        "candidate_ms": 69900
+      },
+      {
+        "surah": 80,
+        "ayah": 20,
+        "before_ms": -43,
+        "after_ms": -78,
+        "onset_ms": 77315,
+        "candidate_ms": 77280
+      },
+      {
+        "surah": 80,
+        "ayah": 22,
+        "before_ms": -106,
+        "after_ms": -161,
+        "onset_ms": 84495,
+        "candidate_ms": 84440
+      },
+      {
+        "surah": 80,
+        "ayah": 23,
+        "before_ms": -65,
+        "after_ms": -109,
+        "onset_ms": 90974,
+        "candidate_ms": 90930
+      },
+      {
+        "surah": 80,
+        "ayah": 24,
+        "before_ms": -90,
+        "after_ms": -84,
+        "onset_ms": 96314,
+        "candidate_ms": 96320
+      },
+      {
+        "surah": 80,
+        "ayah": 25,
+        "before_ms": 53,
+        "after_ms": -71,
+        "onset_ms": 101574,
+        "candidate_ms": 101450
+      },
+      {
+        "surah": 80,
+        "ayah": 26,
+        "before_ms": -42,
+        "after_ms": -5,
+        "onset_ms": 107133,
+        "candidate_ms": 107170
+      },
+      {
+        "surah": 80,
+        "ayah": 28,
+        "before_ms": -58,
+        "after_ms": -141,
+        "onset_ms": 116093,
+        "candidate_ms": 116010
+      },
+      {
+        "surah": 80,
+        "ayah": 29,
+        "before_ms": -35,
+        "after_ms": -27,
+        "onset_ms": 119232,
+        "candidate_ms": 119240
+      },
+      {
+        "surah": 80,
+        "ayah": 30,
+        "before_ms": -65,
+        "after_ms": -67,
+        "onset_ms": 122772,
+        "candidate_ms": 122770
+      },
+      {
+        "surah": 80,
+        "ayah": 32,
+        "before_ms": -39,
+        "after_ms": -61,
+        "onset_ms": 130432,
+        "candidate_ms": 130410
+      },
+      {
+        "surah": 80,
+        "ayah": 34,
+        "before_ms": 32,
+        "after_ms": -39,
+        "onset_ms": 141811,
+        "candidate_ms": 141740
+      },
+      {
+        "surah": 80,
+        "ayah": 35,
+        "before_ms": -2,
+        "after_ms": 7,
+        "onset_ms": 147451,
+        "candidate_ms": 147460
+      },
+      {
+        "surah": 80,
+        "ayah": 38,
+        "before_ms": -88,
+        "after_ms": -127,
+        "onset_ms": 164389,
+        "candidate_ms": 164350
+      },
+      {
+        "surah": 80,
+        "ayah": 40,
+        "before_ms": -46,
+        "after_ms": -155,
+        "onset_ms": 172169,
+        "candidate_ms": 172060
+      },
+      {
+        "surah": 80,
+        "ayah": 42,
+        "before_ms": 21,
+        "after_ms": -78,
+        "onset_ms": 179829,
+        "candidate_ms": 179730
+      },
+      {
+        "surah": 98,
+        "ayah": 2,
+        "before_ms": 57,
+        "after_ms": -212,
+        "onset_ms": 16639,
+        "candidate_ms": 16370
+      },
+      {
+        "surah": 98,
+        "ayah": 3,
+        "before_ms": -19,
+        "after_ms": -18,
+        "onset_ms": 22979,
+        "candidate_ms": 22980
+      },
+      {
+        "surah": 98,
+        "ayah": 4,
+        "before_ms": 19,
+        "after_ms": -10,
+        "onset_ms": 26299,
+        "candidate_ms": 26270
+      },
+      {
+        "surah": 98,
+        "ayah": 5,
+        "before_ms": 26,
+        "after_ms": -113,
+        "onset_ms": 36719,
+        "candidate_ms": 36580
+      },
+      {
+        "surah": 98,
+        "ayah": 6,
+        "before_ms": 94,
+        "after_ms": -104,
+        "onset_ms": 58798,
+        "candidate_ms": 58600
+      },
+      {
+        "surah": 98,
+        "ayah": 7,
+        "before_ms": 97,
+        "after_ms": -160,
+        "onset_ms": 75457,
+        "candidate_ms": 75200
+      },
+      {
+        "surah": 98,
+        "ayah": 8,
+        "before_ms": -15,
+        "after_ms": -132,
+        "onset_ms": 84857,
+        "candidate_ms": 84740
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": 212,
+        "after_ms": 40,
+        "onset_ms": 5542,
+        "candidate_ms": 5370
+      },
+      {
+        "surah": 112,
+        "ayah": 3,
+        "before_ms": -3,
+        "after_ms": -117,
+        "onset_ms": 10124,
+        "candidate_ms": 10010
+      }
+    ],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "saad_al_ghamidi",
+    "policy": "left_plus_400",
+    "stats": {
+      "n": 54,
+      "median_ms": 100.0,
+      "p95_ms": 185.7,
+      "max_ms": 240,
+      "over500": 0
+    },
+    "new": [],
+    "removed": [],
+    "moves": [
+      {
+        "surah": 80,
+        "ayah": 3,
+        "before_ms": -63,
+        "after_ms": -2,
+        "onset_ms": 12899,
+        "candidate_ms": 12960
+      },
+      {
+        "surah": 80,
+        "ayah": 5,
+        "before_ms": 28,
+        "after_ms": 9,
+        "onset_ms": 23139,
+        "candidate_ms": 23120
+      },
+      {
+        "surah": 80,
+        "ayah": 8,
+        "before_ms": -37,
+        "after_ms": -135,
+        "onset_ms": 33938,
+        "candidate_ms": 33840
+      },
+      {
+        "surah": 80,
+        "ayah": 11,
+        "before_ms": -70,
+        "after_ms": 93,
+        "onset_ms": 44477,
+        "candidate_ms": 44640
+      },
+      {
+        "surah": 80,
+        "ayah": 13,
+        "before_ms": -51,
+        "after_ms": 32,
+        "onset_ms": 53557,
+        "candidate_ms": 53640
+      },
+      {
+        "surah": 80,
+        "ayah": 17,
+        "before_ms": -124,
+        "after_ms": -40,
+        "onset_ms": 64936,
+        "candidate_ms": 65020
+      },
+      {
+        "surah": 80,
+        "ayah": 18,
+        "before_ms": -15,
+        "after_ms": 109,
+        "onset_ms": 69956,
+        "candidate_ms": 70080
+      },
+      {
+        "surah": 80,
+        "ayah": 20,
+        "before_ms": -43,
+        "after_ms": 82,
+        "onset_ms": 77315,
+        "candidate_ms": 77440
+      },
+      {
+        "surah": 80,
+        "ayah": 22,
+        "before_ms": -106,
+        "after_ms": -21,
+        "onset_ms": 84495,
+        "candidate_ms": 84580
+      },
+      {
+        "surah": 80,
+        "ayah": 23,
+        "before_ms": -65,
+        "after_ms": 21,
+        "onset_ms": 90974,
+        "candidate_ms": 91060
+      },
+      {
+        "surah": 80,
+        "ayah": 24,
+        "before_ms": -90,
+        "after_ms": 116,
+        "onset_ms": 96314,
+        "candidate_ms": 96520
+      },
+      {
+        "surah": 80,
+        "ayah": 25,
+        "before_ms": 53,
+        "after_ms": 99,
+        "onset_ms": 101574,
+        "candidate_ms": 101620
+      },
+      {
+        "surah": 80,
+        "ayah": 26,
+        "before_ms": -42,
+        "after_ms": 185,
+        "onset_ms": 107133,
+        "candidate_ms": 107360
+      },
+      {
+        "surah": 80,
+        "ayah": 28,
+        "before_ms": -58,
+        "after_ms": 9,
+        "onset_ms": 116093,
+        "candidate_ms": 116160
+      },
+      {
+        "surah": 80,
+        "ayah": 29,
+        "before_ms": -35,
+        "after_ms": 133,
+        "onset_ms": 119232,
+        "candidate_ms": 119400
+      },
+      {
+        "surah": 80,
+        "ayah": 30,
+        "before_ms": -65,
+        "after_ms": 103,
+        "onset_ms": 122772,
+        "candidate_ms": 122940
+      },
+      {
+        "surah": 80,
+        "ayah": 32,
+        "before_ms": -39,
+        "after_ms": 129,
+        "onset_ms": 130432,
+        "candidate_ms": 130600
+      },
+      {
+        "surah": 80,
+        "ayah": 34,
+        "before_ms": 32,
+        "after_ms": 161,
+        "onset_ms": 141811,
+        "candidate_ms": 141940
+      },
+      {
+        "surah": 80,
+        "ayah": 35,
+        "before_ms": -2,
+        "after_ms": 187,
+        "onset_ms": 147451,
+        "candidate_ms": 147640
+      },
+      {
+        "surah": 80,
+        "ayah": 36,
+        "before_ms": -104,
+        "after_ms": 86,
+        "onset_ms": 151910,
+        "candidate_ms": 152100
+      },
+      {
+        "surah": 80,
+        "ayah": 38,
+        "before_ms": -88,
+        "after_ms": 23,
+        "onset_ms": 164389,
+        "candidate_ms": 164500
+      },
+      {
+        "surah": 80,
+        "ayah": 40,
+        "before_ms": -46,
+        "after_ms": -35,
+        "onset_ms": 172169,
+        "candidate_ms": 172180
+      },
+      {
+        "surah": 80,
+        "ayah": 42,
+        "before_ms": 21,
+        "after_ms": 112,
+        "onset_ms": 179829,
+        "candidate_ms": 179920
+      },
+      {
+        "surah": 98,
+        "ayah": 2,
+        "before_ms": 57,
+        "after_ms": -202,
+        "onset_ms": 16639,
+        "candidate_ms": 16380
+      },
+      {
+        "surah": 98,
+        "ayah": 3,
+        "before_ms": -19,
+        "after_ms": 162,
+        "onset_ms": 22979,
+        "candidate_ms": 23160
+      },
+      {
+        "surah": 98,
+        "ayah": 4,
+        "before_ms": 19,
+        "after_ms": 180,
+        "onset_ms": 26299,
+        "candidate_ms": 26460
+      },
+      {
+        "surah": 98,
+        "ayah": 5,
+        "before_ms": 26,
+        "after_ms": -13,
+        "onset_ms": 36719,
+        "candidate_ms": 36680
+      },
+      {
+        "surah": 98,
+        "ayah": 6,
+        "before_ms": 94,
+        "after_ms": 96,
+        "onset_ms": 58798,
+        "candidate_ms": 58800
+      },
+      {
+        "surah": 98,
+        "ayah": 7,
+        "before_ms": 97,
+        "after_ms": -40,
+        "onset_ms": 75457,
+        "candidate_ms": 75320
+      },
+      {
+        "surah": 98,
+        "ayah": 8,
+        "before_ms": -15,
+        "after_ms": -12,
+        "onset_ms": 84857,
+        "candidate_ms": 84860
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": 212,
+        "after_ms": 50,
+        "onset_ms": 5542,
+        "candidate_ms": 5380
+      },
+      {
+        "surah": 112,
+        "ayah": 3,
+        "before_ms": -3,
+        "after_ms": 73,
+        "onset_ms": 10124,
+        "candidate_ms": 10200
+      }
+    ],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "saad_al_ghamidi",
+    "policy": "right_minus_200",
+    "stats": {
+      "n": 54,
+      "median_ms": 85.5,
+      "p95_ms": 164.74999999999986,
+      "max_ms": 240,
+      "over500": 0
+    },
+    "new": [],
+    "removed": [],
+    "moves": [
+      {
+        "surah": 80,
+        "ayah": 3,
+        "before_ms": -63,
+        "after_ms": -82,
+        "onset_ms": 12899,
+        "candidate_ms": 12880
+      },
+      {
+        "surah": 80,
+        "ayah": 5,
+        "before_ms": 28,
+        "after_ms": -71,
+        "onset_ms": 23139,
+        "candidate_ms": 23040
+      },
+      {
+        "surah": 80,
+        "ayah": 8,
+        "before_ms": -37,
+        "after_ms": -95,
+        "onset_ms": 33938,
+        "candidate_ms": 33880
+      },
+      {
+        "surah": 80,
+        "ayah": 11,
+        "before_ms": -70,
+        "after_ms": -47,
+        "onset_ms": 44477,
+        "candidate_ms": 44500
+      },
+      {
+        "surah": 80,
+        "ayah": 13,
+        "before_ms": -51,
+        "after_ms": -28,
+        "onset_ms": 53557,
+        "candidate_ms": 53580
+      },
+      {
+        "surah": 80,
+        "ayah": 17,
+        "before_ms": -124,
+        "after_ms": -100,
+        "onset_ms": 64936,
+        "candidate_ms": 64960
+      },
+      {
+        "surah": 80,
+        "ayah": 18,
+        "before_ms": -15,
+        "after_ms": -91,
+        "onset_ms": 69956,
+        "candidate_ms": 69880
+      },
+      {
+        "surah": 80,
+        "ayah": 20,
+        "before_ms": -43,
+        "after_ms": -38,
+        "onset_ms": 77315,
+        "candidate_ms": 77320
+      },
+      {
+        "surah": 80,
+        "ayah": 22,
+        "before_ms": -106,
+        "after_ms": -101,
+        "onset_ms": 84495,
+        "candidate_ms": 84500
+      },
+      {
+        "surah": 80,
+        "ayah": 23,
+        "before_ms": -65,
+        "after_ms": -39,
+        "onset_ms": 90974,
+        "candidate_ms": 91000
+      },
+      {
+        "surah": 80,
+        "ayah": 24,
+        "before_ms": -90,
+        "after_ms": -84,
+        "onset_ms": 96314,
+        "candidate_ms": 96320
+      },
+      {
+        "surah": 80,
+        "ayah": 25,
+        "before_ms": 53,
+        "after_ms": -41,
+        "onset_ms": 101574,
+        "candidate_ms": 101480
+      },
+      {
+        "surah": 80,
+        "ayah": 26,
+        "before_ms": -42,
+        "after_ms": -15,
+        "onset_ms": 107133,
+        "candidate_ms": 107160
+      },
+      {
+        "surah": 80,
+        "ayah": 28,
+        "before_ms": -58,
+        "after_ms": -91,
+        "onset_ms": 116093,
+        "candidate_ms": 116060
+      },
+      {
+        "surah": 80,
+        "ayah": 29,
+        "before_ms": -35,
+        "after_ms": -67,
+        "onset_ms": 119232,
+        "candidate_ms": 119200
+      },
+      {
+        "surah": 80,
+        "ayah": 30,
+        "before_ms": -65,
+        "after_ms": -97,
+        "onset_ms": 122772,
+        "candidate_ms": 122740
+      },
+      {
+        "surah": 80,
+        "ayah": 32,
+        "before_ms": -39,
+        "after_ms": -71,
+        "onset_ms": 130432,
+        "candidate_ms": 130400
+      },
+      {
+        "surah": 80,
+        "ayah": 34,
+        "before_ms": 32,
+        "after_ms": -39,
+        "onset_ms": 141811,
+        "candidate_ms": 141740
+      },
+      {
+        "surah": 80,
+        "ayah": 35,
+        "before_ms": -2,
+        "after_ms": -13,
+        "onset_ms": 147451,
+        "candidate_ms": 147440
+      },
+      {
+        "surah": 80,
+        "ayah": 36,
+        "before_ms": -104,
+        "after_ms": -94,
+        "onset_ms": 151910,
+        "candidate_ms": 151920
+      },
+      {
+        "surah": 80,
+        "ayah": 38,
+        "before_ms": -88,
+        "after_ms": -77,
+        "onset_ms": 164389,
+        "candidate_ms": 164400
+      },
+      {
+        "surah": 80,
+        "ayah": 40,
+        "before_ms": -46,
+        "after_ms": -75,
+        "onset_ms": 172169,
+        "candidate_ms": 172140
+      },
+      {
+        "surah": 80,
+        "ayah": 42,
+        "before_ms": 21,
+        "after_ms": -88,
+        "onset_ms": 179829,
+        "candidate_ms": 179720
+      },
+      {
+        "surah": 98,
+        "ayah": 2,
+        "before_ms": 57,
+        "after_ms": -22,
+        "onset_ms": 16639,
+        "candidate_ms": 16560
+      },
+      {
+        "surah": 98,
+        "ayah": 3,
+        "before_ms": -19,
+        "after_ms": 2,
+        "onset_ms": 22979,
+        "candidate_ms": 23000
+      },
+      {
+        "surah": 98,
+        "ayah": 4,
+        "before_ms": 19,
+        "after_ms": -20,
+        "onset_ms": 26299,
+        "candidate_ms": 26260
+      },
+      {
+        "surah": 98,
+        "ayah": 5,
+        "before_ms": 26,
+        "after_ms": -13,
+        "onset_ms": 36719,
+        "candidate_ms": 36680
+      },
+      {
+        "surah": 98,
+        "ayah": 6,
+        "before_ms": 94,
+        "after_ms": -104,
+        "onset_ms": 58798,
+        "candidate_ms": 58600
+      },
+      {
+        "surah": 98,
+        "ayah": 7,
+        "before_ms": 97,
+        "after_ms": -80,
+        "onset_ms": 75457,
+        "candidate_ms": 75280
+      },
+      {
+        "surah": 98,
+        "ayah": 8,
+        "before_ms": -15,
+        "after_ms": -52,
+        "onset_ms": 84857,
+        "candidate_ms": 84820
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": 212,
+        "after_ms": 230,
+        "onset_ms": 5542,
+        "candidate_ms": 5560
+      },
+      {
+        "surah": 112,
+        "ayah": 3,
+        "before_ms": -3,
+        "after_ms": -107,
+        "onset_ms": 10124,
+        "candidate_ms": 10020
+      }
+    ],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "saad_al_ghamidi",
+    "policy": "weak_prefix_right",
+    "stats": {
+      "n": 54,
+      "median_ms": 68.5,
+      "p95_ms": 164.74999999999986,
+      "max_ms": 240,
+      "over500": 0
+    },
+    "new": [],
+    "removed": [],
+    "moves": [
+      {
+        "surah": 80,
+        "ayah": 1,
+        "before_ms": 100,
+        "after_ms": 120,
+        "onset_ms": 5280,
+        "candidate_ms": 5300
+      },
+      {
+        "surah": 80,
+        "ayah": 24,
+        "before_ms": -90,
+        "after_ms": -84,
+        "onset_ms": 96314,
+        "candidate_ms": 96320
+      }
+    ],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "mohammed_siddiq_al_minshawi",
+    "policy": "baseline",
+    "stats": {
+      "n": 54,
+      "median_ms": 108.5,
+      "p95_ms": 253.59999999999957,
+      "max_ms": 343,
+      "over500": 0
+    },
+    "new": [],
+    "removed": [],
+    "moves": [],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "mohammed_siddiq_al_minshawi",
+    "policy": "midpoint",
+    "stats": {
+      "n": 54,
+      "median_ms": 80.0,
+      "p95_ms": 310.6999999999999,
+      "max_ms": 357,
+      "over500": 0
+    },
+    "new": [],
+    "removed": [],
+    "moves": [
+      {
+        "surah": 80,
+        "ayah": 1,
+        "before_ms": 200,
+        "after_ms": -280,
+        "onset_ms": 5320,
+        "candidate_ms": 4840
+      },
+      {
+        "surah": 80,
+        "ayah": 2,
+        "before_ms": 159,
+        "after_ms": -50,
+        "onset_ms": 8679,
+        "candidate_ms": 8470
+      },
+      {
+        "surah": 80,
+        "ayah": 3,
+        "before_ms": 119,
+        "after_ms": 60,
+        "onset_ms": 14039,
+        "candidate_ms": 13980
+      },
+      {
+        "surah": 80,
+        "ayah": 4,
+        "before_ms": 158,
+        "after_ms": -70,
+        "onset_ms": 20478,
+        "candidate_ms": 20250
+      },
+      {
+        "surah": 80,
+        "ayah": 5,
+        "before_ms": 178,
+        "after_ms": -20,
+        "onset_ms": 27058,
+        "candidate_ms": 26860
+      },
+      {
+        "surah": 80,
+        "ayah": 6,
+        "before_ms": 71,
+        "after_ms": -7,
+        "onset_ms": 31578,
+        "candidate_ms": 31500
+      },
+      {
+        "surah": 80,
+        "ayah": 7,
+        "before_ms": 90,
+        "after_ms": -167,
+        "onset_ms": 36717,
+        "candidate_ms": 36460
+      },
+      {
+        "surah": 80,
+        "ayah": 8,
+        "before_ms": 84,
+        "after_ms": 67,
+        "onset_ms": 42137,
+        "candidate_ms": 42120
+      },
+      {
+        "surah": 80,
+        "ayah": 10,
+        "before_ms": 83,
+        "after_ms": 27,
+        "onset_ms": 52096,
+        "candidate_ms": 52040
+      },
+      {
+        "surah": 80,
+        "ayah": 11,
+        "before_ms": 76,
+        "after_ms": -20,
+        "onset_ms": 56916,
+        "candidate_ms": 56820
+      },
+      {
+        "surah": 80,
+        "ayah": 12,
+        "before_ms": 88,
+        "after_ms": -27,
+        "onset_ms": 63275,
+        "candidate_ms": 63160
+      },
+      {
+        "surah": 80,
+        "ayah": 13,
+        "before_ms": 35,
+        "after_ms": -40,
+        "onset_ms": 68475,
+        "candidate_ms": 68400
+      },
+      {
+        "surah": 80,
+        "ayah": 14,
+        "before_ms": 114,
+        "after_ms": -130,
+        "onset_ms": 73154,
+        "candidate_ms": 72910
+      },
+      {
+        "surah": 80,
+        "ayah": 15,
+        "before_ms": 174,
+        "after_ms": 0,
+        "onset_ms": 77934,
+        "candidate_ms": 77760
+      },
+      {
+        "surah": 80,
+        "ayah": 16,
+        "before_ms": 54,
+        "after_ms": -20,
+        "onset_ms": 81014,
+        "candidate_ms": 80940
+      },
+      {
+        "surah": 80,
+        "ayah": 17,
+        "before_ms": 80,
+        "after_ms": -53,
+        "onset_ms": 84613,
+        "candidate_ms": 84480
+      },
+      {
+        "surah": 80,
+        "ayah": 18,
+        "before_ms": 120,
+        "after_ms": -23,
+        "onset_ms": 91053,
+        "candidate_ms": 90910
+      },
+      {
+        "surah": 80,
+        "ayah": 19,
+        "before_ms": 133,
+        "after_ms": 0,
+        "onset_ms": 95173,
+        "candidate_ms": 95040
+      },
+      {
+        "surah": 80,
+        "ayah": 20,
+        "before_ms": 52,
+        "after_ms": -90,
+        "onset_ms": 101492,
+        "candidate_ms": 101350
+      },
+      {
+        "surah": 80,
+        "ayah": 21,
+        "before_ms": 39,
+        "after_ms": -93,
+        "onset_ms": 106332,
+        "candidate_ms": 106200
+      },
+      {
+        "surah": 80,
+        "ayah": 22,
+        "before_ms": 44,
+        "after_ms": -97,
+        "onset_ms": 111951,
+        "candidate_ms": 111810
+      },
+      {
+        "surah": 80,
+        "ayah": 23,
+        "before_ms": 58,
+        "after_ms": -133,
+        "onset_ms": 118911,
+        "candidate_ms": 118720
+      },
+      {
+        "surah": 80,
+        "ayah": 24,
+        "before_ms": 77,
+        "after_ms": -13,
+        "onset_ms": 125850,
+        "candidate_ms": 125760
+      },
+      {
+        "surah": 80,
+        "ayah": 26,
+        "before_ms": 42,
+        "after_ms": 33,
+        "onset_ms": 140269,
+        "candidate_ms": 140260
+      },
+      {
+        "surah": 80,
+        "ayah": 27,
+        "before_ms": 69,
+        "after_ms": -10,
+        "onset_ms": 145829,
+        "candidate_ms": 145750
+      },
+      {
+        "surah": 80,
+        "ayah": 28,
+        "before_ms": 108,
+        "after_ms": 110,
+        "onset_ms": 151308,
+        "candidate_ms": 151310
+      },
+      {
+        "surah": 80,
+        "ayah": 29,
+        "before_ms": 135,
+        "after_ms": 37,
+        "onset_ms": 155308,
+        "candidate_ms": 155210
+      },
+      {
+        "surah": 80,
+        "ayah": 30,
+        "before_ms": 121,
+        "after_ms": 83,
+        "onset_ms": 159788,
+        "candidate_ms": 159750
+      },
+      {
+        "surah": 80,
+        "ayah": 31,
+        "before_ms": 94,
+        "after_ms": 87,
+        "onset_ms": 164347,
+        "candidate_ms": 164340
+      },
+      {
+        "surah": 80,
+        "ayah": 32,
+        "before_ms": 120,
+        "after_ms": -137,
+        "onset_ms": 169467,
+        "candidate_ms": 169210
+      },
+      {
+        "surah": 80,
+        "ayah": 33,
+        "before_ms": 67,
+        "after_ms": -110,
+        "onset_ms": 174827,
+        "candidate_ms": 174650
+      },
+      {
+        "surah": 80,
+        "ayah": 34,
+        "before_ms": 119,
+        "after_ms": 33,
+        "onset_ms": 182746,
+        "candidate_ms": 182660
+      },
+      {
+        "surah": 80,
+        "ayah": 35,
+        "before_ms": 99,
+        "after_ms": -77,
+        "onset_ms": 188046,
+        "candidate_ms": 187870
+      },
+      {
+        "surah": 80,
+        "ayah": 36,
+        "before_ms": 65,
+        "after_ms": -40,
+        "onset_ms": 192065,
+        "candidate_ms": 191960
+      },
+      {
+        "surah": 80,
+        "ayah": 37,
+        "before_ms": 112,
+        "after_ms": -113,
+        "onset_ms": 196445,
+        "candidate_ms": 196220
+      },
+      {
+        "surah": 80,
+        "ayah": 38,
+        "before_ms": 197,
+        "after_ms": -357,
+        "onset_ms": 206744,
+        "candidate_ms": 206190
+      },
+      {
+        "surah": 80,
+        "ayah": 39,
+        "before_ms": 177,
+        "after_ms": -27,
+        "onset_ms": 212924,
+        "candidate_ms": 212720
+      },
+      {
+        "surah": 80,
+        "ayah": 40,
+        "before_ms": 96,
+        "after_ms": -147,
+        "onset_ms": 217963,
+        "candidate_ms": 217720
+      },
+      {
+        "surah": 80,
+        "ayah": 41,
+        "before_ms": 70,
+        "after_ms": -3,
+        "onset_ms": 225083,
+        "candidate_ms": 225010
+      },
+      {
+        "surah": 80,
+        "ayah": 42,
+        "before_ms": 182,
+        "after_ms": -150,
+        "onset_ms": 228862,
+        "candidate_ms": 228530
+      },
+      {
+        "surah": 98,
+        "ayah": 1,
+        "before_ms": 227,
+        "after_ms": -73,
+        "onset_ms": 4720,
+        "candidate_ms": 4420
+      },
+      {
+        "surah": 98,
+        "ayah": 2,
+        "before_ms": 145,
+        "after_ms": -293,
+        "onset_ms": 20598,
+        "candidate_ms": 20160
+      },
+      {
+        "surah": 98,
+        "ayah": 3,
+        "before_ms": 117,
+        "after_ms": -10,
+        "onset_ms": 29477,
+        "candidate_ms": 29350
+      },
+      {
+        "surah": 98,
+        "ayah": 4,
+        "before_ms": 104,
+        "after_ms": -123,
+        "onset_ms": 34637,
+        "candidate_ms": 34410
+      },
+      {
+        "surah": 98,
+        "ayah": 5,
+        "before_ms": 95,
+        "after_ms": -210,
+        "onset_ms": 50375,
+        "candidate_ms": 50070
+      },
+      {
+        "surah": 98,
+        "ayah": 8,
+        "before_ms": 109,
+        "after_ms": -220,
+        "onset_ms": 117509,
+        "candidate_ms": 117180
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": 76,
+        "after_ms": 50,
+        "onset_ms": 4676,
+        "candidate_ms": 4650
+      },
+      {
+        "surah": 112,
+        "ayah": 2,
+        "before_ms": 147,
+        "after_ms": 113,
+        "onset_ms": 8094,
+        "candidate_ms": 8060
+      },
+      {
+        "surah": 112,
+        "ayah": 3,
+        "before_ms": 151,
+        "after_ms": 90,
+        "onset_ms": 10751,
+        "candidate_ms": 10690
+      },
+      {
+        "surah": 112,
+        "ayah": 4,
+        "before_ms": 122,
+        "after_ms": 123,
+        "onset_ms": 14149,
+        "candidate_ms": 14150
+      }
+    ],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "mohammed_siddiq_al_minshawi",
+    "policy": "left_plus_400",
+    "stats": {
+      "n": 54,
+      "median_ms": 136.5,
+      "p95_ms": 376.9499999999995,
+      "max_ms": 607,
+      "over500": 1
+    },
+    "new": [
+      {
+        "surah": 80,
+        "ayah": 38,
+        "before_ms": 197,
+        "after_ms": -607,
+        "onset_ms": 206744,
+        "candidate_ms": 205940
+      }
+    ],
+    "removed": [],
+    "moves": [
+      {
+        "surah": 80,
+        "ayah": 1,
+        "before_ms": 200,
+        "after_ms": -440,
+        "onset_ms": 5320,
+        "candidate_ms": 4680
+      },
+      {
+        "surah": 80,
+        "ayah": 2,
+        "before_ms": 159,
+        "after_ms": 40,
+        "onset_ms": 8679,
+        "candidate_ms": 8560
+      },
+      {
+        "surah": 80,
+        "ayah": 3,
+        "before_ms": 119,
+        "after_ms": 260,
+        "onset_ms": 14039,
+        "candidate_ms": 14180
+      },
+      {
+        "surah": 80,
+        "ayah": 4,
+        "before_ms": 158,
+        "after_ms": 0,
+        "onset_ms": 20478,
+        "candidate_ms": 20320
+      },
+      {
+        "surah": 80,
+        "ayah": 5,
+        "before_ms": 178,
+        "after_ms": 80,
+        "onset_ms": 27058,
+        "candidate_ms": 26960
+      },
+      {
+        "surah": 80,
+        "ayah": 6,
+        "before_ms": 71,
+        "after_ms": 113,
+        "onset_ms": 31578,
+        "candidate_ms": 31620
+      },
+      {
+        "surah": 80,
+        "ayah": 7,
+        "before_ms": 90,
+        "after_ms": -207,
+        "onset_ms": 36717,
+        "candidate_ms": 36420
+      },
+      {
+        "surah": 80,
+        "ayah": 8,
+        "before_ms": 84,
+        "after_ms": 267,
+        "onset_ms": 42137,
+        "candidate_ms": 42320
+      },
+      {
+        "surah": 80,
+        "ayah": 10,
+        "before_ms": 83,
+        "after_ms": 167,
+        "onset_ms": 52096,
+        "candidate_ms": 52180
+      },
+      {
+        "surah": 80,
+        "ayah": 11,
+        "before_ms": 76,
+        "after_ms": 80,
+        "onset_ms": 56916,
+        "candidate_ms": 56920
+      },
+      {
+        "surah": 80,
+        "ayah": 12,
+        "before_ms": 88,
+        "after_ms": 53,
+        "onset_ms": 63275,
+        "candidate_ms": 63240
+      },
+      {
+        "surah": 80,
+        "ayah": 13,
+        "before_ms": 35,
+        "after_ms": 60,
+        "onset_ms": 68475,
+        "candidate_ms": 68500
+      },
+      {
+        "surah": 80,
+        "ayah": 14,
+        "before_ms": 114,
+        "after_ms": -140,
+        "onset_ms": 73154,
+        "candidate_ms": 72900
+      },
+      {
+        "surah": 80,
+        "ayah": 15,
+        "before_ms": 174,
+        "after_ms": 120,
+        "onset_ms": 77934,
+        "candidate_ms": 77880
+      },
+      {
+        "surah": 80,
+        "ayah": 16,
+        "before_ms": 54,
+        "after_ms": 100,
+        "onset_ms": 81014,
+        "candidate_ms": 81060
+      },
+      {
+        "surah": 80,
+        "ayah": 17,
+        "before_ms": 80,
+        "after_ms": 7,
+        "onset_ms": 84613,
+        "candidate_ms": 84540
+      },
+      {
+        "surah": 80,
+        "ayah": 18,
+        "before_ms": 120,
+        "after_ms": 87,
+        "onset_ms": 91053,
+        "candidate_ms": 91020
+      },
+      {
+        "surah": 80,
+        "ayah": 19,
+        "before_ms": 133,
+        "after_ms": 120,
+        "onset_ms": 95173,
+        "candidate_ms": 95160
+      },
+      {
+        "surah": 80,
+        "ayah": 20,
+        "before_ms": 52,
+        "after_ms": -60,
+        "onset_ms": 101492,
+        "candidate_ms": 101380
+      },
+      {
+        "surah": 80,
+        "ayah": 21,
+        "before_ms": 39,
+        "after_ms": -33,
+        "onset_ms": 106332,
+        "candidate_ms": 106260
+      },
+      {
+        "surah": 80,
+        "ayah": 22,
+        "before_ms": 44,
+        "after_ms": -67,
+        "onset_ms": 111951,
+        "candidate_ms": 111840
+      },
+      {
+        "surah": 80,
+        "ayah": 23,
+        "before_ms": 58,
+        "after_ms": -153,
+        "onset_ms": 118911,
+        "candidate_ms": 118700
+      },
+      {
+        "surah": 80,
+        "ayah": 24,
+        "before_ms": 77,
+        "after_ms": 87,
+        "onset_ms": 125850,
+        "candidate_ms": 125860
+      },
+      {
+        "surah": 80,
+        "ayah": 26,
+        "before_ms": 42,
+        "after_ms": 193,
+        "onset_ms": 140269,
+        "candidate_ms": 140420
+      },
+      {
+        "surah": 80,
+        "ayah": 27,
+        "before_ms": 69,
+        "after_ms": 120,
+        "onset_ms": 145829,
+        "candidate_ms": 145880
+      },
+      {
+        "surah": 80,
+        "ayah": 28,
+        "before_ms": 108,
+        "after_ms": 260,
+        "onset_ms": 151308,
+        "candidate_ms": 151460
+      },
+      {
+        "surah": 80,
+        "ayah": 29,
+        "before_ms": 135,
+        "after_ms": 187,
+        "onset_ms": 155308,
+        "candidate_ms": 155360
+      },
+      {
+        "surah": 80,
+        "ayah": 30,
+        "before_ms": 121,
+        "after_ms": 253,
+        "onset_ms": 159788,
+        "candidate_ms": 159920
+      },
+      {
+        "surah": 80,
+        "ayah": 31,
+        "before_ms": 94,
+        "after_ms": 267,
+        "onset_ms": 164347,
+        "candidate_ms": 164520
+      },
+      {
+        "surah": 80,
+        "ayah": 32,
+        "before_ms": 120,
+        "after_ms": -147,
+        "onset_ms": 169467,
+        "candidate_ms": 169200
+      },
+      {
+        "surah": 80,
+        "ayah": 33,
+        "before_ms": 67,
+        "after_ms": -100,
+        "onset_ms": 174827,
+        "candidate_ms": 174660
+      },
+      {
+        "surah": 80,
+        "ayah": 34,
+        "before_ms": 119,
+        "after_ms": 193,
+        "onset_ms": 182746,
+        "candidate_ms": 182820
+      },
+      {
+        "surah": 80,
+        "ayah": 35,
+        "before_ms": 99,
+        "after_ms": -27,
+        "onset_ms": 188046,
+        "candidate_ms": 187920
+      },
+      {
+        "surah": 80,
+        "ayah": 36,
+        "before_ms": 65,
+        "after_ms": 60,
+        "onset_ms": 192065,
+        "candidate_ms": 192060
+      },
+      {
+        "surah": 80,
+        "ayah": 37,
+        "before_ms": 112,
+        "after_ms": -93,
+        "onset_ms": 196445,
+        "candidate_ms": 196240
+      },
+      {
+        "surah": 80,
+        "ayah": 38,
+        "before_ms": 197,
+        "after_ms": -607,
+        "onset_ms": 206744,
+        "candidate_ms": 205940
+      },
+      {
+        "surah": 80,
+        "ayah": 39,
+        "before_ms": 177,
+        "after_ms": 93,
+        "onset_ms": 212924,
+        "candidate_ms": 212840
+      },
+      {
+        "surah": 80,
+        "ayah": 40,
+        "before_ms": 96,
+        "after_ms": -167,
+        "onset_ms": 217963,
+        "candidate_ms": 217700
+      },
+      {
+        "surah": 80,
+        "ayah": 41,
+        "before_ms": 70,
+        "after_ms": 107,
+        "onset_ms": 225083,
+        "candidate_ms": 225120
+      },
+      {
+        "surah": 80,
+        "ayah": 42,
+        "before_ms": 182,
+        "after_ms": -180,
+        "onset_ms": 228862,
+        "candidate_ms": 228500
+      },
+      {
+        "surah": 98,
+        "ayah": 1,
+        "before_ms": 227,
+        "after_ms": -33,
+        "onset_ms": 4720,
+        "candidate_ms": 4460
+      },
+      {
+        "surah": 98,
+        "ayah": 2,
+        "before_ms": 145,
+        "after_ms": -453,
+        "onset_ms": 20598,
+        "candidate_ms": 20000
+      },
+      {
+        "surah": 98,
+        "ayah": 3,
+        "before_ms": 117,
+        "after_ms": 60,
+        "onset_ms": 29477,
+        "candidate_ms": 29420
+      },
+      {
+        "surah": 98,
+        "ayah": 4,
+        "before_ms": 104,
+        "after_ms": -133,
+        "onset_ms": 34637,
+        "candidate_ms": 34400
+      },
+      {
+        "surah": 98,
+        "ayah": 5,
+        "before_ms": 95,
+        "after_ms": -320,
+        "onset_ms": 50375,
+        "candidate_ms": 49960
+      },
+      {
+        "surah": 98,
+        "ayah": 8,
+        "before_ms": 109,
+        "after_ms": -300,
+        "onset_ms": 117509,
+        "candidate_ms": 117100
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": 76,
+        "after_ms": 200,
+        "onset_ms": 4676,
+        "candidate_ms": 4800
+      },
+      {
+        "surah": 112,
+        "ayah": 2,
+        "before_ms": 147,
+        "after_ms": 273,
+        "onset_ms": 8094,
+        "candidate_ms": 8220
+      },
+      {
+        "surah": 112,
+        "ayah": 3,
+        "before_ms": 151,
+        "after_ms": 260,
+        "onset_ms": 10751,
+        "candidate_ms": 10860
+      },
+      {
+        "surah": 112,
+        "ayah": 4,
+        "before_ms": 122,
+        "after_ms": 273,
+        "onset_ms": 14149,
+        "candidate_ms": 14300
+      }
+    ],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "mohammed_siddiq_al_minshawi",
+    "policy": "right_minus_200",
+    "stats": {
+      "n": 54,
+      "median_ms": 73.0,
+      "p95_ms": 184.04999999999896,
+      "max_ms": 343,
+      "over500": 0
+    },
+    "new": [],
+    "removed": [],
+    "moves": [
+      {
+        "surah": 80,
+        "ayah": 1,
+        "before_ms": 200,
+        "after_ms": 80,
+        "onset_ms": 5320,
+        "candidate_ms": 5200
+      },
+      {
+        "surah": 80,
+        "ayah": 2,
+        "before_ms": 159,
+        "after_ms": 60,
+        "onset_ms": 8679,
+        "candidate_ms": 8580
+      },
+      {
+        "surah": 80,
+        "ayah": 3,
+        "before_ms": 119,
+        "after_ms": 60,
+        "onset_ms": 14039,
+        "candidate_ms": 13980
+      },
+      {
+        "surah": 80,
+        "ayah": 4,
+        "before_ms": 158,
+        "after_ms": 60,
+        "onset_ms": 20478,
+        "candidate_ms": 20380
+      },
+      {
+        "surah": 80,
+        "ayah": 5,
+        "before_ms": 178,
+        "after_ms": 80,
+        "onset_ms": 27058,
+        "candidate_ms": 26960
+      },
+      {
+        "surah": 80,
+        "ayah": 6,
+        "before_ms": 71,
+        "after_ms": 73,
+        "onset_ms": 31578,
+        "candidate_ms": 31580
+      },
+      {
+        "surah": 80,
+        "ayah": 7,
+        "before_ms": 90,
+        "after_ms": 73,
+        "onset_ms": 36717,
+        "candidate_ms": 36700
+      },
+      {
+        "surah": 80,
+        "ayah": 8,
+        "before_ms": 84,
+        "after_ms": 67,
+        "onset_ms": 42137,
+        "candidate_ms": 42120
+      },
+      {
+        "surah": 80,
+        "ayah": 10,
+        "before_ms": 83,
+        "after_ms": 87,
+        "onset_ms": 52096,
+        "candidate_ms": 52100
+      },
+      {
+        "surah": 80,
+        "ayah": 11,
+        "before_ms": 76,
+        "after_ms": 80,
+        "onset_ms": 56916,
+        "candidate_ms": 56920
+      },
+      {
+        "surah": 80,
+        "ayah": 12,
+        "before_ms": 88,
+        "after_ms": 93,
+        "onset_ms": 63275,
+        "candidate_ms": 63280
+      },
+      {
+        "surah": 80,
+        "ayah": 13,
+        "before_ms": 35,
+        "after_ms": 60,
+        "onset_ms": 68475,
+        "candidate_ms": 68500
+      },
+      {
+        "surah": 80,
+        "ayah": 14,
+        "before_ms": 114,
+        "after_ms": 80,
+        "onset_ms": 73154,
+        "candidate_ms": 73120
+      },
+      {
+        "surah": 80,
+        "ayah": 15,
+        "before_ms": 174,
+        "after_ms": 80,
+        "onset_ms": 77934,
+        "candidate_ms": 77840
+      },
+      {
+        "surah": 80,
+        "ayah": 16,
+        "before_ms": 54,
+        "after_ms": 60,
+        "onset_ms": 81014,
+        "candidate_ms": 81020
+      },
+      {
+        "surah": 80,
+        "ayah": 17,
+        "before_ms": 80,
+        "after_ms": 87,
+        "onset_ms": 84613,
+        "candidate_ms": 84620
+      },
+      {
+        "surah": 80,
+        "ayah": 18,
+        "before_ms": 120,
+        "after_ms": 67,
+        "onset_ms": 91053,
+        "candidate_ms": 91000
+      },
+      {
+        "surah": 80,
+        "ayah": 19,
+        "before_ms": 133,
+        "after_ms": 80,
+        "onset_ms": 95173,
+        "candidate_ms": 95120
+      },
+      {
+        "surah": 80,
+        "ayah": 20,
+        "before_ms": 52,
+        "after_ms": 80,
+        "onset_ms": 101492,
+        "candidate_ms": 101520
+      },
+      {
+        "surah": 80,
+        "ayah": 21,
+        "before_ms": 39,
+        "after_ms": 47,
+        "onset_ms": 106332,
+        "candidate_ms": 106340
+      },
+      {
+        "surah": 80,
+        "ayah": 22,
+        "before_ms": 44,
+        "after_ms": 73,
+        "onset_ms": 111951,
+        "candidate_ms": 111980
+      },
+      {
+        "surah": 80,
+        "ayah": 23,
+        "before_ms": 58,
+        "after_ms": 87,
+        "onset_ms": 118911,
+        "candidate_ms": 118940
+      },
+      {
+        "surah": 80,
+        "ayah": 24,
+        "before_ms": 77,
+        "after_ms": 87,
+        "onset_ms": 125850,
+        "candidate_ms": 125860
+      },
+      {
+        "surah": 80,
+        "ayah": 26,
+        "before_ms": 42,
+        "after_ms": 73,
+        "onset_ms": 140269,
+        "candidate_ms": 140300
+      },
+      {
+        "surah": 80,
+        "ayah": 27,
+        "before_ms": 69,
+        "after_ms": 60,
+        "onset_ms": 145829,
+        "candidate_ms": 145820
+      },
+      {
+        "surah": 80,
+        "ayah": 28,
+        "before_ms": 108,
+        "after_ms": 60,
+        "onset_ms": 151308,
+        "candidate_ms": 151260
+      },
+      {
+        "surah": 80,
+        "ayah": 29,
+        "before_ms": 135,
+        "after_ms": 87,
+        "onset_ms": 155308,
+        "candidate_ms": 155260
+      },
+      {
+        "surah": 80,
+        "ayah": 30,
+        "before_ms": 121,
+        "after_ms": 53,
+        "onset_ms": 159788,
+        "candidate_ms": 159720
+      },
+      {
+        "surah": 80,
+        "ayah": 31,
+        "before_ms": 94,
+        "after_ms": 67,
+        "onset_ms": 164347,
+        "candidate_ms": 164320
+      },
+      {
+        "surah": 80,
+        "ayah": 32,
+        "before_ms": 120,
+        "after_ms": 73,
+        "onset_ms": 169467,
+        "candidate_ms": 169420
+      },
+      {
+        "surah": 80,
+        "ayah": 33,
+        "before_ms": 67,
+        "after_ms": 80,
+        "onset_ms": 174827,
+        "candidate_ms": 174840
+      },
+      {
+        "surah": 80,
+        "ayah": 34,
+        "before_ms": 119,
+        "after_ms": 73,
+        "onset_ms": 182746,
+        "candidate_ms": 182700
+      },
+      {
+        "surah": 80,
+        "ayah": 35,
+        "before_ms": 99,
+        "after_ms": 73,
+        "onset_ms": 188046,
+        "candidate_ms": 188020
+      },
+      {
+        "surah": 80,
+        "ayah": 36,
+        "before_ms": 65,
+        "after_ms": 60,
+        "onset_ms": 192065,
+        "candidate_ms": 192060
+      },
+      {
+        "surah": 80,
+        "ayah": 37,
+        "before_ms": 112,
+        "after_ms": 67,
+        "onset_ms": 196445,
+        "candidate_ms": 196400
+      },
+      {
+        "surah": 80,
+        "ayah": 38,
+        "before_ms": 197,
+        "after_ms": 93,
+        "onset_ms": 206744,
+        "candidate_ms": 206640
+      },
+      {
+        "surah": 80,
+        "ayah": 39,
+        "before_ms": 177,
+        "after_ms": 53,
+        "onset_ms": 212924,
+        "candidate_ms": 212800
+      },
+      {
+        "surah": 80,
+        "ayah": 40,
+        "before_ms": 96,
+        "after_ms": 73,
+        "onset_ms": 217963,
+        "candidate_ms": 217940
+      },
+      {
+        "surah": 80,
+        "ayah": 41,
+        "before_ms": 70,
+        "after_ms": 87,
+        "onset_ms": 225083,
+        "candidate_ms": 225100
+      },
+      {
+        "surah": 80,
+        "ayah": 42,
+        "before_ms": 182,
+        "after_ms": 80,
+        "onset_ms": 228862,
+        "candidate_ms": 228760
+      },
+      {
+        "surah": 98,
+        "ayah": 1,
+        "before_ms": 227,
+        "after_ms": 87,
+        "onset_ms": 4720,
+        "candidate_ms": 4580
+      },
+      {
+        "surah": 98,
+        "ayah": 2,
+        "before_ms": 145,
+        "after_ms": 67,
+        "onset_ms": 20598,
+        "candidate_ms": 20520
+      },
+      {
+        "surah": 98,
+        "ayah": 3,
+        "before_ms": 117,
+        "after_ms": 120,
+        "onset_ms": 29477,
+        "candidate_ms": 29480
+      },
+      {
+        "surah": 98,
+        "ayah": 4,
+        "before_ms": 104,
+        "after_ms": 87,
+        "onset_ms": 34637,
+        "candidate_ms": 34620
+      },
+      {
+        "surah": 98,
+        "ayah": 5,
+        "before_ms": 95,
+        "after_ms": 100,
+        "onset_ms": 50375,
+        "candidate_ms": 50380
+      },
+      {
+        "surah": 98,
+        "ayah": 8,
+        "before_ms": 109,
+        "after_ms": 60,
+        "onset_ms": 117509,
+        "candidate_ms": 117460
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": 76,
+        "after_ms": 100,
+        "onset_ms": 4676,
+        "candidate_ms": 4700
+      },
+      {
+        "surah": 112,
+        "ayah": 2,
+        "before_ms": 147,
+        "after_ms": 73,
+        "onset_ms": 8094,
+        "candidate_ms": 8020
+      },
+      {
+        "surah": 112,
+        "ayah": 3,
+        "before_ms": 151,
+        "after_ms": 60,
+        "onset_ms": 10751,
+        "candidate_ms": 10660
+      },
+      {
+        "surah": 112,
+        "ayah": 4,
+        "before_ms": 122,
+        "after_ms": 73,
+        "onset_ms": 14149,
+        "candidate_ms": 14100
+      }
+    ],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "mohammed_siddiq_al_minshawi",
+    "policy": "weak_prefix_right",
+    "stats": {
+      "n": 54,
+      "median_ms": 108.5,
+      "p95_ms": 253.59999999999957,
+      "max_ms": 343,
+      "over500": 0
+    },
+    "new": [],
+    "removed": [],
+    "moves": [
+      {
+        "surah": 80,
+        "ayah": 6,
+        "before_ms": 71,
+        "after_ms": 73,
+        "onset_ms": 31578,
+        "candidate_ms": 31580
+      },
+      {
+        "surah": 80,
+        "ayah": 10,
+        "before_ms": 83,
+        "after_ms": 87,
+        "onset_ms": 52096,
+        "candidate_ms": 52100
+      },
+      {
+        "surah": 80,
+        "ayah": 11,
+        "before_ms": 76,
+        "after_ms": 80,
+        "onset_ms": 56916,
+        "candidate_ms": 56920
+      },
+      {
+        "surah": 80,
+        "ayah": 12,
+        "before_ms": 88,
+        "after_ms": 93,
+        "onset_ms": 63275,
+        "candidate_ms": 63280
+      },
+      {
+        "surah": 80,
+        "ayah": 16,
+        "before_ms": 54,
+        "after_ms": 60,
+        "onset_ms": 81014,
+        "candidate_ms": 81020
+      },
+      {
+        "surah": 80,
+        "ayah": 17,
+        "before_ms": 80,
+        "after_ms": 87,
+        "onset_ms": 84613,
+        "candidate_ms": 84620
+      },
+      {
+        "surah": 80,
+        "ayah": 23,
+        "before_ms": 58,
+        "after_ms": 87,
+        "onset_ms": 118911,
+        "candidate_ms": 118940
+      },
+      {
+        "surah": 80,
+        "ayah": 24,
+        "before_ms": 77,
+        "after_ms": 87,
+        "onset_ms": 125850,
+        "candidate_ms": 125860
+      },
+      {
+        "surah": 80,
+        "ayah": 26,
+        "before_ms": 42,
+        "after_ms": 73,
+        "onset_ms": 140269,
+        "candidate_ms": 140300
+      },
+      {
+        "surah": 80,
+        "ayah": 33,
+        "before_ms": 67,
+        "after_ms": 80,
+        "onset_ms": 174827,
+        "candidate_ms": 174840
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": 76,
+        "after_ms": 100,
+        "onset_ms": 4676,
+        "candidate_ms": 4700
+      }
+    ],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "mahmoud_khalil_al_hussary",
+    "policy": "baseline",
+    "stats": {
+      "n": 54,
+      "median_ms": 235.0,
+      "p95_ms": 985.799999999998,
+      "max_ms": 1483,
+      "over500": 12
+    },
+    "new": [],
+    "removed": [],
+    "moves": [],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "mahmoud_khalil_al_hussary",
+    "policy": "midpoint",
+    "stats": {
+      "n": 54,
+      "median_ms": 221.5,
+      "p95_ms": 955.6499999999996,
+      "max_ms": 1226,
+      "over500": 6
+    },
+    "new": [
+      {
+        "surah": 98,
+        "ayah": 1,
+        "before_ms": 336,
+        "after_ms": -994,
+        "onset_ms": 9780,
+        "candidate_ms": 8450
+      },
+      {
+        "surah": 98,
+        "ayah": 2,
+        "before_ms": 343,
+        "after_ms": -1226,
+        "onset_ms": 32599,
+        "candidate_ms": 31030
+      },
+      {
+        "surah": 98,
+        "ayah": 5,
+        "before_ms": 273,
+        "after_ms": -935,
+        "onset_ms": 70598,
+        "candidate_ms": 69390
+      },
+      {
+        "surah": 98,
+        "ayah": 8,
+        "before_ms": 272,
+        "after_ms": -1094,
+        "onset_ms": 146316,
+        "candidate_ms": 144950
+      }
+    ],
+    "removed": [
+      {
+        "surah": 80,
+        "ayah": 18,
+        "before_ms": 569,
+        "after_ms": -444,
+        "onset_ms": 113193,
+        "candidate_ms": 112180
+      },
+      {
+        "surah": 80,
+        "ayah": 23,
+        "before_ms": 805,
+        "after_ms": -497,
+        "onset_ms": 141332,
+        "candidate_ms": 140030
+      },
+      {
+        "surah": 80,
+        "ayah": 24,
+        "before_ms": 612,
+        "after_ms": -39,
+        "onset_ms": 148751,
+        "candidate_ms": 148100
+      },
+      {
+        "surah": 80,
+        "ayah": 25,
+        "before_ms": 1212,
+        "after_ms": 91,
+        "onset_ms": 157231,
+        "candidate_ms": 156110
+      },
+      {
+        "surah": 80,
+        "ayah": 26,
+        "before_ms": 1464,
+        "after_ms": 394,
+        "onset_ms": 165910,
+        "candidate_ms": 164840
+      },
+      {
+        "surah": 80,
+        "ayah": 34,
+        "before_ms": 1483,
+        "after_ms": 416,
+        "onset_ms": 215807,
+        "candidate_ms": 214740
+      },
+      {
+        "surah": 80,
+        "ayah": 38,
+        "before_ms": 559,
+        "after_ms": -97,
+        "onset_ms": 246126,
+        "candidate_ms": 245470
+      },
+      {
+        "surah": 80,
+        "ayah": 39,
+        "before_ms": 765,
+        "after_ms": -20,
+        "onset_ms": 253805,
+        "candidate_ms": 253020
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": 629,
+        "after_ms": 82,
+        "onset_ms": 8557,
+        "candidate_ms": 8010
+      },
+      {
+        "surah": 112,
+        "ayah": 2,
+        "before_ms": 611,
+        "after_ms": 36,
+        "onset_ms": 14335,
+        "candidate_ms": 13760
+      }
+    ],
+    "moves": [
+      {
+        "surah": 80,
+        "ayah": 1,
+        "before_ms": 296,
+        "after_ms": -474,
+        "onset_ms": 8320,
+        "candidate_ms": 7550
+      },
+      {
+        "surah": 80,
+        "ayah": 2,
+        "before_ms": 327,
+        "after_ms": 138,
+        "onset_ms": 12639,
+        "candidate_ms": 12450
+      },
+      {
+        "surah": 80,
+        "ayah": 3,
+        "before_ms": 98,
+        "after_ms": -111,
+        "onset_ms": 18959,
+        "candidate_ms": 18750
+      },
+      {
+        "surah": 80,
+        "ayah": 4,
+        "before_ms": 48,
+        "after_ms": -210,
+        "onset_ms": 27038,
+        "candidate_ms": 26780
+      },
+      {
+        "surah": 80,
+        "ayah": 5,
+        "before_ms": 240,
+        "after_ms": -138,
+        "onset_ms": 35578,
+        "candidate_ms": 35200
+      },
+      {
+        "surah": 80,
+        "ayah": 6,
+        "before_ms": -10,
+        "after_ms": -168,
+        "onset_ms": 40678,
+        "candidate_ms": 40520
+      },
+      {
+        "surah": 80,
+        "ayah": 7,
+        "before_ms": 90,
+        "after_ms": -37,
+        "onset_ms": 46197,
+        "candidate_ms": 46070
+      },
+      {
+        "surah": 80,
+        "ayah": 8,
+        "before_ms": 69,
+        "after_ms": -58,
+        "onset_ms": 53737,
+        "candidate_ms": 53610
+      },
+      {
+        "surah": 80,
+        "ayah": 9,
+        "before_ms": 249,
+        "after_ms": 3,
+        "onset_ms": 62456,
+        "candidate_ms": 62210
+      },
+      {
+        "surah": 80,
+        "ayah": 10,
+        "before_ms": -31,
+        "after_ms": -87,
+        "onset_ms": 65996,
+        "candidate_ms": 65940
+      },
+      {
+        "surah": 80,
+        "ayah": 11,
+        "before_ms": 93,
+        "after_ms": -103,
+        "onset_ms": 72116,
+        "candidate_ms": 71920
+      },
+      {
+        "surah": 80,
+        "ayah": 12,
+        "before_ms": 22,
+        "after_ms": -183,
+        "onset_ms": 79435,
+        "candidate_ms": 79230
+      },
+      {
+        "surah": 80,
+        "ayah": 13,
+        "before_ms": -154,
+        "after_ms": -269,
+        "onset_ms": 85215,
+        "candidate_ms": 85100
+      },
+      {
+        "surah": 80,
+        "ayah": 14,
+        "before_ms": 20,
+        "after_ms": -95,
+        "onset_ms": 90695,
+        "candidate_ms": 90580
+      },
+      {
+        "surah": 80,
+        "ayah": 15,
+        "before_ms": -17,
+        "after_ms": -121,
+        "onset_ms": 96754,
+        "candidate_ms": 96650
+      },
+      {
+        "surah": 80,
+        "ayah": 17,
+        "before_ms": 86,
+        "after_ms": 82,
+        "onset_ms": 105314,
+        "candidate_ms": 105310
+      },
+      {
+        "surah": 80,
+        "ayah": 18,
+        "before_ms": 569,
+        "after_ms": -444,
+        "onset_ms": 113193,
+        "candidate_ms": 112180
+      },
+      {
+        "surah": 80,
+        "ayah": 19,
+        "before_ms": 407,
+        "after_ms": -106,
+        "onset_ms": 117433,
+        "candidate_ms": 116920
+      },
+      {
+        "surah": 80,
+        "ayah": 20,
+        "before_ms": 158,
+        "after_ms": -235,
+        "onset_ms": 123033,
+        "candidate_ms": 122640
+      },
+      {
+        "surah": 80,
+        "ayah": 21,
+        "before_ms": 230,
+        "after_ms": -283,
+        "onset_ms": 127653,
+        "candidate_ms": 127140
+      },
+      {
+        "surah": 80,
+        "ayah": 22,
+        "before_ms": 45,
+        "after_ms": -147,
+        "onset_ms": 132512,
+        "candidate_ms": 132320
+      },
+      {
+        "surah": 80,
+        "ayah": 23,
+        "before_ms": 805,
+        "after_ms": -497,
+        "onset_ms": 141332,
+        "candidate_ms": 140030
+      },
+      {
+        "surah": 80,
+        "ayah": 24,
+        "before_ms": 612,
+        "after_ms": -39,
+        "onset_ms": 148751,
+        "candidate_ms": 148100
+      },
+      {
+        "surah": 80,
+        "ayah": 25,
+        "before_ms": 1212,
+        "after_ms": 91,
+        "onset_ms": 157231,
+        "candidate_ms": 156110
+      },
+      {
+        "surah": 80,
+        "ayah": 26,
+        "before_ms": 1464,
+        "after_ms": 394,
+        "onset_ms": 165910,
+        "candidate_ms": 164840
+      },
+      {
+        "surah": 80,
+        "ayah": 27,
+        "before_ms": -75,
+        "after_ms": -385,
+        "onset_ms": 171830,
+        "candidate_ms": 171520
+      },
+      {
+        "surah": 80,
+        "ayah": 28,
+        "before_ms": 191,
+        "after_ms": -259,
+        "onset_ms": 178010,
+        "candidate_ms": 177560
+      },
+      {
+        "surah": 80,
+        "ayah": 29,
+        "before_ms": -80,
+        "after_ms": -289,
+        "onset_ms": 182549,
+        "candidate_ms": 182340
+      },
+      {
+        "surah": 80,
+        "ayah": 30,
+        "before_ms": -107,
+        "after_ms": -436,
+        "onset_ms": 187569,
+        "candidate_ms": 187240
+      },
+      {
+        "surah": 80,
+        "ayah": 31,
+        "before_ms": -24,
+        "after_ms": -233,
+        "onset_ms": 192729,
+        "candidate_ms": 192520
+      },
+      {
+        "surah": 80,
+        "ayah": 32,
+        "before_ms": 17,
+        "after_ms": -262,
+        "onset_ms": 197689,
+        "candidate_ms": 197410
+      },
+      {
+        "surah": 80,
+        "ayah": 33,
+        "before_ms": 554,
+        "after_ms": -524,
+        "onset_ms": 205328,
+        "candidate_ms": 204250
+      },
+      {
+        "surah": 80,
+        "ayah": 34,
+        "before_ms": 1483,
+        "after_ms": 416,
+        "onset_ms": 215807,
+        "candidate_ms": 214740
+      },
+      {
+        "surah": 80,
+        "ayah": 35,
+        "before_ms": 3,
+        "after_ms": -414,
+        "onset_ms": 222647,
+        "candidate_ms": 222230
+      },
+      {
+        "surah": 80,
+        "ayah": 36,
+        "before_ms": -105,
+        "after_ms": -462,
+        "onset_ms": 228007,
+        "candidate_ms": 227650
+      },
+      {
+        "surah": 80,
+        "ayah": 37,
+        "before_ms": 60,
+        "after_ms": -296,
+        "onset_ms": 234186,
+        "candidate_ms": 233830
+      },
+      {
+        "surah": 80,
+        "ayah": 38,
+        "before_ms": 559,
+        "after_ms": -97,
+        "onset_ms": 246126,
+        "candidate_ms": 245470
+      },
+      {
+        "surah": 80,
+        "ayah": 39,
+        "before_ms": 765,
+        "after_ms": -20,
+        "onset_ms": 253805,
+        "candidate_ms": 253020
+      },
+      {
+        "surah": 80,
+        "ayah": 40,
+        "before_ms": 323,
+        "after_ms": -82,
+        "onset_ms": 259665,
+        "candidate_ms": 259260
+      },
+      {
+        "surah": 80,
+        "ayah": 41,
+        "before_ms": 221,
+        "after_ms": -23,
+        "onset_ms": 268124,
+        "candidate_ms": 267880
+      },
+      {
+        "surah": 80,
+        "ayah": 42,
+        "before_ms": 104,
+        "after_ms": -200,
+        "onset_ms": 272664,
+        "candidate_ms": 272360
+      },
+      {
+        "surah": 98,
+        "ayah": 1,
+        "before_ms": 336,
+        "after_ms": -994,
+        "onset_ms": 9780,
+        "candidate_ms": 8450
+      },
+      {
+        "surah": 98,
+        "ayah": 2,
+        "before_ms": 343,
+        "after_ms": -1226,
+        "onset_ms": 32599,
+        "candidate_ms": 31030
+      },
+      {
+        "surah": 98,
+        "ayah": 4,
+        "before_ms": 425,
+        "after_ms": -284,
+        "onset_ms": 51319,
+        "candidate_ms": 50610
+      },
+      {
+        "surah": 98,
+        "ayah": 5,
+        "before_ms": 273,
+        "after_ms": -935,
+        "onset_ms": 70598,
+        "candidate_ms": 69390
+      },
+      {
+        "surah": 98,
+        "ayah": 7,
+        "before_ms": 284,
+        "after_ms": -412,
+        "onset_ms": 128516,
+        "candidate_ms": 127820
+      },
+      {
+        "surah": 98,
+        "ayah": 8,
+        "before_ms": 272,
+        "after_ms": -1094,
+        "onset_ms": 146316,
+        "candidate_ms": 144950
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": 629,
+        "after_ms": 82,
+        "onset_ms": 8557,
+        "candidate_ms": 8010
+      },
+      {
+        "surah": 112,
+        "ayah": 2,
+        "before_ms": 611,
+        "after_ms": 36,
+        "onset_ms": 14335,
+        "candidate_ms": 13760
+      },
+      {
+        "surah": 112,
+        "ayah": 3,
+        "before_ms": 290,
+        "after_ms": -153,
+        "onset_ms": 19093,
+        "candidate_ms": 18650
+      },
+      {
+        "surah": 112,
+        "ayah": 4,
+        "before_ms": 63,
+        "after_ms": -198,
+        "onset_ms": 24791,
+        "candidate_ms": 24530
+      }
+    ],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "mahmoud_khalil_al_hussary",
+    "policy": "left_plus_400",
+    "stats": {
+      "n": 54,
+      "median_ms": 357.5,
+      "p95_ms": 1960.6499999999992,
+      "max_ms": 2516,
+      "over500": 20
+    },
+    "new": [
+      {
+        "surah": 80,
+        "ayah": 1,
+        "before_ms": 296,
+        "after_ms": -924,
+        "onset_ms": 8320,
+        "candidate_ms": 7100
+      },
+      {
+        "surah": 80,
+        "ayah": 21,
+        "before_ms": 230,
+        "after_ms": -623,
+        "onset_ms": 127653,
+        "candidate_ms": 126800
+      },
+      {
+        "surah": 80,
+        "ayah": 27,
+        "before_ms": -75,
+        "after_ms": -525,
+        "onset_ms": 171830,
+        "candidate_ms": 171380
+      },
+      {
+        "surah": 80,
+        "ayah": 30,
+        "before_ms": -107,
+        "after_ms": -536,
+        "onset_ms": 187569,
+        "candidate_ms": 187140
+      },
+      {
+        "surah": 80,
+        "ayah": 35,
+        "before_ms": 3,
+        "after_ms": -584,
+        "onset_ms": 222647,
+        "candidate_ms": 222060
+      },
+      {
+        "surah": 80,
+        "ayah": 36,
+        "before_ms": -105,
+        "after_ms": -592,
+        "onset_ms": 228007,
+        "candidate_ms": 227520
+      },
+      {
+        "surah": 98,
+        "ayah": 1,
+        "before_ms": 336,
+        "after_ms": -2064,
+        "onset_ms": 9780,
+        "candidate_ms": 7380
+      },
+      {
+        "surah": 98,
+        "ayah": 2,
+        "before_ms": 343,
+        "after_ms": -2516,
+        "onset_ms": 32599,
+        "candidate_ms": 29740
+      },
+      {
+        "surah": 98,
+        "ayah": 4,
+        "before_ms": 425,
+        "after_ms": -774,
+        "onset_ms": 51319,
+        "candidate_ms": 50120
+      },
+      {
+        "surah": 98,
+        "ayah": 5,
+        "before_ms": 273,
+        "after_ms": -1905,
+        "onset_ms": 70598,
+        "candidate_ms": 68420
+      },
+      {
+        "surah": 98,
+        "ayah": 7,
+        "before_ms": 284,
+        "after_ms": -712,
+        "onset_ms": 128516,
+        "candidate_ms": 127520
+      },
+      {
+        "surah": 98,
+        "ayah": 8,
+        "before_ms": 272,
+        "after_ms": -2224,
+        "onset_ms": 146316,
+        "candidate_ms": 143820
+      }
+    ],
+    "removed": [
+      {
+        "surah": 80,
+        "ayah": 34,
+        "before_ms": 1483,
+        "after_ms": -404,
+        "onset_ms": 215807,
+        "candidate_ms": 213920
+      },
+      {
+        "surah": 80,
+        "ayah": 39,
+        "before_ms": 765,
+        "after_ms": -420,
+        "onset_ms": 253805,
+        "candidate_ms": 252620
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": 629,
+        "after_ms": -268,
+        "onset_ms": 8557,
+        "candidate_ms": 7660
+      },
+      {
+        "surah": 112,
+        "ayah": 2,
+        "before_ms": 611,
+        "after_ms": -244,
+        "onset_ms": 14335,
+        "candidate_ms": 13480
+      }
+    ],
+    "moves": [
+      {
+        "surah": 80,
+        "ayah": 1,
+        "before_ms": 296,
+        "after_ms": -924,
+        "onset_ms": 8320,
+        "candidate_ms": 7100
+      },
+      {
+        "surah": 80,
+        "ayah": 2,
+        "before_ms": 327,
+        "after_ms": 268,
+        "onset_ms": 12639,
+        "candidate_ms": 12580
+      },
+      {
+        "surah": 80,
+        "ayah": 3,
+        "before_ms": 98,
+        "after_ms": -121,
+        "onset_ms": 18959,
+        "candidate_ms": 18740
+      },
+      {
+        "surah": 80,
+        "ayah": 4,
+        "before_ms": 48,
+        "after_ms": -130,
+        "onset_ms": 27038,
+        "candidate_ms": 26860
+      },
+      {
+        "surah": 80,
+        "ayah": 5,
+        "before_ms": 240,
+        "after_ms": -198,
+        "onset_ms": 35578,
+        "candidate_ms": 35140
+      },
+      {
+        "surah": 80,
+        "ayah": 6,
+        "before_ms": -10,
+        "after_ms": -148,
+        "onset_ms": 40678,
+        "candidate_ms": 40540
+      },
+      {
+        "surah": 80,
+        "ayah": 7,
+        "before_ms": 90,
+        "after_ms": 73,
+        "onset_ms": 46197,
+        "candidate_ms": 46180
+      },
+      {
+        "surah": 80,
+        "ayah": 8,
+        "before_ms": 69,
+        "after_ms": 112,
+        "onset_ms": 53737,
+        "candidate_ms": 53780
+      },
+      {
+        "surah": 80,
+        "ayah": 9,
+        "before_ms": 249,
+        "after_ms": 33,
+        "onset_ms": 62456,
+        "candidate_ms": 62240
+      },
+      {
+        "surah": 80,
+        "ayah": 10,
+        "before_ms": -31,
+        "after_ms": 53,
+        "onset_ms": 65996,
+        "candidate_ms": 66080
+      },
+      {
+        "surah": 80,
+        "ayah": 11,
+        "before_ms": 93,
+        "after_ms": -123,
+        "onset_ms": 72116,
+        "candidate_ms": 71900
+      },
+      {
+        "surah": 80,
+        "ayah": 12,
+        "before_ms": 22,
+        "after_ms": -193,
+        "onset_ms": 79435,
+        "candidate_ms": 79220
+      },
+      {
+        "surah": 80,
+        "ayah": 13,
+        "before_ms": -154,
+        "after_ms": -209,
+        "onset_ms": 85215,
+        "candidate_ms": 85160
+      },
+      {
+        "surah": 80,
+        "ayah": 14,
+        "before_ms": 20,
+        "after_ms": 65,
+        "onset_ms": 90695,
+        "candidate_ms": 90740
+      },
+      {
+        "surah": 80,
+        "ayah": 15,
+        "before_ms": -17,
+        "after_ms": 9,
+        "onset_ms": 96754,
+        "candidate_ms": 96780
+      },
+      {
+        "surah": 80,
+        "ayah": 17,
+        "before_ms": 86,
+        "after_ms": 252,
+        "onset_ms": 105314,
+        "candidate_ms": 105480
+      },
+      {
+        "surah": 80,
+        "ayah": 18,
+        "before_ms": 569,
+        "after_ms": -1264,
+        "onset_ms": 113193,
+        "candidate_ms": 111360
+      },
+      {
+        "surah": 80,
+        "ayah": 19,
+        "before_ms": 407,
+        "after_ms": -406,
+        "onset_ms": 117433,
+        "candidate_ms": 116620
+      },
+      {
+        "surah": 80,
+        "ayah": 20,
+        "before_ms": 158,
+        "after_ms": -475,
+        "onset_ms": 123033,
+        "candidate_ms": 122400
+      },
+      {
+        "surah": 80,
+        "ayah": 21,
+        "before_ms": 230,
+        "after_ms": -623,
+        "onset_ms": 127653,
+        "candidate_ms": 126800
+      },
+      {
+        "surah": 80,
+        "ayah": 22,
+        "before_ms": 45,
+        "after_ms": -207,
+        "onset_ms": 132512,
+        "candidate_ms": 132260
+      },
+      {
+        "surah": 80,
+        "ayah": 23,
+        "before_ms": 805,
+        "after_ms": -1587,
+        "onset_ms": 141332,
+        "candidate_ms": 138940
+      },
+      {
+        "surah": 80,
+        "ayah": 24,
+        "before_ms": 612,
+        "after_ms": -519,
+        "onset_ms": 148751,
+        "candidate_ms": 147620
+      },
+      {
+        "surah": 80,
+        "ayah": 25,
+        "before_ms": 1212,
+        "after_ms": -639,
+        "onset_ms": 157231,
+        "candidate_ms": 155380
+      },
+      {
+        "surah": 80,
+        "ayah": 26,
+        "before_ms": 1464,
+        "after_ms": -506,
+        "onset_ms": 165910,
+        "candidate_ms": 163940
+      },
+      {
+        "surah": 80,
+        "ayah": 27,
+        "before_ms": -75,
+        "after_ms": -525,
+        "onset_ms": 171830,
+        "candidate_ms": 171380
+      },
+      {
+        "surah": 80,
+        "ayah": 28,
+        "before_ms": 191,
+        "after_ms": -479,
+        "onset_ms": 178010,
+        "candidate_ms": 177340
+      },
+      {
+        "surah": 80,
+        "ayah": 29,
+        "before_ms": -80,
+        "after_ms": -269,
+        "onset_ms": 182549,
+        "candidate_ms": 182360
+      },
+      {
+        "surah": 80,
+        "ayah": 30,
+        "before_ms": -107,
+        "after_ms": -536,
+        "onset_ms": 187569,
+        "candidate_ms": 187140
+      },
+      {
+        "surah": 80,
+        "ayah": 31,
+        "before_ms": -24,
+        "after_ms": -193,
+        "onset_ms": 192729,
+        "candidate_ms": 192560
+      },
+      {
+        "surah": 80,
+        "ayah": 32,
+        "before_ms": 17,
+        "after_ms": -352,
+        "onset_ms": 197689,
+        "candidate_ms": 197320
+      },
+      {
+        "surah": 80,
+        "ayah": 33,
+        "before_ms": 554,
+        "after_ms": -1434,
+        "onset_ms": 205328,
+        "candidate_ms": 203340
+      },
+      {
+        "surah": 80,
+        "ayah": 34,
+        "before_ms": 1483,
+        "after_ms": -404,
+        "onset_ms": 215807,
+        "candidate_ms": 213920
+      },
+      {
+        "surah": 80,
+        "ayah": 35,
+        "before_ms": 3,
+        "after_ms": -584,
+        "onset_ms": 222647,
+        "candidate_ms": 222060
+      },
+      {
+        "surah": 80,
+        "ayah": 36,
+        "before_ms": -105,
+        "after_ms": -592,
+        "onset_ms": 228007,
+        "candidate_ms": 227520
+      },
+      {
+        "surah": 80,
+        "ayah": 37,
+        "before_ms": 60,
+        "after_ms": -466,
+        "onset_ms": 234186,
+        "candidate_ms": 233660
+      },
+      {
+        "surah": 80,
+        "ayah": 38,
+        "before_ms": 559,
+        "after_ms": -567,
+        "onset_ms": 246126,
+        "candidate_ms": 245000
+      },
+      {
+        "surah": 80,
+        "ayah": 39,
+        "before_ms": 765,
+        "after_ms": -420,
+        "onset_ms": 253805,
+        "candidate_ms": 252620
+      },
+      {
+        "surah": 80,
+        "ayah": 40,
+        "before_ms": 323,
+        "after_ms": -242,
+        "onset_ms": 259665,
+        "candidate_ms": 259100
+      },
+      {
+        "surah": 80,
+        "ayah": 41,
+        "before_ms": 221,
+        "after_ms": -103,
+        "onset_ms": 268124,
+        "candidate_ms": 267800
+      },
+      {
+        "surah": 80,
+        "ayah": 42,
+        "before_ms": 104,
+        "after_ms": -160,
+        "onset_ms": 272664,
+        "candidate_ms": 272400
+      },
+      {
+        "surah": 98,
+        "ayah": 1,
+        "before_ms": 336,
+        "after_ms": -2064,
+        "onset_ms": 9780,
+        "candidate_ms": 7380
+      },
+      {
+        "surah": 98,
+        "ayah": 2,
+        "before_ms": 343,
+        "after_ms": -2516,
+        "onset_ms": 32599,
+        "candidate_ms": 29740
+      },
+      {
+        "surah": 98,
+        "ayah": 4,
+        "before_ms": 425,
+        "after_ms": -774,
+        "onset_ms": 51319,
+        "candidate_ms": 50120
+      },
+      {
+        "surah": 98,
+        "ayah": 5,
+        "before_ms": 273,
+        "after_ms": -1905,
+        "onset_ms": 70598,
+        "candidate_ms": 68420
+      },
+      {
+        "surah": 98,
+        "ayah": 7,
+        "before_ms": 284,
+        "after_ms": -712,
+        "onset_ms": 128516,
+        "candidate_ms": 127520
+      },
+      {
+        "surah": 98,
+        "ayah": 8,
+        "before_ms": 272,
+        "after_ms": -2224,
+        "onset_ms": 146316,
+        "candidate_ms": 143820
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": 629,
+        "after_ms": -268,
+        "onset_ms": 8557,
+        "candidate_ms": 7660
+      },
+      {
+        "surah": 112,
+        "ayah": 2,
+        "before_ms": 611,
+        "after_ms": -244,
+        "onset_ms": 14335,
+        "candidate_ms": 13480
+      },
+      {
+        "surah": 112,
+        "ayah": 3,
+        "before_ms": 290,
+        "after_ms": -363,
+        "onset_ms": 19093,
+        "candidate_ms": 18440
+      },
+      {
+        "surah": 112,
+        "ayah": 4,
+        "before_ms": 63,
+        "after_ms": -208,
+        "onset_ms": 24791,
+        "candidate_ms": 24520
+      }
+    ],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "mahmoud_khalil_al_hussary",
+    "policy": "right_minus_200",
+    "stats": {
+      "n": 54,
+      "median_ms": 174.5,
+      "p95_ms": 918.9499999999991,
+      "max_ms": 1494,
+      "over500": 12
+    },
+    "new": [],
+    "removed": [],
+    "moves": [
+      {
+        "surah": 80,
+        "ayah": 1,
+        "before_ms": 296,
+        "after_ms": 176,
+        "onset_ms": 8320,
+        "candidate_ms": 8200
+      },
+      {
+        "surah": 80,
+        "ayah": 2,
+        "before_ms": 327,
+        "after_ms": 208,
+        "onset_ms": 12639,
+        "candidate_ms": 12520
+      },
+      {
+        "surah": 80,
+        "ayah": 3,
+        "before_ms": 98,
+        "after_ms": 99,
+        "onset_ms": 18959,
+        "candidate_ms": 18960
+      },
+      {
+        "surah": 80,
+        "ayah": 4,
+        "before_ms": 48,
+        "after_ms": -90,
+        "onset_ms": 27038,
+        "candidate_ms": 26900
+      },
+      {
+        "surah": 80,
+        "ayah": 5,
+        "before_ms": 240,
+        "after_ms": 122,
+        "onset_ms": 35578,
+        "candidate_ms": 35460
+      },
+      {
+        "surah": 80,
+        "ayah": 6,
+        "before_ms": -10,
+        "after_ms": 12,
+        "onset_ms": 40678,
+        "candidate_ms": 40700
+      },
+      {
+        "surah": 80,
+        "ayah": 7,
+        "before_ms": 90,
+        "after_ms": 53,
+        "onset_ms": 46197,
+        "candidate_ms": 46160
+      },
+      {
+        "surah": 80,
+        "ayah": 8,
+        "before_ms": 69,
+        "after_ms": -28,
+        "onset_ms": 53737,
+        "candidate_ms": 53640
+      },
+      {
+        "surah": 80,
+        "ayah": 9,
+        "before_ms": 249,
+        "after_ms": 173,
+        "onset_ms": 62456,
+        "candidate_ms": 62380
+      },
+      {
+        "surah": 80,
+        "ayah": 10,
+        "before_ms": -31,
+        "after_ms": -27,
+        "onset_ms": 65996,
+        "candidate_ms": 66000
+      },
+      {
+        "surah": 80,
+        "ayah": 11,
+        "before_ms": 93,
+        "after_ms": 117,
+        "onset_ms": 72116,
+        "candidate_ms": 72140
+      },
+      {
+        "surah": 80,
+        "ayah": 12,
+        "before_ms": 22,
+        "after_ms": 27,
+        "onset_ms": 79435,
+        "candidate_ms": 79440
+      },
+      {
+        "surah": 80,
+        "ayah": 13,
+        "before_ms": -154,
+        "after_ms": -129,
+        "onset_ms": 85215,
+        "candidate_ms": 85240
+      },
+      {
+        "surah": 80,
+        "ayah": 14,
+        "before_ms": 20,
+        "after_ms": -55,
+        "onset_ms": 90695,
+        "candidate_ms": 90620
+      },
+      {
+        "surah": 80,
+        "ayah": 15,
+        "before_ms": -17,
+        "after_ms": -51,
+        "onset_ms": 96754,
+        "candidate_ms": 96720
+      },
+      {
+        "surah": 80,
+        "ayah": 17,
+        "before_ms": 86,
+        "after_ms": 112,
+        "onset_ms": 105314,
+        "candidate_ms": 105340
+      },
+      {
+        "surah": 80,
+        "ayah": 18,
+        "before_ms": 569,
+        "after_ms": 576,
+        "onset_ms": 113193,
+        "candidate_ms": 113200
+      },
+      {
+        "surah": 80,
+        "ayah": 19,
+        "before_ms": 407,
+        "after_ms": 394,
+        "onset_ms": 117433,
+        "candidate_ms": 117420
+      },
+      {
+        "surah": 80,
+        "ayah": 20,
+        "before_ms": 158,
+        "after_ms": 205,
+        "onset_ms": 123033,
+        "candidate_ms": 123080
+      },
+      {
+        "surah": 80,
+        "ayah": 21,
+        "before_ms": 230,
+        "after_ms": 257,
+        "onset_ms": 127653,
+        "candidate_ms": 127680
+      },
+      {
+        "surah": 80,
+        "ayah": 22,
+        "before_ms": 45,
+        "after_ms": 113,
+        "onset_ms": 132512,
+        "candidate_ms": 132580
+      },
+      {
+        "surah": 80,
+        "ayah": 23,
+        "before_ms": 805,
+        "after_ms": 793,
+        "onset_ms": 141332,
+        "candidate_ms": 141320
+      },
+      {
+        "surah": 80,
+        "ayah": 24,
+        "before_ms": 612,
+        "after_ms": 641,
+        "onset_ms": 148751,
+        "candidate_ms": 148780
+      },
+      {
+        "surah": 80,
+        "ayah": 25,
+        "before_ms": 1212,
+        "after_ms": 1021,
+        "onset_ms": 157231,
+        "candidate_ms": 157040
+      },
+      {
+        "surah": 80,
+        "ayah": 26,
+        "before_ms": 1464,
+        "after_ms": 1494,
+        "onset_ms": 165910,
+        "candidate_ms": 165940
+      },
+      {
+        "surah": 80,
+        "ayah": 27,
+        "before_ms": -75,
+        "after_ms": -45,
+        "onset_ms": 171830,
+        "candidate_ms": 171860
+      },
+      {
+        "surah": 80,
+        "ayah": 28,
+        "before_ms": 191,
+        "after_ms": 161,
+        "onset_ms": 178010,
+        "candidate_ms": 177980
+      },
+      {
+        "surah": 80,
+        "ayah": 29,
+        "before_ms": -80,
+        "after_ms": -109,
+        "onset_ms": 182549,
+        "candidate_ms": 182520
+      },
+      {
+        "surah": 80,
+        "ayah": 30,
+        "before_ms": -107,
+        "after_ms": -136,
+        "onset_ms": 187569,
+        "candidate_ms": 187540
+      },
+      {
+        "surah": 80,
+        "ayah": 31,
+        "before_ms": -24,
+        "after_ms": -73,
+        "onset_ms": 192729,
+        "candidate_ms": 192680
+      },
+      {
+        "surah": 80,
+        "ayah": 32,
+        "before_ms": 17,
+        "after_ms": 28,
+        "onset_ms": 197689,
+        "candidate_ms": 197700
+      },
+      {
+        "surah": 80,
+        "ayah": 33,
+        "before_ms": 554,
+        "after_ms": 586,
+        "onset_ms": 205328,
+        "candidate_ms": 205360
+      },
+      {
+        "surah": 80,
+        "ayah": 34,
+        "before_ms": 1483,
+        "after_ms": 1436,
+        "onset_ms": 215807,
+        "candidate_ms": 215760
+      },
+      {
+        "surah": 80,
+        "ayah": 35,
+        "before_ms": 3,
+        "after_ms": -44,
+        "onset_ms": 222647,
+        "candidate_ms": 222600
+      },
+      {
+        "surah": 80,
+        "ayah": 36,
+        "before_ms": -105,
+        "after_ms": -132,
+        "onset_ms": 228007,
+        "candidate_ms": 227980
+      },
+      {
+        "surah": 80,
+        "ayah": 37,
+        "before_ms": 60,
+        "after_ms": 74,
+        "onset_ms": 234186,
+        "candidate_ms": 234200
+      },
+      {
+        "surah": 80,
+        "ayah": 38,
+        "before_ms": 559,
+        "after_ms": 573,
+        "onset_ms": 246126,
+        "candidate_ms": 246140
+      },
+      {
+        "surah": 80,
+        "ayah": 39,
+        "before_ms": 765,
+        "after_ms": 580,
+        "onset_ms": 253805,
+        "candidate_ms": 253620
+      },
+      {
+        "surah": 80,
+        "ayah": 40,
+        "before_ms": 323,
+        "after_ms": 278,
+        "onset_ms": 259665,
+        "candidate_ms": 259620
+      },
+      {
+        "surah": 80,
+        "ayah": 41,
+        "before_ms": 221,
+        "after_ms": 257,
+        "onset_ms": 268124,
+        "candidate_ms": 268160
+      },
+      {
+        "surah": 80,
+        "ayah": 42,
+        "before_ms": 104,
+        "after_ms": -40,
+        "onset_ms": 272664,
+        "candidate_ms": 272520
+      },
+      {
+        "surah": 98,
+        "ayah": 1,
+        "before_ms": 336,
+        "after_ms": 276,
+        "onset_ms": 9780,
+        "candidate_ms": 9720
+      },
+      {
+        "surah": 98,
+        "ayah": 2,
+        "before_ms": 343,
+        "after_ms": 264,
+        "onset_ms": 32599,
+        "candidate_ms": 32520
+      },
+      {
+        "surah": 98,
+        "ayah": 4,
+        "before_ms": 425,
+        "after_ms": 406,
+        "onset_ms": 51319,
+        "candidate_ms": 51300
+      },
+      {
+        "surah": 98,
+        "ayah": 5,
+        "before_ms": 273,
+        "after_ms": 235,
+        "onset_ms": 70598,
+        "candidate_ms": 70560
+      },
+      {
+        "surah": 98,
+        "ayah": 7,
+        "before_ms": 284,
+        "after_ms": 88,
+        "onset_ms": 128516,
+        "candidate_ms": 128320
+      },
+      {
+        "surah": 98,
+        "ayah": 8,
+        "before_ms": 272,
+        "after_ms": 236,
+        "onset_ms": 146316,
+        "candidate_ms": 146280
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": 629,
+        "after_ms": 632,
+        "onset_ms": 8557,
+        "candidate_ms": 8560
+      },
+      {
+        "surah": 112,
+        "ayah": 2,
+        "before_ms": 611,
+        "after_ms": 516,
+        "onset_ms": 14335,
+        "candidate_ms": 14240
+      },
+      {
+        "surah": 112,
+        "ayah": 3,
+        "before_ms": 290,
+        "after_ms": 257,
+        "onset_ms": 19093,
+        "candidate_ms": 19060
+      },
+      {
+        "surah": 112,
+        "ayah": 4,
+        "before_ms": 63,
+        "after_ms": 12,
+        "onset_ms": 24791,
+        "candidate_ms": 24740
+      }
+    ],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "mahmoud_khalil_al_hussary",
+    "policy": "weak_prefix_right",
+    "stats": {
+      "n": 54,
+      "median_ms": 235.0,
+      "p95_ms": 985.799999999998,
+      "max_ms": 1494,
+      "over500": 12
+    },
+    "new": [],
+    "removed": [],
+    "moves": [
+      {
+        "surah": 80,
+        "ayah": 11,
+        "before_ms": 93,
+        "after_ms": 117,
+        "onset_ms": 72116,
+        "candidate_ms": 72140
+      },
+      {
+        "surah": 80,
+        "ayah": 17,
+        "before_ms": 86,
+        "after_ms": 112,
+        "onset_ms": 105314,
+        "candidate_ms": 105340
+      },
+      {
+        "surah": 80,
+        "ayah": 26,
+        "before_ms": 1464,
+        "after_ms": 1494,
+        "onset_ms": 165910,
+        "candidate_ms": 165940
+      },
+      {
+        "surah": 80,
+        "ayah": 38,
+        "before_ms": 559,
+        "after_ms": 573,
+        "onset_ms": 246126,
+        "candidate_ms": 246140
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": 629,
+        "after_ms": 632,
+        "onset_ms": 8557,
+        "candidate_ms": 8560
+      }
+    ],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "abdul_basit_mujawwad",
+    "policy": "baseline",
+    "stats": {
+      "n": 54,
+      "median_ms": 1484.5,
+      "p95_ms": 3844.6999999999975,
+      "max_ms": 4331,
+      "over500": 52
+    },
+    "new": [],
+    "removed": [],
+    "moves": [],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "abdul_basit_mujawwad",
+    "policy": "midpoint",
+    "stats": {
+      "n": 54,
+      "median_ms": 650.5,
+      "p95_ms": 1973.499999999999,
+      "max_ms": 4140,
+      "over500": 33
+    },
+    "new": [],
+    "removed": [
+      {
+        "surah": 80,
+        "ayah": 1,
+        "before_ms": 1238,
+        "after_ms": 218,
+        "onset_ms": 7740,
+        "candidate_ms": 6720
+      },
+      {
+        "surah": 80,
+        "ayah": 9,
+        "before_ms": 509,
+        "after_ms": 350,
+        "onset_ms": 82859,
+        "candidate_ms": 82700
+      },
+      {
+        "surah": 80,
+        "ayah": 10,
+        "before_ms": 526,
+        "after_ms": 227,
+        "onset_ms": 86939,
+        "candidate_ms": 86640
+      },
+      {
+        "surah": 80,
+        "ayah": 13,
+        "before_ms": 1108,
+        "after_ms": 350,
+        "onset_ms": 113458,
+        "candidate_ms": 112700
+      },
+      {
+        "surah": 80,
+        "ayah": 15,
+        "before_ms": 1118,
+        "after_ms": 400,
+        "onset_ms": 128218,
+        "candidate_ms": 127500
+      },
+      {
+        "surah": 80,
+        "ayah": 19,
+        "before_ms": 912,
+        "after_ms": 134,
+        "onset_ms": 160198,
+        "candidate_ms": 159420
+      },
+      {
+        "surah": 80,
+        "ayah": 20,
+        "before_ms": 846,
+        "after_ms": 238,
+        "onset_ms": 169758,
+        "candidate_ms": 169150
+      },
+      {
+        "surah": 80,
+        "ayah": 21,
+        "before_ms": 1437,
+        "after_ms": 439,
+        "onset_ms": 178098,
+        "candidate_ms": 177100
+      },
+      {
+        "surah": 80,
+        "ayah": 27,
+        "before_ms": 705,
+        "after_ms": 318,
+        "onset_ms": 238557,
+        "candidate_ms": 238170
+      },
+      {
+        "surah": 80,
+        "ayah": 28,
+        "before_ms": 546,
+        "after_ms": 69,
+        "onset_ms": 247397,
+        "candidate_ms": 246920
+      },
+      {
+        "surah": 80,
+        "ayah": 30,
+        "before_ms": 818,
+        "after_ms": 432,
+        "onset_ms": 261356,
+        "candidate_ms": 260970
+      },
+      {
+        "surah": 80,
+        "ayah": 31,
+        "before_ms": 714,
+        "after_ms": 288,
+        "onset_ms": 268376,
+        "candidate_ms": 267950
+      },
+      {
+        "surah": 80,
+        "ayah": 35,
+        "before_ms": 689,
+        "after_ms": 193,
+        "onset_ms": 308416,
+        "candidate_ms": 307920
+      },
+      {
+        "surah": 80,
+        "ayah": 37,
+        "before_ms": 755,
+        "after_ms": 229,
+        "onset_ms": 324356,
+        "candidate_ms": 323830
+      },
+      {
+        "surah": 80,
+        "ayah": 40,
+        "before_ms": 920,
+        "after_ms": 305,
+        "onset_ms": 359335,
+        "candidate_ms": 358720
+      },
+      {
+        "surah": 80,
+        "ayah": 41,
+        "before_ms": 581,
+        "after_ms": 96,
+        "onset_ms": 369935,
+        "candidate_ms": 369450
+      },
+      {
+        "surah": 112,
+        "ayah": 2,
+        "before_ms": 660,
+        "after_ms": 14,
+        "onset_ms": 17776,
+        "candidate_ms": 17130
+      },
+      {
+        "surah": 112,
+        "ayah": 3,
+        "before_ms": 1001,
+        "after_ms": 386,
+        "onset_ms": 23555,
+        "candidate_ms": 22940
+      },
+      {
+        "surah": 112,
+        "ayah": 4,
+        "before_ms": 1252,
+        "after_ms": 399,
+        "onset_ms": 30933,
+        "candidate_ms": 30080
+      }
+    ],
+    "moves": [
+      {
+        "surah": 80,
+        "ayah": 1,
+        "before_ms": 1238,
+        "after_ms": 218,
+        "onset_ms": 7740,
+        "candidate_ms": 6720
+      },
+      {
+        "surah": 80,
+        "ayah": 2,
+        "before_ms": 1960,
+        "after_ms": 730,
+        "onset_ms": 14460,
+        "candidate_ms": 13230
+      },
+      {
+        "surah": 80,
+        "ayah": 3,
+        "before_ms": 1532,
+        "after_ms": 592,
+        "onset_ms": 23720,
+        "candidate_ms": 22780
+      },
+      {
+        "surah": 80,
+        "ayah": 4,
+        "before_ms": 1831,
+        "after_ms": 611,
+        "onset_ms": 35020,
+        "candidate_ms": 33800
+      },
+      {
+        "surah": 80,
+        "ayah": 5,
+        "before_ms": 2021,
+        "after_ms": 832,
+        "onset_ms": 46459,
+        "candidate_ms": 45270
+      },
+      {
+        "surah": 80,
+        "ayah": 6,
+        "before_ms": 2173,
+        "after_ms": 1124,
+        "onset_ms": 54819,
+        "candidate_ms": 53770
+      },
+      {
+        "surah": 80,
+        "ayah": 7,
+        "before_ms": 1673,
+        "after_ms": 684,
+        "onset_ms": 62819,
+        "candidate_ms": 61830
+      },
+      {
+        "surah": 80,
+        "ayah": 8,
+        "before_ms": 1815,
+        "after_ms": 686,
+        "onset_ms": 73339,
+        "candidate_ms": 72210
+      },
+      {
+        "surah": 80,
+        "ayah": 9,
+        "before_ms": 509,
+        "after_ms": 350,
+        "onset_ms": 82859,
+        "candidate_ms": 82700
+      },
+      {
+        "surah": 80,
+        "ayah": 10,
+        "before_ms": 526,
+        "after_ms": 227,
+        "onset_ms": 86939,
+        "candidate_ms": 86640
+      },
+      {
+        "surah": 80,
+        "ayah": 11,
+        "before_ms": 2021,
+        "after_ms": 892,
+        "onset_ms": 95559,
+        "candidate_ms": 94430
+      },
+      {
+        "surah": 80,
+        "ayah": 12,
+        "before_ms": 2072,
+        "after_ms": 903,
+        "onset_ms": 105799,
+        "candidate_ms": 104630
+      },
+      {
+        "surah": 80,
+        "ayah": 13,
+        "before_ms": 1108,
+        "after_ms": 350,
+        "onset_ms": 113458,
+        "candidate_ms": 112700
+      },
+      {
+        "surah": 80,
+        "ayah": 15,
+        "before_ms": 1118,
+        "after_ms": 400,
+        "onset_ms": 128218,
+        "candidate_ms": 127500
+      },
+      {
+        "surah": 80,
+        "ayah": 17,
+        "before_ms": 2038,
+        "after_ms": 890,
+        "onset_ms": 140638,
+        "candidate_ms": 139490
+      },
+      {
+        "surah": 80,
+        "ayah": 18,
+        "before_ms": 4132,
+        "after_ms": 2084,
+        "onset_ms": 153418,
+        "candidate_ms": 151370
+      },
+      {
+        "surah": 80,
+        "ayah": 19,
+        "before_ms": 912,
+        "after_ms": 134,
+        "onset_ms": 160198,
+        "candidate_ms": 159420
+      },
+      {
+        "surah": 80,
+        "ayah": 20,
+        "before_ms": 846,
+        "after_ms": 238,
+        "onset_ms": 169758,
+        "candidate_ms": 169150
+      },
+      {
+        "surah": 80,
+        "ayah": 21,
+        "before_ms": 1437,
+        "after_ms": 439,
+        "onset_ms": 178098,
+        "candidate_ms": 177100
+      },
+      {
+        "surah": 80,
+        "ayah": 23,
+        "before_ms": 1776,
+        "after_ms": 779,
+        "onset_ms": 197437,
+        "candidate_ms": 196440
+      },
+      {
+        "surah": 80,
+        "ayah": 24,
+        "before_ms": 2440,
+        "after_ms": 1143,
+        "onset_ms": 208417,
+        "candidate_ms": 207120
+      },
+      {
+        "surah": 80,
+        "ayah": 25,
+        "before_ms": 1908,
+        "after_ms": 741,
+        "onset_ms": 220257,
+        "candidate_ms": 219090
+      },
+      {
+        "surah": 80,
+        "ayah": 26,
+        "before_ms": 1004,
+        "after_ms": 517,
+        "onset_ms": 229917,
+        "candidate_ms": 229430
+      },
+      {
+        "surah": 80,
+        "ayah": 27,
+        "before_ms": 705,
+        "after_ms": 318,
+        "onset_ms": 238557,
+        "candidate_ms": 238170
+      },
+      {
+        "surah": 80,
+        "ayah": 28,
+        "before_ms": 546,
+        "after_ms": 69,
+        "onset_ms": 247397,
+        "candidate_ms": 246920
+      },
+      {
+        "surah": 80,
+        "ayah": 29,
+        "before_ms": 1073,
+        "after_ms": 546,
+        "onset_ms": 254237,
+        "candidate_ms": 253710
+      },
+      {
+        "surah": 80,
+        "ayah": 30,
+        "before_ms": 818,
+        "after_ms": 432,
+        "onset_ms": 261356,
+        "candidate_ms": 260970
+      },
+      {
+        "surah": 80,
+        "ayah": 31,
+        "before_ms": 714,
+        "after_ms": 288,
+        "onset_ms": 268376,
+        "candidate_ms": 267950
+      },
+      {
+        "surah": 80,
+        "ayah": 32,
+        "before_ms": 1333,
+        "after_ms": 617,
+        "onset_ms": 275936,
+        "candidate_ms": 275220
+      },
+      {
+        "surah": 80,
+        "ayah": 33,
+        "before_ms": 3690,
+        "after_ms": 1914,
+        "onset_ms": 287416,
+        "candidate_ms": 285640
+      },
+      {
+        "surah": 80,
+        "ayah": 34,
+        "before_ms": 1973,
+        "after_ms": 917,
+        "onset_ms": 299136,
+        "candidate_ms": 298080
+      },
+      {
+        "surah": 80,
+        "ayah": 35,
+        "before_ms": 689,
+        "after_ms": 193,
+        "onset_ms": 308416,
+        "candidate_ms": 307920
+      },
+      {
+        "surah": 80,
+        "ayah": 36,
+        "before_ms": 436,
+        "after_ms": 270,
+        "onset_ms": 316036,
+        "candidate_ms": 315870
+      },
+      {
+        "surah": 80,
+        "ayah": 37,
+        "before_ms": 755,
+        "after_ms": 229,
+        "onset_ms": 324356,
+        "candidate_ms": 323830
+      },
+      {
+        "surah": 80,
+        "ayah": 39,
+        "before_ms": 1583,
+        "after_ms": 598,
+        "onset_ms": 351935,
+        "candidate_ms": 350950
+      },
+      {
+        "surah": 80,
+        "ayah": 40,
+        "before_ms": 920,
+        "after_ms": 305,
+        "onset_ms": 359335,
+        "candidate_ms": 358720
+      },
+      {
+        "surah": 80,
+        "ayah": 41,
+        "before_ms": 581,
+        "after_ms": 96,
+        "onset_ms": 369935,
+        "candidate_ms": 369450
+      },
+      {
+        "surah": 98,
+        "ayah": 2,
+        "before_ms": 3392,
+        "after_ms": 844,
+        "onset_ms": 40898,
+        "candidate_ms": 38350
+      },
+      {
+        "surah": 98,
+        "ayah": 3,
+        "before_ms": 2092,
+        "after_ms": 715,
+        "onset_ms": 56037,
+        "candidate_ms": 54660
+      },
+      {
+        "surah": 98,
+        "ayah": 4,
+        "before_ms": 4331,
+        "after_ms": 1795,
+        "onset_ms": 68276,
+        "candidate_ms": 65740
+      },
+      {
+        "surah": 98,
+        "ayah": 5,
+        "before_ms": 3231,
+        "after_ms": 1636,
+        "onset_ms": 92175,
+        "candidate_ms": 90580
+      },
+      {
+        "surah": 98,
+        "ayah": 6,
+        "before_ms": 2723,
+        "after_ms": 1030,
+        "onset_ms": 134733,
+        "candidate_ms": 133040
+      },
+      {
+        "surah": 98,
+        "ayah": 8,
+        "before_ms": 2942,
+        "after_ms": 943,
+        "onset_ms": 196889,
+        "candidate_ms": 194890
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": 2064,
+        "after_ms": 987,
+        "onset_ms": 11557,
+        "candidate_ms": 10480
+      },
+      {
+        "surah": 112,
+        "ayah": 2,
+        "before_ms": 660,
+        "after_ms": 14,
+        "onset_ms": 17776,
+        "candidate_ms": 17130
+      },
+      {
+        "surah": 112,
+        "ayah": 3,
+        "before_ms": 1001,
+        "after_ms": 386,
+        "onset_ms": 23555,
+        "candidate_ms": 22940
+      },
+      {
+        "surah": 112,
+        "ayah": 4,
+        "before_ms": 1252,
+        "after_ms": 399,
+        "onset_ms": 30933,
+        "candidate_ms": 30080
+      }
+    ],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "abdul_basit_mujawwad",
+    "policy": "left_plus_400",
+    "stats": {
+      "n": 54,
+      "median_ms": 199.5,
+      "p95_ms": 1453.799999999999,
+      "max_ms": 4140,
+      "over500": 10
+    },
+    "new": [],
+    "removed": [
+      {
+        "surah": 80,
+        "ayah": 2,
+        "before_ms": 1960,
+        "after_ms": -180,
+        "onset_ms": 14460,
+        "candidate_ms": 12320
+      },
+      {
+        "surah": 80,
+        "ayah": 3,
+        "before_ms": 1532,
+        "after_ms": -128,
+        "onset_ms": 23720,
+        "candidate_ms": 22060
+      },
+      {
+        "surah": 80,
+        "ayah": 4,
+        "before_ms": 1831,
+        "after_ms": -329,
+        "onset_ms": 35020,
+        "candidate_ms": 32860
+      },
+      {
+        "surah": 80,
+        "ayah": 5,
+        "before_ms": 2021,
+        "after_ms": -78,
+        "onset_ms": 46459,
+        "candidate_ms": 44360
+      },
+      {
+        "surah": 80,
+        "ayah": 6,
+        "before_ms": 2173,
+        "after_ms": 254,
+        "onset_ms": 54819,
+        "candidate_ms": 52900
+      },
+      {
+        "surah": 80,
+        "ayah": 7,
+        "before_ms": 1673,
+        "after_ms": -106,
+        "onset_ms": 62819,
+        "candidate_ms": 61040
+      },
+      {
+        "surah": 80,
+        "ayah": 8,
+        "before_ms": 1815,
+        "after_ms": -184,
+        "onset_ms": 73339,
+        "candidate_ms": 71340
+      },
+      {
+        "surah": 80,
+        "ayah": 9,
+        "before_ms": 509,
+        "after_ms": 450,
+        "onset_ms": 82859,
+        "candidate_ms": 82800
+      },
+      {
+        "surah": 80,
+        "ayah": 10,
+        "before_ms": 526,
+        "after_ms": 247,
+        "onset_ms": 86939,
+        "candidate_ms": 86660
+      },
+      {
+        "surah": 80,
+        "ayah": 11,
+        "before_ms": 2021,
+        "after_ms": -38,
+        "onset_ms": 95559,
+        "candidate_ms": 93500
+      },
+      {
+        "surah": 80,
+        "ayah": 12,
+        "before_ms": 2072,
+        "after_ms": -67,
+        "onset_ms": 105799,
+        "candidate_ms": 103660
+      },
+      {
+        "surah": 80,
+        "ayah": 13,
+        "before_ms": 1108,
+        "after_ms": -70,
+        "onset_ms": 113458,
+        "candidate_ms": 112280
+      },
+      {
+        "surah": 80,
+        "ayah": 15,
+        "before_ms": 1118,
+        "after_ms": -80,
+        "onset_ms": 128218,
+        "candidate_ms": 127020
+      },
+      {
+        "surah": 80,
+        "ayah": 17,
+        "before_ms": 2038,
+        "after_ms": -60,
+        "onset_ms": 140638,
+        "candidate_ms": 138540
+      },
+      {
+        "surah": 80,
+        "ayah": 18,
+        "before_ms": 4132,
+        "after_ms": 274,
+        "onset_ms": 153418,
+        "candidate_ms": 149560
+      },
+      {
+        "surah": 80,
+        "ayah": 19,
+        "before_ms": 912,
+        "after_ms": -346,
+        "onset_ms": 160198,
+        "candidate_ms": 158940
+      },
+      {
+        "surah": 80,
+        "ayah": 20,
+        "before_ms": 846,
+        "after_ms": -192,
+        "onset_ms": 169758,
+        "candidate_ms": 168720
+      },
+      {
+        "surah": 80,
+        "ayah": 21,
+        "before_ms": 1437,
+        "after_ms": -161,
+        "onset_ms": 178098,
+        "candidate_ms": 176500
+      },
+      {
+        "surah": 80,
+        "ayah": 23,
+        "before_ms": 1776,
+        "after_ms": -21,
+        "onset_ms": 197437,
+        "candidate_ms": 195640
+      },
+      {
+        "surah": 80,
+        "ayah": 24,
+        "before_ms": 2440,
+        "after_ms": 43,
+        "onset_ms": 208417,
+        "candidate_ms": 206020
+      },
+      {
+        "surah": 80,
+        "ayah": 25,
+        "before_ms": 1908,
+        "after_ms": -69,
+        "onset_ms": 220257,
+        "candidate_ms": 218280
+      },
+      {
+        "surah": 80,
+        "ayah": 26,
+        "before_ms": 1004,
+        "after_ms": 207,
+        "onset_ms": 229917,
+        "candidate_ms": 229120
+      },
+      {
+        "surah": 80,
+        "ayah": 27,
+        "before_ms": 705,
+        "after_ms": 108,
+        "onset_ms": 238557,
+        "candidate_ms": 237960
+      },
+      {
+        "surah": 80,
+        "ayah": 28,
+        "before_ms": 546,
+        "after_ms": -111,
+        "onset_ms": 247397,
+        "candidate_ms": 246740
+      },
+      {
+        "surah": 80,
+        "ayah": 29,
+        "before_ms": 1073,
+        "after_ms": 236,
+        "onset_ms": 254237,
+        "candidate_ms": 253400
+      },
+      {
+        "surah": 80,
+        "ayah": 30,
+        "before_ms": 818,
+        "after_ms": 242,
+        "onset_ms": 261356,
+        "candidate_ms": 260780
+      },
+      {
+        "surah": 80,
+        "ayah": 31,
+        "before_ms": 714,
+        "after_ms": 58,
+        "onset_ms": 268376,
+        "candidate_ms": 267720
+      },
+      {
+        "surah": 80,
+        "ayah": 32,
+        "before_ms": 1333,
+        "after_ms": 157,
+        "onset_ms": 275936,
+        "candidate_ms": 274760
+      },
+      {
+        "surah": 80,
+        "ayah": 33,
+        "before_ms": 3690,
+        "after_ms": 334,
+        "onset_ms": 287416,
+        "candidate_ms": 284060
+      },
+      {
+        "surah": 80,
+        "ayah": 34,
+        "before_ms": 1973,
+        "after_ms": 77,
+        "onset_ms": 299136,
+        "candidate_ms": 297240
+      },
+      {
+        "surah": 80,
+        "ayah": 35,
+        "before_ms": 689,
+        "after_ms": -87,
+        "onset_ms": 308416,
+        "candidate_ms": 307640
+      },
+      {
+        "surah": 80,
+        "ayah": 37,
+        "before_ms": 755,
+        "after_ms": -21,
+        "onset_ms": 324356,
+        "candidate_ms": 323580
+      },
+      {
+        "surah": 80,
+        "ayah": 39,
+        "before_ms": 1583,
+        "after_ms": -72,
+        "onset_ms": 351935,
+        "candidate_ms": 350280
+      },
+      {
+        "surah": 80,
+        "ayah": 40,
+        "before_ms": 920,
+        "after_ms": 45,
+        "onset_ms": 359335,
+        "candidate_ms": 358460
+      },
+      {
+        "surah": 80,
+        "ayah": 41,
+        "before_ms": 581,
+        "after_ms": -54,
+        "onset_ms": 369935,
+        "candidate_ms": 369300
+      },
+      {
+        "surah": 98,
+        "ayah": 3,
+        "before_ms": 2092,
+        "after_ms": -485,
+        "onset_ms": 56037,
+        "candidate_ms": 53460
+      },
+      {
+        "surah": 98,
+        "ayah": 5,
+        "before_ms": 3231,
+        "after_ms": 396,
+        "onset_ms": 92175,
+        "candidate_ms": 89340
+      },
+      {
+        "surah": 98,
+        "ayah": 6,
+        "before_ms": 2723,
+        "after_ms": -330,
+        "onset_ms": 134733,
+        "candidate_ms": 131680
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": 2064,
+        "after_ms": 87,
+        "onset_ms": 11557,
+        "candidate_ms": 9580
+      },
+      {
+        "surah": 112,
+        "ayah": 2,
+        "before_ms": 660,
+        "after_ms": -356,
+        "onset_ms": 17776,
+        "candidate_ms": 16760
+      },
+      {
+        "surah": 112,
+        "ayah": 3,
+        "before_ms": 1001,
+        "after_ms": 46,
+        "onset_ms": 23555,
+        "candidate_ms": 22600
+      },
+      {
+        "surah": 112,
+        "ayah": 4,
+        "before_ms": 1252,
+        "after_ms": -221,
+        "onset_ms": 30933,
+        "candidate_ms": 29460
+      }
+    ],
+    "moves": [
+      {
+        "surah": 80,
+        "ayah": 1,
+        "before_ms": 1238,
+        "after_ms": -502,
+        "onset_ms": 7740,
+        "candidate_ms": 6000
+      },
+      {
+        "surah": 80,
+        "ayah": 2,
+        "before_ms": 1960,
+        "after_ms": -180,
+        "onset_ms": 14460,
+        "candidate_ms": 12320
+      },
+      {
+        "surah": 80,
+        "ayah": 3,
+        "before_ms": 1532,
+        "after_ms": -128,
+        "onset_ms": 23720,
+        "candidate_ms": 22060
+      },
+      {
+        "surah": 80,
+        "ayah": 4,
+        "before_ms": 1831,
+        "after_ms": -329,
+        "onset_ms": 35020,
+        "candidate_ms": 32860
+      },
+      {
+        "surah": 80,
+        "ayah": 5,
+        "before_ms": 2021,
+        "after_ms": -78,
+        "onset_ms": 46459,
+        "candidate_ms": 44360
+      },
+      {
+        "surah": 80,
+        "ayah": 6,
+        "before_ms": 2173,
+        "after_ms": 254,
+        "onset_ms": 54819,
+        "candidate_ms": 52900
+      },
+      {
+        "surah": 80,
+        "ayah": 7,
+        "before_ms": 1673,
+        "after_ms": -106,
+        "onset_ms": 62819,
+        "candidate_ms": 61040
+      },
+      {
+        "surah": 80,
+        "ayah": 8,
+        "before_ms": 1815,
+        "after_ms": -184,
+        "onset_ms": 73339,
+        "candidate_ms": 71340
+      },
+      {
+        "surah": 80,
+        "ayah": 9,
+        "before_ms": 509,
+        "after_ms": 450,
+        "onset_ms": 82859,
+        "candidate_ms": 82800
+      },
+      {
+        "surah": 80,
+        "ayah": 10,
+        "before_ms": 526,
+        "after_ms": 247,
+        "onset_ms": 86939,
+        "candidate_ms": 86660
+      },
+      {
+        "surah": 80,
+        "ayah": 11,
+        "before_ms": 2021,
+        "after_ms": -38,
+        "onset_ms": 95559,
+        "candidate_ms": 93500
+      },
+      {
+        "surah": 80,
+        "ayah": 12,
+        "before_ms": 2072,
+        "after_ms": -67,
+        "onset_ms": 105799,
+        "candidate_ms": 103660
+      },
+      {
+        "surah": 80,
+        "ayah": 13,
+        "before_ms": 1108,
+        "after_ms": -70,
+        "onset_ms": 113458,
+        "candidate_ms": 112280
+      },
+      {
+        "surah": 80,
+        "ayah": 15,
+        "before_ms": 1118,
+        "after_ms": -80,
+        "onset_ms": 128218,
+        "candidate_ms": 127020
+      },
+      {
+        "surah": 80,
+        "ayah": 17,
+        "before_ms": 2038,
+        "after_ms": -60,
+        "onset_ms": 140638,
+        "candidate_ms": 138540
+      },
+      {
+        "surah": 80,
+        "ayah": 18,
+        "before_ms": 4132,
+        "after_ms": 274,
+        "onset_ms": 153418,
+        "candidate_ms": 149560
+      },
+      {
+        "surah": 80,
+        "ayah": 19,
+        "before_ms": 912,
+        "after_ms": -346,
+        "onset_ms": 160198,
+        "candidate_ms": 158940
+      },
+      {
+        "surah": 80,
+        "ayah": 20,
+        "before_ms": 846,
+        "after_ms": -192,
+        "onset_ms": 169758,
+        "candidate_ms": 168720
+      },
+      {
+        "surah": 80,
+        "ayah": 21,
+        "before_ms": 1437,
+        "after_ms": -161,
+        "onset_ms": 178098,
+        "candidate_ms": 176500
+      },
+      {
+        "surah": 80,
+        "ayah": 23,
+        "before_ms": 1776,
+        "after_ms": -21,
+        "onset_ms": 197437,
+        "candidate_ms": 195640
+      },
+      {
+        "surah": 80,
+        "ayah": 24,
+        "before_ms": 2440,
+        "after_ms": 43,
+        "onset_ms": 208417,
+        "candidate_ms": 206020
+      },
+      {
+        "surah": 80,
+        "ayah": 25,
+        "before_ms": 1908,
+        "after_ms": -69,
+        "onset_ms": 220257,
+        "candidate_ms": 218280
+      },
+      {
+        "surah": 80,
+        "ayah": 26,
+        "before_ms": 1004,
+        "after_ms": 207,
+        "onset_ms": 229917,
+        "candidate_ms": 229120
+      },
+      {
+        "surah": 80,
+        "ayah": 27,
+        "before_ms": 705,
+        "after_ms": 108,
+        "onset_ms": 238557,
+        "candidate_ms": 237960
+      },
+      {
+        "surah": 80,
+        "ayah": 28,
+        "before_ms": 546,
+        "after_ms": -111,
+        "onset_ms": 247397,
+        "candidate_ms": 246740
+      },
+      {
+        "surah": 80,
+        "ayah": 29,
+        "before_ms": 1073,
+        "after_ms": 236,
+        "onset_ms": 254237,
+        "candidate_ms": 253400
+      },
+      {
+        "surah": 80,
+        "ayah": 30,
+        "before_ms": 818,
+        "after_ms": 242,
+        "onset_ms": 261356,
+        "candidate_ms": 260780
+      },
+      {
+        "surah": 80,
+        "ayah": 31,
+        "before_ms": 714,
+        "after_ms": 58,
+        "onset_ms": 268376,
+        "candidate_ms": 267720
+      },
+      {
+        "surah": 80,
+        "ayah": 32,
+        "before_ms": 1333,
+        "after_ms": 157,
+        "onset_ms": 275936,
+        "candidate_ms": 274760
+      },
+      {
+        "surah": 80,
+        "ayah": 33,
+        "before_ms": 3690,
+        "after_ms": 334,
+        "onset_ms": 287416,
+        "candidate_ms": 284060
+      },
+      {
+        "surah": 80,
+        "ayah": 34,
+        "before_ms": 1973,
+        "after_ms": 77,
+        "onset_ms": 299136,
+        "candidate_ms": 297240
+      },
+      {
+        "surah": 80,
+        "ayah": 35,
+        "before_ms": 689,
+        "after_ms": -87,
+        "onset_ms": 308416,
+        "candidate_ms": 307640
+      },
+      {
+        "surah": 80,
+        "ayah": 36,
+        "before_ms": 436,
+        "after_ms": 320,
+        "onset_ms": 316036,
+        "candidate_ms": 315920
+      },
+      {
+        "surah": 80,
+        "ayah": 37,
+        "before_ms": 755,
+        "after_ms": -21,
+        "onset_ms": 324356,
+        "candidate_ms": 323580
+      },
+      {
+        "surah": 80,
+        "ayah": 39,
+        "before_ms": 1583,
+        "after_ms": -72,
+        "onset_ms": 351935,
+        "candidate_ms": 350280
+      },
+      {
+        "surah": 80,
+        "ayah": 40,
+        "before_ms": 920,
+        "after_ms": 45,
+        "onset_ms": 359335,
+        "candidate_ms": 358460
+      },
+      {
+        "surah": 80,
+        "ayah": 41,
+        "before_ms": 581,
+        "after_ms": -54,
+        "onset_ms": 369935,
+        "candidate_ms": 369300
+      },
+      {
+        "surah": 98,
+        "ayah": 2,
+        "before_ms": 3392,
+        "after_ms": -1386,
+        "onset_ms": 40898,
+        "candidate_ms": 36120
+      },
+      {
+        "surah": 98,
+        "ayah": 3,
+        "before_ms": 2092,
+        "after_ms": -485,
+        "onset_ms": 56037,
+        "candidate_ms": 53460
+      },
+      {
+        "surah": 98,
+        "ayah": 4,
+        "before_ms": 4331,
+        "after_ms": -525,
+        "onset_ms": 68276,
+        "candidate_ms": 63420
+      },
+      {
+        "surah": 98,
+        "ayah": 5,
+        "before_ms": 3231,
+        "after_ms": 396,
+        "onset_ms": 92175,
+        "candidate_ms": 89340
+      },
+      {
+        "surah": 98,
+        "ayah": 6,
+        "before_ms": 2723,
+        "after_ms": -330,
+        "onset_ms": 134733,
+        "candidate_ms": 131680
+      },
+      {
+        "surah": 98,
+        "ayah": 8,
+        "before_ms": 2942,
+        "after_ms": -787,
+        "onset_ms": 196889,
+        "candidate_ms": 193160
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": 2064,
+        "after_ms": 87,
+        "onset_ms": 11557,
+        "candidate_ms": 9580
+      },
+      {
+        "surah": 112,
+        "ayah": 2,
+        "before_ms": 660,
+        "after_ms": -356,
+        "onset_ms": 17776,
+        "candidate_ms": 16760
+      },
+      {
+        "surah": 112,
+        "ayah": 3,
+        "before_ms": 1001,
+        "after_ms": 46,
+        "onset_ms": 23555,
+        "candidate_ms": 22600
+      },
+      {
+        "surah": 112,
+        "ayah": 4,
+        "before_ms": 1252,
+        "after_ms": -221,
+        "onset_ms": 30933,
+        "candidate_ms": 29460
+      }
+    ],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "abdul_basit_mujawwad",
+    "policy": "right_minus_200",
+    "stats": {
+      "n": 54,
+      "median_ms": 1431.5,
+      "p95_ms": 3833.9999999999977,
+      "max_ms": 4315,
+      "over500": 48
+    },
+    "new": [],
+    "removed": [
+      {
+        "surah": 80,
+        "ayah": 9,
+        "before_ms": 509,
+        "after_ms": 450,
+        "onset_ms": 82859,
+        "candidate_ms": 82800
+      },
+      {
+        "surah": 80,
+        "ayah": 10,
+        "before_ms": 526,
+        "after_ms": 407,
+        "onset_ms": 86939,
+        "candidate_ms": 86820
+      },
+      {
+        "surah": 80,
+        "ayah": 28,
+        "before_ms": 546,
+        "after_ms": 449,
+        "onset_ms": 247397,
+        "candidate_ms": 247300
+      },
+      {
+        "surah": 80,
+        "ayah": 41,
+        "before_ms": 581,
+        "after_ms": 446,
+        "onset_ms": 369935,
+        "candidate_ms": 369800
+      }
+    ],
+    "moves": [
+      {
+        "surah": 80,
+        "ayah": 1,
+        "before_ms": 1238,
+        "after_ms": 1138,
+        "onset_ms": 7740,
+        "candidate_ms": 7640
+      },
+      {
+        "surah": 80,
+        "ayah": 2,
+        "before_ms": 1960,
+        "after_ms": 1840,
+        "onset_ms": 14460,
+        "candidate_ms": 14340
+      },
+      {
+        "surah": 80,
+        "ayah": 3,
+        "before_ms": 1532,
+        "after_ms": 1512,
+        "onset_ms": 23720,
+        "candidate_ms": 23700
+      },
+      {
+        "surah": 80,
+        "ayah": 4,
+        "before_ms": 1831,
+        "after_ms": 1751,
+        "onset_ms": 35020,
+        "candidate_ms": 34940
+      },
+      {
+        "surah": 80,
+        "ayah": 5,
+        "before_ms": 2021,
+        "after_ms": 1942,
+        "onset_ms": 46459,
+        "candidate_ms": 46380
+      },
+      {
+        "surah": 80,
+        "ayah": 6,
+        "before_ms": 2173,
+        "after_ms": 2194,
+        "onset_ms": 54819,
+        "candidate_ms": 54840
+      },
+      {
+        "surah": 80,
+        "ayah": 7,
+        "before_ms": 1673,
+        "after_ms": 1674,
+        "onset_ms": 62819,
+        "candidate_ms": 62820
+      },
+      {
+        "surah": 80,
+        "ayah": 8,
+        "before_ms": 1815,
+        "after_ms": 1756,
+        "onset_ms": 73339,
+        "candidate_ms": 73280
+      },
+      {
+        "surah": 80,
+        "ayah": 9,
+        "before_ms": 509,
+        "after_ms": 450,
+        "onset_ms": 82859,
+        "candidate_ms": 82800
+      },
+      {
+        "surah": 80,
+        "ayah": 10,
+        "before_ms": 526,
+        "after_ms": 407,
+        "onset_ms": 86939,
+        "candidate_ms": 86820
+      },
+      {
+        "surah": 80,
+        "ayah": 11,
+        "before_ms": 2021,
+        "after_ms": 2022,
+        "onset_ms": 95559,
+        "candidate_ms": 95560
+      },
+      {
+        "surah": 80,
+        "ayah": 12,
+        "before_ms": 2072,
+        "after_ms": 2073,
+        "onset_ms": 105799,
+        "candidate_ms": 105800
+      },
+      {
+        "surah": 80,
+        "ayah": 13,
+        "before_ms": 1108,
+        "after_ms": 970,
+        "onset_ms": 113458,
+        "candidate_ms": 113320
+      },
+      {
+        "surah": 80,
+        "ayah": 15,
+        "before_ms": 1118,
+        "after_ms": 1080,
+        "onset_ms": 128218,
+        "candidate_ms": 128180
+      },
+      {
+        "surah": 80,
+        "ayah": 17,
+        "before_ms": 2038,
+        "after_ms": 2040,
+        "onset_ms": 140638,
+        "candidate_ms": 140640
+      },
+      {
+        "surah": 80,
+        "ayah": 18,
+        "before_ms": 4132,
+        "after_ms": 4094,
+        "onset_ms": 153418,
+        "candidate_ms": 153380
+      },
+      {
+        "surah": 80,
+        "ayah": 19,
+        "before_ms": 912,
+        "after_ms": 814,
+        "onset_ms": 160198,
+        "candidate_ms": 160100
+      },
+      {
+        "surah": 80,
+        "ayah": 20,
+        "before_ms": 846,
+        "after_ms": 868,
+        "onset_ms": 169758,
+        "candidate_ms": 169780
+      },
+      {
+        "surah": 80,
+        "ayah": 21,
+        "before_ms": 1437,
+        "after_ms": 1239,
+        "onset_ms": 178098,
+        "candidate_ms": 177900
+      },
+      {
+        "surah": 80,
+        "ayah": 23,
+        "before_ms": 1776,
+        "after_ms": 1779,
+        "onset_ms": 197437,
+        "candidate_ms": 197440
+      },
+      {
+        "surah": 80,
+        "ayah": 24,
+        "before_ms": 2440,
+        "after_ms": 2443,
+        "onset_ms": 208417,
+        "candidate_ms": 208420
+      },
+      {
+        "surah": 80,
+        "ayah": 25,
+        "before_ms": 1908,
+        "after_ms": 1751,
+        "onset_ms": 220257,
+        "candidate_ms": 220100
+      },
+      {
+        "surah": 80,
+        "ayah": 26,
+        "before_ms": 1004,
+        "after_ms": 1027,
+        "onset_ms": 229917,
+        "candidate_ms": 229940
+      },
+      {
+        "surah": 80,
+        "ayah": 27,
+        "before_ms": 705,
+        "after_ms": 728,
+        "onset_ms": 238557,
+        "candidate_ms": 238580
+      },
+      {
+        "surah": 80,
+        "ayah": 28,
+        "before_ms": 546,
+        "after_ms": 449,
+        "onset_ms": 247397,
+        "candidate_ms": 247300
+      },
+      {
+        "surah": 80,
+        "ayah": 29,
+        "before_ms": 1073,
+        "after_ms": 1056,
+        "onset_ms": 254237,
+        "candidate_ms": 254220
+      },
+      {
+        "surah": 80,
+        "ayah": 30,
+        "before_ms": 818,
+        "after_ms": 822,
+        "onset_ms": 261356,
+        "candidate_ms": 261360
+      },
+      {
+        "surah": 80,
+        "ayah": 31,
+        "before_ms": 714,
+        "after_ms": 718,
+        "onset_ms": 268376,
+        "candidate_ms": 268380
+      },
+      {
+        "surah": 80,
+        "ayah": 32,
+        "before_ms": 1333,
+        "after_ms": 1277,
+        "onset_ms": 275936,
+        "candidate_ms": 275880
+      },
+      {
+        "surah": 80,
+        "ayah": 33,
+        "before_ms": 3690,
+        "after_ms": 3694,
+        "onset_ms": 287416,
+        "candidate_ms": 287420
+      },
+      {
+        "surah": 80,
+        "ayah": 34,
+        "before_ms": 1973,
+        "after_ms": 1957,
+        "onset_ms": 299136,
+        "candidate_ms": 299120
+      },
+      {
+        "surah": 80,
+        "ayah": 35,
+        "before_ms": 689,
+        "after_ms": 673,
+        "onset_ms": 308416,
+        "candidate_ms": 308400
+      },
+      {
+        "surah": 80,
+        "ayah": 36,
+        "before_ms": 436,
+        "after_ms": 420,
+        "onset_ms": 316036,
+        "candidate_ms": 316020
+      },
+      {
+        "surah": 80,
+        "ayah": 37,
+        "before_ms": 755,
+        "after_ms": 679,
+        "onset_ms": 324356,
+        "candidate_ms": 324280
+      },
+      {
+        "surah": 80,
+        "ayah": 39,
+        "before_ms": 1583,
+        "after_ms": 1468,
+        "onset_ms": 351935,
+        "candidate_ms": 351820
+      },
+      {
+        "surah": 80,
+        "ayah": 40,
+        "before_ms": 920,
+        "after_ms": 765,
+        "onset_ms": 359335,
+        "candidate_ms": 359180
+      },
+      {
+        "surah": 80,
+        "ayah": 41,
+        "before_ms": 581,
+        "after_ms": 446,
+        "onset_ms": 369935,
+        "candidate_ms": 369800
+      },
+      {
+        "surah": 98,
+        "ayah": 2,
+        "before_ms": 3392,
+        "after_ms": 3274,
+        "onset_ms": 40898,
+        "candidate_ms": 40780
+      },
+      {
+        "surah": 98,
+        "ayah": 3,
+        "before_ms": 2092,
+        "after_ms": 2115,
+        "onset_ms": 56037,
+        "candidate_ms": 56060
+      },
+      {
+        "surah": 98,
+        "ayah": 4,
+        "before_ms": 4331,
+        "after_ms": 4315,
+        "onset_ms": 68276,
+        "candidate_ms": 68260
+      },
+      {
+        "surah": 98,
+        "ayah": 5,
+        "before_ms": 3231,
+        "after_ms": 3076,
+        "onset_ms": 92175,
+        "candidate_ms": 92020
+      },
+      {
+        "surah": 98,
+        "ayah": 6,
+        "before_ms": 2723,
+        "after_ms": 2590,
+        "onset_ms": 134733,
+        "candidate_ms": 134600
+      },
+      {
+        "surah": 98,
+        "ayah": 8,
+        "before_ms": 2942,
+        "after_ms": 2873,
+        "onset_ms": 196889,
+        "candidate_ms": 196820
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": 2064,
+        "after_ms": 2087,
+        "onset_ms": 11557,
+        "candidate_ms": 11580
+      },
+      {
+        "surah": 112,
+        "ayah": 2,
+        "before_ms": 660,
+        "after_ms": 584,
+        "onset_ms": 17776,
+        "candidate_ms": 17700
+      },
+      {
+        "surah": 112,
+        "ayah": 3,
+        "before_ms": 1001,
+        "after_ms": 926,
+        "onset_ms": 23555,
+        "candidate_ms": 23480
+      },
+      {
+        "surah": 112,
+        "ayah": 4,
+        "before_ms": 1252,
+        "after_ms": 1219,
+        "onset_ms": 30933,
+        "candidate_ms": 30900
+      }
+    ],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "abdul_basit_mujawwad",
+    "policy": "weak_prefix_right",
+    "stats": {
+      "n": 54,
+      "median_ms": 1547.5,
+      "p95_ms": 3844.6999999999975,
+      "max_ms": 4331,
+      "over500": 52
+    },
+    "new": [],
+    "removed": [],
+    "moves": [
+      {
+        "surah": 80,
+        "ayah": 23,
+        "before_ms": 1776,
+        "after_ms": 1779,
+        "onset_ms": 197437,
+        "candidate_ms": 197440
+      },
+      {
+        "surah": 80,
+        "ayah": 24,
+        "before_ms": 2440,
+        "after_ms": 2443,
+        "onset_ms": 208417,
+        "candidate_ms": 208420
+      },
+      {
+        "surah": 80,
+        "ayah": 26,
+        "before_ms": 1004,
+        "after_ms": 1027,
+        "onset_ms": 229917,
+        "candidate_ms": 229940
+      },
+      {
+        "surah": 80,
+        "ayah": 38,
+        "before_ms": 1143,
+        "after_ms": 2703,
+        "onset_ms": 340620,
+        "candidate_ms": 342180
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": 2064,
+        "after_ms": 2087,
+        "onset_ms": 11557,
+        "candidate_ms": 11580
+      }
+    ],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "abu_bakr_ash_shatri",
+    "policy": "baseline",
+    "stats": {
+      "n": 101,
+      "median_ms": 74.0,
+      "p95_ms": 241.0,
+      "max_ms": 924,
+      "over500": 5
+    },
+    "new": [],
+    "removed": [],
+    "moves": [],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "abu_bakr_ash_shatri",
+    "policy": "midpoint",
+    "stats": {
+      "n": 101,
+      "median_ms": 101.0,
+      "p95_ms": 610.0,
+      "max_ms": 1562,
+      "over500": 10
+    },
+    "new": [
+      {
+        "surah": 42,
+        "ayah": 6,
+        "before_ms": 27,
+        "after_ms": -542,
+        "onset_ms": 62899,
+        "candidate_ms": 62330
+      },
+      {
+        "surah": 42,
+        "ayah": 13,
+        "before_ms": -20,
+        "after_ms": -1067,
+        "onset_ms": 196217,
+        "candidate_ms": 195170
+      },
+      {
+        "surah": 42,
+        "ayah": 20,
+        "before_ms": 14,
+        "after_ms": -610,
+        "onset_ms": 383454,
+        "candidate_ms": 382830
+      },
+      {
+        "surah": 42,
+        "ayah": 27,
+        "before_ms": -41,
+        "after_ms": -1562,
+        "onset_ms": 534011,
+        "candidate_ms": 532490
+      },
+      {
+        "surah": 42,
+        "ayah": 49,
+        "before_ms": 5,
+        "after_ms": -551,
+        "onset_ms": 877746,
+        "candidate_ms": 877190
+      },
+      {
+        "surah": 42,
+        "ayah": 51,
+        "before_ms": -90,
+        "after_ms": -985,
+        "onset_ms": 910245,
+        "candidate_ms": 909350
+      }
+    ],
+    "removed": [
+      {
+        "surah": 95,
+        "ayah": 8,
+        "before_ms": 840,
+        "after_ms": 475,
+        "onset_ms": 41315,
+        "candidate_ms": 40950
+      }
+    ],
+    "moves": [
+      {
+        "surah": 42,
+        "ayah": 3,
+        "before_ms": -84,
+        "after_ms": -264,
+        "onset_ms": 22900,
+        "candidate_ms": 22720
+      },
+      {
+        "surah": 42,
+        "ayah": 4,
+        "before_ms": 50,
+        "after_ms": 51,
+        "onset_ms": 32559,
+        "candidate_ms": 32560
+      },
+      {
+        "surah": 42,
+        "ayah": 6,
+        "before_ms": 27,
+        "after_ms": -542,
+        "onset_ms": 62899,
+        "candidate_ms": 62330
+      },
+      {
+        "surah": 42,
+        "ayah": 7,
+        "before_ms": -28,
+        "after_ms": -117,
+        "onset_ms": 80659,
+        "candidate_ms": 80570
+      },
+      {
+        "surah": 42,
+        "ayah": 8,
+        "before_ms": -85,
+        "after_ms": -183,
+        "onset_ms": 105798,
+        "candidate_ms": 105700
+      },
+      {
+        "surah": 42,
+        "ayah": 9,
+        "before_ms": -25,
+        "after_ms": -263,
+        "onset_ms": 128038,
+        "candidate_ms": 127800
+      },
+      {
+        "surah": 42,
+        "ayah": 10,
+        "before_ms": -85,
+        "after_ms": -153,
+        "onset_ms": 143198,
+        "candidate_ms": 143130
+      },
+      {
+        "surah": 42,
+        "ayah": 11,
+        "before_ms": -63,
+        "after_ms": -180,
+        "onset_ms": 158457,
+        "candidate_ms": 158340
+      },
+      {
+        "surah": 42,
+        "ayah": 12,
+        "before_ms": 54,
+        "after_ms": -113,
+        "onset_ms": 179537,
+        "candidate_ms": 179370
+      },
+      {
+        "surah": 42,
+        "ayah": 13,
+        "before_ms": -20,
+        "after_ms": -1067,
+        "onset_ms": 196217,
+        "candidate_ms": 195170
+      },
+      {
+        "surah": 42,
+        "ayah": 14,
+        "before_ms": -131,
+        "after_ms": -147,
+        "onset_ms": 237616,
+        "candidate_ms": 237600
+      },
+      {
+        "surah": 42,
+        "ayah": 15,
+        "before_ms": -19,
+        "after_ms": -105,
+        "onset_ms": 267556,
+        "candidate_ms": 267470
+      },
+      {
+        "surah": 42,
+        "ayah": 16,
+        "before_ms": -121,
+        "after_ms": -206,
+        "onset_ms": 306655,
+        "candidate_ms": 306570
+      },
+      {
+        "surah": 42,
+        "ayah": 17,
+        "before_ms": -53,
+        "after_ms": -178,
+        "onset_ms": 332275,
+        "candidate_ms": 332150
+      },
+      {
+        "surah": 42,
+        "ayah": 18,
+        "before_ms": -74,
+        "after_ms": -88,
+        "onset_ms": 345054,
+        "candidate_ms": 345040
+      },
+      {
+        "surah": 42,
+        "ayah": 19,
+        "before_ms": -101,
+        "after_ms": -225,
+        "onset_ms": 368994,
+        "candidate_ms": 368870
+      },
+      {
+        "surah": 42,
+        "ayah": 20,
+        "before_ms": 14,
+        "after_ms": -610,
+        "onset_ms": 383454,
+        "candidate_ms": 382830
+      },
+      {
+        "surah": 42,
+        "ayah": 21,
+        "before_ms": 103,
+        "after_ms": 29,
+        "onset_ms": 402794,
+        "candidate_ms": 402720
+      },
+      {
+        "surah": 42,
+        "ayah": 22,
+        "before_ms": -101,
+        "after_ms": -164,
+        "onset_ms": 425853,
+        "candidate_ms": 425790
+      },
+      {
+        "surah": 42,
+        "ayah": 24,
+        "before_ms": -38,
+        "after_ms": -190,
+        "onset_ms": 481852,
+        "candidate_ms": 481700
+      },
+      {
+        "surah": 42,
+        "ayah": 25,
+        "before_ms": -21,
+        "after_ms": -13,
+        "onset_ms": 502532,
+        "candidate_ms": 502540
+      },
+      {
+        "surah": 42,
+        "ayah": 26,
+        "before_ms": -122,
+        "after_ms": -174,
+        "onset_ms": 516612,
+        "candidate_ms": 516560
+      },
+      {
+        "surah": 42,
+        "ayah": 27,
+        "before_ms": -41,
+        "after_ms": -1562,
+        "onset_ms": 534011,
+        "candidate_ms": 532490
+      },
+      {
+        "surah": 42,
+        "ayah": 28,
+        "before_ms": -125,
+        "after_ms": -66,
+        "onset_ms": 553251,
+        "candidate_ms": 553310
+      },
+      {
+        "surah": 42,
+        "ayah": 29,
+        "before_ms": -102,
+        "after_ms": -123,
+        "onset_ms": 564311,
+        "candidate_ms": 564290
+      },
+      {
+        "surah": 42,
+        "ayah": 31,
+        "before_ms": -121,
+        "after_ms": -171,
+        "onset_ms": 595190,
+        "candidate_ms": 595140
+      },
+      {
+        "surah": 42,
+        "ayah": 32,
+        "before_ms": -96,
+        "after_ms": -466,
+        "onset_ms": 609210,
+        "candidate_ms": 608840
+      },
+      {
+        "surah": 42,
+        "ayah": 33,
+        "before_ms": -11,
+        "after_ms": -31,
+        "onset_ms": 614690,
+        "candidate_ms": 614670
+      },
+      {
+        "surah": 42,
+        "ayah": 34,
+        "before_ms": 54,
+        "after_ms": -86,
+        "onset_ms": 628350,
+        "candidate_ms": 628210
+      },
+      {
+        "surah": 42,
+        "ayah": 35,
+        "before_ms": -154,
+        "after_ms": -224,
+        "onset_ms": 634990,
+        "candidate_ms": 634920
+      },
+      {
+        "surah": 42,
+        "ayah": 36,
+        "before_ms": -100,
+        "after_ms": -170,
+        "onset_ms": 643850,
+        "candidate_ms": 643780
+      },
+      {
+        "surah": 42,
+        "ayah": 37,
+        "before_ms": 76,
+        "after_ms": 87,
+        "onset_ms": 663249,
+        "candidate_ms": 663260
+      },
+      {
+        "surah": 42,
+        "ayah": 38,
+        "before_ms": -61,
+        "after_ms": -390,
+        "onset_ms": 677209,
+        "candidate_ms": 676880
+      },
+      {
+        "surah": 42,
+        "ayah": 40,
+        "before_ms": -123,
+        "after_ms": -72,
+        "onset_ms": 699609,
+        "candidate_ms": 699660
+      },
+      {
+        "surah": 42,
+        "ayah": 41,
+        "before_ms": -91,
+        "after_ms": -99,
+        "onset_ms": 716288,
+        "candidate_ms": 716280
+      },
+      {
+        "surah": 42,
+        "ayah": 43,
+        "before_ms": -103,
+        "after_ms": -131,
+        "onset_ms": 740828,
+        "candidate_ms": 740800
+      },
+      {
+        "surah": 42,
+        "ayah": 44,
+        "before_ms": -60,
+        "after_ms": -58,
+        "onset_ms": 748228,
+        "candidate_ms": 748230
+      },
+      {
+        "surah": 42,
+        "ayah": 45,
+        "before_ms": -112,
+        "after_ms": -130,
+        "onset_ms": 772728,
+        "candidate_ms": 772710
+      },
+      {
+        "surah": 42,
+        "ayah": 47,
+        "before_ms": 86,
+        "after_ms": -81,
+        "onset_ms": 822007,
+        "candidate_ms": 821840
+      },
+      {
+        "surah": 42,
+        "ayah": 48,
+        "before_ms": -66,
+        "after_ms": -192,
+        "onset_ms": 841586,
+        "candidate_ms": 841460
+      },
+      {
+        "surah": 42,
+        "ayah": 49,
+        "before_ms": 5,
+        "after_ms": -551,
+        "onset_ms": 877746,
+        "candidate_ms": 877190
+      },
+      {
+        "surah": 42,
+        "ayah": 50,
+        "before_ms": 33,
+        "after_ms": -113,
+        "onset_ms": 893866,
+        "candidate_ms": 893720
+      },
+      {
+        "surah": 42,
+        "ayah": 51,
+        "before_ms": -90,
+        "after_ms": -985,
+        "onset_ms": 910245,
+        "candidate_ms": 909350
+      },
+      {
+        "surah": 42,
+        "ayah": 53,
+        "before_ms": -17,
+        "after_ms": -101,
+        "onset_ms": 971804,
+        "candidate_ms": 971720
+      },
+      {
+        "surah": 83,
+        "ayah": 2,
+        "before_ms": 105,
+        "after_ms": -4,
+        "onset_ms": 9439,
+        "candidate_ms": 9330
+      },
+      {
+        "surah": 83,
+        "ayah": 3,
+        "before_ms": 26,
+        "after_ms": 57,
+        "onset_ms": 15199,
+        "candidate_ms": 15230
+      },
+      {
+        "surah": 83,
+        "ayah": 4,
+        "before_ms": 185,
+        "after_ms": 66,
+        "onset_ms": 20359,
+        "candidate_ms": 20240
+      },
+      {
+        "surah": 83,
+        "ayah": 5,
+        "before_ms": 25,
+        "after_ms": -3,
+        "onset_ms": 27578,
+        "candidate_ms": 27550
+      },
+      {
+        "surah": 83,
+        "ayah": 6,
+        "before_ms": 53,
+        "after_ms": 15,
+        "onset_ms": 29898,
+        "candidate_ms": 29860
+      },
+      {
+        "surah": 83,
+        "ayah": 7,
+        "before_ms": 62,
+        "after_ms": 104,
+        "onset_ms": 34978,
+        "candidate_ms": 35020
+      },
+      {
+        "surah": 83,
+        "ayah": 8,
+        "before_ms": 199,
+        "after_ms": 151,
+        "onset_ms": 42238,
+        "candidate_ms": 42190
+      },
+      {
+        "surah": 83,
+        "ayah": 9,
+        "before_ms": 6,
+        "after_ms": 29,
+        "onset_ms": 46577,
+        "candidate_ms": 46600
+      },
+      {
+        "surah": 83,
+        "ayah": 10,
+        "before_ms": 825,
+        "after_ms": 558,
+        "onset_ms": 50897,
+        "candidate_ms": 50630
+      },
+      {
+        "surah": 83,
+        "ayah": 11,
+        "before_ms": 55,
+        "after_ms": 18,
+        "onset_ms": 55717,
+        "candidate_ms": 55680
+      },
+      {
+        "surah": 83,
+        "ayah": 13,
+        "before_ms": 924,
+        "after_ms": 628,
+        "onset_ms": 67316,
+        "candidate_ms": 67020
+      },
+      {
+        "surah": 83,
+        "ayah": 14,
+        "before_ms": 48,
+        "after_ms": 32,
+        "onset_ms": 74116,
+        "candidate_ms": 74100
+      },
+      {
+        "surah": 83,
+        "ayah": 15,
+        "before_ms": 86,
+        "after_ms": 61,
+        "onset_ms": 81235,
+        "candidate_ms": 81210
+      },
+      {
+        "surah": 83,
+        "ayah": 16,
+        "before_ms": 176,
+        "after_ms": 211,
+        "onset_ms": 89295,
+        "candidate_ms": 89330
+      },
+      {
+        "surah": 83,
+        "ayah": 17,
+        "before_ms": 124,
+        "after_ms": 129,
+        "onset_ms": 95195,
+        "candidate_ms": 95200
+      },
+      {
+        "surah": 83,
+        "ayah": 18,
+        "before_ms": 138,
+        "after_ms": 214,
+        "onset_ms": 102734,
+        "candidate_ms": 102810
+      },
+      {
+        "surah": 83,
+        "ayah": 19,
+        "before_ms": 138,
+        "after_ms": 144,
+        "onset_ms": 110434,
+        "candidate_ms": 110440
+      },
+      {
+        "surah": 83,
+        "ayah": 20,
+        "before_ms": -48,
+        "after_ms": 48,
+        "onset_ms": 114994,
+        "candidate_ms": 115090
+      },
+      {
+        "surah": 83,
+        "ayah": 21,
+        "before_ms": -21,
+        "after_ms": -34,
+        "onset_ms": 118393,
+        "candidate_ms": 118380
+      },
+      {
+        "surah": 83,
+        "ayah": 22,
+        "before_ms": 43,
+        "after_ms": -70,
+        "onset_ms": 122073,
+        "candidate_ms": 121960
+      },
+      {
+        "surah": 83,
+        "ayah": 23,
+        "before_ms": 69,
+        "after_ms": -44,
+        "onset_ms": 126633,
+        "candidate_ms": 126520
+      },
+      {
+        "surah": 83,
+        "ayah": 25,
+        "before_ms": 165,
+        "after_ms": 163,
+        "onset_ms": 136912,
+        "candidate_ms": 136910
+      },
+      {
+        "surah": 83,
+        "ayah": 26,
+        "before_ms": -39,
+        "after_ms": -21,
+        "onset_ms": 141792,
+        "candidate_ms": 141810
+      },
+      {
+        "surah": 83,
+        "ayah": 27,
+        "before_ms": -6,
+        "after_ms": -28,
+        "onset_ms": 149052,
+        "candidate_ms": 149030
+      },
+      {
+        "surah": 83,
+        "ayah": 28,
+        "before_ms": 111,
+        "after_ms": 0,
+        "onset_ms": 152751,
+        "candidate_ms": 152640
+      },
+      {
+        "surah": 83,
+        "ayah": 31,
+        "before_ms": 823,
+        "after_ms": 513,
+        "onset_ms": 171750,
+        "candidate_ms": 171440
+      },
+      {
+        "surah": 83,
+        "ayah": 32,
+        "before_ms": 139,
+        "after_ms": 89,
+        "onset_ms": 180150,
+        "candidate_ms": 180100
+      },
+      {
+        "surah": 83,
+        "ayah": 35,
+        "before_ms": 41,
+        "after_ms": -28,
+        "onset_ms": 202189,
+        "candidate_ms": 202120
+      },
+      {
+        "surah": 83,
+        "ayah": 36,
+        "before_ms": 140,
+        "after_ms": 82,
+        "onset_ms": 207628,
+        "candidate_ms": 207570
+      },
+      {
+        "surah": 95,
+        "ayah": 1,
+        "before_ms": -89,
+        "after_ms": -128,
+        "onset_ms": 6039,
+        "candidate_ms": 6000
+      },
+      {
+        "surah": 95,
+        "ayah": 3,
+        "before_ms": -88,
+        "after_ms": -87,
+        "onset_ms": 10939,
+        "candidate_ms": 10940
+      },
+      {
+        "surah": 95,
+        "ayah": 4,
+        "before_ms": 26,
+        "after_ms": 48,
+        "onset_ms": 14318,
+        "candidate_ms": 14340
+      },
+      {
+        "surah": 95,
+        "ayah": 5,
+        "before_ms": 47,
+        "after_ms": 90,
+        "onset_ms": 21137,
+        "candidate_ms": 21180
+      },
+      {
+        "surah": 95,
+        "ayah": 6,
+        "before_ms": 91,
+        "after_ms": -36,
+        "onset_ms": 26237,
+        "candidate_ms": 26110
+      },
+      {
+        "surah": 95,
+        "ayah": 7,
+        "before_ms": 125,
+        "after_ms": 119,
+        "onset_ms": 35976,
+        "candidate_ms": 35970
+      },
+      {
+        "surah": 95,
+        "ayah": 8,
+        "before_ms": 840,
+        "after_ms": 475,
+        "onset_ms": 41315,
+        "candidate_ms": 40950
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": -18,
+        "after_ms": -74,
+        "onset_ms": 6076,
+        "candidate_ms": 6020
+      },
+      {
+        "surah": 112,
+        "ayah": 2,
+        "before_ms": -41,
+        "after_ms": -65,
+        "onset_ms": 8714,
+        "candidate_ms": 8690
+      },
+      {
+        "surah": 112,
+        "ayah": 3,
+        "before_ms": -90,
+        "after_ms": -53,
+        "onset_ms": 10773,
+        "candidate_ms": 10810
+      }
+    ],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "abu_bakr_ash_shatri",
+    "policy": "left_plus_400",
+    "stats": {
+      "n": 101,
+      "median_ms": 126.0,
+      "p95_ms": 881.0,
+      "max_ms": 2852,
+      "over500": 11
+    },
+    "new": [
+      {
+        "surah": 42,
+        "ayah": 6,
+        "before_ms": 27,
+        "after_ms": -892,
+        "onset_ms": 62899,
+        "candidate_ms": 61980
+      },
+      {
+        "surah": 42,
+        "ayah": 13,
+        "before_ms": -20,
+        "after_ms": -1877,
+        "onset_ms": 196217,
+        "candidate_ms": 194360
+      },
+      {
+        "surah": 42,
+        "ayah": 20,
+        "before_ms": 14,
+        "after_ms": -980,
+        "onset_ms": 383454,
+        "candidate_ms": 382460
+      },
+      {
+        "surah": 42,
+        "ayah": 27,
+        "before_ms": -41,
+        "after_ms": -2852,
+        "onset_ms": 534011,
+        "candidate_ms": 531200
+      },
+      {
+        "surah": 42,
+        "ayah": 32,
+        "before_ms": -96,
+        "after_ms": -626,
+        "onset_ms": 609210,
+        "candidate_ms": 608680
+      },
+      {
+        "surah": 42,
+        "ayah": 38,
+        "before_ms": -61,
+        "after_ms": -510,
+        "onset_ms": 677209,
+        "candidate_ms": 676760
+      },
+      {
+        "surah": 42,
+        "ayah": 49,
+        "before_ms": 5,
+        "after_ms": -881,
+        "onset_ms": 877746,
+        "candidate_ms": 876860
+      },
+      {
+        "surah": 42,
+        "ayah": 51,
+        "before_ms": -90,
+        "after_ms": -1675,
+        "onset_ms": 910245,
+        "candidate_ms": 908660
+      }
+    ],
+    "removed": [
+      {
+        "surah": 83,
+        "ayah": 31,
+        "before_ms": 823,
+        "after_ms": 393,
+        "onset_ms": 171750,
+        "candidate_ms": 171320
+      },
+      {
+        "surah": 95,
+        "ayah": 8,
+        "before_ms": 840,
+        "after_ms": 405,
+        "onset_ms": 41315,
+        "candidate_ms": 40880
+      }
+    ],
+    "moves": [
+      {
+        "surah": 42,
+        "ayah": 3,
+        "before_ms": -84,
+        "after_ms": -264,
+        "onset_ms": 22900,
+        "candidate_ms": 22720
+      },
+      {
+        "surah": 42,
+        "ayah": 4,
+        "before_ms": 50,
+        "after_ms": 211,
+        "onset_ms": 32559,
+        "candidate_ms": 32720
+      },
+      {
+        "surah": 42,
+        "ayah": 6,
+        "before_ms": 27,
+        "after_ms": -892,
+        "onset_ms": 62899,
+        "candidate_ms": 61980
+      },
+      {
+        "surah": 42,
+        "ayah": 7,
+        "before_ms": -28,
+        "after_ms": 13,
+        "onset_ms": 80659,
+        "candidate_ms": 80700
+      },
+      {
+        "surah": 42,
+        "ayah": 8,
+        "before_ms": -85,
+        "after_ms": -63,
+        "onset_ms": 105798,
+        "candidate_ms": 105820
+      },
+      {
+        "surah": 42,
+        "ayah": 9,
+        "before_ms": -25,
+        "after_ms": -223,
+        "onset_ms": 128038,
+        "candidate_ms": 127840
+      },
+      {
+        "surah": 42,
+        "ayah": 10,
+        "before_ms": -85,
+        "after_ms": -23,
+        "onset_ms": 143198,
+        "candidate_ms": 143260
+      },
+      {
+        "surah": 42,
+        "ayah": 11,
+        "before_ms": -63,
+        "after_ms": -100,
+        "onset_ms": 158457,
+        "candidate_ms": 158420
+      },
+      {
+        "surah": 42,
+        "ayah": 12,
+        "before_ms": 54,
+        "after_ms": -63,
+        "onset_ms": 179537,
+        "candidate_ms": 179420
+      },
+      {
+        "surah": 42,
+        "ayah": 13,
+        "before_ms": -20,
+        "after_ms": -1877,
+        "onset_ms": 196217,
+        "candidate_ms": 194360
+      },
+      {
+        "surah": 42,
+        "ayah": 14,
+        "before_ms": -131,
+        "after_ms": 33,
+        "onset_ms": 237616,
+        "candidate_ms": 237780
+      },
+      {
+        "surah": 42,
+        "ayah": 15,
+        "before_ms": -19,
+        "after_ms": -15,
+        "onset_ms": 267556,
+        "candidate_ms": 267560
+      },
+      {
+        "surah": 42,
+        "ayah": 16,
+        "before_ms": -121,
+        "after_ms": -76,
+        "onset_ms": 306655,
+        "candidate_ms": 306700
+      },
+      {
+        "surah": 42,
+        "ayah": 17,
+        "before_ms": -53,
+        "after_ms": -48,
+        "onset_ms": 332275,
+        "candidate_ms": 332280
+      },
+      {
+        "surah": 42,
+        "ayah": 18,
+        "before_ms": -74,
+        "after_ms": 92,
+        "onset_ms": 345054,
+        "candidate_ms": 345220
+      },
+      {
+        "surah": 42,
+        "ayah": 19,
+        "before_ms": -101,
+        "after_ms": -115,
+        "onset_ms": 368994,
+        "candidate_ms": 368980
+      },
+      {
+        "surah": 42,
+        "ayah": 20,
+        "before_ms": 14,
+        "after_ms": -980,
+        "onset_ms": 383454,
+        "candidate_ms": 382460
+      },
+      {
+        "surah": 42,
+        "ayah": 21,
+        "before_ms": 103,
+        "after_ms": 229,
+        "onset_ms": 402794,
+        "candidate_ms": 402920
+      },
+      {
+        "surah": 42,
+        "ayah": 22,
+        "before_ms": -101,
+        "after_ms": -34,
+        "onset_ms": 425853,
+        "candidate_ms": 425920
+      },
+      {
+        "surah": 42,
+        "ayah": 24,
+        "before_ms": -38,
+        "after_ms": -70,
+        "onset_ms": 481852,
+        "candidate_ms": 481820
+      },
+      {
+        "surah": 42,
+        "ayah": 25,
+        "before_ms": -21,
+        "after_ms": 167,
+        "onset_ms": 502532,
+        "candidate_ms": 502720
+      },
+      {
+        "surah": 42,
+        "ayah": 26,
+        "before_ms": -122,
+        "after_ms": -14,
+        "onset_ms": 516612,
+        "candidate_ms": 516720
+      },
+      {
+        "surah": 42,
+        "ayah": 27,
+        "before_ms": -41,
+        "after_ms": -2852,
+        "onset_ms": 534011,
+        "candidate_ms": 531200
+      },
+      {
+        "surah": 42,
+        "ayah": 28,
+        "before_ms": -125,
+        "after_ms": 84,
+        "onset_ms": 553251,
+        "candidate_ms": 553460
+      },
+      {
+        "surah": 42,
+        "ayah": 29,
+        "before_ms": -102,
+        "after_ms": 47,
+        "onset_ms": 564311,
+        "candidate_ms": 564460
+      },
+      {
+        "surah": 42,
+        "ayah": 31,
+        "before_ms": -121,
+        "after_ms": -31,
+        "onset_ms": 595190,
+        "candidate_ms": 595280
+      },
+      {
+        "surah": 42,
+        "ayah": 32,
+        "before_ms": -96,
+        "after_ms": -626,
+        "onset_ms": 609210,
+        "candidate_ms": 608680
+      },
+      {
+        "surah": 42,
+        "ayah": 33,
+        "before_ms": -11,
+        "after_ms": 119,
+        "onset_ms": 614690,
+        "candidate_ms": 614820
+      },
+      {
+        "surah": 42,
+        "ayah": 34,
+        "before_ms": 54,
+        "after_ms": 64,
+        "onset_ms": 628350,
+        "candidate_ms": 628360
+      },
+      {
+        "surah": 42,
+        "ayah": 35,
+        "before_ms": -154,
+        "after_ms": -84,
+        "onset_ms": 634990,
+        "candidate_ms": 635060
+      },
+      {
+        "surah": 42,
+        "ayah": 36,
+        "before_ms": -100,
+        "after_ms": -70,
+        "onset_ms": 643850,
+        "candidate_ms": 643880
+      },
+      {
+        "surah": 42,
+        "ayah": 37,
+        "before_ms": 76,
+        "after_ms": 267,
+        "onset_ms": 663249,
+        "candidate_ms": 663440
+      },
+      {
+        "surah": 42,
+        "ayah": 38,
+        "before_ms": -61,
+        "after_ms": -510,
+        "onset_ms": 677209,
+        "candidate_ms": 676760
+      },
+      {
+        "surah": 42,
+        "ayah": 40,
+        "before_ms": -123,
+        "after_ms": 88,
+        "onset_ms": 699609,
+        "candidate_ms": 699820
+      },
+      {
+        "surah": 42,
+        "ayah": 41,
+        "before_ms": -91,
+        "after_ms": 101,
+        "onset_ms": 716288,
+        "candidate_ms": 716480
+      },
+      {
+        "surah": 42,
+        "ayah": 43,
+        "before_ms": -103,
+        "after_ms": 29,
+        "onset_ms": 740828,
+        "candidate_ms": 740960
+      },
+      {
+        "surah": 42,
+        "ayah": 44,
+        "before_ms": -60,
+        "after_ms": 132,
+        "onset_ms": 748228,
+        "candidate_ms": 748420
+      },
+      {
+        "surah": 42,
+        "ayah": 45,
+        "before_ms": -112,
+        "after_ms": 60,
+        "onset_ms": 772728,
+        "candidate_ms": 772900
+      },
+      {
+        "surah": 42,
+        "ayah": 47,
+        "before_ms": 86,
+        "after_ms": 39,
+        "onset_ms": 822007,
+        "candidate_ms": 821960
+      },
+      {
+        "surah": 42,
+        "ayah": 48,
+        "before_ms": -66,
+        "after_ms": -132,
+        "onset_ms": 841586,
+        "candidate_ms": 841520
+      },
+      {
+        "surah": 42,
+        "ayah": 49,
+        "before_ms": 5,
+        "after_ms": -881,
+        "onset_ms": 877746,
+        "candidate_ms": 876860
+      },
+      {
+        "surah": 42,
+        "ayah": 50,
+        "before_ms": 33,
+        "after_ms": 27,
+        "onset_ms": 893866,
+        "candidate_ms": 893860
+      },
+      {
+        "surah": 42,
+        "ayah": 51,
+        "before_ms": -90,
+        "after_ms": -1675,
+        "onset_ms": 910245,
+        "candidate_ms": 908660
+      },
+      {
+        "surah": 42,
+        "ayah": 53,
+        "before_ms": -17,
+        "after_ms": 59,
+        "onset_ms": 971804,
+        "candidate_ms": 971880
+      },
+      {
+        "surah": 83,
+        "ayah": 2,
+        "before_ms": 105,
+        "after_ms": 186,
+        "onset_ms": 9439,
+        "candidate_ms": 9520
+      },
+      {
+        "surah": 83,
+        "ayah": 3,
+        "before_ms": 26,
+        "after_ms": 247,
+        "onset_ms": 15199,
+        "candidate_ms": 15420
+      },
+      {
+        "surah": 83,
+        "ayah": 4,
+        "before_ms": 185,
+        "after_ms": 246,
+        "onset_ms": 20359,
+        "candidate_ms": 20420
+      },
+      {
+        "surah": 83,
+        "ayah": 5,
+        "before_ms": 25,
+        "after_ms": 167,
+        "onset_ms": 27578,
+        "candidate_ms": 27720
+      },
+      {
+        "surah": 83,
+        "ayah": 6,
+        "before_ms": 53,
+        "after_ms": 215,
+        "onset_ms": 29898,
+        "candidate_ms": 30060
+      },
+      {
+        "surah": 83,
+        "ayah": 7,
+        "before_ms": 62,
+        "after_ms": 284,
+        "onset_ms": 34978,
+        "candidate_ms": 35200
+      },
+      {
+        "surah": 83,
+        "ayah": 8,
+        "before_ms": 199,
+        "after_ms": 301,
+        "onset_ms": 42238,
+        "candidate_ms": 42340
+      },
+      {
+        "surah": 83,
+        "ayah": 9,
+        "before_ms": 6,
+        "after_ms": 209,
+        "onset_ms": 46577,
+        "candidate_ms": 46780
+      },
+      {
+        "surah": 83,
+        "ayah": 10,
+        "before_ms": 825,
+        "after_ms": 508,
+        "onset_ms": 50897,
+        "candidate_ms": 50580
+      },
+      {
+        "surah": 83,
+        "ayah": 11,
+        "before_ms": 55,
+        "after_ms": 178,
+        "onset_ms": 55717,
+        "candidate_ms": 55840
+      },
+      {
+        "surah": 83,
+        "ayah": 13,
+        "before_ms": 924,
+        "after_ms": 608,
+        "onset_ms": 67316,
+        "candidate_ms": 67000
+      },
+      {
+        "surah": 83,
+        "ayah": 14,
+        "before_ms": 48,
+        "after_ms": 192,
+        "onset_ms": 74116,
+        "candidate_ms": 74260
+      },
+      {
+        "surah": 83,
+        "ayah": 15,
+        "before_ms": 86,
+        "after_ms": 191,
+        "onset_ms": 81235,
+        "candidate_ms": 81340
+      },
+      {
+        "surah": 83,
+        "ayah": 16,
+        "before_ms": 176,
+        "after_ms": 401,
+        "onset_ms": 89295,
+        "candidate_ms": 89520
+      },
+      {
+        "surah": 83,
+        "ayah": 17,
+        "before_ms": 124,
+        "after_ms": 309,
+        "onset_ms": 95195,
+        "candidate_ms": 95380
+      },
+      {
+        "surah": 83,
+        "ayah": 18,
+        "before_ms": 138,
+        "after_ms": 364,
+        "onset_ms": 102734,
+        "candidate_ms": 102960
+      },
+      {
+        "surah": 83,
+        "ayah": 19,
+        "before_ms": 138,
+        "after_ms": 344,
+        "onset_ms": 110434,
+        "candidate_ms": 110640
+      },
+      {
+        "surah": 83,
+        "ayah": 20,
+        "before_ms": -48,
+        "after_ms": 198,
+        "onset_ms": 114994,
+        "candidate_ms": 115240
+      },
+      {
+        "surah": 83,
+        "ayah": 21,
+        "before_ms": -21,
+        "after_ms": 126,
+        "onset_ms": 118393,
+        "candidate_ms": 118540
+      },
+      {
+        "surah": 83,
+        "ayah": 22,
+        "before_ms": 43,
+        "after_ms": 110,
+        "onset_ms": 122073,
+        "candidate_ms": 122140
+      },
+      {
+        "surah": 83,
+        "ayah": 23,
+        "before_ms": 69,
+        "after_ms": 136,
+        "onset_ms": 126633,
+        "candidate_ms": 126700
+      },
+      {
+        "surah": 83,
+        "ayah": 25,
+        "before_ms": 165,
+        "after_ms": 353,
+        "onset_ms": 136912,
+        "candidate_ms": 137100
+      },
+      {
+        "surah": 83,
+        "ayah": 26,
+        "before_ms": -39,
+        "after_ms": 149,
+        "onset_ms": 141792,
+        "candidate_ms": 141980
+      },
+      {
+        "surah": 83,
+        "ayah": 27,
+        "before_ms": -6,
+        "after_ms": 142,
+        "onset_ms": 149052,
+        "candidate_ms": 149200
+      },
+      {
+        "surah": 83,
+        "ayah": 28,
+        "before_ms": 111,
+        "after_ms": 180,
+        "onset_ms": 152751,
+        "candidate_ms": 152820
+      },
+      {
+        "surah": 83,
+        "ayah": 31,
+        "before_ms": 823,
+        "after_ms": 393,
+        "onset_ms": 171750,
+        "candidate_ms": 171320
+      },
+      {
+        "surah": 83,
+        "ayah": 32,
+        "before_ms": 139,
+        "after_ms": 249,
+        "onset_ms": 180150,
+        "candidate_ms": 180260
+      },
+      {
+        "surah": 83,
+        "ayah": 35,
+        "before_ms": 41,
+        "after_ms": 172,
+        "onset_ms": 202189,
+        "candidate_ms": 202320
+      },
+      {
+        "surah": 83,
+        "ayah": 36,
+        "before_ms": 140,
+        "after_ms": 212,
+        "onset_ms": 207628,
+        "candidate_ms": 207700
+      },
+      {
+        "surah": 95,
+        "ayah": 1,
+        "before_ms": -89,
+        "after_ms": 12,
+        "onset_ms": 6039,
+        "candidate_ms": 6140
+      },
+      {
+        "surah": 95,
+        "ayah": 3,
+        "before_ms": -88,
+        "after_ms": 113,
+        "onset_ms": 10939,
+        "candidate_ms": 11140
+      },
+      {
+        "surah": 95,
+        "ayah": 4,
+        "before_ms": 26,
+        "after_ms": 228,
+        "onset_ms": 14318,
+        "candidate_ms": 14520
+      },
+      {
+        "surah": 95,
+        "ayah": 5,
+        "before_ms": 47,
+        "after_ms": 290,
+        "onset_ms": 21137,
+        "candidate_ms": 21380
+      },
+      {
+        "surah": 95,
+        "ayah": 6,
+        "before_ms": 91,
+        "after_ms": 114,
+        "onset_ms": 26237,
+        "candidate_ms": 26260
+      },
+      {
+        "surah": 95,
+        "ayah": 7,
+        "before_ms": 125,
+        "after_ms": 309,
+        "onset_ms": 35976,
+        "candidate_ms": 36160
+      },
+      {
+        "surah": 95,
+        "ayah": 8,
+        "before_ms": 840,
+        "after_ms": 405,
+        "onset_ms": 41315,
+        "candidate_ms": 40880
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": -18,
+        "after_ms": 26,
+        "onset_ms": 6076,
+        "candidate_ms": 6120
+      },
+      {
+        "surah": 112,
+        "ayah": 2,
+        "before_ms": -41,
+        "after_ms": 125,
+        "onset_ms": 8714,
+        "candidate_ms": 8880
+      },
+      {
+        "surah": 112,
+        "ayah": 3,
+        "before_ms": -90,
+        "after_ms": 137,
+        "onset_ms": 10773,
+        "candidate_ms": 11000
+      }
+    ],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "abu_bakr_ash_shatri",
+    "policy": "right_minus_200",
+    "stats": {
+      "n": 101,
+      "median_ms": 70.0,
+      "p95_ms": 241.0,
+      "max_ms": 848,
+      "over500": 5
+    },
+    "new": [],
+    "removed": [],
+    "moves": [
+      {
+        "surah": 42,
+        "ayah": 3,
+        "before_ms": -84,
+        "after_ms": -64,
+        "onset_ms": 22900,
+        "candidate_ms": 22920
+      },
+      {
+        "surah": 42,
+        "ayah": 4,
+        "before_ms": 50,
+        "after_ms": 11,
+        "onset_ms": 32559,
+        "candidate_ms": 32520
+      },
+      {
+        "surah": 42,
+        "ayah": 6,
+        "before_ms": 27,
+        "after_ms": 8,
+        "onset_ms": 62899,
+        "candidate_ms": 62880
+      },
+      {
+        "surah": 42,
+        "ayah": 7,
+        "before_ms": -28,
+        "after_ms": -47,
+        "onset_ms": 80659,
+        "candidate_ms": 80640
+      },
+      {
+        "surah": 42,
+        "ayah": 8,
+        "before_ms": -85,
+        "after_ms": -103,
+        "onset_ms": 105798,
+        "candidate_ms": 105780
+      },
+      {
+        "surah": 42,
+        "ayah": 9,
+        "before_ms": -25,
+        "after_ms": -103,
+        "onset_ms": 128038,
+        "candidate_ms": 127960
+      },
+      {
+        "surah": 42,
+        "ayah": 10,
+        "before_ms": -85,
+        "after_ms": -83,
+        "onset_ms": 143198,
+        "candidate_ms": 143200
+      },
+      {
+        "surah": 42,
+        "ayah": 11,
+        "before_ms": -63,
+        "after_ms": -60,
+        "onset_ms": 158457,
+        "candidate_ms": 158460
+      },
+      {
+        "surah": 42,
+        "ayah": 12,
+        "before_ms": 54,
+        "after_ms": 37,
+        "onset_ms": 179537,
+        "candidate_ms": 179520
+      },
+      {
+        "surah": 42,
+        "ayah": 13,
+        "before_ms": -20,
+        "after_ms": -57,
+        "onset_ms": 196217,
+        "candidate_ms": 196180
+      },
+      {
+        "surah": 42,
+        "ayah": 14,
+        "before_ms": -131,
+        "after_ms": -167,
+        "onset_ms": 237616,
+        "candidate_ms": 237580
+      },
+      {
+        "surah": 42,
+        "ayah": 15,
+        "before_ms": -19,
+        "after_ms": 5,
+        "onset_ms": 267556,
+        "candidate_ms": 267580
+      },
+      {
+        "surah": 42,
+        "ayah": 16,
+        "before_ms": -121,
+        "after_ms": -136,
+        "onset_ms": 306655,
+        "candidate_ms": 306640
+      },
+      {
+        "surah": 42,
+        "ayah": 17,
+        "before_ms": -53,
+        "after_ms": -108,
+        "onset_ms": 332275,
+        "candidate_ms": 332220
+      },
+      {
+        "surah": 42,
+        "ayah": 18,
+        "before_ms": -74,
+        "after_ms": -108,
+        "onset_ms": 345054,
+        "candidate_ms": 345020
+      },
+      {
+        "surah": 42,
+        "ayah": 19,
+        "before_ms": -101,
+        "after_ms": -135,
+        "onset_ms": 368994,
+        "candidate_ms": 368960
+      },
+      {
+        "surah": 42,
+        "ayah": 20,
+        "before_ms": 14,
+        "after_ms": -40,
+        "onset_ms": 383454,
+        "candidate_ms": 383400
+      },
+      {
+        "surah": 42,
+        "ayah": 21,
+        "before_ms": 103,
+        "after_ms": 29,
+        "onset_ms": 402794,
+        "candidate_ms": 402720
+      },
+      {
+        "surah": 42,
+        "ayah": 22,
+        "before_ms": -101,
+        "after_ms": -94,
+        "onset_ms": 425853,
+        "candidate_ms": 425860
+      },
+      {
+        "surah": 42,
+        "ayah": 24,
+        "before_ms": -38,
+        "after_ms": -110,
+        "onset_ms": 481852,
+        "candidate_ms": 481780
+      },
+      {
+        "surah": 42,
+        "ayah": 25,
+        "before_ms": -21,
+        "after_ms": -33,
+        "onset_ms": 502532,
+        "candidate_ms": 502520
+      },
+      {
+        "surah": 42,
+        "ayah": 26,
+        "before_ms": -122,
+        "after_ms": -134,
+        "onset_ms": 516612,
+        "candidate_ms": 516600
+      },
+      {
+        "surah": 42,
+        "ayah": 27,
+        "before_ms": -41,
+        "after_ms": -72,
+        "onset_ms": 534011,
+        "candidate_ms": 533980
+      },
+      {
+        "surah": 42,
+        "ayah": 28,
+        "before_ms": -125,
+        "after_ms": -116,
+        "onset_ms": 553251,
+        "candidate_ms": 553260
+      },
+      {
+        "surah": 42,
+        "ayah": 29,
+        "before_ms": -102,
+        "after_ms": -93,
+        "onset_ms": 564311,
+        "candidate_ms": 564320
+      },
+      {
+        "surah": 42,
+        "ayah": 31,
+        "before_ms": -121,
+        "after_ms": -111,
+        "onset_ms": 595190,
+        "candidate_ms": 595200
+      },
+      {
+        "surah": 42,
+        "ayah": 32,
+        "before_ms": -96,
+        "after_ms": -106,
+        "onset_ms": 609210,
+        "candidate_ms": 609200
+      },
+      {
+        "surah": 42,
+        "ayah": 33,
+        "before_ms": -11,
+        "after_ms": -81,
+        "onset_ms": 614690,
+        "candidate_ms": 614620
+      },
+      {
+        "surah": 42,
+        "ayah": 34,
+        "before_ms": 54,
+        "after_ms": -36,
+        "onset_ms": 628350,
+        "candidate_ms": 628260
+      },
+      {
+        "surah": 42,
+        "ayah": 35,
+        "before_ms": -154,
+        "after_ms": -164,
+        "onset_ms": 634990,
+        "candidate_ms": 634980
+      },
+      {
+        "surah": 42,
+        "ayah": 36,
+        "before_ms": -100,
+        "after_ms": -70,
+        "onset_ms": 643850,
+        "candidate_ms": 643880
+      },
+      {
+        "surah": 42,
+        "ayah": 37,
+        "before_ms": 76,
+        "after_ms": 67,
+        "onset_ms": 663249,
+        "candidate_ms": 663240
+      },
+      {
+        "surah": 42,
+        "ayah": 38,
+        "before_ms": -61,
+        "after_ms": -70,
+        "onset_ms": 677209,
+        "candidate_ms": 677200
+      },
+      {
+        "surah": 42,
+        "ayah": 40,
+        "before_ms": -123,
+        "after_ms": -112,
+        "onset_ms": 699609,
+        "candidate_ms": 699620
+      },
+      {
+        "surah": 42,
+        "ayah": 41,
+        "before_ms": -91,
+        "after_ms": -99,
+        "onset_ms": 716288,
+        "candidate_ms": 716280
+      },
+      {
+        "surah": 42,
+        "ayah": 43,
+        "before_ms": -103,
+        "after_ms": -91,
+        "onset_ms": 740828,
+        "candidate_ms": 740840
+      },
+      {
+        "surah": 42,
+        "ayah": 44,
+        "before_ms": -60,
+        "after_ms": -68,
+        "onset_ms": 748228,
+        "candidate_ms": 748220
+      },
+      {
+        "surah": 42,
+        "ayah": 45,
+        "before_ms": -112,
+        "after_ms": -140,
+        "onset_ms": 772728,
+        "candidate_ms": 772700
+      },
+      {
+        "surah": 42,
+        "ayah": 47,
+        "before_ms": 86,
+        "after_ms": -1,
+        "onset_ms": 822007,
+        "candidate_ms": 821920
+      },
+      {
+        "surah": 42,
+        "ayah": 48,
+        "before_ms": -66,
+        "after_ms": -52,
+        "onset_ms": 841586,
+        "candidate_ms": 841600
+      },
+      {
+        "surah": 42,
+        "ayah": 49,
+        "before_ms": 5,
+        "after_ms": -21,
+        "onset_ms": 877746,
+        "candidate_ms": 877720
+      },
+      {
+        "surah": 42,
+        "ayah": 50,
+        "before_ms": 33,
+        "after_ms": -53,
+        "onset_ms": 893866,
+        "candidate_ms": 893780
+      },
+      {
+        "surah": 42,
+        "ayah": 51,
+        "before_ms": -90,
+        "after_ms": -95,
+        "onset_ms": 910245,
+        "candidate_ms": 910240
+      },
+      {
+        "surah": 42,
+        "ayah": 53,
+        "before_ms": -17,
+        "after_ms": -61,
+        "onset_ms": 971804,
+        "candidate_ms": 971760
+      },
+      {
+        "surah": 83,
+        "ayah": 2,
+        "before_ms": 105,
+        "after_ms": 6,
+        "onset_ms": 9439,
+        "candidate_ms": 9340
+      },
+      {
+        "surah": 83,
+        "ayah": 3,
+        "before_ms": 26,
+        "after_ms": 47,
+        "onset_ms": 15199,
+        "candidate_ms": 15220
+      },
+      {
+        "surah": 83,
+        "ayah": 4,
+        "before_ms": 185,
+        "after_ms": 86,
+        "onset_ms": 20359,
+        "candidate_ms": 20260
+      },
+      {
+        "surah": 83,
+        "ayah": 5,
+        "before_ms": 25,
+        "after_ms": 27,
+        "onset_ms": 27578,
+        "candidate_ms": 27580
+      },
+      {
+        "surah": 83,
+        "ayah": 6,
+        "before_ms": 53,
+        "after_ms": 15,
+        "onset_ms": 29898,
+        "candidate_ms": 29860
+      },
+      {
+        "surah": 83,
+        "ayah": 7,
+        "before_ms": 62,
+        "after_ms": 84,
+        "onset_ms": 34978,
+        "candidate_ms": 35000
+      },
+      {
+        "surah": 83,
+        "ayah": 8,
+        "before_ms": 199,
+        "after_ms": 201,
+        "onset_ms": 42238,
+        "candidate_ms": 42240
+      },
+      {
+        "surah": 83,
+        "ayah": 9,
+        "before_ms": 6,
+        "after_ms": 49,
+        "onset_ms": 46577,
+        "candidate_ms": 46620
+      },
+      {
+        "surah": 83,
+        "ayah": 10,
+        "before_ms": 825,
+        "after_ms": 808,
+        "onset_ms": 50897,
+        "candidate_ms": 50880
+      },
+      {
+        "surah": 83,
+        "ayah": 11,
+        "before_ms": 55,
+        "after_ms": -22,
+        "onset_ms": 55717,
+        "candidate_ms": 55640
+      },
+      {
+        "surah": 83,
+        "ayah": 13,
+        "before_ms": 924,
+        "after_ms": 848,
+        "onset_ms": 67316,
+        "candidate_ms": 67240
+      },
+      {
+        "surah": 83,
+        "ayah": 14,
+        "before_ms": 48,
+        "after_ms": 72,
+        "onset_ms": 74116,
+        "candidate_ms": 74140
+      },
+      {
+        "surah": 83,
+        "ayah": 15,
+        "before_ms": 86,
+        "after_ms": 131,
+        "onset_ms": 81235,
+        "candidate_ms": 81280
+      },
+      {
+        "surah": 83,
+        "ayah": 16,
+        "before_ms": 176,
+        "after_ms": 221,
+        "onset_ms": 89295,
+        "candidate_ms": 89340
+      },
+      {
+        "surah": 83,
+        "ayah": 17,
+        "before_ms": 124,
+        "after_ms": 149,
+        "onset_ms": 95195,
+        "candidate_ms": 95220
+      },
+      {
+        "surah": 83,
+        "ayah": 18,
+        "before_ms": 138,
+        "after_ms": 164,
+        "onset_ms": 102734,
+        "candidate_ms": 102760
+      },
+      {
+        "surah": 83,
+        "ayah": 19,
+        "before_ms": 138,
+        "after_ms": 144,
+        "onset_ms": 110434,
+        "candidate_ms": 110440
+      },
+      {
+        "surah": 83,
+        "ayah": 20,
+        "before_ms": -48,
+        "after_ms": -2,
+        "onset_ms": 114994,
+        "candidate_ms": 115040
+      },
+      {
+        "surah": 83,
+        "ayah": 21,
+        "before_ms": -21,
+        "after_ms": 6,
+        "onset_ms": 118393,
+        "candidate_ms": 118420
+      },
+      {
+        "surah": 83,
+        "ayah": 22,
+        "before_ms": 43,
+        "after_ms": -50,
+        "onset_ms": 122073,
+        "candidate_ms": 121980
+      },
+      {
+        "surah": 83,
+        "ayah": 23,
+        "before_ms": 69,
+        "after_ms": -24,
+        "onset_ms": 126633,
+        "candidate_ms": 126540
+      },
+      {
+        "surah": 83,
+        "ayah": 25,
+        "before_ms": 165,
+        "after_ms": 153,
+        "onset_ms": 136912,
+        "candidate_ms": 136900
+      },
+      {
+        "surah": 83,
+        "ayah": 26,
+        "before_ms": -39,
+        "after_ms": 9,
+        "onset_ms": 141792,
+        "candidate_ms": 141840
+      },
+      {
+        "surah": 83,
+        "ayah": 27,
+        "before_ms": -6,
+        "after_ms": 2,
+        "onset_ms": 149052,
+        "candidate_ms": 149060
+      },
+      {
+        "surah": 83,
+        "ayah": 28,
+        "before_ms": 111,
+        "after_ms": 20,
+        "onset_ms": 152751,
+        "candidate_ms": 152660
+      },
+      {
+        "surah": 83,
+        "ayah": 31,
+        "before_ms": 823,
+        "after_ms": 833,
+        "onset_ms": 171750,
+        "candidate_ms": 171760
+      },
+      {
+        "surah": 83,
+        "ayah": 32,
+        "before_ms": 139,
+        "after_ms": 129,
+        "onset_ms": 180150,
+        "candidate_ms": 180140
+      },
+      {
+        "surah": 83,
+        "ayah": 35,
+        "before_ms": 41,
+        "after_ms": -28,
+        "onset_ms": 202189,
+        "candidate_ms": 202120
+      },
+      {
+        "surah": 83,
+        "ayah": 36,
+        "before_ms": 140,
+        "after_ms": 152,
+        "onset_ms": 207628,
+        "candidate_ms": 207640
+      },
+      {
+        "surah": 95,
+        "ayah": 1,
+        "before_ms": -89,
+        "after_ms": -68,
+        "onset_ms": 6039,
+        "candidate_ms": 6060
+      },
+      {
+        "surah": 95,
+        "ayah": 3,
+        "before_ms": -88,
+        "after_ms": -87,
+        "onset_ms": 10939,
+        "candidate_ms": 10940
+      },
+      {
+        "surah": 95,
+        "ayah": 4,
+        "before_ms": 26,
+        "after_ms": 28,
+        "onset_ms": 14318,
+        "candidate_ms": 14320
+      },
+      {
+        "surah": 95,
+        "ayah": 5,
+        "before_ms": 47,
+        "after_ms": 90,
+        "onset_ms": 21137,
+        "candidate_ms": 21180
+      },
+      {
+        "surah": 95,
+        "ayah": 6,
+        "before_ms": 91,
+        "after_ms": 14,
+        "onset_ms": 26237,
+        "candidate_ms": 26160
+      },
+      {
+        "surah": 95,
+        "ayah": 7,
+        "before_ms": 125,
+        "after_ms": 129,
+        "onset_ms": 35976,
+        "candidate_ms": 35980
+      },
+      {
+        "surah": 95,
+        "ayah": 8,
+        "before_ms": 840,
+        "after_ms": 745,
+        "onset_ms": 41315,
+        "candidate_ms": 41220
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": -18,
+        "after_ms": 26,
+        "onset_ms": 6076,
+        "candidate_ms": 6120
+      },
+      {
+        "surah": 112,
+        "ayah": 2,
+        "before_ms": -41,
+        "after_ms": -75,
+        "onset_ms": 8714,
+        "candidate_ms": 8680
+      },
+      {
+        "surah": 112,
+        "ayah": 3,
+        "before_ms": -90,
+        "after_ms": -63,
+        "onset_ms": 10773,
+        "candidate_ms": 10800
+      }
+    ],
+    "unflagged_large": 0
+  },
+  {
+    "reciter": "abu_bakr_ash_shatri",
+    "policy": "weak_prefix_right",
+    "stats": {
+      "n": 101,
+      "median_ms": 76.0,
+      "p95_ms": 241.0,
+      "max_ms": 924,
+      "over500": 5
+    },
+    "new": [],
+    "removed": [],
+    "moves": [
+      {
+        "surah": 83,
+        "ayah": 7,
+        "before_ms": 62,
+        "after_ms": 84,
+        "onset_ms": 34978,
+        "candidate_ms": 35000
+      },
+      {
+        "surah": 83,
+        "ayah": 26,
+        "before_ms": -39,
+        "after_ms": 9,
+        "onset_ms": 141792,
+        "candidate_ms": 141840
+      },
+      {
+        "surah": 112,
+        "ayah": 1,
+        "before_ms": -18,
+        "after_ms": 26,
+        "onset_ms": 6076,
+        "candidate_ms": 6120
+      }
+    ],
+    "unflagged_large": 0
+  }
+]

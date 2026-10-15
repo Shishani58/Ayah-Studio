@@ -1,0 +1,329 @@
+{
+  "scope": "DSP/VAD only, no text model or referenceinput",
+  "cases": [
+    {
+      "surah": 1,
+      "ayah": 2,
+      "original_ms": 6200,
+      "original_interval_ms": [
+        5780.0,
+        6620.0
+      ],
+      "audio_sha256": "6dedf8c3b88d2cd12c992710839443abebf26e7ef1fcea696acc8961b5836571",
+      "controls": [
+        {
+          "left_context_ms": 1200,
+          "window_ms": [
+            4580.0,
+            8120.0
+          ],
+          "all_pauses": [
+            {
+              "start_ms": 4676.0,
+              "end_ms": 6628.0,
+              "depth_ms": 1952.0,
+              "midpoint_ms": 5652.0
+            }
+          ],
+          "overlap": {
+            "start_ms": 4676.0,
+            "end_ms": 6628.0,
+            "depth_ms": 1952.0,
+            "midpoint_ms": 5652.0
+          }
+        },
+        {
+          "left_context_ms": 2500,
+          "window_ms": [
+            3280.0,
+            8120.0
+          ],
+          "all_pauses": [
+            {
+              "start_ms": 4656.0,
+              "end_ms": 6640.0,
+              "depth_ms": 1984.0,
+              "midpoint_ms": 5648.0
+            }
+          ],
+          "overlap": {
+            "start_ms": 4656.0,
+            "end_ms": 6640.0,
+            "depth_ms": 1984.0,
+            "midpoint_ms": 5648.0
+          }
+        },
+        {
+          "left_context_ms": 4000,
+          "window_ms": [
+            1780.0,
+            8120.0
+          ],
+          "all_pauses": [
+            {
+              "start_ms": 4596.0,
+              "end_ms": 6644.0,
+              "depth_ms": 2048.0,
+              "midpoint_ms": 5620.0
+            }
+          ],
+          "overlap": {
+            "start_ms": 4596.0,
+            "end_ms": 6644.0,
+            "depth_ms": 2048.0,
+            "midpoint_ms": 5620.0
+          }
+        }
+      ]
+    },
+    {
+      "surah": 73,
+      "ayah": 20,
+      "original_ms": 139840,
+      "original_interval_ms": [
+        139440.0,
+        140240.0
+      ],
+      "audio_sha256": "11ae3bc3799cb039f6f937cb45b7706782545e240acb43725b05c750c828688c",
+      "controls": [
+        {
+          "left_context_ms": 1200,
+          "window_ms": [
+            138240.0,
+            141740.0
+          ],
+          "all_pauses": [
+            {
+              "start_ms": 139072.0,
+              "end_ms": 140256.0,
+              "depth_ms": 1184.0,
+              "midpoint_ms": 139664.0
+            }
+          ],
+          "overlap": {
+            "start_ms": 139072.0,
+            "end_ms": 140256.0,
+            "depth_ms": 1184.0,
+            "midpoint_ms": 139664.0
+          }
+        },
+        {
+          "left_context_ms": 2500,
+          "window_ms": [
+            136940.0,
+            141740.0
+          ],
+          "all_pauses": [
+            {
+              "start_ms": 139084.0,
+              "end_ms": 140236.0,
+              "depth_ms": 1152.0,
+              "midpoint_ms": 139660.0
+            }
+          ],
+          "overlap": {
+            "start_ms": 139084.0,
+            "end_ms": 140236.0,
+            "depth_ms": 1152.0,
+            "midpoint_ms": 139660.0
+          }
+        },
+        {
+          "left_context_ms": 4000,
+          "window_ms": [
+            135440.0,
+            141740.0
+          ],
+          "all_pauses": [
+            {
+              "start_ms": 139056.0,
+              "end_ms": 140240.0,
+              "depth_ms": 1184.0,
+              "midpoint_ms": 139648.0
+            }
+          ],
+          "overlap": {
+            "start_ms": 139056.0,
+            "end_ms": 140240.0,
+            "depth_ms": 1184.0,
+            "midpoint_ms": 139648.0
+          }
+        }
+      ]
+    },
+    {
+      "surah": 77,
+      "ayah": 25,
+      "original_ms": 85420,
+      "original_interval_ms": [
+        84820.0,
+        86020.0
+      ],
+      "audio_sha256": "8bee860fa86f33e1b8d8b28236d125766f3133d32e8c77eff2baee2e6e4f2e10",
+      "controls": [
+        {
+          "left_context_ms": 1200,
+          "window_ms": [
+            83620.0,
+            87520.0
+          ],
+          "all_pauses": [
+            {
+              "start_ms": 83972.0,
+              "end_ms": 84612.0,
+              "depth_ms": 640.0,
+              "midpoint_ms": 84292.0
+            },
+            {
+              "start_ms": 84836.0,
+              "end_ms": 86020.0,
+              "depth_ms": 1184.0,
+              "midpoint_ms": 85428.0
+            }
+          ],
+          "overlap": {
+            "start_ms": 84836.0,
+            "end_ms": 86020.0,
+            "depth_ms": 1184.0,
+            "midpoint_ms": 85428.0
+          }
+        },
+        {
+          "left_context_ms": 2500,
+          "window_ms": [
+            82320.0,
+            87520.0
+          ],
+          "all_pauses": [
+            {
+              "start_ms": 84816.0,
+              "end_ms": 86032.0,
+              "depth_ms": 1216.0,
+              "midpoint_ms": 85424.0
+            }
+          ],
+          "overlap": {
+            "start_ms": 84816.0,
+            "end_ms": 86032.0,
+            "depth_ms": 1216.0,
+            "midpoint_ms": 85424.0
+          }
+        },
+        {
+          "left_context_ms": 4000,
+          "window_ms": [
+            80820.0,
+            87520.0
+          ],
+          "all_pauses": [
+            {
+              "start_ms": 80980.0,
+              "end_ms": 81204.0,
+              "depth_ms": 224.0,
+              "midpoint_ms": 81092.0
+            },
+            {
+              "start_ms": 83956.0,
+              "end_ms": 86036.0,
+              "depth_ms": 2080.0,
+              "midpoint_ms": 84996.0
+            }
+          ],
+          "overlap": {
+            "start_ms": 83956.0,
+            "end_ms": 86036.0,
+            "depth_ms": 2080.0,
+            "midpoint_ms": 84996.0
+          }
+        }
+      ]
+    },
+    {
+      "surah": 79,
+      "ayah": 26,
+      "original_ms": 115750,
+      "original_interval_ms": [
+        115320.0,
+        116180.0
+      ],
+      "audio_sha256": "3b423fbe3e9c2ccbbd0e89d9edce0f40e7dfa81410bfc1ad6b0216076f7d861b",
+      "controls": [
+        {
+          "left_context_ms": 1200,
+          "window_ms": [
+            114120.0,
+            117680.0
+          ],
+          "all_pauses": [
+            {
+              "start_ms": 114376.0,
+              "end_ms": 114696.0,
+              "depth_ms": 320.0,
+              "midpoint_ms": 114536.0
+            },
+            {
+              "start_ms": 114888.0,
+              "end_ms": 116200.0,
+              "depth_ms": 1312.0,
+              "midpoint_ms": 115544.0
+            },
+            {
+              "start_ms": 116584.0,
+              "end_ms": 117320.0,
+              "depth_ms": 736.0,
+              "midpoint_ms": 116952.0
+            }
+          ],
+          "overlap": {
+            "start_ms": 114888.0,
+            "end_ms": 116200.0,
+            "depth_ms": 1312.0,
+            "midpoint_ms": 115544.0
+          }
+        },
+        {
+          "left_context_ms": 2500,
+          "window_ms": [
+            112820.0,
+            117680.0
+          ],
+          "all_pauses": [
+            {
+              "start_ms": 114900.0,
+              "end_ms": 116180.0,
+              "depth_ms": 1280.0,
+              "midpoint_ms": 115540.0
+            }
+          ],
+          "overlap": {
+            "start_ms": 114900.0,
+            "end_ms": 116180.0,
+            "depth_ms": 1280.0,
+            "midpoint_ms": 115540.0
+          }
+        },
+        {
+          "left_context_ms": 4000,
+          "window_ms": [
+            111320.0,
+            117680.0
+          ],
+          "all_pauses": [
+            {
+              "start_ms": 114904.0,
+              "end_ms": 116184.0,
+              "depth_ms": 1280.0,
+              "midpoint_ms": 115544.0
+            }
+          ],
+          "overlap": {
+            "start_ms": 114904.0,
+            "end_ms": 116184.0,
+            "depth_ms": 1280.0,
+            "midpoint_ms": 115544.0
+          }
+        }
+      ]
+    }
+  ]
+}

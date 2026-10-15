@@ -1,0 +1,154 @@
+{
+  "recordings": 51,
+  "groups": {
+    "saad_al_ghamidi": {
+      "before": {
+        "n": 54,
+        "median_ms": 68.5,
+        "p95_ms": 164.74999999999986,
+        "max_ms": 240,
+        "over500": 0
+      },
+      "after": {
+        "n": 54,
+        "median_ms": 68.5,
+        "p95_ms": 164.74999999999986,
+        "max_ms": 240,
+        "over500": 0
+      },
+      "unflagged_after": 0
+    },
+    "mohammed_siddiq_al_minshawi": {
+      "before": {
+        "n": 54,
+        "median_ms": 108.5,
+        "p95_ms": 253.59999999999957,
+        "max_ms": 343,
+        "over500": 0
+      },
+      "after": {
+        "n": 54,
+        "median_ms": 108.5,
+        "p95_ms": 253.59999999999957,
+        "max_ms": 343,
+        "over500": 0
+      },
+      "unflagged_after": 0
+    },
+    "mahmoud_khalil_al_hussary": {
+      "before": {
+        "n": 54,
+        "median_ms": 235.0,
+        "p95_ms": 985.799999999998,
+        "max_ms": 1483,
+        "over500": 12
+      },
+      "after": {
+        "n": 54,
+        "median_ms": 235.0,
+        "p95_ms": 985.799999999998,
+        "max_ms": 1483,
+        "over500": 12
+      },
+      "unflagged_after": 0
+    },
+    "abdul_basit_mujawwad": {
+      "before": {
+        "n": 54,
+        "median_ms": 1484.5,
+        "p95_ms": 3844.6999999999975,
+        "max_ms": 4331,
+        "over500": 52
+      },
+      "after": {
+        "n": 54,
+        "median_ms": 1484.5,
+        "p95_ms": 3844.6999999999975,
+        "max_ms": 4331,
+        "over500": 52
+      },
+      "unflagged_after": 0
+    },
+    "abu_bakr_ash_shatri": {
+      "before": {
+        "n": 647,
+        "median_ms": 59.0,
+        "p95_ms": 241.0,
+        "max_ms": 1196,
+        "over500": 16
+      },
+      "after": {
+        "n": 647,
+        "median_ms": 59.0,
+        "p95_ms": 225.1999999999996,
+        "max_ms": 1196,
+        "over500": 13
+      },
+      "unflagged_after": 0
+    },
+    "all": {
+      "before": {
+        "n": 863,
+        "median_ms": 70.0,
+        "p95_ms": 1003.6999999999999,
+        "max_ms": 4331,
+        "over500": 80
+      },
+      "after": {
+        "n": 863,
+        "median_ms": 70.0,
+        "p95_ms": 1003.6999999999999,
+        "max_ms": 4331,
+        "over500": 77
+      },
+      "unflagged_after": 0
+    }
+  },
+  "changed": [
+    {
+      "reciter": "abu_bakr_ash_shatri",
+      "surah": 42,
+      "ayah": 1,
+      "before_ms": -810,
+      "after_ms": 110
+    },
+    {
+      "reciter": "abu_bakr_ash_shatri",
+      "surah": 78,
+      "ayah": 1,
+      "before_ms": -860,
+      "after_ms": 80
+    },
+    {
+      "reciter": "abu_bakr_ash_shatri",
+      "surah": 89,
+      "ayah": 5,
+      "before_ms": -544,
+      "after_ms": -54
+    }
+  ],
+  "new_large": [],
+  "removed_large": [
+    {
+      "reciter": "abu_bakr_ash_shatri",
+      "surah": 42,
+      "ayah": 1,
+      "before_ms": -810,
+      "after_ms": 110
+    },
+    {
+      "reciter": "abu_bakr_ash_shatri",
+      "surah": 78,
+      "ayah": 1,
+      "before_ms": -860,
+      "after_ms": 80
+    },
+    {
+      "reciter": "abu_bakr_ash_shatri",
+      "surah": 89,
+      "ayah": 5,
+      "before_ms": -544,
+      "after_ms": -54
+    }
+  ]
+}

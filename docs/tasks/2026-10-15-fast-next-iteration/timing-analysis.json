@@ -1,0 +1,26 @@
+[
+  {
+    "variant": "baseline",
+    "executor_s": [
+      2.246382250217721,
+      2.194660667097196,
+      2.1712129581719637
+    ],
+    "executor_median_s": 2.194660667097196,
+    "inference_median_s": 2.0168406676966697,
+    "calls": 10,
+    "repeatability": "3/3 exact rows and dispatches"
+  },
+  {
+    "variant": "prototype",
+    "executor_s": [
+      8.593401290941983,
+      9.250122957862914,
+      9.071265541017056
+    ],
+    "executor_median_s": 9.071265541017056,
+    "inference_median_s": 8.87543100072071,
+    "calls": 39,
+    "repeatability": "3/3 exact rows and dispatches"
+  }
+]

@@ -1,0 +1,1380 @@
+{
+  "results": [
+    {
+      "runtime": {
+        "model": "whisper-tarteel-tiny",
+        "weights_sha256": "f26c96202427524ec015bcf25bd932414df0474e538d765c16759f1095757688",
+        "heads": [
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            5
+          ]
+        ]
+      },
+      "silence_ms": 0,
+      "asr": {
+        "text": "إِنَّا أَعْطَيْنَا",
+        "token_confidence": 0.9853917360305786,
+        "min_token_confidence": 0.828160285949707,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -0.0004702892620116472,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -1.1086402082582936e-05,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -4.935142715112306e-05,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -2.47952248173533e-05,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -8.583032467868179e-06,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -7.343022298300639e-05,
+            "bytes": [
+              216,
+              167
+            ]
+          },
+          {
+            "id": 5551,
+            "log_probability": -6.186770770000294e-05,
+            "bytes": [
+              32,
+              216,
+              163
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.00015317220822907984,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3615,
+            "log_probability": -0.015498435124754906,
+            "bytes": [
+              216,
+              185
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -6.9141146923357155e-06,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 9566,
+            "log_probability": -0.0020873204339295626,
+            "bytes": [
+              216,
+              183
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.18854853510856628,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 1829,
+            "log_probability": -0.008726083673536777,
+            "bytes": [
+              217,
+              138
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -6.079655122448457e-06,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -2.7418097943154862e-06,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -1.764281842042692e-05,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -3.349725011503324e-05,
+            "bytes": [
+              216,
+              167
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "expected_words": [
+        "إِنَّآ",
+        "أَعۡطَيۡنَٰكَ"
+      ],
+      "independently_heard": false,
+      "candidates": {
+        "heard_target": {
+          "token_axis_absorberTrue": [
+            720,
+            2320
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            2320
+          ],
+          "time_axis_absorberTrue": [
+            140,
+            2300
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            2300
+          ],
+          "attention_peak": [
+            0,
+            2180
+          ]
+        },
+        "exact_selected_tokens": {
+          "token_axis_absorberTrue": [
+            760,
+            2200
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            2200
+          ],
+          "time_axis_absorberTrue": [
+            440,
+            2120
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            2120
+          ],
+          "attention_peak": [
+            0,
+            2300
+          ]
+        },
+        "wrong_target": {
+          "token_axis_absorberTrue": [
+            80,
+            1920
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            1920
+          ],
+          "time_axis_absorberTrue": [
+            40,
+            960
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            960
+          ],
+          "attention_peak": [
+            0,
+            0
+          ]
+        }
+      },
+      "ledger": {
+        "emission_passes": 4,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.3964574160054326
+          },
+          {
+            "phase": "candidate_alignment_same_local_crop",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.16030791588127613
+          },
+          {
+            "phase": "exact_independently_selected_BPE_alignment",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.14730112487450242
+          },
+          {
+            "phase": "wrong_text_negative",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.14495920785702765
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 12000.0,
+        "covered_audio_ms": 3000.0,
+        "coverage": 0.17478379608557124,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            3000.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "actual_dispatches": [
+        {
+          "phase": "independent_asr",
+          "samples": 48000,
+          "sha256": "e1812c0b6fe9c8fe9ea9a9c339bc53ec146347a08c6b75be1995328c6fc10a99"
+        },
+        {
+          "phase": "candidate_alignment_same_local_crop",
+          "samples": 48000,
+          "sha256": "e1812c0b6fe9c8fe9ea9a9c339bc53ec146347a08c6b75be1995328c6fc10a99"
+        },
+        {
+          "phase": "exact_independently_selected_BPE_alignment",
+          "samples": 48000,
+          "sha256": "e1812c0b6fe9c8fe9ea9a9c339bc53ec146347a08c6b75be1995328c6fc10a99"
+        },
+        {
+          "phase": "wrong_text_negative",
+          "samples": 48000,
+          "sha256": "e1812c0b6fe9c8fe9ea9a9c339bc53ec146347a08c6b75be1995328c6fc10a99"
+        }
+      ]
+    },
+    {
+      "runtime": {
+        "model": "whisper-tarteel-tiny",
+        "weights_sha256": "f26c96202427524ec015bcf25bd932414df0474e538d765c16759f1095757688",
+        "heads": [
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            5
+          ]
+        ]
+      },
+      "silence_ms": 200,
+      "asr": {
+        "text": "إِنَّا أَعْطِينَا",
+        "token_confidence": 0.9111178517341614,
+        "min_token_confidence": 0.41952458024024963,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -4.076874756719917e-05,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -1.4305012882687151e-05,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -2.4318398573086597e-05,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -2.4199192921514623e-05,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -4.529942543740617e-06,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -8.49926145747304e-05,
+            "bytes": [
+              216,
+              167
+            ]
+          },
+          {
+            "id": 5551,
+            "log_probability": -3.0278701160568744e-05,
+            "bytes": [
+              32,
+              216,
+              163
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.00014590153296012431,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3615,
+            "log_probability": -0.005725057329982519,
+            "bytes": [
+              216,
+              185
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -1.0609570381348021e-05,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 9566,
+            "log_probability": -0.001368777477182448,
+            "bytes": [
+              216,
+              183
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -0.5676189064979553,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 9957,
+            "log_probability": -0.8686331510543823,
+            "bytes": [
+              217,
+              138,
+              217,
+              134
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.04309822618961334,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -2.109982233378105e-05,
+            "bytes": [
+              216,
+              167
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "expected_words": [
+        "إِنَّآ",
+        "أَعۡطَيۡنَٰكَ"
+      ],
+      "independently_heard": false,
+      "candidates": {
+        "heard_target": {
+          "token_axis_absorberTrue": [
+            940,
+            2520
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            2520
+          ],
+          "time_axis_absorberTrue": [
+            900,
+            2520
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            2520
+          ],
+          "attention_peak": [
+            940,
+            2400
+          ]
+        },
+        "exact_selected_tokens": {
+          "token_axis_absorberTrue": [
+            960,
+            2400
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            2400
+          ],
+          "time_axis_absorberTrue": [
+            900,
+            2340
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            2340
+          ],
+          "attention_peak": [
+            940,
+            2380
+          ]
+        },
+        "wrong_target": {
+          "token_axis_absorberTrue": [
+            0,
+            2440
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            2440
+          ],
+          "time_axis_absorberTrue": [
+            200,
+            760
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            760
+          ],
+          "attention_peak": [
+            0,
+            0
+          ]
+        }
+      },
+      "ledger": {
+        "emission_passes": 4,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.3005942921154201
+          },
+          {
+            "phase": "candidate_alignment_same_local_crop",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.15769262495450675
+          },
+          {
+            "phase": "exact_independently_selected_BPE_alignment",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.140206083888188
+          },
+          {
+            "phase": "wrong_text_negative",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.14026308385655284
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 12800.0,
+        "covered_audio_ms": 3200.0,
+        "coverage": 0.1842886709259426,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            3200.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "actual_dispatches": [
+        {
+          "phase": "independent_asr",
+          "samples": 51200,
+          "sha256": "0aae03d9f2a2c431bcae8083bddf6d722666edd377e29a3c603f3e3e86b86987"
+        },
+        {
+          "phase": "candidate_alignment_same_local_crop",
+          "samples": 51200,
+          "sha256": "0aae03d9f2a2c431bcae8083bddf6d722666edd377e29a3c603f3e3e86b86987"
+        },
+        {
+          "phase": "exact_independently_selected_BPE_alignment",
+          "samples": 51200,
+          "sha256": "0aae03d9f2a2c431bcae8083bddf6d722666edd377e29a3c603f3e3e86b86987"
+        },
+        {
+          "phase": "wrong_text_negative",
+          "samples": 51200,
+          "sha256": "0aae03d9f2a2c431bcae8083bddf6d722666edd377e29a3c603f3e3e86b86987"
+        }
+      ]
+    },
+    {
+      "runtime": {
+        "model": "whisper-tarteel-base",
+        "weights_sha256": "ec75894993a4570a237b2b1c19fd8a448f1e8f6e083cfab699574f7be53874fa",
+        "heads": [
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            7
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            6
+          ]
+        ]
+      },
+      "silence_ms": 0,
+      "asr": {
+        "text": "إِنَّا أَعْطَيْنَا",
+        "token_confidence": 0.9942814111709595,
+        "min_token_confidence": 0.9998094439506531,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -1.3947389561508317e-05,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -1.1920928244535389e-07,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -5.960462772236497e-07,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -2.145764938177308e-06,
+            "bytes": [
+              216,
+              167
+            ]
+          },
+          {
+            "id": 5551,
+            "log_probability": -0.00015484087634831667,
+            "bytes": [
+              32,
+              216,
+              163
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -2.9802276912960224e-06,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3615,
+            "log_probability": -3.504691630951129e-05,
+            "bytes": [
+              216,
+              185
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -2.7418097943154862e-06,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 9566,
+            "log_probability": -0.00019059749320149422,
+            "bytes": [
+              216,
+              183
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.00017951308109331876,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 1829,
+            "log_probability": -7.676783570786938e-05,
+            "bytes": [
+              217,
+              138
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -7.152555099310121e-07,
+            "bytes": [
+              216,
+              167
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "expected_words": [
+        "إِنَّآ",
+        "أَعۡطَيۡنَٰكَ"
+      ],
+      "independently_heard": false,
+      "candidates": {
+        "heard_target": {
+          "token_axis_absorberTrue": [
+            240,
+            2120
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            2120
+          ],
+          "time_axis_absorberTrue": [
+            40,
+            2120
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            2120
+          ],
+          "attention_peak": [
+            20,
+            2140
+          ]
+        },
+        "exact_selected_tokens": {
+          "token_axis_absorberTrue": [
+            160,
+            2120
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            2120
+          ],
+          "time_axis_absorberTrue": [
+            100,
+            2060
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            2060
+          ],
+          "attention_peak": [
+            20,
+            2020
+          ]
+        },
+        "wrong_target": {
+          "token_axis_absorberTrue": [
+            160,
+            1100
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            1100
+          ],
+          "time_axis_absorberTrue": [
+            20,
+            140
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            140
+          ],
+          "attention_peak": [
+            0,
+            0
+          ]
+        }
+      },
+      "ledger": {
+        "emission_passes": 4,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.6561708750668913
+          },
+          {
+            "phase": "candidate_alignment_same_local_crop",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.29538308386690915
+          },
+          {
+            "phase": "exact_independently_selected_BPE_alignment",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.28955554217100143
+          },
+          {
+            "phase": "wrong_text_negative",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.26971520809456706
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 12000.0,
+        "covered_audio_ms": 3000.0,
+        "coverage": 0.17478379608557124,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            3000.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "actual_dispatches": [
+        {
+          "phase": "independent_asr",
+          "samples": 48000,
+          "sha256": "e1812c0b6fe9c8fe9ea9a9c339bc53ec146347a08c6b75be1995328c6fc10a99"
+        },
+        {
+          "phase": "candidate_alignment_same_local_crop",
+          "samples": 48000,
+          "sha256": "e1812c0b6fe9c8fe9ea9a9c339bc53ec146347a08c6b75be1995328c6fc10a99"
+        },
+        {
+          "phase": "exact_independently_selected_BPE_alignment",
+          "samples": 48000,
+          "sha256": "e1812c0b6fe9c8fe9ea9a9c339bc53ec146347a08c6b75be1995328c6fc10a99"
+        },
+        {
+          "phase": "wrong_text_negative",
+          "samples": 48000,
+          "sha256": "e1812c0b6fe9c8fe9ea9a9c339bc53ec146347a08c6b75be1995328c6fc10a99"
+        }
+      ]
+    },
+    {
+      "runtime": {
+        "model": "whisper-tarteel-base",
+        "weights_sha256": "ec75894993a4570a237b2b1c19fd8a448f1e8f6e083cfab699574f7be53874fa",
+        "heads": [
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            7
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            6
+          ]
+        ]
+      },
+      "silence_ms": 200,
+      "asr": {
+        "text": "إِنَّا أَعْطَيْنَاكَ",
+        "token_confidence": 0.9800412654876709,
+        "min_token_confidence": 0.6693369150161743,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -1.0609570381348021e-05,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -1.1920928244535389e-07,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -5.960462772236497e-07,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -1.0728830375228426e-06,
+            "bytes": [
+              216,
+              167
+            ]
+          },
+          {
+            "id": 5551,
+            "log_probability": -3.790783375734463e-05,
+            "bytes": [
+              32,
+              216,
+              163
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -2.7418097943154862e-06,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3615,
+            "log_probability": -2.0861407392658293e-05,
+            "bytes": [
+              216,
+              185
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -3.3378546504536644e-06,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 9566,
+            "log_probability": -0.00014625910262111574,
+            "bytes": [
+              216,
+              183
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.0007322729215957224,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 1829,
+            "log_probability": -0.00019071667338721454,
+            "bytes": [
+              217,
+              138
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -1.4305104514278355e-06,
+            "bytes": [
+              216,
+              167
+            ]
+          },
+          {
+            "id": 4117,
+            "log_probability": -0.4014676809310913,
+            "bytes": [
+              217,
+              131
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -4.827859811484814e-05,
+            "bytes": [
+              217,
+              142
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "expected_words": [
+        "إِنَّآ",
+        "أَعۡطَيۡنَٰكَ"
+      ],
+      "independently_heard": false,
+      "candidates": {
+        "heard_target": {
+          "token_axis_absorberTrue": [
+            440,
+            2320
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            2320
+          ],
+          "time_axis_absorberTrue": [
+            300,
+            2320
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            2320
+          ],
+          "attention_peak": [
+            220,
+            2340
+          ]
+        },
+        "exact_selected_tokens": {
+          "token_axis_absorberTrue": [
+            400,
+            2320
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            2320
+          ],
+          "time_axis_absorberTrue": [
+            300,
+            2260
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            2260
+          ],
+          "attention_peak": [
+            220,
+            2220
+          ]
+        },
+        "wrong_target": {
+          "token_axis_absorberTrue": [
+            360,
+            1540
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            1540
+          ],
+          "time_axis_absorberTrue": [
+            300,
+            1320
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            1320
+          ],
+          "attention_peak": [
+            200,
+            340
+          ]
+        }
+      },
+      "ledger": {
+        "emission_passes": 4,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.7318650831002742
+          },
+          {
+            "phase": "candidate_alignment_same_local_crop",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.27936112484894693
+          },
+          {
+            "phase": "exact_independently_selected_BPE_alignment",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.28624854190275073
+          },
+          {
+            "phase": "wrong_text_negative",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.3348692918661982
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 12800.0,
+        "covered_audio_ms": 3200.0,
+        "coverage": 0.1842886709259426,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            3200.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "actual_dispatches": [
+        {
+          "phase": "independent_asr",
+          "samples": 51200,
+          "sha256": "0aae03d9f2a2c431bcae8083bddf6d722666edd377e29a3c603f3e3e86b86987"
+        },
+        {
+          "phase": "candidate_alignment_same_local_crop",
+          "samples": 51200,
+          "sha256": "0aae03d9f2a2c431bcae8083bddf6d722666edd377e29a3c603f3e3e86b86987"
+        },
+        {
+          "phase": "exact_independently_selected_BPE_alignment",
+          "samples": 51200,
+          "sha256": "0aae03d9f2a2c431bcae8083bddf6d722666edd377e29a3c603f3e3e86b86987"
+        },
+        {
+          "phase": "wrong_text_negative",
+          "samples": 51200,
+          "sha256": "0aae03d9f2a2c431bcae8083bddf6d722666edd377e29a3c603f3e3e86b86987"
+        }
+      ]
+    }
+  ],
+  "known_word_onsets": "No independent listening annotations available; shift controls do not establish accuracy.",
+  "capability_enabled": false
+}

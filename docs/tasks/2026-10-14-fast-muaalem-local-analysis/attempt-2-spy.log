@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-14-fast-muaalem-local-analysis/probe.py", line 70, in <module>
+    verify_dispatch(actual, pcm, trace)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/Developer/surah-cutter/tools/bench_fast_models.py", line 55, in verify_dispatch
+    assert len(calls) == len(trace["acoustic_reads"])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

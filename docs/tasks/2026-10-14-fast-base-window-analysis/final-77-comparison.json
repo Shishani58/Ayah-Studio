@@ -1,0 +1,24 @@
+{
+  "cases": [
+    {
+      "model": "quran-phonetics",
+      "rows_equal": true,
+      "boundaries_equal": true,
+      "actual_dispatches_equal": true
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "rows_equal": true,
+      "boundaries_equal": true,
+      "actual_dispatches_equal": true
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "rows_equal": true,
+      "boundaries_equal": true,
+      "actual_dispatches_equal": true
+    }
+  ],
+  "pilot_reconstructed_source_sha256": "7f06eec493421384f32769918823aaa4ab5120b288a8b53333dfca98cf70f1e5",
+  "ctc_prototype_probe_count": 0
+}

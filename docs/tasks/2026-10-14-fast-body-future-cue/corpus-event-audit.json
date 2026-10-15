@@ -1,0 +1,116 @@
+{
+  "old_confirmations_changed": [],
+  "body_events": [
+    {
+      "surah": 2,
+      "state": "BODY_FUTURE_SEARCH",
+      "ayah": 57,
+      "cue_read_id": 301,
+      "word_index": 792,
+      "body_phrase": [
+        "ع",
+        "َ",
+        "ل",
+        "َ",
+        "ي",
+        "ك",
+        "ُ",
+        "م",
+        "ُ",
+        "ل",
+        "غ",
+        "َ",
+        "م",
+        "َ",
+        "ا",
+        "م",
+        "َ"
+      ],
+      "body_offset": 18,
+      "body_quality": 0.9182372689247131,
+      "cue_ms": 1036492.5118613138,
+      "forecasts": {
+        "58": 1060434.2858199505,
+        "59": 1084376.0597785872
+      },
+      "region_ms": [
+        1041280.8666530412,
+        1096346.9467579057
+      ],
+      "candidates": [
+        145,
+        146,
+        147,
+        148,
+        150,
+        151,
+        152,
+        153
+      ],
+      "scope": "body search only; current onset unresolved"
+    },
+    {
+      "surah": 2,
+      "state": "BODY_FUTURE_PROVED",
+      "ayah": 57,
+      "future_ayah": 59,
+      "read_id": 308
+    },
+    {
+      "surah": 2,
+      "state": "BODY_FUTURE_SEARCH",
+      "ayah": 62,
+      "cue_read_id": 344,
+      "word_index": 940,
+      "body_phrase": [
+        "و",
+        "َ",
+        "ص",
+        "ص",
+        "َ",
+        "ا",
+        "ب",
+        "ِ",
+        "ء",
+        "ِ",
+        "ۦ",
+        "ن",
+        "َ",
+        "م",
+        "َ",
+        "ن"
+      ],
+      "body_offset": 8,
+      "body_quality": 0.8011027574539185,
+      "cue_ms": 1200750.3166058394,
+      "forecasts": {
+        "63": 1221866.6687574382,
+        "64": 1241654.0197246708
+      },
+      "region_ms": [
+        1204973.5870361591,
+        1253541.1969848366
+      ],
+      "candidates": [
+        172,
+        173,
+        174,
+        175,
+        176,
+        177,
+        178,
+        179
+      ],
+      "scope": "body search only; current onset unresolved"
+    },
+    {
+      "surah": 2,
+      "state": "BODY_FUTURE_PROVED",
+      "ayah": 62,
+      "future_ayah": 64,
+      "read_id": 354
+    }
+  ],
+  "other11_rows_dispatches_exact": true,
+  "source_guard_files": 67
+}

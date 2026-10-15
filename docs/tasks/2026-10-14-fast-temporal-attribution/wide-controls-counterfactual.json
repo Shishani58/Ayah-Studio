@@ -1,0 +1,117 @@
+[
+  {
+    "surah": 2,
+    "ayah": 21,
+    "old_signed_error_ms": 639,
+    "fresh_full_previous": 1,
+    "fresh_full_current": 0,
+    "actual_dispatch_samples": [
+      85120
+    ],
+    "retained_right": {
+      "midpoint_ms": 323130,
+      "signed_error_ms": 529,
+      "scope": "counterfactual only; retained_right is mixed-run independent proof, not a new joint reading"
+    }
+  },
+  {
+    "surah": 2,
+    "ayah": 26,
+    "old_signed_error_ms": -172,
+    "fresh_full_previous": 1,
+    "fresh_full_current": 0,
+    "actual_dispatch_samples": [
+      96000
+    ],
+    "retained_right": {
+      "midpoint_ms": 478550,
+      "signed_error_ms": -182,
+      "scope": "counterfactual only; retained_right is mixed-run independent proof, not a new joint reading"
+    }
+  },
+  {
+    "surah": 2,
+    "ayah": 29,
+    "old_signed_error_ms": 291,
+    "fresh_full_previous": 1,
+    "fresh_full_current": 1,
+    "actual_dispatch_samples": [
+      83840
+    ],
+    "fresh_joint": {
+      "midpoint_ms": 559820,
+      "signed_error_ms": 251,
+      "scope": "counterfactual only; retained_right is mixed-run independent proof, not a new joint reading"
+    },
+    "retained_right": {
+      "midpoint_ms": 559832,
+      "signed_error_ms": 263,
+      "scope": "counterfactual only; retained_right is mixed-run independent proof, not a new joint reading"
+    }
+  },
+  {
+    "surah": 2,
+    "ayah": 44,
+    "old_signed_error_ms": -316,
+    "fresh_full_previous": 1,
+    "fresh_full_current": 0,
+    "actual_dispatch_samples": [
+      96000
+    ],
+    "retained_right": {
+      "midpoint_ms": 834240,
+      "signed_error_ms": -486,
+      "scope": "counterfactual only; retained_right is mixed-run independent proof, not a new joint reading"
+    }
+  },
+  {
+    "surah": 77,
+    "ayah": 25,
+    "old_signed_error_ms": -447,
+    "fresh_full_previous": 0,
+    "fresh_full_current": 1,
+    "actual_dispatch_samples": [
+      83200
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 53,
+    "old_signed_error_ms": 576,
+    "fresh_full_previous": 1,
+    "fresh_full_current": 1,
+    "actual_dispatch_samples": [
+      83520
+    ],
+    "fresh_joint": {
+      "midpoint_ms": 970511,
+      "signed_error_ms": 397,
+      "scope": "counterfactual only; retained_right is mixed-run independent proof, not a new joint reading"
+    },
+    "retained_right": {
+      "midpoint_ms": 970505,
+      "signed_error_ms": 391,
+      "scope": "counterfactual only; retained_right is mixed-run independent proof, not a new joint reading"
+    }
+  },
+  {
+    "surah": 80,
+    "ayah": 37,
+    "old_signed_error_ms": 672,
+    "fresh_full_previous": 1,
+    "fresh_full_current": 1,
+    "actual_dispatch_samples": [
+      80960
+    ],
+    "fresh_joint": {
+      "midpoint_ms": 156351,
+      "signed_error_ms": 413,
+      "scope": "counterfactual only; retained_right is mixed-run independent proof, not a new joint reading"
+    },
+    "retained_right": {
+      "midpoint_ms": 156345,
+      "signed_error_ms": 407,
+      "scope": "counterfactual only; retained_right is mixed-run independent proof, not a new joint reading"
+    }
+  }
+]

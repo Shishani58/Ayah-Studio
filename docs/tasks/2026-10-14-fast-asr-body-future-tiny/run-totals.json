@@ -1,0 +1,66 @@
+[
+  {
+    "model": "quran-phonetics",
+    "variant": "before",
+    "cases": 12,
+    "rows": 607,
+    "calls": 120,
+    "search_seconds": 15.637346042087302
+  },
+  {
+    "model": "quran-phonetics",
+    "variant": "after",
+    "cases": 12,
+    "rows": 607,
+    "calls": 120,
+    "search_seconds": 15.773243584204465
+  },
+  {
+    "model": "quran-phonetics-fp32",
+    "variant": "before",
+    "cases": 12,
+    "rows": 607,
+    "calls": 111,
+    "search_seconds": 18.29062804300338
+  },
+  {
+    "model": "quran-phonetics-fp32",
+    "variant": "after",
+    "cases": 12,
+    "rows": 607,
+    "calls": 111,
+    "search_seconds": 18.415822250768542
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "variant": "before",
+    "cases": 12,
+    "rows": 607,
+    "calls": 217,
+    "search_seconds": 48.23254095739685
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "variant": "after",
+    "cases": 12,
+    "rows": 607,
+    "calls": 237,
+    "search_seconds": 52.54638958605938
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "variant": "before",
+    "cases": 12,
+    "rows": 607,
+    "calls": 326,
+    "search_seconds": 123.72330404049717
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "variant": "after",
+    "cases": 12,
+    "rows": 607,
+    "calls": 326,
+    "search_seconds": 123.55792895937338
+  }
+]

@@ -1,0 +1,61 @@
+{
+  "added": [
+    [
+      98,
+      [
+        5,
+        35290,
+        0.9976535196206563
+      ],
+      78
+    ],
+    [
+      98,
+      [
+        6,
+        52960,
+        0.9998477929052435
+      ],
+      12
+    ],
+    [
+      98,
+      [
+        7,
+        71720,
+        0.9997592552062023
+      ],
+      44
+    ]
+  ],
+  "events": [
+    {
+      "surah": 98,
+      "state": "HEAD_BOUNDARY_RECHECK",
+      "ayah": 5,
+      "candidate": 6,
+      "initial_read_id": 9,
+      "body_read_id": 11,
+      "observed_word": "وماء",
+      "expected_prefix": "وما",
+      "window_ms": [
+        35280.0,
+        37980.0
+      ]
+    },
+    {
+      "surah": 98,
+      "state": "HEAD_BOUNDARY_RECHECK",
+      "ayah": 5,
+      "candidate": 6,
+      "initial_read_id": 9,
+      "body_read_id": 11,
+      "observed_word": "وماء",
+      "expected_prefix": "وما",
+      "window_ms": [
+        35280.0,
+        39480.0
+      ]
+    }
+  ]
+}

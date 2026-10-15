@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-onset-paired-w81_g1r4/before/tools/bench_fast_models.py", line 214, in <module>
+    main()
+    ~~~~^^
+  File "/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-onset-paired-w81_g1r4/before/tools/bench_fast_models.py", line 115, in main
+    canonical_sha = _sha(quran_text.DEFAULT_DB_PATH)
+  File "/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-onset-paired-w81_g1r4/before/tools/bench_fast_models.py", line 26, in _sha
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+                          ~~~~~~~~~~~~~~~^^
+  File "/Users/ayub/.local/share/uv/python/cpython-3.14.7-macos-aarch64-none/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.local/share/uv/python/cpython-3.14.7-macos-aarch64-none/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-onset-paired-w81_g1r4/before/surah_cutter/bundled/data/quran_mushaf.db'

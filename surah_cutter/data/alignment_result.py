@@ -67,6 +67,10 @@ def result_source(trace: dict[str, Any], requested_mode: str) -> str:
                    f":full_max_window_s={full['max_window_s']}")
         if full.get("review_policy"):
             source += f":full_review_policy={full['review_policy']}"
+        if full.get("onset_policy"):
+            source += f":full_onset_policy={full['onset_policy']}"
+    if trace.get("full_boundary_verifier_source"):
+        source += f":full_boundary_verifier={trace['full_boundary_verifier_source']}"
     key = trace_run_key(trace)
     return f"{source}:fast_run_key={key}" if key is not None else source
 

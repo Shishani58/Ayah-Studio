@@ -13,15 +13,16 @@ from time import monotonic
 import numpy as np
 
 from surah_cutter.core.cancellation import GenerationCancelled, check_cancelled
-from surah_cutter.core.fast_adapters import make_adapter, representation_sha, loaded_implementation_sha
+from surah_cutter.core.fast_adapters import make_adapter, representation_sha, loaded_implementation_sha, arabic_units
 from surah_cutter.core.fast_reads import LocalEvidenceReads
 
-VERSION = "sequential-fast-v3-sparse-5"
+VERSION = "sequential-fast-v3-sparse-12-split-opening"
 
 
 @dataclass(frozen=True)
 class Policy:
     speech_ms: tuple[int, ...] = (1300, 2500, 4000)
+    noisy_speech_ms: tuple[int, ...] = (1700, 1900, 2100)
     max_candidates: int = 8
     first_search_ms: int = 15000
     cache_bytes: int = 32 * 1024 * 1024
@@ -94,6 +95,17 @@ def _prefix(observed, expected):
             break
         n += 1
     return n
+
+
+def _strong_continuation_conflict(units, quality, expected, prefix_size, threshold):
+    """A shorter proof cannot hide strongly heard contradictory continuation.
+
+    Missing or weak continuation is incomplete evidence, not a contradiction.
+    Stop at this ayah's known end: subsequent ayahs are legitimate neighbours.
+    """
+    return any(actual != wanted and math.isfinite(q) and q >= threshold
+               for actual, q, wanted in zip(units[prefix_size:], quality[prefix_size:],
+                                            expected[prefix_size:]))
 
 
 def plan_seam(groups, ayah, word_ends):
@@ -184,6 +196,137 @@ def _expansion_evidence(observation, phrase, ends, threshold, groups=None, ayah=
     return None
 
 
+def _split_opening(obs, groups, ends, ayah, threshold):
+    """Confirm exact letters across a split ASR head, preserving token evidence.
+
+    A unique complete first word can authorize finite context expansion. Proof
+    additionally needs two whole canonical words, symmetric char-prefix rivals
+    at every word start, and all contributing selected tokens above threshold.
+    Word segmentation supplies identity only; the DSP pause supplies timing.
+    """
+    target = groups[ayah]
+    # Only plain one-unit canonical words. Named letters need their own proof.
+    if ends[ayah] != list(range(1, len(target) + 1)) or len(target) < 2 or obs.truncated:
+        return None, False
+    units, qualities, attrs = obs.units, obs.unit_quality, obs.attribution
+    if len(units) != len(qualities) or len(attrs) != len(units):
+        return None, False
+    joined, first_count = '', None
+    for i, unit in enumerate(units):
+        joined += unit
+        if joined == target[0]:
+            first_count = i + 1
+            break
+        if not target[0].startswith(joined):
+            return None, False
+    if first_count is None or first_count < 2 or len(target[0]) < 3:
+        return None, False
+    def strong(count):
+        for u, q, a in zip(units[:count], qualities[:count], attrs[:count]):
+            ps = a.get('probabilities', ())
+            if (not math.isfinite(q) or q < threshold or a.get('word') != u
+                    or 'spoken_alias' in a or 'unsupported' in a or not ps
+                    or len(a.get('selected_indices', ())) != len(ps)
+                    or any(not math.isfinite(p) or not threshold <= p <= 1 for p in ps)
+                    or q != min(ps)):
+                return False
+        return True
+    if not strong(first_count):
+        return None, False
+    starts = [(a, i, ''.join(text[i:])) for a, text in groups.items()
+              for i in [0] + ends[a][:-1] if (a, i) != (ayah, 0)]
+    # No partial first-word identity can authorize scanning repeated owners.
+    if any(text.startswith(target[0]) for _, _, text in starts):
+        return None, False
+    # At least TWO whole canonical words; exact source unit endpoints only.
+    for count in range(2, len(target) + 1):
+        text = ''.join(target[:count])
+        if any(other.startswith(text) for _, _, other in starts):
+            continue
+        observed = ''
+        for n, unit in enumerate(units, 1):
+            observed += unit
+            if observed == text and strong(n):
+                return {'phrase': target[:count], 'segmented_opening': {
+                    'source_count': n, 'first_source_count': first_count,
+                    'source_units': list(units[:n]), 'selected_indices': sorted({i for a in attrs[:n] for i in a['selected_indices']}),
+                    'competitor_count': len(starts), 'onset_supported': False}}, True
+            if not text.startswith(observed):
+                break
+    # A strong contradictory next unit is not excused as word segmentation.
+    rest = ''.join(units[first_count:])
+    expected = ''.join(target[1:])
+    if rest and not expected.startswith(rest):
+        if any(q >= threshold for q in qualities[first_count:]):
+            return None, False
+    return None, True
+
+
+def _noisy_opening(observation, groups, word_ends, ayah, threshold):
+    """One missing onset unit can trigger a bounded, independent identity proof.
+
+    Never manufacture the missing unit. Require the rest of the first word at
+    the crop opening AND an additional whole word from at most two following
+    words. Both anchors must exclude every other canonical word start, allowing
+    the same single-unit omission for rivals. No forced path participates.
+    Any intervening words must match too. The omitted onset supplies no timing.
+    """
+    units, ends = groups[ayah], word_ends[ayah]
+    if len(ends) < 2 or ends[0] < 4 or observation.truncated:
+        return None, False
+    remainder = units[1:ends[0]]
+    initial_quality = observation.unit_quality[:len(remainder)]
+    if (_prefix(observation.units, remainder) != len(remainder)
+            or len(initial_quality) != len(remainder)
+            or any(not math.isfinite(q) or q < threshold for q in initial_quality)):
+        return None, False
+    rivals = []
+    for owner, text in groups.items():
+        for start in [0] + word_ends[owner][:-1]:
+            if (owner, start) == (ayah, 0):
+                continue
+            # Wrong owner and internal starts get the same tolerated defect.
+            if any(text[start + missing:start + missing + len(remainder)] == remainder
+                   for missing in (0, 1)):
+                rivals.append((owner, start))
+    if rivals:
+        return None, False
+    for word_index in range(1, min(3, len(ends))):
+        left, right = ends[word_index - 1], ends[word_index]
+        anchor = units[left:right]
+        if len(anchor) < 3:
+            continue
+        # The crop starts at the pause right edge; do not search distant repeats.
+        limit = right + 2
+        offsets = [i for i in range(len(remainder), min(len(observation.units), limit))
+                   if observation.units[i:i + len(anchor)] == anchor]
+        if len(offsets) != 1:
+            continue
+        offset = offsets[0]
+        # No arbitrary inserted or contradictory intervening speech. The
+        # tolerated defect is the initial unit only; any intervening complete
+        # canonical words must themselves be independently heard in order.
+        if observation.units[len(remainder):offset] != units[ends[0]:left]:
+            continue
+        quality = observation.unit_quality[:offset + len(anchor)]
+        if len(quality) != offset + len(anchor) or any(not math.isfinite(q) or q < threshold for q in quality):
+            continue
+        # A complete conflicting canonical opening cannot be excused as noise.
+        for owner, text in groups.items():
+            first = word_ends[owner][0]
+            if owner == ayah or _prefix(observation.units, text[:first]) != first:
+                continue
+            other = plan_phrase(groups, owner, word_ends)
+            if not other["ambiguous"] and _prefix(observation.units, other["units"]) == len(other["units"]):
+                return None, False
+        return {"phrase": units[:right], "opening_recovery": {
+            "missing_initial_units": 1, "heard_remainder": remainder,
+            "additional_word": anchor, "additional_word_index": word_index,
+            "additional_word_offset": offset, "rivals": rivals,
+            "onset_supported": False}, "completeness": "identity_anchors_only"}, True
+    return None, True
+
+
 def _incomplete_speech_edge(pcm, sr, end_ms, observation, phrase, groups, word_ends, ayah, threshold):
     """DSP explains a finite crop expansion, never identifies a canonical owner."""
     if (observation.positions_ms is None or not observation.units or observation.truncated
@@ -221,6 +364,23 @@ def _competing_prefix(observation, phrase, groups, ayah, word_ends, adapter, rea
     if observation.posterior is None or not hasattr(adapter, "vocab"):
         return observation, {}, False
     from surah_cutter.core.fast_ctc import prefix_scores, prefix_path
+    if not phrase or any(unit not in adapter.vocab for unit in phrase):
+        return observation, {}, False
+    # Neither proof nor expansion can survive a target below BOTH gates.
+    # Score it before constructing/scoring every canonical rival. This uses
+    # the same local posterior and never relaxes the residual/quality checks.
+    expected = prefix_scores(observation.posterior,
+                             [tuple(adapter.vocab[u] for u in phrase)], adapter.blank_id)[0]
+    if not math.isfinite(expected) or expected < math.log(min(
+            policy.ctc_prefix_probability, policy.ctc_expansion_probability)):
+        read.setdefault("prefix_rejections", []).append({
+            "units": phrase, "reason": "target_below_proof_and_expansion_gates",
+            "expected_log_probability": expected if math.isfinite(expected) else None,
+            "proof_probability": policy.ctc_prefix_probability,
+            "expansion_probability": policy.ctc_expansion_probability,
+            "posterior_sha256": observation.posterior_sha256,
+        })
+        return observation, {}, False
     alternatives = [(ayah, 0, phrase)]
     for owner, units in groups.items():
         stream = units + groups.get(owner + 1, ())
@@ -275,20 +435,29 @@ def pause_geometry(pcm, sr, pause):
     Keep the original DSP interval, but require review of its midpoint when
     the interior quarter levels show a sustained audible decay.
     """
-    if pause.end_ms - pause.start_ms <= 1000:
-        return {"accepted": True, "reason": "short_dsp_interval"}
     left, right = int(pause.start_ms * sr / 1000), int(pause.end_ms * sr / 1000)
     local = pcm[left:right]
     frame = max(1, sr // 50)
     count = len(local) // frame
     if count < 8:
-        return {"accepted": False, "reason": "unmeasurable_long_interval"}
+        return {"accepted": False, "reason": "unmeasurable_pause_interval"}
     levels = np.sqrt(np.mean(local[:count * frame].reshape(count, frame) ** 2, axis=1))
     quarter = max(1, count // 4)
     beginning, ending = float(np.median(levels[:quarter])), float(np.median(levels[-quarter:]))
+    # Measure stationarity even for short pauses. Ordinary reverberant pauses
+    # commonly decline; that is not evidence of an incorrect midpoint. Preserve
+    # the existing audible 4x-decay rejection until independent listening labels
+    # establish a better temporal gate, rather than fitting a new ratio to GT.
+    deviations = np.concatenate((np.abs(levels[:quarter] - beginning),
+                                 np.abs(levels[-quarter:] - ending)))
+    variation = float(np.median(deviations)) * 1.4826
+    stationarity = beginning - ending <= max(.003, 3 * variation)
     decay = beginning > max(.003, ending * 4)
-    return {"accepted": not decay, "reason": "decaying_tail_midpoint_unproved" if decay else "stable_long_interval",
-            "first_quarter_rms": beginning, "last_quarter_rms": ending}
+    return {"accepted": not decay, "reason": "decaying_tail_midpoint_unproved" if decay else "measured_dsp_interval",
+            "first_quarter_rms": beginning, "last_quarter_rms": ending,
+            "within_quarter_variation": variation, "midpoint_interval_radius_ms": (right - left) * 500 / sr,
+            "quiet_stationarity": stationarity, "timing_status": "uncalibrated_pause_midpoint",
+            "temporal_probability": None}
 
 
 def validate_boundaries(boundaries, ayahs, duration_ms, reads, *, groups=None, word_ends=None,
@@ -364,10 +533,40 @@ def validate_boundaries(boundaries, ayahs, duration_ms, reads, *, groups=None, w
             observed = {**observed, **selected}
         offset = proof.get("offset", 0)
         phrase = tuple(proof.get("phrase", ()))
-        if not phrase or tuple(observed["units"][offset:offset + len(phrase)]) != phrase:
+        recovery = proof.get("opening_recovery")
+        segmented = proof.get("segmented_opening")
+        if segmented:
+            from surah_cutter.core.fast_adapters import Observation
+            if (boundary.evidence_kind != "pause" or groups is None or word_ends is None
+                    or offset != 0 or recovery or proof.get("contextual_owner")
+                    or "prefix_comparison_id" in proof or "decoder_hypothesis" in proof):
+                raise ValueError("unsupported_segmented_proof")
+            decoded = Observation(tuple(observed["units"]), None, observed["quality"],
+                observed["truncated"], unit_quality=tuple(observed["unit_quality"]),
+                attribution=tuple(observed.get("attribution", ())))
+            expected, _ = _split_opening(decoded, groups, word_ends, boundary.ayah, threshold)
+            if not expected or expected["segmented_opening"] != segmented or expected["phrase"] != phrase:
+                raise ValueError("unheard_segmented_phrase")
+            quality = observed["unit_quality"][:segmented["source_count"]]
+        elif recovery:
+            from surah_cutter.core.fast_adapters import Observation
+            if (boundary.evidence_kind != "pause" or groups is None or word_ends is None
+                    or offset != 0 or "prefix_comparison_id" in proof or "decoder_hypothesis" in proof
+                    or proof.get("contextual_owner")):
+                raise ValueError("unsupported_noisy_opening_proof")
+            decoded = Observation(tuple(observed["units"]), None, observed["quality"],
+                                  observed["truncated"], unit_quality=tuple(observed["unit_quality"]))
+            expected, _ = _noisy_opening(decoded, groups, word_ends, boundary.ayah, threshold)
+            if (not expected or expected["opening_recovery"] != recovery or expected["phrase"] != phrase
+                    or proof.get("completeness") != "identity_anchors_only"):
+                raise ValueError("unheard_noisy_opening_identity")
+            i = recovery["additional_word_offset"]
+            quality = observed["unit_quality"][:i + len(recovery["additional_word"])]
+        elif not phrase or tuple(observed["units"][offset:offset + len(phrase)]) != phrase:
             raise ValueError("unheard_discriminating_phrase")
-        quality = observed.get("unit_quality", ())[offset:offset + len(phrase)]
-        if (len(quality) != len(phrase) or any(not math.isfinite(q) for q in quality)
+        else:
+            quality = observed.get("unit_quality", ())[offset:offset + len(phrase)]
+        if ((not recovery and not segmented and len(quality) != len(phrase)) or not quality or any(not math.isfinite(q) for q in quality)
                 or min(quality) < threshold or boundary.confidence > min(quality)):
             raise ValueError("weak_discriminating_unit")
         if groups is not None:
@@ -376,7 +575,10 @@ def validate_boundaries(boundaries, ayahs, duration_ms, reads, *, groups=None, w
                 seam = plan_seam(groups, boundary.ayah, word_ends)
                 if not seam or phrase != seam["units"] or tuple(proof.get("previous_tail", ())) != seam["tail"]:
                     raise ValueError("ambiguous_contextual_owner")
-            elif phrase != planned["units"] or planned["ambiguous"]:
+                if _strong_continuation_conflict(observed["units"][offset:], observed["unit_quality"][offset:],
+                                                 groups[boundary.ayah], len(phrase), threshold):
+                    raise ValueError("contradictory_contextual_continuation")
+            elif not recovery and not segmented and (phrase != planned["units"] or planned["ambiguous"]):
                 raise ValueError("non_distinguishing_phrase")
             if "spoken_owner_units" in proof:
                 if canonical_ends is None:
@@ -405,8 +607,9 @@ def validate_boundaries(boundaries, ayahs, duration_ms, reads, *, groups=None, w
                 pause = pauses[index]
                 if [left, right] != [pause.start_ms, pause.end_ms]:
                     raise ValueError("mutated_pause_interval")
-                if right - left > 1000 and (pause_geometry_data is None or not pause_geometry_data[index]["accepted"]):
-                    raise ValueError("unproved_long_pause_geometry")
+                if (pause_geometry_data is None or index >= len(pause_geometry_data)
+                        or not pause_geometry_data[index]["accepted"]):
+                    raise ValueError("unproved_pause_geometry")
             r0, r1 = read["window_ms"]
             expected_left = max(left, right - 200.)
             if abs(r0 - expected_left) > .1 or r1 <= right or offset != 0:
@@ -587,6 +790,17 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
         word_ends.setdefault(word.ayah, []).extend(base + end for end in ends)
         canonical_ends.setdefault(word.ayah, []).append(base + len(units))
     groups = {a: tuple(units) for a, units in groups.items()}
+    plans = {}
+
+    def planned_opening(ayah):
+        # Text is immutable within this run. Retain the small result, not a
+        # separate full-surah competitor list for every ayah (long-surah RAM).
+        if ayah not in plans:
+            planned = plan_phrase(groups, ayah, word_ends)
+            planned["competitor_count"] = len(planned.pop("competitors"))
+            plans[ayah] = planned
+        return plans[ayah]
+
     from pathlib import Path
     dsp_config = {name: value for name, value in vars(candidates).items()
                   if name.isupper() and isinstance(value, (str, bool, int, float))}
@@ -658,7 +872,7 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
             if confirmed and ayah <= confirmed[-1].ayah:
                 continue  # already validated and atomically published by RESOLVE_BLOCK
             event("PLAN_PHRASE", ayah)
-            plan = plan_phrase(groups, ayah, word_ends)
+            plan = planned_opening(ayah)
             seam = plan_seam(groups, ayah, word_ends) if plan["ambiguous"] and confirmed else None
             if seam:
                 plan = {**plan, **seam, "contextual_owner": True}
@@ -682,8 +896,21 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
                 forecast = previous + predicted_span
                 left = previous + predicted_span * policy.tempo_lower_ratio
                 right = previous + predicted_span * policy.tempo_upper_ratio
+                candidate_pool = candidates_here
                 candidates_here = [c for c in candidates_here if left <= c[2] <= right]
                 event("SELECT_CANDIDATE", ayah, forecast_ms=forecast, region_ms=[left, right])
+                if not candidates_here and not adapter.timing:
+                    # Without word positions the empty region cannot use wasl
+                    # recovery. One measured gap is a bounded next hypothesis;
+                    # tempo never supplies the owner proof or a timestamp.
+                    lookahead_right = right + predicted_span * policy.expansion_lookahead
+                    following = next((c for c in candidate_pool if right < c[2] <= lookahead_right
+                                      and geometry[c[1]]["accepted"]), None)
+                    if following is not None:
+                        candidates_here = [following]
+                        event("SELECT_CANDIDATE", ayah, candidate=following[1],
+                              reason="empty_tempo_region_next_dsp_pause", region_ms=[left, right],
+                              lookahead_region_ms=[right, lookahead_right])
             boundary, blocked_prefix, future = None, False, None
             for kind, index, start, speech_start, pause in candidates_here[:policy.max_candidates]:
                 # Geometry belongs to DSP. Acoustic identity needs speech at
@@ -696,7 +923,8 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
                         continue
                 event("SELECT_CANDIDATE", ayah, candidate=index, kind=kind)
                 had_prefix = False
-                for step, speech in enumerate(policy.speech_ms):
+                speech_steps = list(policy.speech_ms)
+                for step, speech in enumerate(speech_steps):
                     end = min(duration, speech_start + speech)
                     if end - start > 6000:
                         reason = "insufficient_local_context"
@@ -721,21 +949,84 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
                             obs, phrase, groups, ayah, word_ends, adapter, reads.calls[opening_id], policy, threshold)
                         beam_proof.update(prefix_proof)
                     complete = _prefix(obs.units, phrase)
+                    segmented_proof, segmented_expansion = (None, False)
+                    if (pause and not adapter.timing and complete != len(phrase)
+                            and not beam_proof and not plan.get("contextual_owner")):
+                        segmented_proof, segmented_expansion = _split_opening(obs, groups, word_ends, ayah, threshold)
+                    noisy_proof, noisy_expansion = (None, False)
+                    if (pause and adapter.metric == "ctc_greedy_probability"
+                            and complete != len(phrase) and not beam_proof and not plan.get("contextual_owner")):
+                        noisy_proof, noisy_expansion = _noisy_opening(obs, groups, word_ends, ayah, threshold)
+                    # A globally distinct longer opening can still be incomplete
+                    # in this crop. Try the shorter adjoining context after that
+                    # concrete failure; pause centers do not require word timing.
+                    opening_alternative = None
+                    alternative_context_read_id = None
+                    alternative_context_quality = None
+                    if (pause and confirmed and confirmed[-1].ayah == ayah - 1
+                            and complete != len(phrase) and not plan.get("contextual_owner") and not obs.truncated):
+                        contextual = plan_seam(groups, ayah, word_ends)
+                        if (contextual and _prefix(obs.units, contextual["units"]) == len(contextual["units"])
+                                and min(obs.unit_quality[:len(contextual["units"])], default=0.) >= threshold
+                                and not _strong_continuation_conflict(obs.units, obs.unit_quality,
+                                    groups[ayah], len(contextual["units"]), threshold)):
+                            opening_alternative = (obs, plan, phrase, complete, beam_proof,
+                                                   noisy_proof, noisy_expansion)
+                            plan = {**plan, **contextual, "contextual_owner": True}
+                            phrase = plan["units"]
+                            complete = len(phrase)
+                            beam_proof = {}
+                            noisy_proof, noisy_expansion = None, False
+                            event("EXPAND_LOCAL", ayah, reason="incomplete_opening_contextual_pause",
+                                  phrase=phrase, previous_tail=plan["tail"])
+                            for context_ms in policy.speech_ms:
+                                context_start = max(previous, pause.start_ms - context_ms)
+                                context_obs = reads.read(context_start, pause.start_ms,
+                                    reason=f"ayah={ayah}:repeated_owner_previous_tail")
+                                tail = plan["tail"]
+                                if (context_obs and not context_obs.truncated
+                                        and tuple(context_obs.units[-len(tail):]) == tail
+                                        and min(context_obs.unit_quality[-len(tail):], default=0.) >= threshold):
+                                    alternative_context_read_id = reads.last_read_id
+                                    alternative_context_quality = min(context_obs.unit_quality[-len(tail):])
+                                    break
+                            if alternative_context_read_id is None:
+                                # Retain the original opening/provenance. Its
+                                # expansion and future-owner evaluations below
+                                # still run on the independent opening read.
+                                (obs, plan, phrase, complete, beam_proof,
+                                 noisy_proof, noisy_expansion) = opening_alternative
+                                event("EVALUATE", ayah,
+                                      reason="alternative_context_unproved_resume_opening",
+                                      phrase=phrase, read_id=opening_id)
                     alias_conflict = any("spoken_alias" in item and tuple(item["source_units"]) != rendered[word_map[ayah][0]]
                                          for item in obs.attribution[:len(phrase)])
+                    if plan.get("contextual_owner"):
+                        alias_conflict |= _strong_continuation_conflict(
+                            obs.units, obs.unit_quality, groups[ayah], len(phrase), threshold)
                     spoken_owner = (rendered[word_map[ayah][0]] if len(proof_ends[word_map[ayah][0]]) > 1 else ())
                     if spoken_owner:
                         alias_conflict |= any(expected != actual and obs.unit_quality[i] >= threshold
                                               for i, (expected, actual) in enumerate(zip(spoken_owner, obs.units)))
                     phrase_quality = min(obs.unit_quality[:len(phrase)], default=0.)
+                    if segmented_proof:
+                        phrase_quality = min(obs.unit_quality[:segmented_proof["segmented_opening"]["source_count"]])
+                    if noisy_proof:
+                        recovery = noisy_proof["opening_recovery"]
+                        i = recovery["additional_word_offset"]
+                        phrase_quality = min(obs.unit_quality[:i + len(recovery["additional_word"])])
                     event("EVALUATE", ayah, candidate=index, complete_units=complete,
-                          needed_units=len(phrase), quality=obs.quality, observed=obs.units)
-                    if (complete == len(phrase) and not plan["ambiguous"] and not obs.truncated
+                          needed_units=len(phrase), quality=obs.quality, observed=obs.units,
+                          identity_recovery=noisy_proof,
+                          onset_supported=False if noisy_proof else None)
+                    if ((complete == len(phrase) or noisy_proof or segmented_proof) and not plan["ambiguous"] and not obs.truncated
                             and phrase_quality >= threshold and not alias_conflict):
-                        context_read_id = None
+                        context_read_id = alternative_context_read_id
+                        if alternative_context_quality is not None:
+                            phrase_quality = min(phrase_quality, alternative_context_quality)
                         if plan.get("contextual_owner") and pause:
                             tail = plan["tail"]
-                            for context_ms in policy.speech_ms:
+                            for context_ms in (() if context_read_id is not None else policy.speech_ms):
                                 context_start = max(previous, pause.start_ms - context_ms)
                                 context_obs = reads.read(context_start, pause.start_ms,
                                     reason=f"ayah={ayah}:repeated_owner_previous_tail")
@@ -757,8 +1048,12 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
                             reason = "unsupported_first_onset_timing"
                             break
                         proof = {"phrase": phrase, "complete": True, "ambiguous": False,
-                                 "competitors_checked": True, "competitor_count": len(plan["competitors"]),
+                                 "competitors_checked": True, "competitor_count": plan["competitor_count"],
                                  "offset": 0, "quality_metric": adapter.metric, **beam_proof}
+                        if noisy_proof:
+                            proof.update(noisy_proof)
+                        if segmented_proof:
+                            proof.update(segmented_proof)
                         if spoken_owner:
                             proof["spoken_owner_units"] = spoken_owner
                         if context_read_id is not None:
@@ -768,19 +1063,57 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
                             ms = round(pause.center_ms)
                             proof.update(pause_ms=[pause.start_ms, pause.end_ms], pause_id=index)
                         else:
-                            ms = round(start + obs.positions_ms[0])
+                            ms = round(reads.calls[opening_id]["window_ms"][0] + obs.positions_ms[0])
                         if ms <= previous:
                             reason = "quantized_boundary_collision"
                             break
                         # Context reads must not replace the opening's provenance.
                         boundary = Boundary(ayah, ms, kind, phrase_quality, read_id=opening_id, proof=proof)
                         break
+                    if (confirmed and confirmed[-1].ayah == ayah - 1 and not obs.truncated
+                            and len(canonical_ends[ayah]) > 1
+                            and len(phrase) > canonical_ends[ayah][0]):
+                        first_end = canonical_ends[ayah][0]
+                        first_word = groups[ayah][:first_end]
+                        previous_ayah = confirmed[-1].ayah
+                        previous_ends = canonical_ends[previous_ayah]
+                        rival = None
+                        if _prefix(obs.units, first_word) == len(first_word):
+                            for word_index in range(1, len(previous_ends) - 1):
+                                start_unit = previous_ends[word_index - 1]
+                                end_first, end_second = previous_ends[word_index:word_index + 2]
+                                previous_first = groups[previous_ayah][start_unit:end_first]
+                                previous_second = groups[previous_ayah][end_first:end_second]
+                                current_second = groups[ayah][first_end:canonical_ends[ayah][1]]
+                                alternative = previous_first + previous_second
+                                quality = obs.unit_quality[:len(alternative)]
+                                if (previous_first == first_word and previous_second != current_second
+                                        and words[word_map[previous_ayah][start_unit]].text == words[word_map[ayah][0]].text
+                                        and words[word_map[previous_ayah][end_first]].text != words[word_map[ayah][first_end]].text
+                                        and arabic_units(words[word_map[previous_ayah][end_first]].text)
+                                        != arabic_units(words[word_map[ayah][first_end]].text)
+                                        and _prefix(obs.units, alternative) == len(alternative)
+                                        and len(quality) == len(alternative)
+                                        and all(math.isfinite(q) for q in quality)
+                                        and min(quality, default=0.) >= threshold
+                                        and _strong_continuation_conflict(obs.units, obs.unit_quality,
+                                                                         groups[ayah], first_end, threshold)):
+                                    rival = {"ayah": previous_ayah, "start_unit": start_unit,
+                                             "units": alternative, "min_quality": min(quality)}
+                                    break
+                        if rival:
+                            reason = "decoded_previous_ayah_body"
+                            event("DECLINE_CANDIDATE", ayah, candidate=index, reason=reason, rival=rival,
+                                  read_id=opening_id)
+                            had_prefix = False
+                            blocked_prefix = False
+                            break
                     future_expansion = None
                     if pause is not None and obs.units:
                         for future_ayah in ayahs:
                             if future_ayah <= ayah:
                                 continue
-                            next_plan = plan_phrase(groups, future_ayah, word_ends)
+                            next_plan = planned_opening(future_ayah)
                             next_phrase = next_plan["units"]
                             next_obs, future_proof = _beam_view(obs, next_phrase, threshold, policy.beam_log_margin)
                             next_owner = rendered[word_map[future_ayah][0]]
@@ -794,7 +1127,7 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
                             quality = min(next_obs.unit_quality[:len(next_phrase)], default=0.)
                             if (not next_plan["ambiguous"] and _prefix(next_obs.units, next_phrase) == len(next_phrase)
                                     and not next_obs.truncated and quality >= threshold and not conflict):
-                                future = (future_ayah, next_phrase, pause, index, reads.last_read_id, quality, future_proof)
+                                future = (future_ayah, next_phrase, pause, index, opening_id, quality, future_proof)
                                 reason = ("future_ayah_without_current" if future_ayah == ayah + 1
                                           else "future_outside_bounded_block")
                                 break
@@ -807,13 +1140,23 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
                         if future:
                             break
                     expansion = _expansion_evidence(obs, phrase, word_ends[ayah], threshold, groups, ayah, word_ends)
+                    if not expansion and segmented_expansion:
+                        expansion = "split_head_requires_whole_continuation"
+                    if not expansion and noisy_expansion:
+                        expansion = "noisy_opening_additional_whole_word"
+                    if noisy_expansion and step == 0:
+                        # A damaged minimal opening already contains the next
+                        # word's beginning. Small finite extensions preserve
+                        # that independent observation; a jump to 2.5/4s can
+                        # change the decoder output after adding unrelated text.
+                        speech_steps[step + 1:] = [ms for ms in policy.noisy_speech_ms if ms > speech]
                     if not expansion and posterior_expansion:
                         expansion = "canonical_prefix_vs_unresolved_residual"
                     current_expansion = bool(expansion)
                     if not expansion and future_expansion:
                         expansion = "provisional_unique_anchor_partial:" + future_expansion[1]
                     speech_edge = None
-                    if not expansion and step + 1 < len(policy.speech_ms):
+                    if not expansion and step + 1 < len(speech_steps):
                         speech_edge = _incomplete_speech_edge(pcm, sr, end, obs, phrase, groups,
                                                              word_ends, ayah, threshold)
                         if speech_edge:
@@ -821,7 +1164,7 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
                     if expansion:
                         had_prefix |= current_expansion
                         reason = "ambiguous_phrase" if plan["ambiguous"] else "incomplete_distinguishing_phrase"
-                        if step + 1 < len(policy.speech_ms):
+                        if step + 1 < len(speech_steps):
                             event("EXPAND_LOCAL", ayah, reason=reason, acoustic_anchor=expansion,
                                   speech_edge=speech_edge)
                             continue
@@ -848,7 +1191,7 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
                         if len(offsets) == 1 and not plan["ambiguous"]:
                             offset = offsets[0]
                             quality = min(obs.unit_quality[offset:offset + len(combined)], default=0.)
-                            ms = round(start + obs.positions_ms[offset])
+                            ms = round(reads.calls[reads.last_read_id]["window_ms"][0] + obs.positions_ms[offset])
                             if quality >= threshold and previous < ms < round(pause.center_ms):
                                 proof = {"phrase": phrase, "complete": True, "ambiguous": False,
                                          "competitors_checked": True, "offset": offset,
@@ -910,9 +1253,12 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
                         occurrences = [i for i in range(len(obs.units)) if obs.units[i:i + len(combined)] == combined]
                         if len(occurrences) == 1:
                             offset = occurrences[0] + len(tail)
-                            ms = round(start + obs.positions_ms[offset])
+                            ms = round(reads.calls[reads.last_read_id]["window_ms"][0] + obs.positions_ms[offset])
                             phrase_quality = min(obs.unit_quality[occurrences[0]:offset + len(wasl_phrase)], default=0.)
-                            if previous < ms < duration and phrase_quality >= threshold:
+                            if (previous < ms < duration and phrase_quality >= threshold
+                                    and (not seam_plan or not _strong_continuation_conflict(
+                                        obs.units[offset:], obs.unit_quality[offset:], groups[ayah],
+                                        len(wasl_phrase), threshold))):
                                 proof = {"phrase": wasl_phrase, "complete": True, "ambiguous": False,
                                          "competitors_checked": True, "offset": offset,
                                          "previous_tail": tail, "quality_metric": adapter.metric,
@@ -922,6 +1268,89 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
                         reason = "unresolved_local_block"
                 else:
                     reason = "unsupported_wasl_timing"
+            if (boundary is None and future is None and policy.sparse_anchors
+                    and adapter.model_id in {"whisper-tarteel-tiny", "whisper-tarteel-base"}
+                    and not adapter.timing and len(confirmed) >= 2 and not plan["ambiguous"]
+                    and not plan.get("contextual_owner") and canonical_ends[ayah][0] == 1
+                    and len(phrase) > 1 and len(phrase[0]) >= 3):
+                current_words = [i for i, w in enumerate(words) if w.ayah == ayah]
+                owners = {}
+                for wi in range(len(rendered) - 1):
+                    owners.setdefault(rendered[wi] + rendered[wi + 1], []).append(wi)
+                current_reads = [r for r in reads.calls if r["reason"].startswith(f"ayah={ayah}:")
+                                 and "previous_tail" not in r["reason"]]
+                body_cue = None
+                for r in current_reads:
+                    observed = r.get("observed", {})
+                    if observed.get("truncated"):
+                        continue
+                    units, qualities = observed.get("units", ()), observed.get("unit_quality", ())
+                    for wi in current_words[1:-1]:
+                        pair = rendered[wi] + rendered[wi + 1]
+                        if owners[pair] != [wi]:
+                            continue
+                        for offset in range(len(units) - len(pair) + 1):
+                            q = qualities[offset:offset + len(pair)]
+                            if (tuple(units[offset:offset + len(pair)]) == pair
+                                    and len(q) == len(pair) and all(math.isfinite(x) for x in q)
+                                    and min(q) >= threshold and not any("spoken_alias" in a for a in
+                                        observed.get("attribution", ())[offset:offset + len(pair)])):
+                                body_cue = (r["id"], wi, pair)
+                                break
+                        if body_cue:
+                            break
+                    if body_cue:
+                        break
+                if body_cue:
+                    tried_head_candidates = set()
+                    for initial in current_reads:
+                        observed = initial.get("observed", {})
+                        units, qualities = observed.get("units", ()), observed.get("unit_quality", ())
+                        if (observed.get("truncated") or not units or not qualities or qualities[0] <= 0
+                                or not units[0].startswith(phrase[0]) or len(units[0]) <= len(phrase[0])
+                                or any("unsupported" in a for a in observed.get("attribution", ()))):
+                            continue
+                        for kind, index, _, _, pause in candidates_here[:policy.max_candidates]:
+                            if pause is None or index in tried_head_candidates or not geometry[index]["accepted"]:
+                                continue
+                            start = max(pause.start_ms, pause.end_ms - 200.)
+                            if round(initial["window_ms"][0] * sr / 1000) != round(start * sr / 1000):
+                                continue
+                            tried_head_candidates.add(index)
+                            for speech in policy.speech_ms[1:]:
+                                event("HEAD_BOUNDARY_RECHECK", ayah, candidate=index,
+                                      initial_read_id=initial["id"], body_read_id=body_cue[0],
+                                      observed_word=units[0], expected_prefix=phrase[0],
+                                      window_ms=[start, min(duration, pause.end_ms + speech)])
+                                recheck = reads.read(start, min(duration, pause.end_ms + speech),
+                                                     reason=f"ayah={ayah}:head_word_boundary_recheck")
+                                if recheck is None:
+                                    break
+                                q = recheck.unit_quality[:len(phrase)]
+                                conflict = any("spoken_alias" in a and tuple(a["source_units"]) != rendered[word_map[ayah][0]]
+                                               for a in recheck.attribution[:len(phrase)])
+                                if (_prefix(recheck.units, phrase) == len(phrase) and not recheck.truncated
+                                        and len(q) == len(phrase) and min(q) >= threshold and not conflict):
+                                    ms = round(pause.center_ms)
+                                    if ms <= previous:
+                                        break
+                                    proof = {"phrase": phrase, "complete": True, "ambiguous": False,
+                                             "competitors_checked": True, "competitor_count": plan["competitor_count"],
+                                             "offset": 0, "quality_metric": adapter.metric,
+                                             "pause_ms": [pause.start_ms, pause.end_ms], "pause_id": index,
+                                             "head_boundary_recheck": True, "body_cue_read_id": body_cue[0],
+                                             "initial_head_read_id": initial["id"]}
+                                    boundary = Boundary(ayah, ms, "pause", min(q), read_id=reads.last_read_id, proof=proof)
+                                    validate_boundaries([boundary], [ayah], duration, reads.calls,
+                                                        groups=groups, word_ends=word_ends, canonical_ends=canonical_ends,
+                                                        threshold=threshold, pauses=pauses, policy=policy, pause_geometry_data=geometry)
+                                    break
+                                if not _expansion_evidence(recheck, phrase, word_ends[ayah], threshold, groups, ayah, word_ends):
+                                    break
+                            if boundary:
+                                break
+                        if boundary:
+                            break
             if boundary is None:
                 if (future and policy.sparse_anchors and future[0] > ayah
                         and (policy.max_unresolved_ayahs is None or future[0] - ayah <= policy.max_unresolved_ayahs)):
@@ -954,6 +1383,13 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
         validate_boundaries(result, ayahs, duration, reads.calls,
                             groups=groups, word_ends=word_ends, canonical_ends=canonical_ends, threshold=threshold, pauses=pauses, policy=policy, pause_geometry_data=geometry)
         trace["boundaries"] = [asdict(b) for b in result]
+        trace["confidence_semantics"] = {
+            "recognition": "minimum_independently_supported_essential_unit_score",
+            "calibrated_probability": False,
+            "temporal_probability": None,
+            "pause_timing": "midpoint_of_measured_DSP_interval_not_calibrated_probability",
+            "noisy_opening": "identity_only_missing_onset_not_reconstructed",
+        }
         trace["ayahs"] = [{"ayah": b.ayah, "onset_ms": b.start_ms, "conf": b.confidence,
                             "reliable": b.evidence_kind != "estimate"} for b in result]
         trace["review_required_ayahs"] = [b.ayah for b in result if b.evidence_kind == "estimate"]

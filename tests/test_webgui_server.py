@@ -81,6 +81,7 @@ def test_ayah_review_status_round_trip_preserves_time(project):
 
 def test_generation_reruns_changed_mode_and_keeps_manual_marks(project, monkeypatch):
     from surah_cutter.core import pipeline
+    from surah_cutter.core import full_windows
 
     calls = []
 
@@ -88,14 +89,21 @@ def test_generation_reruns_changed_mode_and_keeps_manual_marks(project, monkeypa
         mode = kwargs["mode"]
         calls.append(mode)
         confidence = 0.2 if mode == "fast" else 0.9
-        kwargs["trace"].update(mode=mode, model_source="onnx-ctc:test", ayahs=[
+        kwargs["trace"].update(mode=mode, model_source="onnx-ctc:quran-phonetics", ayahs=[
             {"ayah": a, "conf": confidence} for a in range(1, 7)
         ])
+        if mode == "full":
+            kwargs["trace"]["full_windows"] = {
+                "algorithm": full_windows.FULL_POLICY, "window_s": 20, "workers": 3,
+                "context_s": 2, "max_window_s": 60, "onset_policy": full_windows.FULL_ONSET_POLICY,
+                "pause_policy": "strong-dsp-v1",
+            }
         return [(surah, a, a * 1000 + (100 if mode == "full" else 0)) for a in range(1, 7)]
 
     monkeypatch.setattr(pipeline, "process_surah", align)
     monkeypatch.setattr(server._GenJob, "start", server._GenJob._run)
     monkeypatch.setattr(server.model_store, "active_kind", lambda: "phonetic")
+    monkeypatch.setattr(server.model_store, "ACTIVE_ID", "quran-phonetics")
     generate = endpoint("/api/generate")
     generate({"suras": [114], "mode": "fast", "only_missing": True})
     with ProjectDB.open(str(project.db_path), DB_CODE, DB_VERSION) as db:

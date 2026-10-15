@@ -1,0 +1,25 @@
+whisper-tarteel-tiny 77 8.59 review 26 coverage 0.236 calls 39
+whisper-tarteel-tiny 77 9.25 review 26 coverage 0.236 calls 39
+whisper-tarteel-tiny 77 9.07 review 26 coverage 0.236 calls 39
+{
+  "whisper-tarteel-tiny": {
+    "surahs": 3,
+    "ayahs": 150,
+    "median_ms": 183.0,
+    "p95_ms": 4587.0,
+    "max_ms": 6737,
+    "over500": 57,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 78,
+    "load_probe_seconds": 3.3336986671201885,
+    "decode_seconds": 0.6410921250935644,
+    "dsp_seconds": 0.2064381237141788,
+    "inference_match_seconds": 26.914789789821953,
+    "search_seconds": 27.12122791353613,
+    "audio_ms": 189300.0,
+    "covered_audio_ms": 158100.0,
+    "total_ms": 670275.9375,
+    "model_reads": 117
+  }
+}

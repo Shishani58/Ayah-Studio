@@ -1,0 +1,113 @@
+muaalem 1 5.41 review 0 coverage 0.319 calls 12
+muaalem 2 144.8 review 236 coverage 0.057 calls 302
+muaalem 32 43.38 review 1 coverage 0.345 calls 110
+muaalem 55 41.88 review 48 coverage 0.228 calls 97
+muaalem 59 58.19 review 3 coverage 0.358 calls 136
+muaalem 65 6.6 review 11 coverage 0.067 calls 16
+muaalem 73 19.01 review 0 coverage 0.304 calls 51
+muaalem 77 41.88 review 12 coverage 0.573 calls 99
+muaalem 79 43.28 review 0 coverage 0.572 calls 106
+muaalem 80 37.23 review 2 coverage 0.616 calls 93
+muaalem 98 13.02 review 0 coverage 0.38 calls 32
+muaalem 112 2.04 review 0 coverage 0.337 calls 6
+{
+  "muaalem": {
+    "surahs": 12,
+    "ayahs": 607,
+    "median_ms": 1012.0,
+    "p95_ms": 34669.49999999999,
+    "max_ms": 48672,
+    "over500": 314,
+    "positive_conf_over500": [
+      [
+        2,
+        4,
+        505,
+        0.5287481546401978
+      ],
+      [
+        2,
+        9,
+        1012,
+        0.982150673866272
+      ],
+      [
+        2,
+        10,
+        2217,
+        0.9648646712303162
+      ],
+      [
+        2,
+        18,
+        1476,
+        0.6338685750961304
+      ],
+      [
+        2,
+        21,
+        639,
+        0.9702951312065125
+      ],
+      [
+        2,
+        23,
+        1335,
+        0.6194765567779541
+      ],
+      [
+        2,
+        25,
+        980,
+        0.943581759929657
+      ],
+      [
+        2,
+        53,
+        576,
+        0.8841537833213806
+      ],
+      [
+        32,
+        11,
+        1892,
+        0.9276061058044434
+      ],
+      [
+        32,
+        16,
+        566,
+        0.5809784531593323
+      ],
+      [
+        32,
+        20,
+        1063,
+        0.9856603145599365
+      ],
+      [
+        79,
+        26,
+        508,
+        0.4011196494102478
+      ],
+      [
+        80,
+        37,
+        672,
+        0.6702582240104675
+      ]
+    ],
+    "sequence_violations": [],
+    "review_ayahs": 313,
+    "load_probe_seconds": 8.446757375029847,
+    "decode_seconds": 8.818710541818291,
+    "dsp_seconds": 1.2846381661947817,
+    "inference_match_seconds": 456.71335337520577,
+    "search_seconds": 457.99799154140055,
+    "audio_ms": 2275964.0625,
+    "covered_audio_ms": 1416909.0,
+    "total_ms": 10041365.0,
+    "model_reads": 1060
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "records": [
+    {
+      "control": "original",
+      "target_matches": [
+        0
+      ],
+      "wrong_target_matches": [],
+      "normalization": [
+        "ء",
+        "َ",
+        "ل",
+        "ح",
+        "َ",
+        "م",
+        "د",
+        "ُ",
+        "ل",
+        "ِ",
+        "ل",
+        "ل",
+        "َ",
+        "ا"
+      ],
+      "retained_minimum_scores": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "control": "leading_silence_200ms",
+      "target_matches": [
+        0
+      ],
+      "wrong_target_matches": [],
+      "normalization": [
+        "ء",
+        "َ",
+        "ل",
+        "ح",
+        "َ",
+        "م",
+        "د",
+        "ُ",
+        "ل",
+        "ِ",
+        "ل",
+        "ل",
+        "َ",
+        "ا"
+      ],
+      "retained_minimum_scores": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "control": "silence",
+      "target_matches": [],
+      "wrong_target_matches": [],
+      "normalization": [],
+      "retained_minimum_scores": []
+    }
+  ],
+  "normalizer_source_sha256": "7f7c3e6cdefa0680c3c880171ff8af992bba52f0a24078f1d863f3347b599ef2",
+  "scope": "derived replay of real observed phones, not new acoustic controls"
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "variant": "baseline",
+    "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-next-_hxeh055",
+    "import": {
+      "executor": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-next-_hxeh055/surah_cutter/core/fast_executor.py",
+      "adapter": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-next-_hxeh055/surah_cutter/core/fast_adapters.py",
+      "version": "sequential-fast-v3-sparse-11-head-boundary"
+    }
+  },
+  {
+    "variant": "prototype",
+    "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-next-_hxeh055-split",
+    "import": {
+      "executor": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-next-_hxeh055-split/surah_cutter/core/fast_executor.py",
+      "adapter": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-next-_hxeh055-split/surah_cutter/core/fast_adapters.py",
+      "version": "sequential-fast-v3-sparse-12-split-probe"
+    }
+  }
+]

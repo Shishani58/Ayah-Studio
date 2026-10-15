@@ -1,0 +1,409 @@
+{
+  "rows": [
+    [
+      1,
+      1,
+      120
+    ],
+    [
+      1,
+      2,
+      6483
+    ],
+    [
+      1,
+      3,
+      11598
+    ],
+    [
+      1,
+      4,
+      15937
+    ],
+    [
+      1,
+      5,
+      21577
+    ],
+    [
+      1,
+      6,
+      27876
+    ],
+    [
+      1,
+      7,
+      33395
+    ]
+  ],
+  "trace": {
+    "model_source": "onnx-ctc:quran-phonetics:revision=local-export:sha256=423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a:lag=200",
+    "audio_signature": {
+      "name": "001.mp3",
+      "size": 944169,
+      "mtime_ns": 1788193443548851799
+    },
+    "full_windows": {
+      "algorithm": "qpc-full-pause-v1",
+      "review_policy": "qpc-pause-review-v1",
+      "onset_policy": "qpc-phrase-boundary-v3",
+      "window_s": 20,
+      "context_s": 2,
+      "workers": 3,
+      "batch_size": 1,
+      "dsp_s": 0.00391762494109571,
+      "windows": [
+        {
+          "start_ms": 0.0,
+          "end_ms": 20920.0,
+          "read_start_ms": 0.0,
+          "read_end_ms": 22920.0,
+          "input_samples": 398720,
+          "frames": 1046,
+          "cut_reason": "pause"
+        },
+        {
+          "start_ms": 20920.0,
+          "end_ms": 38680.0,
+          "read_start_ms": 18920.0,
+          "read_end_ms": 40680.0,
+          "input_samples": 348160,
+          "frames": 888,
+          "cut_reason": "pause"
+        },
+        {
+          "start_ms": 38680.0,
+          "end_ms": 59010.625,
+          "read_start_ms": 36680.0,
+          "read_end_ms": 59010.625,
+          "input_samples": 389440,
+          "frames": 1017,
+          "cut_reason": "end"
+        }
+      ],
+      "max_window_s": 60,
+      "pause_policy": "strong-dsp-v1",
+      "min_pause_ms": 300.0,
+      "pause_decisions": [
+        {
+          "start_ms": 5780.0,
+          "end_ms": 6620.0,
+          "center_ms": 6200.0,
+          "duration_ms": 840.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.35003631399762625,
+            "zcr": 0.07344425039066091,
+            "rms_ratio": 0.05631836753502089
+          }
+        },
+        {
+          "start_ms": 11340.0,
+          "end_ms": 11740.0,
+          "center_ms": 11540.0,
+          "duration_ms": 400.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.42733061872040085,
+            "zcr": 0.05730659025787966,
+            "rms_ratio": 0.12595032563283362
+          }
+        },
+        {
+          "start_ms": 20160.0,
+          "end_ms": 21680.0,
+          "center_ms": 20920.0,
+          "duration_ms": 1520.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.2681974753180254,
+            "zcr": 0.04494691851647594,
+            "rms_ratio": 0.040402916871467194
+          }
+        },
+        {
+          "start_ms": 27460.0,
+          "end_ms": 27980.0,
+          "center_ms": 27720.0,
+          "duration_ms": 520.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.4447401599729706,
+            "zcr": 0.05886438617815593,
+            "rms_ratio": 0.10076750020480052
+          }
+        },
+        {
+          "start_ms": 33120.0,
+          "end_ms": 33540.0,
+          "center_ms": 33330.0,
+          "duration_ms": 420.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.32406243702790727,
+            "zcr": 0.03101707141139697,
+            "rms_ratio": 0.12486093020398133
+          }
+        },
+        {
+          "start_ms": 38540.0,
+          "end_ms": 38840.0,
+          "center_ms": 38690.0,
+          "duration_ms": 300.0,
+          "accepted": true,
+          "metrics": {
+            "flatness": 0.3655601716486362,
+            "zcr": 0.08634164495720134,
+            "rms_ratio": 0.06517240108134677
+          }
+        }
+      ],
+      "short_clip": false,
+      "inference_s": 2.0301957079209387,
+      "pause_cuts": 2,
+      "fallback_cuts": 0,
+      "review_min_token_conf": 0.05,
+      "review_long_pause_ms": 700,
+      "review_late_ms": 200
+    },
+    "full_boundary_reads": [
+      {
+        "ayah": 2,
+        "start_ms": 6420,
+        "end_ms": 8340,
+        "frames": 95,
+        "accepted": true,
+        "outcome": "completed",
+        "target": [
+          "al-ḥamdu",
+          "lillahi"
+        ],
+        "normalization": "local",
+        "decoded": "l-ḥamdulilāhi",
+        "local_check": {
+          "ayah": 2,
+          "raw_onset_ms": 6483,
+          "onset_ms": 6483,
+          "conf": 0.5305,
+          "first_token_conf": 0.0022,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0022,
+            0.9998,
+            0.9998,
+            0.9287,
+            0.9996,
+            0.8878,
+            0.9963,
+            0.9991
+          ]
+        },
+        "consonant_conf": [
+          0.9998,
+          0.9287,
+          0.8878,
+          0.9963
+        ],
+        "body_token_conf": [
+          0.9998,
+          0.9287,
+          0.9996,
+          0.8878,
+          0.9963,
+          0.9991
+        ],
+        "reason": "split-word-local-recheck",
+        "before_ms": 5339,
+        "after_ms": 6483
+      }
+    ],
+    "mode": "full",
+    "total_ms": 59010.625,
+    "emission_passes": 1,
+    "emissions_frames": 2951,
+    "backend": "onnx",
+    "batch_size": 1,
+    "align_lag_ms": 200,
+    "ayahs": [
+      {
+        "ayah": 1,
+        "raw_onset_ms": 120,
+        "onset_ms": 120,
+        "conf": 0.2666,
+        "first_token_conf": 0.866,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word-token",
+        "token_confs": [
+          0.866,
+          0.988,
+          0.0243,
+          0.024,
+          0.999,
+          0.7187
+        ],
+        "review_policy": "qpc-pause-review-v1"
+      },
+      {
+        "ayah": 2,
+        "raw_onset_ms": 5339,
+        "onset_ms": 6483,
+        "conf": 0.5305,
+        "first_token_conf": 0.0022,
+        "reliable": false,
+        "repaired": true,
+        "reason": "split-word-local-recheck",
+        "token_confs": [
+          0.0022,
+          0.9998,
+          0.9998,
+          0.9287,
+          0.9996,
+          0.8878,
+          0.9963,
+          0.9991
+        ],
+        "original_conf": 0.3485,
+        "original_first_token_conf": 0.8975,
+        "pause_start_ms": 5780.0,
+        "pause_end_ms": 6620.0
+      },
+      {
+        "ayah": 3,
+        "raw_onset_ms": 11598,
+        "onset_ms": 11598,
+        "conf": 0.0478,
+        "first_token_conf": 0.7211,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.7211,
+          0.0,
+          0.0001,
+          0.988,
+          0.001,
+          0.0004,
+          0.9763,
+          0.9931,
+          0.3676,
+          0.347
+        ]
+      },
+      {
+        "ayah": 4,
+        "raw_onset_ms": 15937,
+        "onset_ms": 15937,
+        "conf": 0.0697,
+        "first_token_conf": 0.9987,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9987,
+          0.8528,
+          0.9631,
+          0.0898,
+          0.0046,
+          0.0
+        ]
+      },
+      {
+        "ayah": 5,
+        "raw_onset_ms": 21577,
+        "onset_ms": 21577,
+        "conf": 0.0603,
+        "first_token_conf": 0.7071,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.7071,
+          0.0238,
+          0.0001,
+          0.0565,
+          0.9925,
+          0.9994
+        ]
+      },
+      {
+        "ayah": 6,
+        "raw_onset_ms": 27876,
+        "onset_ms": 27876,
+        "conf": 0.171,
+        "first_token_conf": 0.9791,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9791,
+          0.8971,
+          0.7196,
+          0.1329,
+          0.9957,
+          0.8827,
+          0.0
+        ]
+      },
+      {
+        "ayah": 7,
+        "raw_onset_ms": 33395,
+        "onset_ms": 33395,
+        "conf": 0.1572,
+        "first_token_conf": 0.8755,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.8755,
+          0.9603,
+          0.9424,
+          0.9181,
+          0.0762,
+          0.0
+        ]
+      }
+    ],
+    "generated_rows": [
+      [
+        1,
+        1,
+        120
+      ],
+      [
+        1,
+        2,
+        6483
+      ],
+      [
+        1,
+        3,
+        11598
+      ],
+      [
+        1,
+        4,
+        15937
+      ],
+      [
+        1,
+        5,
+        21577
+      ],
+      [
+        1,
+        6,
+        27876
+      ],
+      [
+        1,
+        7,
+        33395
+      ]
+    ]
+  },
+  "elapsed_s": 2.208911916008219,
+  "fresh_main_emissions": true
+}

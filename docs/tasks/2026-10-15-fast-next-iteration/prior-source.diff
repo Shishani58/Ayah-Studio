@@ -1,0 +1,11 @@
+--- 
++++ 
+@@ -16,7 +16,7 @@
+ from surah_cutter.core.fast_adapters import make_adapter, representation_sha, loaded_implementation_sha, arabic_units
+ from surah_cutter.core.fast_reads import LocalEvidenceReads
+ 
+-VERSION = "sequential-fast-v3-sparse-11-head-boundary-probe"
++VERSION = "sequential-fast-v3-sparse-11-head-boundary"
+ 
+ 
+ @dataclass(frozen=True)

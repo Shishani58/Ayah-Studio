@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "/Users/ayub/Developer/surah-cutter/.venv/bin/python",
+    "-u",
+    "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-next-_hxeh055-split/tools/bench_fast_models.py",
+    "--models",
+    "whisper-tarteel-tiny",
+    "--surahs",
+    "77",
+    "--audio-dir",
+    "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri",
+    "--reference",
+    "/Users/ayub/Developer/surah-cutter/data/references/abu_bakr_ash_shatri.db",
+    "--output",
+    "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-next-iteration/split-local.json"
+  ],
+  "cwd": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-next-_hxeh055-split",
+  "PYTHONPATH": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-next-_hxeh055-split"
+}

@@ -1,0 +1,655 @@
+[
+  {
+    "model": "quran-phonetics",
+    "lost": [],
+    "added": [],
+    "changed_prior": [],
+    "new_outliers": [],
+    "cases": [
+      {
+        "surah": 1,
+        "before": 1,
+        "after": 1,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 5500.0,
+        "coverage": 0.11523348549519684,
+        "input_ratio": 0.24741307179851085
+      },
+      {
+        "surah": 32,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 4200.0,
+        "coverage": 0.02088026657749529,
+        "input_ratio": 0.03746568620031977
+      },
+      {
+        "surah": 55,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 4200.0,
+        "coverage": 0.03028611096024416,
+        "input_ratio": 0.05799889223105581
+      },
+      {
+        "surah": 59,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 2700.0,
+        "coverage": 0.02375678940230883,
+        "input_ratio": 0.03207353043325838
+      },
+      {
+        "surah": 65,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 4200.0,
+        "coverage": 0.04397750511580038,
+        "input_ratio": 0.06271348362667392
+      },
+      {
+        "surah": 73,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 2700.0,
+        "coverage": 0.029063383661064555,
+        "input_ratio": 0.042076839031690474
+      },
+      {
+        "surah": 77,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 4200.0,
+        "coverage": 0.04547380906091381,
+        "input_ratio": 0.09220083333216778
+      },
+      {
+        "surah": 80,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 4200.0,
+        "coverage": 0.0948397694336964,
+        "input_ratio": 0.1458676888572613
+      },
+      {
+        "surah": 98,
+        "before": 1,
+        "after": 1,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 5500.0,
+        "coverage": 0.24913764205927832,
+        "input_ratio": 0.37334222677011736
+      },
+      {
+        "surah": 112,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 2700.0,
+        "coverage": 0.36109595603401246,
+        "input_ratio": 0.42582070287029766
+      },
+      {
+        "surah": 2,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 4200.0,
+        "coverage": 0.0009454494955740307,
+        "input_ratio": 0.0017215647531348022
+      },
+      {
+        "surah": 79,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 4200.0,
+        "coverage": 0.08182068960022786,
+        "input_ratio": 0.1442019943295155
+      }
+    ],
+    "before_proofs": 2,
+    "after_proofs": 2
+  },
+  {
+    "model": "quran-phonetics-fp32",
+    "lost": [],
+    "added": [],
+    "changed_prior": [],
+    "new_outliers": [],
+    "cases": [
+      {
+        "surah": 1,
+        "before": 1,
+        "after": 1,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 5500.0,
+        "coverage": 0.11523348549519684,
+        "input_ratio": 0.20843703993984133
+      },
+      {
+        "surah": 32,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 4200.0,
+        "coverage": 0.02088026657749529,
+        "input_ratio": 0.03746568620031977
+      },
+      {
+        "surah": 55,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 4200.0,
+        "coverage": 0.03028611096024416,
+        "input_ratio": 0.05799889223105581
+      },
+      {
+        "surah": 59,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 2700.0,
+        "coverage": 0.02375678940230883,
+        "input_ratio": 0.03207353043325838
+      },
+      {
+        "surah": 65,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 4200.0,
+        "coverage": 0.040854842030654794,
+        "input_ratio": 0.05568749168509634
+      },
+      {
+        "surah": 73,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 2700.0,
+        "coverage": 0.029063383661064555,
+        "input_ratio": 0.042076839031690474
+      },
+      {
+        "surah": 77,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 4200.0,
+        "coverage": 0.04547380906091381,
+        "input_ratio": 0.09220083333216778
+      },
+      {
+        "surah": 80,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 2300.0,
+        "coverage": 0.026287110006078893,
+        "input_ratio": 0.054635954130281626
+      },
+      {
+        "surah": 98,
+        "before": 1,
+        "after": 1,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 5500.0,
+        "coverage": 0.24913764205927832,
+        "input_ratio": 0.37334222677011736
+      },
+      {
+        "surah": 112,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 2700.0,
+        "coverage": 0.36109595603401246,
+        "input_ratio": 0.42582070287029766
+      },
+      {
+        "surah": 2,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 4200.0,
+        "coverage": 0.0009454494955740307,
+        "input_ratio": 0.0017215647531348022
+      },
+      {
+        "surah": 79,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 4200.0,
+        "coverage": 0.08182068960022786,
+        "input_ratio": 0.1442019943295155
+      }
+    ],
+    "before_proofs": 2,
+    "after_proofs": 2
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "lost": [],
+    "added": [],
+    "changed_prior": [],
+    "new_outliers": [],
+    "cases": [
+      {
+        "surah": 1,
+        "before": 2,
+        "after": 2,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 4000.0,
+        "coverage": 0.13082389823866464,
+        "input_ratio": 0.2050478197782179
+      },
+      {
+        "surah": 32,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 4200.0,
+        "coverage": 0.015991451426965755,
+        "input_ratio": 0.02558632228314521
+      },
+      {
+        "surah": 55,
+        "before": 19,
+        "after": 19,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 2700.0,
+        "coverage": 0.117264654463063,
+        "input_ratio": 0.14846132823649097
+      },
+      {
+        "surah": 59,
+        "before": 3,
+        "after": 3,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 4200.0,
+        "coverage": 0.05023609941116168,
+        "input_ratio": 0.07347076157385933
+      },
+      {
+        "surah": 65,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 1500.0,
+        "coverage": 0.03070618700393163,
+        "input_ratio": 0.03070618700393163
+      },
+      {
+        "surah": 73,
+        "before": 17,
+        "after": 17,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 2700.0,
+        "coverage": 0.22122874130064063,
+        "input_ratio": 0.2567988526470182
+      },
+      {
+        "surah": 77,
+        "before": 6,
+        "after": 6,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 2700.0,
+        "coverage": 0.06489864482118606,
+        "input_ratio": 0.07161229773372253
+      },
+      {
+        "surah": 80,
+        "before": 9,
+        "after": 9,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 2700.0,
+        "coverage": 0.1383423593261093,
+        "input_ratio": 0.178494631276571
+      },
+      {
+        "surah": 98,
+        "before": 4,
+        "after": 4,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 2700.0,
+        "coverage": 0.1593533894750501,
+        "input_ratio": 0.1730122514300544
+      },
+      {
+        "surah": 112,
+        "before": 4,
+        "after": 4,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 1500.0,
+        "coverage": 0.3483213349479035,
+        "input_ratio": 0.366205804468456
+      },
+      {
+        "surah": 2,
+        "before": 4,
+        "after": 4,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 4200.0,
+        "coverage": 0.0029915715382342464,
+        "input_ratio": 0.004191022390828166
+      },
+      {
+        "surah": 79,
+        "before": 16,
+        "after": 16,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 4200.0,
+        "coverage": 0.19104772508407633,
+        "input_ratio": 0.2573328407095774
+      }
+    ],
+    "before_proofs": 84,
+    "after_proofs": 84
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "lost": [],
+    "added": [
+      [
+        59,
+        [
+          11,
+          265200,
+          0.9999973774024795
+        ]
+      ],
+      [
+        59,
+        [
+          12,
+          296270,
+          0.9997776049374032
+        ]
+      ],
+      [
+        59,
+        [
+          13,
+          318000,
+          0.9846188513475372
+        ]
+      ],
+      [
+        59,
+        [
+          14,
+          330580,
+          0.9999163220796634
+        ]
+      ],
+      [
+        59,
+        [
+          15,
+          356170,
+          0.9999763971175267
+        ]
+      ],
+      [
+        59,
+        [
+          16,
+          366440,
+          0.9999718673999347
+        ]
+      ],
+      [
+        59,
+        [
+          17,
+          388060,
+          0.9999976158197796
+        ]
+      ],
+      [
+        59,
+        [
+          19,
+          421110,
+          0.9999903441405488
+        ]
+      ],
+      [
+        59,
+        [
+          20,
+          434380,
+          0.6482537624338445
+        ]
+      ],
+      [
+        59,
+        [
+          21,
+          449260,
+          0.9988183648821419
+        ]
+      ],
+      [
+        59,
+        [
+          22,
+          473360,
+          0.9972482556121489
+        ]
+      ],
+      [
+        59,
+        [
+          23,
+          485370,
+          0.999837067447481
+        ]
+      ],
+      [
+        59,
+        [
+          24,
+          508660,
+          0.9994012128513499
+        ]
+      ],
+      [
+        77,
+        [
+          25,
+          85420,
+          0.9998928423312176
+        ]
+      ],
+      [
+        77,
+        [
+          27,
+          92560,
+          0.9999291946990259
+        ]
+      ],
+      [
+        77,
+        [
+          28,
+          103330,
+          0.9393910506731099
+        ]
+      ]
+    ],
+    "changed_prior": [],
+    "new_outliers": [],
+    "cases": [
+      {
+        "surah": 1,
+        "before": 2,
+        "after": 2,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 4000.0,
+        "coverage": 0.13082389823866464,
+        "input_ratio": 0.2050478197782179
+      },
+      {
+        "surah": 32,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 4200.0,
+        "coverage": 0.012564711835473094,
+        "input_ratio": 0.02215958269165255
+      },
+      {
+        "surah": 55,
+        "before": 19,
+        "after": 19,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 4200.0,
+        "coverage": 0.11271184039714395,
+        "input_ratio": 0.14707568917295039
+      },
+      {
+        "surah": 59,
+        "before": 8,
+        "after": 21,
+        "rows_equal": false,
+        "dispatches_equal": false,
+        "max_read_ms": 4200.0,
+        "coverage": 0.2435723572786169,
+        "input_ratio": 0.3104792335545071
+      },
+      {
+        "surah": 65,
+        "before": 0,
+        "after": 0,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 1500.0,
+        "coverage": 0.03070618700393163,
+        "input_ratio": 0.03070618700393163
+      },
+      {
+        "surah": 73,
+        "before": 19,
+        "after": 19,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 2700.0,
+        "coverage": 0.2147220136153277,
+        "input_ratio": 0.23424219667126656
+      },
+      {
+        "surah": 77,
+        "before": 21,
+        "after": 24,
+        "rows_equal": false,
+        "dispatches_equal": false,
+        "max_read_ms": 3810.0,
+        "coverage": 0.246614850320507,
+        "input_ratio": 0.3236428280703423
+      },
+      {
+        "surah": 80,
+        "before": 10,
+        "after": 10,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 2700.0,
+        "coverage": 0.1461769489749799,
+        "input_ratio": 0.19808110539874743
+      },
+      {
+        "surah": 98,
+        "before": 7,
+        "after": 7,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 2700.0,
+        "coverage": 0.28811092817089057,
+        "input_ratio": 0.34147154887510733
+      },
+      {
+        "surah": 112,
+        "before": 4,
+        "after": 4,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 1500.0,
+        "coverage": 0.3483213349479035,
+        "input_ratio": 0.366205804468456
+      },
+      {
+        "surah": 2,
+        "before": 2,
+        "after": 2,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 2700.0,
+        "coverage": 0.0018344542451436418,
+        "input_ratio": 0.0020461220426602157
+      },
+      {
+        "surah": 79,
+        "before": 22,
+        "after": 22,
+        "rows_equal": true,
+        "dispatches_equal": true,
+        "max_read_ms": 2700.0,
+        "coverage": 0.20658329905880315,
+        "input_ratio": 0.23343195767153613
+      }
+    ],
+    "before_proofs": 114,
+    "after_proofs": 130
+  }
+]

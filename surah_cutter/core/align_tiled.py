@@ -236,7 +236,18 @@ def align_surah_tiled(
             checks = A._check_ayah_onsets(
                 sub_words, spans, tspans, fscores, stride, base_ms=base, pauses=onset_pauses,
                 lag_ms=lag,
+                pcm=pcm if parallel_full else None, sr=sr,
             )
+            if parallel_full:
+                from surah_cutter.core.full_boundary import recheck_split_words
+
+                recheck_split_words(bundle, pcm, sr, sub_words, spans, tspans, fscores,
+                                    stride, checks, onset_pauses, base_ms=base, trace=trace,
+                                    log_event=log_event)
+                from surah_cutter.core.full_pause_center import record_edges
+
+                record_edges(checks, sub_words, spans, tspans, fscores, stride, base_ms=base,
+                             intro=basmala, targets=targets, delim_id=bundle.delim_id)
             for idx, word in enumerate(sub_words):
                 if idx == 0 or sub_words[idx - 1].ayah != word.ayah:
                     starts[idx] = float(checks[word.ayah]["onset_ms"])
@@ -360,6 +371,13 @@ def align_surah_tiled(
             measured_tempo = slopes[len(slopes) // 2]
 
         i = j
+
+    if parallel_full and trusted_checks:
+        from surah_cutter.core.full_pause_center import position_boundaries
+
+        position_boundaries(trusted_checks, pcm, sr, trace=trace)
+        for a, check in trusted_checks.items():
+            starts_ms[a] = check["onset_ms"]
 
     # Assemble rows, enforce monotonic non-decreasing starts (same as the others).
     rows: list[tuple[int, int, float]] = []

@@ -1,0 +1,11 @@
+{
+  "pytest": {
+    "passed": 602,
+    "skipped": 7,
+    "seconds": 9.18
+  },
+  "ruff_own_artifacts": "passed after removing unused import",
+  "global_diff_check": "tests/test_fast_reads.py:64 new blank line at EOF (other chat file)",
+  "source_changes_since_verification_start": [],
+  "protected_mismatches": []
+}

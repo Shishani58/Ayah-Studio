@@ -1,0 +1,1206 @@
+{
+  "results": [
+    {
+      "runtime": {
+        "model": "whisper-tarteel-tiny",
+        "weights_sha256": "f26c96202427524ec015bcf25bd932414df0474e538d765c16759f1095757688",
+        "heads": [
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            5
+          ]
+        ]
+      },
+      "silence_ms": 0,
+      "asr": {
+        "text": "إِنَّا أَعْطَى",
+        "token_confidence": 0.9886506199836731,
+        "min_token_confidence": 0.9200578331947327,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -0.000219321038457565,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -6.437094270950183e-05,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -0.00012158608296886086,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -2.539125671319198e-05,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -1.2159273865108844e-05,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.0017027654685080051,
+            "bytes": [
+              216,
+              167
+            ]
+          },
+          {
+            "id": 5551,
+            "log_probability": -0.010344932787120342,
+            "bytes": [
+              32,
+              216,
+              163
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.0006935574929229915,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3615,
+            "log_probability": -0.006768159102648497,
+            "bytes": [
+              216,
+              185
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -2.062299427052494e-05,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 9566,
+            "log_probability": -0.01927093416452408,
+            "bytes": [
+              216,
+              183
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.08331874758005142,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 7578,
+            "log_probability": -0.036885689944028854,
+            "bytes": [
+              217,
+              137
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "expected_words": [
+        "إِنَّآ"
+      ],
+      "independently_heard": true,
+      "candidates": {
+        "heard_target": {
+          "token_axis_absorberTrue": [
+            1320
+          ],
+          "token_axis_absorberFalse": [
+            0
+          ],
+          "time_axis_absorberTrue": [
+            760
+          ],
+          "time_axis_absorberFalse": [
+            0
+          ],
+          "attention_peak": [
+            1340
+          ]
+        },
+        "exact_selected_tokens": {
+          "token_axis_absorberTrue": [
+            1380
+          ],
+          "token_axis_absorberFalse": [
+            0
+          ],
+          "time_axis_absorberTrue": [
+            1220
+          ],
+          "time_axis_absorberFalse": [
+            0
+          ],
+          "attention_peak": [
+            0
+          ]
+        },
+        "wrong_target": {
+          "token_axis_absorberTrue": [
+            0,
+            2980
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            2980
+          ],
+          "time_axis_absorberTrue": [
+            0,
+            1060
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            1060
+          ],
+          "attention_peak": [
+            0,
+            0
+          ]
+        }
+      },
+      "ledger": {
+        "emission_passes": 4,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.5168433340732008
+          },
+          {
+            "phase": "candidate_alignment_same_local_crop",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.28871037485077977
+          },
+          {
+            "phase": "exact_independently_selected_BPE_alignment",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.2576075829565525
+          },
+          {
+            "phase": "wrong_text_negative",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.2596249161288142
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 12000.0,
+        "covered_audio_ms": 3000.0,
+        "coverage": 0.1688802885038262,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            3000.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "actual_dispatches": [
+        {
+          "phase": "independent_asr",
+          "samples": 48000,
+          "sha256": "97eea26c8404608e2edfcc34de75855981114fc5aaca97409e34e6ef542897da"
+        },
+        {
+          "phase": "candidate_alignment_same_local_crop",
+          "samples": 48000,
+          "sha256": "97eea26c8404608e2edfcc34de75855981114fc5aaca97409e34e6ef542897da"
+        },
+        {
+          "phase": "exact_independently_selected_BPE_alignment",
+          "samples": 48000,
+          "sha256": "97eea26c8404608e2edfcc34de75855981114fc5aaca97409e34e6ef542897da"
+        },
+        {
+          "phase": "wrong_text_negative",
+          "samples": 48000,
+          "sha256": "97eea26c8404608e2edfcc34de75855981114fc5aaca97409e34e6ef542897da"
+        }
+      ]
+    },
+    {
+      "runtime": {
+        "model": "whisper-tarteel-tiny",
+        "weights_sha256": "f26c96202427524ec015bcf25bd932414df0474e538d765c16759f1095757688",
+        "heads": [
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            5
+          ]
+        ]
+      },
+      "silence_ms": 200,
+      "asr": {
+        "text": "إِنَّا أَعْطَى",
+        "token_confidence": 0.9812450408935547,
+        "min_token_confidence": 0.8603671193122864,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -0.0001294529065489769,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": -0.00012742661056108773,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": -7.807903602952138e-05,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -8.046303264563903e-05,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -1.4781842764932662e-05,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.004279503133147955,
+            "bytes": [
+              216,
+              167
+            ]
+          },
+          {
+            "id": 5551,
+            "log_probability": -0.015166323632001877,
+            "bytes": [
+              32,
+              216,
+              163
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.0006729483720846474,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3615,
+            "log_probability": -0.01860676147043705,
+            "bytes": [
+              216,
+              185
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -2.539125671319198e-05,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 9566,
+            "log_probability": -0.03251507133245468,
+            "bytes": [
+              216,
+              183
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.15039607882499695,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 7578,
+            "log_probability": -0.042636942118406296,
+            "bytes": [
+              217,
+              137
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "expected_words": [
+        "إِنَّآ"
+      ],
+      "independently_heard": true,
+      "candidates": {
+        "heard_target": {
+          "token_axis_absorberTrue": [
+            1540
+          ],
+          "token_axis_absorberFalse": [
+            0
+          ],
+          "time_axis_absorberTrue": [
+            960
+          ],
+          "time_axis_absorberFalse": [
+            0
+          ],
+          "attention_peak": [
+            1540
+          ]
+        },
+        "exact_selected_tokens": {
+          "token_axis_absorberTrue": [
+            1560
+          ],
+          "token_axis_absorberFalse": [
+            0
+          ],
+          "time_axis_absorberTrue": [
+            980
+          ],
+          "time_axis_absorberFalse": [
+            0
+          ],
+          "attention_peak": [
+            1540
+          ]
+        },
+        "wrong_target": {
+          "token_axis_absorberTrue": [
+            0,
+            3100
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            3100
+          ],
+          "time_axis_absorberTrue": [
+            0,
+            1240
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            1240
+          ],
+          "attention_peak": [
+            0,
+            0
+          ]
+        }
+      },
+      "ledger": {
+        "emission_passes": 4,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.4377247500233352
+          },
+          {
+            "phase": "candidate_alignment_same_local_crop",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.261706082848832
+          },
+          {
+            "phase": "exact_independently_selected_BPE_alignment",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.2824419590178877
+          },
+          {
+            "phase": "wrong_text_negative",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.27549604093655944
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 12800.0,
+        "covered_audio_ms": 3200.0,
+        "coverage": 0.17813342611115943,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            3200.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "actual_dispatches": [
+        {
+          "phase": "independent_asr",
+          "samples": 51200,
+          "sha256": "0ef3e9bf503d135d6d7f3896c2e568c4f3a58f82abcda365545dba3315492eca"
+        },
+        {
+          "phase": "candidate_alignment_same_local_crop",
+          "samples": 51200,
+          "sha256": "0ef3e9bf503d135d6d7f3896c2e568c4f3a58f82abcda365545dba3315492eca"
+        },
+        {
+          "phase": "exact_independently_selected_BPE_alignment",
+          "samples": 51200,
+          "sha256": "0ef3e9bf503d135d6d7f3896c2e568c4f3a58f82abcda365545dba3315492eca"
+        },
+        {
+          "phase": "wrong_text_negative",
+          "samples": 51200,
+          "sha256": "0ef3e9bf503d135d6d7f3896c2e568c4f3a58f82abcda365545dba3315492eca"
+        }
+      ]
+    },
+    {
+      "runtime": {
+        "model": "whisper-tarteel-base",
+        "weights_sha256": "ec75894993a4570a237b2b1c19fd8a448f1e8f6e083cfab699574f7be53874fa",
+        "heads": [
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            7
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            6
+          ]
+        ]
+      },
+      "silence_ms": 0,
+      "asr": {
+        "text": "إِنَّا أَعْطَى",
+        "token_confidence": 0.9992110133171082,
+        "min_token_confidence": 0.9896495342254639,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -3.099436753473128e-06,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -1.1920928244535389e-07,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.00019143179815728217,
+            "bytes": [
+              216,
+              167
+            ]
+          },
+          {
+            "id": 5551,
+            "log_probability": -3.302042750874534e-05,
+            "bytes": [
+              32,
+              216,
+              163
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -4.410734163684538e-06,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3615,
+            "log_probability": -1.1324817933200393e-05,
+            "bytes": [
+              216,
+              185
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -2.7418097943154862e-06,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 9566,
+            "log_probability": -0.0001971527235582471,
+            "bytes": [
+              216,
+              183
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.00019941726350225508,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 7578,
+            "log_probability": -0.010404394008219242,
+            "bytes": [
+              217,
+              137
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "expected_words": [
+        "إِنَّآ"
+      ],
+      "independently_heard": true,
+      "candidates": {
+        "heard_target": {
+          "token_axis_absorberTrue": [
+            1040
+          ],
+          "token_axis_absorberFalse": [
+            0
+          ],
+          "time_axis_absorberTrue": [
+            720
+          ],
+          "time_axis_absorberFalse": [
+            0
+          ],
+          "attention_peak": [
+            620
+          ]
+        },
+        "exact_selected_tokens": {
+          "token_axis_absorberTrue": [
+            1040
+          ],
+          "token_axis_absorberFalse": [
+            0
+          ],
+          "time_axis_absorberTrue": [
+            720
+          ],
+          "time_axis_absorberFalse": [
+            0
+          ],
+          "attention_peak": [
+            620
+          ]
+        },
+        "wrong_target": {
+          "token_axis_absorberTrue": [
+            0,
+            1800
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            1800
+          ],
+          "time_axis_absorberTrue": [
+            720,
+            1600
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            1600
+          ],
+          "attention_peak": [
+            740,
+            0
+          ]
+        }
+      },
+      "ledger": {
+        "emission_passes": 4,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 2.4899430831428617
+          },
+          {
+            "phase": "candidate_alignment_same_local_crop",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.8235905000474304
+          },
+          {
+            "phase": "exact_independently_selected_BPE_alignment",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.8054262921214104
+          },
+          {
+            "phase": "wrong_text_negative",
+            "window_ms": [
+              0.0,
+              3000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.7770924589131027
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 12000.0,
+        "covered_audio_ms": 3000.0,
+        "coverage": 0.1688802885038262,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            3000.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "actual_dispatches": [
+        {
+          "phase": "independent_asr",
+          "samples": 48000,
+          "sha256": "97eea26c8404608e2edfcc34de75855981114fc5aaca97409e34e6ef542897da"
+        },
+        {
+          "phase": "candidate_alignment_same_local_crop",
+          "samples": 48000,
+          "sha256": "97eea26c8404608e2edfcc34de75855981114fc5aaca97409e34e6ef542897da"
+        },
+        {
+          "phase": "exact_independently_selected_BPE_alignment",
+          "samples": 48000,
+          "sha256": "97eea26c8404608e2edfcc34de75855981114fc5aaca97409e34e6ef542897da"
+        },
+        {
+          "phase": "wrong_text_negative",
+          "samples": 48000,
+          "sha256": "97eea26c8404608e2edfcc34de75855981114fc5aaca97409e34e6ef542897da"
+        }
+      ]
+    },
+    {
+      "runtime": {
+        "model": "whisper-tarteel-base",
+        "weights_sha256": "ec75894993a4570a237b2b1c19fd8a448f1e8f6e083cfab699574f7be53874fa",
+        "heads": [
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            7
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            6
+          ]
+        ]
+      },
+      "silence_ms": 200,
+      "asr": {
+        "text": "إِنَّا أَعْطَى",
+        "token_confidence": 0.9993127584457397,
+        "min_token_confidence": 0.9914284348487854,
+        "selected_tokens": [
+          {
+            "id": 28814,
+            "log_probability": -2.9802276912960224e-06,
+            "bytes": [
+              216,
+              165
+            ]
+          },
+          {
+            "id": 11082,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              144
+            ]
+          },
+          {
+            "id": 1863,
+            "log_probability": 0.0,
+            "bytes": [
+              217,
+              134
+            ]
+          },
+          {
+            "id": 11703,
+            "log_probability": -1.1920928244535389e-07,
+            "bytes": [
+              217,
+              145
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -1.1920928244535389e-07,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 995,
+            "log_probability": -0.0002898749662563205,
+            "bytes": [
+              216,
+              167
+            ]
+          },
+          {
+            "id": 5551,
+            "log_probability": -9.655486064730212e-05,
+            "bytes": [
+              32,
+              216,
+              163
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -5.8412379075889476e-06,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 3615,
+            "log_probability": -9.059865078597795e-06,
+            "bytes": [
+              216,
+              185
+            ]
+          },
+          {
+            "id": 17195,
+            "log_probability": -3.933898824470816e-06,
+            "bytes": [
+              217,
+              146
+            ]
+          },
+          {
+            "id": 9566,
+            "log_probability": -0.00040570611599832773,
+            "bytes": [
+              216,
+              183
+            ]
+          },
+          {
+            "id": 6808,
+            "log_probability": -0.00019762947340495884,
+            "bytes": [
+              217,
+              142
+            ]
+          },
+          {
+            "id": 7578,
+            "log_probability": -0.008608493953943253,
+            "bytes": [
+              217,
+              137
+            ]
+          }
+        ],
+        "truncated": false
+      },
+      "expected_words": [
+        "إِنَّآ"
+      ],
+      "independently_heard": true,
+      "candidates": {
+        "heard_target": {
+          "token_axis_absorberTrue": [
+            1240
+          ],
+          "token_axis_absorberFalse": [
+            0
+          ],
+          "time_axis_absorberTrue": [
+            920
+          ],
+          "time_axis_absorberFalse": [
+            0
+          ],
+          "attention_peak": [
+            820
+          ]
+        },
+        "exact_selected_tokens": {
+          "token_axis_absorberTrue": [
+            1240
+          ],
+          "token_axis_absorberFalse": [
+            0
+          ],
+          "time_axis_absorberTrue": [
+            920
+          ],
+          "time_axis_absorberFalse": [
+            0
+          ],
+          "attention_peak": [
+            820
+          ]
+        },
+        "wrong_target": {
+          "token_axis_absorberTrue": [
+            0,
+            2140
+          ],
+          "token_axis_absorberFalse": [
+            0,
+            2140
+          ],
+          "time_axis_absorberTrue": [
+            920,
+            1760
+          ],
+          "time_axis_absorberFalse": [
+            0,
+            1760
+          ],
+          "attention_peak": [
+            940,
+            440
+          ]
+        }
+      },
+      "ledger": {
+        "emission_passes": 4,
+        "emissions_frames": 0,
+        "acoustic_reads": [
+          {
+            "phase": "independent_asr",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 1.332153792027384
+          },
+          {
+            "phase": "candidate_alignment_same_local_crop",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.5927935838699341
+          },
+          {
+            "phase": "exact_independently_selected_BPE_alignment",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.6490786669310182
+          },
+          {
+            "phase": "wrong_text_negative",
+            "window_ms": [
+              0.0,
+              3200.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "seconds": 0.47005799994803965
+          }
+        ],
+        "denied_acoustic_reads": [],
+        "audio_ms": 12800.0,
+        "covered_audio_ms": 3200.0,
+        "coverage": 0.17813342611115943,
+        "acoustic_intervals_ms": [
+          [
+            0.0,
+            3200.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 0,
+        "peak_cache_bytes": 0,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": null,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        }
+      },
+      "actual_dispatches": [
+        {
+          "phase": "independent_asr",
+          "samples": 51200,
+          "sha256": "0ef3e9bf503d135d6d7f3896c2e568c4f3a58f82abcda365545dba3315492eca"
+        },
+        {
+          "phase": "candidate_alignment_same_local_crop",
+          "samples": 51200,
+          "sha256": "0ef3e9bf503d135d6d7f3896c2e568c4f3a58f82abcda365545dba3315492eca"
+        },
+        {
+          "phase": "exact_independently_selected_BPE_alignment",
+          "samples": 51200,
+          "sha256": "0ef3e9bf503d135d6d7f3896c2e568c4f3a58f82abcda365545dba3315492eca"
+        },
+        {
+          "phase": "wrong_text_negative",
+          "samples": 51200,
+          "sha256": "0ef3e9bf503d135d6d7f3896c2e568c4f3a58f82abcda365545dba3315492eca"
+        }
+      ]
+    }
+  ],
+  "known_word_onsets": "No independent listening annotations available; shift controls do not establish accuracy.",
+  "capability_enabled": false
+}

@@ -1,0 +1,5351 @@
+[
+  {
+    "tail": "weak",
+    "baseline": {
+      "rows": [
+        [
+          1,
+          1100,
+          0.99
+        ],
+        [
+          2,
+          6100,
+          0.99
+        ],
+        [
+          3,
+          12619,
+          0.0
+        ],
+        [
+          4,
+          24354,
+          0.0
+        ]
+      ],
+      "trace": {
+        "align_lag_ms": 0,
+        "backend": "asr_token_probability",
+        "fast_adapter": "fake-v1",
+        "fast_version": "sequential-fast-v3-sparse-5",
+        "fast_run_key": "57b8480c79f8ddfb1f1008ae364899bff1bb3b86e583224ee95d52f4a3608f65",
+        "run_snapshot": {
+          "algorithm": "sequential-fast-v3-sparse-5",
+          "adapter": "fake-v1",
+          "model": "fake",
+          "revision": "one",
+          "policy": {
+            "speech_ms": [
+              1300,
+              2500,
+              4000
+            ],
+            "noisy_speech_ms": [
+              1700,
+              1900,
+              2100
+            ],
+            "max_candidates": 8,
+            "first_search_ms": 15000,
+            "cache_bytes": 33554432,
+            "ctc_quality": 0.25,
+            "asr_quality": 0.6,
+            "max_block_ayahs": 2,
+            "tempo_lower_ratio": 0.2,
+            "tempo_upper_ratio": 2.5,
+            "beam_log_margin": 2.1972245773362196,
+            "sparse_anchors": false,
+            "max_unresolved_ayahs": null,
+            "expansion_lookahead": 2,
+            "ctc_prefix_probability": 0.9,
+            "ctc_expansion_probability": 0.1
+          },
+          "lag_ms": 0,
+          "text_sha256": "cdcd87a250245525cd5cd380a02e73e713e69491a2ed6cb1f33f642d7613504b",
+          "pcm_sha256": "9d273a083b8f5584199cd5f024ad451ad74617a0d528495baed60a8ec56c901e",
+          "sample_rate": 16000,
+          "dsp_version": "311d6ad230f2dc2aaf9cba31431d9e8d8570a1252865e1bc8cad1fc2942bf2db",
+          "dsp_config": {
+            "SILERO_VAD_URL": "https://github.com/snakers4/silero-vad/raw/master/src/silero_vad/data/silero_vad.onnx",
+            "VAD_SR": 16000,
+            "VAD_WINDOW": 512,
+            "VAD_CONTEXT": 64,
+            "SPEECH_THRESHOLD": 0.5,
+            "MIN_PAUSE_MS": 300.0,
+            "WEAK_MIN_PAUSE_MS": 200.0,
+            "MATCH_TOLERANCE_FRAC": 0.04,
+            "_TEN_HOP_SIZE": 256
+          },
+          "dsp_models": {
+            "silero": {
+              "path": "/Users/ayub/Developer/surah-cutter/models/silero_vad.onnx",
+              "available": true,
+              "sha256": "1a153a22f4509e292a94e67d6f9b85e8deb25b4988682b7e174c65279d8788e3",
+              "provider": "CPUExecutionProvider"
+            },
+            "onnxruntime_version": "1.27.0",
+            "numpy_version": "2.5.0",
+            "ten_vad": {
+              "available": false
+            }
+          },
+          "decode": "ffmpeg-mono-float32-16000",
+          "normalization": "fake-v1",
+          "limits": {
+            "max_read_ms": 6000,
+            "coverage": 0.65,
+            "input_ratio": 2.0
+          },
+          "text_runtime": {
+            "test_adapter": "fake-v1"
+          },
+          "implementation_sha256": "07631dfedd9f0a016026af19f275daa8e0ae91b9a3a3350dd65b2e4ca1725ab6",
+          "root_text_runtime": {
+            "python": "3.14.7 (main, Aug  7 2026, 02:15:30) [Clang 22.1.3 ]",
+            "unicode": "16.0.0"
+          },
+          "proof_word_ends_sha256": "b53c428390a1631a1fc45d5cd807173f2a8db743b4138cf8154cdb92c816de5a",
+          "dsp_pauses_sha256": "fa74325d0d4021a8adbbd1688833e70145a46b7f10b8e0df8680e87a21094a69"
+        },
+        "model_source": "fake:revision=one:adapter=fake-v1",
+        "total_ms": 40000.0,
+        "duration_ms": 40000.0,
+        "transitions": [
+          {
+            "state": "PREPARE",
+            "ayah": null
+          },
+          {
+            "state": "DETECT_PAUSES",
+            "ayah": null
+          },
+          {
+            "state": "LOCATE_FIRST",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 1,
+            "phrase": [
+              "first"
+            ],
+            "canonical_word_indices": [
+              0
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 1,
+            "candidate": 0,
+            "kind": "pause"
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 1,
+            "candidate": 0,
+            "window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "reason": "minimal_phrase"
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 1,
+            "candidate": 0,
+            "complete_units": 1,
+            "needed_units": 1,
+            "quality": 0.99,
+            "observed": [
+              "first"
+            ]
+          },
+          {
+            "state": "CONFIRMED",
+            "ayah": 1,
+            "evidence": "pause",
+            "start_ms": 1100
+          },
+          {
+            "state": "ADVANCE",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 2
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 2,
+            "phrase": [
+              "shared",
+              "a2w5"
+            ],
+            "canonical_word_indices": [
+              4,
+              5
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 2,
+            "candidate": 1,
+            "kind": "pause"
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 2,
+            "candidate": 1,
+            "window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "reason": "minimal_phrase"
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 2,
+            "candidate": 1,
+            "complete_units": 1,
+            "needed_units": 2,
+            "quality": 0.99,
+            "observed": [
+              "shared"
+            ]
+          },
+          {
+            "state": "EXPAND_LOCAL",
+            "ayah": 2,
+            "reason": "incomplete_distinguishing_phrase",
+            "acoustic_anchor": "exact_first_word",
+            "speech_edge": null
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 2,
+            "candidate": 1,
+            "window_ms": [
+              6000.0,
+              8700.0
+            ],
+            "reason": "incomplete_distinguishing_phrase"
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 2,
+            "candidate": 1,
+            "complete_units": 2,
+            "needed_units": 2,
+            "quality": 0.99,
+            "observed": [
+              "shared",
+              "a2w5"
+            ]
+          },
+          {
+            "state": "CONFIRMED",
+            "ayah": 2,
+            "evidence": "pause",
+            "start_ms": 6100
+          },
+          {
+            "state": "ADVANCE",
+            "ayah": 2
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 3
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 3,
+            "phrase": [
+              "shared",
+              "a3w7"
+            ],
+            "canonical_word_indices": [
+              6,
+              7
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 3,
+            "forecast_ms": 9041.176470588234,
+            "region_ms": [
+              6688.235294117647,
+              13452.941176470587
+            ]
+          },
+          {
+            "state": "RESOLVE_BLOCK",
+            "ayah": 3,
+            "reason": "incomplete_distinguishing_phrase"
+          },
+          {
+            "state": "REVIEW_REQUIRED",
+            "ayah": 3,
+            "reason": "unsupported_wasl_timing"
+          },
+          {
+            "state": "VALIDATE",
+            "ayah": null
+          },
+          {
+            "state": "RESULT_READY",
+            "ayah": null
+          }
+        ],
+        "dsp_seconds": 0.012704625027254224,
+        "phase1_pauses": [
+          {
+            "start_ms": 1000.0,
+            "end_ms": 1200.0,
+            "center_ms": 1100.0
+          },
+          {
+            "start_ms": 6000.0,
+            "end_ms": 6200.0,
+            "center_ms": 6100.0
+          }
+        ],
+        "acoustic_reads": [
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 0,
+            "reason": "ayah=1:pause:minimal_phrase",
+            "requested_window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "samples": [
+              16000,
+              40000
+            ],
+            "observed": {
+              "units": [
+                "first"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 3.2708048820495605e-05
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 1,
+            "reason": "ayah=2:pause:minimal_phrase",
+            "requested_window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "samples": [
+              96000,
+              120000
+            ],
+            "observed": {
+              "units": [
+                "shared"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 1.454097218811512e-05
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              6000.0,
+              8700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 2,
+            "reason": "ayah=2:pause:incomplete_distinguishing_phrase",
+            "requested_window_ms": [
+              6000.0,
+              8700.0
+            ],
+            "samples": [
+              96000,
+              139200
+            ],
+            "observed": {
+              "units": [
+                "shared",
+                "a2w5"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99,
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 1.4167046174407005e-05
+          }
+        ],
+        "pause_geometry": [
+          {
+            "pause_id": 0,
+            "interval_ms": [
+              1000.0,
+              1200.0
+            ],
+            "accepted": true,
+            "reason": "short_dsp_interval"
+          },
+          {
+            "pause_id": 1,
+            "interval_ms": [
+              6000.0,
+              6200.0
+            ],
+            "accepted": true,
+            "reason": "short_dsp_interval"
+          }
+        ],
+        "first_onset_hypotheses": {
+          "speech_start_ms": 3100.0,
+          "search_region_ms": [
+            3100.0,
+            18100.0
+          ],
+          "supplemental_pauses": []
+        },
+        "boundaries": [
+          {
+            "ayah": 1,
+            "start_ms": 1100,
+            "evidence_kind": "pause",
+            "confidence": 0.99,
+            "review_reason": null,
+            "read_id": 0,
+            "proof": {
+              "phrase": [
+                "first"
+              ],
+              "complete": true,
+              "ambiguous": false,
+              "competitors_checked": true,
+              "competitor_count": 14,
+              "offset": 0,
+              "quality_metric": "asr_token_probability",
+              "pause_ms": [
+                1000.0,
+                1200.0
+              ],
+              "pause_id": 0
+            }
+          },
+          {
+            "ayah": 2,
+            "start_ms": 6100,
+            "evidence_kind": "pause",
+            "confidence": 0.99,
+            "review_reason": null,
+            "read_id": 2,
+            "proof": {
+              "phrase": [
+                "shared",
+                "a2w5"
+              ],
+              "complete": true,
+              "ambiguous": false,
+              "competitors_checked": true,
+              "competitor_count": 14,
+              "offset": 0,
+              "quality_metric": "asr_token_probability",
+              "pause_ms": [
+                6000.0,
+                6200.0
+              ],
+              "pause_id": 1
+            }
+          },
+          {
+            "ayah": 3,
+            "start_ms": 12619,
+            "evidence_kind": "estimate",
+            "confidence": 0.0,
+            "review_reason": "unsupported_wasl_timing",
+            "read_id": null,
+            "proof": null
+          },
+          {
+            "ayah": 4,
+            "start_ms": 24354,
+            "evidence_kind": "estimate",
+            "confidence": 0.0,
+            "review_reason": "blocked_by_unresolved_ayah",
+            "read_id": null,
+            "proof": null
+          }
+        ],
+        "ayahs": [
+          {
+            "ayah": 1,
+            "onset_ms": 1100,
+            "conf": 0.99,
+            "reliable": true
+          },
+          {
+            "ayah": 2,
+            "onset_ms": 6100,
+            "conf": 0.99,
+            "reliable": true
+          },
+          {
+            "ayah": 3,
+            "onset_ms": 12619,
+            "conf": 0.0,
+            "reliable": false
+          },
+          {
+            "ayah": 4,
+            "onset_ms": 24354,
+            "conf": 0.0,
+            "reliable": false
+          }
+        ],
+        "review_required_ayahs": [
+          3,
+          4
+        ],
+        "pause_matches": [
+          {
+            "ayah": 1,
+            "from_pause": true,
+            "onset_ms": 1100,
+            "conf": 0.99,
+            "boundary_evidence": "pause",
+            "pause_start_ms": 1000.0,
+            "pause_end_ms": 1200.0
+          },
+          {
+            "ayah": 2,
+            "from_pause": true,
+            "onset_ms": 6100,
+            "conf": 0.99,
+            "boundary_evidence": "pause",
+            "pause_start_ms": 6000.0,
+            "pause_end_ms": 6200.0
+          },
+          {
+            "ayah": 3,
+            "from_pause": false,
+            "onset_ms": 12619,
+            "conf": 0.0,
+            "boundary_evidence": "estimate"
+          },
+          {
+            "ayah": 4,
+            "from_pause": false,
+            "onset_ms": 24354,
+            "conf": 0.0,
+            "boundary_evidence": "estimate"
+          }
+        ],
+        "n_pause": 2,
+        "n_wasl": 0,
+        "bounded_ctc_fallback": null,
+        "emission_passes": 0,
+        "emissions_frames": 0,
+        "denied_acoustic_reads": [],
+        "audio_ms": 5700.0,
+        "covered_audio_ms": 4200.0,
+        "coverage": 0.105,
+        "acoustic_intervals_ms": [
+          [
+            1000.0,
+            2500.0
+          ],
+          [
+            6000.0,
+            8700.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 5289,
+        "peak_cache_bytes": 5289,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": 33554432,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        },
+        "model_passes": 3,
+        "inference_seconds": 6.141606718301773e-05
+      }
+    },
+    "current": {
+      "rows": [
+        [
+          1,
+          1100,
+          0.99
+        ],
+        [
+          2,
+          6100,
+          0.99
+        ],
+        [
+          3,
+          12619,
+          0.0
+        ],
+        [
+          4,
+          24354,
+          0.0
+        ]
+      ],
+      "trace": {
+        "align_lag_ms": 0,
+        "backend": "asr_token_probability",
+        "fast_adapter": "fake-v1",
+        "fast_version": "sequential-fast-v3-sparse-7",
+        "fast_run_key": "6784fd0cd3e4686c47b79f8bd3e748bec702936cfa7bd2bb4fd9286f485e12f2",
+        "run_snapshot": {
+          "algorithm": "sequential-fast-v3-sparse-7",
+          "adapter": "fake-v1",
+          "model": "fake",
+          "revision": "one",
+          "policy": {
+            "speech_ms": [
+              1300,
+              2500,
+              4000
+            ],
+            "noisy_speech_ms": [
+              1700,
+              1900,
+              2100
+            ],
+            "max_candidates": 8,
+            "first_search_ms": 15000,
+            "cache_bytes": 33554432,
+            "ctc_quality": 0.25,
+            "asr_quality": 0.6,
+            "max_block_ayahs": 2,
+            "tempo_lower_ratio": 0.2,
+            "tempo_upper_ratio": 2.5,
+            "beam_log_margin": 2.1972245773362196,
+            "sparse_anchors": false,
+            "max_unresolved_ayahs": null,
+            "expansion_lookahead": 2,
+            "ctc_prefix_probability": 0.9,
+            "ctc_expansion_probability": 0.1
+          },
+          "lag_ms": 0,
+          "text_sha256": "cdcd87a250245525cd5cd380a02e73e713e69491a2ed6cb1f33f642d7613504b",
+          "pcm_sha256": "9d273a083b8f5584199cd5f024ad451ad74617a0d528495baed60a8ec56c901e",
+          "sample_rate": 16000,
+          "dsp_version": "311d6ad230f2dc2aaf9cba31431d9e8d8570a1252865e1bc8cad1fc2942bf2db",
+          "dsp_config": {
+            "SILERO_VAD_URL": "https://github.com/snakers4/silero-vad/raw/master/src/silero_vad/data/silero_vad.onnx",
+            "VAD_SR": 16000,
+            "VAD_WINDOW": 512,
+            "VAD_CONTEXT": 64,
+            "SPEECH_THRESHOLD": 0.5,
+            "MIN_PAUSE_MS": 300.0,
+            "WEAK_MIN_PAUSE_MS": 200.0,
+            "MATCH_TOLERANCE_FRAC": 0.04,
+            "_TEN_HOP_SIZE": 256
+          },
+          "dsp_models": {
+            "silero": {
+              "path": "/Users/ayub/Developer/surah-cutter/models/silero_vad.onnx",
+              "available": true,
+              "sha256": "1a153a22f4509e292a94e67d6f9b85e8deb25b4988682b7e174c65279d8788e3",
+              "provider": "CPUExecutionProvider"
+            },
+            "onnxruntime_version": "1.27.0",
+            "numpy_version": "2.5.0",
+            "ten_vad": {
+              "available": false
+            }
+          },
+          "decode": "ffmpeg-mono-float32-16000",
+          "normalization": "fake-v1",
+          "limits": {
+            "max_read_ms": 6000,
+            "coverage": 0.65,
+            "input_ratio": 2.0
+          },
+          "text_runtime": {
+            "test_adapter": "fake-v1"
+          },
+          "implementation_sha256": "f14beb139d80f9d2983c4561c8e4edc5b6475c39310daec9cd1a66e2ecfa0334",
+          "root_text_runtime": {
+            "python": "3.14.7 (main, Aug  7 2026, 02:15:30) [Clang 22.1.3 ]",
+            "unicode": "16.0.0"
+          },
+          "proof_word_ends_sha256": "b53c428390a1631a1fc45d5cd807173f2a8db743b4138cf8154cdb92c816de5a",
+          "dsp_pauses_sha256": "fa74325d0d4021a8adbbd1688833e70145a46b7f10b8e0df8680e87a21094a69"
+        },
+        "model_source": "fake:revision=one:adapter=fake-v1",
+        "total_ms": 40000.0,
+        "duration_ms": 40000.0,
+        "transitions": [
+          {
+            "state": "PREPARE",
+            "ayah": null
+          },
+          {
+            "state": "DETECT_PAUSES",
+            "ayah": null
+          },
+          {
+            "state": "LOCATE_FIRST",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 1,
+            "phrase": [
+              "first"
+            ],
+            "canonical_word_indices": [
+              0
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 1,
+            "candidate": 0,
+            "kind": "pause"
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 1,
+            "candidate": 0,
+            "window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "reason": "minimal_phrase"
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 1,
+            "candidate": 0,
+            "complete_units": 1,
+            "needed_units": 1,
+            "quality": 0.99,
+            "observed": [
+              "first"
+            ],
+            "identity_recovery": null,
+            "onset_supported": null
+          },
+          {
+            "state": "CONFIRMED",
+            "ayah": 1,
+            "evidence": "pause",
+            "start_ms": 1100
+          },
+          {
+            "state": "ADVANCE",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 2
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 2,
+            "phrase": [
+              "shared",
+              "a2w5"
+            ],
+            "canonical_word_indices": [
+              4,
+              5
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 2,
+            "candidate": 1,
+            "kind": "pause"
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 2,
+            "candidate": 1,
+            "window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "reason": "minimal_phrase"
+          },
+          {
+            "state": "EXPAND_LOCAL",
+            "ayah": 2,
+            "reason": "incomplete_opening_contextual_pause",
+            "phrase": [
+              "shared"
+            ],
+            "previous_tail": [
+              "a1w3"
+            ]
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 2,
+            "reason": "alternative_context_unproved_resume_opening",
+            "phrase": [
+              "shared",
+              "a2w5"
+            ],
+            "read_id": 1
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 2,
+            "candidate": 1,
+            "complete_units": 1,
+            "needed_units": 2,
+            "quality": 0.99,
+            "observed": [
+              "shared"
+            ],
+            "identity_recovery": null,
+            "onset_supported": null
+          },
+          {
+            "state": "EXPAND_LOCAL",
+            "ayah": 2,
+            "reason": "incomplete_distinguishing_phrase",
+            "acoustic_anchor": "exact_first_word",
+            "speech_edge": null
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 2,
+            "candidate": 1,
+            "window_ms": [
+              6000.0,
+              8700.0
+            ],
+            "reason": "incomplete_distinguishing_phrase"
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 2,
+            "candidate": 1,
+            "complete_units": 2,
+            "needed_units": 2,
+            "quality": 0.99,
+            "observed": [
+              "shared",
+              "a2w5"
+            ],
+            "identity_recovery": null,
+            "onset_supported": null
+          },
+          {
+            "state": "CONFIRMED",
+            "ayah": 2,
+            "evidence": "pause",
+            "start_ms": 6100
+          },
+          {
+            "state": "ADVANCE",
+            "ayah": 2
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 3
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 3,
+            "phrase": [
+              "shared",
+              "a3w7"
+            ],
+            "canonical_word_indices": [
+              6,
+              7
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 3,
+            "forecast_ms": 9041.176470588234,
+            "region_ms": [
+              6688.235294117647,
+              13452.941176470587
+            ]
+          },
+          {
+            "state": "RESOLVE_BLOCK",
+            "ayah": 3,
+            "reason": "incomplete_distinguishing_phrase"
+          },
+          {
+            "state": "REVIEW_REQUIRED",
+            "ayah": 3,
+            "reason": "unsupported_wasl_timing"
+          },
+          {
+            "state": "VALIDATE",
+            "ayah": null
+          },
+          {
+            "state": "RESULT_READY",
+            "ayah": null
+          }
+        ],
+        "dsp_seconds": 0.017093125032261014,
+        "phase1_pauses": [
+          {
+            "start_ms": 1000.0,
+            "end_ms": 1200.0,
+            "center_ms": 1100.0
+          },
+          {
+            "start_ms": 6000.0,
+            "end_ms": 6200.0,
+            "center_ms": 6100.0
+          }
+        ],
+        "acoustic_reads": [
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 0,
+            "reason": "ayah=1:pause:minimal_phrase",
+            "requested_window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "samples": [
+              16000,
+              40000
+            ],
+            "observed": {
+              "units": [
+                "first"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 2.3792032152414322e-05
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 1,
+            "reason": "ayah=2:pause:minimal_phrase",
+            "requested_window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "samples": [
+              96000,
+              120000
+            ],
+            "observed": {
+              "units": [
+                "shared"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 1.1208001524209976e-05
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              4700.0,
+              6000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 2,
+            "reason": "ayah=2:repeated_owner_previous_tail",
+            "requested_window_ms": [
+              4700.0,
+              6000.0
+            ],
+            "samples": [
+              75200,
+              96000
+            ],
+            "observed": {
+              "units": [
+                "first",
+                "a1w1",
+                "a1w2",
+                "a1w3"
+              ],
+              "positions_ms": null,
+              "quality": 0.59,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.59,
+                0.59,
+                0.59,
+                0.59
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 3.1291041523218155e-05
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              3500.0,
+              6000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 3,
+            "reason": "ayah=2:repeated_owner_previous_tail",
+            "requested_window_ms": [
+              3500.0,
+              6000.0
+            ],
+            "samples": [
+              56000,
+              96000
+            ],
+            "observed": {
+              "units": [
+                "first",
+                "a1w1",
+                "a1w2",
+                "a1w3"
+              ],
+              "positions_ms": null,
+              "quality": 0.59,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.59,
+                0.59,
+                0.59,
+                0.59
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 1.570885069668293e-05
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              2000.0,
+              6000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 4,
+            "reason": "ayah=2:repeated_owner_previous_tail",
+            "requested_window_ms": [
+              2000.0,
+              6000.0
+            ],
+            "samples": [
+              32000,
+              96000
+            ],
+            "observed": {
+              "units": [
+                "first",
+                "a1w1",
+                "a1w2",
+                "a1w3"
+              ],
+              "positions_ms": null,
+              "quality": 0.59,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.59,
+                0.59,
+                0.59,
+                0.59
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 9.750016033649445e-06
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              6000.0,
+              8700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 5,
+            "reason": "ayah=2:pause:incomplete_distinguishing_phrase",
+            "requested_window_ms": [
+              6000.0,
+              8700.0
+            ],
+            "samples": [
+              96000,
+              139200
+            ],
+            "observed": {
+              "units": [
+                "shared",
+                "a2w5"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99,
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 1.3791024684906006e-05
+          }
+        ],
+        "pause_geometry": [
+          {
+            "pause_id": 0,
+            "interval_ms": [
+              1000.0,
+              1200.0
+            ],
+            "accepted": true,
+            "reason": "measured_dsp_interval",
+            "first_quarter_rms": 1019.5162963867188,
+            "last_quarter_rms": 1179.5140380859375,
+            "within_quarter_variation": 14.825773773193358,
+            "midpoint_interval_radius_ms": 100.0,
+            "quiet_stationarity": true,
+            "timing_status": "uncalibrated_pause_midpoint",
+            "temporal_probability": null
+          },
+          {
+            "pause_id": 1,
+            "interval_ms": [
+              6000.0,
+              6200.0
+            ],
+            "accepted": true,
+            "reason": "measured_dsp_interval",
+            "first_quarter_rms": 6019.5029296875,
+            "last_quarter_rms": 6179.5029296875,
+            "within_quarter_variation": 14.826361962890624,
+            "midpoint_interval_radius_ms": 100.0,
+            "quiet_stationarity": true,
+            "timing_status": "uncalibrated_pause_midpoint",
+            "temporal_probability": null
+          }
+        ],
+        "first_onset_hypotheses": {
+          "speech_start_ms": 3100.0,
+          "search_region_ms": [
+            3100.0,
+            18100.0
+          ],
+          "supplemental_pauses": []
+        },
+        "boundaries": [
+          {
+            "ayah": 1,
+            "start_ms": 1100,
+            "evidence_kind": "pause",
+            "confidence": 0.99,
+            "review_reason": null,
+            "read_id": 0,
+            "proof": {
+              "phrase": [
+                "first"
+              ],
+              "complete": true,
+              "ambiguous": false,
+              "competitors_checked": true,
+              "competitor_count": 14,
+              "offset": 0,
+              "quality_metric": "asr_token_probability",
+              "pause_ms": [
+                1000.0,
+                1200.0
+              ],
+              "pause_id": 0
+            }
+          },
+          {
+            "ayah": 2,
+            "start_ms": 6100,
+            "evidence_kind": "pause",
+            "confidence": 0.99,
+            "review_reason": null,
+            "read_id": 5,
+            "proof": {
+              "phrase": [
+                "shared",
+                "a2w5"
+              ],
+              "complete": true,
+              "ambiguous": false,
+              "competitors_checked": true,
+              "competitor_count": 14,
+              "offset": 0,
+              "quality_metric": "asr_token_probability",
+              "pause_ms": [
+                6000.0,
+                6200.0
+              ],
+              "pause_id": 1
+            }
+          },
+          {
+            "ayah": 3,
+            "start_ms": 12619,
+            "evidence_kind": "estimate",
+            "confidence": 0.0,
+            "review_reason": "unsupported_wasl_timing",
+            "read_id": null,
+            "proof": null
+          },
+          {
+            "ayah": 4,
+            "start_ms": 24354,
+            "evidence_kind": "estimate",
+            "confidence": 0.0,
+            "review_reason": "blocked_by_unresolved_ayah",
+            "read_id": null,
+            "proof": null
+          }
+        ],
+        "confidence_semantics": {
+          "recognition": "minimum_independently_supported_essential_unit_score",
+          "calibrated_probability": false,
+          "temporal_probability": null,
+          "pause_timing": "midpoint_of_measured_DSP_interval_not_calibrated_probability",
+          "noisy_opening": "identity_only_missing_onset_not_reconstructed"
+        },
+        "ayahs": [
+          {
+            "ayah": 1,
+            "onset_ms": 1100,
+            "conf": 0.99,
+            "reliable": true
+          },
+          {
+            "ayah": 2,
+            "onset_ms": 6100,
+            "conf": 0.99,
+            "reliable": true
+          },
+          {
+            "ayah": 3,
+            "onset_ms": 12619,
+            "conf": 0.0,
+            "reliable": false
+          },
+          {
+            "ayah": 4,
+            "onset_ms": 24354,
+            "conf": 0.0,
+            "reliable": false
+          }
+        ],
+        "review_required_ayahs": [
+          3,
+          4
+        ],
+        "pause_matches": [
+          {
+            "ayah": 1,
+            "from_pause": true,
+            "onset_ms": 1100,
+            "conf": 0.99,
+            "boundary_evidence": "pause",
+            "pause_start_ms": 1000.0,
+            "pause_end_ms": 1200.0
+          },
+          {
+            "ayah": 2,
+            "from_pause": true,
+            "onset_ms": 6100,
+            "conf": 0.99,
+            "boundary_evidence": "pause",
+            "pause_start_ms": 6000.0,
+            "pause_end_ms": 6200.0
+          },
+          {
+            "ayah": 3,
+            "from_pause": false,
+            "onset_ms": 12619,
+            "conf": 0.0,
+            "boundary_evidence": "estimate"
+          },
+          {
+            "ayah": 4,
+            "from_pause": false,
+            "onset_ms": 24354,
+            "conf": 0.0,
+            "boundary_evidence": "estimate"
+          }
+        ],
+        "n_pause": 2,
+        "n_wasl": 0,
+        "bounded_ctc_fallback": null,
+        "emission_passes": 0,
+        "emissions_frames": 0,
+        "denied_acoustic_reads": [],
+        "audio_ms": 13500.0,
+        "covered_audio_ms": 7700.0,
+        "coverage": 0.1925,
+        "acoustic_intervals_ms": [
+          [
+            1000.0,
+            8700.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 10848,
+        "peak_cache_bytes": 10848,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": 33554432,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        },
+        "model_passes": 6,
+        "inference_seconds": 0.00010554096661508083
+      }
+    },
+    "regression": false
+  },
+  {
+    "tail": "wrong",
+    "baseline": {
+      "rows": [
+        [
+          1,
+          1100,
+          0.99
+        ],
+        [
+          2,
+          6100,
+          0.99
+        ],
+        [
+          3,
+          12619,
+          0.0
+        ],
+        [
+          4,
+          24354,
+          0.0
+        ]
+      ],
+      "trace": {
+        "align_lag_ms": 0,
+        "backend": "asr_token_probability",
+        "fast_adapter": "fake-v1",
+        "fast_version": "sequential-fast-v3-sparse-5",
+        "fast_run_key": "53a4ee57aab0eba10916ea8c4458f5d0dc7cd00cc9b61adb143e7c214f789100",
+        "run_snapshot": {
+          "algorithm": "sequential-fast-v3-sparse-5",
+          "adapter": "fake-v1",
+          "model": "fake",
+          "revision": "one",
+          "policy": {
+            "speech_ms": [
+              1300,
+              2500,
+              4000
+            ],
+            "noisy_speech_ms": [
+              1700,
+              1900,
+              2100
+            ],
+            "max_candidates": 8,
+            "first_search_ms": 15000,
+            "cache_bytes": 33554432,
+            "ctc_quality": 0.25,
+            "asr_quality": 0.6,
+            "max_block_ayahs": 2,
+            "tempo_lower_ratio": 0.2,
+            "tempo_upper_ratio": 2.5,
+            "beam_log_margin": 2.1972245773362196,
+            "sparse_anchors": false,
+            "max_unresolved_ayahs": null,
+            "expansion_lookahead": 2,
+            "ctc_prefix_probability": 0.9,
+            "ctc_expansion_probability": 0.1
+          },
+          "lag_ms": 0,
+          "text_sha256": "cdcd87a250245525cd5cd380a02e73e713e69491a2ed6cb1f33f642d7613504b",
+          "pcm_sha256": "9d273a083b8f5584199cd5f024ad451ad74617a0d528495baed60a8ec56c901e",
+          "sample_rate": 16000,
+          "dsp_version": "311d6ad230f2dc2aaf9cba31431d9e8d8570a1252865e1bc8cad1fc2942bf2db",
+          "dsp_config": {
+            "SILERO_VAD_URL": "https://github.com/snakers4/silero-vad/raw/master/src/silero_vad/data/silero_vad.onnx",
+            "VAD_SR": 16000,
+            "VAD_WINDOW": 512,
+            "VAD_CONTEXT": 64,
+            "SPEECH_THRESHOLD": 0.5,
+            "MIN_PAUSE_MS": 300.0,
+            "WEAK_MIN_PAUSE_MS": 200.0,
+            "MATCH_TOLERANCE_FRAC": 0.04,
+            "_TEN_HOP_SIZE": 256
+          },
+          "dsp_models": {
+            "silero": {
+              "path": "/Users/ayub/Developer/surah-cutter/models/silero_vad.onnx",
+              "available": true,
+              "sha256": "1a153a22f4509e292a94e67d6f9b85e8deb25b4988682b7e174c65279d8788e3",
+              "provider": "CPUExecutionProvider"
+            },
+            "onnxruntime_version": "1.27.0",
+            "numpy_version": "2.5.0",
+            "ten_vad": {
+              "available": false
+            }
+          },
+          "decode": "ffmpeg-mono-float32-16000",
+          "normalization": "fake-v1",
+          "limits": {
+            "max_read_ms": 6000,
+            "coverage": 0.65,
+            "input_ratio": 2.0
+          },
+          "text_runtime": {
+            "test_adapter": "fake-v1"
+          },
+          "implementation_sha256": "76f7cbf91267b574c9e5ad5a7b3caa7fa93d549cf1beb691ae227ace6bf2d192",
+          "root_text_runtime": {
+            "python": "3.14.7 (main, Aug  7 2026, 02:15:30) [Clang 22.1.3 ]",
+            "unicode": "16.0.0"
+          },
+          "proof_word_ends_sha256": "b53c428390a1631a1fc45d5cd807173f2a8db743b4138cf8154cdb92c816de5a",
+          "dsp_pauses_sha256": "fa74325d0d4021a8adbbd1688833e70145a46b7f10b8e0df8680e87a21094a69"
+        },
+        "model_source": "fake:revision=one:adapter=fake-v1",
+        "total_ms": 40000.0,
+        "duration_ms": 40000.0,
+        "transitions": [
+          {
+            "state": "PREPARE",
+            "ayah": null
+          },
+          {
+            "state": "DETECT_PAUSES",
+            "ayah": null
+          },
+          {
+            "state": "LOCATE_FIRST",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 1,
+            "phrase": [
+              "first"
+            ],
+            "canonical_word_indices": [
+              0
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 1,
+            "candidate": 0,
+            "kind": "pause"
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 1,
+            "candidate": 0,
+            "window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "reason": "minimal_phrase"
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 1,
+            "candidate": 0,
+            "complete_units": 1,
+            "needed_units": 1,
+            "quality": 0.99,
+            "observed": [
+              "first"
+            ]
+          },
+          {
+            "state": "CONFIRMED",
+            "ayah": 1,
+            "evidence": "pause",
+            "start_ms": 1100
+          },
+          {
+            "state": "ADVANCE",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 2
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 2,
+            "phrase": [
+              "shared",
+              "a2w5"
+            ],
+            "canonical_word_indices": [
+              4,
+              5
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 2,
+            "candidate": 1,
+            "kind": "pause"
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 2,
+            "candidate": 1,
+            "window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "reason": "minimal_phrase"
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 2,
+            "candidate": 1,
+            "complete_units": 1,
+            "needed_units": 2,
+            "quality": 0.99,
+            "observed": [
+              "shared"
+            ]
+          },
+          {
+            "state": "EXPAND_LOCAL",
+            "ayah": 2,
+            "reason": "incomplete_distinguishing_phrase",
+            "acoustic_anchor": "exact_first_word",
+            "speech_edge": null
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 2,
+            "candidate": 1,
+            "window_ms": [
+              6000.0,
+              8700.0
+            ],
+            "reason": "incomplete_distinguishing_phrase"
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 2,
+            "candidate": 1,
+            "complete_units": 2,
+            "needed_units": 2,
+            "quality": 0.99,
+            "observed": [
+              "shared",
+              "a2w5"
+            ]
+          },
+          {
+            "state": "CONFIRMED",
+            "ayah": 2,
+            "evidence": "pause",
+            "start_ms": 6100
+          },
+          {
+            "state": "ADVANCE",
+            "ayah": 2
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 3
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 3,
+            "phrase": [
+              "shared",
+              "a3w7"
+            ],
+            "canonical_word_indices": [
+              6,
+              7
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 3,
+            "forecast_ms": 9041.176470588234,
+            "region_ms": [
+              6688.235294117647,
+              13452.941176470587
+            ]
+          },
+          {
+            "state": "RESOLVE_BLOCK",
+            "ayah": 3,
+            "reason": "incomplete_distinguishing_phrase"
+          },
+          {
+            "state": "REVIEW_REQUIRED",
+            "ayah": 3,
+            "reason": "unsupported_wasl_timing"
+          },
+          {
+            "state": "VALIDATE",
+            "ayah": null
+          },
+          {
+            "state": "RESULT_READY",
+            "ayah": null
+          }
+        ],
+        "dsp_seconds": 0.012585958000272512,
+        "phase1_pauses": [
+          {
+            "start_ms": 1000.0,
+            "end_ms": 1200.0,
+            "center_ms": 1100.0
+          },
+          {
+            "start_ms": 6000.0,
+            "end_ms": 6200.0,
+            "center_ms": 6100.0
+          }
+        ],
+        "acoustic_reads": [
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 0,
+            "reason": "ayah=1:pause:minimal_phrase",
+            "requested_window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "samples": [
+              16000,
+              40000
+            ],
+            "observed": {
+              "units": [
+                "first"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 3.1207920983433723e-05
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 1,
+            "reason": "ayah=2:pause:minimal_phrase",
+            "requested_window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "samples": [
+              96000,
+              120000
+            ],
+            "observed": {
+              "units": [
+                "shared"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 1.395796425640583e-05
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              6000.0,
+              8700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 2,
+            "reason": "ayah=2:pause:incomplete_distinguishing_phrase",
+            "requested_window_ms": [
+              6000.0,
+              8700.0
+            ],
+            "samples": [
+              96000,
+              139200
+            ],
+            "observed": {
+              "units": [
+                "shared",
+                "a2w5"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99,
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 1.2249918654561043e-05
+          }
+        ],
+        "pause_geometry": [
+          {
+            "pause_id": 0,
+            "interval_ms": [
+              1000.0,
+              1200.0
+            ],
+            "accepted": true,
+            "reason": "short_dsp_interval"
+          },
+          {
+            "pause_id": 1,
+            "interval_ms": [
+              6000.0,
+              6200.0
+            ],
+            "accepted": true,
+            "reason": "short_dsp_interval"
+          }
+        ],
+        "first_onset_hypotheses": {
+          "speech_start_ms": 3100.0,
+          "search_region_ms": [
+            3100.0,
+            18100.0
+          ],
+          "supplemental_pauses": []
+        },
+        "boundaries": [
+          {
+            "ayah": 1,
+            "start_ms": 1100,
+            "evidence_kind": "pause",
+            "confidence": 0.99,
+            "review_reason": null,
+            "read_id": 0,
+            "proof": {
+              "phrase": [
+                "first"
+              ],
+              "complete": true,
+              "ambiguous": false,
+              "competitors_checked": true,
+              "competitor_count": 14,
+              "offset": 0,
+              "quality_metric": "asr_token_probability",
+              "pause_ms": [
+                1000.0,
+                1200.0
+              ],
+              "pause_id": 0
+            }
+          },
+          {
+            "ayah": 2,
+            "start_ms": 6100,
+            "evidence_kind": "pause",
+            "confidence": 0.99,
+            "review_reason": null,
+            "read_id": 2,
+            "proof": {
+              "phrase": [
+                "shared",
+                "a2w5"
+              ],
+              "complete": true,
+              "ambiguous": false,
+              "competitors_checked": true,
+              "competitor_count": 14,
+              "offset": 0,
+              "quality_metric": "asr_token_probability",
+              "pause_ms": [
+                6000.0,
+                6200.0
+              ],
+              "pause_id": 1
+            }
+          },
+          {
+            "ayah": 3,
+            "start_ms": 12619,
+            "evidence_kind": "estimate",
+            "confidence": 0.0,
+            "review_reason": "unsupported_wasl_timing",
+            "read_id": null,
+            "proof": null
+          },
+          {
+            "ayah": 4,
+            "start_ms": 24354,
+            "evidence_kind": "estimate",
+            "confidence": 0.0,
+            "review_reason": "blocked_by_unresolved_ayah",
+            "read_id": null,
+            "proof": null
+          }
+        ],
+        "ayahs": [
+          {
+            "ayah": 1,
+            "onset_ms": 1100,
+            "conf": 0.99,
+            "reliable": true
+          },
+          {
+            "ayah": 2,
+            "onset_ms": 6100,
+            "conf": 0.99,
+            "reliable": true
+          },
+          {
+            "ayah": 3,
+            "onset_ms": 12619,
+            "conf": 0.0,
+            "reliable": false
+          },
+          {
+            "ayah": 4,
+            "onset_ms": 24354,
+            "conf": 0.0,
+            "reliable": false
+          }
+        ],
+        "review_required_ayahs": [
+          3,
+          4
+        ],
+        "pause_matches": [
+          {
+            "ayah": 1,
+            "from_pause": true,
+            "onset_ms": 1100,
+            "conf": 0.99,
+            "boundary_evidence": "pause",
+            "pause_start_ms": 1000.0,
+            "pause_end_ms": 1200.0
+          },
+          {
+            "ayah": 2,
+            "from_pause": true,
+            "onset_ms": 6100,
+            "conf": 0.99,
+            "boundary_evidence": "pause",
+            "pause_start_ms": 6000.0,
+            "pause_end_ms": 6200.0
+          },
+          {
+            "ayah": 3,
+            "from_pause": false,
+            "onset_ms": 12619,
+            "conf": 0.0,
+            "boundary_evidence": "estimate"
+          },
+          {
+            "ayah": 4,
+            "from_pause": false,
+            "onset_ms": 24354,
+            "conf": 0.0,
+            "boundary_evidence": "estimate"
+          }
+        ],
+        "n_pause": 2,
+        "n_wasl": 0,
+        "bounded_ctc_fallback": null,
+        "emission_passes": 0,
+        "emissions_frames": 0,
+        "denied_acoustic_reads": [],
+        "audio_ms": 5700.0,
+        "covered_audio_ms": 4200.0,
+        "coverage": 0.105,
+        "acoustic_intervals_ms": [
+          [
+            1000.0,
+            2500.0
+          ],
+          [
+            6000.0,
+            8700.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 5073,
+        "peak_cache_bytes": 5073,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": 33554432,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        },
+        "model_passes": 3,
+        "inference_seconds": 5.74158038944006e-05
+      }
+    },
+    "current": {
+      "rows": [
+        [
+          1,
+          1100,
+          0.99
+        ],
+        [
+          2,
+          6100,
+          0.99
+        ],
+        [
+          3,
+          12619,
+          0.0
+        ],
+        [
+          4,
+          24354,
+          0.0
+        ]
+      ],
+      "trace": {
+        "align_lag_ms": 0,
+        "backend": "asr_token_probability",
+        "fast_adapter": "fake-v1",
+        "fast_version": "sequential-fast-v3-sparse-7",
+        "fast_run_key": "6784fd0cd3e4686c47b79f8bd3e748bec702936cfa7bd2bb4fd9286f485e12f2",
+        "run_snapshot": {
+          "algorithm": "sequential-fast-v3-sparse-7",
+          "adapter": "fake-v1",
+          "model": "fake",
+          "revision": "one",
+          "policy": {
+            "speech_ms": [
+              1300,
+              2500,
+              4000
+            ],
+            "noisy_speech_ms": [
+              1700,
+              1900,
+              2100
+            ],
+            "max_candidates": 8,
+            "first_search_ms": 15000,
+            "cache_bytes": 33554432,
+            "ctc_quality": 0.25,
+            "asr_quality": 0.6,
+            "max_block_ayahs": 2,
+            "tempo_lower_ratio": 0.2,
+            "tempo_upper_ratio": 2.5,
+            "beam_log_margin": 2.1972245773362196,
+            "sparse_anchors": false,
+            "max_unresolved_ayahs": null,
+            "expansion_lookahead": 2,
+            "ctc_prefix_probability": 0.9,
+            "ctc_expansion_probability": 0.1
+          },
+          "lag_ms": 0,
+          "text_sha256": "cdcd87a250245525cd5cd380a02e73e713e69491a2ed6cb1f33f642d7613504b",
+          "pcm_sha256": "9d273a083b8f5584199cd5f024ad451ad74617a0d528495baed60a8ec56c901e",
+          "sample_rate": 16000,
+          "dsp_version": "311d6ad230f2dc2aaf9cba31431d9e8d8570a1252865e1bc8cad1fc2942bf2db",
+          "dsp_config": {
+            "SILERO_VAD_URL": "https://github.com/snakers4/silero-vad/raw/master/src/silero_vad/data/silero_vad.onnx",
+            "VAD_SR": 16000,
+            "VAD_WINDOW": 512,
+            "VAD_CONTEXT": 64,
+            "SPEECH_THRESHOLD": 0.5,
+            "MIN_PAUSE_MS": 300.0,
+            "WEAK_MIN_PAUSE_MS": 200.0,
+            "MATCH_TOLERANCE_FRAC": 0.04,
+            "_TEN_HOP_SIZE": 256
+          },
+          "dsp_models": {
+            "silero": {
+              "path": "/Users/ayub/Developer/surah-cutter/models/silero_vad.onnx",
+              "available": true,
+              "sha256": "1a153a22f4509e292a94e67d6f9b85e8deb25b4988682b7e174c65279d8788e3",
+              "provider": "CPUExecutionProvider"
+            },
+            "onnxruntime_version": "1.27.0",
+            "numpy_version": "2.5.0",
+            "ten_vad": {
+              "available": false
+            }
+          },
+          "decode": "ffmpeg-mono-float32-16000",
+          "normalization": "fake-v1",
+          "limits": {
+            "max_read_ms": 6000,
+            "coverage": 0.65,
+            "input_ratio": 2.0
+          },
+          "text_runtime": {
+            "test_adapter": "fake-v1"
+          },
+          "implementation_sha256": "f14beb139d80f9d2983c4561c8e4edc5b6475c39310daec9cd1a66e2ecfa0334",
+          "root_text_runtime": {
+            "python": "3.14.7 (main, Aug  7 2026, 02:15:30) [Clang 22.1.3 ]",
+            "unicode": "16.0.0"
+          },
+          "proof_word_ends_sha256": "b53c428390a1631a1fc45d5cd807173f2a8db743b4138cf8154cdb92c816de5a",
+          "dsp_pauses_sha256": "fa74325d0d4021a8adbbd1688833e70145a46b7f10b8e0df8680e87a21094a69"
+        },
+        "model_source": "fake:revision=one:adapter=fake-v1",
+        "total_ms": 40000.0,
+        "duration_ms": 40000.0,
+        "transitions": [
+          {
+            "state": "PREPARE",
+            "ayah": null
+          },
+          {
+            "state": "DETECT_PAUSES",
+            "ayah": null
+          },
+          {
+            "state": "LOCATE_FIRST",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 1,
+            "phrase": [
+              "first"
+            ],
+            "canonical_word_indices": [
+              0
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 1,
+            "candidate": 0,
+            "kind": "pause"
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 1,
+            "candidate": 0,
+            "window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "reason": "minimal_phrase"
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 1,
+            "candidate": 0,
+            "complete_units": 1,
+            "needed_units": 1,
+            "quality": 0.99,
+            "observed": [
+              "first"
+            ],
+            "identity_recovery": null,
+            "onset_supported": null
+          },
+          {
+            "state": "CONFIRMED",
+            "ayah": 1,
+            "evidence": "pause",
+            "start_ms": 1100
+          },
+          {
+            "state": "ADVANCE",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 2
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 2,
+            "phrase": [
+              "shared",
+              "a2w5"
+            ],
+            "canonical_word_indices": [
+              4,
+              5
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 2,
+            "candidate": 1,
+            "kind": "pause"
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 2,
+            "candidate": 1,
+            "window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "reason": "minimal_phrase"
+          },
+          {
+            "state": "EXPAND_LOCAL",
+            "ayah": 2,
+            "reason": "incomplete_opening_contextual_pause",
+            "phrase": [
+              "shared"
+            ],
+            "previous_tail": [
+              "a1w3"
+            ]
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 2,
+            "reason": "alternative_context_unproved_resume_opening",
+            "phrase": [
+              "shared",
+              "a2w5"
+            ],
+            "read_id": 1
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 2,
+            "candidate": 1,
+            "complete_units": 1,
+            "needed_units": 2,
+            "quality": 0.99,
+            "observed": [
+              "shared"
+            ],
+            "identity_recovery": null,
+            "onset_supported": null
+          },
+          {
+            "state": "EXPAND_LOCAL",
+            "ayah": 2,
+            "reason": "incomplete_distinguishing_phrase",
+            "acoustic_anchor": "exact_first_word",
+            "speech_edge": null
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 2,
+            "candidate": 1,
+            "window_ms": [
+              6000.0,
+              8700.0
+            ],
+            "reason": "incomplete_distinguishing_phrase"
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 2,
+            "candidate": 1,
+            "complete_units": 2,
+            "needed_units": 2,
+            "quality": 0.99,
+            "observed": [
+              "shared",
+              "a2w5"
+            ],
+            "identity_recovery": null,
+            "onset_supported": null
+          },
+          {
+            "state": "CONFIRMED",
+            "ayah": 2,
+            "evidence": "pause",
+            "start_ms": 6100
+          },
+          {
+            "state": "ADVANCE",
+            "ayah": 2
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 3
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 3,
+            "phrase": [
+              "shared",
+              "a3w7"
+            ],
+            "canonical_word_indices": [
+              6,
+              7
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 3,
+            "forecast_ms": 9041.176470588234,
+            "region_ms": [
+              6688.235294117647,
+              13452.941176470587
+            ]
+          },
+          {
+            "state": "RESOLVE_BLOCK",
+            "ayah": 3,
+            "reason": "incomplete_distinguishing_phrase"
+          },
+          {
+            "state": "REVIEW_REQUIRED",
+            "ayah": 3,
+            "reason": "unsupported_wasl_timing"
+          },
+          {
+            "state": "VALIDATE",
+            "ayah": null
+          },
+          {
+            "state": "RESULT_READY",
+            "ayah": null
+          }
+        ],
+        "dsp_seconds": 0.012574916938319802,
+        "phase1_pauses": [
+          {
+            "start_ms": 1000.0,
+            "end_ms": 1200.0,
+            "center_ms": 1100.0
+          },
+          {
+            "start_ms": 6000.0,
+            "end_ms": 6200.0,
+            "center_ms": 6100.0
+          }
+        ],
+        "acoustic_reads": [
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 0,
+            "reason": "ayah=1:pause:minimal_phrase",
+            "requested_window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "samples": [
+              16000,
+              40000
+            ],
+            "observed": {
+              "units": [
+                "first"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 1.841713674366474e-05
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 1,
+            "reason": "ayah=2:pause:minimal_phrase",
+            "requested_window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "samples": [
+              96000,
+              120000
+            ],
+            "observed": {
+              "units": [
+                "shared"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 9.457813575863838e-06
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              4700.0,
+              6000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 2,
+            "reason": "ayah=2:repeated_owner_previous_tail",
+            "requested_window_ms": [
+              4700.0,
+              6000.0
+            ],
+            "samples": [
+              75200,
+              96000
+            ],
+            "observed": {
+              "units": [
+                "wrong"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 8.584000170230865e-06
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              3500.0,
+              6000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 3,
+            "reason": "ayah=2:repeated_owner_previous_tail",
+            "requested_window_ms": [
+              3500.0,
+              6000.0
+            ],
+            "samples": [
+              56000,
+              96000
+            ],
+            "observed": {
+              "units": [
+                "wrong"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 7.2498805820941925e-06
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              2000.0,
+              6000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 4,
+            "reason": "ayah=2:repeated_owner_previous_tail",
+            "requested_window_ms": [
+              2000.0,
+              6000.0
+            ],
+            "samples": [
+              32000,
+              96000
+            ],
+            "observed": {
+              "units": [
+                "wrong"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 7.00005330145359e-06
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              6000.0,
+              8700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 5,
+            "reason": "ayah=2:pause:incomplete_distinguishing_phrase",
+            "requested_window_ms": [
+              6000.0,
+              8700.0
+            ],
+            "samples": [
+              96000,
+              139200
+            ],
+            "observed": {
+              "units": [
+                "shared",
+                "a2w5"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99,
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 1.0624993592500687e-05
+          }
+        ],
+        "pause_geometry": [
+          {
+            "pause_id": 0,
+            "interval_ms": [
+              1000.0,
+              1200.0
+            ],
+            "accepted": true,
+            "reason": "measured_dsp_interval",
+            "first_quarter_rms": 1019.5162963867188,
+            "last_quarter_rms": 1179.5140380859375,
+            "within_quarter_variation": 14.825773773193358,
+            "midpoint_interval_radius_ms": 100.0,
+            "quiet_stationarity": true,
+            "timing_status": "uncalibrated_pause_midpoint",
+            "temporal_probability": null
+          },
+          {
+            "pause_id": 1,
+            "interval_ms": [
+              6000.0,
+              6200.0
+            ],
+            "accepted": true,
+            "reason": "measured_dsp_interval",
+            "first_quarter_rms": 6019.5029296875,
+            "last_quarter_rms": 6179.5029296875,
+            "within_quarter_variation": 14.826361962890624,
+            "midpoint_interval_radius_ms": 100.0,
+            "quiet_stationarity": true,
+            "timing_status": "uncalibrated_pause_midpoint",
+            "temporal_probability": null
+          }
+        ],
+        "first_onset_hypotheses": {
+          "speech_start_ms": 3100.0,
+          "search_region_ms": [
+            3100.0,
+            18100.0
+          ],
+          "supplemental_pauses": []
+        },
+        "boundaries": [
+          {
+            "ayah": 1,
+            "start_ms": 1100,
+            "evidence_kind": "pause",
+            "confidence": 0.99,
+            "review_reason": null,
+            "read_id": 0,
+            "proof": {
+              "phrase": [
+                "first"
+              ],
+              "complete": true,
+              "ambiguous": false,
+              "competitors_checked": true,
+              "competitor_count": 14,
+              "offset": 0,
+              "quality_metric": "asr_token_probability",
+              "pause_ms": [
+                1000.0,
+                1200.0
+              ],
+              "pause_id": 0
+            }
+          },
+          {
+            "ayah": 2,
+            "start_ms": 6100,
+            "evidence_kind": "pause",
+            "confidence": 0.99,
+            "review_reason": null,
+            "read_id": 5,
+            "proof": {
+              "phrase": [
+                "shared",
+                "a2w5"
+              ],
+              "complete": true,
+              "ambiguous": false,
+              "competitors_checked": true,
+              "competitor_count": 14,
+              "offset": 0,
+              "quality_metric": "asr_token_probability",
+              "pause_ms": [
+                6000.0,
+                6200.0
+              ],
+              "pause_id": 1
+            }
+          },
+          {
+            "ayah": 3,
+            "start_ms": 12619,
+            "evidence_kind": "estimate",
+            "confidence": 0.0,
+            "review_reason": "unsupported_wasl_timing",
+            "read_id": null,
+            "proof": null
+          },
+          {
+            "ayah": 4,
+            "start_ms": 24354,
+            "evidence_kind": "estimate",
+            "confidence": 0.0,
+            "review_reason": "blocked_by_unresolved_ayah",
+            "read_id": null,
+            "proof": null
+          }
+        ],
+        "confidence_semantics": {
+          "recognition": "minimum_independently_supported_essential_unit_score",
+          "calibrated_probability": false,
+          "temporal_probability": null,
+          "pause_timing": "midpoint_of_measured_DSP_interval_not_calibrated_probability",
+          "noisy_opening": "identity_only_missing_onset_not_reconstructed"
+        },
+        "ayahs": [
+          {
+            "ayah": 1,
+            "onset_ms": 1100,
+            "conf": 0.99,
+            "reliable": true
+          },
+          {
+            "ayah": 2,
+            "onset_ms": 6100,
+            "conf": 0.99,
+            "reliable": true
+          },
+          {
+            "ayah": 3,
+            "onset_ms": 12619,
+            "conf": 0.0,
+            "reliable": false
+          },
+          {
+            "ayah": 4,
+            "onset_ms": 24354,
+            "conf": 0.0,
+            "reliable": false
+          }
+        ],
+        "review_required_ayahs": [
+          3,
+          4
+        ],
+        "pause_matches": [
+          {
+            "ayah": 1,
+            "from_pause": true,
+            "onset_ms": 1100,
+            "conf": 0.99,
+            "boundary_evidence": "pause",
+            "pause_start_ms": 1000.0,
+            "pause_end_ms": 1200.0
+          },
+          {
+            "ayah": 2,
+            "from_pause": true,
+            "onset_ms": 6100,
+            "conf": 0.99,
+            "boundary_evidence": "pause",
+            "pause_start_ms": 6000.0,
+            "pause_end_ms": 6200.0
+          },
+          {
+            "ayah": 3,
+            "from_pause": false,
+            "onset_ms": 12619,
+            "conf": 0.0,
+            "boundary_evidence": "estimate"
+          },
+          {
+            "ayah": 4,
+            "from_pause": false,
+            "onset_ms": 24354,
+            "conf": 0.0,
+            "boundary_evidence": "estimate"
+          }
+        ],
+        "n_pause": 2,
+        "n_wasl": 0,
+        "bounded_ctc_fallback": null,
+        "emission_passes": 0,
+        "emissions_frames": 0,
+        "denied_acoustic_reads": [],
+        "audio_ms": 13500.0,
+        "covered_audio_ms": 7700.0,
+        "coverage": 0.1925,
+        "acoustic_intervals_ms": [
+          [
+            1000.0,
+            8700.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 9891,
+        "peak_cache_bytes": 9891,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": 33554432,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        },
+        "model_passes": 6,
+        "inference_seconds": 6.133387796580791e-05
+      }
+    },
+    "regression": false
+  },
+  {
+    "tail": "truncated",
+    "baseline": {
+      "rows": [
+        [
+          1,
+          1100,
+          0.99
+        ],
+        [
+          2,
+          6100,
+          0.99
+        ],
+        [
+          3,
+          12619,
+          0.0
+        ],
+        [
+          4,
+          24354,
+          0.0
+        ]
+      ],
+      "trace": {
+        "align_lag_ms": 0,
+        "backend": "asr_token_probability",
+        "fast_adapter": "fake-v1",
+        "fast_version": "sequential-fast-v3-sparse-5",
+        "fast_run_key": "17871950f5fb97a9ccc71d24c05d42b9143ad12ab019f7d1f5a573bf9eec8b24",
+        "run_snapshot": {
+          "algorithm": "sequential-fast-v3-sparse-5",
+          "adapter": "fake-v1",
+          "model": "fake",
+          "revision": "one",
+          "policy": {
+            "speech_ms": [
+              1300,
+              2500,
+              4000
+            ],
+            "noisy_speech_ms": [
+              1700,
+              1900,
+              2100
+            ],
+            "max_candidates": 8,
+            "first_search_ms": 15000,
+            "cache_bytes": 33554432,
+            "ctc_quality": 0.25,
+            "asr_quality": 0.6,
+            "max_block_ayahs": 2,
+            "tempo_lower_ratio": 0.2,
+            "tempo_upper_ratio": 2.5,
+            "beam_log_margin": 2.1972245773362196,
+            "sparse_anchors": false,
+            "max_unresolved_ayahs": null,
+            "expansion_lookahead": 2,
+            "ctc_prefix_probability": 0.9,
+            "ctc_expansion_probability": 0.1
+          },
+          "lag_ms": 0,
+          "text_sha256": "cdcd87a250245525cd5cd380a02e73e713e69491a2ed6cb1f33f642d7613504b",
+          "pcm_sha256": "9d273a083b8f5584199cd5f024ad451ad74617a0d528495baed60a8ec56c901e",
+          "sample_rate": 16000,
+          "dsp_version": "311d6ad230f2dc2aaf9cba31431d9e8d8570a1252865e1bc8cad1fc2942bf2db",
+          "dsp_config": {
+            "SILERO_VAD_URL": "https://github.com/snakers4/silero-vad/raw/master/src/silero_vad/data/silero_vad.onnx",
+            "VAD_SR": 16000,
+            "VAD_WINDOW": 512,
+            "VAD_CONTEXT": 64,
+            "SPEECH_THRESHOLD": 0.5,
+            "MIN_PAUSE_MS": 300.0,
+            "WEAK_MIN_PAUSE_MS": 200.0,
+            "MATCH_TOLERANCE_FRAC": 0.04,
+            "_TEN_HOP_SIZE": 256
+          },
+          "dsp_models": {
+            "silero": {
+              "path": "/Users/ayub/Developer/surah-cutter/models/silero_vad.onnx",
+              "available": true,
+              "sha256": "1a153a22f4509e292a94e67d6f9b85e8deb25b4988682b7e174c65279d8788e3",
+              "provider": "CPUExecutionProvider"
+            },
+            "onnxruntime_version": "1.27.0",
+            "numpy_version": "2.5.0",
+            "ten_vad": {
+              "available": false
+            }
+          },
+          "decode": "ffmpeg-mono-float32-16000",
+          "normalization": "fake-v1",
+          "limits": {
+            "max_read_ms": 6000,
+            "coverage": 0.65,
+            "input_ratio": 2.0
+          },
+          "text_runtime": {
+            "test_adapter": "fake-v1"
+          },
+          "implementation_sha256": "46dacf4ae6e3ea1cc5bb807d7bea2c395be96a7f99bc1f3594cd2387b682100a",
+          "root_text_runtime": {
+            "python": "3.14.7 (main, Aug  7 2026, 02:15:30) [Clang 22.1.3 ]",
+            "unicode": "16.0.0"
+          },
+          "proof_word_ends_sha256": "b53c428390a1631a1fc45d5cd807173f2a8db743b4138cf8154cdb92c816de5a",
+          "dsp_pauses_sha256": "fa74325d0d4021a8adbbd1688833e70145a46b7f10b8e0df8680e87a21094a69"
+        },
+        "model_source": "fake:revision=one:adapter=fake-v1",
+        "total_ms": 40000.0,
+        "duration_ms": 40000.0,
+        "transitions": [
+          {
+            "state": "PREPARE",
+            "ayah": null
+          },
+          {
+            "state": "DETECT_PAUSES",
+            "ayah": null
+          },
+          {
+            "state": "LOCATE_FIRST",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 1,
+            "phrase": [
+              "first"
+            ],
+            "canonical_word_indices": [
+              0
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 1,
+            "candidate": 0,
+            "kind": "pause"
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 1,
+            "candidate": 0,
+            "window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "reason": "minimal_phrase"
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 1,
+            "candidate": 0,
+            "complete_units": 1,
+            "needed_units": 1,
+            "quality": 0.99,
+            "observed": [
+              "first"
+            ]
+          },
+          {
+            "state": "CONFIRMED",
+            "ayah": 1,
+            "evidence": "pause",
+            "start_ms": 1100
+          },
+          {
+            "state": "ADVANCE",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 2
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 2,
+            "phrase": [
+              "shared",
+              "a2w5"
+            ],
+            "canonical_word_indices": [
+              4,
+              5
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 2,
+            "candidate": 1,
+            "kind": "pause"
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 2,
+            "candidate": 1,
+            "window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "reason": "minimal_phrase"
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 2,
+            "candidate": 1,
+            "complete_units": 1,
+            "needed_units": 2,
+            "quality": 0.99,
+            "observed": [
+              "shared"
+            ]
+          },
+          {
+            "state": "EXPAND_LOCAL",
+            "ayah": 2,
+            "reason": "incomplete_distinguishing_phrase",
+            "acoustic_anchor": "exact_first_word",
+            "speech_edge": null
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 2,
+            "candidate": 1,
+            "window_ms": [
+              6000.0,
+              8700.0
+            ],
+            "reason": "incomplete_distinguishing_phrase"
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 2,
+            "candidate": 1,
+            "complete_units": 2,
+            "needed_units": 2,
+            "quality": 0.99,
+            "observed": [
+              "shared",
+              "a2w5"
+            ]
+          },
+          {
+            "state": "CONFIRMED",
+            "ayah": 2,
+            "evidence": "pause",
+            "start_ms": 6100
+          },
+          {
+            "state": "ADVANCE",
+            "ayah": 2
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 3
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 3,
+            "phrase": [
+              "shared",
+              "a3w7"
+            ],
+            "canonical_word_indices": [
+              6,
+              7
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 3,
+            "forecast_ms": 9041.176470588234,
+            "region_ms": [
+              6688.235294117647,
+              13452.941176470587
+            ]
+          },
+          {
+            "state": "RESOLVE_BLOCK",
+            "ayah": 3,
+            "reason": "incomplete_distinguishing_phrase"
+          },
+          {
+            "state": "REVIEW_REQUIRED",
+            "ayah": 3,
+            "reason": "unsupported_wasl_timing"
+          },
+          {
+            "state": "VALIDATE",
+            "ayah": null
+          },
+          {
+            "state": "RESULT_READY",
+            "ayah": null
+          }
+        ],
+        "dsp_seconds": 0.012288999976590276,
+        "phase1_pauses": [
+          {
+            "start_ms": 1000.0,
+            "end_ms": 1200.0,
+            "center_ms": 1100.0
+          },
+          {
+            "start_ms": 6000.0,
+            "end_ms": 6200.0,
+            "center_ms": 6100.0
+          }
+        ],
+        "acoustic_reads": [
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 0,
+            "reason": "ayah=1:pause:minimal_phrase",
+            "requested_window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "samples": [
+              16000,
+              40000
+            ],
+            "observed": {
+              "units": [
+                "first"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 2.3124972358345985e-05
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 1,
+            "reason": "ayah=2:pause:minimal_phrase",
+            "requested_window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "samples": [
+              96000,
+              120000
+            ],
+            "observed": {
+              "units": [
+                "shared"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 1.016608439385891e-05
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              6000.0,
+              8700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 2,
+            "reason": "ayah=2:pause:incomplete_distinguishing_phrase",
+            "requested_window_ms": [
+              6000.0,
+              8700.0
+            ],
+            "samples": [
+              96000,
+              139200
+            ],
+            "observed": {
+              "units": [
+                "shared",
+                "a2w5"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99,
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 1.2709060683846474e-05
+          }
+        ],
+        "pause_geometry": [
+          {
+            "pause_id": 0,
+            "interval_ms": [
+              1000.0,
+              1200.0
+            ],
+            "accepted": true,
+            "reason": "short_dsp_interval"
+          },
+          {
+            "pause_id": 1,
+            "interval_ms": [
+              6000.0,
+              6200.0
+            ],
+            "accepted": true,
+            "reason": "short_dsp_interval"
+          }
+        ],
+        "first_onset_hypotheses": {
+          "speech_start_ms": 3100.0,
+          "search_region_ms": [
+            3100.0,
+            18100.0
+          ],
+          "supplemental_pauses": []
+        },
+        "boundaries": [
+          {
+            "ayah": 1,
+            "start_ms": 1100,
+            "evidence_kind": "pause",
+            "confidence": 0.99,
+            "review_reason": null,
+            "read_id": 0,
+            "proof": {
+              "phrase": [
+                "first"
+              ],
+              "complete": true,
+              "ambiguous": false,
+              "competitors_checked": true,
+              "competitor_count": 14,
+              "offset": 0,
+              "quality_metric": "asr_token_probability",
+              "pause_ms": [
+                1000.0,
+                1200.0
+              ],
+              "pause_id": 0
+            }
+          },
+          {
+            "ayah": 2,
+            "start_ms": 6100,
+            "evidence_kind": "pause",
+            "confidence": 0.99,
+            "review_reason": null,
+            "read_id": 2,
+            "proof": {
+              "phrase": [
+                "shared",
+                "a2w5"
+              ],
+              "complete": true,
+              "ambiguous": false,
+              "competitors_checked": true,
+              "competitor_count": 14,
+              "offset": 0,
+              "quality_metric": "asr_token_probability",
+              "pause_ms": [
+                6000.0,
+                6200.0
+              ],
+              "pause_id": 1
+            }
+          },
+          {
+            "ayah": 3,
+            "start_ms": 12619,
+            "evidence_kind": "estimate",
+            "confidence": 0.0,
+            "review_reason": "unsupported_wasl_timing",
+            "read_id": null,
+            "proof": null
+          },
+          {
+            "ayah": 4,
+            "start_ms": 24354,
+            "evidence_kind": "estimate",
+            "confidence": 0.0,
+            "review_reason": "blocked_by_unresolved_ayah",
+            "read_id": null,
+            "proof": null
+          }
+        ],
+        "ayahs": [
+          {
+            "ayah": 1,
+            "onset_ms": 1100,
+            "conf": 0.99,
+            "reliable": true
+          },
+          {
+            "ayah": 2,
+            "onset_ms": 6100,
+            "conf": 0.99,
+            "reliable": true
+          },
+          {
+            "ayah": 3,
+            "onset_ms": 12619,
+            "conf": 0.0,
+            "reliable": false
+          },
+          {
+            "ayah": 4,
+            "onset_ms": 24354,
+            "conf": 0.0,
+            "reliable": false
+          }
+        ],
+        "review_required_ayahs": [
+          3,
+          4
+        ],
+        "pause_matches": [
+          {
+            "ayah": 1,
+            "from_pause": true,
+            "onset_ms": 1100,
+            "conf": 0.99,
+            "boundary_evidence": "pause",
+            "pause_start_ms": 1000.0,
+            "pause_end_ms": 1200.0
+          },
+          {
+            "ayah": 2,
+            "from_pause": true,
+            "onset_ms": 6100,
+            "conf": 0.99,
+            "boundary_evidence": "pause",
+            "pause_start_ms": 6000.0,
+            "pause_end_ms": 6200.0
+          },
+          {
+            "ayah": 3,
+            "from_pause": false,
+            "onset_ms": 12619,
+            "conf": 0.0,
+            "boundary_evidence": "estimate"
+          },
+          {
+            "ayah": 4,
+            "from_pause": false,
+            "onset_ms": 24354,
+            "conf": 0.0,
+            "boundary_evidence": "estimate"
+          }
+        ],
+        "n_pause": 2,
+        "n_wasl": 0,
+        "bounded_ctc_fallback": null,
+        "emission_passes": 0,
+        "emissions_frames": 0,
+        "denied_acoustic_reads": [],
+        "audio_ms": 5700.0,
+        "covered_audio_ms": 4200.0,
+        "coverage": 0.105,
+        "acoustic_intervals_ms": [
+          [
+            1000.0,
+            2500.0
+          ],
+          [
+            6000.0,
+            8700.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 4953,
+        "peak_cache_bytes": 4953,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": 33554432,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        },
+        "model_passes": 3,
+        "inference_seconds": 4.600011743605137e-05
+      }
+    },
+    "current": {
+      "rows": [
+        [
+          1,
+          1100,
+          0.99
+        ],
+        [
+          2,
+          6100,
+          0.99
+        ],
+        [
+          3,
+          12619,
+          0.0
+        ],
+        [
+          4,
+          24354,
+          0.0
+        ]
+      ],
+      "trace": {
+        "align_lag_ms": 0,
+        "backend": "asr_token_probability",
+        "fast_adapter": "fake-v1",
+        "fast_version": "sequential-fast-v3-sparse-7",
+        "fast_run_key": "6784fd0cd3e4686c47b79f8bd3e748bec702936cfa7bd2bb4fd9286f485e12f2",
+        "run_snapshot": {
+          "algorithm": "sequential-fast-v3-sparse-7",
+          "adapter": "fake-v1",
+          "model": "fake",
+          "revision": "one",
+          "policy": {
+            "speech_ms": [
+              1300,
+              2500,
+              4000
+            ],
+            "noisy_speech_ms": [
+              1700,
+              1900,
+              2100
+            ],
+            "max_candidates": 8,
+            "first_search_ms": 15000,
+            "cache_bytes": 33554432,
+            "ctc_quality": 0.25,
+            "asr_quality": 0.6,
+            "max_block_ayahs": 2,
+            "tempo_lower_ratio": 0.2,
+            "tempo_upper_ratio": 2.5,
+            "beam_log_margin": 2.1972245773362196,
+            "sparse_anchors": false,
+            "max_unresolved_ayahs": null,
+            "expansion_lookahead": 2,
+            "ctc_prefix_probability": 0.9,
+            "ctc_expansion_probability": 0.1
+          },
+          "lag_ms": 0,
+          "text_sha256": "cdcd87a250245525cd5cd380a02e73e713e69491a2ed6cb1f33f642d7613504b",
+          "pcm_sha256": "9d273a083b8f5584199cd5f024ad451ad74617a0d528495baed60a8ec56c901e",
+          "sample_rate": 16000,
+          "dsp_version": "311d6ad230f2dc2aaf9cba31431d9e8d8570a1252865e1bc8cad1fc2942bf2db",
+          "dsp_config": {
+            "SILERO_VAD_URL": "https://github.com/snakers4/silero-vad/raw/master/src/silero_vad/data/silero_vad.onnx",
+            "VAD_SR": 16000,
+            "VAD_WINDOW": 512,
+            "VAD_CONTEXT": 64,
+            "SPEECH_THRESHOLD": 0.5,
+            "MIN_PAUSE_MS": 300.0,
+            "WEAK_MIN_PAUSE_MS": 200.0,
+            "MATCH_TOLERANCE_FRAC": 0.04,
+            "_TEN_HOP_SIZE": 256
+          },
+          "dsp_models": {
+            "silero": {
+              "path": "/Users/ayub/Developer/surah-cutter/models/silero_vad.onnx",
+              "available": true,
+              "sha256": "1a153a22f4509e292a94e67d6f9b85e8deb25b4988682b7e174c65279d8788e3",
+              "provider": "CPUExecutionProvider"
+            },
+            "onnxruntime_version": "1.27.0",
+            "numpy_version": "2.5.0",
+            "ten_vad": {
+              "available": false
+            }
+          },
+          "decode": "ffmpeg-mono-float32-16000",
+          "normalization": "fake-v1",
+          "limits": {
+            "max_read_ms": 6000,
+            "coverage": 0.65,
+            "input_ratio": 2.0
+          },
+          "text_runtime": {
+            "test_adapter": "fake-v1"
+          },
+          "implementation_sha256": "f14beb139d80f9d2983c4561c8e4edc5b6475c39310daec9cd1a66e2ecfa0334",
+          "root_text_runtime": {
+            "python": "3.14.7 (main, Aug  7 2026, 02:15:30) [Clang 22.1.3 ]",
+            "unicode": "16.0.0"
+          },
+          "proof_word_ends_sha256": "b53c428390a1631a1fc45d5cd807173f2a8db743b4138cf8154cdb92c816de5a",
+          "dsp_pauses_sha256": "fa74325d0d4021a8adbbd1688833e70145a46b7f10b8e0df8680e87a21094a69"
+        },
+        "model_source": "fake:revision=one:adapter=fake-v1",
+        "total_ms": 40000.0,
+        "duration_ms": 40000.0,
+        "transitions": [
+          {
+            "state": "PREPARE",
+            "ayah": null
+          },
+          {
+            "state": "DETECT_PAUSES",
+            "ayah": null
+          },
+          {
+            "state": "LOCATE_FIRST",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 1,
+            "phrase": [
+              "first"
+            ],
+            "canonical_word_indices": [
+              0
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 1,
+            "candidate": 0,
+            "kind": "pause"
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 1,
+            "candidate": 0,
+            "window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "reason": "minimal_phrase"
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 1,
+            "candidate": 0,
+            "complete_units": 1,
+            "needed_units": 1,
+            "quality": 0.99,
+            "observed": [
+              "first"
+            ],
+            "identity_recovery": null,
+            "onset_supported": null
+          },
+          {
+            "state": "CONFIRMED",
+            "ayah": 1,
+            "evidence": "pause",
+            "start_ms": 1100
+          },
+          {
+            "state": "ADVANCE",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 2
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 2,
+            "phrase": [
+              "shared",
+              "a2w5"
+            ],
+            "canonical_word_indices": [
+              4,
+              5
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 2,
+            "candidate": 1,
+            "kind": "pause"
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 2,
+            "candidate": 1,
+            "window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "reason": "minimal_phrase"
+          },
+          {
+            "state": "EXPAND_LOCAL",
+            "ayah": 2,
+            "reason": "incomplete_opening_contextual_pause",
+            "phrase": [
+              "shared"
+            ],
+            "previous_tail": [
+              "a1w3"
+            ]
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 2,
+            "reason": "alternative_context_unproved_resume_opening",
+            "phrase": [
+              "shared",
+              "a2w5"
+            ],
+            "read_id": 1
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 2,
+            "candidate": 1,
+            "complete_units": 1,
+            "needed_units": 2,
+            "quality": 0.99,
+            "observed": [
+              "shared"
+            ],
+            "identity_recovery": null,
+            "onset_supported": null
+          },
+          {
+            "state": "EXPAND_LOCAL",
+            "ayah": 2,
+            "reason": "incomplete_distinguishing_phrase",
+            "acoustic_anchor": "exact_first_word",
+            "speech_edge": null
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 2,
+            "candidate": 1,
+            "window_ms": [
+              6000.0,
+              8700.0
+            ],
+            "reason": "incomplete_distinguishing_phrase"
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 2,
+            "candidate": 1,
+            "complete_units": 2,
+            "needed_units": 2,
+            "quality": 0.99,
+            "observed": [
+              "shared",
+              "a2w5"
+            ],
+            "identity_recovery": null,
+            "onset_supported": null
+          },
+          {
+            "state": "CONFIRMED",
+            "ayah": 2,
+            "evidence": "pause",
+            "start_ms": 6100
+          },
+          {
+            "state": "ADVANCE",
+            "ayah": 2
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 3
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 3,
+            "phrase": [
+              "shared",
+              "a3w7"
+            ],
+            "canonical_word_indices": [
+              6,
+              7
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 3,
+            "forecast_ms": 9041.176470588234,
+            "region_ms": [
+              6688.235294117647,
+              13452.941176470587
+            ]
+          },
+          {
+            "state": "RESOLVE_BLOCK",
+            "ayah": 3,
+            "reason": "incomplete_distinguishing_phrase"
+          },
+          {
+            "state": "REVIEW_REQUIRED",
+            "ayah": 3,
+            "reason": "unsupported_wasl_timing"
+          },
+          {
+            "state": "VALIDATE",
+            "ayah": null
+          },
+          {
+            "state": "RESULT_READY",
+            "ayah": null
+          }
+        ],
+        "dsp_seconds": 0.01259941584430635,
+        "phase1_pauses": [
+          {
+            "start_ms": 1000.0,
+            "end_ms": 1200.0,
+            "center_ms": 1100.0
+          },
+          {
+            "start_ms": 6000.0,
+            "end_ms": 6200.0,
+            "center_ms": 6100.0
+          }
+        ],
+        "acoustic_reads": [
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 0,
+            "reason": "ayah=1:pause:minimal_phrase",
+            "requested_window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "samples": [
+              16000,
+              40000
+            ],
+            "observed": {
+              "units": [
+                "first"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 1.8249964341521263e-05
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 1,
+            "reason": "ayah=2:pause:minimal_phrase",
+            "requested_window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "samples": [
+              96000,
+              120000
+            ],
+            "observed": {
+              "units": [
+                "shared"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 9.875046089291573e-06
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              4700.0,
+              6000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 2,
+            "reason": "ayah=2:repeated_owner_previous_tail",
+            "requested_window_ms": [
+              4700.0,
+              6000.0
+            ],
+            "samples": [
+              75200,
+              96000
+            ],
+            "observed": {
+              "units": [
+                "first",
+                "a1w1",
+                "a1w2",
+                "a1w3"
+              ],
+              "positions_ms": null,
+              "quality": 0.71,
+              "truncated": true,
+              "text": "",
+              "unit_quality": [
+                0.71,
+                0.71,
+                0.71,
+                0.71
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 1.8208054825663567e-05
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              3500.0,
+              6000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 3,
+            "reason": "ayah=2:repeated_owner_previous_tail",
+            "requested_window_ms": [
+              3500.0,
+              6000.0
+            ],
+            "samples": [
+              56000,
+              96000
+            ],
+            "observed": {
+              "units": [
+                "first",
+                "a1w1",
+                "a1w2",
+                "a1w3"
+              ],
+              "positions_ms": null,
+              "quality": 0.71,
+              "truncated": true,
+              "text": "",
+              "unit_quality": [
+                0.71,
+                0.71,
+                0.71,
+                0.71
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 1.237494871020317e-05
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              2000.0,
+              6000.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 4,
+            "reason": "ayah=2:repeated_owner_previous_tail",
+            "requested_window_ms": [
+              2000.0,
+              6000.0
+            ],
+            "samples": [
+              32000,
+              96000
+            ],
+            "observed": {
+              "units": [
+                "first",
+                "a1w1",
+                "a1w2",
+                "a1w3"
+              ],
+              "positions_ms": null,
+              "quality": 0.71,
+              "truncated": true,
+              "text": "",
+              "unit_quality": [
+                0.71,
+                0.71,
+                0.71,
+                0.71
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 1.0584015399217606e-05
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              6000.0,
+              8700.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 5,
+            "reason": "ayah=2:pause:incomplete_distinguishing_phrase",
+            "requested_window_ms": [
+              6000.0,
+              8700.0
+            ],
+            "samples": [
+              96000,
+              139200
+            ],
+            "observed": {
+              "units": [
+                "shared",
+                "a2w5"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99,
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 1.1249911040067673e-05
+          }
+        ],
+        "pause_geometry": [
+          {
+            "pause_id": 0,
+            "interval_ms": [
+              1000.0,
+              1200.0
+            ],
+            "accepted": true,
+            "reason": "measured_dsp_interval",
+            "first_quarter_rms": 1019.5162963867188,
+            "last_quarter_rms": 1179.5140380859375,
+            "within_quarter_variation": 14.825773773193358,
+            "midpoint_interval_radius_ms": 100.0,
+            "quiet_stationarity": true,
+            "timing_status": "uncalibrated_pause_midpoint",
+            "temporal_probability": null
+          },
+          {
+            "pause_id": 1,
+            "interval_ms": [
+              6000.0,
+              6200.0
+            ],
+            "accepted": true,
+            "reason": "measured_dsp_interval",
+            "first_quarter_rms": 6019.5029296875,
+            "last_quarter_rms": 6179.5029296875,
+            "within_quarter_variation": 14.826361962890624,
+            "midpoint_interval_radius_ms": 100.0,
+            "quiet_stationarity": true,
+            "timing_status": "uncalibrated_pause_midpoint",
+            "temporal_probability": null
+          }
+        ],
+        "first_onset_hypotheses": {
+          "speech_start_ms": 3100.0,
+          "search_region_ms": [
+            3100.0,
+            18100.0
+          ],
+          "supplemental_pauses": []
+        },
+        "boundaries": [
+          {
+            "ayah": 1,
+            "start_ms": 1100,
+            "evidence_kind": "pause",
+            "confidence": 0.99,
+            "review_reason": null,
+            "read_id": 0,
+            "proof": {
+              "phrase": [
+                "first"
+              ],
+              "complete": true,
+              "ambiguous": false,
+              "competitors_checked": true,
+              "competitor_count": 14,
+              "offset": 0,
+              "quality_metric": "asr_token_probability",
+              "pause_ms": [
+                1000.0,
+                1200.0
+              ],
+              "pause_id": 0
+            }
+          },
+          {
+            "ayah": 2,
+            "start_ms": 6100,
+            "evidence_kind": "pause",
+            "confidence": 0.99,
+            "review_reason": null,
+            "read_id": 5,
+            "proof": {
+              "phrase": [
+                "shared",
+                "a2w5"
+              ],
+              "complete": true,
+              "ambiguous": false,
+              "competitors_checked": true,
+              "competitor_count": 14,
+              "offset": 0,
+              "quality_metric": "asr_token_probability",
+              "pause_ms": [
+                6000.0,
+                6200.0
+              ],
+              "pause_id": 1
+            }
+          },
+          {
+            "ayah": 3,
+            "start_ms": 12619,
+            "evidence_kind": "estimate",
+            "confidence": 0.0,
+            "review_reason": "unsupported_wasl_timing",
+            "read_id": null,
+            "proof": null
+          },
+          {
+            "ayah": 4,
+            "start_ms": 24354,
+            "evidence_kind": "estimate",
+            "confidence": 0.0,
+            "review_reason": "blocked_by_unresolved_ayah",
+            "read_id": null,
+            "proof": null
+          }
+        ],
+        "confidence_semantics": {
+          "recognition": "minimum_independently_supported_essential_unit_score",
+          "calibrated_probability": false,
+          "temporal_probability": null,
+          "pause_timing": "midpoint_of_measured_DSP_interval_not_calibrated_probability",
+          "noisy_opening": "identity_only_missing_onset_not_reconstructed"
+        },
+        "ayahs": [
+          {
+            "ayah": 1,
+            "onset_ms": 1100,
+            "conf": 0.99,
+            "reliable": true
+          },
+          {
+            "ayah": 2,
+            "onset_ms": 6100,
+            "conf": 0.99,
+            "reliable": true
+          },
+          {
+            "ayah": 3,
+            "onset_ms": 12619,
+            "conf": 0.0,
+            "reliable": false
+          },
+          {
+            "ayah": 4,
+            "onset_ms": 24354,
+            "conf": 0.0,
+            "reliable": false
+          }
+        ],
+        "review_required_ayahs": [
+          3,
+          4
+        ],
+        "pause_matches": [
+          {
+            "ayah": 1,
+            "from_pause": true,
+            "onset_ms": 1100,
+            "conf": 0.99,
+            "boundary_evidence": "pause",
+            "pause_start_ms": 1000.0,
+            "pause_end_ms": 1200.0
+          },
+          {
+            "ayah": 2,
+            "from_pause": true,
+            "onset_ms": 6100,
+            "conf": 0.99,
+            "boundary_evidence": "pause",
+            "pause_start_ms": 6000.0,
+            "pause_end_ms": 6200.0
+          },
+          {
+            "ayah": 3,
+            "from_pause": false,
+            "onset_ms": 12619,
+            "conf": 0.0,
+            "boundary_evidence": "estimate"
+          },
+          {
+            "ayah": 4,
+            "from_pause": false,
+            "onset_ms": 24354,
+            "conf": 0.0,
+            "boundary_evidence": "estimate"
+          }
+        ],
+        "n_pause": 2,
+        "n_wasl": 0,
+        "bounded_ctc_fallback": null,
+        "emission_passes": 0,
+        "emissions_frames": 0,
+        "denied_acoustic_reads": [],
+        "audio_ms": 13500.0,
+        "covered_audio_ms": 7700.0,
+        "coverage": 0.1925,
+        "acoustic_intervals_ms": [
+          [
+            1000.0,
+            8700.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 10392,
+        "peak_cache_bytes": 10392,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": 33554432,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        },
+        "model_passes": 6,
+        "inference_seconds": 8.054194040596485e-05
+      }
+    },
+    "regression": false
+  },
+  {
+    "tail": "contradictory_future",
+    "baseline": {
+      "rows": [
+        [
+          1,
+          1100,
+          0.99
+        ],
+        [
+          2,
+          10684,
+          0.0
+        ],
+        [
+          3,
+          16322,
+          0.0
+        ],
+        [
+          4,
+          26469,
+          0.0
+        ]
+      ],
+      "trace": {
+        "align_lag_ms": 0,
+        "backend": "asr_token_probability",
+        "fast_adapter": "fake-v1",
+        "fast_version": "sequential-fast-v3-sparse-5",
+        "fast_run_key": "17871950f5fb97a9ccc71d24c05d42b9143ad12ab019f7d1f5a573bf9eec8b24",
+        "run_snapshot": {
+          "algorithm": "sequential-fast-v3-sparse-5",
+          "adapter": "fake-v1",
+          "model": "fake",
+          "revision": "one",
+          "policy": {
+            "speech_ms": [
+              1300,
+              2500,
+              4000
+            ],
+            "noisy_speech_ms": [
+              1700,
+              1900,
+              2100
+            ],
+            "max_candidates": 8,
+            "first_search_ms": 15000,
+            "cache_bytes": 33554432,
+            "ctc_quality": 0.25,
+            "asr_quality": 0.6,
+            "max_block_ayahs": 2,
+            "tempo_lower_ratio": 0.2,
+            "tempo_upper_ratio": 2.5,
+            "beam_log_margin": 2.1972245773362196,
+            "sparse_anchors": false,
+            "max_unresolved_ayahs": null,
+            "expansion_lookahead": 2,
+            "ctc_prefix_probability": 0.9,
+            "ctc_expansion_probability": 0.1
+          },
+          "lag_ms": 0,
+          "text_sha256": "cdcd87a250245525cd5cd380a02e73e713e69491a2ed6cb1f33f642d7613504b",
+          "pcm_sha256": "9d273a083b8f5584199cd5f024ad451ad74617a0d528495baed60a8ec56c901e",
+          "sample_rate": 16000,
+          "dsp_version": "311d6ad230f2dc2aaf9cba31431d9e8d8570a1252865e1bc8cad1fc2942bf2db",
+          "dsp_config": {
+            "SILERO_VAD_URL": "https://github.com/snakers4/silero-vad/raw/master/src/silero_vad/data/silero_vad.onnx",
+            "VAD_SR": 16000,
+            "VAD_WINDOW": 512,
+            "VAD_CONTEXT": 64,
+            "SPEECH_THRESHOLD": 0.5,
+            "MIN_PAUSE_MS": 300.0,
+            "WEAK_MIN_PAUSE_MS": 200.0,
+            "MATCH_TOLERANCE_FRAC": 0.04,
+            "_TEN_HOP_SIZE": 256
+          },
+          "dsp_models": {
+            "silero": {
+              "path": "/Users/ayub/Developer/surah-cutter/models/silero_vad.onnx",
+              "available": true,
+              "sha256": "1a153a22f4509e292a94e67d6f9b85e8deb25b4988682b7e174c65279d8788e3",
+              "provider": "CPUExecutionProvider"
+            },
+            "onnxruntime_version": "1.27.0",
+            "numpy_version": "2.5.0",
+            "ten_vad": {
+              "available": false
+            }
+          },
+          "decode": "ffmpeg-mono-float32-16000",
+          "normalization": "fake-v1",
+          "limits": {
+            "max_read_ms": 6000,
+            "coverage": 0.65,
+            "input_ratio": 2.0
+          },
+          "text_runtime": {
+            "test_adapter": "fake-v1"
+          },
+          "implementation_sha256": "46dacf4ae6e3ea1cc5bb807d7bea2c395be96a7f99bc1f3594cd2387b682100a",
+          "root_text_runtime": {
+            "python": "3.14.7 (main, Aug  7 2026, 02:15:30) [Clang 22.1.3 ]",
+            "unicode": "16.0.0"
+          },
+          "proof_word_ends_sha256": "b53c428390a1631a1fc45d5cd807173f2a8db743b4138cf8154cdb92c816de5a",
+          "dsp_pauses_sha256": "fa74325d0d4021a8adbbd1688833e70145a46b7f10b8e0df8680e87a21094a69"
+        },
+        "model_source": "fake:revision=one:adapter=fake-v1",
+        "total_ms": 40000.0,
+        "duration_ms": 40000.0,
+        "transitions": [
+          {
+            "state": "PREPARE",
+            "ayah": null
+          },
+          {
+            "state": "DETECT_PAUSES",
+            "ayah": null
+          },
+          {
+            "state": "LOCATE_FIRST",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 1,
+            "phrase": [
+              "first"
+            ],
+            "canonical_word_indices": [
+              0
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 1,
+            "candidate": 0,
+            "kind": "pause"
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 1,
+            "candidate": 0,
+            "window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "reason": "minimal_phrase"
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 1,
+            "candidate": 0,
+            "complete_units": 1,
+            "needed_units": 1,
+            "quality": 0.99,
+            "observed": [
+              "first"
+            ]
+          },
+          {
+            "state": "CONFIRMED",
+            "ayah": 1,
+            "evidence": "pause",
+            "start_ms": 1100
+          },
+          {
+            "state": "ADVANCE",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 2
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 2,
+            "phrase": [
+              "shared",
+              "a2w5"
+            ],
+            "canonical_word_indices": [
+              4,
+              5
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 2,
+            "candidate": 1,
+            "kind": "pause"
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 2,
+            "candidate": 1,
+            "window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "reason": "minimal_phrase"
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 2,
+            "candidate": 1,
+            "complete_units": 1,
+            "needed_units": 2,
+            "quality": 0.99,
+            "observed": [
+              "shared",
+              "a3w7"
+            ]
+          },
+          {
+            "state": "RESOLVE_BLOCK",
+            "ayah": 2,
+            "future_ayah": 3,
+            "reason": "future_ayah_without_current"
+          },
+          {
+            "state": "RESOLVE_BLOCK",
+            "ayah": 2,
+            "reason": "unresolved_adjacent_block"
+          },
+          {
+            "state": "REVIEW_REQUIRED",
+            "ayah": 2,
+            "reason": "unsupported_wasl_timing"
+          },
+          {
+            "state": "VALIDATE",
+            "ayah": null
+          },
+          {
+            "state": "RESULT_READY",
+            "ayah": null
+          }
+        ],
+        "dsp_seconds": 0.012559958035126328,
+        "phase1_pauses": [
+          {
+            "start_ms": 1000.0,
+            "end_ms": 1200.0,
+            "center_ms": 1100.0
+          },
+          {
+            "start_ms": 6000.0,
+            "end_ms": 6200.0,
+            "center_ms": 6100.0
+          }
+        ],
+        "acoustic_reads": [
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 0,
+            "reason": "ayah=1:pause:minimal_phrase",
+            "requested_window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "samples": [
+              16000,
+              40000
+            ],
+            "observed": {
+              "units": [
+                "first"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 2.308306284248829e-05
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 1,
+            "reason": "ayah=2:pause:minimal_phrase",
+            "requested_window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "samples": [
+              96000,
+              120000
+            ],
+            "observed": {
+              "units": [
+                "shared",
+                "a3w7"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99,
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 1.4374963939189911e-05
+          }
+        ],
+        "pause_geometry": [
+          {
+            "pause_id": 0,
+            "interval_ms": [
+              1000.0,
+              1200.0
+            ],
+            "accepted": true,
+            "reason": "short_dsp_interval"
+          },
+          {
+            "pause_id": 1,
+            "interval_ms": [
+              6000.0,
+              6200.0
+            ],
+            "accepted": true,
+            "reason": "short_dsp_interval"
+          }
+        ],
+        "first_onset_hypotheses": {
+          "speech_start_ms": 3100.0,
+          "search_region_ms": [
+            3100.0,
+            18100.0
+          ],
+          "supplemental_pauses": []
+        },
+        "boundaries": [
+          {
+            "ayah": 1,
+            "start_ms": 1100,
+            "evidence_kind": "pause",
+            "confidence": 0.99,
+            "review_reason": null,
+            "read_id": 0,
+            "proof": {
+              "phrase": [
+                "first"
+              ],
+              "complete": true,
+              "ambiguous": false,
+              "competitors_checked": true,
+              "competitor_count": 14,
+              "offset": 0,
+              "quality_metric": "asr_token_probability",
+              "pause_ms": [
+                1000.0,
+                1200.0
+              ],
+              "pause_id": 0
+            }
+          },
+          {
+            "ayah": 2,
+            "start_ms": 10684,
+            "evidence_kind": "estimate",
+            "confidence": 0.0,
+            "review_reason": "unsupported_wasl_timing",
+            "read_id": null,
+            "proof": null
+          },
+          {
+            "ayah": 3,
+            "start_ms": 16322,
+            "evidence_kind": "estimate",
+            "confidence": 0.0,
+            "review_reason": "blocked_by_unresolved_ayah",
+            "read_id": null,
+            "proof": null
+          },
+          {
+            "ayah": 4,
+            "start_ms": 26469,
+            "evidence_kind": "estimate",
+            "confidence": 0.0,
+            "review_reason": "blocked_by_unresolved_ayah",
+            "read_id": null,
+            "proof": null
+          }
+        ],
+        "ayahs": [
+          {
+            "ayah": 1,
+            "onset_ms": 1100,
+            "conf": 0.99,
+            "reliable": true
+          },
+          {
+            "ayah": 2,
+            "onset_ms": 10684,
+            "conf": 0.0,
+            "reliable": false
+          },
+          {
+            "ayah": 3,
+            "onset_ms": 16322,
+            "conf": 0.0,
+            "reliable": false
+          },
+          {
+            "ayah": 4,
+            "onset_ms": 26469,
+            "conf": 0.0,
+            "reliable": false
+          }
+        ],
+        "review_required_ayahs": [
+          2,
+          3,
+          4
+        ],
+        "pause_matches": [
+          {
+            "ayah": 1,
+            "from_pause": true,
+            "onset_ms": 1100,
+            "conf": 0.99,
+            "boundary_evidence": "pause",
+            "pause_start_ms": 1000.0,
+            "pause_end_ms": 1200.0
+          },
+          {
+            "ayah": 2,
+            "from_pause": false,
+            "onset_ms": 10684,
+            "conf": 0.0,
+            "boundary_evidence": "estimate"
+          },
+          {
+            "ayah": 3,
+            "from_pause": false,
+            "onset_ms": 16322,
+            "conf": 0.0,
+            "boundary_evidence": "estimate"
+          },
+          {
+            "ayah": 4,
+            "from_pause": false,
+            "onset_ms": 26469,
+            "conf": 0.0,
+            "boundary_evidence": "estimate"
+          }
+        ],
+        "n_pause": 1,
+        "n_wasl": 0,
+        "bounded_ctc_fallback": null,
+        "emission_passes": 0,
+        "emissions_frames": 0,
+        "denied_acoustic_reads": [],
+        "audio_ms": 3000.0,
+        "covered_audio_ms": 3000.0,
+        "coverage": 0.075,
+        "acoustic_intervals_ms": [
+          [
+            1000.0,
+            2500.0
+          ],
+          [
+            6000.0,
+            7500.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 3322,
+        "peak_cache_bytes": 3322,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": 33554432,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        },
+        "model_passes": 2,
+        "inference_seconds": 3.74580267816782e-05
+      }
+    },
+    "current": {
+      "rows": [
+        [
+          1,
+          1100,
+          0.99
+        ],
+        [
+          2,
+          10684,
+          0.0
+        ],
+        [
+          3,
+          16322,
+          0.0
+        ],
+        [
+          4,
+          26469,
+          0.0
+        ]
+      ],
+      "trace": {
+        "align_lag_ms": 0,
+        "backend": "asr_token_probability",
+        "fast_adapter": "fake-v1",
+        "fast_version": "sequential-fast-v3-sparse-7",
+        "fast_run_key": "6784fd0cd3e4686c47b79f8bd3e748bec702936cfa7bd2bb4fd9286f485e12f2",
+        "run_snapshot": {
+          "algorithm": "sequential-fast-v3-sparse-7",
+          "adapter": "fake-v1",
+          "model": "fake",
+          "revision": "one",
+          "policy": {
+            "speech_ms": [
+              1300,
+              2500,
+              4000
+            ],
+            "noisy_speech_ms": [
+              1700,
+              1900,
+              2100
+            ],
+            "max_candidates": 8,
+            "first_search_ms": 15000,
+            "cache_bytes": 33554432,
+            "ctc_quality": 0.25,
+            "asr_quality": 0.6,
+            "max_block_ayahs": 2,
+            "tempo_lower_ratio": 0.2,
+            "tempo_upper_ratio": 2.5,
+            "beam_log_margin": 2.1972245773362196,
+            "sparse_anchors": false,
+            "max_unresolved_ayahs": null,
+            "expansion_lookahead": 2,
+            "ctc_prefix_probability": 0.9,
+            "ctc_expansion_probability": 0.1
+          },
+          "lag_ms": 0,
+          "text_sha256": "cdcd87a250245525cd5cd380a02e73e713e69491a2ed6cb1f33f642d7613504b",
+          "pcm_sha256": "9d273a083b8f5584199cd5f024ad451ad74617a0d528495baed60a8ec56c901e",
+          "sample_rate": 16000,
+          "dsp_version": "311d6ad230f2dc2aaf9cba31431d9e8d8570a1252865e1bc8cad1fc2942bf2db",
+          "dsp_config": {
+            "SILERO_VAD_URL": "https://github.com/snakers4/silero-vad/raw/master/src/silero_vad/data/silero_vad.onnx",
+            "VAD_SR": 16000,
+            "VAD_WINDOW": 512,
+            "VAD_CONTEXT": 64,
+            "SPEECH_THRESHOLD": 0.5,
+            "MIN_PAUSE_MS": 300.0,
+            "WEAK_MIN_PAUSE_MS": 200.0,
+            "MATCH_TOLERANCE_FRAC": 0.04,
+            "_TEN_HOP_SIZE": 256
+          },
+          "dsp_models": {
+            "silero": {
+              "path": "/Users/ayub/Developer/surah-cutter/models/silero_vad.onnx",
+              "available": true,
+              "sha256": "1a153a22f4509e292a94e67d6f9b85e8deb25b4988682b7e174c65279d8788e3",
+              "provider": "CPUExecutionProvider"
+            },
+            "onnxruntime_version": "1.27.0",
+            "numpy_version": "2.5.0",
+            "ten_vad": {
+              "available": false
+            }
+          },
+          "decode": "ffmpeg-mono-float32-16000",
+          "normalization": "fake-v1",
+          "limits": {
+            "max_read_ms": 6000,
+            "coverage": 0.65,
+            "input_ratio": 2.0
+          },
+          "text_runtime": {
+            "test_adapter": "fake-v1"
+          },
+          "implementation_sha256": "f14beb139d80f9d2983c4561c8e4edc5b6475c39310daec9cd1a66e2ecfa0334",
+          "root_text_runtime": {
+            "python": "3.14.7 (main, Aug  7 2026, 02:15:30) [Clang 22.1.3 ]",
+            "unicode": "16.0.0"
+          },
+          "proof_word_ends_sha256": "b53c428390a1631a1fc45d5cd807173f2a8db743b4138cf8154cdb92c816de5a",
+          "dsp_pauses_sha256": "fa74325d0d4021a8adbbd1688833e70145a46b7f10b8e0df8680e87a21094a69"
+        },
+        "model_source": "fake:revision=one:adapter=fake-v1",
+        "total_ms": 40000.0,
+        "duration_ms": 40000.0,
+        "transitions": [
+          {
+            "state": "PREPARE",
+            "ayah": null
+          },
+          {
+            "state": "DETECT_PAUSES",
+            "ayah": null
+          },
+          {
+            "state": "LOCATE_FIRST",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 1,
+            "phrase": [
+              "first"
+            ],
+            "canonical_word_indices": [
+              0
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 1,
+            "candidate": 0,
+            "kind": "pause"
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 1,
+            "candidate": 0,
+            "window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "reason": "minimal_phrase"
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 1,
+            "candidate": 0,
+            "complete_units": 1,
+            "needed_units": 1,
+            "quality": 0.99,
+            "observed": [
+              "first"
+            ],
+            "identity_recovery": null,
+            "onset_supported": null
+          },
+          {
+            "state": "CONFIRMED",
+            "ayah": 1,
+            "evidence": "pause",
+            "start_ms": 1100
+          },
+          {
+            "state": "ADVANCE",
+            "ayah": 1
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 2
+          },
+          {
+            "state": "PLAN_PHRASE",
+            "ayah": 2,
+            "phrase": [
+              "shared",
+              "a2w5"
+            ],
+            "canonical_word_indices": [
+              4,
+              5
+            ],
+            "ambiguous": false
+          },
+          {
+            "state": "SELECT_CANDIDATE",
+            "ayah": 2,
+            "candidate": 1,
+            "kind": "pause"
+          },
+          {
+            "state": "READ_LOCAL",
+            "ayah": 2,
+            "candidate": 1,
+            "window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "reason": "minimal_phrase"
+          },
+          {
+            "state": "EVALUATE",
+            "ayah": 2,
+            "candidate": 1,
+            "complete_units": 1,
+            "needed_units": 2,
+            "quality": 0.99,
+            "observed": [
+              "shared",
+              "a3w7"
+            ],
+            "identity_recovery": null,
+            "onset_supported": null
+          },
+          {
+            "state": "RESOLVE_BLOCK",
+            "ayah": 2,
+            "future_ayah": 3,
+            "reason": "future_ayah_without_current"
+          },
+          {
+            "state": "RESOLVE_BLOCK",
+            "ayah": 2,
+            "reason": "unresolved_adjacent_block"
+          },
+          {
+            "state": "REVIEW_REQUIRED",
+            "ayah": 2,
+            "reason": "unsupported_wasl_timing"
+          },
+          {
+            "state": "VALIDATE",
+            "ayah": null
+          },
+          {
+            "state": "RESULT_READY",
+            "ayah": null
+          }
+        ],
+        "dsp_seconds": 0.012551666935905814,
+        "phase1_pauses": [
+          {
+            "start_ms": 1000.0,
+            "end_ms": 1200.0,
+            "center_ms": 1100.0
+          },
+          {
+            "start_ms": 6000.0,
+            "end_ms": 6200.0,
+            "center_ms": 6100.0
+          }
+        ],
+        "acoustic_reads": [
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 0,
+            "reason": "ayah=1:pause:minimal_phrase",
+            "requested_window_ms": [
+              1000.0,
+              2500.0
+            ],
+            "samples": [
+              16000,
+              40000
+            ],
+            "observed": {
+              "units": [
+                "first"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 2.0582927390933037e-05
+          },
+          {
+            "phase": "independent-local",
+            "window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "frames": 0,
+            "outcome": "completed",
+            "id": 1,
+            "reason": "ayah=2:pause:minimal_phrase",
+            "requested_window_ms": [
+              6000.0,
+              7500.0
+            ],
+            "samples": [
+              96000,
+              120000
+            ],
+            "observed": {
+              "units": [
+                "shared",
+                "a3w7"
+              ],
+              "positions_ms": null,
+              "quality": 0.99,
+              "truncated": false,
+              "text": "",
+              "unit_quality": [
+                0.99,
+                0.99
+              ],
+              "frames": 0,
+              "attribution": [],
+              "hypotheses": [],
+              "null_log_probability": null,
+              "posterior_sha256": null,
+              "stride_ms": 0.0
+            },
+            "seconds": 1.4374963939189911e-05
+          }
+        ],
+        "pause_geometry": [
+          {
+            "pause_id": 0,
+            "interval_ms": [
+              1000.0,
+              1200.0
+            ],
+            "accepted": true,
+            "reason": "measured_dsp_interval",
+            "first_quarter_rms": 1019.5162963867188,
+            "last_quarter_rms": 1179.5140380859375,
+            "within_quarter_variation": 14.825773773193358,
+            "midpoint_interval_radius_ms": 100.0,
+            "quiet_stationarity": true,
+            "timing_status": "uncalibrated_pause_midpoint",
+            "temporal_probability": null
+          },
+          {
+            "pause_id": 1,
+            "interval_ms": [
+              6000.0,
+              6200.0
+            ],
+            "accepted": true,
+            "reason": "measured_dsp_interval",
+            "first_quarter_rms": 6019.5029296875,
+            "last_quarter_rms": 6179.5029296875,
+            "within_quarter_variation": 14.826361962890624,
+            "midpoint_interval_radius_ms": 100.0,
+            "quiet_stationarity": true,
+            "timing_status": "uncalibrated_pause_midpoint",
+            "temporal_probability": null
+          }
+        ],
+        "first_onset_hypotheses": {
+          "speech_start_ms": 3100.0,
+          "search_region_ms": [
+            3100.0,
+            18100.0
+          ],
+          "supplemental_pauses": []
+        },
+        "boundaries": [
+          {
+            "ayah": 1,
+            "start_ms": 1100,
+            "evidence_kind": "pause",
+            "confidence": 0.99,
+            "review_reason": null,
+            "read_id": 0,
+            "proof": {
+              "phrase": [
+                "first"
+              ],
+              "complete": true,
+              "ambiguous": false,
+              "competitors_checked": true,
+              "competitor_count": 14,
+              "offset": 0,
+              "quality_metric": "asr_token_probability",
+              "pause_ms": [
+                1000.0,
+                1200.0
+              ],
+              "pause_id": 0
+            }
+          },
+          {
+            "ayah": 2,
+            "start_ms": 10684,
+            "evidence_kind": "estimate",
+            "confidence": 0.0,
+            "review_reason": "unsupported_wasl_timing",
+            "read_id": null,
+            "proof": null
+          },
+          {
+            "ayah": 3,
+            "start_ms": 16322,
+            "evidence_kind": "estimate",
+            "confidence": 0.0,
+            "review_reason": "blocked_by_unresolved_ayah",
+            "read_id": null,
+            "proof": null
+          },
+          {
+            "ayah": 4,
+            "start_ms": 26469,
+            "evidence_kind": "estimate",
+            "confidence": 0.0,
+            "review_reason": "blocked_by_unresolved_ayah",
+            "read_id": null,
+            "proof": null
+          }
+        ],
+        "confidence_semantics": {
+          "recognition": "minimum_independently_supported_essential_unit_score",
+          "calibrated_probability": false,
+          "temporal_probability": null,
+          "pause_timing": "midpoint_of_measured_DSP_interval_not_calibrated_probability",
+          "noisy_opening": "identity_only_missing_onset_not_reconstructed"
+        },
+        "ayahs": [
+          {
+            "ayah": 1,
+            "onset_ms": 1100,
+            "conf": 0.99,
+            "reliable": true
+          },
+          {
+            "ayah": 2,
+            "onset_ms": 10684,
+            "conf": 0.0,
+            "reliable": false
+          },
+          {
+            "ayah": 3,
+            "onset_ms": 16322,
+            "conf": 0.0,
+            "reliable": false
+          },
+          {
+            "ayah": 4,
+            "onset_ms": 26469,
+            "conf": 0.0,
+            "reliable": false
+          }
+        ],
+        "review_required_ayahs": [
+          2,
+          3,
+          4
+        ],
+        "pause_matches": [
+          {
+            "ayah": 1,
+            "from_pause": true,
+            "onset_ms": 1100,
+            "conf": 0.99,
+            "boundary_evidence": "pause",
+            "pause_start_ms": 1000.0,
+            "pause_end_ms": 1200.0
+          },
+          {
+            "ayah": 2,
+            "from_pause": false,
+            "onset_ms": 10684,
+            "conf": 0.0,
+            "boundary_evidence": "estimate"
+          },
+          {
+            "ayah": 3,
+            "from_pause": false,
+            "onset_ms": 16322,
+            "conf": 0.0,
+            "boundary_evidence": "estimate"
+          },
+          {
+            "ayah": 4,
+            "from_pause": false,
+            "onset_ms": 26469,
+            "conf": 0.0,
+            "boundary_evidence": "estimate"
+          }
+        ],
+        "n_pause": 1,
+        "n_wasl": 0,
+        "bounded_ctc_fallback": null,
+        "emission_passes": 0,
+        "emissions_frames": 0,
+        "denied_acoustic_reads": [],
+        "audio_ms": 3000.0,
+        "covered_audio_ms": 3000.0,
+        "coverage": 0.075,
+        "acoustic_intervals_ms": [
+          [
+            1000.0,
+            2500.0
+          ],
+          [
+            6000.0,
+            7500.0
+          ]
+        ],
+        "cache_hits": 0,
+        "cache_bytes": 3322,
+        "peak_cache_bytes": 3322,
+        "cache_evictions": 0,
+        "local_read_limits": {
+          "cache_limit_bytes": 33554432,
+          "max_read_ms": 6000.0,
+          "max_coverage": 0.65,
+          "max_audio_ratio": 2.0
+        },
+        "model_passes": 2,
+        "inference_seconds": 3.495789133012295e-05
+      }
+    },
+    "regression": false
+  }
+]

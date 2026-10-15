@@ -1,0 +1,50 @@
+{
+  "name": "saad_al_ghamidi",
+  "reciter": {
+    "id": 11,
+    "country": "sa",
+    "name": "Саад аль-Гамиди",
+    "url_template": "https://quran-audio.quranacademy.org/by-surah/Saad-Al-Ghamidi/{sura}.mp3",
+    "recitation_type": null,
+    "recitation_speed": null,
+    "timecodes_db_url": "https://cdn.quranacademy.org/mobile-app/reciters/timecodes/saad_al_ghamidi.db",
+    "timecodes_version": 1
+  },
+  "audio_dir": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi",
+  "reference": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi/saad_al_ghamidi.db",
+  "files": [
+    {
+      "url": "https://cdn.quranacademy.org/mobile-app/reciters/timecodes/saad_al_ghamidi.db",
+      "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi/saad_al_ghamidi.db",
+      "bytes": 106496,
+      "sha256": "4fdb78de213c4c9763e820d932c7d3420e65f32b48ea2aa2411defc5a8e57de3"
+    },
+    {
+      "url": "https://quran-audio.quranacademy.org/by-surah/Saad-Al-Ghamidi/080.mp3",
+      "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi/080.mp3",
+      "bytes": 3009408,
+      "sha256": "01cbc697f10e8cb67347e83e42cc9bfd46dacf646655940921a7ce78f1f519e9"
+    },
+    {
+      "url": "https://quran-audio.quranacademy.org/by-surah/Saad-Al-Ghamidi/098.mp3",
+      "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi/098.mp3",
+      "bytes": 1821696,
+      "sha256": "ed0dff4f6de5d0c795aaf5f8fc0b6da2c8b79c4059e58a1c318876e19062c965"
+    },
+    {
+      "url": "https://quran-audio.quranacademy.org/by-surah/Saad-Al-Ghamidi/112.mp3",
+      "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi/112.mp3",
+      "bytes": 306048,
+      "sha256": "a58bccb959151791597f0e750784260429fedc8c685e20c45d0429368ca2e8db"
+    }
+  ],
+  "local_reference": "data/references/saad_al_ghamidi.db",
+  "reference_sha_matches_packaged": true,
+  "all_reference_rows_match_packaged": true,
+  "surahs": [
+    80,
+    98,
+    112
+  ],
+  "reason": "Preselected available local 3-surah corpus: short verses, long verses, short recording. No FAST results inspected before selection."
+}

@@ -27,6 +27,7 @@ def bundle():
 
 
 @pytest.mark.parametrize("surah, mode, max_error_ms", [
+    (1, "full", 100),
     (112, "full", 150), (114, "full", 150),
     (112, "fast", 150), (114, "fast", 150),
     (80, "fast", 800), (88, "fast", 500),
@@ -64,8 +65,25 @@ def test_actual_alignment_starts_and_sequence(bundle, surah, mode, max_error_ms,
     assert [a for a, _, _ in rows] == list(range(1, quran_text.ayah_count(surah) + 1))
     assert all(left[1] < right[1] for left, right in zip(rows, rows[1:]))
     if mode == "full":
-        assert max(abs(ms - reference[(surah, a)]) for a, ms, _ in rows) <= max_error_ms
+        # The reference grades the former speech-edge placement. Keep that
+        # regression bound on the acoustic result, then check the new cut
+        # independently: it intentionally differs from the reference in silence.
+        checks = {c["ayah"]: c for c in trace["ayahs"]}
+        assert max(abs(checks[a]["pre_center_onset_ms"] - reference[(surah, a)])
+                   for a, _, _ in rows) <= max_error_ms
+        centered = [c for c in checks.values() if c.get("pause_center_reason") == "positioned"]
+        assert centered
+        for check in centered:
+            start, end = check["center_pause_start_ms"], check["center_pause_end_ms"]
+            assert check["onset_ms"] == round(end - min((end - start) / 2, 250))
+            assert start < check["onset_ms"] < end
         assert trace["emission_passes"] == 1
+        if surah == 1:
+            first_word = next(c for c in trace["ayahs"] if c["ayah"] == 2)
+            assert first_word["reason"] == "split-word-local-recheck"
+            assert first_word["raw_onset_ms"] != first_word["onset_ms"]
+            assert len(trace["full_boundary_reads"]) == 1
+            assert trace["full_boundary_reads"][0]["accepted"]
     else:
         # A local FAST can explicitly decline proof. Large residual errors may
         # never be advertised as reliable merely to match former full-pass tests.

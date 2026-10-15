@@ -1,0 +1,34 @@
+[
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 59,
+    "read_id": 43,
+    "reason": "ayah=10:pause:minimal_phrase",
+    "raw_word": "أَلَمْ",
+    "normalized_word": "الم",
+    "old_units": [
+      "الف",
+      "لام",
+      "ميم"
+    ],
+    "corrected_units": [
+      "الم"
+    ]
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 77,
+    "read_id": 34,
+    "reason": "ayah=25:pause:minimal_phrase",
+    "raw_word": "أَلَمْ",
+    "normalized_word": "الم",
+    "old_units": [
+      "الف",
+      "لام",
+      "ميم"
+    ],
+    "corrected_units": [
+      "الم"
+    ]
+  }
+]

@@ -1,0 +1,3308 @@
+{
+  "source": "onnx-ctc:quran-phonetics:revision=local-export:sha256=423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a:lag=200:backend=onnx:requested_mode=full:actual_mode=tiled:align_lag_ms=200:lag_adjust_ms=0:full_policy=qpc-full-pause-v1:full_window_s=20:full_workers=3:full_context_s=2:full_pause_policy=strong-dsp-v1:full_max_window_s=60:full_review_policy=qpc-pause-review-v1:full_onset_policy=qpc-phrase-boundary-v3",
+  "chunk": {
+    "ayahs": [
+      217,
+      220
+    ],
+    "window_ms": [
+      4679538.0,
+      4987601.3
+    ],
+    "n_tokens": 879,
+    "tempo": 7009162.14,
+    "prior": "references"
+  },
+  "stride_ms": 19.99998959300537,
+  "base_ms": 4679537.565002617,
+  "checks": {
+    "215": {
+      "ayah": 215,
+      "raw_onset_ms": 4679638,
+      "onset_ms": 4679638,
+      "conf": 0.8687,
+      "first_token_conf": 0.9555,
+      "reliable": true,
+      "repaired": false,
+      "reason": "ctc",
+      "token_confs": [
+        0.9555,
+        0.9967,
+        0.9317,
+        0.9936,
+        0.9846,
+        0.6919,
+        0.9977,
+        0.9941,
+        0.6718,
+        0.5349
+      ]
+    },
+    "216": {
+      "ayah": 216,
+      "raw_onset_ms": 4704758,
+      "onset_ms": 4704758,
+      "conf": 0.0893,
+      "first_token_conf": 0.1542,
+      "reliable": false,
+      "repaired": false,
+      "reason": "weak-onset",
+      "token_confs": [
+        0.1542,
+        0.9922,
+        0.927,
+        0.7556,
+        0.0003,
+        0.0002
+      ]
+    },
+    "217": {
+      "ayah": 217,
+      "raw_onset_ms": 4728058,
+      "onset_ms": 4728058,
+      "conf": 0.775,
+      "first_token_conf": 0.977,
+      "reliable": true,
+      "repaired": false,
+      "reason": "ctc",
+      "token_confs": [
+        0.977,
+        0.9811,
+        0.9914,
+        0.6246,
+        0.9992,
+        0.9984,
+        0.869,
+        0.9763,
+        0.9908,
+        0.1194
+      ]
+    },
+    "218": {
+      "ayah": 218,
+      "raw_onset_ms": 4793798,
+      "onset_ms": 4793798,
+      "conf": 0.4479,
+      "first_token_conf": 0.9967,
+      "reliable": true,
+      "repaired": false,
+      "reason": "ctc",
+      "token_confs": [
+        0.9967,
+        0.7667,
+        0.9988,
+        0.0308
+      ]
+    },
+    "219": {
+      "ayah": 219,
+      "raw_onset_ms": 4815677,
+      "onset_ms": 4815677,
+      "conf": 0.5082,
+      "first_token_conf": 0.5452,
+      "reliable": true,
+      "repaired": false,
+      "reason": "ctc",
+      "token_confs": [
+        0.5452,
+        0.9394,
+        0.9854,
+        0.9278,
+        0.9985,
+        0.7686,
+        0.9977,
+        0.9578,
+        0.9846,
+        0.0006
+      ]
+    },
+    "220": {
+      "ayah": 220,
+      "raw_onset_ms": 4843477,
+      "onset_ms": 4843477,
+      "conf": 0.0,
+      "first_token_conf": 0.0002,
+      "reliable": false,
+      "repaired": false,
+      "reason": "weak-onset",
+      "token_confs": [
+        0.0002,
+        0.0
+      ]
+    },
+    "221": {
+      "ayah": 221,
+      "raw_onset_ms": 4872457,
+      "onset_ms": 4872457,
+      "conf": 0.9959,
+      "first_token_conf": 0.9996,
+      "reliable": true,
+      "repaired": false,
+      "reason": "ctc",
+      "token_confs": [
+        0.9996,
+        0.9915,
+        0.9998,
+        0.9971
+      ]
+    },
+    "222": {
+      "ayah": 222,
+      "raw_onset_ms": 4917917,
+      "onset_ms": 4917917,
+      "conf": 0.8015,
+      "first_token_conf": 0.9712,
+      "reliable": true,
+      "repaired": false,
+      "reason": "ctc",
+      "token_confs": [
+        0.9712,
+        0.8625,
+        0.9763,
+        0.9997,
+        0.9826,
+        0.9273,
+        0.9967,
+        0.9323,
+        0.9997,
+        0.9957,
+        0.9951,
+        0.0672
+      ]
+    },
+    "223": {
+      "ayah": 223,
+      "raw_onset_ms": 4948897,
+      "onset_ms": 4948897,
+      "conf": 0.0632,
+      "first_token_conf": 0.0073,
+      "reliable": false,
+      "repaired": false,
+      "reason": "weak-onset",
+      "token_confs": [
+        0.0073,
+        0.9944,
+        0.9717,
+        0.9998,
+        0.0001,
+        0.6087,
+        0.0392,
+        0.0001
+      ]
+    }
+  },
+  "words": [
+    {
+      "ayah": 219,
+      "text": "۞ يَسۡـَٔلُونَكَ",
+      "tr": "yasalūnaka",
+      "tokens": [
+        {
+          "char": "y",
+          "start_ms": 4815877.494058135,
+          "end_ms": 4815877.494058135,
+          "confidence": 0.5452
+        },
+        {
+          "char": "a",
+          "start_ms": 4815937.494026914,
+          "end_ms": 4815957.494016507,
+          "confidence": 0.9394
+        },
+        {
+          "char": "s",
+          "start_ms": 4816137.4939228445,
+          "end_ms": 4816157.493912437,
+          "confidence": 0.9854
+        },
+        {
+          "char": "a",
+          "start_ms": 4816297.493839588,
+          "end_ms": 4816297.493839588,
+          "confidence": 0.9278
+        },
+        {
+          "char": "l",
+          "start_ms": 4816417.493777147,
+          "end_ms": 4816417.493777147,
+          "confidence": 0.9985
+        },
+        {
+          "char": "ū",
+          "start_ms": 4816517.493725111,
+          "end_ms": 4816537.493714704,
+          "confidence": 0.7686
+        },
+        {
+          "char": "n",
+          "start_ms": 4816757.493600227,
+          "end_ms": 4816757.493600227,
+          "confidence": 0.9977
+        },
+        {
+          "char": "a",
+          "start_ms": 4816837.4935586,
+          "end_ms": 4816837.4935586,
+          "confidence": 0.9578
+        },
+        {
+          "char": "k",
+          "start_ms": 4816957.493496157,
+          "end_ms": 4816957.493496157,
+          "confidence": 0.9846
+        },
+        {
+          "char": "a",
+          "start_ms": 4817017.4934649365,
+          "end_ms": 4817017.4934649365,
+          "confidence": 0.0006
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "عَنِ",
+      "tr": "ʿani",
+      "tokens": [
+        {
+          "char": "ʿ",
+          "start_ms": 4817057.493444122,
+          "end_ms": 4817057.493444122,
+          "confidence": 0.0006
+        },
+        {
+          "char": "a",
+          "start_ms": 4817077.493433716,
+          "end_ms": 4817077.493433716,
+          "confidence": 0.0018
+        },
+        {
+          "char": "n",
+          "start_ms": 4817297.493319239,
+          "end_ms": 4817297.493319239,
+          "confidence": 0.1188
+        },
+        {
+          "char": "i",
+          "start_ms": 4817357.493288018,
+          "end_ms": 4817357.493288018,
+          "confidence": 0.1524
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "ٱلۡخَمۡرِ",
+      "tr": "l-khamri",
+      "tokens": [
+        {
+          "char": "l",
+          "start_ms": 4817437.49324639,
+          "end_ms": 4817437.49324639,
+          "confidence": 0.2301
+        },
+        {
+          "char": "-",
+          "start_ms": 4817457.493235982,
+          "end_ms": 4817457.493235982,
+          "confidence": 0.032
+        },
+        {
+          "char": "k",
+          "start_ms": 4817637.49314232,
+          "end_ms": 4817637.49314232,
+          "confidence": 0.0166
+        },
+        {
+          "char": "h",
+          "start_ms": 4817657.493131912,
+          "end_ms": 4817657.493131912,
+          "confidence": 0.9858
+        },
+        {
+          "char": "a",
+          "start_ms": 4817737.493090285,
+          "end_ms": 4817737.493090285,
+          "confidence": 0.8809
+        },
+        {
+          "char": "m",
+          "start_ms": 4817837.493038249,
+          "end_ms": 4817837.493038249,
+          "confidence": 0.3971
+        },
+        {
+          "char": "r",
+          "start_ms": 4817997.492954994,
+          "end_ms": 4817997.492954994,
+          "confidence": 0.0005
+        },
+        {
+          "char": "i",
+          "start_ms": 4818057.492923773,
+          "end_ms": 4818057.492923773,
+          "confidence": 0.0109
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "وَٱلۡمَيۡسِرِۖ",
+      "tr": "wal-maysiri",
+      "tokens": [
+        {
+          "char": "w",
+          "start_ms": 4818177.4928613305,
+          "end_ms": 4818177.4928613305,
+          "confidence": 0.9972
+        },
+        {
+          "char": "a",
+          "start_ms": 4818237.49283011,
+          "end_ms": 4818257.492819702,
+          "confidence": 0.917
+        },
+        {
+          "char": "l",
+          "start_ms": 4818317.4927884815,
+          "end_ms": 4818337.492778075,
+          "confidence": 0.795
+        },
+        {
+          "char": "-",
+          "start_ms": 4818357.492767667,
+          "end_ms": 4818357.492767667,
+          "confidence": 0.2071
+        },
+        {
+          "char": "m",
+          "start_ms": 4818517.492684412,
+          "end_ms": 4818517.492684412,
+          "confidence": 0.9895
+        },
+        {
+          "char": "a",
+          "start_ms": 4818597.492642784,
+          "end_ms": 4818617.492632377,
+          "confidence": 0.9309
+        },
+        {
+          "char": "y",
+          "start_ms": 4818677.492601156,
+          "end_ms": 4818697.492590749,
+          "confidence": 0.7449
+        },
+        {
+          "char": "s",
+          "start_ms": 4818897.492486679,
+          "end_ms": 4818917.492476271,
+          "confidence": 0.8052
+        },
+        {
+          "char": "i",
+          "start_ms": 4819017.492424237,
+          "end_ms": 4819017.492424237,
+          "confidence": 0.9975
+        },
+        {
+          "char": "r",
+          "start_ms": 4819137.492361795,
+          "end_ms": 4819137.492361795,
+          "confidence": 0.0035
+        },
+        {
+          "char": "i",
+          "start_ms": 4819157.492351388,
+          "end_ms": 4819157.492351388,
+          "confidence": 0.0003
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "قُلۡ",
+      "tr": "qul",
+      "tokens": [
+        {
+          "char": "q",
+          "start_ms": 4819637.49210162,
+          "end_ms": 4819637.49210162,
+          "confidence": 0.003
+        },
+        {
+          "char": "u",
+          "start_ms": 4819737.492049585,
+          "end_ms": 4819737.492049585,
+          "confidence": 0.9995
+        },
+        {
+          "char": "l",
+          "start_ms": 4819797.492018364,
+          "end_ms": 4819797.492018364,
+          "confidence": 0.9978
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "فِيهِمَآ",
+      "tr": "fīhimā",
+      "tokens": [
+        {
+          "char": "f",
+          "start_ms": 4819957.491935108,
+          "end_ms": 4819957.491935108,
+          "confidence": 0.5543
+        },
+        {
+          "char": "ī",
+          "start_ms": 4819977.491924701,
+          "end_ms": 4819977.491924701,
+          "confidence": 0.0
+        },
+        {
+          "char": "h",
+          "start_ms": 4819997.491914294,
+          "end_ms": 4819997.491914294,
+          "confidence": 0.0009
+        },
+        {
+          "char": "i",
+          "start_ms": 4820097.491862259,
+          "end_ms": 4820097.491862259,
+          "confidence": 0.0353
+        },
+        {
+          "char": "m",
+          "start_ms": 4820537.491633305,
+          "end_ms": 4820537.491633305,
+          "confidence": 0.9938
+        },
+        {
+          "char": "ā",
+          "start_ms": 4820637.4915812705,
+          "end_ms": 4820637.4915812705,
+          "confidence": 0.5072
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "إِثۡمٞ",
+      "tr": "ith'mun",
+      "tokens": [
+        {
+          "char": "i",
+          "start_ms": 4821457.491154583,
+          "end_ms": 4821477.491144177,
+          "confidence": 0.8757
+        },
+        {
+          "char": "t",
+          "start_ms": 4821597.491081734,
+          "end_ms": 4821597.491081734,
+          "confidence": 0.0006
+        },
+        {
+          "char": "h",
+          "start_ms": 4821617.491071328,
+          "end_ms": 4821617.491071328,
+          "confidence": 0.344
+        },
+        {
+          "char": "'",
+          "start_ms": 4821637.491060921,
+          "end_ms": 4821637.491060921,
+          "confidence": 0.0001
+        },
+        {
+          "char": "m",
+          "start_ms": 4821677.491040107,
+          "end_ms": 4821677.491040107,
+          "confidence": 0.0
+        },
+        {
+          "char": "u",
+          "start_ms": 4821697.491029699,
+          "end_ms": 4821697.491029699,
+          "confidence": 0.0
+        },
+        {
+          "char": "n",
+          "start_ms": 4821717.491019293,
+          "end_ms": 4821717.491019293,
+          "confidence": 0.0028
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "كَبِيرٞ",
+      "tr": "kabīrun",
+      "tokens": [
+        {
+          "char": "k",
+          "start_ms": 4822517.490603013,
+          "end_ms": 4822517.490603013,
+          "confidence": 0.9927
+        },
+        {
+          "char": "a",
+          "start_ms": 4822617.490550978,
+          "end_ms": 4822637.490540571,
+          "confidence": 0.7197
+        },
+        {
+          "char": "b",
+          "start_ms": 4822697.49050935,
+          "end_ms": 4822697.49050935,
+          "confidence": 0.2506
+        },
+        {
+          "char": "ī",
+          "start_ms": 4822797.490457315,
+          "end_ms": 4822797.490457315,
+          "confidence": 0.0
+        },
+        {
+          "char": "r",
+          "start_ms": 4822817.4904469075,
+          "end_ms": 4822817.4904469075,
+          "confidence": 0.0
+        },
+        {
+          "char": "u",
+          "start_ms": 4822937.490384466,
+          "end_ms": 4822937.490384466,
+          "confidence": 0.0
+        },
+        {
+          "char": "n",
+          "start_ms": 4822957.4903740585,
+          "end_ms": 4822957.4903740585,
+          "confidence": 0.0422
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "وَمَنَٰفِعُ",
+      "tr": "wamanāfiʿu",
+      "tokens": [
+        {
+          "char": "w",
+          "start_ms": 4823857.489905744,
+          "end_ms": 4823857.489905744,
+          "confidence": 0.0
+        },
+        {
+          "char": "a",
+          "start_ms": 4823877.489895337,
+          "end_ms": 4823877.489895337,
+          "confidence": 0.0
+        },
+        {
+          "char": "m",
+          "start_ms": 4823897.48988493,
+          "end_ms": 4823897.48988493,
+          "confidence": 0.0332
+        },
+        {
+          "char": "a",
+          "start_ms": 4823977.489843302,
+          "end_ms": 4823977.489843302,
+          "confidence": 0.9277
+        },
+        {
+          "char": "n",
+          "start_ms": 4824077.489791268,
+          "end_ms": 4824077.489791268,
+          "confidence": 0.9992
+        },
+        {
+          "char": "ā",
+          "start_ms": 4824157.489749639,
+          "end_ms": 4824157.489749639,
+          "confidence": 0.9989
+        },
+        {
+          "char": "f",
+          "start_ms": 4824397.489624755,
+          "end_ms": 4824417.489614348,
+          "confidence": 0.9471
+        },
+        {
+          "char": "i",
+          "start_ms": 4824497.489572721,
+          "end_ms": 4824497.489572721,
+          "confidence": 0.9815
+        },
+        {
+          "char": "ʿ",
+          "start_ms": 4824617.489510278,
+          "end_ms": 4824617.489510278,
+          "confidence": 0.9798
+        },
+        {
+          "char": "u",
+          "start_ms": 4824697.48946865,
+          "end_ms": 4824697.48946865,
+          "confidence": 0.9984
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "لِلنَّاسِ",
+      "tr": "lilnnāsi",
+      "tokens": [
+        {
+          "char": "l",
+          "start_ms": 4824757.489437429,
+          "end_ms": 4824757.489437429,
+          "confidence": 0.9567
+        },
+        {
+          "char": "i",
+          "start_ms": 4824857.489385394,
+          "end_ms": 4824857.489385394,
+          "confidence": 0.7632
+        },
+        {
+          "char": "l",
+          "start_ms": 4825437.489083592,
+          "end_ms": 4825437.489083592,
+          "confidence": 0.0001
+        },
+        {
+          "char": "n",
+          "start_ms": 4825457.489073184,
+          "end_ms": 4825457.489073184,
+          "confidence": 0.9996
+        },
+        {
+          "char": "n",
+          "start_ms": 4825537.489031557,
+          "end_ms": 4825537.489031557,
+          "confidence": 0.0
+        },
+        {
+          "char": "ā",
+          "start_ms": 4825557.489021149,
+          "end_ms": 4825557.489021149,
+          "confidence": 0.999
+        },
+        {
+          "char": "s",
+          "start_ms": 4825817.488885859,
+          "end_ms": 4825817.488885859,
+          "confidence": 0.773
+        },
+        {
+          "char": "i",
+          "start_ms": 4825877.488854637,
+          "end_ms": 4825877.488854637,
+          "confidence": 0.0753
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "وَإِثۡمُهُمَآ",
+      "tr": "wa-ith'muhumā",
+      "tokens": [
+        {
+          "char": "w",
+          "start_ms": 4825997.488792196,
+          "end_ms": 4825997.488792196,
+          "confidence": 0.224
+        },
+        {
+          "char": "a",
+          "start_ms": 4826057.488760975,
+          "end_ms": 4826077.488750568,
+          "confidence": 0.8948
+        },
+        {
+          "char": "-",
+          "start_ms": 4826157.488708939,
+          "end_ms": 4826157.488708939,
+          "confidence": 0.001
+        },
+        {
+          "char": "i",
+          "start_ms": 4826217.488677719,
+          "end_ms": 4826237.488667312,
+          "confidence": 0.9431
+        },
+        {
+          "char": "t",
+          "start_ms": 4826337.488615277,
+          "end_ms": 4826337.488615277,
+          "confidence": 0.0
+        },
+        {
+          "char": "h",
+          "start_ms": 4826357.48860487,
+          "end_ms": 4826357.48860487,
+          "confidence": 0.1995
+        },
+        {
+          "char": "'",
+          "start_ms": 4826377.488594463,
+          "end_ms": 4826377.488594463,
+          "confidence": 0.0001
+        },
+        {
+          "char": "m",
+          "start_ms": 4826417.488573649,
+          "end_ms": 4826417.488573649,
+          "confidence": 0.0002
+        },
+        {
+          "char": "u",
+          "start_ms": 4826437.488563241,
+          "end_ms": 4826437.488563241,
+          "confidence": 0.0003
+        },
+        {
+          "char": "h",
+          "start_ms": 4826457.488552835,
+          "end_ms": 4826457.488552835,
+          "confidence": 0.0015
+        },
+        {
+          "char": "u",
+          "start_ms": 4826477.488542428,
+          "end_ms": 4826477.488542428,
+          "confidence": 0.0002
+        },
+        {
+          "char": "m",
+          "start_ms": 4826877.488334288,
+          "end_ms": 4826877.488334288,
+          "confidence": 0.991
+        },
+        {
+          "char": "ā",
+          "start_ms": 4826977.488282253,
+          "end_ms": 4826977.488282253,
+          "confidence": 0.9952
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "أَكۡبَرُ",
+      "tr": "akbaru",
+      "tokens": [
+        {
+          "char": "a",
+          "start_ms": 4827777.487865973,
+          "end_ms": 4827777.487865973,
+          "confidence": 0.0002
+        },
+        {
+          "char": "k",
+          "start_ms": 4827857.487824345,
+          "end_ms": 4827857.487824345,
+          "confidence": 0.0001
+        },
+        {
+          "char": "b",
+          "start_ms": 4827877.487813938,
+          "end_ms": 4827877.487813938,
+          "confidence": 0.6924
+        },
+        {
+          "char": "a",
+          "start_ms": 4827957.48777231,
+          "end_ms": 4827977.487761904,
+          "confidence": 0.9782
+        },
+        {
+          "char": "r",
+          "start_ms": 4828057.487720275,
+          "end_ms": 4828057.487720275,
+          "confidence": 0.9933
+        },
+        {
+          "char": "u",
+          "start_ms": 4828137.487678647,
+          "end_ms": 4828157.48766824,
+          "confidence": 0.9394
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "مِن",
+      "tr": "min",
+      "tokens": [
+        {
+          "char": "m",
+          "start_ms": 4828237.487626612,
+          "end_ms": 4828237.487626612,
+          "confidence": 0.956
+        },
+        {
+          "char": "i",
+          "start_ms": 4828317.487584984,
+          "end_ms": 4828337.487574577,
+          "confidence": 0.7345
+        },
+        {
+          "char": "n",
+          "start_ms": 4828397.487543357,
+          "end_ms": 4828397.487543357,
+          "confidence": 0.3231
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "نَّفۡعِهِمَاۗ",
+      "tr": "nafʿihimā",
+      "tokens": [
+        {
+          "char": "n",
+          "start_ms": 4828877.487293589,
+          "end_ms": 4828877.487293589,
+          "confidence": 0.9996
+        },
+        {
+          "char": "a",
+          "start_ms": 4828957.487251961,
+          "end_ms": 4828957.487251961,
+          "confidence": 0.9987
+        },
+        {
+          "char": "f",
+          "start_ms": 4829097.487179112,
+          "end_ms": 4829097.487179112,
+          "confidence": 0.2115
+        },
+        {
+          "char": "ʿ",
+          "start_ms": 4829257.487095855,
+          "end_ms": 4829257.487095855,
+          "confidence": 0.0206
+        },
+        {
+          "char": "i",
+          "start_ms": 4829317.487064634,
+          "end_ms": 4829317.487064634,
+          "confidence": 0.0001
+        },
+        {
+          "char": "h",
+          "start_ms": 4829337.487054228,
+          "end_ms": 4829337.487054228,
+          "confidence": 0.0002
+        },
+        {
+          "char": "i",
+          "start_ms": 4829357.48704382,
+          "end_ms": 4829357.48704382,
+          "confidence": 0.006
+        },
+        {
+          "char": "m",
+          "start_ms": 4829617.48690853,
+          "end_ms": 4829617.48690853,
+          "confidence": 0.9944
+        },
+        {
+          "char": "ā",
+          "start_ms": 4829717.486856495,
+          "end_ms": 4829717.486856495,
+          "confidence": 0.9986
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "وَيَسۡـَٔلُونَكَ",
+      "tr": "wayasalūnaka",
+      "tokens": [
+        {
+          "char": "w",
+          "start_ms": 4830697.486346552,
+          "end_ms": 4830717.486336145,
+          "confidence": 0.9939
+        },
+        {
+          "char": "a",
+          "start_ms": 4830777.486304924,
+          "end_ms": 4830797.486294517,
+          "confidence": 0.7866
+        },
+        {
+          "char": "y",
+          "start_ms": 4830877.486252889,
+          "end_ms": 4830897.486242482,
+          "confidence": 0.9037
+        },
+        {
+          "char": "a",
+          "start_ms": 4830937.486221668,
+          "end_ms": 4830957.486211261,
+          "confidence": 0.9231
+        },
+        {
+          "char": "s",
+          "start_ms": 4831137.486117598,
+          "end_ms": 4831137.486117598,
+          "confidence": 0.9913
+        },
+        {
+          "char": "a",
+          "start_ms": 4831257.486055156,
+          "end_ms": 4831257.486055156,
+          "confidence": 0.6614
+        },
+        {
+          "char": "l",
+          "start_ms": 4831397.485982307,
+          "end_ms": 4831417.485971901,
+          "confidence": 0.8002
+        },
+        {
+          "char": "ū",
+          "start_ms": 4831497.485930272,
+          "end_ms": 4831517.485919865,
+          "confidence": 0.7232
+        },
+        {
+          "char": "n",
+          "start_ms": 4831717.485815795,
+          "end_ms": 4831737.485805389,
+          "confidence": 0.7117
+        },
+        {
+          "char": "a",
+          "start_ms": 4831797.485774167,
+          "end_ms": 4831817.48576376,
+          "confidence": 0.7835
+        },
+        {
+          "char": "k",
+          "start_ms": 4831937.485701318,
+          "end_ms": 4831937.485701318,
+          "confidence": 0.9983
+        },
+        {
+          "char": "a",
+          "start_ms": 4832017.485659691,
+          "end_ms": 4832017.485659691,
+          "confidence": 0.8208
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "مَاذَا",
+      "tr": "mādhā",
+      "tokens": [
+        {
+          "char": "m",
+          "start_ms": 4832117.485607656,
+          "end_ms": 4832117.485607656,
+          "confidence": 0.9758
+        },
+        {
+          "char": "ā",
+          "start_ms": 4832197.485566027,
+          "end_ms": 4832197.485566027,
+          "confidence": 0.995
+        },
+        {
+          "char": "d",
+          "start_ms": 4832497.485409923,
+          "end_ms": 4832497.485409923,
+          "confidence": 0.2641
+        },
+        {
+          "char": "h",
+          "start_ms": 4832517.485399515,
+          "end_ms": 4832517.485399515,
+          "confidence": 0.0004
+        },
+        {
+          "char": "ā",
+          "start_ms": 4832577.485368295,
+          "end_ms": 4832577.485368295,
+          "confidence": 0.9943
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "يُنفِقُونَۖ",
+      "tr": "yunfiqūna",
+      "tokens": [
+        {
+          "char": "y",
+          "start_ms": 4832837.485233003,
+          "end_ms": 4832837.485233003,
+          "confidence": 0.96
+        },
+        {
+          "char": "u",
+          "start_ms": 4832957.485170562,
+          "end_ms": 4832957.485170562,
+          "confidence": 0.0042
+        },
+        {
+          "char": "n",
+          "start_ms": 4833017.48513934,
+          "end_ms": 4833017.48513934,
+          "confidence": 0.0001
+        },
+        {
+          "char": "f",
+          "start_ms": 4833617.484827131,
+          "end_ms": 4833637.4848167235,
+          "confidence": 0.9395
+        },
+        {
+          "char": "i",
+          "start_ms": 4833717.484775096,
+          "end_ms": 4833737.484764689,
+          "confidence": 0.9953
+        },
+        {
+          "char": "q",
+          "start_ms": 4833837.484712654,
+          "end_ms": 4833837.484712654,
+          "confidence": 0.0208
+        },
+        {
+          "char": "ū",
+          "start_ms": 4833957.484650212,
+          "end_ms": 4833957.484650212,
+          "confidence": 0.9981
+        },
+        {
+          "char": "n",
+          "start_ms": 4834177.484535735,
+          "end_ms": 4834177.484535735,
+          "confidence": 0.9989
+        },
+        {
+          "char": "a",
+          "start_ms": 4834257.484494107,
+          "end_ms": 4834257.484494107,
+          "confidence": 0.9907
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "قُلِ",
+      "tr": "quli",
+      "tokens": [
+        {
+          "char": "q",
+          "start_ms": 4834397.484421258,
+          "end_ms": 4834397.484421258,
+          "confidence": 0.0158
+        },
+        {
+          "char": "u",
+          "start_ms": 4834497.484369223,
+          "end_ms": 4834497.484369223,
+          "confidence": 0.8768
+        },
+        {
+          "char": "l",
+          "start_ms": 4834577.484327595,
+          "end_ms": 4834577.484327595,
+          "confidence": 0.9078
+        },
+        {
+          "char": "i",
+          "start_ms": 4834637.484296374,
+          "end_ms": 4834637.484296374,
+          "confidence": 0.83
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "ٱلۡعَفۡوَۗ",
+      "tr": "l-ʿafwa",
+      "tokens": [
+        {
+          "char": "l",
+          "start_ms": 4834897.484161084,
+          "end_ms": 4834897.484161084,
+          "confidence": 0.0003
+        },
+        {
+          "char": "-",
+          "start_ms": 4834917.484150676,
+          "end_ms": 4834917.484150676,
+          "confidence": 0.0258
+        },
+        {
+          "char": "ʿ",
+          "start_ms": 4834937.484140269,
+          "end_ms": 4834937.484140269,
+          "confidence": 0.0052
+        },
+        {
+          "char": "a",
+          "start_ms": 4834957.484129862,
+          "end_ms": 4834957.484129862,
+          "confidence": 0.0333
+        },
+        {
+          "char": "f",
+          "start_ms": 4835157.484025792,
+          "end_ms": 4835157.484025792,
+          "confidence": 0.011
+        },
+        {
+          "char": "w",
+          "start_ms": 4835297.483952943,
+          "end_ms": 4835297.483952943,
+          "confidence": 0.0001
+        },
+        {
+          "char": "a",
+          "start_ms": 4835357.4839217225,
+          "end_ms": 4835357.4839217225,
+          "confidence": 0.8221
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "كَذَٰلِكَ",
+      "tr": "kadhālika",
+      "tokens": [
+        {
+          "char": "k",
+          "start_ms": 4835497.4838488735,
+          "end_ms": 4835497.4838488735,
+          "confidence": 0.9995
+        },
+        {
+          "char": "a",
+          "start_ms": 4835577.483807245,
+          "end_ms": 4835597.483796839,
+          "confidence": 0.7174
+        },
+        {
+          "char": "d",
+          "start_ms": 4835697.483744804,
+          "end_ms": 4835697.483744804,
+          "confidence": 0.9338
+        },
+        {
+          "char": "h",
+          "start_ms": 4835717.483734396,
+          "end_ms": 4835717.483734396,
+          "confidence": 0.0033
+        },
+        {
+          "char": "ā",
+          "start_ms": 4835797.483692768,
+          "end_ms": 4835797.483692768,
+          "confidence": 0.9868
+        },
+        {
+          "char": "l",
+          "start_ms": 4835997.483588698,
+          "end_ms": 4835997.483588698,
+          "confidence": 0.9709
+        },
+        {
+          "char": "i",
+          "start_ms": 4836077.48354707,
+          "end_ms": 4836077.48354707,
+          "confidence": 0.151
+        },
+        {
+          "char": "k",
+          "start_ms": 4836197.483484629,
+          "end_ms": 4836197.483484629,
+          "confidence": 0.9904
+        },
+        {
+          "char": "a",
+          "start_ms": 4836277.483443,
+          "end_ms": 4836277.483443,
+          "confidence": 0.9983
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "يُبَيِّنُ",
+      "tr": "yubayyinu",
+      "tokens": [
+        {
+          "char": "y",
+          "start_ms": 4836377.4833909655,
+          "end_ms": 4836377.4833909655,
+          "confidence": 0.4507
+        },
+        {
+          "char": "u",
+          "start_ms": 4836437.483359745,
+          "end_ms": 4836457.483349337,
+          "confidence": 0.7771
+        },
+        {
+          "char": "b",
+          "start_ms": 4836557.483297302,
+          "end_ms": 4836557.483297302,
+          "confidence": 0.5954
+        },
+        {
+          "char": "a",
+          "start_ms": 4836637.483255675,
+          "end_ms": 4836637.483255675,
+          "confidence": 0.9888
+        },
+        {
+          "char": "y",
+          "start_ms": 4836657.4832452675,
+          "end_ms": 4836657.4832452675,
+          "confidence": 0.0
+        },
+        {
+          "char": "y",
+          "start_ms": 4836737.483203639,
+          "end_ms": 4836737.483203639,
+          "confidence": 0.0235
+        },
+        {
+          "char": "i",
+          "start_ms": 4836757.483193233,
+          "end_ms": 4836757.483193233,
+          "confidence": 0.0002
+        },
+        {
+          "char": "n",
+          "start_ms": 4837057.483037128,
+          "end_ms": 4837057.483037128,
+          "confidence": 0.9727
+        },
+        {
+          "char": "u",
+          "start_ms": 4837157.482985092,
+          "end_ms": 4837157.482985092,
+          "confidence": 0.9453
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "ٱللَّهُ",
+      "tr": "l-lahu",
+      "tokens": [
+        {
+          "char": "l",
+          "start_ms": 4837397.4828602085,
+          "end_ms": 4837397.4828602085,
+          "confidence": 0.0005
+        },
+        {
+          "char": "-",
+          "start_ms": 4837417.482849802,
+          "end_ms": 4837417.482849802,
+          "confidence": 0.0
+        },
+        {
+          "char": "l",
+          "start_ms": 4837477.482818581,
+          "end_ms": 4837477.482818581,
+          "confidence": 0.0001
+        },
+        {
+          "char": "a",
+          "start_ms": 4837497.482808174,
+          "end_ms": 4837497.482808174,
+          "confidence": 0.0077
+        },
+        {
+          "char": "h",
+          "start_ms": 4837777.482662476,
+          "end_ms": 4837777.482662476,
+          "confidence": 0.0018
+        },
+        {
+          "char": "u",
+          "start_ms": 4837797.482652069,
+          "end_ms": 4837797.482652069,
+          "confidence": 0.0
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "لَكُمُ",
+      "tr": "lakumu",
+      "tokens": [
+        {
+          "char": "l",
+          "start_ms": 4837957.482568813,
+          "end_ms": 4837957.482568813,
+          "confidence": 0.0089
+        },
+        {
+          "char": "a",
+          "start_ms": 4838037.482527185,
+          "end_ms": 4838037.482527185,
+          "confidence": 0.9953
+        },
+        {
+          "char": "k",
+          "start_ms": 4838157.482464743,
+          "end_ms": 4838157.482464743,
+          "confidence": 0.015
+        },
+        {
+          "char": "u",
+          "start_ms": 4838177.482454336,
+          "end_ms": 4838177.482454336,
+          "confidence": 0.0002
+        },
+        {
+          "char": "m",
+          "start_ms": 4838197.482443929,
+          "end_ms": 4838197.482443929,
+          "confidence": 0.0
+        },
+        {
+          "char": "u",
+          "start_ms": 4838257.482412708,
+          "end_ms": 4838257.482412708,
+          "confidence": 0.0004
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "ٱلۡأٓيَٰتِ",
+      "tr": "l-āyāti",
+      "tokens": [
+        {
+          "char": "l",
+          "start_ms": 4838517.482277418,
+          "end_ms": 4838517.482277418,
+          "confidence": 0.0
+        },
+        {
+          "char": "-",
+          "start_ms": 4838737.48216294,
+          "end_ms": 4838737.48216294,
+          "confidence": 0.0
+        },
+        {
+          "char": "ā",
+          "start_ms": 4838757.482152533,
+          "end_ms": 4838757.482152533,
+          "confidence": 0.0058
+        },
+        {
+          "char": "y",
+          "start_ms": 4839037.482006835,
+          "end_ms": 4839037.482006835,
+          "confidence": 0.988
+        },
+        {
+          "char": "ā",
+          "start_ms": 4839117.4819652075,
+          "end_ms": 4839117.4819652075,
+          "confidence": 0.998
+        },
+        {
+          "char": "t",
+          "start_ms": 4839397.4818195095,
+          "end_ms": 4839397.4818195095,
+          "confidence": 0.9835
+        },
+        {
+          "char": "i",
+          "start_ms": 4839477.481777881,
+          "end_ms": 4839477.481777881,
+          "confidence": 0.2482
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "لَعَلَّكُمۡ",
+      "tr": "laʿallakum",
+      "tokens": [
+        {
+          "char": "l",
+          "start_ms": 4839577.481725846,
+          "end_ms": 4839577.481725846,
+          "confidence": 0.9988
+        },
+        {
+          "char": "a",
+          "start_ms": 4839677.481673812,
+          "end_ms": 4839677.481673812,
+          "confidence": 0.0488
+        },
+        {
+          "char": "ʿ",
+          "start_ms": 4839777.481621777,
+          "end_ms": 4839777.481621777,
+          "confidence": 0.0201
+        },
+        {
+          "char": "a",
+          "start_ms": 4839817.481600963,
+          "end_ms": 4839817.481600963,
+          "confidence": 0.0154
+        },
+        {
+          "char": "l",
+          "start_ms": 4839897.481559334,
+          "end_ms": 4839917.481548928,
+          "confidence": 0.9767
+        },
+        {
+          "char": "l",
+          "start_ms": 4840077.481465671,
+          "end_ms": 4840077.481465671,
+          "confidence": 0.9356
+        },
+        {
+          "char": "a",
+          "start_ms": 4840157.481424044,
+          "end_ms": 4840157.481424044,
+          "confidence": 0.9929
+        },
+        {
+          "char": "k",
+          "start_ms": 4840317.481340787,
+          "end_ms": 4840317.481340787,
+          "confidence": 0.0591
+        },
+        {
+          "char": "u",
+          "start_ms": 4840397.48129916,
+          "end_ms": 4840397.48129916,
+          "confidence": 0.0003
+        },
+        {
+          "char": "m",
+          "start_ms": 4840417.4812887525,
+          "end_ms": 4840417.4812887525,
+          "confidence": 0.0001
+        }
+      ]
+    },
+    {
+      "ayah": 219,
+      "text": "تَتَفَكَّرُونَ",
+      "tr": "tatafakkarūna",
+      "tokens": [
+        {
+          "char": "t",
+          "start_ms": 4840677.481153462,
+          "end_ms": 4840677.481153462,
+          "confidence": 0.9994
+        },
+        {
+          "char": "a",
+          "start_ms": 4840757.481111834,
+          "end_ms": 4840757.481111834,
+          "confidence": 0.9852
+        },
+        {
+          "char": "t",
+          "start_ms": 4840857.481059799,
+          "end_ms": 4840857.481059799,
+          "confidence": 0.994
+        },
+        {
+          "char": "a",
+          "start_ms": 4840937.481018171,
+          "end_ms": 4840937.481018171,
+          "confidence": 0.9431
+        },
+        {
+          "char": "f",
+          "start_ms": 4841077.480945322,
+          "end_ms": 4841077.480945322,
+          "confidence": 0.4846
+        },
+        {
+          "char": "a",
+          "start_ms": 4841137.480914101,
+          "end_ms": 4841137.480914101,
+          "confidence": 0.7829
+        },
+        {
+          "char": "k",
+          "start_ms": 4841157.4809036935,
+          "end_ms": 4841157.4809036935,
+          "confidence": 0.0
+        },
+        {
+          "char": "k",
+          "start_ms": 4841377.480789217,
+          "end_ms": 4841377.480789217,
+          "confidence": 0.9995
+        },
+        {
+          "char": "a",
+          "start_ms": 4841477.480737182,
+          "end_ms": 4841497.480726775,
+          "confidence": 0.7873
+        },
+        {
+          "char": "r",
+          "start_ms": 4841617.480664333,
+          "end_ms": 4841617.480664333,
+          "confidence": 0.9173
+        },
+        {
+          "char": "ū",
+          "start_ms": 4841697.480622705,
+          "end_ms": 4841697.480622705,
+          "confidence": 0.0334
+        },
+        {
+          "char": "n",
+          "start_ms": 4842497.480206425,
+          "end_ms": 4842517.480196018,
+          "confidence": 0.9818
+        },
+        {
+          "char": "a",
+          "start_ms": 4843577.479644448,
+          "end_ms": 4843577.479644448,
+          "confidence": 0.7266
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "فِي",
+      "tr": "fī",
+      "tokens": [
+        {
+          "char": "f",
+          "start_ms": 4843677.479592413,
+          "end_ms": 4843677.479592413,
+          "confidence": 0.0002
+        },
+        {
+          "char": "ī",
+          "start_ms": 4843697.479582005,
+          "end_ms": 4843697.479582005,
+          "confidence": 0.0
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "ٱلدُّنۡيَا",
+      "tr": "l-dun'yā",
+      "tokens": [
+        {
+          "char": "l",
+          "start_ms": 4843817.479519564,
+          "end_ms": 4843837.479509156,
+          "confidence": 0.9719
+        },
+        {
+          "char": "-",
+          "start_ms": 4843857.47949875,
+          "end_ms": 4843857.47949875,
+          "confidence": 0.1674
+        },
+        {
+          "char": "d",
+          "start_ms": 4844237.479301017,
+          "end_ms": 4844237.479301017,
+          "confidence": 0.0004
+        },
+        {
+          "char": "u",
+          "start_ms": 4844337.479248982,
+          "end_ms": 4844337.479248982,
+          "confidence": 0.001
+        },
+        {
+          "char": "n",
+          "start_ms": 4844577.479124098,
+          "end_ms": 4844577.479124098,
+          "confidence": 0.0002
+        },
+        {
+          "char": "'",
+          "start_ms": 4844677.479072062,
+          "end_ms": 4844677.479072062,
+          "confidence": 0.0
+        },
+        {
+          "char": "y",
+          "start_ms": 4844797.479009621,
+          "end_ms": 4844797.479009621,
+          "confidence": 0.0
+        },
+        {
+          "char": "ā",
+          "start_ms": 4844857.4789784,
+          "end_ms": 4844857.4789784,
+          "confidence": 0.0003
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "وَٱلۡأٓخِرَةِۗ",
+      "tr": "wal-ākhirati",
+      "tokens": [
+        {
+          "char": "w",
+          "start_ms": 4845297.478749446,
+          "end_ms": 4845297.478749446,
+          "confidence": 0.0
+        },
+        {
+          "char": "a",
+          "start_ms": 4845397.478697411,
+          "end_ms": 4845417.478687004,
+          "confidence": 0.8494
+        },
+        {
+          "char": "l",
+          "start_ms": 4845837.478468457,
+          "end_ms": 4845837.478468457,
+          "confidence": 0.0011
+        },
+        {
+          "char": "-",
+          "start_ms": 4845857.47845805,
+          "end_ms": 4845857.47845805,
+          "confidence": 0.0002
+        },
+        {
+          "char": "ā",
+          "start_ms": 4845937.478416422,
+          "end_ms": 4845937.478416422,
+          "confidence": 0.0
+        },
+        {
+          "char": "k",
+          "start_ms": 4846057.47835398,
+          "end_ms": 4846057.47835398,
+          "confidence": 0.0006
+        },
+        {
+          "char": "h",
+          "start_ms": 4846077.478343573,
+          "end_ms": 4846077.478343573,
+          "confidence": 0.0004
+        },
+        {
+          "char": "i",
+          "start_ms": 4846157.478301945,
+          "end_ms": 4846177.478291539,
+          "confidence": 0.8304
+        },
+        {
+          "char": "r",
+          "start_ms": 4846377.478187468,
+          "end_ms": 4846377.478187468,
+          "confidence": 0.0001
+        },
+        {
+          "char": "a",
+          "start_ms": 4846477.478135433,
+          "end_ms": 4846477.478135433,
+          "confidence": 0.0001
+        },
+        {
+          "char": "t",
+          "start_ms": 4847817.477438165,
+          "end_ms": 4847817.477438165,
+          "confidence": 0.0004
+        },
+        {
+          "char": "i",
+          "start_ms": 4847917.47738613,
+          "end_ms": 4847937.4773757225,
+          "confidence": 0.9856
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "وَيَسۡـَٔلُونَكَ",
+      "tr": "wayasalūnaka",
+      "tokens": [
+        {
+          "char": "w",
+          "start_ms": 4848917.47686578,
+          "end_ms": 4848917.47686578,
+          "confidence": 0.998
+        },
+        {
+          "char": "a",
+          "start_ms": 4848997.476824152,
+          "end_ms": 4849017.476813745,
+          "confidence": 0.9904
+        },
+        {
+          "char": "y",
+          "start_ms": 4849097.4767721165,
+          "end_ms": 4849097.4767721165,
+          "confidence": 0.9992
+        },
+        {
+          "char": "a",
+          "start_ms": 4849157.476740896,
+          "end_ms": 4849157.476740896,
+          "confidence": 0.9995
+        },
+        {
+          "char": "s",
+          "start_ms": 4849357.476636826,
+          "end_ms": 4849357.476636826,
+          "confidence": 0.9884
+        },
+        {
+          "char": "a",
+          "start_ms": 4849497.476563977,
+          "end_ms": 4849497.476563977,
+          "confidence": 0.6335
+        },
+        {
+          "char": "l",
+          "start_ms": 4849637.476491128,
+          "end_ms": 4849637.476491128,
+          "confidence": 0.9969
+        },
+        {
+          "char": "ū",
+          "start_ms": 4849737.476439093,
+          "end_ms": 4849737.476439093,
+          "confidence": 0.9974
+        },
+        {
+          "char": "n",
+          "start_ms": 4849957.476324616,
+          "end_ms": 4849977.476314209,
+          "confidence": 0.9637
+        },
+        {
+          "char": "a",
+          "start_ms": 4850037.476282988,
+          "end_ms": 4850037.476282988,
+          "confidence": 0.9815
+        },
+        {
+          "char": "k",
+          "start_ms": 4850177.47621014,
+          "end_ms": 4850177.47621014,
+          "confidence": 0.1498
+        },
+        {
+          "char": "a",
+          "start_ms": 4850257.476168511,
+          "end_ms": 4850257.476168511,
+          "confidence": 0.1804
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "عَنِ",
+      "tr": "ʿani",
+      "tokens": [
+        {
+          "char": "ʿ",
+          "start_ms": 4850377.476106069,
+          "end_ms": 4850377.476106069,
+          "confidence": 0.0119
+        },
+        {
+          "char": "a",
+          "start_ms": 4850397.476095662,
+          "end_ms": 4850397.476095662,
+          "confidence": 0.0023
+        },
+        {
+          "char": "n",
+          "start_ms": 4850417.476085255,
+          "end_ms": 4850417.476085255,
+          "confidence": 0.0002
+        },
+        {
+          "char": "i",
+          "start_ms": 4850437.476074848,
+          "end_ms": 4850437.476074848,
+          "confidence": 0.0
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "ٱلۡيَتَٰمَىٰۖ",
+      "tr": "l-yatāmā",
+      "tokens": [
+        {
+          "char": "l",
+          "start_ms": 4850537.4760228135,
+          "end_ms": 4850537.4760228135,
+          "confidence": 0.0079
+        },
+        {
+          "char": "-",
+          "start_ms": 4850557.476012406,
+          "end_ms": 4850557.476012406,
+          "confidence": 0.0002
+        },
+        {
+          "char": "y",
+          "start_ms": 4850817.4758771155,
+          "end_ms": 4850817.4758771155,
+          "confidence": 0.993
+        },
+        {
+          "char": "a",
+          "start_ms": 4850897.475835487,
+          "end_ms": 4850917.475825081,
+          "confidence": 0.6934
+        },
+        {
+          "char": "t",
+          "start_ms": 4851057.475752232,
+          "end_ms": 4851057.475752232,
+          "confidence": 0.9973
+        },
+        {
+          "char": "ā",
+          "start_ms": 4851157.475700197,
+          "end_ms": 4851157.475700197,
+          "confidence": 0.9991
+        },
+        {
+          "char": "m",
+          "start_ms": 4851377.47558572,
+          "end_ms": 4851377.47558572,
+          "confidence": 0.7044
+        },
+        {
+          "char": "ā",
+          "start_ms": 4851477.475533685,
+          "end_ms": 4851477.475533685,
+          "confidence": 0.9967
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "قُلۡ",
+      "tr": "qul",
+      "tokens": [
+        {
+          "char": "q",
+          "start_ms": 4851737.475398393,
+          "end_ms": 4851737.475398393,
+          "confidence": 0.0109
+        },
+        {
+          "char": "u",
+          "start_ms": 4851837.4753463585,
+          "end_ms": 4851837.4753463585,
+          "confidence": 0.8513
+        },
+        {
+          "char": "l",
+          "start_ms": 4851937.475294324,
+          "end_ms": 4851937.475294324,
+          "confidence": 0.0124
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "إِصۡلَاحٞ",
+      "tr": "iṣ'lāḥun",
+      "tokens": [
+        {
+          "char": "i",
+          "start_ms": 4852117.4752006605,
+          "end_ms": 4852117.4752006605,
+          "confidence": 0.6342
+        },
+        {
+          "char": "ṣ",
+          "start_ms": 4852297.475106997,
+          "end_ms": 4852297.475106997,
+          "confidence": 0.0015
+        },
+        {
+          "char": "'",
+          "start_ms": 4852337.475086184,
+          "end_ms": 4852337.475086184,
+          "confidence": 0.8329
+        },
+        {
+          "char": "l",
+          "start_ms": 4852437.475034148,
+          "end_ms": 4852437.475034148,
+          "confidence": 0.0668
+        },
+        {
+          "char": "ā",
+          "start_ms": 4852537.474982114,
+          "end_ms": 4852537.474982114,
+          "confidence": 0.9984
+        },
+        {
+          "char": "ḥ",
+          "start_ms": 4852797.474846823,
+          "end_ms": 4852797.474846823,
+          "confidence": 0.0475
+        },
+        {
+          "char": "u",
+          "start_ms": 4852897.474794788,
+          "end_ms": 4852897.474794788,
+          "confidence": 0.9775
+        },
+        {
+          "char": "n",
+          "start_ms": 4852957.474763567,
+          "end_ms": 4852957.474763567,
+          "confidence": 0.0
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "لَّهُمۡ",
+      "tr": "lahum",
+      "tokens": [
+        {
+          "char": "l",
+          "start_ms": 4853117.474680311,
+          "end_ms": 4853117.474680311,
+          "confidence": 0.9921
+        },
+        {
+          "char": "a",
+          "start_ms": 4853197.474638683,
+          "end_ms": 4853197.474638683,
+          "confidence": 0.9676
+        },
+        {
+          "char": "h",
+          "start_ms": 4853217.474628276,
+          "end_ms": 4853217.474628276,
+          "confidence": 0.0
+        },
+        {
+          "char": "u",
+          "start_ms": 4853297.474586648,
+          "end_ms": 4853297.474586648,
+          "confidence": 0.0
+        },
+        {
+          "char": "m",
+          "start_ms": 4853317.474576241,
+          "end_ms": 4853317.474576241,
+          "confidence": 0.9372
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "خَيۡرٞۖ",
+      "tr": "khayrun",
+      "tokens": [
+        {
+          "char": "k",
+          "start_ms": 4853677.474388915,
+          "end_ms": 4853677.474388915,
+          "confidence": 0.3778
+        },
+        {
+          "char": "h",
+          "start_ms": 4853697.4743785085,
+          "end_ms": 4853697.4743785085,
+          "confidence": 0.9554
+        },
+        {
+          "char": "a",
+          "start_ms": 4853777.47433688,
+          "end_ms": 4853797.474326474,
+          "confidence": 0.9069
+        },
+        {
+          "char": "y",
+          "start_ms": 4853937.474253625,
+          "end_ms": 4853937.474253625,
+          "confidence": 0.5335
+        },
+        {
+          "char": "r",
+          "start_ms": 4854657.473878972,
+          "end_ms": 4854657.473878972,
+          "confidence": 0.678
+        },
+        {
+          "char": "u",
+          "start_ms": 4854697.473858158,
+          "end_ms": 4854697.473858158,
+          "confidence": 0.0868
+        },
+        {
+          "char": "n",
+          "start_ms": 4854717.4738477515,
+          "end_ms": 4854717.4738477515,
+          "confidence": 0.0001
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "وَإِن",
+      "tr": "wa-in",
+      "tokens": [
+        {
+          "char": "w",
+          "start_ms": 4855237.47357717,
+          "end_ms": 4855237.47357717,
+          "confidence": 0.9993
+        },
+        {
+          "char": "a",
+          "start_ms": 4855317.473535541,
+          "end_ms": 4855337.473525135,
+          "confidence": 0.9969
+        },
+        {
+          "char": "-",
+          "start_ms": 4855417.473483507,
+          "end_ms": 4855417.473483507,
+          "confidence": 0.0023
+        },
+        {
+          "char": "i",
+          "start_ms": 4855537.473421065,
+          "end_ms": 4855537.473421065,
+          "confidence": 0.993
+        },
+        {
+          "char": "n",
+          "start_ms": 4855597.4733898435,
+          "end_ms": 4855597.4733898435,
+          "confidence": 0.9809
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "تُخَالِطُوهُمۡ",
+      "tr": "tukhāliṭūhum",
+      "tokens": [
+        {
+          "char": "t",
+          "start_ms": 4856157.473098448,
+          "end_ms": 4856157.473098448,
+          "confidence": 0.223
+        },
+        {
+          "char": "u",
+          "start_ms": 4856237.47305682,
+          "end_ms": 4856237.47305682,
+          "confidence": 0.9257
+        },
+        {
+          "char": "k",
+          "start_ms": 4856357.472994378,
+          "end_ms": 4856357.472994378,
+          "confidence": 0.3081
+        },
+        {
+          "char": "h",
+          "start_ms": 4856377.472983971,
+          "end_ms": 4856377.472983971,
+          "confidence": 0.4158
+        },
+        {
+          "char": "ā",
+          "start_ms": 4856477.472931936,
+          "end_ms": 4856477.472931936,
+          "confidence": 0.9751
+        },
+        {
+          "char": "l",
+          "start_ms": 4856677.472827866,
+          "end_ms": 4856677.472827866,
+          "confidence": 0.9653
+        },
+        {
+          "char": "i",
+          "start_ms": 4856757.472786238,
+          "end_ms": 4856757.472786238,
+          "confidence": 0.9985
+        },
+        {
+          "char": "ṭ",
+          "start_ms": 4856897.472713389,
+          "end_ms": 4856897.472713389,
+          "confidence": 0.001
+        },
+        {
+          "char": "ū",
+          "start_ms": 4856997.472661354,
+          "end_ms": 4856997.472661354,
+          "confidence": 0.9976
+        },
+        {
+          "char": "h",
+          "start_ms": 4857017.472650947,
+          "end_ms": 4857017.472650947,
+          "confidence": 0.0
+        },
+        {
+          "char": "u",
+          "start_ms": 4857397.472453214,
+          "end_ms": 4857397.472453214,
+          "confidence": 0.0
+        },
+        {
+          "char": "m",
+          "start_ms": 4857437.4724324,
+          "end_ms": 4857437.4724324,
+          "confidence": 0.0
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "فَإِخۡوَٰنُكُمۡۚ",
+      "tr": "fa-ikh'wānukum",
+      "tokens": [
+        {
+          "char": "f",
+          "start_ms": 4857597.4723491445,
+          "end_ms": 4857597.4723491445,
+          "confidence": 0.9962
+        },
+        {
+          "char": "a",
+          "start_ms": 4857677.472307516,
+          "end_ms": 4857697.47229711,
+          "confidence": 0.9159
+        },
+        {
+          "char": "-",
+          "start_ms": 4857797.472245074,
+          "end_ms": 4857797.472245074,
+          "confidence": 0.0005
+        },
+        {
+          "char": "i",
+          "start_ms": 4857817.472234667,
+          "end_ms": 4857817.472234667,
+          "confidence": 0.9851
+        },
+        {
+          "char": "k",
+          "start_ms": 4857957.472161818,
+          "end_ms": 4857957.472161818,
+          "confidence": 0.184
+        },
+        {
+          "char": "h",
+          "start_ms": 4857977.472151412,
+          "end_ms": 4857977.472151412,
+          "confidence": 0.0661
+        },
+        {
+          "char": "'",
+          "start_ms": 4858017.472130598,
+          "end_ms": 4858017.472130598,
+          "confidence": 0.0003
+        },
+        {
+          "char": "w",
+          "start_ms": 4858117.472078563,
+          "end_ms": 4858117.472078563,
+          "confidence": 0.5635
+        },
+        {
+          "char": "ā",
+          "start_ms": 4858197.472036934,
+          "end_ms": 4858217.472026527,
+          "confidence": 0.8626
+        },
+        {
+          "char": "n",
+          "start_ms": 4858457.471901643,
+          "end_ms": 4858457.471901643,
+          "confidence": 0.996
+        },
+        {
+          "char": "u",
+          "start_ms": 4858537.471860016,
+          "end_ms": 4858557.471849608,
+          "confidence": 0.9658
+        },
+        {
+          "char": "k",
+          "start_ms": 4858677.471787167,
+          "end_ms": 4858677.471787167,
+          "confidence": 0.9035
+        },
+        {
+          "char": "u",
+          "start_ms": 4858797.471724724,
+          "end_ms": 4858797.471724724,
+          "confidence": 0.9958
+        },
+        {
+          "char": "m",
+          "start_ms": 4858817.471714318,
+          "end_ms": 4858817.471714318,
+          "confidence": 0.0
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "وَٱللَّهُ",
+      "tr": "wal-lahu",
+      "tokens": [
+        {
+          "char": "w",
+          "start_ms": 4859477.471370887,
+          "end_ms": 4859477.471370887,
+          "confidence": 0.9967
+        },
+        {
+          "char": "a",
+          "start_ms": 4859537.471339665,
+          "end_ms": 4859557.471329259,
+          "confidence": 0.7597
+        },
+        {
+          "char": "l",
+          "start_ms": 4859577.471318852,
+          "end_ms": 4859577.471318852,
+          "confidence": 0.0
+        },
+        {
+          "char": "-",
+          "start_ms": 4859657.471277224,
+          "end_ms": 4859657.471277224,
+          "confidence": 0.0004
+        },
+        {
+          "char": "l",
+          "start_ms": 4859777.4712147815,
+          "end_ms": 4859777.4712147815,
+          "confidence": 0.001
+        },
+        {
+          "char": "a",
+          "start_ms": 4859897.47115234,
+          "end_ms": 4859897.47115234,
+          "confidence": 0.0085
+        },
+        {
+          "char": "h",
+          "start_ms": 4860117.471037863,
+          "end_ms": 4860117.471037863,
+          "confidence": 0.0006
+        },
+        {
+          "char": "u",
+          "start_ms": 4860137.471027456,
+          "end_ms": 4860137.471027456,
+          "confidence": 0.0001
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "يَعۡلَمُ",
+      "tr": "yaʿlamu",
+      "tokens": [
+        {
+          "char": "y",
+          "start_ms": 4860337.470923386,
+          "end_ms": 4860337.470923386,
+          "confidence": 0.9484
+        },
+        {
+          "char": "a",
+          "start_ms": 4860417.470881758,
+          "end_ms": 4860437.470871351,
+          "confidence": 0.9287
+        },
+        {
+          "char": "ʿ",
+          "start_ms": 4860517.470829723,
+          "end_ms": 4860517.470829723,
+          "confidence": 0.709
+        },
+        {
+          "char": "l",
+          "start_ms": 4860617.470777688,
+          "end_ms": 4860617.470777688,
+          "confidence": 0.9992
+        },
+        {
+          "char": "a",
+          "start_ms": 4860717.470725653,
+          "end_ms": 4860737.470715246,
+          "confidence": 0.9523
+        },
+        {
+          "char": "m",
+          "start_ms": 4860817.470673618,
+          "end_ms": 4860837.470663211,
+          "confidence": 0.9808
+        },
+        {
+          "char": "u",
+          "start_ms": 4860917.470621583,
+          "end_ms": 4860917.470621583,
+          "confidence": 0.1189
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "ٱلۡمُفۡسِدَ",
+      "tr": "l-muf'sida",
+      "tokens": [
+        {
+          "char": "l",
+          "start_ms": 4860997.470579955,
+          "end_ms": 4860997.470579955,
+          "confidence": 0.0019
+        },
+        {
+          "char": "-",
+          "start_ms": 4861017.470569548,
+          "end_ms": 4861017.470569548,
+          "confidence": 0.0
+        },
+        {
+          "char": "m",
+          "start_ms": 4861117.470517513,
+          "end_ms": 4861117.470517513,
+          "confidence": 0.0
+        },
+        {
+          "char": "u",
+          "start_ms": 4861217.4704654785,
+          "end_ms": 4861217.4704654785,
+          "confidence": 0.0
+        },
+        {
+          "char": "f",
+          "start_ms": 4861377.470382222,
+          "end_ms": 4861377.470382222,
+          "confidence": 0.0007
+        },
+        {
+          "char": "'",
+          "start_ms": 4861417.470361408,
+          "end_ms": 4861417.470361408,
+          "confidence": 0.0018
+        },
+        {
+          "char": "s",
+          "start_ms": 4861517.470309373,
+          "end_ms": 4861517.470309373,
+          "confidence": 0.9953
+        },
+        {
+          "char": "i",
+          "start_ms": 4861637.470246932,
+          "end_ms": 4861637.470246932,
+          "confidence": 0.9985
+        },
+        {
+          "char": "d",
+          "start_ms": 4861737.470194897,
+          "end_ms": 4861737.470194897,
+          "confidence": 0.0135
+        },
+        {
+          "char": "a",
+          "start_ms": 4861817.470153268,
+          "end_ms": 4861837.470142862,
+          "confidence": 0.9476
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "مِنَ",
+      "tr": "mina",
+      "tokens": [
+        {
+          "char": "m",
+          "start_ms": 4861937.470090826,
+          "end_ms": 4861937.470090826,
+          "confidence": 0.0213
+        },
+        {
+          "char": "i",
+          "start_ms": 4861997.470059605,
+          "end_ms": 4861997.470059605,
+          "confidence": 0.0018
+        },
+        {
+          "char": "n",
+          "start_ms": 4862097.47000757,
+          "end_ms": 4862097.47000757,
+          "confidence": 0.0049
+        },
+        {
+          "char": "a",
+          "start_ms": 4862177.469965942,
+          "end_ms": 4862177.469965942,
+          "confidence": 0.985
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "ٱلۡمُصۡلِحِۚ",
+      "tr": "l-muṣ'liḥi",
+      "tokens": [
+        {
+          "char": "l",
+          "start_ms": 4862257.469924315,
+          "end_ms": 4862257.469924315,
+          "confidence": 0.9874
+        },
+        {
+          "char": "-",
+          "start_ms": 4862277.469913907,
+          "end_ms": 4862277.469913907,
+          "confidence": 0.0206
+        },
+        {
+          "char": "m",
+          "start_ms": 4862437.469830652,
+          "end_ms": 4862437.469830652,
+          "confidence": 0.9859
+        },
+        {
+          "char": "u",
+          "start_ms": 4862517.4697890235,
+          "end_ms": 4862537.469778617,
+          "confidence": 0.988
+        },
+        {
+          "char": "ṣ",
+          "start_ms": 4862697.46969536,
+          "end_ms": 4862697.46969536,
+          "confidence": 0.0003
+        },
+        {
+          "char": "'",
+          "start_ms": 4862737.469674546,
+          "end_ms": 4862737.469674546,
+          "confidence": 0.961
+        },
+        {
+          "char": "l",
+          "start_ms": 4862857.469612105,
+          "end_ms": 4862857.469612105,
+          "confidence": 0.0885
+        },
+        {
+          "char": "i",
+          "start_ms": 4862917.469580884,
+          "end_ms": 4862937.469570477,
+          "confidence": 0.709
+        },
+        {
+          "char": "ḥ",
+          "start_ms": 4863177.469445593,
+          "end_ms": 4863177.469445593,
+          "confidence": 0.0459
+        },
+        {
+          "char": "i",
+          "start_ms": 4863197.469435186,
+          "end_ms": 4863197.469435186,
+          "confidence": 0.0001
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "وَلَوۡ",
+      "tr": "walaw",
+      "tokens": [
+        {
+          "char": "w",
+          "start_ms": 4863717.469164604,
+          "end_ms": 4863717.469164604,
+          "confidence": 0.6995
+        },
+        {
+          "char": "a",
+          "start_ms": 4863777.469133383,
+          "end_ms": 4863797.469122976,
+          "confidence": 0.995
+        },
+        {
+          "char": "l",
+          "start_ms": 4863877.469081348,
+          "end_ms": 4863877.469081348,
+          "confidence": 0.9998
+        },
+        {
+          "char": "a",
+          "start_ms": 4863937.469050127,
+          "end_ms": 4863957.46903972,
+          "confidence": 0.9702
+        },
+        {
+          "char": "w",
+          "start_ms": 4864017.469008499,
+          "end_ms": 4864017.469008499,
+          "confidence": 0.0734
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "شَآءَ",
+      "tr": "shāa",
+      "tokens": [
+        {
+          "char": "s",
+          "start_ms": 4864237.468894022,
+          "end_ms": 4864237.468894022,
+          "confidence": 0.9988
+        },
+        {
+          "char": "h",
+          "start_ms": 4864257.468883615,
+          "end_ms": 4864257.468883615,
+          "confidence": 0.9991
+        },
+        {
+          "char": "ā",
+          "start_ms": 4864357.46883158,
+          "end_ms": 4864357.46883158,
+          "confidence": 0.9992
+        },
+        {
+          "char": "a",
+          "start_ms": 4865717.468123904,
+          "end_ms": 4865717.468123904,
+          "confidence": 0.0
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "ٱللَّهُ",
+      "tr": "l-lahu",
+      "tokens": [
+        {
+          "char": "l",
+          "start_ms": 4865837.468061462,
+          "end_ms": 4865837.468061462,
+          "confidence": 0.0
+        },
+        {
+          "char": "-",
+          "start_ms": 4865997.467978206,
+          "end_ms": 4865997.467978206,
+          "confidence": 0.0001
+        },
+        {
+          "char": "l",
+          "start_ms": 4866017.4679678,
+          "end_ms": 4866017.4679678,
+          "confidence": 0.0389
+        },
+        {
+          "char": "a",
+          "start_ms": 4866097.467926172,
+          "end_ms": 4866097.467926172,
+          "confidence": 0.0073
+        },
+        {
+          "char": "h",
+          "start_ms": 4866357.46779088,
+          "end_ms": 4866357.46779088,
+          "confidence": 0.0001
+        },
+        {
+          "char": "u",
+          "start_ms": 4866377.467780474,
+          "end_ms": 4866377.467780474,
+          "confidence": 0.0
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "لَأَعۡنَتَكُمۡۚ",
+      "tr": "la-aʿnatakum",
+      "tokens": [
+        {
+          "char": "l",
+          "start_ms": 4866577.467676404,
+          "end_ms": 4866577.467676404,
+          "confidence": 0.9964
+        },
+        {
+          "char": "a",
+          "start_ms": 4866677.467624369,
+          "end_ms": 4866677.467624369,
+          "confidence": 0.002
+        },
+        {
+          "char": "-",
+          "start_ms": 4866937.467489078,
+          "end_ms": 4866937.467489078,
+          "confidence": 0.0001
+        },
+        {
+          "char": "a",
+          "start_ms": 4866957.467478671,
+          "end_ms": 4866957.467478671,
+          "confidence": 0.0001
+        },
+        {
+          "char": "ʿ",
+          "start_ms": 4867077.467416229,
+          "end_ms": 4867077.467416229,
+          "confidence": 0.0
+        },
+        {
+          "char": "n",
+          "start_ms": 4867097.467405822,
+          "end_ms": 4867097.467405822,
+          "confidence": 0.9995
+        },
+        {
+          "char": "a",
+          "start_ms": 4867177.467364194,
+          "end_ms": 4867197.467353787,
+          "confidence": 0.9835
+        },
+        {
+          "char": "t",
+          "start_ms": 4867317.467291345,
+          "end_ms": 4867317.467291345,
+          "confidence": 0.9994
+        },
+        {
+          "char": "a",
+          "start_ms": 4867397.467249717,
+          "end_ms": 4867397.467249717,
+          "confidence": 0.998
+        },
+        {
+          "char": "k",
+          "start_ms": 4867517.467187275,
+          "end_ms": 4867517.467187275,
+          "confidence": 0.0043
+        },
+        {
+          "char": "u",
+          "start_ms": 4867617.46713524,
+          "end_ms": 4867617.46713524,
+          "confidence": 0.3863
+        },
+        {
+          "char": "m",
+          "start_ms": 4867637.467124833,
+          "end_ms": 4867637.467124833,
+          "confidence": 0.0
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "إِنَّ",
+      "tr": "inna",
+      "tokens": [
+        {
+          "char": "i",
+          "start_ms": 4868357.466750181,
+          "end_ms": 4868357.466750181,
+          "confidence": 0.9947
+        },
+        {
+          "char": "n",
+          "start_ms": 4868417.466718961,
+          "end_ms": 4868437.466708553,
+          "confidence": 0.9495
+        },
+        {
+          "char": "n",
+          "start_ms": 4869017.4664067505,
+          "end_ms": 4869017.4664067505,
+          "confidence": 0.9471
+        },
+        {
+          "char": "a",
+          "start_ms": 4869077.46637553,
+          "end_ms": 4869077.46637553,
+          "confidence": 0.6364
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "ٱللَّهَ",
+      "tr": "l-laha",
+      "tokens": [
+        {
+          "char": "l",
+          "start_ms": 4869157.4663339015,
+          "end_ms": 4869157.4663339015,
+          "confidence": 0.0005
+        },
+        {
+          "char": "-",
+          "start_ms": 4869177.466323494,
+          "end_ms": 4869177.466323494,
+          "confidence": 0.0005
+        },
+        {
+          "char": "l",
+          "start_ms": 4869337.466240238,
+          "end_ms": 4869337.466240238,
+          "confidence": 0.0116
+        },
+        {
+          "char": "a",
+          "start_ms": 4869437.466188204,
+          "end_ms": 4869437.466188204,
+          "confidence": 0.0035
+        },
+        {
+          "char": "h",
+          "start_ms": 4869717.466042506,
+          "end_ms": 4869737.466032098,
+          "confidence": 0.7632
+        },
+        {
+          "char": "a",
+          "start_ms": 4869817.465990471,
+          "end_ms": 4869817.465990471,
+          "confidence": 0.0038
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "عَزِيزٌ",
+      "tr": "ʿazīzun",
+      "tokens": [
+        {
+          "char": "ʿ",
+          "start_ms": 4869937.465928028,
+          "end_ms": 4869937.465928028,
+          "confidence": 0.0002
+        },
+        {
+          "char": "a",
+          "start_ms": 4869977.465907214,
+          "end_ms": 4869977.465907214,
+          "confidence": 0.0007
+        },
+        {
+          "char": "z",
+          "start_ms": 4870117.465834365,
+          "end_ms": 4870117.465834365,
+          "confidence": 0.0103
+        },
+        {
+          "char": "ī",
+          "start_ms": 4870237.465771924,
+          "end_ms": 4870237.465771924,
+          "confidence": 0.0008
+        },
+        {
+          "char": "z",
+          "start_ms": 4870457.4656574465,
+          "end_ms": 4870457.4656574465,
+          "confidence": 0.0051
+        },
+        {
+          "char": "u",
+          "start_ms": 4870557.465605412,
+          "end_ms": 4870557.465605412,
+          "confidence": 0.9891
+        },
+        {
+          "char": "n",
+          "start_ms": 4870617.465574191,
+          "end_ms": 4870617.465574191,
+          "confidence": 0.0006
+        }
+      ]
+    },
+    {
+      "ayah": 220,
+      "text": "حَكِيمٞ",
+      "tr": "ḥakīmun",
+      "tokens": [
+        {
+          "char": "ḥ",
+          "start_ms": 4870817.46547012,
+          "end_ms": 4870817.46547012,
+          "confidence": 0.0019
+        },
+        {
+          "char": "a",
+          "start_ms": 4870877.4654389,
+          "end_ms": 4870897.465428493,
+          "confidence": 0.9698
+        },
+        {
+          "char": "k",
+          "start_ms": 4870997.465376458,
+          "end_ms": 4870997.465376458,
+          "confidence": 0.9859
+        },
+        {
+          "char": "ī",
+          "start_ms": 4871117.465314016,
+          "end_ms": 4871117.465314016,
+          "confidence": 0.001
+        },
+        {
+          "char": "m",
+          "start_ms": 4871137.465303609,
+          "end_ms": 4871137.465303609,
+          "confidence": 0.0001
+        },
+        {
+          "char": "u",
+          "start_ms": 4872017.464845701,
+          "end_ms": 4872017.464845701,
+          "confidence": 0.0004
+        },
+        {
+          "char": "n",
+          "start_ms": 4872037.4648352945,
+          "end_ms": 4872037.4648352945,
+          "confidence": 0.2986
+        }
+      ]
+    }
+  ],
+  "greedy": [
+    {
+      "char": "l",
+      "ms": 4840077.481465671,
+      "prob": 0.9356255531311035
+    },
+    {
+      "char": "a",
+      "ms": 4840157.481424044,
+      "prob": 0.9928511381149292
+    },
+    {
+      "char": "f",
+      "ms": 4840317.481340787,
+      "prob": 0.35112646222114563
+    },
+    {
+      "char": "t",
+      "ms": 4840677.481153462,
+      "prob": 0.9993603825569153
+    },
+    {
+      "char": "a",
+      "ms": 4840757.481111834,
+      "prob": 0.9852051138877869
+    },
+    {
+      "char": "t",
+      "ms": 4840857.481059799,
+      "prob": 0.9940390586853027
+    },
+    {
+      "char": "a",
+      "ms": 4840937.481018171,
+      "prob": 0.9431369304656982
+    },
+    {
+      "char": "f",
+      "ms": 4841077.480945322,
+      "prob": 0.48462608456611633
+    },
+    {
+      "char": "a",
+      "ms": 4841137.480914101,
+      "prob": 0.7829343676567078
+    },
+    {
+      "char": "k",
+      "ms": 4841377.480789217,
+      "prob": 0.9995278120040894
+    },
+    {
+      "char": "a",
+      "ms": 4841477.480737182,
+      "prob": 0.9980708956718445
+    },
+    {
+      "char": "r",
+      "ms": 4841617.480664333,
+      "prob": 0.9173144698143005
+    },
+    {
+      "char": "n",
+      "ms": 4842497.480206425,
+      "prob": 0.999104917049408
+    },
+    {
+      "char": "l",
+      "ms": 4843497.479686076,
+      "prob": 0.9881256818771362
+    },
+    {
+      "char": "a",
+      "ms": 4843577.479644448,
+      "prob": 0.7265827655792236
+    },
+    {
+      "char": "l",
+      "ms": 4843817.479519564,
+      "prob": 0.9817910194396973
+    },
+    {
+      "char": "a",
+      "ms": 4844077.479384272,
+      "prob": 0.7208511233329773
+    },
+    {
+      "char": "f",
+      "ms": 4844237.479301017,
+      "prob": 0.7704374194145203
+    },
+    {
+      "char": "t",
+      "ms": 4844577.479124098,
+      "prob": 0.9979193806648254
+    },
+    {
+      "char": "a",
+      "ms": 4844657.47908247,
+      "prob": 0.85471510887146
+    },
+    {
+      "char": "t",
+      "ms": 4844797.479009621,
+      "prob": 0.7437928318977356
+    },
+    {
+      "char": "a",
+      "ms": 4844857.4789784,
+      "prob": 0.7922332882881165
+    },
+    {
+      "char": "h",
+      "ms": 4844997.478905551,
+      "prob": 0.583872377872467
+    },
+    {
+      "char": "a",
+      "ms": 4845077.478863923,
+      "prob": 0.88294517993927
+    },
+    {
+      "char": "k",
+      "ms": 4845297.478749446,
+      "prob": 0.9991224408149719
+    },
+    {
+      "char": "a",
+      "ms": 4845397.478697411,
+      "prob": 0.896377682685852
+    },
+    {
+      "char": "n",
+      "ms": 4845837.478468457,
+      "prob": 0.9985345602035522
+    },
+    {
+      "char": "a",
+      "ms": 4845917.478426829,
+      "prob": 0.8082708716392517
+    },
+    {
+      "char": "f",
+      "ms": 4846057.47835398,
+      "prob": 0.997062623500824
+    },
+    {
+      "char": "i",
+      "ms": 4846157.478301945,
+      "prob": 0.9405314922332764
+    },
+    {
+      "char": "t",
+      "ms": 4846377.478187468,
+      "prob": 0.9870572686195374
+    },
+    {
+      "char": "u",
+      "ms": 4846477.478135433,
+      "prob": 0.9972859621047974
+    },
+    {
+      "char": "l",
+      "ms": 4847277.477719153,
+      "prob": 0.634793221950531
+    },
+    {
+      "char": "f",
+      "ms": 4847817.477438165,
+      "prob": 0.8461382389068604
+    },
+    {
+      "char": "i",
+      "ms": 4847917.47738613,
+      "prob": 0.9990881681442261
+    },
+    {
+      "char": "r",
+      "ms": 4848037.477323688,
+      "prob": 0.9971845746040344
+    },
+    {
+      "char": "a",
+      "ms": 4848117.477282059,
+      "prob": 0.8115515112876892
+    },
+    {
+      "char": "w",
+      "ms": 4848917.47686578,
+      "prob": 0.9979573488235474
+    },
+    {
+      "char": "a",
+      "ms": 4848997.476824152,
+      "prob": 0.9935517311096191
+    },
+    {
+      "char": "y",
+      "ms": 4849097.4767721165,
+      "prob": 0.9992066025733948
+    },
+    {
+      "char": "a",
+      "ms": 4849157.476740896,
+      "prob": 0.9994714856147766
+    },
+    {
+      "char": "s",
+      "ms": 4849357.476636826,
+      "prob": 0.98841792345047
+    },
+    {
+      "char": "a",
+      "ms": 4849497.476563977,
+      "prob": 0.6334534287452698
+    },
+    {
+      "char": "l",
+      "ms": 4849637.476491128,
+      "prob": 0.9968982934951782
+    },
+    {
+      "char": "ū",
+      "ms": 4849737.476439093,
+      "prob": 0.9973904490470886
+    },
+    {
+      "char": "n",
+      "ms": 4849957.476324616,
+      "prob": 0.9322820901870728
+    },
+    {
+      "char": "a",
+      "ms": 4850037.476282988,
+      "prob": 0.9814648032188416
+    },
+    {
+      "char": "ā",
+      "ms": 4850257.476168511,
+      "prob": 0.473833292722702
+    },
+    {
+      "char": "l",
+      "ms": 4850517.47603322,
+      "prob": 0.45426714420318604
+    },
+    {
+      "char": "y",
+      "ms": 4850817.4758771155,
+      "prob": 0.9929848313331604
+    },
+    {
+      "char": "a",
+      "ms": 4850897.475835487,
+      "prob": 0.6106541752815247
+    },
+    {
+      "char": "t",
+      "ms": 4851057.475752232,
+      "prob": 0.9973487854003906
+    },
+    {
+      "char": "ā",
+      "ms": 4851157.475700197,
+      "prob": 0.9991195797920227
+    },
+    {
+      "char": "m",
+      "ms": 4851377.47558572,
+      "prob": 0.7044490575790405
+    },
+    {
+      "char": "ā",
+      "ms": 4851477.475533685,
+      "prob": 0.9966781139373779
+    },
+    {
+      "char": "f",
+      "ms": 4851737.475398393,
+      "prob": 0.34251540899276733
+    },
+    {
+      "char": "u",
+      "ms": 4851837.4753463585,
+      "prob": 0.8513025045394897
+    },
+    {
+      "char": "i",
+      "ms": 4852117.4752006605,
+      "prob": 0.6341573596000671
+    },
+    {
+      "char": "s",
+      "ms": 4852297.475106997,
+      "prob": 0.8815136551856995
+    },
+    {
+      "char": "'",
+      "ms": 4852337.475086184,
+      "prob": 0.8328607678413391
+    },
+    {
+      "char": "ā",
+      "ms": 4852537.474982114,
+      "prob": 0.9983905553817749
+    },
+    {
+      "char": "f",
+      "ms": 4852797.474846823,
+      "prob": 0.6319320797920227
+    },
+    {
+      "char": "u",
+      "ms": 4852897.474794788,
+      "prob": 0.977464497089386
+    },
+    {
+      "char": "l",
+      "ms": 4853117.474680311,
+      "prob": 0.9921167492866516
+    },
+    {
+      "char": "a",
+      "ms": 4853197.474638683,
+      "prob": 0.9675801396369934
+    },
+    {
+      "char": "m",
+      "ms": 4853317.474576241,
+      "prob": 0.9371662735939026
+    },
+    {
+      "char": "h",
+      "ms": 4853677.474388915,
+      "prob": 0.45204129815101624
+    },
+    {
+      "char": "a",
+      "ms": 4853777.47433688,
+      "prob": 0.8269677758216858
+    },
+    {
+      "char": "y",
+      "ms": 4853937.474253625,
+      "prob": 0.5334803462028503
+    }
+  ],
+  "local": [
+    {
+      "crop_ms": [
+        4843000,
+        4850000
+      ],
+      "greedy": "laʿ-alftatafakarnafitunālāhirawayasalūn",
+      "check": {
+        "220": {
+          "ayah": 220,
+          "raw_onset_ms": 4844044,
+          "onset_ms": 4844044,
+          "conf": 0.0016,
+          "first_token_conf": 0.996,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-word",
+          "token_confs": [
+            0.996,
+            0.0
+          ]
+        }
+      }
+    },
+    {
+      "crop_ms": [
+        4845600,
+        4850000
+      ],
+      "greedy": "nafitunālākhirawayasalūn",
+      "check": {
+        "220": {
+          "ayah": 220,
+          "raw_onset_ms": 4845641,
+          "onset_ms": 4845641,
+          "conf": 0.0,
+          "first_token_conf": 0.0,
+          "reliable": false,
+          "repaired": false,
+          "reason": "weak-onset",
+          "token_confs": [
+            0.0,
+            0.0
+          ]
+        }
+      }
+    }
+  ],
+  "audio_sha256": "511e1c23f9c51271d1da629761c0ccf26fd1e734532c09dc85983cea4b4c4177"
+}

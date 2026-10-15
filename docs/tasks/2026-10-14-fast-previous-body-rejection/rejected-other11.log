@@ -1,0 +1,58 @@
+muaalem 1 5.43 review 0 coverage 0.319 calls 12
+muaalem 32 37.23 review 7 coverage 0.29 calls 91
+muaalem 55 42.07 review 48 coverage 0.228 calls 97
+muaalem 59 58.79 review 3 coverage 0.358 calls 136
+muaalem 65 6.65 review 11 coverage 0.067 calls 16
+muaalem 73 19.24 review 0 coverage 0.304 calls 51
+muaalem 77 42.25 review 12 coverage 0.573 calls 99
+muaalem 80 30.68 review 9 coverage 0.506 calls 77
+muaalem 98 13.11 review 0 coverage 0.38 calls 32
+muaalem 112 2.05 review 0 coverage 0.337 calls 6
+muaalem 79 43.83 review 0 coverage 0.572 calls 106
+{
+  "muaalem": {
+    "surahs": 11,
+    "ayahs": 321,
+    "median_ms": 96.0,
+    "p95_ms": 9052.0,
+    "max_ms": 15526,
+    "over500": 87,
+    "positive_conf_over500": [
+      [
+        32,
+        11,
+        1892,
+        0.9276061058044434
+      ],
+      [
+        32,
+        16,
+        566,
+        0.5809784531593323
+      ],
+      [
+        32,
+        20,
+        1063,
+        0.9856603145599365
+      ],
+      [
+        79,
+        26,
+        508,
+        0.4011196494102478
+      ]
+    ],
+    "sequence_violations": [],
+    "review_ayahs": 90,
+    "load_probe_seconds": 4.988409750163555,
+    "decode_seconds": 2.8496363749727607,
+    "dsp_seconds": 1.605474540963769,
+    "inference_match_seconds": 301.345840082271,
+    "search_seconds": 302.9513146232348,
+    "audio_ms": 1538364.0625,
+    "covered_audio_ms": 968083.625,
+    "total_ms": 2954788.6875,
+    "model_reads": 723
+  }
+}

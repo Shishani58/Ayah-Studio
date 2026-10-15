@@ -1,0 +1,28 @@
+[
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 98,
+    "ayah": 5,
+    "head_read_id": 9,
+    "window_ms": [
+      35280.0,
+      36780.0
+    ],
+    "observed_head": "وماء",
+    "expected_first": "وما",
+    "plan": [
+      "وما",
+      "امروا"
+    ],
+    "body_cues": [
+      {
+        "read_id": 11,
+        "word_index": 45,
+        "pair": [
+          "وذلك",
+          "دين"
+        ]
+      }
+    ]
+  }
+]

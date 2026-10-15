@@ -1,0 +1,60 @@
+{
+  "head": "37f3309f76fa077651239fe4892575de3b5d1fa6",
+  "owned_production": [
+    "surah_cutter/core/fast_executor.py"
+  ],
+  "owned_tests": [
+    "tests/test_fast_algorithm_gaps.py"
+  ],
+  "sha256": {
+    "surah_cutter/core/fast_executor.py": "2247dd8d917c360964d2e18fb3eab9343ea9a01cf7ed8941464f178eccec32ea",
+    "tests/test_fast_algorithm_gaps.py": "5c0d745ecdc3211171ba6011cb94a370901cb0b92c223a613d25bb9f1ce79de9"
+  },
+  "task_artifacts_sha256": {
+    "exact-temporal-candidates.json": "065394a86361810719b448a957c557d3f7440567487b2277b7fa4a1c20b6975c",
+    "exact_temporal_candidates.py": "6294e6fe720b1f1c6f5e644247c0398215751887b0c02b7829102f061243da27",
+    "isolated-opening-crops.json": "ea3228c41301f2dc215042d52ea85d858f56778652be8218897675482c3e8a78",
+    "isolated_opening_crops.py": "18117793f525770a3d49b672115104288eddd4c4d88909d87d7232b828dcaca4",
+    "local-verification.json": "db7108aa6d71f28decf0f0bd5fc792c584564fbb96349b932b30388d4f2a39c6",
+    "local_verification.py": "46547c062dfc525a3b1284824327865d37a51c43d86248643f5424fb3d55e70a",
+    "minimal-extensions.json": "549a163ff12fa3d383fb5cd3b3de057b98c6dfd0c78acd4e12b202467d6c77d8",
+    "minimal_extensions.py": "06c08c513fa2779ee98ac5bbee0ee8c97e436bc8243c60b6340274791623bbe6",
+    "real-regression.json": "774cfa8d5ea57673cf5cd17ff0b72b62f6f1c69bcb5cd8c08b128d8409c181df",
+    "real_regression.py": "18b20bbc4251f62ab7b80547aa0f1e43e10ee741fa3b3bfd7788373a55c80b62",
+    "repeated-separate-word-crops.json": "8ec39335f3397ee73629db70ca3c03b2f10b634018772ddbac50f6d6a67c4095",
+    "report.md": "b023453a5a86facb80529351c12f2077cda3f8609e325e54d4afc8e6f4c8f74a",
+    "separate-word-crops.json": "e89db045130858f81c0e39f93638c2c814d634cd1726834744e0b7ca8f713c53",
+    "separate_word_crops.py": "c2c94f0b824eb4c74e5fa9921918f152c2538a7b3572f5c9485119e660c3c7cb",
+    "single-word-exact-temporal.json": "aa26699cb3edc9e328c60ad634f512c054e84f232edc8a026c794480fdaa79b1",
+    "single_word_exact_temporal.py": "5e61980ab3abf1491951b0760df8755cb44d229b2528313afb889bc5e87dba74",
+    "task.md": "d2676574911531a5e2529daa7a9e91d450e84fff4673b2777a0a874a658f6966",
+    "temporal-candidates.json": "258dca63c1ce5af4854895beca41ed3b7276bebcda03895dddcc26667044f12d",
+    "temporal_candidates.py": "c4f0e49fdc9037ee0b0949d60852d8573d3f72955248579c6e3dfc53921b43e7"
+  },
+  "final_fast_checks": {
+    "passed": 104,
+    "ruff": "passed",
+    "diff_check": "passed"
+  },
+  "full_suite_before_last_quality_tightening": {
+    "passed": 625,
+    "skipped": 8
+  },
+  "not_owned": [
+    "docs/STATUS.md",
+    "docs/project.md",
+    "docs/full-performance.md",
+    "surah_cutter/core/align.py",
+    "surah_cutter/core/align_tiled.py",
+    "surah_cutter/core/full_windows.py",
+    "surah_cutter/data/alignment_result.py",
+    "surah_cutter/core/full_boundary.py"
+  ],
+  "status": "partial; real1:2/79:26/localASRtiming unresolved",
+  "final_suite": {
+    "passed": 635,
+    "skipped": 8
+  },
+  "version": "sequential-fast-v3-sparse-7",
+  "independent_regression_cases": 4
+}
