@@ -2,11 +2,11 @@
 
 import json
 from types import SimpleNamespace
+from pathlib import Path
 
 import pytest
 
 from surah_cutter.data import quran_text, transliteration as tr
-from surah_cutter.resources import resource_path
 
 
 @pytest.fixture
@@ -17,7 +17,7 @@ def mapping():
 def test_every_canonical_word_has_a_nonempty_target(mapping):
     from surah_cutter.core.align import _build_targets
 
-    vocab = json.loads(resource_path("models", "wav2vec2-quran-phonetics.onnx.vocab.json")
+    vocab = json.loads((Path(__file__).parent / "fixtures/quran_phonetics_vocab.json")
                        .read_text(encoding="utf-8"))
     bundle = SimpleNamespace(vocab=vocab, delim_id=vocab["|"])
     assert len(mapping) == 6236

@@ -89,6 +89,7 @@ def test_word_progress_counts_ayahs_once_even_with_boundary_pass_and_word_failur
     ("tiled", align_tiled, "align_surah_tiled"),
 ])
 def test_pipeline_forwards_progress_without_changing_rows(mode, module, function, monkeypatch):
+    monkeypatch.setattr(align, "default_bundle", lambda: object())
     reported = []
     monkeypatch.setattr(decode, "decode", lambda _: np.zeros(decode.DEFAULT_SR))
 

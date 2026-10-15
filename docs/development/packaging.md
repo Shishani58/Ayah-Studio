@@ -2,7 +2,7 @@
 
 ## Установка пользователем
 
-Открыть `Ayah-Studio-0.3.0-macOS-arm64.dmg`, перенести `Ayah Studio.app`
+Открыть `Ayah-Studio-0.3.1-macOS-arm64.dmg`, перенести `Ayah Studio.app`
 на ярлык `Applications`, извлечь диск и запустить приложение из «Программ».
 Python, исходники и терминал пользователю не нужны. Базовая модель включена;
 дополнительные модели устанавливаются отдельно через каталог настроек.
@@ -25,11 +25,11 @@ uv run --locked --extra build pyinstaller surah_cutter.spec --noconfirm --clean
 
 Скрипт проверяет frozen `--self-check` (ONNX inference, FFmpeg, 114/6236,
 ресурсы), ждёт появления отвечающего нативного окна, закрывает тестовый процесс
-и создаёт `Ayah-Studio-0.3.0-Windows-x64.zip` с SHA-256.
+и создаёт `Ayah-Studio-0.3.1-Windows-x64.zip` с SHA-256.
 Запуск требует интерактивной Windows-сессии; CI использует `windows-latest`.
 
 В GitHub Actions → build → Run workflow можно выбрать `windows_only` и указать
-существующий `release_tag`, например `v0.3.0`. Публикация сохраняет описание
+существующий `release_tag`, например `v0.3.1`. Публикация сохраняет описание
 релиза и его macOS assets. Для ручной сборки берётся выбранная ветка workflow;
 точный commit записывается в запуске Actions.
 
@@ -44,7 +44,7 @@ uv run --locked --extra build python tools/build_macos.py
 `--skip-build` упаковывает уже собранную `.app`; для изменённого кода нужен полный
 запуск. Версия берётся из Info.plist собранного bundle.
 
-Результат: `dist/Ayah Studio.app`, `dist/Ayah-Studio-0.3.0-macOS-arm64.dmg`
+Результат: `dist/Ayah Studio.app`, `dist/Ayah-Studio-0.3.1-macOS-arm64.dmg`
 и `.dmg.sha256`. Архитектура совпадает с Python сборочной машины: arm64 или
 x86_64. Универсальная сборка и запуск на Intel в этой задаче не проверялись.
 Зависимости зафиксированы в `uv.lock`; не включать extras `align` / `qt` в сборку.

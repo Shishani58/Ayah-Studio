@@ -75,7 +75,7 @@ async def waveform_events(audio_path: str):
         if probe.returncode is None:
             probe.kill()
             with CancelScope(shield=True):
-                await probe.wait()
+                await probe.communicate()
     match = re.search(rb"Duration: (\d+):(\d+):(\d+(?:\.\d+)?)", metadata)
     estimated_ms = 0
     samples_per_bucket = 160  # 10 ms when a container has no duration metadata.
@@ -130,7 +130,8 @@ async def waveform_events(audio_path: str):
                 except ProcessLookupError:
                     pass
                 with CancelScope(shield=True):
-                    await proc.wait()
+                    # Drain the pipe too: Python 3.12 wait() can block on a full buffer.
+                    await proc.communicate()
 
 
 def waveform_peaks(audio_path: str, buckets: int | None = None) -> tuple[list[int], int]:

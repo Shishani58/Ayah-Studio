@@ -2613,3 +2613,11 @@ bootstrap/recovery, отдельная временная ветка, межчт
 diff-check и AGENTS/CLAUDE sync — OK. Исторические диагностические снимки
 `docs/tasks` сохранены и исключены из Ruff. Публикация через tag CI GitHub.
 Подробности: [release task](tasks/2026-10-15-release-0.3.0/task.md).
+
+
+## Исправленный выпуск 0.3.1 — 2026-10-15
+
+Первый tag 0.3.0 остановился на CI: тесты требовали локальные модели.
+Тестовые загрузки изолированы; словарь phonetics сохранён как fixture.
+Устранено зависание очистки FFmpeg на Python 3.12 (kill + drain stdout).
+Чистый snapshot без моделей: 734 passed, 8 skipped. Релиз 0.3.1 через tag CI.

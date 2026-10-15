@@ -103,7 +103,7 @@ def test_http_disconnect_reaps_decoder(tmp_path, monkeypatch):
 
         await endpoint(114)({"type": "http", "asgi": {"spec_version": "2.3"}}, receive, send)
 
-    asyncio.run(disconnect())
+    asyncio.run(asyncio.wait_for(disconnect(), timeout=10))
     assert len(processes) == 2
     assert all(proc.returncode is not None for proc in processes)
 

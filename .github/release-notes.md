@@ -1,4 +1,4 @@
-## Ayah Studio 0.3.0
+## Ayah Studio 0.3.1
 
 Разметка аудио Корана по аятам и словам — локально на вашем компьютере.
 
@@ -9,10 +9,10 @@
 - Выбор ASR-моделей, русский и английский интерфейс.
 - Ручные и проверенные метки сохраняются при перегенерации.
 
-**macOS Apple Silicon:** скачайте `Ayah-Studio-0.3.0-macOS-arm64.dmg`
+**macOS Apple Silicon:** скачайте `Ayah-Studio-0.3.1-macOS-arm64.dmg`
 и перенесите приложение в **Applications / Программы**.
 
-**Windows x64:** скачайте `Ayah-Studio-0.3.0-Windows-x64.zip`, распакуйте
+**Windows x64:** скачайте `Ayah-Studio-0.3.1-Windows-x64.zip`, распакуйте
 целиком и запустите **Ayah Studio.exe**. Папка `_internal` должна оставаться
 рядом. Нужен [Microsoft WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/).
 
@@ -25,7 +25,7 @@ Apple ([инструкция запуска](https://support.apple.com/ru-ru/102
 
 ---
 
-**Ayah Studio 0.3.0:** unified local FAST with improved head-word checks,
+**Ayah Studio 0.3.1:** unified local FAST with improved head-word checks,
 FULL boundary verification and pause centering, onset confidence review,
 ASR model selection and Russian/English interface. Manual and verified timings
 survive regeneration.

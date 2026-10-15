@@ -266,9 +266,10 @@ def test_tempo_region_is_a_selection_hint_not_proof():
 
 @pytest.mark.parametrize("experimental", [False, True])
 def test_fast_pipeline_never_falls_back(monkeypatch, experimental):
-    from surah_cutter.core import align_fast, fast_executor, pipeline, decode, model_store
+    from surah_cutter.core import align, align_fast, fast_executor, pipeline, decode, model_store
     monkeypatch.setattr(model_store, "ACTIVE_ID", "quran-phonetics")
     monkeypatch.setattr(decode, "decode", lambda _: np.ones(160000, dtype=np.float32))
+    monkeypatch.setattr(align, "default_bundle", lambda: object())
     calls = []
     def experimental(*args, **kwargs):
         calls.append("new")
@@ -455,7 +456,7 @@ def test_nonadjacent_future_cannot_be_ignored_in_favor_of_later_repetition():
     assert not any(e["state"] == "ADVANCE" for e in trace["transitions"])
 
 
-def test_first_pause_recall_refines_vad_and_preserves_offset(monkeypatch):
+def test_first_pause_recall_refines_vad_and_preserves_offset(monkeypatch, tmp_path):
     from surah_cutter.core import candidates
     from surah_cutter.core.fast_executor import first_pause_hypotheses
     clip = np.full(16000 * 2, .2, dtype=np.float32)
@@ -466,6 +467,10 @@ def test_first_pause_recall_refines_vad_and_preserves_offset(monkeypatch):
         received.append(len(local))
         return [candidates.Pause(400, 1000, 600)]
     monkeypatch.setattr(candidates, "detect_silero_pauses", vad)
+    from surah_cutter.core import fast_executor
+    model = tmp_path / "silero.onnx"
+    model.touch()
+    monkeypatch.setattr(fast_executor, "_silero_model_path", lambda: model)
     result = first_pause_hypotheses(pcm, 16000, 12000, 15000)
     assert received == [32000]
     assert [(p.start_ms, p.end_ms) for p in result] == [(12500, 12900)]
