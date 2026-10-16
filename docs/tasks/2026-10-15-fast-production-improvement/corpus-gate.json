@@ -1,0 +1,1531 @@
+{
+  "passed": true,
+  "incomplete": [],
+  "pairs": 50,
+  "added": 6,
+  "lost": 0,
+  "new_over500": 0,
+  "results": [
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-tiny",
+      "surah": 1,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        2,
+        2
+      ],
+      "calls": [
+        6,
+        6
+      ],
+      "pcm_ms": [
+        12100.0,
+        12100.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.13082389823866464,
+      "input_ratio": 0.2050478197782179
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-tiny",
+      "surah": 2,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        4,
+        4
+      ],
+      "calls": [
+        16,
+        16
+      ],
+      "pcm_ms": [
+        29700.0,
+        29700.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.0029915715382342464,
+      "input_ratio": 0.004191022390828166
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-tiny",
+      "surah": 32,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        0,
+        0
+      ],
+      "calls": [
+        5,
+        5
+      ],
+      "pcm_ms": [
+        11200.0,
+        11200.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.015991451426965755,
+      "input_ratio": 0.02558632228314521
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-tiny",
+      "surah": 55,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        19,
+        19
+      ],
+      "calls": [
+        44,
+        44
+      ],
+      "pcm_ms": [
+        75000.0,
+        75000.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.117264654463063,
+      "input_ratio": 0.14846132823649097
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-tiny",
+      "surah": 59,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        3,
+        3
+      ],
+      "calls": [
+        19,
+        19
+      ],
+      "pcm_ms": [
+        39400.0,
+        39400.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.05023609941116168,
+      "input_ratio": 0.07347076157385933
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-tiny",
+      "surah": 65,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        0,
+        0
+      ],
+      "calls": [
+        8,
+        8
+      ],
+      "pcm_ms": [
+        11800.0,
+        11800.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.03070618700393163,
+      "input_ratio": 0.03070618700393163
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-tiny",
+      "surah": 73,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        17,
+        17
+      ],
+      "calls": [
+        36,
+        36
+      ],
+      "pcm_ms": [
+        59200.0,
+        59200.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.22122874130064063,
+      "input_ratio": 0.2567988526470182
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-tiny",
+      "surah": 77,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        24,
+        24
+      ],
+      "calls": [
+        39,
+        39
+      ],
+      "pcm_ms": [
+        63100.0,
+        63100.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.2358730056604486,
+      "input_ratio": 0.28242099918736824
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-tiny",
+      "surah": 79,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        16,
+        16
+      ],
+      "calls": [
+        34,
+        34
+      ],
+      "pcm_ms": [
+        64600.0,
+        64600.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.19104772508407633,
+      "input_ratio": 0.2573328407095774
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-tiny",
+      "surah": 80,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        9,
+        9
+      ],
+      "calls": [
+        21,
+        21
+      ],
+      "pcm_ms": [
+        34630.0,
+        34630.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.1383423593261093,
+      "input_ratio": 0.178494631276571
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-tiny",
+      "surah": 98,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        7,
+        7
+      ],
+      "calls": [
+        26,
+        26
+      ],
+      "pcm_ms": [
+        51700.0,
+        51700.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.34183578519390745,
+      "input_ratio": 0.470775442049148
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-tiny",
+      "surah": 112,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        4,
+        4
+      ],
+      "calls": [
+        6,
+        6
+      ],
+      "pcm_ms": [
+        8600.0,
+        8600.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.3483213349479035,
+      "input_ratio": 0.366205804468456
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-base",
+      "surah": 1,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        2,
+        2
+      ],
+      "calls": [
+        6,
+        6
+      ],
+      "pcm_ms": [
+        12100.0,
+        12100.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.13082389823866464,
+      "input_ratio": 0.2050478197782179
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-base",
+      "surah": 2,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        2,
+        2
+      ],
+      "calls": [
+        9,
+        9
+      ],
+      "pcm_ms": [
+        14500.0,
+        14500.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.0018344542451436418,
+      "input_ratio": 0.0020461220426602157
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-base",
+      "surah": 32,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        0,
+        0
+      ],
+      "calls": [
+        4,
+        4
+      ],
+      "pcm_ms": [
+        9700.0,
+        9700.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.012564711835473094,
+      "input_ratio": 0.02215958269165255
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-base",
+      "surah": 55,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        19,
+        19
+      ],
+      "calls": [
+        42,
+        42
+      ],
+      "pcm_ms": [
+        74300.0,
+        74300.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.11271184039714395,
+      "input_ratio": 0.14707568917295039
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-base",
+      "surah": 59,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        21,
+        21
+      ],
+      "calls": [
+        93,
+        93
+      ],
+      "pcm_ms": [
+        166500.0,
+        166500.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.2435723572786169,
+      "input_ratio": 0.3104792335545071
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-base",
+      "surah": 65,
+      "added": [
+        {
+          "ayah": 1,
+          "row": [
+            1,
+            6050,
+            0.9997532976492673
+          ],
+          "reference_error_ms": 98
+        }
+      ],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [
+        1
+      ],
+      "downstream_added": [],
+      "confirmed": [
+        0,
+        1
+      ],
+      "calls": [
+        8,
+        12
+      ],
+      "pcm_ms": [
+        11800.0,
+        19000.0
+      ],
+      "identical_rows": false,
+      "identical_dispatches": false,
+      "max_union_ratio": 0.043769327576790674,
+      "input_ratio": 0.04944216551480517
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-base",
+      "surah": 73,
+      "added": [
+        {
+          "ayah": 1,
+          "row": [
+            1,
+            6030,
+            0.9999945164027223
+          ],
+          "reference_error_ms": 110
+        }
+      ],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [
+        1
+      ],
+      "downstream_added": [],
+      "confirmed": [
+        19,
+        20
+      ],
+      "calls": [
+        34,
+        35
+      ],
+      "pcm_ms": [
+        54000.0,
+        56700.0
+      ],
+      "identical_rows": false,
+      "identical_dispatches": false,
+      "max_union_ratio": 0.21992739576357806,
+      "input_ratio": 0.24595430650482988
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-base",
+      "surah": 77,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        24,
+        24
+      ],
+      "calls": [
+        42,
+        42
+      ],
+      "pcm_ms": [
+        72310.0,
+        72310.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.246614850320507,
+      "input_ratio": 0.3236428280703423
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-base",
+      "surah": 79,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        22,
+        22
+      ],
+      "calls": [
+        36,
+        36
+      ],
+      "pcm_ms": [
+        58600.0,
+        58600.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.20658329905880315,
+      "input_ratio": 0.23343195767153613
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-base",
+      "surah": 80,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        10,
+        10
+      ],
+      "calls": [
+        23,
+        23
+      ],
+      "pcm_ms": [
+        38430.0,
+        38430.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.1461769489749799,
+      "input_ratio": 0.19808110539874743
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-base",
+      "surah": 98,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        7,
+        7
+      ],
+      "calls": [
+        23,
+        23
+      ],
+      "pcm_ms": [
+        37500.0,
+        37500.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.28811092817089057,
+      "input_ratio": 0.34147154887510733
+    },
+    {
+      "before": "corpus-a-baseline",
+      "after": "corpus-a-prototype-c",
+      "model": "whisper-tarteel-base",
+      "surah": 112,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        4,
+        4
+      ],
+      "calls": [
+        6,
+        6
+      ],
+      "pcm_ms": [
+        8600.0,
+        8600.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.3483213349479035,
+      "input_ratio": 0.366205804468456
+    },
+    {
+      "before": "corpus-e-baseline",
+      "after": "corpus-e-prototype-c",
+      "model": "whisper-tarteel-tiny",
+      "surah": 9,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        1,
+        1
+      ],
+      "calls": [
+        11,
+        11
+      ],
+      "pcm_ms": [
+        16300.0,
+        16300.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.005326098335214418,
+      "input_ratio": 0.005326098335214418
+    },
+    {
+      "before": "corpus-e-baseline",
+      "after": "corpus-e-prototype-c",
+      "model": "whisper-tarteel-tiny",
+      "surah": 42,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        8,
+        8
+      ],
+      "calls": [
+        32,
+        32
+      ],
+      "pcm_ms": [
+        54100.0,
+        54100.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.047257071478524766,
+      "input_ratio": 0.054511888421923026
+    },
+    {
+      "before": "corpus-e-baseline",
+      "after": "corpus-e-prototype-c",
+      "model": "whisper-tarteel-tiny",
+      "surah": 83,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        34,
+        34
+      ],
+      "calls": [
+        81,
+        81
+      ],
+      "pcm_ms": [
+        155080.0,
+        155080.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.4794015658240112,
+      "input_ratio": 0.7045640146700877
+    },
+    {
+      "before": "corpus-e-baseline",
+      "after": "corpus-e-prototype-c",
+      "model": "whisper-tarteel-tiny",
+      "surah": 95,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        7,
+        7
+      ],
+      "calls": [
+        10,
+        10
+      ],
+      "pcm_ms": [
+        16000.0,
+        16000.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.2746550238192202,
+      "input_ratio": 0.303067612490174
+    },
+    {
+      "before": "corpus-e-baseline",
+      "after": "corpus-e-prototype-c",
+      "model": "whisper-tarteel-tiny",
+      "surah": 109,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        6,
+        6
+      ],
+      "calls": [
+        13,
+        13
+      ],
+      "pcm_ms": [
+        22300.0,
+        22300.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.4178427419354839,
+      "input_ratio": 0.5619959677419355
+    },
+    {
+      "before": "corpus-e-baseline",
+      "after": "corpus-e-prototype-c",
+      "model": "whisper-tarteel-tiny",
+      "surah": 113,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        5,
+        5
+      ],
+      "calls": [
+        12,
+        12
+      ],
+      "pcm_ms": [
+        18200.0,
+        18200.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.4780458388318264,
+      "input_ratio": 0.5701464132856645
+    },
+    {
+      "before": "corpus-e-baseline",
+      "after": "corpus-e-prototype-c",
+      "model": "whisper-tarteel-tiny",
+      "surah": 114,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        5,
+        5
+      ],
+      "calls": [
+        8,
+        8
+      ],
+      "pcm_ms": [
+        13000.0,
+        13000.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.33275462962962965,
+      "input_ratio": 0.3761574074074074
+    },
+    {
+      "before": "corpus-e-baseline",
+      "after": "corpus-e-prototype-c",
+      "model": "whisper-tarteel-base",
+      "surah": 9,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        2,
+        2
+      ],
+      "calls": [
+        15,
+        15
+      ],
+      "pcm_ms": [
+        26200.0,
+        26200.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.007188598980044,
+      "input_ratio": 0.008560967876234218
+    },
+    {
+      "before": "corpus-e-baseline",
+      "after": "corpus-e-prototype-c",
+      "model": "whisper-tarteel-base",
+      "surah": 42,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        8,
+        8
+      ],
+      "calls": [
+        32,
+        32
+      ],
+      "pcm_ms": [
+        54100.0,
+        54100.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.047257071478524766,
+      "input_ratio": 0.054511888421923026
+    },
+    {
+      "before": "corpus-e-baseline",
+      "after": "corpus-e-prototype-c",
+      "model": "whisper-tarteel-base",
+      "surah": 83,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        35,
+        35
+      ],
+      "calls": [
+        84,
+        84
+      ],
+      "pcm_ms": [
+        161000.0,
+        161000.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.49230433730752327,
+      "input_ratio": 0.7314599326920566
+    },
+    {
+      "before": "corpus-e-baseline",
+      "after": "corpus-e-prototype-c",
+      "model": "whisper-tarteel-base",
+      "surah": 95,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        7,
+        7
+      ],
+      "calls": [
+        10,
+        10
+      ],
+      "pcm_ms": [
+        16000.0,
+        16000.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.2746550238192202,
+      "input_ratio": 0.303067612490174
+    },
+    {
+      "before": "corpus-e-baseline",
+      "after": "corpus-e-prototype-c",
+      "model": "whisper-tarteel-base",
+      "surah": 109,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        6,
+        6
+      ],
+      "calls": [
+        13,
+        13
+      ],
+      "pcm_ms": [
+        22300.0,
+        22300.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.4178427419354839,
+      "input_ratio": 0.5619959677419355
+    },
+    {
+      "before": "corpus-e-baseline",
+      "after": "corpus-e-prototype-c",
+      "model": "whisper-tarteel-base",
+      "surah": 113,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        5,
+        5
+      ],
+      "calls": [
+        11,
+        11
+      ],
+      "pcm_ms": [
+        15700.0,
+        15700.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.47428663171126156,
+      "input_ratio": 0.4918295982738974
+    },
+    {
+      "before": "corpus-e-baseline",
+      "after": "corpus-e-prototype-c",
+      "model": "whisper-tarteel-base",
+      "surah": 114,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        5,
+        5
+      ],
+      "calls": [
+        8,
+        8
+      ],
+      "pcm_ms": [
+        13000.0,
+        13000.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.33275462962962965,
+      "input_ratio": 0.3761574074074074
+    },
+    {
+      "before": "h9b-baseline-saad_al_ghamidi",
+      "after": "h9c-prototype-saad_al_ghamidi",
+      "model": "whisper-tarteel-tiny",
+      "surah": 65,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        0,
+        0
+      ],
+      "calls": [
+        7,
+        7
+      ],
+      "pcm_ms": [
+        10300.0,
+        10300.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.03153318638256184,
+      "input_ratio": 0.03153318638256184
+    },
+    {
+      "before": "h9b-baseline-saad_al_ghamidi",
+      "after": "h9c-prototype-saad_al_ghamidi",
+      "model": "whisper-tarteel-tiny",
+      "surah": 73,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        3,
+        3
+      ],
+      "calls": [
+        12,
+        12
+      ],
+      "pcm_ms": [
+        21100.0,
+        21100.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.0595718901453958,
+      "input_ratio": 0.08876884760366183
+    },
+    {
+      "before": "h9b-baseline-saad_al_ghamidi",
+      "after": "h9c-prototype-saad_al_ghamidi",
+      "model": "whisper-tarteel-base",
+      "surah": 65,
+      "added": [
+        {
+          "ayah": 1,
+          "row": [
+            1,
+            3890,
+            0.999098994280071
+          ],
+          "reference_error_ms": 40
+        },
+        {
+          "ayah": 2,
+          "row": [
+            2,
+            48700,
+            0.9999985694905718
+          ],
+          "reference_error_ms": 1
+        }
+      ],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [
+        1
+      ],
+      "downstream_added": [
+        2
+      ],
+      "confirmed": [
+        0,
+        2
+      ],
+      "calls": [
+        7,
+        18
+      ],
+      "pcm_ms": [
+        10300.0,
+        28000.0
+      ],
+      "identical_rows": false,
+      "identical_dispatches": false,
+      "max_union_ratio": 0.08112907176096008,
+      "input_ratio": 0.08572128337007102
+    },
+    {
+      "before": "h9b-baseline-saad_al_ghamidi",
+      "after": "h9c-prototype-saad_al_ghamidi",
+      "model": "whisper-tarteel-base",
+      "surah": 73,
+      "added": [
+        {
+          "ayah": 1,
+          "row": [
+            1,
+            4420,
+            0.9999066678402974
+          ],
+          "reference_error_ms": 120
+        }
+      ],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [
+        1
+      ],
+      "downstream_added": [],
+      "confirmed": [
+        16,
+        17
+      ],
+      "calls": [
+        35,
+        36
+      ],
+      "pcm_ms": [
+        56300.0,
+        59000.0
+      ],
+      "identical_rows": false,
+      "identical_dispatches": false,
+      "max_union_ratio": 0.20681879375336565,
+      "input_ratio": 0.24821620893914917
+    },
+    {
+      "before": "h9b-baseline-mahmoud_khalil_al_hussary",
+      "after": "h9c-prototype-mahmoud_khalil_al_hussary",
+      "model": "whisper-tarteel-tiny",
+      "surah": 65,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        0,
+        0
+      ],
+      "calls": [
+        7,
+        7
+      ],
+      "pcm_ms": [
+        10300.0,
+        10300.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.018770677786622725,
+      "input_ratio": 0.018770677786622725
+    },
+    {
+      "before": "h9b-baseline-mahmoud_khalil_al_hussary",
+      "after": "h9c-prototype-mahmoud_khalil_al_hussary",
+      "model": "whisper-tarteel-tiny",
+      "surah": 73,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        0,
+        0
+      ],
+      "calls": [
+        5,
+        5
+      ],
+      "pcm_ms": [
+        7300.0,
+        7300.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.01870878620983057,
+      "input_ratio": 0.01870878620983057
+    },
+    {
+      "before": "h9b-baseline-mahmoud_khalil_al_hussary",
+      "after": "h9c-prototype-mahmoud_khalil_al_hussary",
+      "model": "whisper-tarteel-base",
+      "surah": 65,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        0,
+        0
+      ],
+      "calls": [
+        7,
+        7
+      ],
+      "pcm_ms": [
+        10300.0,
+        10300.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.018770677786622725,
+      "input_ratio": 0.018770677786622725
+    },
+    {
+      "before": "h9b-baseline-mahmoud_khalil_al_hussary",
+      "after": "h9c-prototype-mahmoud_khalil_al_hussary",
+      "model": "whisper-tarteel-base",
+      "surah": 73,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        0,
+        0
+      ],
+      "calls": [
+        5,
+        5
+      ],
+      "pcm_ms": [
+        7300.0,
+        7300.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.01870878620983057,
+      "input_ratio": 0.01870878620983057
+    },
+    {
+      "before": "h9c-baseline-mohammed_siddiq_al_minshawi",
+      "after": "h9c-prototype-mohammed_siddiq_al_minshawi",
+      "model": "whisper-tarteel-tiny",
+      "surah": 65,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        0,
+        0
+      ],
+      "calls": [
+        7,
+        7
+      ],
+      "pcm_ms": [
+        10300.0,
+        10300.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.02726245272081925,
+      "input_ratio": 0.02726245272081925
+    },
+    {
+      "before": "h9c-baseline-mohammed_siddiq_al_minshawi",
+      "after": "h9c-prototype-mohammed_siddiq_al_minshawi",
+      "model": "whisper-tarteel-tiny",
+      "surah": 73,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        2,
+        2
+      ],
+      "calls": [
+        9,
+        9
+      ],
+      "pcm_ms": [
+        13300.0,
+        13300.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": true,
+      "max_union_ratio": 0.04557638127809988,
+      "input_ratio": 0.04841580439286968
+    },
+    {
+      "before": "h9c-baseline-mohammed_siddiq_al_minshawi",
+      "after": "h9c-prototype-mohammed_siddiq_al_minshawi",
+      "model": "whisper-tarteel-base",
+      "surah": 65,
+      "added": [],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [],
+      "downstream_added": [],
+      "confirmed": [
+        0,
+        0
+      ],
+      "calls": [
+        7,
+        3
+      ],
+      "pcm_ms": [
+        10300.0,
+        5500.0
+      ],
+      "identical_rows": true,
+      "identical_dispatches": false,
+      "max_union_ratio": 0.010587360279929806,
+      "input_ratio": 0.014557620384903483
+    },
+    {
+      "before": "h9c-baseline-mohammed_siddiq_al_minshawi",
+      "after": "h9c-prototype-mohammed_siddiq_al_minshawi",
+      "model": "whisper-tarteel-base",
+      "surah": 73,
+      "added": [
+        {
+          "ayah": 1,
+          "row": [
+            1,
+            4190,
+            0.9999903441405488
+          ],
+          "reference_error_ms": 30
+        }
+      ],
+      "lost": [],
+      "changed": [],
+      "new_over500": [],
+      "sequence_violations": [],
+      "direct_added": [
+        1
+      ],
+      "downstream_added": [],
+      "confirmed": [
+        2,
+        3
+      ],
+      "calls": [
+        9,
+        11
+      ],
+      "pcm_ms": [
+        13300.0,
+        20200.0
+      ],
+      "identical_rows": false,
+      "identical_dispatches": false,
+      "max_union_ratio": 0.05431306778508388,
+      "input_ratio": 0.07353377810044869
+    }
+  ]
+}

@@ -21,7 +21,7 @@ def align_ayah_words(pcm, sr: int, words: list[Word]) -> list[tuple[int, int, fl
     if len({(w.surah, w.ayah) for w in words}) != 1:
         raise ValueError("Ожидаются слова одного аята.")
     bundle = align._get_onnx_bundle()
-    if getattr(bundle, "text_kind", "phonetic") == "whisper":
+    if getattr(bundle, "text_kind", "phonetic") in ("whisper", "mfa"):
         return bundle.emitter.align_words(pcm, words)
     if (hasattr(getattr(bundle, "emitter", None), "build_targets")
             or getattr(bundle, "text_kind", "phonetic") == "arabic"):

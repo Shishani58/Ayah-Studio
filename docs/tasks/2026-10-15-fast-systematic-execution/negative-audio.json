@@ -1,0 +1,1889 @@
+[
+  {
+    "model": "quran-phonetics",
+    "kind": "zero",
+    "target": "qul",
+    "text": "",
+    "accepted": false,
+    "runtime": {
+      "blank_id": 37,
+      "do_normalize": true,
+      "input_name": "input_values",
+      "numpy": "2.5.0",
+      "onnxruntime": "1.27.0",
+      "output_name": "logits",
+      "providers": [
+        "CPUExecutionProvider"
+      ],
+      "session_options": {
+        "execution_mode": "ExecutionMode.ORT_SEQUENTIAL",
+        "graph_optimization_level": "GraphOptimizationLevel.ORT_ENABLE_ALL",
+        "inter_op_num_threads": "0",
+        "intra_op_num_threads": "0"
+      },
+      "vocab": {
+        " ": 0,
+        "'": 1,
+        "-": 2,
+        "</s>": 39,
+        "<s>": 38,
+        "H": 3,
+        "[PAD]": 37,
+        "[UNK]": 36,
+        "a": 4,
+        "b": 5,
+        "d": 6,
+        "e": 7,
+        "f": 8,
+        "g": 9,
+        "h": 10,
+        "i": 11,
+        "j": 12,
+        "k": 13,
+        "l": 14,
+        "m": 15,
+        "n": 16,
+        "o": 17,
+        "q": 18,
+        "r": 19,
+        "s": 20,
+        "t": 21,
+        "u": 22,
+        "w": 23,
+        "y": 24,
+        "z": 25,
+        "|": 35,
+        "ā": 26,
+        "ī": 27,
+        "ū": 28,
+        "ʿ": 29,
+        "ḍ": 30,
+        "ḥ": 31,
+        "ṣ": 32,
+        "ṭ": 33,
+        "ẓ": 34
+      },
+      "weights_sha256": "423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a"
+    },
+    "trace": {
+      "total_ms": 23484.0625,
+      "emission_passes": 1,
+      "emissions_frames": 34,
+      "acoustic_reads": [
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            6120.0,
+            6820.0
+          ],
+          "frames": 34,
+          "outcome": "completed",
+          "id": 0,
+          "reason": "negative:zero:qul",
+          "requested_window_ms": [
+            6120.0,
+            6820.0
+          ],
+          "samples": [
+            97920,
+            109120
+          ],
+          "observed": {
+            "units": [],
+            "positions_ms": [],
+            "quality": 0.0,
+            "truncated": false,
+            "text": "",
+            "unit_quality": [],
+            "frames": 34,
+            "attribution": [],
+            "hypotheses": [
+              {
+                "units": [],
+                "positions_ms": [],
+                "unit_quality": [],
+                "log_probability": -0.00013679198264071601
+              },
+              {
+                "units": [
+                  "a"
+                ],
+                "positions_ms": [
+                  314.7058823529412
+                ],
+                "unit_quality": [
+                  8.444059352297745e-07
+                ],
+                "log_probability": -10.544877121435633
+              },
+              {
+                "units": [
+                  "u"
+                ],
+                "positions_ms": [
+                  88.23529411764707
+                ],
+                "unit_quality": [
+                  6.468458911975171e-07
+                ],
+                "log_probability": -10.789309011557682
+              },
+              {
+                "units": [
+                  "f"
+                ],
+                "positions_ms": [
+                  479.41176470588243
+                ],
+                "unit_quality": [
+                  5.504068270166921e-07
+                ],
+                "log_probability": -11.120036136910063
+              },
+              {
+                "units": [
+                  "t"
+                ],
+                "positions_ms": [
+                  479.41176470588243
+                ],
+                "unit_quality": [
+                  4.171610049239827e-07
+                ],
+                "log_probability": -11.308648766855738
+              },
+              {
+                "units": [
+                  "w"
+                ],
+                "positions_ms": [
+                  479.41176470588243
+                ],
+                "unit_quality": [
+                  2.703445623070571e-07
+                ],
+                "log_probability": -11.737651675533854
+              },
+              {
+                "units": [
+                  "i"
+                ],
+                "positions_ms": [
+                  314.7058823529412
+                ],
+                "unit_quality": [
+                  2.1552987179285982e-07
+                ],
+                "log_probability": -11.897982104958471
+              },
+              {
+                "units": [
+                  "k"
+                ],
+                "positions_ms": [
+                  479.41176470588243
+                ],
+                "unit_quality": [
+                  2.2407799191923485e-07
+                ],
+                "log_probability": -11.959310951917702
+              }
+            ],
+            "null_log_probability": -0.00013679199037142098,
+            "posterior_sha256": "3faef2942a03d584e0652c2bb5ba99228fde5f4cf4734cf054bcc53f2f451d28",
+            "stride_ms": 20.58823529411765
+          },
+          "seconds": 0.03269299981184304
+        }
+      ],
+      "denied_acoustic_reads": [],
+      "audio_ms": 700.0,
+      "covered_audio_ms": 700.0,
+      "coverage": 0.02980744920092084,
+      "acoustic_intervals_ms": [
+        [
+          6120.0,
+          6820.0
+        ]
+      ],
+      "cache_hits": 0,
+      "cache_bytes": 11751,
+      "peak_cache_bytes": 11751,
+      "cache_evictions": 0,
+      "local_read_limits": {
+        "cache_limit_bytes": 33554432,
+        "max_read_ms": 6000.0,
+        "max_coverage": 0.65,
+        "max_audio_ratio": 2.0
+      },
+      "model_passes": 1
+    },
+    "actual_dispatches": [
+      {
+        "samples": 11200,
+        "sha256": "83e3a378d982f2eb58920deabe073501dcd8bca293224e4639d6a7094e8e16c7"
+      }
+    ],
+    "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a"
+  },
+  {
+    "model": "quran-phonetics",
+    "kind": "wrong-owner",
+    "target": "qul",
+    "text": "thalla",
+    "accepted": false,
+    "runtime": {
+      "blank_id": 37,
+      "do_normalize": true,
+      "input_name": "input_values",
+      "numpy": "2.5.0",
+      "onnxruntime": "1.27.0",
+      "output_name": "logits",
+      "providers": [
+        "CPUExecutionProvider"
+      ],
+      "session_options": {
+        "execution_mode": "ExecutionMode.ORT_SEQUENTIAL",
+        "graph_optimization_level": "GraphOptimizationLevel.ORT_ENABLE_ALL",
+        "inter_op_num_threads": "0",
+        "intra_op_num_threads": "0"
+      },
+      "vocab": {
+        " ": 0,
+        "'": 1,
+        "-": 2,
+        "</s>": 39,
+        "<s>": 38,
+        "H": 3,
+        "[PAD]": 37,
+        "[UNK]": 36,
+        "a": 4,
+        "b": 5,
+        "d": 6,
+        "e": 7,
+        "f": 8,
+        "g": 9,
+        "h": 10,
+        "i": 11,
+        "j": 12,
+        "k": 13,
+        "l": 14,
+        "m": 15,
+        "n": 16,
+        "o": 17,
+        "q": 18,
+        "r": 19,
+        "s": 20,
+        "t": 21,
+        "u": 22,
+        "w": 23,
+        "y": 24,
+        "z": 25,
+        "|": 35,
+        "ā": 26,
+        "ī": 27,
+        "ū": 28,
+        "ʿ": 29,
+        "ḍ": 30,
+        "ḥ": 31,
+        "ṣ": 32,
+        "ṭ": 33,
+        "ẓ": 34
+      },
+      "weights_sha256": "423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a"
+    },
+    "trace": {
+      "total_ms": 23484.0625,
+      "emission_passes": 1,
+      "emissions_frames": 34,
+      "acoustic_reads": [
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            8680.0,
+            9380.0
+          ],
+          "frames": 34,
+          "outcome": "completed",
+          "id": 0,
+          "reason": "negative:wrong-owner:qul",
+          "requested_window_ms": [
+            8680.0,
+            9380.0
+          ],
+          "samples": [
+            138880,
+            150080
+          ],
+          "observed": {
+            "units": [
+              "t",
+              "h",
+              "a",
+              "l",
+              "l",
+              "a"
+            ],
+            "positions_ms": [
+              0.0,
+              0.0,
+              47.05882352941177,
+              150.0,
+              355.88235294117646,
+              458.82352941176475
+            ],
+            "quality": 0.9473807017008463,
+            "truncated": false,
+            "text": "thalla",
+            "unit_quality": [
+              0.9479916095733643,
+              0.7395009994506836,
+              0.9998102784156799,
+              0.9980121850967407,
+              0.9995014667510986,
+              0.999467670917511
+            ],
+            "frames": 34,
+            "attribution": [],
+            "hypotheses": [
+              {
+                "units": [
+                  "t",
+                  "h",
+                  "a",
+                  "l",
+                  "l",
+                  "a"
+                ],
+                "positions_ms": [
+                  0.0,
+                  0.0,
+                  47.05882352941177,
+                  150.0,
+                  355.88235294117646,
+                  458.82352941176475
+                ],
+                "unit_quality": [
+                  0.947991601426922,
+                  0.7395010123993355,
+                  0.9998102548156492,
+                  0.9980122103891025,
+                  0.999501476968004,
+                  0.9994676564332926
+                ],
+                "log_probability": -0.3487544430901499
+              },
+              {
+                "units": [
+                  "t",
+                  "a",
+                  "l",
+                  "l",
+                  "a"
+                ],
+                "positions_ms": [
+                  0.0,
+                  47.05882352941177,
+                  150.0,
+                  355.88235294117646,
+                  458.82352941176475
+                ],
+                "unit_quality": [
+                  0.947991601426922,
+                  0.9998102548156492,
+                  0.9980122103891025,
+                  0.999501476968004,
+                  0.9994676564332926
+                ],
+                "log_probability": -1.438944814537891
+              },
+              {
+                "units": [
+                  "t",
+                  "t",
+                  "h",
+                  "a",
+                  "l",
+                  "l",
+                  "a"
+                ],
+                "positions_ms": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  47.05882352941177,
+                  150.0,
+                  355.88235294117646,
+                  458.82352941176475
+                ],
+                "unit_quality": [
+                  0.3961301514624369,
+                  0.9718164693568562,
+                  0.7395010123993355,
+                  0.9998102548156492,
+                  0.9980122103891025,
+                  0.999501476968004,
+                  0.9994676564332926
+                ],
+                "log_probability": -3.5830697919662104
+              },
+              {
+                "units": [
+                  "t",
+                  "t",
+                  "a",
+                  "l",
+                  "l",
+                  "a"
+                ],
+                "positions_ms": [
+                  0.0,
+                  0.0,
+                  47.05882352941177,
+                  150.0,
+                  355.88235294117646,
+                  458.82352941176475
+                ],
+                "unit_quality": [
+                  0.3961301514624369,
+                  0.9718164693568562,
+                  0.9998102548156492,
+                  0.9980122103891025,
+                  0.999501476968004,
+                  0.9994676564332926
+                ],
+                "log_probability": -4.599795589956037
+              },
+              {
+                "units": [
+                  "t",
+                  "f",
+                  "a",
+                  "l",
+                  "l",
+                  "a"
+                ],
+                "positions_ms": [
+                  0.0,
+                  0.0,
+                  47.05882352941177,
+                  150.0,
+                  355.88235294117646,
+                  458.82352941176475
+                ],
+                "unit_quality": [
+                  0.947991601426922,
+                  0.003439519963831779,
+                  0.9998102548156492,
+                  0.9980122103891025,
+                  0.999501476968004,
+                  0.9994676564332926
+                ],
+                "log_probability": -5.679691451309248
+              },
+              {
+                "units": [
+                  "t",
+                  "h",
+                  "t",
+                  "a",
+                  "l",
+                  "l",
+                  "a"
+                ],
+                "positions_ms": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  47.05882352941177,
+                  150.0,
+                  355.88235294117646,
+                  458.82352941176475
+                ],
+                "unit_quality": [
+                  0.947991601426922,
+                  0.019590955319131253,
+                  0.09027696959914254,
+                  0.9998102548156492,
+                  0.9980122103891025,
+                  0.999501476968004,
+                  0.9994676564332926
+                ],
+                "log_probability": -6.329419878359845
+              },
+              {
+                "units": [
+                  "t",
+                  "h",
+                  "a",
+                  "l",
+                  "l"
+                ],
+                "positions_ms": [
+                  0.0,
+                  0.0,
+                  47.05882352941177,
+                  150.0,
+                  355.88235294117646
+                ],
+                "unit_quality": [
+                  0.947991601426922,
+                  0.7395010123993355,
+                  0.9998102548156492,
+                  0.9980122103891025,
+                  0.999501476968004
+                ],
+                "log_probability": -7.968217955094211
+              },
+              {
+                "units": [
+                  "t",
+                  "a",
+                  "l",
+                  "l"
+                ],
+                "positions_ms": [
+                  0.0,
+                  47.05882352941177,
+                  150.0,
+                  355.88235294117646
+                ],
+                "unit_quality": [
+                  0.947991601426922,
+                  0.9998102548156492,
+                  0.9980122103891025,
+                  0.999501476968004
+                ],
+                "log_probability": -9.058408326545413
+              }
+            ],
+            "null_log_probability": -47.372459411621094,
+            "posterior_sha256": "e23e9c984a483bf57f629f4181a7551258af018aa362ff674aea0d6076818064",
+            "stride_ms": 20.58823529411765
+          },
+          "seconds": 0.03018741589039564
+        }
+      ],
+      "denied_acoustic_reads": [],
+      "audio_ms": 700.0,
+      "covered_audio_ms": 700.0,
+      "coverage": 0.02980744920092084,
+      "acoustic_intervals_ms": [
+        [
+          8680.0,
+          9380.0
+        ]
+      ],
+      "cache_hits": 0,
+      "cache_bytes": 14161,
+      "peak_cache_bytes": 14161,
+      "cache_evictions": 0,
+      "local_read_limits": {
+        "cache_limit_bytes": 33554432,
+        "max_read_ms": 6000.0,
+        "max_coverage": 0.65,
+        "max_audio_ratio": 2.0
+      },
+      "model_passes": 1
+    },
+    "actual_dispatches": [
+      {
+        "samples": 11200,
+        "sha256": "17e1b0253921da9cd483bb8ba2aa341aea5b480415871064bd56d316ac1136a6"
+      }
+    ],
+    "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a"
+  },
+  {
+    "model": "quran-phonetics",
+    "kind": "late-non-target",
+    "target": "qul",
+    "text": "wala",
+    "accepted": false,
+    "runtime": {
+      "blank_id": 37,
+      "do_normalize": true,
+      "input_name": "input_values",
+      "numpy": "2.5.0",
+      "onnxruntime": "1.27.0",
+      "output_name": "logits",
+      "providers": [
+        "CPUExecutionProvider"
+      ],
+      "session_options": {
+        "execution_mode": "ExecutionMode.ORT_SEQUENTIAL",
+        "graph_optimization_level": "GraphOptimizationLevel.ORT_ENABLE_ALL",
+        "inter_op_num_threads": "0",
+        "intra_op_num_threads": "0"
+      },
+      "vocab": {
+        " ": 0,
+        "'": 1,
+        "-": 2,
+        "</s>": 39,
+        "<s>": 38,
+        "H": 3,
+        "[PAD]": 37,
+        "[UNK]": 36,
+        "a": 4,
+        "b": 5,
+        "d": 6,
+        "e": 7,
+        "f": 8,
+        "g": 9,
+        "h": 10,
+        "i": 11,
+        "j": 12,
+        "k": 13,
+        "l": 14,
+        "m": 15,
+        "n": 16,
+        "o": 17,
+        "q": 18,
+        "r": 19,
+        "s": 20,
+        "t": 21,
+        "u": 22,
+        "w": 23,
+        "y": 24,
+        "z": 25,
+        "|": 35,
+        "ā": 26,
+        "ī": 27,
+        "ū": 28,
+        "ʿ": 29,
+        "ḍ": 30,
+        "ḥ": 31,
+        "ṣ": 32,
+        "ṭ": 33,
+        "ẓ": 34
+      },
+      "weights_sha256": "423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a"
+    },
+    "trace": {
+      "total_ms": 23484.0625,
+      "emission_passes": 1,
+      "emissions_frames": 34,
+      "acoustic_reads": [
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            13480.0,
+            14180.0
+          ],
+          "frames": 34,
+          "outcome": "completed",
+          "id": 0,
+          "reason": "negative:late-non-target:qul",
+          "requested_window_ms": [
+            13480.0,
+            14180.0
+          ],
+          "samples": [
+            215680,
+            226880
+          ],
+          "observed": {
+            "units": [
+              "w",
+              "a",
+              "l",
+              "a"
+            ],
+            "positions_ms": [
+              26.470588235294144,
+              108.82352941176475,
+              211.76470588235298,
+              273.5294117647059
+            ],
+            "quality": 0.9987304657697678,
+            "truncated": false,
+            "text": "wala",
+            "unit_quality": [
+              0.9976644515991211,
+              0.9998955726623535,
+              0.9999327659606934,
+              0.9974290728569031
+            ],
+            "frames": 34,
+            "attribution": [],
+            "hypotheses": [
+              {
+                "units": [
+                  "w",
+                  "a",
+                  "l",
+                  "a"
+                ],
+                "positions_ms": [
+                  26.470588235294144,
+                  108.82352941176475,
+                  211.76470588235298,
+                  273.5294117647059
+                ],
+                "unit_quality": [
+                  0.9976644356492924,
+                  0.9998955835638214,
+                  0.9999327704835214,
+                  0.997429083429395
+                ],
+                "log_probability": -0.6137638474464734
+              },
+              {
+                "units": [
+                  "w",
+                  "a",
+                  "l",
+                  "a",
+                  "n"
+                ],
+                "positions_ms": [
+                  26.470588235294144,
+                  108.82352941176475,
+                  211.76470588235298,
+                  273.5294117647059,
+                  376.47058823529414
+                ],
+                "unit_quality": [
+                  0.9976644356492924,
+                  0.9998955835638214,
+                  0.9999327704835214,
+                  0.997429083429395,
+                  0.40298565800559505
+                ],
+                "log_probability": -0.9159342295709116
+              },
+              {
+                "units": [
+                  "w",
+                  "a",
+                  "l",
+                  "a",
+                  "m"
+                ],
+                "positions_ms": [
+                  26.470588235294144,
+                  108.82352941176475,
+                  211.76470588235298,
+                  273.5294117647059,
+                  376.47058823529414
+                ],
+                "unit_quality": [
+                  0.9976644356492924,
+                  0.9998955835638214,
+                  0.9999327704835214,
+                  0.997429083429395,
+                  0.040756050709698705
+                ],
+                "log_probability": -3.206590045527923
+              },
+              {
+                "units": [
+                  "w",
+                  "a",
+                  "l",
+                  "a",
+                  "l"
+                ],
+                "positions_ms": [
+                  26.470588235294144,
+                  108.82352941176475,
+                  211.76470588235298,
+                  273.5294117647059,
+                  376.47058823529414
+                ],
+                "unit_quality": [
+                  0.9976644356492924,
+                  0.9998955835638214,
+                  0.9999327704835214,
+                  0.997429083429395,
+                  0.003621291775241242
+                ],
+                "log_probability": -5.627538920365023
+              },
+              {
+                "units": [
+                  "h",
+                  "w",
+                  "a",
+                  "l",
+                  "a"
+                ],
+                "positions_ms": [
+                  0.0,
+                  26.470588235294144,
+                  108.82352941176475,
+                  211.76470588235298,
+                  273.5294117647059
+                ],
+                "unit_quality": [
+                  0.0025143303637212835,
+                  0.9976644356492924,
+                  0.9998955835638214,
+                  0.9999327704835214,
+                  0.997429083429395
+                ],
+                "log_probability": -5.812885324127979
+              },
+              {
+                "units": [
+                  "h",
+                  "w",
+                  "a",
+                  "l",
+                  "a",
+                  "n"
+                ],
+                "positions_ms": [
+                  0.0,
+                  26.470588235294144,
+                  108.82352941176475,
+                  211.76470588235298,
+                  273.5294117647059,
+                  376.47058823529414
+                ],
+                "unit_quality": [
+                  0.0025143303637212835,
+                  0.9976644356492924,
+                  0.9998955835638214,
+                  0.9999327704835214,
+                  0.997429083429395,
+                  0.40298565800559505
+                ],
+                "log_probability": -6.115425086098473
+              },
+              {
+                "units": [
+                  "w",
+                  "a",
+                  "l",
+                  "a",
+                  "'"
+                ],
+                "positions_ms": [
+                  26.470588235294144,
+                  108.82352941176475,
+                  211.76470588235298,
+                  273.5294117647059,
+                  376.47058823529414
+                ],
+                "unit_quality": [
+                  0.9976644356492924,
+                  0.9998955835638214,
+                  0.9999327704835214,
+                  0.997429083429395,
+                  0.0011124554297081042
+                ],
+                "log_probability": -6.768906339715254
+              },
+              {
+                "units": [
+                  "a",
+                  "l",
+                  "a"
+                ],
+                "positions_ms": [
+                  108.82352941176475,
+                  211.76470588235298,
+                  273.5294117647059
+                ],
+                "unit_quality": [
+                  0.9998955835638214,
+                  0.9999327704835214,
+                  0.997429083429395
+                ],
+                "log_probability": -6.945307238988302
+              }
+            ],
+            "null_log_probability": -49.318172454833984,
+            "posterior_sha256": "9e059af5d735e2c7a5c3799a8e73c19dd22b141b5783b959c3835c6a1078a099",
+            "stride_ms": 20.58823529411765
+          },
+          "seconds": 0.030949082924053073
+        }
+      ],
+      "denied_acoustic_reads": [],
+      "audio_ms": 700.0,
+      "covered_audio_ms": 700.0,
+      "coverage": 0.02980744920092084,
+      "acoustic_intervals_ms": [
+        [
+          13480.0,
+          14180.0
+        ]
+      ],
+      "cache_hits": 0,
+      "cache_bytes": 13803,
+      "peak_cache_bytes": 13803,
+      "cache_evictions": 0,
+      "local_read_limits": {
+        "cache_limit_bytes": 33554432,
+        "max_read_ms": 6000.0,
+        "max_coverage": 0.65,
+        "max_audio_ratio": 2.0
+      },
+      "model_passes": 1
+    },
+    "actual_dispatches": [
+      {
+        "samples": 11200,
+        "sha256": "47fe05f0479d22cffaa4a5f6884d922bdcdce02964bbd69697d09cc7ea92ec38"
+      }
+    ],
+    "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a"
+  },
+  {
+    "model": "quran-phonetics-fp32",
+    "kind": "zero",
+    "target": "qul",
+    "text": "",
+    "accepted": false,
+    "runtime": {
+      "blank_id": 37,
+      "do_normalize": true,
+      "input_name": "input_values",
+      "numpy": "2.5.0",
+      "onnxruntime": "1.27.0",
+      "output_name": "logits",
+      "providers": [
+        "CPUExecutionProvider"
+      ],
+      "session_options": {
+        "execution_mode": "ExecutionMode.ORT_SEQUENTIAL",
+        "graph_optimization_level": "GraphOptimizationLevel.ORT_ENABLE_ALL",
+        "inter_op_num_threads": "0",
+        "intra_op_num_threads": "0"
+      },
+      "vocab": {
+        " ": 0,
+        "'": 1,
+        "-": 2,
+        "</s>": 39,
+        "<s>": 38,
+        "H": 3,
+        "[PAD]": 37,
+        "[UNK]": 36,
+        "a": 4,
+        "b": 5,
+        "d": 6,
+        "e": 7,
+        "f": 8,
+        "g": 9,
+        "h": 10,
+        "i": 11,
+        "j": 12,
+        "k": 13,
+        "l": 14,
+        "m": 15,
+        "n": 16,
+        "o": 17,
+        "q": 18,
+        "r": 19,
+        "s": 20,
+        "t": 21,
+        "u": 22,
+        "w": 23,
+        "y": 24,
+        "z": 25,
+        "|": 35,
+        "ā": 26,
+        "ī": 27,
+        "ū": 28,
+        "ʿ": 29,
+        "ḍ": 30,
+        "ḥ": 31,
+        "ṣ": 32,
+        "ṭ": 33,
+        "ẓ": 34
+      },
+      "weights_sha256": "5b2e9c350371feb5bb520acd0a09c7372c80915fce4e2f2e3df48cb803da87e3"
+    },
+    "trace": {
+      "total_ms": 23484.0625,
+      "emission_passes": 1,
+      "emissions_frames": 34,
+      "acoustic_reads": [
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            6120.0,
+            6820.0
+          ],
+          "frames": 34,
+          "outcome": "completed",
+          "id": 0,
+          "reason": "negative:zero:qul",
+          "requested_window_ms": [
+            6120.0,
+            6820.0
+          ],
+          "samples": [
+            97920,
+            109120
+          ],
+          "observed": {
+            "units": [],
+            "positions_ms": [],
+            "quality": 0.0,
+            "truncated": false,
+            "text": "",
+            "unit_quality": [],
+            "frames": 34,
+            "attribution": [],
+            "hypotheses": [
+              {
+                "units": [],
+                "positions_ms": [],
+                "unit_quality": [],
+                "log_probability": -0.0001441122972209996
+              },
+              {
+                "units": [
+                  "i"
+                ],
+                "positions_ms": [
+                  314.7058823529412
+                ],
+                "unit_quality": [
+                  5.335692622157694e-07
+                ],
+                "log_probability": -10.962431488045658
+              },
+              {
+                "units": [
+                  "u"
+                ],
+                "positions_ms": [
+                  479.41176470588243
+                ],
+                "unit_quality": [
+                  4.919742785231965e-07
+                ],
+                "log_probability": -11.049904556152669
+              },
+              {
+                "units": [
+                  "a"
+                ],
+                "positions_ms": [
+                  314.7058823529412
+                ],
+                "unit_quality": [
+                  4.6766266225000205e-07
+                ],
+                "log_probability": -11.106854340714852
+              },
+              {
+                "units": [
+                  "f"
+                ],
+                "positions_ms": [
+                  479.41176470588243
+                ],
+                "unit_quality": [
+                  4.849468537149524e-07
+                ],
+                "log_probability": -11.226752744221963
+              },
+              {
+                "units": [
+                  "t"
+                ],
+                "positions_ms": [
+                  479.41176470588243
+                ],
+                "unit_quality": [
+                  4.5124489257715366e-07
+                ],
+                "log_probability": -11.25252064336733
+              },
+              {
+                "units": [
+                  "ā"
+                ],
+                "positions_ms": [
+                  0.0
+                ],
+                "unit_quality": [
+                  3.009363794118919e-07
+                ],
+                "log_probability": -11.622227741614543
+              },
+              {
+                "units": [
+                  "w"
+                ],
+                "positions_ms": [
+                  479.41176470588243
+                ],
+                "unit_quality": [
+                  2.834694769703391e-07
+                ],
+                "log_probability": -11.69224814791041
+              }
+            ],
+            "null_log_probability": -0.00014411228767130524,
+            "posterior_sha256": "1a74e6499ab8eacdab47475da32e381ffad63b37e105ad530e0c9feef5a34b73",
+            "stride_ms": 20.58823529411765
+          },
+          "seconds": 0.040928333066403866
+        }
+      ],
+      "denied_acoustic_reads": [],
+      "audio_ms": 700.0,
+      "covered_audio_ms": 700.0,
+      "coverage": 0.02980744920092084,
+      "acoustic_intervals_ms": [
+        [
+          6120.0,
+          6820.0
+        ]
+      ],
+      "cache_hits": 0,
+      "cache_bytes": 11745,
+      "peak_cache_bytes": 11745,
+      "cache_evictions": 0,
+      "local_read_limits": {
+        "cache_limit_bytes": 33554432,
+        "max_read_ms": 6000.0,
+        "max_coverage": 0.65,
+        "max_audio_ratio": 2.0
+      },
+      "model_passes": 1
+    },
+    "actual_dispatches": [
+      {
+        "samples": 11200,
+        "sha256": "83e3a378d982f2eb58920deabe073501dcd8bca293224e4639d6a7094e8e16c7"
+      }
+    ],
+    "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a"
+  },
+  {
+    "model": "quran-phonetics-fp32",
+    "kind": "wrong-owner",
+    "target": "qul",
+    "text": "thalla",
+    "accepted": false,
+    "runtime": {
+      "blank_id": 37,
+      "do_normalize": true,
+      "input_name": "input_values",
+      "numpy": "2.5.0",
+      "onnxruntime": "1.27.0",
+      "output_name": "logits",
+      "providers": [
+        "CPUExecutionProvider"
+      ],
+      "session_options": {
+        "execution_mode": "ExecutionMode.ORT_SEQUENTIAL",
+        "graph_optimization_level": "GraphOptimizationLevel.ORT_ENABLE_ALL",
+        "inter_op_num_threads": "0",
+        "intra_op_num_threads": "0"
+      },
+      "vocab": {
+        " ": 0,
+        "'": 1,
+        "-": 2,
+        "</s>": 39,
+        "<s>": 38,
+        "H": 3,
+        "[PAD]": 37,
+        "[UNK]": 36,
+        "a": 4,
+        "b": 5,
+        "d": 6,
+        "e": 7,
+        "f": 8,
+        "g": 9,
+        "h": 10,
+        "i": 11,
+        "j": 12,
+        "k": 13,
+        "l": 14,
+        "m": 15,
+        "n": 16,
+        "o": 17,
+        "q": 18,
+        "r": 19,
+        "s": 20,
+        "t": 21,
+        "u": 22,
+        "w": 23,
+        "y": 24,
+        "z": 25,
+        "|": 35,
+        "ā": 26,
+        "ī": 27,
+        "ū": 28,
+        "ʿ": 29,
+        "ḍ": 30,
+        "ḥ": 31,
+        "ṣ": 32,
+        "ṭ": 33,
+        "ẓ": 34
+      },
+      "weights_sha256": "5b2e9c350371feb5bb520acd0a09c7372c80915fce4e2f2e3df48cb803da87e3"
+    },
+    "trace": {
+      "total_ms": 23484.0625,
+      "emission_passes": 1,
+      "emissions_frames": 34,
+      "acoustic_reads": [
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            8680.0,
+            9380.0
+          ],
+          "frames": 34,
+          "outcome": "completed",
+          "id": 0,
+          "reason": "negative:wrong-owner:qul",
+          "requested_window_ms": [
+            8680.0,
+            9380.0
+          ],
+          "samples": [
+            138880,
+            150080
+          ],
+          "observed": {
+            "units": [
+              "t",
+              "h",
+              "a",
+              "l",
+              "l",
+              "a"
+            ],
+            "positions_ms": [
+              0.0,
+              0.0,
+              47.05882352941177,
+              150.0,
+              355.88235294117646,
+              458.82352941176475
+            ],
+            "quality": 0.9592563211917877,
+            "truncated": false,
+            "text": "thalla",
+            "unit_quality": [
+              0.8366695642471313,
+              0.9714804291725159,
+              0.9998732805252075,
+              0.947986364364624,
+              0.9997672438621521,
+              0.9997610449790955
+            ],
+            "frames": 34,
+            "attribution": [],
+            "hypotheses": [
+              {
+                "units": [
+                  "t",
+                  "h",
+                  "a",
+                  "l",
+                  "l",
+                  "a"
+                ],
+                "positions_ms": [
+                  0.0,
+                  0.0,
+                  47.05882352941177,
+                  150.0,
+                  355.88235294117646,
+                  458.82352941176475
+                ],
+                "unit_quality": [
+                  0.8366695659021856,
+                  0.9714804081060732,
+                  0.9998732965854205,
+                  0.9479863535671885,
+                  0.9997672384463482,
+                  0.999761042494754
+                ],
+                "log_probability": -0.13201984003185727
+              },
+              {
+                "units": [
+                  "t",
+                  "t",
+                  "h",
+                  "a",
+                  "l",
+                  "l",
+                  "a"
+                ],
+                "positions_ms": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  47.05882352941177,
+                  150.0,
+                  355.88235294117646,
+                  458.82352941176475
+                ],
+                "unit_quality": [
+                  0.19776434377132524,
+                  0.9837544516732103,
+                  0.9714804081060732,
+                  0.9998732965854205,
+                  0.9479863535671885,
+                  0.9997672384463482,
+                  0.999761042494754
+                ],
+                "log_probability": -2.4876567977665016
+              },
+              {
+                "units": [
+                  "t",
+                  "a",
+                  "l",
+                  "l",
+                  "a"
+                ],
+                "positions_ms": [
+                  0.0,
+                  47.05882352941177,
+                  150.0,
+                  355.88235294117646,
+                  458.82352941176475
+                ],
+                "unit_quality": [
+                  0.8366695659021856,
+                  0.9998732965854205,
+                  0.9479863535671885,
+                  0.9997672384463482,
+                  0.999761042494754
+                ],
+                "log_probability": -3.792257585582817
+              },
+              {
+                "units": [
+                  "t",
+                  "t",
+                  "a",
+                  "l",
+                  "l",
+                  "a"
+                ],
+                "positions_ms": [
+                  0.0,
+                  0.0,
+                  47.05882352941177,
+                  150.0,
+                  355.88235294117646,
+                  458.82352941176475
+                ],
+                "unit_quality": [
+                  0.19776434377132524,
+                  0.9837544516732103,
+                  0.9998732965854205,
+                  0.9479863535671885,
+                  0.9997672384463482,
+                  0.999761042494754
+                ],
+                "log_probability": -6.12560857592083
+              },
+              {
+                "units": [
+                  "t",
+                  "h",
+                  "a",
+                  "l",
+                  "a"
+                ],
+                "positions_ms": [
+                  0.0,
+                  0.0,
+                  47.05882352941177,
+                  355.88235294117646,
+                  458.82352941176475
+                ],
+                "unit_quality": [
+                  0.8366695659021856,
+                  0.9714804081060732,
+                  0.9998732965854205,
+                  0.9997672384463482,
+                  0.999761042494754
+                ],
+                "log_probability": -6.160647943597566
+              },
+              {
+                "units": [
+                  "t",
+                  "t",
+                  "t",
+                  "h",
+                  "a",
+                  "l",
+                  "l",
+                  "a"
+                ],
+                "positions_ms": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  47.05882352941177,
+                  150.0,
+                  355.88235294117646,
+                  458.82352941176475
+                ],
+                "unit_quality": [
+                  0.01219317453419635,
+                  0.19776434377132524,
+                  0.9837544516732103,
+                  0.9714804081060732,
+                  0.9998732965854205,
+                  0.9479863535671885,
+                  0.9997672384463482,
+                  0.999761042494754
+                ],
+                "log_probability": -6.387032413679958
+              },
+              {
+                "units": [
+                  "t",
+                  "k",
+                  "h",
+                  "a",
+                  "l",
+                  "l",
+                  "a"
+                ],
+                "positions_ms": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  47.05882352941177,
+                  150.0,
+                  355.88235294117646,
+                  458.82352941176475
+                ],
+                "unit_quality": [
+                  0.8366695659021856,
+                  0.001569431636054015,
+                  0.9714804081060732,
+                  0.9998732965854205,
+                  0.9479863535671885,
+                  0.9997672384463482,
+                  0.999761042494754
+                ],
+                "log_probability": -6.631358660966669
+              },
+              {
+                "units": [
+                  "t",
+                  "h",
+                  "a",
+                  "l",
+                  "l"
+                ],
+                "positions_ms": [
+                  0.0,
+                  0.0,
+                  47.05882352941177,
+                  150.0,
+                  355.88235294117646
+                ],
+                "unit_quality": [
+                  0.8366695659021856,
+                  0.9714804081060732,
+                  0.9998732965854205,
+                  0.9479863535671885,
+                  0.9997672384463482
+                ],
+                "log_probability": -8.60632700531077
+              }
+            ],
+            "null_log_probability": -52.442596435546875,
+            "posterior_sha256": "99e0142e8842ceaf961cd399d06b7a48ad15e04335d78cbb46ba90cc9412e918",
+            "stride_ms": 20.58823529411765
+          },
+          "seconds": 0.04196983319707215
+        }
+      ],
+      "denied_acoustic_reads": [],
+      "audio_ms": 700.0,
+      "covered_audio_ms": 700.0,
+      "coverage": 0.02980744920092084,
+      "acoustic_intervals_ms": [
+        [
+          8680.0,
+          9380.0
+        ]
+      ],
+      "cache_hits": 0,
+      "cache_bytes": 14353,
+      "peak_cache_bytes": 14353,
+      "cache_evictions": 0,
+      "local_read_limits": {
+        "cache_limit_bytes": 33554432,
+        "max_read_ms": 6000.0,
+        "max_coverage": 0.65,
+        "max_audio_ratio": 2.0
+      },
+      "model_passes": 1
+    },
+    "actual_dispatches": [
+      {
+        "samples": 11200,
+        "sha256": "17e1b0253921da9cd483bb8ba2aa341aea5b480415871064bd56d316ac1136a6"
+      }
+    ],
+    "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a"
+  },
+  {
+    "model": "quran-phonetics-fp32",
+    "kind": "late-non-target",
+    "target": "qul",
+    "text": "walam",
+    "accepted": false,
+    "runtime": {
+      "blank_id": 37,
+      "do_normalize": true,
+      "input_name": "input_values",
+      "numpy": "2.5.0",
+      "onnxruntime": "1.27.0",
+      "output_name": "logits",
+      "providers": [
+        "CPUExecutionProvider"
+      ],
+      "session_options": {
+        "execution_mode": "ExecutionMode.ORT_SEQUENTIAL",
+        "graph_optimization_level": "GraphOptimizationLevel.ORT_ENABLE_ALL",
+        "inter_op_num_threads": "0",
+        "intra_op_num_threads": "0"
+      },
+      "vocab": {
+        " ": 0,
+        "'": 1,
+        "-": 2,
+        "</s>": 39,
+        "<s>": 38,
+        "H": 3,
+        "[PAD]": 37,
+        "[UNK]": 36,
+        "a": 4,
+        "b": 5,
+        "d": 6,
+        "e": 7,
+        "f": 8,
+        "g": 9,
+        "h": 10,
+        "i": 11,
+        "j": 12,
+        "k": 13,
+        "l": 14,
+        "m": 15,
+        "n": 16,
+        "o": 17,
+        "q": 18,
+        "r": 19,
+        "s": 20,
+        "t": 21,
+        "u": 22,
+        "w": 23,
+        "y": 24,
+        "z": 25,
+        "|": 35,
+        "ā": 26,
+        "ī": 27,
+        "ū": 28,
+        "ʿ": 29,
+        "ḍ": 30,
+        "ḥ": 31,
+        "ṣ": 32,
+        "ṭ": 33,
+        "ẓ": 34
+      },
+      "weights_sha256": "5b2e9c350371feb5bb520acd0a09c7372c80915fce4e2f2e3df48cb803da87e3"
+    },
+    "trace": {
+      "total_ms": 23484.0625,
+      "emission_passes": 1,
+      "emissions_frames": 34,
+      "acoustic_reads": [
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            13480.0,
+            14180.0
+          ],
+          "frames": 34,
+          "outcome": "completed",
+          "id": 0,
+          "reason": "negative:late-non-target:qul",
+          "requested_window_ms": [
+            13480.0,
+            14180.0
+          ],
+          "samples": [
+            215680,
+            226880
+          ],
+          "observed": {
+            "units": [
+              "w",
+              "a",
+              "l",
+              "a",
+              "m"
+            ],
+            "positions_ms": [
+              26.470588235294144,
+              108.82352941176475,
+              211.76470588235298,
+              273.5294117647059,
+              376.47058823529414
+            ],
+            "quality": 0.8887290894985199,
+            "truncated": false,
+            "text": "walam",
+            "unit_quality": [
+              0.9997033476829529,
+              0.9999330043792725,
+              0.9999456405639648,
+              0.9981617331504822,
+              0.4459017217159271
+            ],
+            "frames": 34,
+            "attribution": [],
+            "hypotheses": [
+              {
+                "units": [
+                  "w",
+                  "a",
+                  "l",
+                  "a",
+                  "m"
+                ],
+                "positions_ms": [
+                  26.470588235294144,
+                  108.82352941176475,
+                  211.76470588235298,
+                  273.5294117647059,
+                  376.47058823529414
+                ],
+                "unit_quality": [
+                  0.9997033760848748,
+                  0.9999330088642737,
+                  0.9999456435183514,
+                  0.998161721236607,
+                  0.44590172205540046
+                ],
+                "log_probability": -0.826939349219315
+              },
+              {
+                "units": [
+                  "w",
+                  "a",
+                  "l",
+                  "a",
+                  "n"
+                ],
+                "positions_ms": [
+                  26.470588235294144,
+                  108.82352941176475,
+                  211.76470588235298,
+                  273.5294117647059,
+                  376.47058823529414
+                ],
+                "unit_quality": [
+                  0.9997033760848748,
+                  0.9999330088642737,
+                  0.9999456435183514,
+                  0.998161721236607,
+                  0.3348074604069557
+                ],
+                "log_probability": -1.1136607740542352
+              },
+              {
+                "units": [
+                  "w",
+                  "a",
+                  "l",
+                  "a"
+                ],
+                "positions_ms": [
+                  26.470588235294144,
+                  108.82352941176475,
+                  211.76470588235298,
+                  273.5294117647059
+                ],
+                "unit_quality": [
+                  0.9997033760848748,
+                  0.9999330088642737,
+                  0.9999456435183514,
+                  0.998161721236607
+                ],
+                "log_probability": -1.5996522467783663
+              },
+              {
+                "units": [
+                  "h",
+                  "w",
+                  "a",
+                  "l",
+                  "a",
+                  "m"
+                ],
+                "positions_ms": [
+                  0.0,
+                  26.470588235294144,
+                  108.82352941176475,
+                  211.76470588235298,
+                  273.5294117647059,
+                  376.47058823529414
+                ],
+                "unit_quality": [
+                  0.008131853332538661,
+                  0.9997033760848748,
+                  0.9999330088642737,
+                  0.9999456435183514,
+                  0.998161721236607,
+                  0.44590172205540046
+                ],
+                "log_probability": -4.926661011093309
+              },
+              {
+                "units": [
+                  "h",
+                  "w",
+                  "a",
+                  "l",
+                  "a",
+                  "n"
+                ],
+                "positions_ms": [
+                  0.0,
+                  26.470588235294144,
+                  108.82352941176475,
+                  211.76470588235298,
+                  273.5294117647059,
+                  376.47058823529414
+                ],
+                "unit_quality": [
+                  0.008131853332538661,
+                  0.9997033760848748,
+                  0.9999330088642737,
+                  0.9999456435183514,
+                  0.998161721236607,
+                  0.3348074604069557
+                ],
+                "log_probability": -5.213256749392131
+              },
+              {
+                "units": [
+                  "w",
+                  "a",
+                  "l",
+                  "a",
+                  "l"
+                ],
+                "positions_ms": [
+                  26.470588235294144,
+                  108.82352941176475,
+                  211.76470588235298,
+                  273.5294117647059,
+                  376.47058823529414
+                ],
+                "unit_quality": [
+                  0.9997033760848748,
+                  0.9999330088642737,
+                  0.9999456435183514,
+                  0.998161721236607,
+                  0.004847774459190863
+                ],
+                "log_probability": -5.348293401485069
+              },
+              {
+                "units": [
+                  "h",
+                  "w",
+                  "a",
+                  "l",
+                  "a"
+                ],
+                "positions_ms": [
+                  0.0,
+                  26.470588235294144,
+                  108.82352941176475,
+                  211.76470588235298,
+                  273.5294117647059
+                ],
+                "unit_quality": [
+                  0.008131853332538661,
+                  0.9997033760848748,
+                  0.9999330088642737,
+                  0.9999456435183514,
+                  0.998161721236607
+                ],
+                "log_probability": -5.699248222116262
+              },
+              {
+                "units": [
+                  "w",
+                  "a",
+                  "l",
+                  "a",
+                  "'"
+                ],
+                "positions_ms": [
+                  26.470588235294144,
+                  108.82352941176475,
+                  211.76470588235298,
+                  273.5294117647059,
+                  376.47058823529414
+                ],
+                "unit_quality": [
+                  0.9997033760848748,
+                  0.9999330088642737,
+                  0.9999456435183514,
+                  0.998161721236607,
+                  0.0017177323823776766
+                ],
+                "log_probability": -6.373976705216479
+              }
+            ],
+            "null_log_probability": -54.1518440246582,
+            "posterior_sha256": "a965a24cd3dc9e9200449852d8bec36707adeb457b5d36c4676aa79733d66cf1",
+            "stride_ms": 20.58823529411765
+          },
+          "seconds": 0.04145400016568601
+        }
+      ],
+      "denied_acoustic_reads": [],
+      "audio_ms": 700.0,
+      "covered_audio_ms": 700.0,
+      "coverage": 0.02980744920092084,
+      "acoustic_intervals_ms": [
+        [
+          13480.0,
+          14180.0
+        ]
+      ],
+      "cache_hits": 0,
+      "cache_bytes": 13948,
+      "peak_cache_bytes": 13948,
+      "cache_evictions": 0,
+      "local_read_limits": {
+        "cache_limit_bytes": 33554432,
+        "max_read_ms": 6000.0,
+        "max_coverage": 0.65,
+        "max_audio_ratio": 2.0
+      },
+      "model_passes": 1
+    },
+    "actual_dispatches": [
+      {
+        "samples": 11200,
+        "sha256": "47fe05f0479d22cffaa4a5f6884d922bdcdce02964bbd69697d09cc7ea92ec38"
+      }
+    ],
+    "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a"
+  }
+]

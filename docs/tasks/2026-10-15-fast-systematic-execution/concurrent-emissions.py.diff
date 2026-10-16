@@ -1,0 +1,37 @@
+--- initial/surah_cutter/core/emissions.py
++++ current/surah_cutter/core/emissions.py
+@@ -224,6 +224,8 @@
+     if audio_waveform.size == 0:
+         raise ValueError("audio_waveform must contain samples")
+ 
++    from surah_cutter.core.progress import advance
++
+     wav = np.ascontiguousarray(audio_waveform, dtype=np.float32)
+     if do_normalize:
+         wav = _normalize(wav)
+@@ -235,7 +237,9 @@
+     # Short clip: a single forward pass, no context trimming needed. This also
+     # matches the torch path's behaviour for typical per-sura recitations.
+     if n <= window:
++        advance("acoustic", 0, 1)
+         logits = _run(session, wav[None, :], input_name, output_name)[0]
++        advance("acoustic", 1, 1)
+         return _log_softmax(logits)
+ 
+     # Pad so the signal length is a whole number of windows, plus ``context`` of
+@@ -246,6 +250,7 @@
+     num_windows = (padded.shape[0] - 2 * context) // window
+     ctx_frames = _time_to_frame(context_s)
+ 
++    advance("acoustic", 0, num_windows)
+     emissions_chunks: list[np.ndarray] = []
+     for i in range(0, num_windows, batch_size):
+         batch = np.stack([
+@@ -258,6 +263,7 @@
+         # reference implementation's framing.
+         trimmed = logits[:, ctx_frames:-ctx_frames + 1, :] if ctx_frames else logits
+         emissions_chunks.append(trimmed)
++        advance("acoustic", min(num_windows, i + batch_size), num_windows)
+ 
+     emissions = np.concatenate(emissions_chunks, axis=0)  # (num_windows, Tc, V)
+     emissions = emissions.reshape(-1, emissions.shape[-1])  # (T_padded, V)

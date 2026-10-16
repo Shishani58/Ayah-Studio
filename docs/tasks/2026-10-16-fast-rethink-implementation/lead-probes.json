@@ -1,0 +1,41 @@
+{
+  "empty_fast": {
+    "passed": true,
+    "requested_mode": "fast",
+    "preserved": [
+      "edited",
+      "verified",
+      "auto_FULL"
+    ],
+    "removed": [
+      "auto_FAST"
+    ]
+  },
+  "empty_words_using_fast": {
+    "passed": true,
+    "requested_mode": "words",
+    "preserved": [
+      "edited",
+      "verified",
+      "auto_FULL"
+    ],
+    "removed": [
+      "auto_FAST"
+    ]
+  },
+  "export": {
+    "passed": true,
+    "old_estimate_rejected": true,
+    "human_verified_time_exported": true
+  },
+  "implicit_fast_origin": {
+    "passed": true,
+    "source": "review-model:backend=review:requested_mode=words:actual_mode=fast:align_lag_ms=0:lag_adjust_ms=0:fast_result=partial-v1"
+  },
+  "cancelled_cleanup": {
+    "passed": true,
+    "cleanup_rolled_back": true,
+    "manual_metadata_unchanged": true
+  },
+  "new_acoustic_calls": 0
+}

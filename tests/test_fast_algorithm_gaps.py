@@ -57,7 +57,7 @@ def test_missing_onset_executor_expands_once_then_validates_identity_only():
         observation(tuple("bcdef" if d < 1800 else "bcdefghi")) if s == 1000 else observation(())
     )
     rows, trace = run(fake, [pause(1000)])
-    assert rows[0][1] == 1100 and rows[0][2] > 0
+    assert trace["boundaries"][0]["start_ms"] == 1100 and trace["boundaries"][0]["confidence"] > 0
     assert trace["boundaries"][0]["proof"]["opening_recovery"]["missing_initial_units"] == 1
     assert sum(r["reason"].startswith("ayah=1:pause") for r in trace["acoustic_reads"]) == 2
     assert trace["confidence_semantics"]["calibrated_probability"] is False
@@ -127,7 +127,7 @@ def contextual_fake(tail_kind="correct"):
 
 def test_incomplete_distinct_opening_uses_shorter_pause_seam_without_timing():
     rows, trace = run(contextual_fake(), [pause(1000), pause(6000)])
-    assert rows[1][1] == 6100 and rows[1][2] == pytest.approx(0.71)
+    assert trace["boundaries"][1]["start_ms"] == 6100 and trace["boundaries"][1]["confidence"] == pytest.approx(0.71)
     proof = trace["boundaries"][1]["proof"]
     assert proof["contextual_owner"]
     assert proof["previous_context_read_id"] != trace["boundaries"][1]["read_id"]
@@ -140,7 +140,7 @@ def test_incomplete_distinct_opening_uses_shorter_pause_seam_without_timing():
 @pytest.mark.parametrize("kind", ["wrong", "weak", "truncated"])
 def test_shorter_pause_seam_requires_previous_tail(kind):
     rows, trace = run(contextual_fake(kind), [pause(1000), pause(6000)])
-    assert rows[1][2] == 0
+    assert trace["boundaries"][1]["confidence"] == 0
     assert any("previous_tail" in r["reason"] for r in trace["acoustic_reads"])
 
 
@@ -192,7 +192,7 @@ def test_unproved_alternative_tail_preserves_original_opening_expansion(kind):
 
     fake.responder = respond
     rows, trace = run(fake, [pause(1000), pause(6000), pause(18000)])
-    assert rows[1] == (2, 6100, 0.99)
+    assert (trace["boundaries"][1]["ayah"], trace["boundaries"][1]["start_ms"], trace["boundaries"][1]["confidence"]) == (2, 6100, 0.99)
     proof = trace["boundaries"][1]["proof"]
     assert not proof.get("contextual_owner")
     read_id = trace["boundaries"][1]["read_id"]
@@ -224,7 +224,7 @@ def test_failed_alternative_tail_does_not_replace_future_opening_provenance():
 
     fake.responder = respond
     rows, trace = run(fake, [pause(1000), pause(6000)], policy=Policy(sparse_anchors=True))
-    assert rows[1][2] == 0 and rows[2] == (3, 6100, 0.99)
+    assert trace["boundaries"][1]["confidence"] == 0 and (trace["boundaries"][2]["ayah"], trace["boundaries"][2]["start_ms"], trace["boundaries"][2]["confidence"]) == (3, 6100, 0.99)
     anchor = trace["boundaries"][2]
     read = trace["acoustic_reads"][anchor["read_id"]]
     assert read["window_ms"] == [6000.0, 8700.0]
@@ -239,7 +239,7 @@ def test_correct_tail_cannot_hide_strong_future_continuation():
         observation(f.phrase(3), positions=False) if s == 6000 else original(f, s, d)
     )
     rows, trace = run(fake, [pause(1000), pause(6000)])
-    assert rows[1][2] == 0
+    assert trace["boundaries"][1]["confidence"] == 0
     assert not trace["boundaries"][1]["proof"]
     assert not any("previous_tail" in r["reason"] for r in trace["acoustic_reads"])
 
@@ -258,7 +258,7 @@ def test_shorter_seam_distinguishes_strong_wrong_and_weak_continuation(quality):
 
     fake.responder = respond
     rows, trace = run(fake, [pause(1000), pause(6000)])
-    assert (rows[1][2] > 0) == (quality < 0.6)
+    assert (trace["boundaries"][1]["confidence"] > 0) == (quality < 0.6)
 
 
 def test_contextual_validator_rejects_hidden_strong_wrong_continuation():

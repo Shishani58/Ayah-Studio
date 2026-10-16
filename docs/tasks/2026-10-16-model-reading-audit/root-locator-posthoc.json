@@ -1,0 +1,259 @@
+{
+  "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+  "method": "posthoc packaged cut proximity, not physical ground truth; never used for inference selection",
+  "results": [
+    {
+      "surah": 1,
+      "ayah": 1,
+      "reason": "unresolved_before_unique_anchor",
+      "reference_ms": 100,
+      "nearest_pause_id": 0,
+      "nearest_pause_ms": 6200.0,
+      "delta_ms": 6100.0,
+      "nearest_pause_read": true,
+      "terminal_blocked_rows": 3
+    },
+    {
+      "surah": 1,
+      "ayah": 4,
+      "reason": "unsupported_wasl_timing",
+      "reference_ms": 16000,
+      "nearest_pause_id": 1,
+      "nearest_pause_ms": 11540.0,
+      "delta_ms": -4460.0,
+      "nearest_pause_read": false,
+      "terminal_blocked_rows": 3
+    },
+    {
+      "surah": 32,
+      "ayah": 1,
+      "reason": "incomplete_distinguishing_phrase",
+      "reference_ms": 6140,
+      "nearest_pause_id": 0,
+      "nearest_pause_ms": 2560.0,
+      "delta_ms": -3580.0,
+      "nearest_pause_read": true,
+      "terminal_blocked_rows": 29
+    },
+    {
+      "surah": 55,
+      "ayah": 4,
+      "reason": "unresolved_before_unique_anchor",
+      "reference_ms": 14219,
+      "nearest_pause_id": 3,
+      "nearest_pause_ms": 11890.0,
+      "delta_ms": -2329.0,
+      "nearest_pause_read": false,
+      "terminal_blocked_rows": 56
+    },
+    {
+      "surah": 55,
+      "ayah": 13,
+      "reason": "unresolved_before_unique_anchor",
+      "reference_ms": 55064,
+      "nearest_pause_id": 13,
+      "nearest_pause_ms": 55190.0,
+      "delta_ms": 126.0,
+      "nearest_pause_read": true,
+      "terminal_blocked_rows": 56
+    },
+    {
+      "surah": 55,
+      "ayah": 22,
+      "reason": "unsupported_wasl_timing",
+      "reference_ms": 113145,
+      "nearest_pause_id": 23,
+      "nearest_pause_ms": 111780.0,
+      "delta_ms": -1365.0,
+      "nearest_pause_read": true,
+      "terminal_blocked_rows": 56
+    },
+    {
+      "surah": 59,
+      "ayah": 8,
+      "reason": "unresolved_before_unique_anchor",
+      "reference_ms": 171939,
+      "nearest_pause_id": 24,
+      "nearest_pause_ms": 163210.0,
+      "delta_ms": -8729.0,
+      "nearest_pause_read": true,
+      "terminal_blocked_rows": 0
+    },
+    {
+      "surah": 59,
+      "ayah": 10,
+      "reason": "unresolved_before_unique_anchor",
+      "reference_ms": 230270,
+      "nearest_pause_id": 30,
+      "nearest_pause_ms": 222410.0,
+      "delta_ms": -7860.0,
+      "nearest_pause_read": true,
+      "terminal_blocked_rows": 0
+    },
+    {
+      "surah": 59,
+      "ayah": 18,
+      "reason": "unresolved_before_unique_anchor",
+      "reference_ms": 404585,
+      "nearest_pause_id": 50,
+      "nearest_pause_ms": 396350.0,
+      "delta_ms": -8235.0,
+      "nearest_pause_read": true,
+      "terminal_blocked_rows": 0
+    },
+    {
+      "surah": 65,
+      "ayah": 1,
+      "reason": "no_local_evidence",
+      "reference_ms": 6148,
+      "nearest_pause_id": 1,
+      "nearest_pause_ms": 6050.0,
+      "delta_ms": -98.0,
+      "nearest_pause_read": true,
+      "terminal_blocked_rows": 11
+    },
+    {
+      "surah": 73,
+      "ayah": 1,
+      "reason": "unresolved_before_unique_anchor",
+      "reference_ms": 6140,
+      "nearest_pause_id": 1,
+      "nearest_pause_ms": 6030.0,
+      "delta_ms": -110.0,
+      "nearest_pause_read": true,
+      "terminal_blocked_rows": 0
+    },
+    {
+      "surah": 77,
+      "ayah": 16,
+      "reason": "unresolved_before_unique_anchor",
+      "reference_ms": 48141,
+      "nearest_pause_id": 15,
+      "nearest_pause_ms": 43760.0,
+      "delta_ms": -4381.0,
+      "nearest_pause_read": false,
+      "terminal_blocked_rows": 22
+    },
+    {
+      "surah": 77,
+      "ayah": 20,
+      "reason": "unresolved_before_unique_anchor",
+      "reference_ms": 62347,
+      "nearest_pause_id": 17,
+      "nearest_pause_ms": 57990.0,
+      "delta_ms": -4357.0,
+      "nearest_pause_read": false,
+      "terminal_blocked_rows": 22
+    },
+    {
+      "surah": 77,
+      "ayah": 26,
+      "reason": "unresolved_before_unique_anchor",
+      "reference_ms": 89223,
+      "nearest_pause_id": 23,
+      "nearest_pause_ms": 92560.0,
+      "delta_ms": 3337.0,
+      "nearest_pause_read": true,
+      "terminal_blocked_rows": 22
+    },
+    {
+      "surah": 77,
+      "ayah": 29,
+      "reason": "unsupported_wasl_timing",
+      "reference_ms": 107774,
+      "nearest_pause_id": 27,
+      "nearest_pause_ms": 107760.0,
+      "delta_ms": -14.0,
+      "nearest_pause_read": true,
+      "terminal_blocked_rows": 22
+    },
+    {
+      "surah": 80,
+      "ayah": 2,
+      "reason": "unresolved_before_unique_anchor",
+      "reference_ms": 8703,
+      "nearest_pause_id": 2,
+      "nearest_pause_ms": 8720.0,
+      "delta_ms": 17.0,
+      "nearest_pause_read": true,
+      "terminal_blocked_rows": 30
+    },
+    {
+      "surah": 80,
+      "ayah": 12,
+      "reason": "unsupported_wasl_timing",
+      "reference_ms": 51704,
+      "nearest_pause_id": 13,
+      "nearest_pause_ms": 51800.0,
+      "delta_ms": 96.0,
+      "nearest_pause_read": true,
+      "terminal_blocked_rows": 30
+    },
+    {
+      "surah": 98,
+      "ayah": 8,
+      "reason": "unsupported_wasl_timing",
+      "reference_ms": 80701,
+      "nearest_pause_id": 13,
+      "nearest_pause_ms": 80740.0,
+      "delta_ms": 39.0,
+      "nearest_pause_read": true,
+      "terminal_blocked_rows": 0
+    },
+    {
+      "surah": 2,
+      "ayah": 1,
+      "reason": "unresolved_before_unique_anchor",
+      "reference_ms": 5635,
+      "nearest_pause_id": 0,
+      "nearest_pause_ms": 5770.0,
+      "delta_ms": 135.0,
+      "nearest_pause_read": true,
+      "terminal_blocked_rows": 282
+    },
+    {
+      "surah": 2,
+      "ayah": 4,
+      "reason": "unsupported_wasl_timing",
+      "reference_ms": 34197,
+      "nearest_pause_id": 5,
+      "nearest_pause_ms": 34210.0,
+      "delta_ms": 13.0,
+      "nearest_pause_read": false,
+      "terminal_blocked_rows": 282
+    },
+    {
+      "surah": 79,
+      "ayah": 1,
+      "reason": "unresolved_before_unique_anchor",
+      "reference_ms": 6110,
+      "nearest_pause_id": 0,
+      "nearest_pause_ms": 2560.0,
+      "delta_ms": -3550.0,
+      "nearest_pause_read": true,
+      "terminal_blocked_rows": 21
+    },
+    {
+      "surah": 79,
+      "ayah": 25,
+      "reason": "unresolved_before_unique_anchor",
+      "reference_ms": 108687,
+      "nearest_pause_id": 27,
+      "nearest_pause_ms": 108740.0,
+      "delta_ms": 53.0,
+      "nearest_pause_read": true,
+      "terminal_blocked_rows": 21
+    },
+    {
+      "surah": 79,
+      "ayah": 27,
+      "reason": "unsupported_wasl_timing",
+      "reference_ms": 122476,
+      "nearest_pause_id": 29,
+      "nearest_pause_ms": 122540.0,
+      "delta_ms": 64.0,
+      "nearest_pause_read": true,
+      "terminal_blocked_rows": 21
+    }
+  ]
+}

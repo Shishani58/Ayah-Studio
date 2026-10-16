@@ -46,6 +46,8 @@ def test_fast_trace_summary_exposes_forecast_and_atomic_fallbacks():
 
 @pytest.fixture
 def project(tmp_path, monkeypatch):
+    from surah_cutter.core import decode
+
     state = AppState()
     state.set_db_path(str(tmp_path / "a.db"))
     state.audio_map = {113: tmp_path / "a/113.mp3", 114: tmp_path / "a/114.mp3"}
@@ -54,6 +56,7 @@ def project(tmp_path, monkeypatch):
     monkeypatch.setattr(server, "STATE", state)
     monkeypatch.setattr(server, "_JOB", None)
     monkeypatch.setattr(server.settings, "update", lambda **kwargs: kwargs)
+    monkeypatch.setattr(decode, "duration_ms", lambda _: 30000)
     return state
 
 
@@ -61,9 +64,44 @@ def endpoint(path):
     return next(route.endpoint for route in server.app.routes if route.path == path)
 
 
+@pytest.mark.parametrize("path", ["/api/settings", "/api/generate/preview", "/api/generate"])
+def test_removed_auto_mode_is_rejected_before_start(project, path):
+    with pytest.raises(HTTPException, match="unknown mode") as error:
+        endpoint(path)({"mode": "auto", "suras": [114]})
+    assert error.value.status_code == 400
+    assert server._JOB is None
+
+
 def timings(path):
     with sqlite3.connect(path) as conn:
         return conn.execute("SELECT sura, ayah, time FROM timings ORDER BY sura, ayah").fetchall()
+
+
+def test_audio_clip_route_preserves_project_and_uses_explicit_range(project, monkeypatch):
+    from surah_cutter.webgui import playback
+
+    calls = []
+    monkeypatch.setattr(playback, "audio_clip", lambda *args: calls.append(args) or b"wav")
+    before = project.db_path.read_bytes()
+    response = endpoint("/api/audio/{surah}/clip")(114, 120, 6483)
+    assert calls == [(project.audio_map[114], 120, 6483)]
+    assert response.body == b"wav" and response.media_type == "audio/wav"
+    assert project.db_path.read_bytes() == before
+    with pytest.raises(HTTPException) as error:
+        endpoint("/api/audio/{surah}/clip")(112, 0, 1000)
+    assert error.value.status_code == 404
+
+
+def test_audio_clip_route_rejects_bad_range(project, monkeypatch):
+    from surah_cutter.webgui import playback
+
+    def invalid(*args):
+        raise ValueError("Invalid audio range")
+
+    monkeypatch.setattr(playback, "audio_clip", invalid)
+    with pytest.raises(HTTPException) as error:
+        endpoint("/api/audio/{surah}/clip")(114, 100, 20)
+    assert error.value.status_code == 400
 
 
 def test_ayah_review_status_round_trip_preserves_time(project):
@@ -119,16 +157,17 @@ def test_generation_reruns_changed_mode_and_keeps_manual_marks(project, monkeypa
         assert [db.get_review(114, a) for a in (1, 2)] == protected
         assert "requested_mode=full" in db.get_review(114, 3)["source"]
     assert endpoint("/api/suras")()[-1]["alignment_modes"] == ["full"]
-    with pytest.raises(HTTPException, match="all done"):
-        generate({"suras": [114], "mode": "full", "only_missing": True})
-    assert calls == ["fast", "full"]
+    assert generate({"suras": [114], "mode": "full", "only_missing": True})["suras"] == [114]
+    assert calls == ["fast", "full", "full"]
+    with ProjectDB.open(str(project.db_path), DB_CODE, DB_VERSION) as db:
+        assert [db.get_review(114, a) for a in (1, 2)] == protected
 
 
 def test_explicit_mode_resume_recalculates_unknown_and_mixed_modes(project, monkeypatch):
     with ProjectDB.open(str(project.db_path), DB_CODE, DB_VERSION) as db:
         db.write_timings([(114, a, a * 1000) for a in range(1, 7)], source="legacy")
     starts = []
-    monkeypatch.setattr(server._GenJob, "start", lambda job, suras, mode, reciter: starts.append(suras))
+    monkeypatch.setattr(server._GenJob, "start", lambda job, suras, mode: starts.append(suras))
     assert endpoint("/api/generate")({"suras": [114], "mode": "full", "only_missing": True})["suras"] == [114]
     with ProjectDB.open(str(project.db_path), DB_CODE, DB_VERSION) as db:
         db.write_timings([(114, a, a * 1000) for a in range(1, 7)], source="test:requested_mode=full")
@@ -176,6 +215,63 @@ def test_ayah_review_status_rejects_changed_project(project, tmp_path):
         })
     assert exc.value.status_code == 409
     assert timings(project.db_path) == []
+
+
+@pytest.mark.parametrize("time", [1000, 1001])
+def test_manual_start_rejects_end_of_real_audio(project, monkeypatch, tmp_path, time):
+    import wave
+
+    from surah_cutter.core import decode
+
+    audio = tmp_path / "114.wav"
+    with wave.open(str(audio), "wb") as wav:
+        wav.setparams((1, 2, 16000, 0, "NONE", "not compressed"))
+        wav.writeframes(b"\0\0" * 16000)
+    project.audio_map[114] = audio
+    # Exercise exact decoding rather than trusting container/browser duration.
+    monkeypatch.setattr(decode, "duration_ms", lambda path: round(len(decode.decode(path)) / 16))
+    with ProjectDB.open(str(project.db_path), DB_CODE, DB_VERSION) as db:
+        db.set_time(114, 6, 999)
+    with pytest.raises(HTTPException) as error:
+        endpoint("/api/timing")({"surah": 114, "ayah": 6, "time": time})
+    assert error.value.status_code == 400
+    assert timings(project.db_path) == [(114, 6, 999)]
+    assert endpoint("/api/timing")({"surah": 114, "ayah": 6, "time": 999})["ok"]
+    assert endpoint("/api/verify")({"surah": 114, "ayah": 6})["ok"]
+
+
+@pytest.mark.parametrize("status", ["edited", "verified"])
+@pytest.mark.parametrize("time", [30000, 30001])
+def test_review_status_rejects_saved_start_outside_audio(project, status, time):
+    with ProjectDB.open(str(project.db_path), DB_CODE, DB_VERSION) as db:
+        db.write_timings([(114, 6, time)], "test")
+        before = db.get_review(114, 6)
+    with pytest.raises(HTTPException) as error:
+        endpoint("/api/verify")({"surah": 114, "ayah": 6, "status": status})
+    assert error.value.status_code == 400
+    with ProjectDB.open(str(project.db_path), DB_CODE, DB_VERSION) as db:
+        assert db.get_review(114, 6) == before
+        assert db._conn.execute("SELECT COUNT(*) FROM edit_history").fetchone()[0] == 0
+
+
+@pytest.mark.parametrize("audio_state", ["missing", "unreadable"])
+def test_manual_review_requires_readable_audio(project, monkeypatch, audio_state):
+    from surah_cutter.core import decode
+
+    if audio_state == "missing":
+        project.audio_map.clear()
+    else:
+        def fail(path):
+            raise decode.DecodeError("bad audio")
+        monkeypatch.setattr(decode, "duration_ms", fail)
+    with ProjectDB.open(str(project.db_path), DB_CODE, DB_VERSION) as db:
+        db.write_timings([(114, 1, 1000)], "test")
+    for route, payload in (("/api/timing", {"time": 1100}), ("/api/verify", {})):
+        with pytest.raises(HTTPException) as error:
+            endpoint(route)({"surah": 114, "ayah": 1, **payload})
+        assert error.value.status_code == 400
+    assert endpoint("/api/verify")({"surah": 114, "ayah": 1, "status": "auto"})["ok"]
+    assert timings(project.db_path) == [(114, 1, 1000)]
 
 
 def test_saved_sura_logs_list_pairs_and_read_full_data(project):
@@ -234,7 +330,7 @@ def test_job_retains_audio_database_and_logs_when_state_changes(project, tmp_pat
     monkeypatch.setattr(pipeline, "process_surah", process)
     # Change the selected DB before the worker even opens its connection.
     project.db_path = tmp_path / "b.db"
-    job._run([113, 114], "fast", None)
+    job._run([113, 114], "fast")
 
     assert seen == [original_audio[113], original_audio[114]]
     assert timings(original_db) == [(113, 1, 100), (114, 1, 100)]
@@ -265,7 +361,7 @@ def test_full_job_saves_trace_confidence_and_preserves_manual_rows(project, monk
 
     monkeypatch.setattr(pipeline, "process_surah", process)
     job = server._GenJob(project.db_path, project.audio_map)
-    job._run([114], "full", None)
+    job._run([114], "full")
 
     with ProjectDB.open(str(project.db_path), DB_CODE, DB_VERSION) as db:
         meta = {a: db.get_review(114, a) for a in (1, 2)}
@@ -361,11 +457,12 @@ def test_resume_fills_partial_sura_and_preserves_manual_ayahs(project, monkeypat
     monkeypatch.setattr(
         pipeline,
         "process_surah",
-        lambda audio, surah, **kw: [(surah, a, a * 1000) for a in range(1, 7)],
+        lambda audio, surah, **kw: [(surah, a, a * 1000)
+                                  for a in range(1, server.quran_text.ayah_count(surah) + 1)],
     )
     monkeypatch.setattr(server._GenJob, "start", server._GenJob._run)
     result = endpoint("/api/generate")({"only_missing": True})
-    assert result["suras"] == [114]
+    assert result["suras"] == [113, 114]
     assert timings(project.db_path)[5:] == [
         (114, 1, 123),
         (114, 2, 456),
@@ -592,7 +689,7 @@ def test_word_sura_job_keeps_ayahs_and_preserves_verified_word(complete_word_pro
         db.verify_word(114, 1, 0, 1000, 5000)
     before = timings(path)
     job = server._GenJob(path, complete_word_project.audio_map)
-    job._run([114], "words", None)
+    job._run([114], "words")
     assert timings(path) == before
     event = next(e for e in job.events.snapshot() if e and e["type"] == "sura")
     assert event["words_written"] == len(server.quran_text.surah_words(114)) - 1
@@ -609,7 +706,7 @@ def test_word_sura_job_keeps_ayahs_and_preserves_verified_word(complete_word_pro
 
 def test_word_resume_uses_words_not_ayah_completeness(complete_word_project, monkeypatch):
     started = []
-    monkeypatch.setattr(server._GenJob, "start", lambda job, suras, mode, reciter:
+    monkeypatch.setattr(server._GenJob, "start", lambda job, suras, mode:
                         started.append((suras, mode)))
     result = endpoint("/api/generate")({"suras": [114], "mode": "words", "only_missing": True})
     assert result["mode"] == "words"
@@ -638,7 +735,7 @@ def test_word_sura_job_reports_unaligned_ayah_and_continues(complete_word_projec
         return [(w.index, 50 + i * 500, .9) for i, w in enumerate(words)]
     monkeypatch.setattr(word_align, "align_ayah_words", compute)
     job = server._GenJob(complete_word_project.db_path, complete_word_project.audio_map)
-    job._run([114], "words", None)
+    job._run([114], "words")
     event = next(e for e in job.events.snapshot() if e and e["type"] == "sura")
     assert event["word_failures"] == 1
     assert not server._word_progress()[114]["complete"]
@@ -658,7 +755,7 @@ def test_word_mode_builds_missing_ayah_marks_with_fast(project, monkeypatch):
     monkeypatch.setattr(server, "_align_sura_words", lambda *args:
                         {"words_written": 20, "word_failures": 0})
     job = server._GenJob(project.db_path, project.audio_map)
-    job._run([114], "words", None)
+    job._run([114], "words")
     assert seen == ["fast"]
     assert len(timings(project.db_path)) == 6
 
@@ -760,7 +857,7 @@ def test_cancel_current_sura_does_not_write_computed_rows(project, monkeypatch):
         return [(surah, 1, 100)]
 
     monkeypatch.setattr(pipeline, "process_surah", process)
-    job._run([113, 114], "full", None)
+    job._run([113, 114], "full")
     assert calls == [113]
     assert timings(project.db_path) == []
     assert job.events.snapshot()[-1:] == [{"type": "cancelled", "completed": 0}]
@@ -770,7 +867,7 @@ def test_cancel_current_sura_does_not_write_computed_rows(project, monkeypatch):
     # A fresh job can write immediately after cancellation.
     monkeypatch.setattr(pipeline, "process_surah", lambda audio, surah, **kw: [(surah, 1, 100)])
     retry = server._GenJob(project.db_path, project.audio_map)
-    retry._run([114], "full", None)
+    retry._run([114], "full")
     assert timings(project.db_path) == [(114, 1, 100)]
     assert retry.events.snapshot()[-1:] == [{"type": "done", "completed": 1}]
 
@@ -796,7 +893,7 @@ def test_cancel_words_preserves_finished_ayah_and_manual_marks(complete_word_pro
         return [(w.index, 50 + i * 500, .9) for i, w in enumerate(words)]
 
     monkeypatch.setattr(word_align, "align_ayah_words", align)
-    job._run([114], "words", None)
+    job._run([114], "words")
     assert calls == [1, 2]
     assert timings(path) == before
     with ProjectDB.open(str(path), DB_CODE, DB_VERSION) as db:

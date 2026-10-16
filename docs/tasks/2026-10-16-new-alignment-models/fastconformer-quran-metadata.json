@@ -1,0 +1,359 @@
+{
+  "_id": "6a0c5f3336e7373b42f979e5",
+  "id": "Muno459/fastconformer-quran",
+  "private": false,
+  "pipeline_tag": "automatic-speech-recognition",
+  "library_name": "nemo",
+  "tags": [
+    "nemo",
+    "onnx",
+    "audio",
+    "automatic-speech-recognition",
+    "arabic",
+    "quran",
+    "quranic-recitation",
+    "tajweed",
+    "fastconformer",
+    "mispronunciation-detection",
+    "ar",
+    "dataset:tarteel-ai/everyayah",
+    "dataset:tarteel-ai/tlog",
+    "dataset:obadx/muaalem-annotated-v3",
+    "base_model:nvidia/stt_ar_fastconformer_hybrid_large_pcd_v1.0",
+    "base_model:quantized:nvidia/stt_ar_fastconformer_hybrid_large_pcd_v1.0",
+    "license:other",
+    "model-index",
+    "region:us"
+  ],
+  "downloads": 1998,
+  "likes": 30,
+  "modelId": "Muno459/fastconformer-quran",
+  "author": "Muno459",
+  "sha": "77dbe5d809628ea89422243695de4c0d69770775",
+  "lastModified": "2026-08-15T00:10:39.000Z",
+  "gated": "manual",
+  "disabled": false,
+  "model-index": [
+    {
+      "name": "fastconformer-quran",
+      "results": [
+        {
+          "task": {
+            "type": "automatic-speech-recognition",
+            "name": "Automatic Speech Recognition"
+          },
+          "dataset": {
+            "type": "tarteel-ai/everyayah",
+            "name": "EveryAyah held-out (3 zero-training reciters)"
+          },
+          "metrics": [
+            {
+              "type": "wer",
+              "value": 0.93,
+              "name": "WER (normalized) - leakage-free held-out reciters",
+              "verified": false
+            },
+            {
+              "type": "cer",
+              "value": 0.26,
+              "name": "CER (normalized) - leakage-free held-out reciters",
+              "verified": false
+            }
+          ]
+        },
+        {
+          "task": {
+            "type": "automatic-speech-recognition",
+            "name": "ASR on the leakage-free Quran benchmark"
+          },
+          "dataset": {
+            "type": "tarteel-ai/everyayah",
+            "name": "Held-out Quran benchmark (EveryAyah unseen + QUL unseen + tlog phone, 600 clips)"
+          },
+          "metrics": [
+            {
+              "type": "wer",
+              "value": 5.41,
+              "name": "WER (normalized) overall - beats nvidia FastConformer (7.44) and Tarteel's production realtime ASR (9.56)",
+              "verified": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "config": {},
+  "cardData": {
+    "language": [
+      "ar"
+    ],
+    "license": "other",
+    "license_name": "npl-1.1",
+    "license_link": "LICENSE",
+    "library_name": "nemo",
+    "base_model": "nvidia/stt_ar_fastconformer_hybrid_large_pcd_v1.0",
+    "tags": [
+      "audio",
+      "automatic-speech-recognition",
+      "arabic",
+      "quran",
+      "quranic-recitation",
+      "tajweed",
+      "fastconformer",
+      "mispronunciation-detection"
+    ],
+    "datasets": [
+      "tarteel-ai/everyayah",
+      "tarteel-ai/tlog",
+      "obadx/muaalem-annotated-v3"
+    ],
+    "metrics": [
+      "wer",
+      "cer"
+    ],
+    "model-index": [
+      {
+        "name": "fastconformer-quran",
+        "results": [
+          {
+            "task": {
+              "type": "automatic-speech-recognition",
+              "name": "Automatic Speech Recognition"
+            },
+            "dataset": {
+              "type": "tarteel-ai/everyayah",
+              "name": "EveryAyah held-out (3 zero-training reciters)"
+            },
+            "metrics": [
+              {
+                "type": "wer",
+                "value": 0.93,
+                "name": "WER (normalized) - leakage-free held-out reciters",
+                "verified": false
+              },
+              {
+                "type": "cer",
+                "value": 0.26,
+                "name": "CER (normalized) - leakage-free held-out reciters",
+                "verified": false
+              }
+            ]
+          },
+          {
+            "task": {
+              "type": "automatic-speech-recognition",
+              "name": "ASR on the leakage-free Quran benchmark"
+            },
+            "dataset": {
+              "type": "tarteel-ai/everyayah",
+              "name": "Held-out Quran benchmark (EveryAyah unseen + QUL unseen + tlog phone, 600 clips)"
+            },
+            "metrics": [
+              {
+                "type": "wer",
+                "value": 5.41,
+                "name": "WER (normalized) overall - beats nvidia FastConformer (7.44) and Tarteel's production realtime ASR (9.56)",
+                "verified": false
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "siblings": [
+    {
+      "rfilename": ".gitattributes",
+      "blobId": "fe77853e47648f5e98ef730d2e29a37af7232596",
+      "size": 1846
+    },
+    {
+      "rfilename": "LICENSE",
+      "blobId": "267a1a8c645a73215bc3518ccc3932a86ba98d04",
+      "size": 5852
+    },
+    {
+      "rfilename": "README.md",
+      "blobId": "3863950a02771c6502e14f1dcc381918f200f535",
+      "size": 17067
+    },
+    {
+      "rfilename": "demo/01_alafasy_fatihah.wav",
+      "blobId": "7d128d729213c2e6add5cdf901fd6c6aac679648",
+      "size": 149708,
+      "lfs": {
+        "sha256": "3b56976960861f541bd142c8dd2a9c9ba74ad7a8fba2fb0ea539d1c49828e1dc",
+        "size": 149708,
+        "pointerSize": 131
+      }
+    },
+    {
+      "rfilename": "demo/02_basfar_ikhlas.wav",
+      "blobId": "f6f1eb52fe8a305a66c23a1e6ac70a81bc9ac57c",
+      "size": 117106,
+      "lfs": {
+        "sha256": "c2a1cb1c1f7891bdff49b7ae7e8b4df97780bbf0abf6ab75c777dd0aa1e583e7",
+        "size": 117106,
+        "pointerSize": 131
+      }
+    },
+    {
+      "rfilename": "demo/03_alafasy_naba.wav",
+      "blobId": "b88380de7deb65c460203328c6d03702710580af",
+      "size": 152236,
+      "lfs": {
+        "sha256": "4ae8f1f7bc046c48d60627da2221526dc13aa12ce07a079db7cbe11bd5b815c6",
+        "size": 152236,
+        "pointerSize": 131
+      }
+    },
+    {
+      "rfilename": "head/pronunciation_head.pt",
+      "blobId": "173ad5966117eeb32e52c34b5e505a5d85283ec4",
+      "size": 5386706,
+      "lfs": {
+        "sha256": "87aeacf67a0d1e38f6f5b30db7df43b7653c4d6ea5e243be7d9aea95039adf06",
+        "size": 5386706,
+        "pointerSize": 132
+      }
+    },
+    {
+      "rfilename": "model_config.yaml",
+      "blobId": "e6d70588fd61cb1c87587d36be70c561c962143b",
+      "size": 42366
+    },
+    {
+      "rfilename": "nemo/fastconformer-quran.nemo",
+      "blobId": "e956dcc8c40e6172072c5453b1368fa664df1e88",
+      "size": 459243520,
+      "lfs": {
+        "sha256": "4e83b585b24235aa82e26dc60ecee73d973dfe48619a98ade8691dc85b6d8d4e",
+        "size": 459243520,
+        "pointerSize": 134
+      }
+    },
+    {
+      "rfilename": "onnx/model.fp16.onnx",
+      "blobId": "48b7f4122c0ef5099bf6cc682d6bd3460922f400",
+      "size": 229742801,
+      "lfs": {
+        "sha256": "eb6c079f5da7e9fd2f9de9ccf3c3a364603cacf77d000af123f15d8125c148d6",
+        "size": 229742801,
+        "pointerSize": 134
+      }
+    },
+    {
+      "rfilename": "onnx/model.onnx",
+      "blobId": "65b4482dbb6d97e6b56e977f363df0aa061547dc",
+      "size": 458253672,
+      "lfs": {
+        "sha256": "13097475d693738424f6fe25047765f512b5efa4395c31dc09174ec9914a1ac8",
+        "size": 458253672,
+        "pointerSize": 134
+      }
+    },
+    {
+      "rfilename": "onnx/model.q8.onnx",
+      "blobId": "12ca9434390a0851403f1bf94d861e33cbd09e2e",
+      "size": 131801646,
+      "lfs": {
+        "sha256": "bdb590bb27c78963c8bdae58ee50d9d5e6c1ad61d37cba27374bd1ff0441b118",
+        "size": 131801646,
+        "pointerSize": 134
+      }
+    },
+    {
+      "rfilename": "onnx/model_with_encoder.onnx",
+      "blobId": "efdc41007d7795e5174c2abffe8ba67c0c3ceff9",
+      "size": 458253686,
+      "lfs": {
+        "sha256": "417da4c1ead548ffe8bd802fd3d256f065ca180fb191818a3914f43f824bef0d",
+        "size": 458253686,
+        "pointerSize": 134
+      }
+    },
+    {
+      "rfilename": "onnx/model_with_encoder.q8.onnx",
+      "blobId": "4ad7d72b95a345acb10afb4b8111d8aa3b861b4b",
+      "size": 131801467,
+      "lfs": {
+        "sha256": "cf4da2a8eaf3fd8c2640bfab3bd7080a494754c0baaafddf4622bdd6af5175f9",
+        "size": 131801467,
+        "pointerSize": 134
+      }
+    },
+    {
+      "rfilename": "tajweed/__init__.py",
+      "blobId": "e070ef15e16ef9233a50d88f9bea31e4706d4e7e",
+      "size": 1202
+    },
+    {
+      "rfilename": "tajweed/aligner.py",
+      "blobId": "85442a568d100d1ee6bcdb62746ab6d56a80d435",
+      "size": 26115
+    },
+    {
+      "rfilename": "tajweed/engine.py",
+      "blobId": "8f28437fd0aaadf28771aa059b375206b25163b2",
+      "size": 5911
+    },
+    {
+      "rfilename": "tajweed/full_scorer.py",
+      "blobId": "bbe36841f7e4977a408033192abd5831f9d587a6",
+      "size": 7168
+    },
+    {
+      "rfilename": "tajweed/gop_scorer.py",
+      "blobId": "d6cfdc4fb061f6ec3d18a35b0f7c5bcb12d861f2",
+      "size": 7746
+    },
+    {
+      "rfilename": "tajweed/head_scorer.py",
+      "blobId": "7438c4e07855fb914d97899aa30f417a804677e1",
+      "size": 4762
+    },
+    {
+      "rfilename": "tajweed/phonology.py",
+      "blobId": "39f39012c3ab61b92ce258bf3b57b236041517cd",
+      "size": 1889
+    },
+    {
+      "rfilename": "tajweed/rules.py",
+      "blobId": "4be2a077c499d98cec24ff5a2eba6771b993057f",
+      "size": 19210
+    },
+    {
+      "rfilename": "tajweed/text_analyzer.py",
+      "blobId": "f5a3c150eed0e96a52cb1d064491c479fa0c1177",
+      "size": 21418
+    },
+    {
+      "rfilename": "tajweed/token_features.py",
+      "blobId": "e901f0cf62e72f7b3bcf378806135694248f6649",
+      "size": 3804
+    },
+    {
+      "rfilename": "tokenizer.model",
+      "blobId": "17ec7c4606bf387375de77d2b21947e9f9fb0f80",
+      "size": 254806,
+      "lfs": {
+        "sha256": "1fcfa104fa448c979cc2537788947c6516827f403ecdc55c4895b77d28630ba4",
+        "size": 254806,
+        "pointerSize": 131
+      }
+    },
+    {
+      "rfilename": "tokens.txt",
+      "blobId": "d7d231461c8be9a42e316c1907670c8164a7968f",
+      "size": 12847
+    }
+  ],
+  "spaces": [
+    "Quran-Lab/quranic-asr-leaderboard",
+    "Muno459/fastconformer-quran-demo",
+    "teloor/asr-fc2-gradio",
+    "radekkaminski/sacred-journey"
+  ],
+  "createdAt": "2026-05-19T13:01:39.000Z",
+  "usedStorage": 4340038355
+}

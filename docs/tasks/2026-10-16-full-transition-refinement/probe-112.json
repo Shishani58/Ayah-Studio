@@ -1,0 +1,73 @@
+[
+  {
+    "ayah": 2,
+    "reason": "weak-evidence",
+    "lo": 6820,
+    "hi": 10960,
+    "decoded": "wal-āahadatl-lāsamadat",
+    "targets": [
+      [
+        "l-lahu",
+        "aḥadun"
+      ],
+      [
+        "al-lahu",
+        "l-ṣamadu"
+      ]
+    ],
+    "consonants": "wlhdtlsmdt",
+    "expected": [
+      "lhḥdn",
+      "lhlṣmd"
+    ],
+    "local": {
+      "1": {
+        "ayah": 1,
+        "raw_onset_ms": 6781,
+        "onset_ms": 6781,
+        "conf": 0.0244,
+        "first_token_conf": 0.932,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.932,
+          0.9627,
+          0.0009,
+          0.0008,
+          0.0002,
+          0.0009
+        ],
+        "full_ctc_first_ms": 6980.776699029127,
+        "full_ctc_tail_conf": 0.9887,
+        "full_ctc_end_ms": 8307.184466019418,
+        "full_ctc_head_end_ms": 8628.73786407767,
+        "full_ctc_tail_start_ms": 6980.776699029127
+      },
+      "2": {
+        "ayah": 2,
+        "raw_onset_ms": 8750,
+        "onset_ms": 8750,
+        "conf": 0.0317,
+        "first_token_conf": 0.0016,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-onset",
+        "token_confs": [
+          0.0016,
+          0.9859,
+          0.9994,
+          0.5863,
+          0.0001,
+          0.0836,
+          0.0043
+        ],
+        "full_ctc_first_ms": 8950.291262135923,
+        "full_ctc_tail_conf": 0.9953,
+        "full_ctc_end_ms": 10477.669902912621,
+        "full_ctc_head_end_ms": 10859.514563106795,
+        "full_ctc_tail_start_ms": 8950.291262135923
+      }
+    }
+  }
+]

@@ -1,0 +1,126 @@
+{
+  "cases": [
+    {
+      "key": "future-5-from-read-7-1500",
+      "role": "adjacent-recovery",
+      "surah": 2,
+      "ayah": 5,
+      "phrase": [
+        "اولئك",
+        "على"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "اولئك",
+        "على",
+        "هدى",
+        "من",
+        "ربهم",
+        "واولئك",
+        "هم",
+        "المفلحون"
+      ],
+      "window_ms": [
+        50120.0,
+        51620.0
+      ],
+      "source_read_id": 7,
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/002.mp3",
+      "audio_sha256": "511e1c23f9c51271d1da629761c0ccf26fd1e734532c09dc85983cea4b4c4177",
+      "pcm_sha256": "870b3bee2059a4fd6817b070aca5a710a11b26a23f83b781e44ac78e6a45ea30",
+      "samples": 24000
+    },
+    {
+      "key": "future-5-from-read-7-4000",
+      "role": "adjacent-recovery",
+      "surah": 2,
+      "ayah": 5,
+      "phrase": [
+        "اولئك",
+        "على"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "اولئك",
+        "على",
+        "هدى",
+        "من",
+        "ربهم",
+        "واولئك",
+        "هم",
+        "المفلحون"
+      ],
+      "window_ms": [
+        50120.0,
+        54120.0
+      ],
+      "source_read_id": 7,
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/002.mp3",
+      "audio_sha256": "511e1c23f9c51271d1da629761c0ccf26fd1e734532c09dc85983cea4b4c4177",
+      "pcm_sha256": "45085e846a2492367cc2b703dd972cbb1641d01a2639cef250974ab59723ef62",
+      "samples": 64000
+    },
+    {
+      "key": "future-5-from-read-8-1500",
+      "role": "adjacent-recovery",
+      "surah": 2,
+      "ayah": 5,
+      "phrase": [
+        "اولئك",
+        "على"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "اولئك",
+        "على",
+        "هدى",
+        "من",
+        "ربهم",
+        "واولئك",
+        "هم",
+        "المفلحون"
+      ],
+      "window_ms": [
+        56740.0,
+        58240.0
+      ],
+      "source_read_id": 8,
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/002.mp3",
+      "audio_sha256": "511e1c23f9c51271d1da629761c0ccf26fd1e734532c09dc85983cea4b4c4177",
+      "pcm_sha256": "3d20a81eb51b239252c6c232c7ad88b120a77a6f4180814dc06b4cb0fe46796c",
+      "samples": 24000
+    },
+    {
+      "key": "future-5-from-read-8-4000",
+      "role": "adjacent-recovery",
+      "surah": 2,
+      "ayah": 5,
+      "phrase": [
+        "اولئك",
+        "على"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "اولئك",
+        "على",
+        "هدى",
+        "من",
+        "ربهم",
+        "واولئك",
+        "هم",
+        "المفلحون"
+      ],
+      "window_ms": [
+        56740.0,
+        60740.0
+      ],
+      "source_read_id": 8,
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/002.mp3",
+      "audio_sha256": "511e1c23f9c51271d1da629761c0ccf26fd1e734532c09dc85983cea4b4c4177",
+      "pcm_sha256": "f515961e36a102adfbede570c1e44c8d6e1ba6d278b8e6d2f7ac5b3896a61d92",
+      "samples": 64000
+    }
+  ],
+  "selection": "Every existing ayah4 pause read; test immediate next ayah5 on same candidate",
+  "weights": "/Users/ayub/.surah-cutter/models/whisper-tarteel-base/5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c"
+}

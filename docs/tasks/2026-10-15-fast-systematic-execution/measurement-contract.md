@@ -41,3 +41,13 @@ decode/DSP/load/inference+matcher; текущий runner разделение in
 Все attempts получают отдельный ID, команду, stdout/stderr/exit, source root,
 PCM coordinates/hash, наблюдение и решение. Не перезапускать живой процесс.
 Все модельные чтения через общий ledger6s/65%/200%, cache32MiB.
+
+Уточнение H8 по исходнику runner/worker: перед recording runs Tiny/Base каждый
+выполняет отдельный probe на1000ms синтетических нулей (encoder+decoder).
+Они входят в load/probe_seconds, но не в recording acoustic_reads. В A before/after
+это ещё по2synthetic probes на запуск runner, всего4. Это не чтение записи и не
+обходит её ledger. Whisper architecture дополняет разрешённый локальный вход
+до штатной feature shape; padded silence не является прочитанным пользовательским
+аудио. В отчёте recording calls и synthetic startup probes указаны раздельно.
+CTC ONNX emitter в выбранных моделях probe-метода не имеет. Временной forward
+не включался. Внутренние autoregressive decoder steps не названы отдельными PCM reads.

@@ -1,0 +1,84 @@
+........................................F............................... [ 33%]
+.........F............FFF............................................... [ 67%]
+.....................................................................    [100%]
+=================================== FAILURES ===================================
+__________________ test_next_pause_beyond_horizon_is_not_read __________________
+
+    def test_next_pause_beyond_horizon_is_not_read():
+        fake = Fake(responder)
+        fake.timing = False
+        rows, trace = run(fake, [pause(1000), pause(6000), pause(18000)],
+                          policy=Policy(sparse_anchors=True))
+        assert trace["boundaries"][2]["confidence"] == trace["boundaries"][3]["confidence"] == 0
+>       assert not any(r["window_ms"][0] == 18000 for r in trace["acoustic_reads"])
+E       assert not True
+E        +  where True = any(<generator object test_next_pause_beyond_horizon_is_not_read.<locals>.<genexpr> at 0x10a733c60>)
+
+tests/test_fast_empty_region.py:45: AssertionError
+_________ test_adjacent_block_with_weak_previous_tail_stops_for_review _________
+
+    def test_adjacent_block_with_weak_previous_tail_stops_for_review():
+        fake = Fake(lambda *args: observation(()))
+        full_second = tuple(u for w, us in zip(fake.words, fake.rendered) if w.ayah == 2 for u in us)
+        tail = tuple(u for w, us in zip(fake.words, fake.rendered) if w.ayah == 1 for u in us)[-1:]
+        def respond(f, start, duration):
+            if start == 1000:
+                return observation(f.phrase(1))
+            if start == 8000:
+                return observation(f.phrase(3))
+            if duration == 6000:
+                units = tail + full_second + f.phrase(3)
+                return Observation(units, tuple(i * 100. for i in range(len(units))), .99,
+                                   unit_quality=(.01,) + (.99,) * (len(units)-1))
+            return observation(())
+        fake.responder = respond
+        rows, trace = run(fake, [pause(1000), pause(8000)])
+>       assert trace["boundaries"][0]["confidence"] > 0 and all(conf == 0 for _, _, conf in rows[1:])
+E       assert (0.99 > 0 and False)
+E        +  where False = all(<generator object test_adjacent_block_with_weak_previous_tail_stops_for_review.<locals>.<genexpr> at 0x108efec00>)
+
+tests/test_fast_executor.py:526: AssertionError
+_________ test_base_probe_does_not_change_tiny_or_exceed_candidate_cap _________
+
+    def test_base_probe_does_not_change_tiny_or_exceed_candidate_cap():
+        for fake, policy in [(probe_fake('whisper-tarteel-tiny'), Policy(sparse_anchors=True)),
+                             (probe_fake(), Policy(sparse_anchors=True, max_candidates=1))]:
+            rows, trace = run(fake, [pause(1000), pause(6000), pause(10000), pause(15000)], policy=policy)
+>           assert trace["boundaries"][2]["confidence"] == trace["boundaries"][3]["confidence"] == 0
+E           assert 0.0 == 0.99
+
+tests/test_fast_next_pause_recovery.py:37: AssertionError
+__ test_an_existing_strong_incomplete_prefix_blocks_the_optional_later_pause ___
+
+    def test_an_existing_strong_incomplete_prefix_blocks_the_optional_later_pause():
+        fake = probe_fake()
+        rendered = list(fake.rendered)
+        first3 = next(i for i, w in enumerate(fake.words) if w.ayah == 3)
+        rendered[-1] = rendered[first3]
+        fake.rendered = tuple(rendered)
+        fake.responder = lambda f, s, d: observation(f.phrase(3)[:1], positions=False) if s == 10000 else responder(f, s, d)
+        rows, trace = run(fake, [pause(1000), pause(6000), pause(10000), pause(15000)],
+                          policy=Policy(sparse_anchors=True))
+>       assert trace["boundaries"][2]["confidence"] == trace["boundaries"][3]["confidence"] == 0
+E       assert 0.0 == 0.99
+
+tests/test_fast_next_pause_recovery.py:50: AssertionError
+__________ test_optional_following_owner_cannot_jump_beyond_two_ayahs __________
+
+    def test_optional_following_owner_cannot_jump_beyond_two_ayahs():
+        fake = Fake(responder, words=quran_text.surah_words(114))
+        fake.timing, fake.model_id = False, 'whisper-tarteel-base'
+        fake.responder = lambda f, s, d: observation(f.phrase(6), positions=False) if s == 15000 else responder(f, s, d)
+        rows, trace = run(fake, [pause(1000), pause(6000), pause(10000), pause(15000)],
+                          policy=Policy(sparse_anchors=True))
+>       assert trace["boundaries"][5]["confidence"] == 0
+E       assert 0.99 == 0
+
+tests/test_fast_next_pause_recovery.py:60: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_fast_empty_region.py::test_next_pause_beyond_horizon_is_not_read
+FAILED tests/test_fast_executor.py::test_adjacent_block_with_weak_previous_tail_stops_for_review
+FAILED tests/test_fast_next_pause_recovery.py::test_base_probe_does_not_change_tiny_or_exceed_candidate_cap
+FAILED tests/test_fast_next_pause_recovery.py::test_an_existing_strong_incomplete_prefix_blocks_the_optional_later_pause
+FAILED tests/test_fast_next_pause_recovery.py::test_optional_following_owner_cannot_jump_beyond_two_ayahs
+5 failed, 208 passed in 22.97s

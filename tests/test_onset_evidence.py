@@ -20,6 +20,10 @@ def test_weak_word_body_does_not_hide_supported_first_sound():
     assert onset_evidence(check(), 1000, .01) == {
         'first_sound': .99, 'word': .01, 'boundary_warning': False,
         'boundary': {'level': 'unknown', 'reason': 'insufficient-timing-evidence'},
+        'timing_accuracy': {'probability': None, 'tolerance_ms': 500,
+                            'target': 'playback-cut', 'calibration': 'unavailable',
+                            'review_reasons': ['missing-proof'], 'cut_span_ms': None,
+                            'cut_span_source': None, 'review_priority': 'unassessed'},
     }
     c = check()
     c.update(conf=0, first_token_conf=.0002, reason='weak-onset')

@@ -6,7 +6,7 @@ Builds a windowed application from ``surah_cutter/webgui/launch.py``.
 Bundle layout (critical):
     The runtime resolves bundled data via
     ``Path(__file__).resolve().parents[2] / "data" / ...`` from inside
-    ``surah_cutter/data/*.py`` (see ``quran_text.py`` / ``references.py``).
+    ``surah_cutter/data/*.py`` (see ``quran_text.py``).
     In a frozen bundle ``__file__`` lives under ``<bundle>/surah_cutter/data/``,
     so ``parents[2]`` is the bundle root. Therefore ``data/`` and ``assets/``
     MUST be placed at the bundle root (datas target ``.``), as siblings of the
@@ -37,7 +37,6 @@ block_cipher = None
 # --- bundled data (target "." => bundle root, sibling of surah_cutter/) -------
 datas = [
     (str(ROOT / "data" / "quran_mushaf.db"), "data"),
-    (str(ROOT / "data" / "references"), "data/references"),
     (str(ROOT / "data" / "word_tr_cache.json"), "data"),
     (str(ROOT / "data" / "model_text_targets.json"), "data"),
     (str(ROOT / "surah_cutter/core/model_catalog.json"), "surah_cutter/core"),

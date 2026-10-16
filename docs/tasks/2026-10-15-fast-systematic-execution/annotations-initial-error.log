@@ -1,0 +1,6 @@
+Archived from exec_command output (not a live redirected logfile).
+Traceback (most recent call last):
+  File "prepare_annotations.py", line 36, in <module>
+    pauses = [d for d in decisions if d.accepted and d.center_ms > 4000]
+AttributeError: 'PauseDecision' object has no attribute 'center_ms'
+Exit: 1; acoustic calls: 0.

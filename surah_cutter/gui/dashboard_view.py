@@ -35,8 +35,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-# Project DB identity (reciter/edition). Phase-1 placeholder; review screen
-# rewrites it via reference metadata in later phases.
+# Project DB identity (reciter/edition).
 _DB_CODE = "surah-cutter"
 _DB_VERSION = 1
 
@@ -83,14 +82,12 @@ class GenerationWorker(QObject):
         audio_dir: str,
         db_path: str,
         done_suras: set[int],
-        reciter: str | None = None,
-        mode: str = "auto",
+        mode: str = "full",
     ) -> None:
         super().__init__()
         self._audio_dir = audio_dir
         self._db_path = db_path
         self._done = set(done_suras)
-        self._reciter = reciter
         self._mode = mode
         self._cancel = threading.Event()
 
@@ -127,6 +124,7 @@ class GenerationWorker(QObject):
 
         written = 0
         skipped = 0
+        unresolved = 0
         with ProjectDB.open(self._db_path, _DB_CODE, _DB_VERSION) as db:
             for i, (surah, path) in enumerate(files):
                 if self._cancel.is_set():
@@ -139,13 +137,9 @@ class GenerationWorker(QObject):
                     # infer FAST identity from canonical completeness alone.
                     done = fast_resume_suras(self._db_path)
                 elif self._mode == "full":
-                    from surah_cutter.core import full_windows, model_store
                     from surah_cutter.data.alignment_identity import full_resume_suras
 
-                    done = self._done & full_resume_suras(
-                        self._db_path, model_id=model_store.ACTIVE_ID,
-                        onset_policy=full_windows.FULL_ONSET_POLICY,
-                    )
+                    done = self._done & full_resume_suras(self._db_path)
                 else:
                     done = self._done
                 if surah in done:
@@ -155,8 +149,7 @@ class GenerationWorker(QObject):
                 self.progress.emit(i + 1, total, f"Aligning surah {surah}…")
                 trace: dict = {}
                 try:
-                    rows = process_surah(str(path), surah, reciter=self._reciter,
-                                         mode=self._mode, trace=trace)
+                    rows = process_surah(str(path), surah, mode=self._mode, trace=trace)
                     save_result = write_alignment_result(
                         db, rows, trace=trace, requested_mode=self._mode, db_path=self._db_path,
                     )
@@ -169,14 +162,18 @@ class GenerationWorker(QObject):
                     raise
                 written += 1
                 self.surah_done.emit(surah)
-                self.progress.emit(i + 1, total, f"Wrote surah {surah}")
+                unresolved += len(save_result.unresolved_ayahs)
+                label = (f"Partial surah {surah}: {len(save_result.unresolved_ayahs)} boundaries unresolved"
+                         if save_result.unresolved_ayahs else f"Wrote surah {surah}")
+                self.progress.emit(i + 1, total, label)
                 if save_result.diagnostics_error:
                     self.progress.emit(
                         i + 1, total,
                         f"Saved surah {surah}; diagnostics error: {save_result.diagnostics_error}",
                     )
 
-        self.finished.emit(f"Done: {written} written, {skipped} skipped.")
+        self.finished.emit(f"{'Partial result' if unresolved else 'Done'}: {written} processed, "
+                           f"{skipped} skipped, {unresolved} boundaries unresolved.")
 
 
 class _SurahCell(QFrame):
@@ -353,6 +350,9 @@ class DashboardView(QWidget):
             timings = db.get_timings()
             for sura, ayah, _time in timings:
                 rev = db.get_review(sura, ayah)
+                from surah_cutter.data.alignment_identity import unresolved_fast_row
+                if unresolved_fast_row(rev or {}):
+                    continue
                 status = (rev or {}).get("status", "auto")
                 reviews.setdefault(sura, []).append(str(status))
         return reviews

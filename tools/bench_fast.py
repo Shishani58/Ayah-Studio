@@ -18,7 +18,8 @@ import time
 from pathlib import Path
 
 from surah_cutter.core import align, align_fast, decode
-from surah_cutter.data import quran_text, references
+from surah_cutter.data import quran_text
+from tools.research import references
 
 AUDIO = Path(os.environ.get("SHATRI_DIR", str(Path.home() / "Desktop" / "Abu_Bakr_Ash-Shatri")))
 REF = references.load_reference("abu_bakr_ash_shatri")
@@ -56,7 +57,7 @@ def pause_contract_violations(rows, trace: dict) -> list[str]:
 
     A pause-backed output must equal the arithmetic centre of its final owner.
     A wasl boundary must be a CTC start rather than a disguised pause centre.
-    Independently matched exact-recording clips are exempt from the pause rule.
+    Estimates must require review; acoustic onsets must carry a valid local proof.
     """
     starts = {ayah: start_ms for ayah, start_ms, _conf in rows}
     confidences = {ayah: confidence for ayah, _ms, confidence in rows}
@@ -67,28 +68,55 @@ def pause_contract_violations(rows, trace: dict) -> list[str]:
         and pause.get("quality") != "rejected"
     }
     violations: list[str] = []
-    for match in trace.get("pause_matches", []):
+    matches = trace.get("pause_matches", [])
+    matched_ayahs = [match.get("ayah") for match in matches]
+    for ayah in starts.keys() - set(matched_ayahs):
+        violations.append(f"ayah {ayah}: output has no boundary evidence")
+    if len(matched_ayahs) != len(set(matched_ayahs)):
+        violations.append("duplicate boundary evidence")
+    boundaries = {b.get("ayah"): b for b in trace.get("boundaries", [])}
+    for match in matches:
         ayah = match.get("ayah")
         start_ms = starts.get(ayah)
+        if (trace.get("result_contract") == "partial-v1"
+                and match.get("boundary_evidence") == "unresolved"
+                and ayah in trace.get("unresolved_ayahs", []) and start_ms is None
+                and match.get("onset_ms") is None and match.get("conf") == 0):
+            continue
         if start_ms is None:
             violations.append(f"ayah {ayah}: trace has no output start")
             continue
-        if match.get("boundary_evidence") in {"exact_fingerprint", "ctc_pre_owner"}:
+        evidence = match.get("boundary_evidence")
+        if evidence == "estimate":
+            if (match.get("from_pause") or confidences.get(ayah) != 0.0
+                    or ayah not in trace.get("review_required_ayahs", [])):
+                violations.append(f"ayah {ayah}: estimate lacks review flag/confidence=0 or claims a pause")
             continue
         if not match.get("from_pause"):
-            if match.get("boundary_evidence") == "unresolved_local":
-                if confidences.get(ayah) != 0.0 or ayah not in trace.get("review_required_ayahs", []):
-                    violations.append(f"ayah {ayah}: unresolved local start lacks review flag/confidence=0")
+            if evidence not in {"first_onset", "wasl"}:
+                violations.append(f"ayah {ayah}: non-pause start {start_ms} has unknown evidence {evidence!r}")
                 continue
-            if match.get("match_action") != "wasl":
-                violations.append(
-                    f"ayah {ayah}: non-pause start {start_ms} has action "
-                    f"{match.get('match_action')!r}, not wasl"
+            from surah_cutter.core.fast_executor import Boundary, validate_boundaries
+
+            boundary = boundaries.get(ayah)
+            try:
+                if (boundary is None or boundary.get("start_ms") != start_ms
+                        or boundary.get("confidence") != confidences[ayah]
+                        or boundary.get("evidence_kind") != evidence):
+                    raise ValueError("missing_or_mismatched_boundary")
+                if evidence == "first_onset" and ayah != 1:
+                    raise ValueError("first_onset_is_not_first_ayah")
+                validate_boundaries(
+                    [Boundary(**boundary)], [ayah], trace["total_ms"],
+                    trace["acoustic_reads"],
                 )
-            elif any(abs(start_ms - center) <= 1.0 for center in known_pause_centers):
-                violations.append(
-                    f"ayah {ayah}: wasl start {start_ms} equals a detected pause centre"
-                )
+            except (ValueError, KeyError, TypeError, IndexError) as error:
+                violations.append(f"ayah {ayah}: invalid {evidence} proof: {error}")
+            if evidence == "wasl" and any(abs(start_ms - center) <= 1.0 for center in known_pause_centers):
+                violations.append(f"ayah {ayah}: wasl start {start_ms} equals a detected pause centre")
+            continue
+        if evidence != "pause":
+            violations.append(f"ayah {ayah}: pause-backed start has unknown evidence {evidence!r}")
             continue
         pause_start = match.get("pause_start_ms")
         pause_end = match.get("pause_end_ms")
@@ -112,17 +140,46 @@ def pause_contract_violations(rows, trace: dict) -> list[str]:
 def sequence_contract_violations(
     rows: list[tuple[int, int, float]],
     expected_ayahs: list[int],
+    trace: dict | None = None,
 ) -> list[str]:
     """Require a complete in-order ayah sequence with strictly growing starts."""
     actual_ayahs = [ayah for ayah, _start_ms, _conf in rows]
     violations: list[str] = []
-    if actual_ayahs != expected_ayahs:
+    partial = trace is not None and trace.get("result_contract") == "partial-v1"
+    if partial:
+        import math
+        unknown = trace.get("unresolved_ayahs", [])
+        if (any(type(a) is not int for a in actual_ayahs + unknown)
+                or actual_ayahs != sorted(set(actual_ayahs)) or len(unknown) != len(set(unknown))
+                or set(actual_ayahs) & set(unknown)
+                or set(actual_ayahs) | set(unknown) != set(expected_ayahs)):
+            violations.append("partial canonical partition is invalid")
+        boundaries = trace.get("boundaries", [])
+        if [b.get("ayah") for b in boundaries] != expected_ayahs:
+            violations.append("partial trace does not cover canonical ayahs")
+        starts = {a: (ms, conf) for a, ms, conf in rows}
+        for b in boundaries:
+            a = b.get("ayah")
+            if a in unknown:
+                if (b.get("start_ms") is not None or b.get("evidence_kind") != "unresolved"
+                        or b.get("confidence") != 0 or b.get("read_id") is not None
+                        or b.get("proof") is not None or not b.get("review_reason")):
+                    violations.append(f"ayah {a}: unresolved has timing or proof")
+            elif starts.get(a) != (b.get("start_ms"), b.get("confidence")):
+                violations.append(f"ayah {a}: published row disagrees with trace")
+        if any(type(ms) is not int or ms < 0 or type(conf) not in (int, float)
+               or not math.isfinite(conf) or not 0 < conf <= 1
+               for _, ms, conf in rows):
+            violations.append("partial published rows require integer times and positive evidence")
+    elif actual_ayahs != expected_ayahs:
         violations.append(
             f"ayah sequence {actual_ayahs[:8]}… does not equal expected "
             f"{expected_ayahs[:8]}…"
         )
     for (previous_ayah, previous_ms, _), (ayah, start_ms, _) in zip(rows, rows[1:]):
-        if start_ms <= previous_ms:
+        if type(start_ms) is not int or type(previous_ms) is not int:
+            violations.append("published times must be integers")
+        elif start_ms <= previous_ms:
             violations.append(
                 f"ayah {previous_ayah}->{ayah}: non-increasing start "
                 f"{previous_ms}->{start_ms}"
@@ -305,7 +362,7 @@ def main(argv):
         if audit_sequence:
             sequence_violations = sequence_contract_violations(
                 fast,
-                sorted({word.ayah for word in words}),
+                sorted({word.ayah for word in words}), trace,
             )
             all_sequence_contract_violations.extend(
                 f"sura {surah}: {violation}" for violation in sequence_violations
@@ -321,10 +378,13 @@ def main(argv):
             f"pause={trace.get('n_pause')}/wasl={trace.get('n_wasl')}, "
             f"cover={trace.get('coverage')}):"
         )
-        print(
-            f"   FAST med={ef['med']:>5} p90={ef['p90']:>5} max={ef['max']:>6} "
-            f"<=150={ef['le150']}% <=500={ef['le500']}%  {tf:5.1f}s"
-        )
+        print(f"   FAST published={len(fast)}/{len({w.ayah for w in words})}; "
+              f"unresolved={len(trace.get('unresolved_ayahs', []))}")
+        if ef is not None:
+            print(f"   FAST med={ef['med']:>5} p90={ef['p90']:>5} max={ef['max']:>6} "
+                  f"<=150={ef['le150']}% <=500={ef['le500']}%  {tf:5.1f}s")
+        else:
+            print(f"   FAST no published boundaries; {tf:5.1f}s")
         if audit_pauses:
             status = "OK" if not violations else f"FAILED ({len(violations)})"
             print(f"   PAUSE CONTRACT: {status}")

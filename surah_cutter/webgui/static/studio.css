@@ -111,6 +111,14 @@ body { --sidebar-width: 246px; --header-gap: 14px; --header-inset: 18px; overflo
 .timing-confidence[data-level="high"] { color: var(--status-green); }
 .timing-confidence[data-level="medium"] { color: var(--status-amber); }
 .timing-confidence[data-level="low"] { color: var(--status-red); }
+.ayah-list > li[hidden] { display: none; }
+.timing-review-tools { display: grid; gap: 14px; font-size: 12px; }
+.timing-review-tools label { display: grid; gap: 6px; }
+.timing-review-tools select { width: 100%; min-width: 0; min-height: 40px; }
+.timing-review-tools p { margin: 0; color: var(--muted); line-height: 1.5; }
+.workspace-bar .timing-review-tools { width: 300px; padding: 16px; }
+.timing-review-tools .mode-picker-heading { padding: 0; }
+#timingReviewCount { color: var(--muted); }
 .word-card-head { flex-wrap: wrap; }
 .word-card-head .timing-confidence { flex-basis: 100%; text-align: end; }
 #comparisonDialog { width: min(900px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); padding: 0; overflow: auto; color: var(--text); background: var(--panel); border: 1px solid var(--line); border-radius: 12px; }
@@ -304,6 +312,11 @@ body { --sidebar-width: 246px; --header-gap: 14px; --header-inset: 18px; overflo
 #settingsDialog .model-card:last-child { border-bottom: 0; }
 #settingsDialog .model-action { border-radius: 7px; }
 #settingsDialog .settings-message { overflow-wrap: anywhere; }
+#appUpdateMessage { padding: 0 0 16px; }
+#appUpdateMessage[data-kind="status"] { color: var(--muted); }
+#appUpdateProgress { display: block; width: 100%; margin-bottom: 16px; accent-color: var(--accent); }
+#appUpdateProgress[hidden] { display: none; }
+#updateSettings .dialog-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 #settingsDialog :focus-visible { outline-color: var(--blue); outline-offset: 2px; }
 #settingsDialog .settings-tabs button[aria-pressed="true"]:focus-visible { outline-color: var(--text); outline-offset: -3px; }
 @media (hover: hover) {
@@ -493,7 +506,7 @@ button, summary, input { -webkit-tap-highlight-color: transparent; }
 .workspace-context .toolbar-popover { inset-inline-start: 0; inset-inline-end: auto; }
 .workspace-bar .workspace-summary { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; flex: 1 1 200px; min-width: 0; padding: 0 0 0 16px; border: 0; border-inline-start: 1px solid var(--line); border-radius: 0; background: transparent; font-size: 12px; }
 .workspace-summary #suraProgressText { color: var(--text); font-weight: 500; }
-.workspace-summary #suraProgressMeta { color: var(--muted); font-size: 11px; overflow-wrap: anywhere; }
+.workspace-summary #suraProgressMeta { color: var(--muted); font-size: 12px; }
 .workspace-summary .summary-counts { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; padding: 0; border: 0; background: transparent; font-size: 12px; }
 .workspace-primary { flex: none; }
 .workspace-actions { flex: none; }
@@ -508,16 +521,58 @@ button, summary, input { -webkit-tap-highlight-color: transparent; }
 .navigation-progress .review-generation { border-radius: 3px; height: 5px; }
 .review-generation.determinate > div { animation: none; transform: none; width: 0; opacity: 1; }
 #review > .wave-wrap { margin-top: 0; }
-@media (max-width: 1180px) {
-  .workspace-context { flex-basis: 180px; }
-  .workspace-bar { flex-wrap: wrap; }
-  .workspace-bar .workspace-summary { flex-basis: 170px; }
+/* One aligned toolbar: navigation, project, calculation, status, utilities. */
+.workspace-bar {
+  display: grid; grid-template-columns: 44px 164px 112px minmax(0, 1fr) auto;
+  height: 96px; min-height: 96px; gap: 16px; padding: 8px 18px; align-items: center;
+}
+.workspace-navigation, .sidebar-hidden .workspace-navigation { min-width: 0; flex-basis: auto; gap: 0; }
+.workspace-context { min-width: 0; gap: 0; }
+.workspace-bar #recordingMenuToggle { min-height: 24px; padding: 2px 0; font-size: 14px; line-height: 20px; }
+.workspace-bar .workspace-mode summary { min-height: 20px; padding: 1px 0; font-size: 12px; line-height: 18px; }
+.workspace-primary button { width: 112px; height: 44px; min-height: 44px; padding: 6px 8px; justify-content: center; white-space: nowrap; font-size: 13px; }
+.workspace-primary .studio-icon { width: 16px; height: 16px; flex: none; }
+.workspace-actions { grid-column: 5; margin-inline-start: 0; gap: 8px; }
+.workspace-review-actions { gap: 8px; }
+.workspace-review-actions #showSuraLogBtn { margin-inline-start: 0; }
+.workspace-bar .workspace-summary {
+  height: 80px; min-width: 0; padding: 0 16px; border: 0;
+  gap: 4px; justify-content: center;
+}
+.workspace-summary .summary-counts {
+  display: flex; flex-direction: row; align-items: baseline; gap: 10px;
+  width: 100%; min-width: 0; line-height: 18px; font-variant-numeric: tabular-nums;
+}
+.workspace-summary #suraProgressText { flex: none; font-size: 13px; font-weight: 600; }
+.workspace-summary #suraProgressMeta { min-width: 0; font-size: 12px; }
+.workspace-summary:not(:has(.navigation-progress.started)) .summary-counts { flex-direction: column; gap: 0; }
+.workspace-summary #suraProgressMeta, #alignmentPosition {
+  display: block; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+.navigation-progress { margin: 0; }
+.alignment-progress-meta {
+  display: flex; flex-wrap: nowrap; align-items: baseline; gap: 12px;
+  margin-block-end: 4px; font-size: 12px; line-height: 18px;
+}
+#alignmentPosition { min-width: 0; color: var(--text); font-weight: 500; }
+.alignment-clock { flex: none; color: var(--muted); }
+#alignmentPercent { color: var(--accent2); font-weight: 600; }
+.navigation-progress .review-generation { height: 4px; margin: 0; }
+.navigation-progress .sura-gen-status { font-size: 12px; line-height: 18px; padding-top: 4px; }
+@media (max-width: 1100px) {
+  .workspace-bar { grid-template-columns: 44px minmax(0, 1fr) 112px auto; grid-template-rows: 44px 64px; height: 136px; min-height: 136px; gap: 8px 16px; padding: 10px 12px; }
+  .workspace-actions { grid-column: 4; grid-row: 1; }
+  .workspace-bar .workspace-summary { grid-column: 1 / -1; grid-row: 2; height: 64px; padding: 0; border-inline: 0; gap: 2px; }
+  .alignment-progress-meta { margin-block-end: 2px; }
+  .navigation-progress .sura-gen-status { padding-top: 2px; }
 }
 @media (max-width: 600px) {
-  .workspace-context { flex: 1 1 130px; }
-  .workspace-bar .workspace-summary { flex: 1 1 130px; padding-inline-start: 12px; }
-  .workspace-actions { flex-basis: auto; margin-inline-start: auto; }
-  .workspace-primary button { white-space: normal; }
+  .workspace-bar { grid-template-columns: 44px minmax(0, 1fr) 112px; grid-template-rows: 44px 44px 80px; height: 204px; min-height: 204px; gap: 8px 12px; }
+  .workspace-actions { grid-column: 1 / -1; grid-row: 2; justify-content: flex-end; }
+  .workspace-bar .workspace-summary { grid-row: 3; height: 80px; }
+  .workspace-summary .summary-counts { flex-wrap: wrap; gap: 0 10px; }
+  .workspace-bar #recordingMenuToggle { font-size: 13px; }
+  .workspace-bar .workspace-mode summary { font-size: 11px; }
 }
 
 /* Distinct mode icons, shared by the review and dashboard menus. */
@@ -561,3 +616,7 @@ button, summary, input { -webkit-tap-highlight-color: transparent; }
   #projectDialog .settings-fields { grid-template-columns: minmax(0, 1fr); }
   #projectDialog input { font-size: 16px; }
 }
+
+/* Unknown work totals remain visibly active without an invented percentage. */
+.progress-fill.indeterminate { inset: 0 auto 0 0; width: 30%; animation: review-generation 1.6s ease-in-out infinite alternate; }
+@media (prefers-reduced-motion: reduce) { .progress-fill.indeterminate { animation: none; width: 100%; opacity: .6; } }

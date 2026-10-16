@@ -1,0 +1,22 @@
+{
+  "mfa_runtime_identity": {
+    "adapter": "mfa-hafs-v1",
+    "mfa": "3.4.0",
+    "files": {
+      "quran_hafs.dict": "58509c23d4465b9c152fa09a3f0f311509f03fbc9e414c9e26aaf859cb487f6c",
+      "quran_hafs_acoustic.zip": "d749c212e5c2b237bb9ed6da59e9b739ee6f6b5b7432b5e302a904b9d604b1ef"
+    },
+    "lookup_sha256": "09213c4d70c25444ba9deaa42c9f46e65f7e392f62c8c217307b719bfb2cb4e5"
+  },
+  "source_files_sha256": {
+    "surah_cutter/core/mfa_runtime.py": "ece79ee377bab55950ba358e79fd4ed38e60be98337f4a00165a110b6af677b9",
+    "surah_cutter/core/model_store.py": "f316ecaf23bc233a730453a6bd93bb375206fb1c55944190f3914f8b2f29c067",
+    "surah_cutter/core/model_catalog.json": "5bfa53840a387d9b5fa63333a9fcbdddde88195a208343643975ba120922fde0",
+    "surah_cutter/core/word_align.py": "c51c7fd25fc6d40fcf7fb437863c32ca1931ec038f3be1764b51c3c648803031",
+    "surah_cutter/core/align.py": "438cd3a6cc04c8f3116f56e2a63f841db77e34a0832c26b8f04f2f79a9a77cfe",
+    "surah_cutter/core/align_tiled.py": "2bdb4c1175fe3a9a0bfe938838403dc2d7deddaea431b66396d0b67b012b889a",
+    "surah_cutter/core/runtime_locks/mfa-osx-arm64.txt": "d64ef1101569e1c802634f76d951123f157b8d43fccb5e3979388ae7363ff073",
+    "surah_cutter/core/pipeline.py": "4d34a797e1968f04e824af9e167d51a7ef8497b20caed369363d1b9260e712e8"
+  },
+  "micromamba_archive_sha256": "bd5b8d3f151c3ad2d92f0fb918806543d713c7f67895c020db4041097a7f004d"
+}

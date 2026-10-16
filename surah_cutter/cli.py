@@ -38,21 +38,15 @@ def build_parser() -> argparse.ArgumentParser:
         help="db_version code (reciter id); defaults to the audio folder name",
     )
     p.add_argument(
-        "--reciter",
-        default=None,
-        help="known-reciter id; if it matches a bundled reference, use its "
-        "timings instead of running the model",
-    )
-    p.add_argument(
         "--mode",
-        default="auto",
-        choices=("auto", "full", "fast", "tiled", "hybrid", "fingerprint"),
-        help="alignment mode (default: auto)",
+        default="full",
+        choices=("full", "fast", "tiled", "hybrid", "fingerprint"),
+        help="alignment mode (default: full)",
     )
     p.add_argument(
         "--ayah-audio-dir",
         default=None,
-        help="folder with same-recording per-ayah clips for fingerprint mode or fast refinement",
+        help="folder with same-recording per-ayah clips for fingerprint mode",
     )
     return p
 
@@ -98,7 +92,6 @@ def main(argv: list[str] | None = None) -> int:
                 rows = pipeline.process_surah(
                     str(path),
                     surah,
-                    reciter=args.reciter,
                     mode=args.mode,
                     ayah_audio_dir=args.ayah_audio_dir,
                     trace=trace,
@@ -119,6 +112,9 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"    FAILED sura {surah}: {exc}", file=sys.stderr, flush=True)
                 continue
             print(f"    sura {surah:03d}: {written} ayah timings written", flush=True)
+            if save_result.unresolved_ayahs:
+                print(f"    partial FAST: {len(save_result.unresolved_ayahs)} unresolved ayahs "
+                      "(no timestamps generated)", flush=True)
             if save_result.diagnostics_error:
                 print(f"    saved_with_diagnostics_error: {save_result.diagnostics_error}; "
                       f"paths={save_result.log_paths}", file=sys.stderr, flush=True)

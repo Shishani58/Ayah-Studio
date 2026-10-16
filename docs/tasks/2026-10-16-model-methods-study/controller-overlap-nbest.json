@@ -1,0 +1,30 @@
+[
+  {
+    "name": "whisper-overlap",
+    "command": [
+      "/Users/ayub/.surah-cutter/model-runtime/bin/python",
+      "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/secondary_asr.py",
+      "whisper",
+      "--methods",
+      "greedy_overlap"
+    ],
+    "started": 1792118045.057638,
+    "state": "complete",
+    "exit_code": 0,
+    "finished": 1792118207.955936
+  },
+  {
+    "name": "whisper-nbest",
+    "command": [
+      "/Users/ayub/.surah-cutter/model-runtime/bin/python",
+      "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/secondary_asr.py",
+      "whisper",
+      "--methods",
+      "nbest5"
+    ],
+    "started": 1792118207.9576,
+    "state": "complete",
+    "exit_code": 0,
+    "finished": 1792118487.498828
+  }
+]

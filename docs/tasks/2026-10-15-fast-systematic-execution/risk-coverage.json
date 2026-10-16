@@ -1,0 +1,174 @@
+{
+  "quran-phonetics": {
+    "kind": "posthoc-reference-risk-only-no-policy-tuning",
+    "wrong_owner_risk": null,
+    "physical_timing_risk": null,
+    "points": [
+      {
+        "threshold": 0.25,
+        "confirmed": 2,
+        "total": 607,
+        "reference_timing_outliers": 0
+      },
+      {
+        "threshold": 0.4,
+        "confirmed": 2,
+        "total": 607,
+        "reference_timing_outliers": 0
+      },
+      {
+        "threshold": 0.6,
+        "confirmed": 1,
+        "total": 607,
+        "reference_timing_outliers": 0
+      },
+      {
+        "threshold": 0.8,
+        "confirmed": 1,
+        "total": 607,
+        "reference_timing_outliers": 0
+      },
+      {
+        "threshold": 0.9,
+        "confirmed": 1,
+        "total": 607,
+        "reference_timing_outliers": 0
+      },
+      {
+        "threshold": 0.95,
+        "confirmed": 1,
+        "total": 607,
+        "reference_timing_outliers": 0
+      },
+      {
+        "threshold": 0.99,
+        "confirmed": 0,
+        "total": 607,
+        "reference_timing_outliers": 0
+      }
+    ]
+  },
+  "quran-phonetics-fp32": {
+    "kind": "posthoc-reference-risk-only-no-policy-tuning",
+    "wrong_owner_risk": null,
+    "physical_timing_risk": null,
+    "points": [
+      {
+        "threshold": 0.25,
+        "confirmed": 2,
+        "total": 607,
+        "reference_timing_outliers": 0
+      },
+      {
+        "threshold": 0.4,
+        "confirmed": 2,
+        "total": 607,
+        "reference_timing_outliers": 0
+      },
+      {
+        "threshold": 0.6,
+        "confirmed": 2,
+        "total": 607,
+        "reference_timing_outliers": 0
+      },
+      {
+        "threshold": 0.8,
+        "confirmed": 2,
+        "total": 607,
+        "reference_timing_outliers": 0
+      },
+      {
+        "threshold": 0.9,
+        "confirmed": 1,
+        "total": 607,
+        "reference_timing_outliers": 0
+      },
+      {
+        "threshold": 0.95,
+        "confirmed": 1,
+        "total": 607,
+        "reference_timing_outliers": 0
+      },
+      {
+        "threshold": 0.99,
+        "confirmed": 0,
+        "total": 607,
+        "reference_timing_outliers": 0
+      }
+    ]
+  },
+  "whisper-tarteel-tiny": {
+    "kind": "posthoc-reference-risk-only-no-policy-tuning",
+    "wrong_owner_risk": null,
+    "physical_timing_risk": null,
+    "points": [
+      {
+        "threshold": 0.6,
+        "confirmed": 105,
+        "total": 607,
+        "reference_timing_outliers": 0
+      },
+      {
+        "threshold": 0.8,
+        "confirmed": 91,
+        "total": 607,
+        "reference_timing_outliers": 0
+      },
+      {
+        "threshold": 0.9,
+        "confirmed": 74,
+        "total": 607,
+        "reference_timing_outliers": 0
+      },
+      {
+        "threshold": 0.95,
+        "confirmed": 69,
+        "total": 607,
+        "reference_timing_outliers": 0
+      },
+      {
+        "threshold": 0.99,
+        "confirmed": 48,
+        "total": 607,
+        "reference_timing_outliers": 0
+      }
+    ]
+  },
+  "whisper-tarteel-base": {
+    "kind": "posthoc-reference-risk-only-no-policy-tuning",
+    "wrong_owner_risk": null,
+    "physical_timing_risk": null,
+    "points": [
+      {
+        "threshold": 0.6,
+        "confirmed": 130,
+        "total": 607,
+        "reference_timing_outliers": 1
+      },
+      {
+        "threshold": 0.8,
+        "confirmed": 125,
+        "total": 607,
+        "reference_timing_outliers": 1
+      },
+      {
+        "threshold": 0.9,
+        "confirmed": 124,
+        "total": 607,
+        "reference_timing_outliers": 1
+      },
+      {
+        "threshold": 0.95,
+        "confirmed": 116,
+        "total": 607,
+        "reference_timing_outliers": 1
+      },
+      {
+        "threshold": 0.99,
+        "confirmed": 103,
+        "total": 607,
+        "reference_timing_outliers": 1
+      }
+    ]
+  }
+}

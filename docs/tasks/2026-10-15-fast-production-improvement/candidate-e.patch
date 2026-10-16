@@ -1,0 +1,84 @@
+--- a/surah_cutter/core/fast_executor.py
++++ b/surah_cutter/core/fast_executor.py
+@@ -21,6 +21,7 @@
+ 
+ @dataclass(frozen=True)
+ class Policy:
++    short_word_pause_radius_ms: float = 500.
+     speech_ms: tuple[int, ...] = (1300, 2500, 4000)
+     noisy_speech_ms: tuple[int, ...] = (1700, 1900, 2100)
+     max_candidates: int = 8
+@@ -171,6 +172,16 @@
+     if _prefix(observation.units, phrase) >= ends[0]:
+         return "exact_first_word"
+     matched = _prefix(observation.units, phrase)
++    # The model can spell one canonical word as multiple independently spoken
++    # words (for example vocative ya + ayyuha). A complete short spoken word is
++    # a cue to resolve the remaining ambiguity, never a canonical-word proof.
++    if (groups is not None and matched == 1 and len(phrase[0]) == 2 and ends[0] > 1
++            and not observation.truncated and observation.unit_quality
++            and math.isfinite(observation.unit_quality[0])
++            and observation.unit_quality[0] >= threshold
++            and not _strong_continuation_conflict(observation.units, observation.unit_quality,
++                                                groups[ayah], matched, threshold)):
++        return "whole_spoken_prefix_incomplete_canonical_word"
+     if groups is not None and matched > 0 and sum(map(len, phrase[:matched])) >= 3:
+         fragment = phrase[:matched]
+         rivals = [(a, i) for a, units in groups.items() for i in [0] + word_ends[a][:-1]
+@@ -929,6 +940,8 @@
+                         continue
+                 event("SELECT_CANDIDATE", ayah, candidate=index, kind=kind)
+                 had_prefix = False
++                soft_short_word_route = False
++                short_word_base_plan, short_word_base_phrase = plan, phrase
+                 speech_steps = list(policy.speech_ms)
+                 for step, speech in enumerate(speech_steps):
+                     end = min(duration, speech_start + speech)
+@@ -1141,11 +1154,18 @@
+                                     and not next_plan["ambiguous"] and not conflict):
+                                 anchor = _expansion_evidence(next_obs, next_phrase, word_ends[future_ayah], threshold,
+                                                              groups, future_ayah, word_ends)
+-                                if anchor:
++                                if (anchor and (anchor != "whole_spoken_prefix_incomplete_canonical_word"
++                                        or (pause.end_ms - pause.start_ms) / 2 <= policy.short_word_pause_radius_ms)):
+                                     future_expansion = (future_ayah, anchor)
+                         if future:
+                             break
+                     expansion = _expansion_evidence(obs, phrase, word_ends[ayah], threshold, groups, ayah, word_ends)
++                    if (expansion == "whole_spoken_prefix_incomplete_canonical_word" and pause
++                            and (pause.end_ms - pause.start_ms) / 2 > policy.short_word_pause_radius_ms):
++                        event("SEARCH_CUE_ONLY", ayah, read_id=opening_id,
++                              reason="short_word_pause_time_uncertain", observed=obs.units,
++                              pause_ms=[pause.start_ms, pause.end_ms])
++                        expansion = None
+                     if not expansion and segmented_expansion:
+                         expansion = "split_head_requires_whole_continuation"
+                     if not expansion and noisy_expansion:
+@@ -1158,7 +1178,11 @@
+                         speech_steps[step + 1:] = [ms for ms in policy.noisy_speech_ms if ms > speech]
+                     if not expansion and posterior_expansion:
+                         expansion = "canonical_prefix_vs_unresolved_residual"
+-                    current_expansion = bool(expansion)
++                    # Only the new permission is provisional. An earlier
++                    # supported opening keeps its existing repetition block.
++                    soft_short_word_route |= (expansion == "whole_spoken_prefix_incomplete_canonical_word"
++                                              and not had_prefix)
++                    current_expansion = bool(expansion) and not soft_short_word_route
+                     if not expansion and future_expansion:
+                         expansion = "provisional_unique_anchor_partial:" + future_expansion[1]
+                     speech_edge = None
+@@ -1179,6 +1203,14 @@
+                     # be silently replaced by a later repetition.
+                     blocked_prefix = blocked_prefix or had_prefix
+                     break
++                if soft_short_word_route and boundary is None and future is None:
++                    # This additional permission is provisional. Its failed
++                    # reads cannot turn the original incomplete opening into
++                    # a sticky block that hides a later independent anchor.
++                    blocked_prefix = False
++                    plan, phrase = short_word_base_plan, short_word_base_phrase
++                    event("EVALUATE", ayah, candidate=index,
++                          reason="short_word_extension_unresolved_resume_candidates")
+                 if boundary or blocked_prefix or future:
+                     break
+             if boundary is None and future:

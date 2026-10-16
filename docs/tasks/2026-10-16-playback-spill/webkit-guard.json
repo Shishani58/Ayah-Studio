@@ -1,0 +1,175 @@
+{
+  "stops": [
+    {
+      "actual_ms": 6483.696730098839,
+      "gain_at_late_stop": 0,
+      "ayah": 1,
+      "rate": 1,
+      "cut_ms": 6483,
+      "overshoot_ms": 0.696730098838998
+    },
+    {
+      "actual_ms": 11460.21182184394,
+      "gain_at_late_stop": 0,
+      "ayah": 2,
+      "rate": 1,
+      "cut_ms": 11460,
+      "overshoot_ms": 0.21182184393910575
+    },
+    {
+      "actual_ms": 15937.136725002787,
+      "gain_at_late_stop": 0,
+      "ayah": 3,
+      "rate": 1,
+      "cut_ms": 15937,
+      "overshoot_ms": 0.13672500278698863
+    },
+    {
+      "actual_ms": 21577.736606306702,
+      "gain_at_late_stop": 0,
+      "ayah": 4,
+      "rate": 1,
+      "cut_ms": 21577,
+      "overshoot_ms": 0.736606306702015
+    },
+    {
+      "actual_ms": 27740.24991467193,
+      "gain_at_late_stop": 0,
+      "ayah": 5,
+      "rate": 1,
+      "cut_ms": 27740,
+      "overshoot_ms": 0.24991467193103745
+    },
+    {
+      "actual_ms": 33395.38940774024,
+      "gain_at_late_stop": 0,
+      "ayah": 6,
+      "rate": 1,
+      "cut_ms": 33395,
+      "overshoot_ms": 0.3894077402364928
+    },
+    {
+      "actual_ms": 6484.287983800324,
+      "gain_at_late_stop": 0,
+      "ayah": 1,
+      "rate": 2,
+      "cut_ms": 6483,
+      "overshoot_ms": 1.2879838003236728
+    },
+    {
+      "actual_ms": 11460.19454296301,
+      "gain_at_late_stop": 1,
+      "ayah": 2,
+      "rate": 2,
+      "cut_ms": 11460,
+      "overshoot_ms": 0.1945429630104627
+    },
+    {
+      "actual_ms": 15938.338072018088,
+      "gain_at_late_stop": 0,
+      "ayah": 3,
+      "rate": 2,
+      "cut_ms": 15937,
+      "overshoot_ms": 1.3380720180884964
+    },
+    {
+      "actual_ms": 21577.740670760235,
+      "gain_at_late_stop": 0,
+      "ayah": 4,
+      "rate": 2,
+      "cut_ms": 21577,
+      "overshoot_ms": 0.7406707602349343
+    },
+    {
+      "actual_ms": 27740.076026538776,
+      "gain_at_late_stop": 0,
+      "ayah": 5,
+      "rate": 2,
+      "cut_ms": 27740,
+      "overshoot_ms": 0.07602653877620469
+    },
+    {
+      "actual_ms": 33396.20009048391,
+      "gain_at_late_stop": 0,
+      "ayah": 6,
+      "rate": 2,
+      "cut_ms": 33395,
+      "overshoot_ms": 1.200090483907843
+    }
+  ],
+  "busy": [
+    {
+      "cut": 6483,
+      "start_ms": 5903.970136330125,
+      "end_ms": 6254.420053003949,
+      "gain": 0
+    },
+    {
+      "cut": 11460,
+      "start_ms": 10949.432358982594,
+      "end_ms": 11298.807567356707,
+      "gain": 0
+    },
+    {
+      "cut": 15937,
+      "start_ms": 15400.973175052855,
+      "end_ms": 15750.066508405213,
+      "gain": 0
+    },
+    {
+      "cut": 21577,
+      "start_ms": 21038.466670365917,
+      "end_ms": 21387.565003756346,
+      "gain": 0
+    },
+    {
+      "cut": 27740,
+      "start_ms": 27199.173869843104,
+      "end_ms": 27548.259786608138,
+      "gain": 0
+    },
+    {
+      "cut": 33395,
+      "start_ms": 32886.113777583756,
+      "end_ms": 33235.62602751359,
+      "gain": 0
+    },
+    {
+      "cut": 6483,
+      "start_ms": 5458.367076668922,
+      "end_ms": 6157.881993301246,
+      "gain": 0
+    },
+    {
+      "cut": 11460,
+      "start_ms": 10615.676749458304,
+      "end_ms": 11313.884999563685,
+      "gain": 0
+    },
+    {
+      "cut": 15937,
+      "start_ms": 15083.042441911397,
+      "end_ms": 15781.938692133275,
+      "gain": 0
+    },
+    {
+      "cut": 21577,
+      "start_ms": 20670.58314416114,
+      "end_ms": 21368.906061030215,
+      "gain": 0
+    },
+    {
+      "cut": 27740,
+      "start_ms": 26838.49722999091,
+      "end_ms": 27538.735063420037,
+      "gain": 0
+    },
+    {
+      "cut": 33395,
+      "start_ms": 32540.665905129557,
+      "end_ms": 33240.41898841823,
+      "gain": 0
+    }
+  ],
+  "duration_ms": 59010.61224489796
+}

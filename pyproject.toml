@@ -12,8 +12,8 @@ license = { text = "MIT" }
 authors = [{ name = "Ayah Studio contributors" }]
 keywords = ["quran", "forced-alignment", "timecodes", "ayah", "recitation"]
 
-# Core is the full shipped runtime: GUI (dashboard + review), DB I/O, decode,
-# metric AND timing generation. Generation runs the int8 ONNX model
+# Core is the shipped runtime: GUI (dashboard + review), DB I/O, decode
+# and timing generation. Generation runs the int8 ONNX model
 # (models/wav2vec2-quran-phonetics.onnx) via onnxruntime + the vendored CTC
 # Viterbi (surah_cutter.core._ctc) + the vendored per-word transliteration cache
 # (data/word_tr_cache.json). No torch, transformers, librosa or HF at runtime.
@@ -74,11 +74,13 @@ surah-cutter-gui-qt = "surah_cutter.gui.app:main"
 [tool.hatch.build.targets.wheel]
 packages = ["surah_cutter"]
 
+[tool.hatch.build.targets.sdist]
+exclude = ["/data/references", "/tools/research", "/docs/tasks"]
+
 [tool.hatch.build.targets.wheel.force-include]
 "data/quran_mushaf.db" = "surah_cutter/bundled/data/quran_mushaf.db"
 "data/word_tr_cache.json" = "surah_cutter/bundled/data/word_tr_cache.json"
 "data/model_text_targets.json" = "surah_cutter/bundled/data/model_text_targets.json"
-"data/references" = "surah_cutter/bundled/data/references"
 "assets/fonts/qpc_hafs.ttf" = "surah_cutter/bundled/assets/fonts/qpc_hafs.ttf"
 
 [tool.ruff]

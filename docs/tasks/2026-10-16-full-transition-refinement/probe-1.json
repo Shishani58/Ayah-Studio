@@ -1,0 +1,290 @@
+[
+  {
+    "ayah": 3,
+    "reason": "unstable-pause",
+    "lo": 7980,
+    "hi": 14240,
+    "decoded": "lrabialamūnaarūh'mālirrhi",
+    "targets": [
+      [
+        "rabbi",
+        "l-ʿālamīna"
+      ],
+      [
+        "al-raḥmāni",
+        "l-raḥīmi"
+      ]
+    ],
+    "consonants": "lrblmnrhmlrh",
+    "expected": [
+      "rblʿlmn",
+      "lrḥmnlrḥm"
+    ],
+    "local": {
+      "2": {
+        "ayah": 2,
+        "raw_onset_ms": 8181,
+        "onset_ms": 8181,
+        "conf": 0.2483,
+        "first_token_conf": 0.9971,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9971,
+          0.9095,
+          0.0001,
+          0.9583,
+          0.9687
+        ],
+        "full_ctc_first_ms": 8381.28205128205,
+        "full_ctc_tail_conf": 0.9864,
+        "full_ctc_end_ms": 11029.74358974359,
+        "full_ctc_head_end_ms": 11029.74358974359,
+        "full_ctc_tail_start_ms": 8381.28205128205
+      },
+      "3": {
+        "ayah": 3,
+        "raw_onset_ms": 11632,
+        "onset_ms": 11632,
+        "conf": 0.0401,
+        "first_token_conf": 0.843,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.843,
+          0.0,
+          0.0003,
+          0.0021,
+          0.0006,
+          0.0197,
+          0.8275,
+          0.9327,
+          0.2001,
+          0.8468
+        ],
+        "full_ctc_first_ms": 11832.307692307691,
+        "full_ctc_tail_conf": 0.7708,
+        "full_ctc_end_ms": 13838.71794871795,
+        "full_ctc_head_end_ms": 13838.71794871795,
+        "full_ctc_tail_start_ms": 11832.307692307691
+      }
+    }
+  },
+  {
+    "ayah": 4,
+    "reason": "weak-word-right-shift",
+    "lo": 11400,
+    "hi": 18080,
+    "decoded": "a-rk'mālirākhiīemamālitiawmint",
+    "targets": [
+      [
+        "al-raḥmāni",
+        "l-raḥīmi"
+      ],
+      [
+        "māliki",
+        "yawmi"
+      ]
+    ],
+    "consonants": "rkmlrkhmltwmnt",
+    "expected": [
+      "lrḥmnlrḥm",
+      "mlkywm"
+    ],
+    "local": {
+      "3": {
+        "ayah": 3,
+        "raw_onset_ms": 11601,
+        "onset_ms": 11601,
+        "conf": 0.1971,
+        "first_token_conf": 0.7209,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.7209,
+          0.011,
+          0.9726,
+          0.9576,
+          0.4177,
+          0.0018,
+          0.9964,
+          0.9732,
+          0.0044,
+          0.9963
+        ],
+        "full_ctc_first_ms": 11801.201201201202,
+        "full_ctc_tail_conf": 0.9838,
+        "full_ctc_end_ms": 15351.831831831832,
+        "full_ctc_head_end_ms": 15371.891891891892,
+        "full_ctc_tail_start_ms": 11801.201201201202
+      },
+      "4": {
+        "ayah": 4,
+        "raw_onset_ms": 15954,
+        "onset_ms": 15954,
+        "conf": 0.6015,
+        "first_token_conf": 0.9998,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9998,
+          0.9976,
+          0.9946,
+          0.9778,
+          0.0224,
+          0.8114
+        ],
+        "full_ctc_first_ms": 16154.234234234234,
+        "full_ctc_tail_conf": 0.9996,
+        "full_ctc_end_ms": 17698.85885885886,
+        "full_ctc_head_end_ms": 17698.85885885886,
+        "full_ctc_tail_start_ms": 16154.234234234234
+      }
+    }
+  },
+  {
+    "ayah": 5,
+    "reason": "unstable-pause",
+    "lo": 16780,
+    "hi": 24020,
+    "decoded": "l-yawminnīnaīākanābudū",
+    "targets": [
+      [
+        "yawmi",
+        "l-dīni"
+      ],
+      [
+        "iyyāka",
+        "naʿbudu"
+      ]
+    ],
+    "consonants": "lywmnknbd",
+    "expected": [
+      "ywmldn",
+      "yknʿbd"
+    ],
+    "local": {
+      "4": {
+        "ayah": 4,
+        "raw_onset_ms": 16921,
+        "onset_ms": 16921,
+        "conf": 0.9682,
+        "first_token_conf": 0.8888,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.8888,
+          0.9542,
+          0.9944,
+          0.997,
+          0.9996
+        ],
+        "full_ctc_first_ms": 17120.941828254847,
+        "full_ctc_tail_conf": 0.9999,
+        "full_ctc_end_ms": 19587.75623268698,
+        "full_ctc_head_end_ms": 19607.81163434903,
+        "full_ctc_tail_start_ms": 17120.941828254847
+      },
+      "5": {
+        "ayah": 5,
+        "raw_onset_ms": 21594,
+        "onset_ms": 21594,
+        "conf": 0.0363,
+        "first_token_conf": 0.0042,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-onset",
+        "token_confs": [
+          0.0042,
+          0.0007,
+          0.0001,
+          0.7564,
+          0.9725,
+          0.8291
+        ],
+        "full_ctc_first_ms": 21793.850415512465,
+        "full_ctc_tail_conf": 0.9827,
+        "full_ctc_end_ms": 23558.725761772854,
+        "full_ctc_head_end_ms": 23679.05817174515,
+        "full_ctc_tail_start_ms": 21793.850415512465
+      }
+    }
+  },
+  {
+    "ayah": 7,
+    "reason": "unstable-pause",
+    "lo": 28380,
+    "hi": 36060,
+    "decoded": "linaṣirāalm'tafīmṣirāṭalladnaan",
+    "targets": [
+      [
+        "l-ṣirāṭa",
+        "l-mus'taqīma"
+      ],
+      [
+        "ṣirāṭa",
+        "alladhīna"
+      ]
+    ],
+    "consonants": "lnṣrlmtfmṣrṭldn",
+    "expected": [
+      "lṣrṭlmstqm",
+      "ṣrṭldhn"
+    ],
+    "local": {
+      "6": {
+        "ayah": 6,
+        "raw_onset_ms": 28240,
+        "onset_ms": 28240,
+        "conf": 0.6449,
+        "first_token_conf": 0.997,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.997,
+          0.1858,
+          0.997,
+          0.9554,
+          0.9986,
+          0.9978,
+          0.1151,
+          0.9985
+        ],
+        "full_ctc_first_ms": 28440.156657963445,
+        "full_ctc_tail_conf": 0.9727,
+        "full_ctc_end_ms": 32651.1227154047,
+        "full_ctc_head_end_ms": 32671.17493472585,
+        "full_ctc_tail_start_ms": 28440.156657963445
+      },
+      "7": {
+        "ayah": 7,
+        "raw_onset_ms": 33414,
+        "onset_ms": 33414,
+        "conf": 0.1681,
+        "first_token_conf": 0.9959,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9959,
+          0.997,
+          0.9995,
+          0.994,
+          0.781,
+          0.0
+        ],
+        "full_ctc_first_ms": 33613.62924281984,
+        "full_ctc_tail_conf": 0.8105,
+        "full_ctc_end_ms": 35899.58224543081,
+        "full_ctc_head_end_ms": 35899.58224543081,
+        "full_ctc_tail_start_ms": 33613.62924281984
+      }
+    }
+  }
+]

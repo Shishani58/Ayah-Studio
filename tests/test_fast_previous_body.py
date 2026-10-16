@@ -35,14 +35,14 @@ def test_complete_previous_body_is_declined_before_reading_true_opening():
 
 def test_partial_rival_keeps_the_unresolved_opening_protected():
     rows, trace = scenario('partial')
-    assert rows[3][2] == 0
+    assert trace["boundaries"][3]["confidence"] == 0
     assert not any(e['state'] == 'DECLINE_CANDIDATE' for e in trace['transitions'])
     assert not any(r['window_ms'][0] == 20000 for r in trace['acoustic_reads'])
 
 
 def test_weak_rival_cannot_authorize_a_later_replacement():
     rows, trace = scenario('weak')
-    assert rows[3][2] == 0
+    assert trace["boundaries"][3]["confidence"] == 0
     assert not any(e['state'] == 'DECLINE_CANDIDATE' for e in trace['transitions'])
 
 

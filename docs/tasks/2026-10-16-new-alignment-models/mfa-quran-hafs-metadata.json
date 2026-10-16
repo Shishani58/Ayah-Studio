@@ -1,0 +1,82 @@
+{
+  "_id": "6a7494a65119d47e4e97bad4",
+  "id": "Quran-Lab/mfa-quran-hafs",
+  "private": false,
+  "library_name": "montreal-forced-aligner",
+  "tags": [
+    "montreal-forced-aligner",
+    "forced-alignment",
+    "quran",
+    "recitation",
+    "tajweed",
+    "speech",
+    "ar",
+    "license:apache-2.0",
+    "region:us"
+  ],
+  "downloads": 68,
+  "likes": 4,
+  "modelId": "Quran-Lab/mfa-quran-hafs",
+  "author": "Quran-Lab",
+  "sha": "8386dceddf0fa816bd7f9b3c0667d992fa34bd36",
+  "lastModified": "2026-08-06T14:09:57.000Z",
+  "gated": false,
+  "disabled": false,
+  "model-index": null,
+  "config": {},
+  "cardData": {
+    "license": "apache-2.0",
+    "language": [
+      "ar"
+    ],
+    "tags": [
+      "montreal-forced-aligner",
+      "forced-alignment",
+      "quran",
+      "recitation",
+      "tajweed",
+      "speech"
+    ],
+    "library_name": "montreal-forced-aligner"
+  },
+  "siblings": [
+    {
+      "rfilename": ".gitattributes",
+      "blobId": "a6344aac8c09253b3b630fb776ae94478aa0275b",
+      "size": 1519
+    },
+    {
+      "rfilename": "README.md",
+      "blobId": "8b9b26e3cc5d63b4859fa6f9394ab7e65297c5c4",
+      "size": 4633
+    },
+    {
+      "rfilename": "quran_hafs.dict",
+      "blobId": "143978a8dbbbbec35d33fc83612541cf34b6de1b",
+      "size": 1017862
+    },
+    {
+      "rfilename": "quran_hafs_acoustic.zip",
+      "blobId": "e7fe0a44a32f80b77060f4c85325439eb96486b3",
+      "size": 61697691,
+      "lfs": {
+        "sha256": "d749c212e5c2b237bb9ed6da59e9b739ee6f6b5b7432b5e302a904b9d604b1ef",
+        "size": 61697691,
+        "pointerSize": 133
+      }
+    },
+    {
+      "rfilename": "rule_index.jsonl",
+      "blobId": "5e900c5ca4a09c994a113905cd910a99e7176a31",
+      "size": 9939992
+    },
+    {
+      "rfilename": "tokens.txt",
+      "blobId": "9381fb688df0e37644eb6e7bdc294b2aec59f601",
+      "size": 623
+    }
+  ],
+  "spaces": [],
+  "createdAt": "2026-08-06T14:05:26.000Z",
+  "usedStorage": 61697691
+}

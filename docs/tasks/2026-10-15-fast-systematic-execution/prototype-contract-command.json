@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "/Users/ayub/Developer/surah-cutter/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-c",
+    "/dev/null",
+    "-o",
+    "pythonpath=",
+    "--import-mode=importlib",
+    "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/regression_draft.py"
+  ],
+  "cwd": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/prototype",
+  "env": {
+    "PYTHONPATH": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/prototype:/Users/ayub/Developer/surah-cutter/tests"
+  }
+}

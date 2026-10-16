@@ -1,0 +1,27 @@
+.......................F                                                 [100%]
+=================================== FAILURES ===================================
+_________ test_failed_future_cue_cannot_create_a_sticky_current_prefix _________
+
+    def test_failed_future_cue_cannot_create_a_sticky_current_prefix():
+        fake = clipped_fake('wrong')
+        rendered = list(fake.rendered)
+        rendered[0] = ('currentword',)
+        next_ayah = next(i for i, w in enumerate(fake.words) if w.ayah == 2)
+        rendered[next_ayah] = ('futureword',)
+        rendered[-1] = ('currentword',)
+        fake.rendered = tuple(rendered)
+        fake.responder = lambda f, s, d: (
+            observation(('futurx',) if d < 2000 else ('currentword',), positions=False) if s == 1000
+            else observation(f.phrase(1), positions=False) if s == 6000
+            else observation((), positions=False))
+        rows, trace = run(fake, [pause(1000), pause(6000)])
+        assert rows[0] == (1, 6100, .99)
+>       assert any(e.get('possible_ayah') == 2 and e['state'] == 'SEARCH_CUE_ONLY'
+                   for e in trace['transitions'])
+E       assert False
+E        +  where False = any(<generator object test_failed_future_cue_cannot_create_a_sticky_current_prefix.<locals>.<genexpr> at 0x10c244a00>)
+
+/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-fast-addressed-recovery/regression_draft.py:197: AssertionError
+=========================== short test summary info ============================
+FAILED ../../../../../../../../dev::test_failed_future_cue_cannot_create_a_sticky_current_prefix
+1 failed, 23 passed in 1.61s

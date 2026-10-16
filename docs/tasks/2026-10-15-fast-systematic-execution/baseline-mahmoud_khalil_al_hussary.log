@@ -1,0 +1,86 @@
+quran-phonetics 80 2.24 review 41 coverage 0.132 calls 25
+quran-phonetics 98 4.36 review 4 coverage 0.286 calls 46
+quran-phonetics 112 0.87 review 2 coverage 0.376 calls 8
+quran-phonetics-fp32 80 3.05 review 41 coverage 0.132 calls 25
+quran-phonetics-fp32 98 5.82 review 4 coverage 0.286 calls 46
+quran-phonetics-fp32 112 1.09 review 2 coverage 0.376 calls 8
+{
+  "quran-phonetics": {
+    "surahs": 3,
+    "ayahs": 54,
+    "median_ms": 3892.0,
+    "p95_ms": 7532.699999999996,
+    "max_ms": 8100,
+    "over500": 47,
+    "positive_conf_over500": [
+      [
+        98,
+        1,
+        994,
+        0.9986016154289246
+      ],
+      [
+        98,
+        2,
+        1226,
+        0.8967914581298828
+      ],
+      [
+        98,
+        5,
+        935,
+        0.9384638071060181
+      ]
+    ],
+    "sequence_violations": [],
+    "review_ayahs": 47,
+    "load_probe_seconds": 0.2001582500524819,
+    "decode_seconds": 0.4888519588857889,
+    "dsp_seconds": 0.22178808320313692,
+    "inference_match_seconds": 7.471334042260423,
+    "search_seconds": 7.69312212546356,
+    "audio_ms": 195800.0,
+    "covered_audio_ms": 108929.375,
+    "total_ms": 523702.875,
+    "model_reads": 79
+  },
+  "quran-phonetics-fp32": {
+    "surahs": 3,
+    "ayahs": 54,
+    "median_ms": 3892.0,
+    "p95_ms": 7532.699999999996,
+    "max_ms": 8100,
+    "over500": 47,
+    "positive_conf_over500": [
+      [
+        98,
+        1,
+        994,
+        0.9976612329483032
+      ],
+      [
+        98,
+        2,
+        1226,
+        0.9675735235214233
+      ],
+      [
+        98,
+        5,
+        935,
+        0.9391893148422241
+      ]
+    ],
+    "sequence_violations": [],
+    "review_ayahs": 47,
+    "load_probe_seconds": 0.5471873329952359,
+    "decode_seconds": 0.4888519588857889,
+    "dsp_seconds": 0.22178808320313692,
+    "inference_match_seconds": 9.956601375015453,
+    "search_seconds": 10.17838945821859,
+    "audio_ms": 195800.0,
+    "covered_audio_ms": 108929.375,
+    "total_ms": 523702.875,
+    "model_reads": 79
+  }
+}

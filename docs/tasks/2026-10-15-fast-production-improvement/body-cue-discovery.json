@@ -1,0 +1,566 @@
+[
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 1,
+    "ayah": 1,
+    "read_id": 0,
+    "reason": "ayah=1:first_onset:minimal_phrase",
+    "window_ms": [
+      200.0,
+      1500.0
+    ],
+    "expected_head": [
+      "بسم"
+    ],
+    "observed": [
+      "بسم",
+      "الله"
+    ],
+    "quality": [
+      0.8228098354022655,
+      0.9127059182769857
+    ],
+    "hits": [
+      {
+        "word_index": 1,
+        "pair": [
+          "الله"
+        ],
+        "offset": 1,
+        "quality": [
+          0.9127059182769857
+        ]
+      }
+    ]
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 65,
+    "ayah": 1,
+    "read_id": 4,
+    "reason": "ayah=1:pause:minimal_phrase",
+    "window_ms": [
+      24640.0,
+      26140.0
+    ],
+    "expected_head": [
+      "يايها"
+    ],
+    "observed": [
+      "واتقوا",
+      "الله"
+    ],
+    "quality": [
+      0.9930727891789028,
+      0.8997632526555944
+    ],
+    "hits": [
+      {
+        "word_index": 9,
+        "pair": [
+          "واتقوا"
+        ],
+        "offset": 0,
+        "quality": [
+          0.9930727891789028
+        ]
+      },
+      {
+        "word_index": 9,
+        "pair": [
+          "واتقوا",
+          "الله"
+        ],
+        "offset": 0,
+        "quality": [
+          0.9930727891789028,
+          0.8997632526555944
+        ]
+      }
+    ]
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 65,
+    "ayah": 1,
+    "read_id": 7,
+    "reason": "ayah=1:pause:minimal_phrase",
+    "window_ms": [
+      43300.0,
+      44800.0
+    ],
+    "expected_head": [
+      "يايها"
+    ],
+    "observed": [
+      "وتلك",
+      "حدود"
+    ],
+    "quality": [
+      0.9990667477916416,
+      0.7898461798205106
+    ],
+    "hits": [
+      {
+        "word_index": 23,
+        "pair": [
+          "وتلك"
+        ],
+        "offset": 0,
+        "quality": [
+          0.9990667477916416
+        ]
+      },
+      {
+        "word_index": 23,
+        "pair": [
+          "وتلك",
+          "حدود"
+        ],
+        "offset": 0,
+        "quality": [
+          0.9990667477916416,
+          0.7898461798205106
+        ]
+      }
+    ]
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 98,
+    "ayah": 8,
+    "read_id": 24,
+    "reason": "ayah=8:pause:minimal_phrase",
+    "window_ms": [
+      89460.0,
+      90960.0
+    ],
+    "expected_head": [
+      "جزاؤهم"
+    ],
+    "observed": [
+      "تجري",
+      "من"
+    ],
+    "quality": [
+      0.9842051677936985,
+      0.6770096494433742
+    ],
+    "hits": [
+      {
+        "word_index": 78,
+        "pair": [
+          "تجري"
+        ],
+        "offset": 0,
+        "quality": [
+          0.9842051677936985
+        ]
+      },
+      {
+        "word_index": 78,
+        "pair": [
+          "تجري",
+          "من"
+        ],
+        "offset": 0,
+        "quality": [
+          0.9842051677936985,
+          0.6770096494433742
+        ]
+      }
+    ]
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 98,
+    "ayah": 8,
+    "read_id": 25,
+    "reason": "ayah=8:pause:minimal_phrase",
+    "window_ms": [
+      96300.0,
+      97800.0
+    ],
+    "expected_head": [
+      "جزاؤهم"
+    ],
+    "observed": [
+      "رضي",
+      "الله"
+    ],
+    "quality": [
+      0.9975028562955445,
+      0.999929671466158
+    ],
+    "hits": [
+      {
+        "word_index": 85,
+        "pair": [
+          "رضي",
+          "الله"
+        ],
+        "offset": 0,
+        "quality": [
+          0.9975028562955445,
+          0.999929671466158
+        ]
+      }
+    ]
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 79,
+    "ayah": 20,
+    "read_id": 32,
+    "reason": "ayah=20:pause:incomplete_distinguishing_phrase",
+    "window_ms": [
+      91840.0,
+      94540.0
+    ],
+    "expected_head": [
+      "فارىه"
+    ],
+    "observed": [
+      "فاراه",
+      "الاية"
+    ],
+    "quality": [
+      0.4517455276824846,
+      0.9838222925867045
+    ],
+    "hits": [
+      {
+        "word_index": 67,
+        "pair": [
+          "الاية"
+        ],
+        "offset": 1,
+        "quality": [
+          0.9838222925867045
+        ]
+      }
+    ]
+  },
+  {
+    "model": "whisper-tarteel-tiny",
+    "surah": 79,
+    "ayah": 20,
+    "read_id": 33,
+    "reason": "ayah=20:pause:incomplete_distinguishing_phrase",
+    "window_ms": [
+      91840.0,
+      96040.0
+    ],
+    "expected_head": [
+      "فارىه"
+    ],
+    "observed": [
+      "فاراه",
+      "الاية",
+      "الكبرى"
+    ],
+    "quality": [
+      0.5420487808244504,
+      0.9970065823570118,
+      0.9983405041422548
+    ],
+    "hits": [
+      {
+        "word_index": 67,
+        "pair": [
+          "الاية"
+        ],
+        "offset": 1,
+        "quality": [
+          0.9970065823570118
+        ]
+      },
+      {
+        "word_index": 67,
+        "pair": [
+          "الاية",
+          "الكبرى"
+        ],
+        "offset": 1,
+        "quality": [
+          0.9970065823570118,
+          0.9983405041422548
+        ]
+      }
+    ]
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 1,
+    "ayah": 1,
+    "read_id": 0,
+    "reason": "ayah=1:first_onset:minimal_phrase",
+    "window_ms": [
+      200.0,
+      1500.0
+    ],
+    "expected_head": [
+      "بسم"
+    ],
+    "observed": [
+      "بسم",
+      "الله"
+    ],
+    "quality": [
+      0.9958471387882633,
+      0.9997677150562424
+    ],
+    "hits": [
+      {
+        "word_index": 1,
+        "pair": [
+          "الله"
+        ],
+        "offset": 1,
+        "quality": [
+          0.9997677150562424
+        ]
+      }
+    ]
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 59,
+    "ayah": 8,
+    "read_id": 34,
+    "reason": "ayah=8:pause:minimal_phrase",
+    "window_ms": [
+      182360.0,
+      183860.0
+    ],
+    "expected_head": [
+      "للفقراء"
+    ],
+    "observed": [
+      "يبتغون"
+    ],
+    "quality": [
+      0.9999502921986438
+    ],
+    "hits": [
+      {
+        "word_index": 159,
+        "pair": [
+          "يبتغون"
+        ],
+        "offset": 0,
+        "quality": [
+          0.9999502921986438
+        ]
+      }
+    ]
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 59,
+    "ayah": 10,
+    "read_id": 42,
+    "reason": "ayah=10:pause:minimal_phrase",
+    "window_ms": [
+      254300.0,
+      255800.0
+    ],
+    "expected_head": [
+      "والذين"
+    ],
+    "observed": [
+      "ولا",
+      "تجعل"
+    ],
+    "quality": [
+      0.9999984502816872,
+      0.9786976034919708
+    ],
+    "hits": [
+      {
+        "word_index": 214,
+        "pair": [
+          "تجعل"
+        ],
+        "offset": 1,
+        "quality": [
+          0.9786976034919708
+        ]
+      },
+      {
+        "word_index": 213,
+        "pair": [
+          "ولا",
+          "تجعل"
+        ],
+        "offset": 0,
+        "quality": [
+          0.9999984502816872,
+          0.9786976034919708
+        ]
+      }
+    ]
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 65,
+    "ayah": 1,
+    "read_id": 4,
+    "reason": "ayah=1:pause:minimal_phrase",
+    "window_ms": [
+      24640.0,
+      26140.0
+    ],
+    "expected_head": [
+      "يايها"
+    ],
+    "observed": [
+      "واتقوا",
+      "الله"
+    ],
+    "quality": [
+      0.9297863780658012,
+      0.9979177055248466
+    ],
+    "hits": [
+      {
+        "word_index": 9,
+        "pair": [
+          "واتقوا"
+        ],
+        "offset": 0,
+        "quality": [
+          0.9297863780658012
+        ]
+      },
+      {
+        "word_index": 9,
+        "pair": [
+          "واتقوا",
+          "الله"
+        ],
+        "offset": 0,
+        "quality": [
+          0.9297863780658012,
+          0.9979177055248466
+        ]
+      }
+    ]
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 65,
+    "ayah": 1,
+    "read_id": 7,
+    "reason": "ayah=1:pause:minimal_phrase",
+    "window_ms": [
+      43300.0,
+      44800.0
+    ],
+    "expected_head": [
+      "يايها"
+    ],
+    "observed": [
+      "وتلك",
+      "حدور"
+    ],
+    "quality": [
+      0.9999562521044904,
+      0.9120567244171867
+    ],
+    "hits": [
+      {
+        "word_index": 23,
+        "pair": [
+          "وتلك"
+        ],
+        "offset": 0,
+        "quality": [
+          0.9999562521044904
+        ]
+      }
+    ]
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 98,
+    "ayah": 8,
+    "read_id": 21,
+    "reason": "ayah=8:pause:minimal_phrase",
+    "window_ms": [
+      89460.0,
+      90960.0
+    ],
+    "expected_head": [
+      "جزاؤهم"
+    ],
+    "observed": [
+      "تجري",
+      "من"
+    ],
+    "quality": [
+      0.9994077615601981,
+      0.9356772970049266
+    ],
+    "hits": [
+      {
+        "word_index": 78,
+        "pair": [
+          "تجري"
+        ],
+        "offset": 0,
+        "quality": [
+          0.9994077615601981
+        ]
+      },
+      {
+        "word_index": 78,
+        "pair": [
+          "تجري",
+          "من"
+        ],
+        "offset": 0,
+        "quality": [
+          0.9994077615601981,
+          0.9356772970049266
+        ]
+      }
+    ]
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "surah": 98,
+    "ayah": 8,
+    "read_id": 22,
+    "reason": "ayah=8:pause:minimal_phrase",
+    "window_ms": [
+      96300.0,
+      97800.0
+    ],
+    "expected_head": [
+      "جزاؤهم"
+    ],
+    "observed": [
+      "رضي",
+      "الله"
+    ],
+    "quality": [
+      0.998733457702467,
+      0.9999881984200047
+    ],
+    "hits": [
+      {
+        "word_index": 85,
+        "pair": [
+          "رضي",
+          "الله"
+        ],
+        "offset": 0,
+        "quality": [
+          0.998733457702467,
+          0.9999881984200047
+        ]
+      }
+    ]
+  }
+]

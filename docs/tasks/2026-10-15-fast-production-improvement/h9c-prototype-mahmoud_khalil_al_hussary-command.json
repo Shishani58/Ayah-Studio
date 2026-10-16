@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "/Users/ayub/Developer/surah-cutter/.venv/bin/python",
+    "-u",
+    "-c",
+    "\nimport hashlib,json,os,runpy,sys\nfrom pathlib import Path\nimport surah_cutter.core.fast_executor as e\nimport surah_cutter.core.fast_adapters as a\nimport surah_cutter.core.fast_ctc as c\nroot=Path.cwd().resolve()\npaths={m.__name__:str(Path(m.__file__).resolve()) for m in (e,a,c)}\nassert all(Path(p).is_relative_to(root) for p in paths.values()), paths\nout=Path(sys.argv[1]);sys.argv=sys.argv[2:]\nout.write_text(json.dumps({'cwd':str(root),'modules':paths,'policy':vars(e.Policy()),\n 'sha256':{n:hashlib.sha256(Path(p).read_bytes()).hexdigest() for n,p in paths.items()}},indent=2))\nrunpy.run_path(str(root/'tools/bench_fast_models.py'),run_name='__main__')\n",
+    "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/h9c-prototype-mahmoud_khalil_al_hussary-imports.json",
+    "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-c3/tools/bench_fast_models.py",
+    "--models",
+    "whisper-tarteel-tiny",
+    "whisper-tarteel-base",
+    "--surahs",
+    "65",
+    "73",
+    "--audio-dir",
+    "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mahmoud_khalil_al_hussary",
+    "--reference",
+    "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mahmoud_khalil_al_hussary/mahmoud_khalil_al_hussary.db",
+    "--output",
+    "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/h9c-prototype-mahmoud_khalil_al_hussary.json"
+  ],
+  "cwd": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-c3",
+  "PYTHONPATH": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-c3",
+  "started_unix": 1792094217.315511
+}

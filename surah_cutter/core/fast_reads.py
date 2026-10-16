@@ -119,9 +119,12 @@ class LocalEvidenceReads(LocalAcousticReads):
         if window is None:
             return None
         s0, s1 = window
+        query = {"reason": reason, "requested_window_ms": [start_ms, end_ms],
+                 "window_ms": [s0 * 1000. / self.sr, s1 * 1000. / self.sr]}
         if window in self.observations:
             observation, self.last_read_id, _ = self.observations[window]
             self.cache_hits += 1
+            self.calls[self.last_read_id].setdefault("queries", []).append({**query, "cache_hit": True})
             return observation
         allowed = self._permit(s0, s1)
         if allowed is None:
@@ -129,7 +132,7 @@ class LocalEvidenceReads(LocalAcousticReads):
         check_cancelled()
         attempt = self._begin_read(s0, s1, allowed, phase="independent-local")
         self.last_read_id = len(self.calls) - 1
-        attempt.update(id=self.last_read_id, reason=reason,
+        attempt.update(id=self.last_read_id, reason=reason, queries=[{**query, "cache_hit": False}],
                        requested_window_ms=[start_ms, end_ms], samples=[s0, s1])
         started = monotonic()
         try:

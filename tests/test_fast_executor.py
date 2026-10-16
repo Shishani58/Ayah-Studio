@@ -78,7 +78,7 @@ def test_missing_current_never_confirms_future_or_reads_tail():
     rows, trace = run(fake, [pause(1000), pause(10000), pause(20000)])
     assert all(conf == 0 for _, _, conf in rows)
     assert not any(e["state"] == "ADVANCE" for e in trace["transitions"])
-    assert trace["boundaries"][1]["review_reason"] == "blocked_by_unresolved_ayah"
+    assert trace["boundaries"][1]["start_ms"] is None
     assert len(fake.calls) <= 3  # first onset, future pause, bounded block
 
 
@@ -109,21 +109,21 @@ def test_two_letter_complete_word_allows_expansion():
     fake = Fake(lambda f, start, duration: observation(f.phrase(1)[:1] if duration < 2000 else f.phrase(1)))
     fake.rendered = (("ان",),) + fake.rendered[1:]
     rows, trace = run(fake, [pause(1000)])
-    assert rows[0][2] > 0
+    assert trace["boundaries"][0]["confidence"] > 0
     assert any(e["state"] == "EXPAND_LOCAL" for e in trace["transitions"])
 
 
 def test_first_onset_no_fixed_six_seconds():
     fake = Fake(lambda f, start, duration: observation(f.phrase(1)))
-    rows, _ = run(fake)
-    assert rows[0][1] == 3100 and rows[0][2] > 0
+    rows, trace = run(fake)
+    assert trace["boundaries"][0]["start_ms"] == 3100 and trace["boundaries"][0]["confidence"] > 0
 
 
 def test_no_timing_cannot_confirm_first_onset():
     fake = Fake(lambda f, start, duration: observation(f.phrase(1), positions=False))
     fake.timing = False
     rows, trace = run(fake)
-    assert rows[0][2] == 0
+    assert not rows
     assert trace["boundaries"][0]["review_reason"] == "unsupported_first_onset_timing"
 
 
@@ -145,8 +145,8 @@ def test_unit_quality_cannot_be_compensated_by_high_mean():
     def respond(f, start, duration):
         units = f.phrase(1)
         return Observation(units, (0., 100.), .99, unit_quality=(.01, .99))
-    rows, _ = run(Fake(respond), [pause(1000)])
-    assert rows[0][2] == 0
+    rows, trace = run(Fake(respond), [pause(1000)])
+    assert not rows
 
 
 def test_cache_eviction_preserves_started_budget():
@@ -174,8 +174,10 @@ def test_adapter_failure_is_not_retried_and_ledger_survives():
 @pytest.mark.parametrize("surah", [1, 9])
 def test_canonical_exceptions_no_rewrite(surah):
     fake = Fake(lambda *args: observation(()), quran_text.surah_words(surah))
-    rows, _ = run(fake)
-    assert [r[0] for r in rows] == list(range(1, quran_text.ayah_count(surah) + 1))
+    rows, trace = run(fake)
+    assert not rows
+    assert [b["ayah"] for b in trace["boundaries"]] == list(range(1, quran_text.ayah_count(surah) + 1))
+    assert all(b["start_ms"] is None for b in trace["boundaries"])
 
 
 def test_validator_rejects_false_proof_and_collision():
@@ -233,9 +235,9 @@ def test_anchored_short_wasl_requires_previous_tail_and_real_position():
         return observation(())
     fake.responder = respond
     rows, trace = run(fake, [pause(1000)])
-    assert rows[0][2] > 0 and rows[1][2] > 0
+    assert trace["boundaries"][0]["confidence"] > 0 and trace["boundaries"][1]["confidence"] > 0
     assert trace["boundaries"][1]["evidence_kind"] == "wasl"
-    assert rows[2][2] == 0  # no advancing through the next unresolved ayah
+    assert trace["boundaries"][2]["start_ms"] is None  # unresolved has no published time
 
 
 def test_future_block_is_published_atomically_only_after_current_proof():
@@ -249,7 +251,7 @@ def test_future_block_is_published_atomically_only_after_current_proof():
         return observation(())
     fake.responder = respond
     rows, trace = run(fake, [pause(5000)])
-    assert rows[0][2] > 0 and rows[1][2] > 0
+    assert trace["boundaries"][0]["confidence"] > 0 and trace["boundaries"][1]["confidence"] > 0
     confirms = [e for e in trace["transitions"] if e["state"] == "CONFIRMED"]
     assert confirms[0]["block_ayahs"] == [1, 2]
     assert trace["boundaries"][0]["read_id"] > trace["boundaries"][1]["read_id"]
@@ -261,7 +263,7 @@ def test_tempo_region_is_a_selection_hint_not_proof():
     fake = Fake(respond)
     rows, trace = run(fake, [pause(p) for p in (1000, 6000, 6050, 6100, 6200, 6250, 6300, 6400, 6450, 6500, 12000)])
     assert any("forecast_ms" in e for e in trace["transitions"])
-    assert rows[2][2] == 0
+    assert trace["boundaries"][2]["start_ms"] is None
 
 
 @pytest.mark.parametrize("experimental", [False, True])
@@ -348,12 +350,11 @@ def test_changed_active_model_during_read_does_not_change_snapshot(monkeypatch):
     assert trace["align_lag_ms"] == 0
 
 
-def test_validator_rejects_mismatched_rows_and_impossible_duration():
-    from surah_cutter.core.fast_executor import _finish_estimates
-    with pytest.raises(ValueError, match="unrepresentable_timeline"):
-        _finish_estimates([], [1, 2, 3], {1: ("a",), 2: ("b",), 3: ("c",)}, 2., "test")
+def test_validator_rejects_mismatched_rows_and_unknown_with_time():
+    with pytest.raises(ValueError, match="invalid_unresolved"):
+        validate_boundaries([Boundary(1, 0, "unresolved", 0, "test")], [1], 1000, [])
     with pytest.raises(ValueError, match="canonical_ayah_set"):
-        validate_boundaries([Boundary(2, 0, "estimate", 0, "test")], [1], 1000, [])
+        validate_boundaries([Boundary(2, None, "unresolved", 0, "test")], [1], 1000, [])
 
 
 def test_explicit_settings_restore_runs_at_asgi_startup_only(monkeypatch):
@@ -369,12 +370,12 @@ def test_explicit_settings_restore_runs_at_asgi_startup_only(monkeypatch):
     asyncio.run(start())
 
 
-def test_estimates_reserve_duration_for_last_confirmed_ayah():
-    from surah_cutter.core.fast_executor import _finish_estimates
-    rows = _finish_estimates([Boundary(1, 1000, "first_onset", .9)], [1, 2, 3],
-                             {1: ("longpreviousayah" * 10,), 2: ("small",), 3: ("small",)}, 10000, "test")
-    assert 8000 < rows[1].start_ms < rows[2].start_ms < 10000
-    assert rows[0].start_ms == 1000 and rows[1].confidence == rows[2].confidence == 0
+def test_unknown_boundaries_never_receive_text_weighted_times():
+    from surah_cutter.core.fast_executor import _complete_result
+    rows = _complete_result([Boundary(1, 1000, "first_onset", .9)], [1, 2, 3], "test")
+    assert rows[0].start_ms == 1000
+    assert rows[1].start_ms is rows[2].start_ms is None
+    assert rows[1].confidence == rows[2].confidence == 0
 
 
 def test_wasl_tail_is_whole_word_and_distinguishes_repeated_ending():
@@ -488,7 +489,7 @@ def test_supplemental_first_pause_has_validated_owner(monkeypatch):
     assert trace["phase1_pauses"] == []
     hyp = trace["first_onset_hypotheses"]["supplemental_pauses"][0]
     assert hyp["pause_id"] == trace["boundaries"][0]["proof"]["pause_id"]
-    assert hyp["center_ms"] == rows[0][1]
+    assert hyp["center_ms"] == trace["boundaries"][0]["start_ms"]
     bad = [Boundary(**b) for b in trace["boundaries"]]
     with pytest.raises(ValueError, match="unknown_pause_owner"):
         validate_boundaries(bad, [1, 2, 3, 4], 40000, trace["acoustic_reads"], pauses=[])
@@ -521,8 +522,8 @@ def test_adjacent_block_with_weak_previous_tail_stops_for_review():
                                unit_quality=(.01,) + (.99,) * (len(units)-1))
         return observation(())
     fake.responder = respond
-    rows, trace = run(fake, [pause(1000), pause(8000)])
-    assert rows[0][2] > 0 and all(conf == 0 for _, _, conf in rows[1:])
+    rows, trace = run(fake, [pause(1000), pause(8000)], policy=Policy(sparse_anchors=False, independent_search=False))
+    assert trace["boundaries"][0]["confidence"] > 0 and all(conf == 0 for _, _, conf in rows[1:])
     assert trace["boundaries"][1]["review_reason"] in ("unresolved_adjacent_block", "unresolved_local_block")
     assert trace["transitions"][-1]["state"] == "RESULT_READY"
 

@@ -1,0 +1,470 @@
+{
+  "stage": "complete: actual production FAST Base improved and verified",
+  "goal": "actual safe production improvement",
+  "previous_cycle": "not sufficient to close goal",
+  "processes": [
+    {
+      "label": "short-unit-baseline",
+      "pid": 38270,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/short-unit-baseline.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "short-unit-prototype",
+      "pid": 38548,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/short-unit-prototype.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "h9b-development",
+      "pid": 39634,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-b",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/h9b-development.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "h9b-baseline-saad_al_ghamidi",
+      "pid": 39934,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/h9b-baseline-saad_al_ghamidi.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "h9b-prototype-b-saad_al_ghamidi",
+      "pid": 40128,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-b",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/h9b-prototype-b-saad_al_ghamidi.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "h9b-baseline-mahmoud_khalil_al_hussary",
+      "pid": 40480,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/h9b-baseline-mahmoud_khalil_al_hussary.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "h9b-prototype-b-mahmoud_khalil_al_hussary",
+      "pid": 40624,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-b",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/h9b-prototype-b-mahmoud_khalil_al_hussary.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "corpus-a-baseline",
+      "pid": 41090,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/corpus-a-baseline.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "corpus-e-baseline",
+      "pid": 43547,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/corpus-e-baseline.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "corpus-a-prototype-b",
+      "pid": 45295,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-b",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/corpus-a-prototype-b.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "corpus-e-prototype-b",
+      "pid": 47609,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-b",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/corpus-e-prototype-b.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "corpus-saad_al_ghamidi-baseline",
+      "pid": 49219,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/corpus-saad_al_ghamidi-baseline.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "corpus-saad_al_ghamidi-prototype-b",
+      "pid": 49382,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-b",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/corpus-saad_al_ghamidi-prototype-b.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "corpus-mohammed_siddiq_al_minshawi-baseline",
+      "pid": 49606,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/corpus-mohammed_siddiq_al_minshawi-baseline.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "corpus-mohammed_siddiq_al_minshawi-prototype-b",
+      "pid": 49748,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-b",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/corpus-mohammed_siddiq_al_minshawi-prototype-b.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "corpus-mahmoud_khalil_al_hussary-baseline",
+      "pid": 49880,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/corpus-mahmoud_khalil_al_hussary-baseline.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "corpus-mahmoud_khalil_al_hussary-prototype-b",
+      "pid": 50337,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-b",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/corpus-mahmoud_khalil_al_hussary-prototype-b.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "corpus-abdul_basit_mujawwad-baseline",
+      "pid": 50765,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/corpus-abdul_basit_mujawwad-baseline.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "corpus-abdul_basit_mujawwad-prototype-b",
+      "pid": 51010,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-b",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/corpus-abdul_basit_mujawwad-prototype-b.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "h9c-development",
+      "pid": 51274,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-c3",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/h9c-development.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "h9c-prototype-saad_al_ghamidi",
+      "pid": 51567,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-c3",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/h9c-prototype-saad_al_ghamidi.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "h9c-prototype-mahmoud_khalil_al_hussary",
+      "pid": 52111,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-c3",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/h9c-prototype-mahmoud_khalil_al_hussary.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "h9c-baseline-mohammed_siddiq_al_minshawi",
+      "pid": 52218,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/h9c-baseline-mohammed_siddiq_al_minshawi.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "h9c-prototype-mohammed_siddiq_al_minshawi",
+      "pid": 52773,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-c3",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/h9c-prototype-mohammed_siddiq_al_minshawi.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "negative-h9c",
+      "pid": 52929,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-c3",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/negative-h9c.log",
+      "status": "completed",
+      "exit": 0,
+      "wall_s": 11.716056916862726
+    },
+    {
+      "label": "corpus-a-prototype-c",
+      "pid": 53214,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-c3",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/corpus-a-prototype-c.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "corpus-e-prototype-c",
+      "pid": 55726,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-c3",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/corpus-e-prototype-c.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "wide-baseline",
+      "pid": 56504,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/wide-baseline.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "d-core-replay",
+      "pid": 69022,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-d",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/d-core-replay.log",
+      "status": "completed",
+      "exit": 1,
+      "wall_s": 39.31262541608885
+    },
+    {
+      "label": "d-core-replay-v2",
+      "pid": 72876,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-d",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/d-core-replay-v2.log",
+      "status": "completed",
+      "exit": 0,
+      "wall_s": 40.86533120810054
+    },
+    {
+      "label": "ctc-intro-probe",
+      "pid": 80958,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-c3",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/ctc-intro-probe.log",
+      "status": "completed",
+      "exit": 0,
+      "wall_s": 2.151944792130962
+    },
+    {
+      "label": "wide-prototype-c",
+      "pid": 80983,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-d",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/wide-prototype-c.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "prepause-base",
+      "pid": 32416,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-e",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/prepause-base.log",
+      "status": "completed",
+      "exit": 0,
+      "wall_s": 12.214457790832967
+    },
+    {
+      "label": "f-wide-replay",
+      "pid": 36246,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-f",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/f-wide-replay.log",
+      "status": "completed",
+      "exit": 0,
+      "wall_s": 311.09461687505245
+    },
+    {
+      "label": "warm-baseline",
+      "pid": 39310,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/warm-baseline.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "warm-prototype-c",
+      "pid": 40700,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-f",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/warm-prototype-c.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "final-f-saad_al_ghamidi",
+      "pid": 42220,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-f",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/final-f-saad_al_ghamidi.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "final-f-mahmoud_khalil_al_hussary",
+      "pid": 44002,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-f",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/final-f-mahmoud_khalil_al_hussary.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "final-f-mohammed_siddiq_al_minshawi",
+      "pid": 44735,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-f",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/final-f-mohammed_siddiq_al_minshawi.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "production-smoke",
+      "pid": 47818,
+      "root": "/Users/ayub/Developer/surah-cutter",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/production-smoke.log",
+      "status": "completed",
+      "exit": 1
+    },
+    {
+      "label": "production-frozen-smoke",
+      "pid": 52328,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/production-integrated",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-production-improvement/production-frozen-smoke.log",
+      "status": "completed",
+      "exit": 0
+    }
+  ],
+  "next": "none for this scoped change; old baseline errors/human onset calibration remain documented",
+  "read_only_prior": "docs/tasks/2026-10-15-fast-systematic-execution",
+  "roots": {
+    "baseline": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/baseline",
+    "prototype": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype"
+  },
+  "hypotheses": {
+    "H9a": "Base73 local positive,65 blocked by rival; retained prototype",
+    "H9b": "cross-reader gains but unreviewed Hussary73+679ms; rejected for production",
+    "H9c": "pre-read temporal-radius cap passed50pairs,+6direct/downstream total,0lost/0newoutliers",
+    "H9d": "D50row replay same; 49window same; Minshawi65Base failed C route now resumes baseline windows. All fresh F after calls selectD explicitly in metadata; fresh D transfers follow.",
+    "H10": "separate queued CTC intro-end diagnostic; no production support claimed",
+    "H9e": "Static preservation guard: earlier established prefix block must survive a later optional short cue. D remains frozen/in-flight; E replay and fresh cross/source checks queued.",
+    "H11": "Pre-pause Base8calls negative; no claimed onset and no runtime extra reads transferred",
+    "H12": "F: weak first unit in already-complete initial sparse prefix + nonstationary DSP -> identity retained for sequence, time review. Existing .6/stationarity reused, no new numerical gate, no model calls added."
+  },
+  "queued": [
+    {
+      "tool_session": 88278,
+      "script": "run_h9c.py",
+      "waits_for": "B corpus final summary",
+      "source_key": "prototype-c",
+      "source_root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-c3",
+      "state": "completed"
+    },
+    {
+      "tool_session": 55050,
+      "script": "run_final_corpus.py",
+      "waits_for": "new Minshawi C confirmation",
+      "then": "negative audio, fresh C A/E, row safety gate, before/after114 Tiny+Base",
+      "state": "running wide corpus"
+    },
+    {
+      "script": "run_warm.py",
+      "tool_session": 60851,
+      "waits_for": "wide-gate.json passed",
+      "then": "three warm65/73 repetitions per model/source; no tests yet",
+      "state": "stopped before inference; superseded by serial Base-only final runner at user request"
+    },
+    {
+      "script": "run_final_transfer.py",
+      "tool_session": 95927,
+      "state": "stopped before inference; replaced by fresh E after complete D replay",
+      "then": "fresh finalD Ghamidi/Hussary/Minshawi65/73 and final-gate"
+    },
+    {
+      "script": "finish_implementation.py",
+      "tool_session": 52946,
+      "state": "stopped before adoption: preserve pre-existing hard prefix block",
+      "then": "guarded minimal production patch+version, common final pytest/ruff, actual production smoke; no goal closure until report review"
+    },
+    {
+      "script": "run_final_e_transfer.py",
+      "tool_session": 31374,
+      "state": "stopped before inference; superseded by serial Base-only final runner at user request",
+      "then": "strict228case E replay of D PCM outputs; fresh E3reciters; final-gate"
+    },
+    {
+      "script": "finish_implementation.py",
+      "tool_session": 59250,
+      "state": "stopped before inference; superseded by serial Base-only final runner at user request",
+      "then": "guarded production E patch; final pytest/ruff and actual source smoke"
+    },
+    {
+      "script": "run_base_final.py",
+      "tool_session": 19246,
+      "state": "waiting wide-gate; one selected model Base",
+      "then": "Base warm baseline/E3repeats; Base E114 exact replay; fresh Base E3readers65/73; final Base gate120pairs; production patch+final suite+Base smoke2cases"
+    },
+    {
+      "tool_session": 73265,
+      "script": "run_base_f_final.py",
+      "state": "running F Base114 exact-PCM replay",
+      "then": "F-wide-gate (preserve baseline confirmations); Base F warm3; fresh Base F3readers; final120pairs; guarded F production+common tests+7fresh production cases"
+    }
+  ],
+  "ctc_additional_audit": "Exact three-phone word with weak first phone: no eligible independent case in prior A/cross-reciter CTC observations; no ungrounded prototype.",
+  "known_future_work": [
+    "Production transfer after full gates; user goal remains active until actual improvement implemented and verified."
+  ],
+  "core_gate": {
+    "passed": true,
+    "paired_cases": 50,
+    "added": 6,
+    "lost": 0,
+    "new_over500": 0,
+    "direct": 5,
+    "downstream": 1
+  },
+  "wide_candidate": {
+    "variant": "prototype-d",
+    "selector": "selected-wide-candidate.json",
+    "artifact_label": "wide-prototype-c (effectiveD recorded)",
+    "core_replay": "d-core-replay-v2.json;50 rows same,49windows same",
+    "fresh_cross_pending": "final-d-* after warm"
+  },
+  "h10": {
+    "stage": "completed negative; no target onset in 6 independent cases",
+    "trigger": "wide-prototype-c pre-hook",
+    "command_label": "ctc-intro-probe",
+    "expected": "independent first target inside single intro-end crop, or explicit negative",
+    "source": "intro_bootstrap_probe.py",
+    "evidence": "ctc-intro-probe.json; ctc-intro-probe-evaluation.json"
+  },
+  "source_archives": "measured-source-manifests.json plus per-variant source ZIP; weights identified by SHA, not bundled",
+  "single_model": {
+    "model": "whisper-tarteel-base",
+    "reason": "User explicitly requested one best model; Base has highest confirmed coverage among current measured supported local FAST models",
+    "scope": "all subsequent inference; running wide already executing Base, Tiny finished before request",
+    "does_not_change_application_default": true
+  },
+  "final_gate": {
+    "passed": true,
+    "incomplete": [],
+    "pairs": 120,
+    "added": 50,
+    "lost": 0,
+    "new_over500": 0
+  },
+  "active_tool_session": 77693,
+  "production_validation": "7live rows/PCM matched; whole-file drift guard caught unrelated FULL edit;2stable current-source cases passed",
+  "final_checks": "final-checks.json",
+  "docs_updated": [
+    "docs/project.md",
+    "docs/STATUS.md",
+    "task.md",
+    "report.md",
+    "hypotheses.md"
+  ]
+}

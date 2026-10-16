@@ -1,5 +1,5 @@
 {
-  "stage": "M0",
+  "stage": "M7 complete",
   "head": "37f3309f76fa077651239fe4892575de3b5d1fa6",
   "roots": {
     "baseline": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/baseline",
@@ -19,9 +19,174 @@
       "pid": 21076,
       "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/baseline",
       "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/baseline-a2.log",
-      "status": "running"
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "local-ctc",
+      "pid": 25606,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/local-ctc.log",
+      "status": "completed",
+      "exit": 0,
+      "wall_s": 2.8445608750917017
+    },
+    {
+      "label": "short-a-dev",
+      "pid": 26224,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/prototype",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/short-a-dev.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "baseline-e",
+      "pid": 26449,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/baseline-e.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "annotations",
+      "pid": 26872,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/annotations.log",
+      "status": "completed",
+      "exit": 0,
+      "wall_s": 6.237738084048033
+    },
+    {
+      "label": "baseline-saad_al_ghamidi",
+      "pid": 26896,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/baseline-saad_al_ghamidi.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "prototype-saad_al_ghamidi",
+      "pid": 27002,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/prototype",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/prototype-saad_al_ghamidi.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "baseline-mohammed_siddiq_al_minshawi",
+      "pid": 27107,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/baseline-mohammed_siddiq_al_minshawi.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "prototype-mohammed_siddiq_al_minshawi",
+      "pid": 27164,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/prototype",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/prototype-mohammed_siddiq_al_minshawi.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "baseline-mahmoud_khalil_al_hussary",
+      "pid": 27224,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/baseline-mahmoud_khalil_al_hussary.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "prototype-mahmoud_khalil_al_hussary",
+      "pid": 27465,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/prototype",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/prototype-mahmoud_khalil_al_hussary.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "baseline-abdul_basit_mujawwad",
+      "pid": 27639,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/baseline-abdul_basit_mujawwad.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "prototype-abdul_basit_mujawwad",
+      "pid": 27716,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/prototype",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/prototype-abdul_basit_mujawwad.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "after-a",
+      "pid": 27997,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/prototype",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/after-a.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "after-e",
+      "pid": 29900,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/prototype",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/after-e.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "negative-ctc",
+      "pid": 30265,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/negative-ctc.log",
+      "status": "completed",
+      "exit": 0,
+      "wall_s": 1.1920615411363542
+    },
+    {
+      "label": "repeat-baseline",
+      "pid": 30321,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/baseline",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/repeat-baseline.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "repeat-prototype",
+      "pid": 30416,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/prototype",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/repeat-prototype.log",
+      "status": "completed",
+      "exit": 0
+    },
+    {
+      "label": "current-smoke",
+      "pid": 30675,
+      "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-systematic-4v_ooc85/current",
+      "log": "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-15-fast-systematic-execution/current-smoke.log",
+      "status": "completed",
+      "exit": 0
     }
   ],
-  "hypotheses": {},
-  "next": "Compare source to measured sparse12; fresh baseline."
+  "hypotheses": {
+    "H1": "112700ms recovers qul;80/98 negative; short prototype complete, positive112114 pending paired and transfer",
+    "H2": "77432 words,0 OOV,0 non-NFC; training metadata pending",
+    "H3": "late-offset maxima do not restore80/98/112 ordinary crop; not supported as general fix",
+    "H4": "only unconsumed strong ASR opening is1:1 unsupported timing; short CTC context selected",
+    "H5": "structural coupling known; no new representation justified",
+    "H6": "no unconsumed strong unique future in A ASR; complete recovery bypass unsupported",
+    "H7": "external labels, blind package prepared script, not run yet",
+    "H8": "baseline live tree RSS200ms and import guard"
+  },
+  "next": null,
+  "outcome": "Measured research limit; short prototype not transferred because no positive cross-reciter case.",
+  "remaining_external_dependencies": [
+    "Independent human owner/onset/previous-end/playback interval labels;18clip package prepared."
+  ],
+  "remaining_execution_work": [],
+  "final_report": "docs/tasks/2026-10-15-fast-systematic-execution/report.md",
+  "final_source_guard": "docs/tasks/2026-10-15-fast-systematic-execution/final-audit.json",
+  "final_head": "3dc28641907d81c3ce5d2aec06ac23605206b794"
 }

@@ -1,0 +1,225 @@
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+Whisper did not predict an ending timestamp, which can happen if audio is cut off in the middle of a word. Also make sure WhisperTimeStampLogitsProcessor was used during generation.
+[
+  {
+    "method": "beam5",
+    "records": 12,
+    "expected_ayahs": 73,
+    "covered_ayahs": 0,
+    "timing": null,
+    "wer": 0.13322884012539185
+  },
+  {
+    "method": "beam5_wrapper",
+    "records": 1,
+    "expected_ayahs": 7,
+    "covered_ayahs": 0,
+    "timing": null,
+    "wer": 0.27586206896551724
+  },
+  {
+    "method": "connected4",
+    "records": 12,
+    "expected_ayahs": 73,
+    "covered_ayahs": 73,
+    "timing": {
+      "n": 73,
+      "median_ms": 299.0,
+      "p95_ms": 3432.799999999998,
+      "max_ms": 4497.0,
+      "over500": 18
+    }
+  },
+  {
+    "method": "ctc",
+    "records": 12,
+    "expected_ayahs": 73,
+    "covered_ayahs": 68,
+    "timing": {
+      "n": 68,
+      "median_ms": 1255.5,
+      "p95_ms": 3172.2499999999995,
+      "max_ms": 4293.0,
+      "over500": 56
+    },
+    "wer": 0.0877742946708464
+  },
+  {
+    "method": "forced_acoustic_bpe",
+    "records": 12,
+    "expected_ayahs": 73,
+    "covered_ayahs": 73,
+    "timing": {
+      "n": 73,
+      "median_ms": 398.0,
+      "p95_ms": 3345.7999999999975,
+      "max_ms": 4606.0,
+      "over500": 29
+    }
+  },
+  {
+    "method": "forced_default_bpe",
+    "records": 12,
+    "expected_ayahs": 73,
+    "covered_ayahs": 73,
+    "timing": {
+      "n": 73,
+      "median_ms": 398.0,
+      "p95_ms": 3345.7999999999975,
+      "max_ms": 4606.0,
+      "over500": 29
+    }
+  },
+  {
+    "method": "greedy",
+    "records": 12,
+    "expected_ayahs": 73,
+    "covered_ayahs": 0,
+    "timing": null,
+    "wer": 0.13949843260188088
+  },
+  {
+    "method": "greedy_overlap",
+    "records": 12,
+    "expected_ayahs": 73,
+    "covered_ayahs": 0,
+    "timing": null,
+    "wer": 0.08463949843260188
+  },
+  {
+    "method": "greedy_sdpa",
+    "records": 12,
+    "expected_ayahs": 73,
+    "covered_ayahs": 0,
+    "timing": null,
+    "wer": 0.13949843260188088
+  },
+  {
+    "method": "madd2",
+    "records": 12,
+    "expected_ayahs": 73,
+    "covered_ayahs": 73,
+    "timing": {
+      "n": 73,
+      "median_ms": 285.0,
+      "p95_ms": 3432.799999999998,
+      "max_ms": 4497.0,
+      "over500": 17
+    }
+  },
+  {
+    "method": "madd4",
+    "records": 12,
+    "expected_ayahs": 73,
+    "covered_ayahs": 73,
+    "timing": {
+      "n": 73,
+      "median_ms": 285.0,
+      "p95_ms": 3432.799999999998,
+      "max_ms": 4497.0,
+      "over500": 17
+    }
+  },
+  {
+    "method": "madd6",
+    "records": 12,
+    "expected_ayahs": 73,
+    "covered_ayahs": 73,
+    "timing": {
+      "n": 73,
+      "median_ms": 285.0,
+      "p95_ms": 3432.799999999998,
+      "max_ms": 4497.0,
+      "over500": 17
+    }
+  },
+  {
+    "method": "nbest5",
+    "records": 12,
+    "expected_ayahs": 73,
+    "covered_ayahs": 0,
+    "timing": null,
+    "wer": 0.13322884012539185
+  },
+  {
+    "method": "rnnt",
+    "records": 12,
+    "expected_ayahs": 73,
+    "covered_ayahs": 66,
+    "timing": {
+      "n": 66,
+      "median_ms": 408.5,
+      "p95_ms": 3654.5,
+      "max_ms": 4615.0,
+      "over500": 23
+    },
+    "wer": 0.048589341692789965
+  },
+  {
+    "method": "teacher_attention",
+    "records": 12,
+    "expected_ayahs": 73,
+    "covered_ayahs": 73,
+    "timing": {
+      "n": 73,
+      "median_ms": 475.0,
+      "p95_ms": 3410.199999999997,
+      "max_ms": 4635.0,
+      "over500": 31
+    }
+  },
+  {
+    "method": "token_timestamps",
+    "records": 12,
+    "expected_ayahs": 73,
+    "covered_ayahs": 68,
+    "timing": {
+      "n": 68,
+      "median_ms": 296.5,
+      "p95_ms": 7430.999999999998,
+      "max_ms": 9493.0,
+      "over500": 25
+    },
+    "wer": 0.13949843260188088
+  }
+]
+failures 0

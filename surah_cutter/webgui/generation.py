@@ -24,6 +24,8 @@ class GenerationEvents:
         self._ayahs_done = 0
         self._completed = 0
         self._word_failures = 0
+        self._unresolved_boundaries = 0
+        self._stage = None
 
     def emit(self, event: dict[str, Any]) -> None:
         with self._lock:
@@ -39,6 +41,11 @@ class GenerationEvents:
                 self._completed = event["index"] + 1
             if event["type"] == "sura":
                 self._word_failures += event.get("word_failures", 0)
+                self._unresolved_boundaries += len(event.get("unresolved_ayahs", ()))
+            if event["type"] == "stage_progress":
+                self._stage = dict(event)
+            elif event["type"] == "sura_start":
+                self._stage = None
             if event["type"] in ("start", "sura_start", "ayah_progress", "sura"):
                 self._progress = dict(event)
             if event["type"] in ("done", "cancelled", "error"):
@@ -60,6 +67,8 @@ class GenerationEvents:
                 "ayahs_done": self._ayahs_done,
                 "completed": self._completed,
                 "word_failures": self._word_failures,
+                "unresolved_boundaries": self._unresolved_boundaries,
+                "stage": dict(self._stage) if self._stage else None,
                 "progress": dict(self._progress) if self._progress else None,
                 "terminal": dict(self._terminal[1]) if self._terminal else None,
             }

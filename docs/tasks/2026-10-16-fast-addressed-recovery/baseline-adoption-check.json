@@ -1,0 +1,15 @@
+{
+  "production_F_adopted": true,
+  "executor_AST_equal_except_VERSION": true,
+  "other_source_differences": [
+    "surah_cutter/core/word_align.py",
+    "surah_cutter/core/align.py",
+    "surah_cutter/core/fast_executor.py",
+    "surah_cutter/core/model_store.py",
+    "surah_cutter/core/full_windows.py",
+    "surah_cutter/core/pipeline.py",
+    "surah_cutter/core/align_tiled.py",
+    "surah_cutter/core/full_pause_center.py",
+    "surah_cutter/data/onset_evidence.py"
+  ]
+}

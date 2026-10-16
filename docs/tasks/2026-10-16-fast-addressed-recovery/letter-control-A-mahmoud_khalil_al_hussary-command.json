@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "/Users/ayub/Developer/surah-cutter/.venv/bin/python",
+    "-u",
+    "/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-addressed-e6zhmc74/A/tools/bench_fast_models.py",
+    "--models",
+    "whisper-tarteel-base",
+    "--surahs",
+    "79",
+    "98",
+    "--audio-dir",
+    "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mahmoud_khalil_al_hussary",
+    "--reference",
+    "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mahmoud_khalil_al_hussary/mahmoud_khalil_al_hussary.db",
+    "--output",
+    "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-fast-addressed-recovery/letter-control-A-mahmoud_khalil_al_hussary.json"
+  ],
+  "cwd": "/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-addressed-e6zhmc74/A",
+  "PYTHONPATH": "/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-addressed-e6zhmc74/A",
+  "profile_directory": null,
+  "started_unix": 1792103452.3284469
+}

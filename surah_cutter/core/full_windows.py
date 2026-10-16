@@ -27,9 +27,9 @@ STRONG_PAUSE_MIN_MS = 300.0
 FULL_WINDOW_S = 20
 FULL_WORKERS = 3
 FULL_MAX_WINDOW_S = 60
-FULL_POLICY = "qpc-full-pause-v1"
+FULL_POLICY = "qpc-full-pause-v2-text-only"
 FULL_REVIEW_POLICY = "qpc-pause-review-v1"
-FULL_ONSET_POLICY = "qpc-local-pause-lead-v5"
+FULL_ONSET_POLICY = "qpc-waveform-pause-v9"
 
 
 def detect_strong_pauses(pcm: np.ndarray, *, trace: dict | None = None):
@@ -196,6 +196,9 @@ def generate_pause_emissions(
                           "read_start_ms": real_left / 16, "read_end_ms": real_right / 16,
                           "input_samples": len(clip), "frames": frames, "cut_reason": reason}
 
+    from surah_cutter.core.progress import advance
+
+    advance("acoustic", 0, len(spans))
     start = time.perf_counter()
     results = []
     intervals = []
@@ -210,6 +213,7 @@ def generate_pause_emissions(
             kept, interval = pending.popleft().result()
             results.append(kept)
             intervals.append(interval)
+            advance("acoustic", len(results), len(spans))
             span = next(iterator, None)
             if span is not None:
                 pending.append(pool.submit(run_window, span))

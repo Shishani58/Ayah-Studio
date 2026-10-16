@@ -45,17 +45,17 @@ def test_body_cue_authorizes_full_head_retry_at_same_measured_pause():
 
 def test_weak_body_cannot_authorize_an_unread_head():
     rows,trace=scenario("weak")
-    assert rows[3][2]==0
+    assert trace["boundaries"][3]["confidence"]==0
     assert not any(e["state"]=="HEAD_BOUNDARY_RECHECK" for e in trace["transitions"])
 
 
 def test_partial_body_cannot_authorize_an_unread_head():
     rows,trace=scenario("partial")
-    assert rows[3][2]==0
+    assert trace["boundaries"][3]["confidence"]==0
     assert not any(e["state"]=="HEAD_BOUNDARY_RECHECK" for e in trace["transitions"])
 
 
 def test_unrelated_initial_word_is_not_replaced_using_body_identity():
     rows,trace=scenario(head="unrelated")
-    assert rows[3][2]==0
+    assert trace["boundaries"][3]["confidence"]==0
     assert not any(e["state"]=="HEAD_BOUNDARY_RECHECK" for e in trace["transitions"])

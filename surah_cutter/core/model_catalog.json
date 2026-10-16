@@ -60,9 +60,7 @@
     "note": "Текущая фонетическая модель. Загружается оригинал; ONNX собирается инструментом экспорта.",
     "gated": false,
     "hidden": false,
-    "description": "Основная модель: точные границы и быстрый расчёт. Поддерживает быстрый режим; сложные участки проверяйте на слух.",
-    "benchmark_summary": "Полный режим: ошибка 31–49 мс · расчёт 1–4 с",
-    "fast_benchmark_summary": "FAST, Шатри 78–114: 564 аята; медиана 73,5 мс, p95 4466 мс, максимум 26762 мс; 107 ошибок >500 мс, 288 меток ревью. Расчёт 136,3 с без загрузки и декодирования. 6 крупных ошибок без метки ревью."
+    "description": "Основная фонетическая модель. Поддерживает быстрый, полный и пословный режимы; границы проверяйте на слух."
   },
   {
     "id": "arabic-ctc",
@@ -173,8 +171,7 @@
     "gated": false,
     "runtime_family": "muaalem-onnx",
     "hidden": false,
-    "description": "Дополнительная проверка коранического произношения и огласовок. Хорошие результаты на длинной суре, но медленнее основной модели.",
-    "benchmark_summary": "Полный режим: ошибка 124–140 мс · расчёт 8–25 с"
+    "description": "Кораническая фонетическая модель для выравнивания известного текста и проверки произношения."
   },
   {
     "id": "fastconformer",
@@ -547,8 +544,7 @@
     "note": "",
     "gated": false,
     "hidden": false,
-    "description": "Дополнительная проверка сложных записей. Точнее остальных обычных Whisper в наших замерах, но требует больше времени.",
-    "benchmark_summary": "Полный режим: ошибка 112–140 мс · расчёт 19–83 с"
+    "description": "Многоязычная модель Whisper. Для выравнивания получает известный текст; сложные границы требуют ревью."
   },
   {
     "id": "whisper-large-v3-turbo",
@@ -665,8 +661,7 @@
     "note": "",
     "gated": false,
     "hidden": false,
-    "description": "Быстрый дополнительный вариант для сравнения границ. На проверенных записях уступает основной модели по точности.",
-    "benchmark_summary": "Полный режим: ошибка 133–209 мс · расчёт 1–12 с"
+    "description": "Арабская модель FastConformer. Полный и пословный режимы используют сопоставление с известным текстом."
   },
   {
     "id": "mms-arabic",
@@ -807,8 +802,7 @@
     "note": "",
     "gated": false,
     "hidden": false,
-    "description": "Компактный экспериментальный FAST: на проверенных 37 сурах Шатри на треть меньше крупных ошибок, чем у основной INT8. Почти вдвое медленнее INT8 и почти вдвое быстрее Base; границы требуют слуховой проверки.",
-    "benchmark_summary": "Шатри 112/114: медианная ошибка 398/459 мс; p95 638/666 мс; FULL 0,25/1,93 с. Загрузка с probe 4,15 с отдельно. 78: отказ — недостаточно текстовых опор.",
+    "description": "Компактная модель Whisper для чтения Корана. Поддерживает экспериментальный локальный FAST; границы требуют слуховой проверки.",
     "generation_config": {
       "alignment_heads": [
         [
@@ -1062,9 +1056,7 @@
       "revision": "169d4a4341b33bc18d8881c4b69c2e104e1cc0af",
       "path": "generation_config.json",
       "sha256": "a5d5325911f16e74001a72fa13d6e208eee51548f994646de1f4b4cc8b35b512"
-    },
-    "benchmark_conditions": "FAST: одинаковые DSP/VAD-паузы, локальные фразы 1,3 с; расширение до 2,5/4 с только при неполном или неоднозначном начале. Максимальный фактический вход 4,2 с, покрытие каждой записи ≤57,6%. Без полного прохода или перехода в FULL. FULL и слова используют отдельный алгоритм; heads исходной OpenAI Tiny для FULL не калиброваны под Tarteel. Mac ARM64 CPU, 4 потока; Шатри, других чтецов не проверяли. Уверенность не заменяет ревью.",
-    "fast_benchmark_summary": "FAST, Шатри 78–114: 564 аята; медиана 68 мс, p95 1758 мс, максимум 6062 мс; 72 ошибки >500 мс, 170 меток ревью. Расчёт 243,8 с без загрузки 4,4 с и декодирования 3,3 с. 8 крупных ошибок без метки ревью."
+    }
   },
   {
     "id": "whisper-tarteel-base",
@@ -1141,8 +1133,7 @@
     "note": "",
     "gated": false,
     "hidden": false,
-    "description": "Экспериментальный локальный FAST: меньше крупных ошибок и меток ревью на проверенных 37 сурах Шатри, но медленнее основной INT8. Уверенные границы тоже могут ошибаться; результат требует слуховой проверки.",
-    "benchmark_summary": "Шатри 112/114: медианная ошибка 271/280 мс; p95 343/360 мс; FULL 0,34/3,45 с. Загрузка с probe 4,24 с отдельно. Сура 78: медиана 367 мс, p95 1226 мс, максимум 1337 мс; FULL 35,34 с.",
+    "description": "Модель Whisper для чтения Корана. Поддерживает экспериментальный локальный FAST и выравнивание известного текста в FULL.",
     "generation_config": {
       "alignment_heads": [
         [
@@ -1404,8 +1395,113 @@
       "revision": "e37978b90ca9030d5170a5c07aadb050351a65bb",
       "path": "generation_config.json",
       "sha256": "444b3f636d2fff89dd9ecf549e2a085b61f7ff0fa0246d4628bac6a3b8cc9ba4"
-    },
-    "benchmark_conditions": "FAST: одинаковые DSP/VAD-паузы, локальные фразы 1,3 с; расширение до 2,5/4 с только при неполном или неоднозначном начале. Максимальный фактический вход 4,2 с, покрытие каждой записи ≤57,1%. Без полного прохода или перехода в FULL. FULL и слова используют отдельный алгоритм; heads исходной OpenAI Base для FULL не калиброваны под Tarteel. Mac ARM64 CPU, 4 потока; Шатри, других чтецов не проверяли. Уверенность не заменяет ревью.",
-    "fast_benchmark_summary": "FAST, Шатри 78–114: 564 аята; медиана 67,5 мс, p95 1628 мс, максимум 6062 мс; 64 ошибки >500 мс, 153 метки ревью. Расчёт 516,4 с без загрузки 5,3 с и декодирования 3,8 с. 9 крупных ошибок без метки ревью."
+    }
+  },
+  {
+    "id": "mfa-quran-hafs",
+    "name": "MFA Quran Hafs",
+    "repo": "Quran-Lab/mfa-quran-hafs",
+    "revision": "8386dceddf0fa816bd7f9b3c0667d992fa34bd36",
+    "license": "apache-2.0",
+    "license_url": "https://huggingface.co/Quran-Lab/mfa-quran-hafs",
+    "files": [
+      {
+        "path": "quran_hafs_acoustic.zip",
+        "size": 61697691,
+        "sha256": "d749c212e5c2b237bb9ed6da59e9b739ee6f6b5b7432b5e302a904b9d604b1ef",
+        "git_oid": "e7fe0a44a32f80b77060f4c85325439eb96486b3"
+      },
+      {
+        "path": "quran_hafs.dict",
+        "size": 1017862,
+        "sha256": null,
+        "git_oid": "143978a8dbbbbec35d33fc83612541cf34b6de1b"
+      }
+    ],
+    "text_kind": "mfa",
+    "runtime_family": "mfa",
+    "hidden": false,
+    "gated": false,
+    "description": "Экспериментальное выравнивание аятов и слов Hafs. Требуется отдельное окружение MFA 3.4.0; FAST недоступен. Все границы требуют ревью."
+  },
+  {
+    "id": "fastconformer-muno",
+    "name": "Muno FastConformer Quran",
+    "repo": "Muno459/fastconformer-quran",
+    "revision": "77dbe5d809628ea89422243695de4c0d69770775",
+    "license": "other",
+    "license_url": "https://huggingface.co/Muno459/fastconformer-quran",
+    "files": [
+      {
+        "path": "nemo/fastconformer-quran.nemo",
+        "size": 459243520,
+        "sha256": "4e83b585b24235aa82e26dc60ecee73d973dfe48619a98ade8691dc85b6d8d4e",
+        "git_oid": "e956dcc8c40e6172072c5453b1368fa664df1e88"
+      },
+      {
+        "path": "LICENSE",
+        "size": 5852,
+        "sha256": null,
+        "git_oid": "267a1a8c645a73215bc3518ccc3932a86ba98d04"
+      }
+    ],
+    "text_kind": "nemo-hybrid",
+    "runtime_family": "nemo-hybrid",
+    "hidden": false,
+    "gated": true,
+    "description": "Кандидат Hafs. Требуется принятие условий Hugging Face и локальный токен. Подготовлен путь NeMo checkpoint 459 МБ; подключение и реальный прогон ожидают доступа к весам.",
+    "integration_status": "awaiting-access"
+  },
+  {
+    "id": "zipformer-quran",
+    "name": "Zipformer Quran v3 · INT8",
+    "repo": "Quran-Lab/zipformer_p-arabic-v3",
+    "revision": "3da514fc833b22c902ee466a7710cf399896f2f0",
+    "license": "other",
+    "license_url": "https://huggingface.co/Quran-Lab/zipformer_p-arabic-v3",
+    "files": [
+      {
+        "path": "zipformer_p_arabic_v3.int8.onnx",
+        "size": 72705392,
+        "sha256": "6a5ddafa9c5e5c01260d30264031b341785bdc152e9ef1d569b41c8c278508eb",
+        "git_oid": "0905b9d8c5bd5d0984435ad2ab49270b4bb75dd8"
+      },
+      {
+        "path": "tokens.txt",
+        "size": 2346,
+        "sha256": null,
+        "git_oid": "5b0ed53f48819bac097568c596c668aa14d21f50"
+      },
+      {
+        "path": "phoneme_units.json",
+        "size": 3350,
+        "sha256": null,
+        "git_oid": "9ea207e78a5fbce8dbefe23602697c65440ad7b8"
+      },
+      {
+        "path": "ordered_quran_phonemes.json",
+        "size": 5106711,
+        "sha256": null,
+        "git_oid": "8dc0fab9f128cde16ccc2cb32de5eee42e3ce850"
+      },
+      {
+        "path": "quran_text2phoneme.json",
+        "size": 3881782,
+        "sha256": null,
+        "git_oid": "eed2fa2a86c23e269f9e7f8c4db58c5b7302a5a0"
+      },
+      {
+        "path": "LICENSE",
+        "size": 7041,
+        "sha256": null,
+        "git_oid": "defd34f9748fac0ea9573cc8cec26c5534f8dabf"
+      }
+    ],
+    "text_kind": "zipformer",
+    "runtime_family": null,
+    "hidden": false,
+    "gated": true,
+    "description": "Кандидат Hafs: требуется принятие условий Hugging Face. Адаптер расчёта пока не подключён; проверка ожидает доступа к весам.",
+    "integration_status": "awaiting-access"
   }
 ]

@@ -59,15 +59,8 @@ DEFAULT_MODEL_ID = "TBOGamer22/wav2vec2-quran-phonetics"
 #: Sample rate the model expects (wav2vec2 family); ``core.decode`` produces it.
 EXPECTED_SR = 16_000
 
-#: CTC emission-lag compensation (ms), subtracted from every word start.
-#: A CTC model emits each token's probability spike slightly *after* the acoustic
-#: onset, so the raw first-token frame runs systematically late versus a human
-#: onset mark — measured ~230 ms median (100% of ayahs late) on a labelled
-#: reciter. The lag is a property of the model's receptive field, not the
-#: reciter, so a fixed compensation is reciter-agnostic. Subtracting ~200 ms cut
-#: the median error ~246 -> ~58 ms in validation. Override via the
-#: ``SURAH_CUTTER_ALIGN_LAG_MS`` env var (set 0 to disable).
-ALIGN_LAG_MS = int(os.environ.get("SURAH_CUTTER_ALIGN_LAG_MS", "200"))
+#: No timing correction fitted to an external labelled recording is applied.
+ALIGN_LAG_MS = 0
 
 #: Word-delimiter symbol in the model vocabulary.
 WORD_DELIMITER = "|"
@@ -253,6 +246,9 @@ def align_surah(
     from surah_cutter.core._ctc import forced_align, aligned_segments
     from surah_cutter.data import transliteration
 
+    from surah_cutter.core.progress import report
+
+    report("model")
     if use_onnx:
         bundle = model if isinstance(model, _OnnxBundle) else _get_onnx_bundle()
     else:
@@ -266,8 +262,10 @@ def align_surah(
     if trace is not None:
         trace["model_source"] = bundle_source(bundle)
 
-    if getattr(bundle, "text_kind", "phonetic") == "whisper":
+    if getattr(bundle, "text_kind", "phonetic") in ("whisper", "mfa"):
+        report("acoustic")
         word_rows = bundle.emitter.align_words(pcm, words, intro=surah not in (1, 9), strict_words=False)
+        report("verify")
         first = {}
         for word, (_, start, confidence) in zip(words, word_rows):
             if ayah_progress is not None and word.ayah not in first:
@@ -275,9 +273,9 @@ def align_surah(
             first.setdefault(word.ayah, (word.ayah, start, confidence))
         rows = list(first.values())
         if any(b[1] <= a[1] for a, b in zip(rows, rows[1:])):
-            raise ValueError("Границы аятов Whisper не различимы.")
+            raise ValueError("Границы аятов модели не различимы.")
         if trace is not None:
-            trace.update({"mode": "full", "backend": "whisper-attention-dtw",
+            trace.update({"mode": "full", "backend": ("mfa" if bundle.text_kind == "mfa" else "whisper-attention-dtw"),
                           "align_lag_ms": 0, "ayahs": [
                               {"ayah": a, "onset_ms": ms, "conf": c, "reliable": c >= .25}
                               for a, ms, c in rows]})
@@ -318,6 +316,7 @@ def align_surah(
         return rows
 
     # --- 2. emissions: log-probs over the vocab, shape (T, V) ---------------
+    report("acoustic")
     emissions = _full_emissions(bundle, pcm, np, trace=trace)  # float32 (T, V)
     if getattr(bundle, "text_kind", "").startswith("fastconformer"):
         targets, word_token_spans = _build_targets(words, word_trs, bundle, basmala_trs)
@@ -333,7 +332,9 @@ def align_surah(
     log_probs = np.ascontiguousarray(emissions[None, :, :], dtype=np.float32)
 
     # --- 3. forced alignment (CTC, no decoding) -----------------------------
+    report("alignment", 0, n_frames)
     path, frame_scores = forced_align(log_probs, targets_arr, blank=bundle.blank_id)
+    report("verify")
     path = np.asarray(path).reshape(-1)
     frame_scores = np.asarray(frame_scores).reshape(-1)
 
@@ -371,6 +372,9 @@ def align_surah(
         record_edges(checks, words, word_token_spans, target_spans, frame_scores, stride_ms,
                      intro=bool(basmala_trs), targets=targets, delim_id=bundle.delim_id)
         position_boundaries(checks, pcm, sr, trace=trace)
+        from surah_cutter.core.full_signal import refine_late_boundaries
+
+        refine_late_boundaries(checks, pcm, sr, trace=trace)
         _review_pause_full_onsets(checks.values(), trace["full_windows"])
     rows = [(a, checks[a]["onset_ms"], checks[a]["conf"]) for a, _, _ in rows]
     if any(right[1] <= left[1] for left, right in zip(rows, rows[1:])):
@@ -396,6 +400,7 @@ def align_surah(
                     "split-word-muaalem-proof": "начало фразы подтверждено локальной проверкой Muaalem",
                     "weak-word-token": "звук первого слова не подтверждён, требуется ревью",
                     "late-onset-in-pause": "сомнительное начало в длинной паузе, требуется ревью",
+                    "waveform-pause-recheck": "поздний разрез уточнён по звуковой волне и паузе, требуется ревью",
                 }.get(check["reason"], check["reason"])
                 log_event(
                     f"Аят {check['ayah']}: {reason}, "

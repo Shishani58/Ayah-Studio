@@ -1,0 +1,247 @@
+{
+  "exit": 0,
+  "wall_s": 18.375750708160922,
+  "samples": [
+    {
+      "elapsed_s": 0.04858550010249019,
+      "tree_rss_kib": 13728
+    },
+    {
+      "elapsed_s": 0.5839279580395669,
+      "tree_rss_kib": 75536
+    },
+    {
+      "elapsed_s": 1.249401291133836,
+      "tree_rss_kib": 298240
+    },
+    {
+      "elapsed_s": 1.788515041116625,
+      "tree_rss_kib": 444224
+    },
+    {
+      "elapsed_s": 2.3335961250122637,
+      "tree_rss_kib": 506816
+    },
+    {
+      "elapsed_s": 2.8613147500436753,
+      "tree_rss_kib": 257904
+    },
+    {
+      "elapsed_s": 3.392141625052318,
+      "tree_rss_kib": 260272
+    },
+    {
+      "elapsed_s": 3.918687916127965,
+      "tree_rss_kib": 289824
+    },
+    {
+      "elapsed_s": 4.4450601250864565,
+      "tree_rss_kib": 339008
+    },
+    {
+      "elapsed_s": 4.975634041009471,
+      "tree_rss_kib": 518416
+    },
+    {
+      "elapsed_s": 5.551566082984209,
+      "tree_rss_kib": 444144
+    },
+    {
+      "elapsed_s": 6.083802041132003,
+      "tree_rss_kib": 490176
+    },
+    {
+      "elapsed_s": 6.614239750197157,
+      "tree_rss_kib": 595376
+    },
+    {
+      "elapsed_s": 7.145114666083828,
+      "tree_rss_kib": 922416
+    },
+    {
+      "elapsed_s": 7.686102790990844,
+      "tree_rss_kib": 1180864
+    },
+    {
+      "elapsed_s": 8.228199040982872,
+      "tree_rss_kib": 1259248
+    },
+    {
+      "elapsed_s": 8.768860041163862,
+      "tree_rss_kib": 1269296
+    },
+    {
+      "elapsed_s": 9.294892375124618,
+      "tree_rss_kib": 1271696
+    },
+    {
+      "elapsed_s": 9.82315354119055,
+      "tree_rss_kib": 1273696
+    },
+    {
+      "elapsed_s": 10.365863375132903,
+      "tree_rss_kib": 1181760
+    },
+    {
+      "elapsed_s": 10.89589983318001,
+      "tree_rss_kib": 1139328
+    },
+    {
+      "elapsed_s": 11.42967408313416,
+      "tree_rss_kib": 1184112
+    },
+    {
+      "elapsed_s": 11.977652041008696,
+      "tree_rss_kib": 1184816
+    },
+    {
+      "elapsed_s": 12.513431958155707,
+      "tree_rss_kib": 1149824
+    },
+    {
+      "elapsed_s": 13.046682875137776,
+      "tree_rss_kib": 885920
+    },
+    {
+      "elapsed_s": 13.578945165965706,
+      "tree_rss_kib": 886016
+    },
+    {
+      "elapsed_s": 14.111514958087355,
+      "tree_rss_kib": 887792
+    },
+    {
+      "elapsed_s": 14.646277208114043,
+      "tree_rss_kib": 888544
+    },
+    {
+      "elapsed_s": 15.186140458099544,
+      "tree_rss_kib": 882368
+    },
+    {
+      "elapsed_s": 15.722193291177973,
+      "tree_rss_kib": 883984
+    },
+    {
+      "elapsed_s": 16.266023916192353,
+      "tree_rss_kib": 884160
+    },
+    {
+      "elapsed_s": 16.80387304117903,
+      "tree_rss_kib": 879936
+    },
+    {
+      "elapsed_s": 17.33757154108025,
+      "tree_rss_kib": 880064
+    },
+    {
+      "elapsed_s": 17.87480308301747,
+      "tree_rss_kib": 880096
+    }
+  ],
+  "tree_peak_kib": 1273696,
+  "host_before": [
+    {
+      "pid": 633,
+      "cpu_percent": 71.8,
+      "command": "/System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer"
+    },
+    {
+      "pid": 50212,
+      "cpu_percent": 69.0,
+      "command": "/Users/ayub/.surah-cutter/model-runtime/bin/python"
+    },
+    {
+      "pid": 62786,
+      "cpu_percent": 46.3,
+      "command": "/Users/ayub/.local/bin/codebase-memory-mcp"
+    },
+    {
+      "pid": 66777,
+      "cpu_percent": 46.2,
+      "command": "/usr/libexec/trustd"
+    },
+    {
+      "pid": 21376,
+      "cpu_percent": 44.2,
+      "command": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex"
+    },
+    {
+      "pid": 62913,
+      "cpu_percent": 38.2,
+      "command": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+    },
+    {
+      "pid": 62922,
+      "cpu_percent": 33.6,
+      "command": "node"
+    },
+    {
+      "pid": 62911,
+      "cpu_percent": 31.9,
+      "command": "/Users/ayub/Library/Application Support/Open Design/launcher/channels/stable/namespaces/release-stable/versions/0.25.0/payload/Open Design.app/Contents/Frameworks/Open Design Helper.app/Contents/MacOS/Open Design Helper"
+    },
+    {
+      "pid": 62908,
+      "cpu_percent": 30.8,
+      "command": "node"
+    },
+    {
+      "pid": 10297,
+      "cpu_percent": 30.3,
+      "command": "/Applications/Happ.app/Contents/PlugIns/Tunnel.appex/Contents/MacOS/Tunnel"
+    }
+  ],
+  "host_after": [
+    {
+      "pid": 50212,
+      "cpu_percent": 169.4,
+      "command": "/Users/ayub/.surah-cutter/model-runtime/bin/python"
+    },
+    {
+      "pid": 633,
+      "cpu_percent": 64.7,
+      "command": "/System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer"
+    },
+    {
+      "pid": 21375,
+      "cpu_percent": 38.5,
+      "command": "/Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/155.0.8059.40/Helpers/Codex (Renderer).app/Contents/MacOS/Codex (Renderer)"
+    },
+    {
+      "pid": 1924,
+      "cpu_percent": 32.6,
+      "command": "/Applications/Happ.app/Contents/MacOS/Happ"
+    },
+    {
+      "pid": 63145,
+      "cpu_percent": 31.8,
+      "command": "/System/Library/Frameworks/Contacts.framework/Support/contactsd"
+    },
+    {
+      "pid": 21242,
+      "cpu_percent": 22.5,
+      "command": "/Applications/ChatGPT.app/Contents/MacOS/ChatGPT"
+    },
+    {
+      "pid": 902,
+      "cpu_percent": 19.0,
+      "command": "/System/Library/Frameworks/Accounts.framework/Versions/A/Support/accountsd"
+    },
+    {
+      "pid": 870,
+      "cpu_percent": 10.2,
+      "command": "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mds_stores"
+    },
+    {
+      "pid": 21450,
+      "cpu_percent": 8.0,
+      "command": "/Users/ayub/.codex/computer-use/Codex Computer Use.app/Contents/MacOS/SkyComputerUseService"
+    },
+    {
+      "pid": 63132,
+      "cpu_percent": 7.7,
+      "command": "/System/Library/Services/AppleSpell.service/Contents/MacOS/AppleSpell"
+    }
+  ]
+}

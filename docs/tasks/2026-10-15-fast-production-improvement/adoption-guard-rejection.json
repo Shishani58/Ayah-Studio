@@ -1,0 +1,8 @@
+{
+  "stage": "before patch/tests",
+  "reason": "align.py current hash differed from reviewed hash",
+  "change": "one extra FULL review-reason string; FAST relevant AST unchanged",
+  "prior_reviewed_sha": "438cd3a6cc04c8f3116f56e2a63f841db77e34a0832c26b8f04f2f79a9a77cfe",
+  "current_sha": "335534e6826afef9360950e1ca0b1f4d3e370441507c7966ad71cacb55a01172",
+  "unix": 1792101563.52254
+}

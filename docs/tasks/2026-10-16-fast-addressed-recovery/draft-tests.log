@@ -1,0 +1,16 @@
+
+==================================== ERRORS ====================================
+_ ERROR collecting docs/tasks/2026-10-16-fast-addressed-recovery/regression_draft.py _
+ImportError while importing test module '/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-fast-addressed-recovery/regression_draft.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+docs/tasks/2026-10-16-fast-addressed-recovery/regression_draft.py:8: in <module>
+    from surah_cutter.core.fast_executor import (
+E   ImportError: cannot import name '_asr_head_competitors' from 'surah_cutter.core.fast_executor' (/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_executor.py)
+=========================== short test summary info ============================
+ERROR docs/tasks/2026-10-16-fast-addressed-recovery/regression_draft.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.81s

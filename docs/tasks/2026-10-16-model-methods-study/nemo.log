@@ -1,0 +1,3016 @@
+[NeMo W 2026-10-16 04:05:25 nemo_logging:405] /Users/ayub/.surah-cutter/nemo-runtime/lib/python3.11/site-packages/pydub/utils.py:170: RuntimeWarning: Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work
+      warn("Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work", RuntimeWarning)
+    
+[NeMo I 2026-10-16 04:05:33 nemo_logging:393] Tokenizer SentencePieceTokenizer initialized with 1024 tokens
+[NeMo W 2026-10-16 04:05:35 nemo_logging:405] If you intend to do training or fine-tuning, please call the ModelPT.setup_training_data() method and provide a valid configuration file to setup the train data loader.
+    Train config : 
+    manifest_filepath: ./quran_asr/data/train_manifest.jsonl
+    sample_rate: 16000
+    batch_size: 6
+    shuffle: true
+    num_workers: 4
+    pin_memory: true
+    max_duration: 30.0
+    min_duration: 0.5
+    shuffle_n: 2048
+    bucketing_strategy: fully_randomized
+    bucketing_batch_size: null
+    
+[NeMo W 2026-10-16 04:05:35 nemo_logging:405] If you intend to do validation, please call the ModelPT.setup_validation_data() or ModelPT.setup_multiple_validation_data() method and provide a valid configuration file to setup the validation data loader(s). 
+    Validation config : 
+    manifest_filepath: ./quran_asr/data/val_manifest.jsonl
+    sample_rate: 16000
+    batch_size: 6
+    shuffle: false
+    use_start_end_token: false
+    num_workers: 4
+    pin_memory: true
+    
+[NeMo W 2026-10-16 04:05:35 nemo_logging:405] Please call the ModelPT.setup_test_data() or ModelPT.setup_multiple_test_data() method and provide a valid configuration file to setup the test data loader(s).
+    Test config : 
+    manifest_filepath: ./quran_asr/data/val_manifest.jsonl
+    sample_rate: 16000
+    batch_size: 16
+    shuffle: false
+    use_start_end_token: false
+    num_workers: 8
+    pin_memory: true
+    
+[NeMo I 2026-10-16 04:05:35 nemo_logging:393] PADDING: 0
+[NeMo I 2026-10-16 04:05:47 nemo_logging:393] Using RNNT Loss : warprnnt_numba
+    Loss warprnnt_numba_kwargs: {'fastemit_lambda': 0.0, 'clamp': -1.0}
+[NeMo I 2026-10-16 04:05:47 nemo_logging:393] Using RNNT Loss : warprnnt_numba
+    Loss warprnnt_numba_kwargs: {'fastemit_lambda': 0.0, 'clamp': -1.0}
+[NeMo W 2026-10-16 04:05:47 nemo_logging:405] No conditional node support for Cuda.
+    Cuda graphs with while loops are disabled, decoding speed will be slower
+    Reason: CUDA is not available
+[NeMo I 2026-10-16 04:05:51 nemo_logging:393] Using RNNT Loss : warprnnt_numba
+    Loss warprnnt_numba_kwargs: {'fastemit_lambda': 0.0, 'clamp': -1.0}
+[NeMo W 2026-10-16 04:05:51 nemo_logging:405] No conditional node support for Cuda.
+    Cuda graphs with while loops are disabled, decoding speed will be slower
+    Reason: CUDA is not available
+[NeMo I 2026-10-16 04:05:57 nemo_logging:393] Model EncDecHybridRNNTCTCBPEModel was successfully restored from /Users/ayub/.surah-cutter/models/fastconformer/60973918b40c5fcdc0e93310c13a4a4661525142/phase3_full/phase3_full_wer0.0014.nemo.
+[NeMo I 2026-10-16 04:06:03 nemo_logging:393] Changed decoding strategy of the CTC decoder to 
+    strategy: greedy_batch
+    preserve_alignments: true
+    compute_timestamps: true
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    ctc_timestamp_type: all
+    batch_dim_index: 0
+    greedy:
+      preserve_alignments: false
+      compute_timestamps: false
+      preserve_frame_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      allow_cuda_graphs: true
+    beam:
+      beam_size: 4
+      search_type: default
+      preserve_alignments: false
+      compute_timestamps: false
+      return_best_hypothesis: true
+      allow_cuda_graphs: true
+      beam_alpha: null
+      beam_beta: 1.0
+      beam_threshold: 20.0
+      kenlm_path: null
+      ngram_lm_alpha: 1.0
+      ngram_lm_model: null
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      flashlight_cfg:
+        lexicon_path: null
+        boost_path: null
+        beam_size_token: 16
+        beam_threshold: 20.0
+        unk_weight: -.inf
+        sil_weight: 0.0
+      pyctcdecode_cfg:
+        beam_prune_logp: -10.0
+        token_min_logp: -5.0
+        prune_history: false
+        hotwords: null
+        hotword_weight: 10.0
+    wfst:
+      beam_size: 4
+      search_type: riva
+      return_best_hypothesis: true
+      preserve_alignments: false
+      compute_timestamps: false
+      decoding_mode: nbest
+      open_vocabulary_decoding: false
+      beam_width: 10.0
+      lm_weight: 1.0
+      device: cuda
+      arpa_lm_path: null
+      wfst_lm_path: null
+      riva_decoding_cfg: {}
+      k2_decoding_cfg:
+        search_beam: 20.0
+        output_beam: 10.0
+        min_active_states: 30
+        max_active_states: 10000
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    temperature: 1.0
+    
+nemo shatri-001 ctc OK 39.01
+[NeMo I 2026-10-16 04:06:42 nemo_logging:393] Using RNNT Loss : warprnnt_numba
+    Loss warprnnt_numba_kwargs: {'fastemit_lambda': 0.0, 'clamp': -1.0}
+[NeMo I 2026-10-16 04:06:42 nemo_logging:393] Changed decoding strategy of the RNNT decoder to 
+    model_type: rnnt
+    strategy: greedy_batch
+    compute_hypothesis_token_set: false
+    preserve_alignments: true
+    tdt_include_token_duration: null
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    fused_batch_size: null
+    compute_timestamps: true
+    compute_langs: false
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    rnnt_timestamp_type: all
+    greedy:
+      max_symbols_per_step: 10
+      preserve_alignments: false
+      preserve_frame_confidence: false
+      tdt_include_token_duration: false
+      tdt_include_duration_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      loop_labels: true
+      use_cuda_graph_decoder: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      max_symbols: 10
+    beam:
+      beam_size: 2
+      search_type: default
+      score_norm: true
+      return_best_hypothesis: false
+      tsd_max_sym_exp_per_step: 50
+      alsd_max_target_len: 2.0
+      nsc_max_timesteps_expansion: 1
+      nsc_prefix_alpha: 1
+      maes_num_steps: 2
+      maes_prefix_alpha: 1
+      maes_expansion_gamma: 2.3
+      maes_expansion_beta: 2
+      language_model: null
+      softmax_temperature: 1.0
+      preserve_alignments: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      hat_subtract_ilm: false
+      hat_ilm_weight: 0.0
+      max_symbols_per_step: 10
+      blank_lm_score_mode: LM_WEIGHTED_FULL
+      pruning_mode: LATE
+      allow_cuda_graphs: true
+      tsd_max_sym_exp: 50
+    temperature: 1.0
+    durations: []
+    big_blank_durations: []
+    
+nemo shatri-001 rnnt OK 19.5
+[NeMo I 2026-10-16 04:07:02 nemo_logging:393] Changed decoding strategy of the CTC decoder to 
+    strategy: greedy_batch
+    preserve_alignments: true
+    compute_timestamps: true
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    ctc_timestamp_type: all
+    batch_dim_index: 0
+    greedy:
+      preserve_alignments: false
+      compute_timestamps: false
+      preserve_frame_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      allow_cuda_graphs: true
+    beam:
+      beam_size: 4
+      search_type: default
+      preserve_alignments: false
+      compute_timestamps: false
+      return_best_hypothesis: true
+      allow_cuda_graphs: true
+      beam_alpha: null
+      beam_beta: 1.0
+      beam_threshold: 20.0
+      kenlm_path: null
+      ngram_lm_alpha: 1.0
+      ngram_lm_model: null
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      flashlight_cfg:
+        lexicon_path: null
+        boost_path: null
+        beam_size_token: 16
+        beam_threshold: 20.0
+        unk_weight: -.inf
+        sil_weight: 0.0
+      pyctcdecode_cfg:
+        beam_prune_logp: -10.0
+        token_min_logp: -5.0
+        prune_history: false
+        hotwords: null
+        hotword_weight: 10.0
+    wfst:
+      beam_size: 4
+      search_type: riva
+      return_best_hypothesis: true
+      preserve_alignments: false
+      compute_timestamps: false
+      decoding_mode: nbest
+      open_vocabulary_decoding: false
+      beam_width: 10.0
+      lm_weight: 1.0
+      device: cuda
+      arpa_lm_path: null
+      wfst_lm_path: null
+      riva_decoding_cfg: {}
+      k2_decoding_cfg:
+        search_beam: 20.0
+        output_beam: 10.0
+        min_active_states: 30
+        max_active_states: 10000
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    temperature: 1.0
+    
+nemo shatri-098 ctc OK 14.55
+[NeMo I 2026-10-16 04:07:16 nemo_logging:393] Using RNNT Loss : warprnnt_numba
+    Loss warprnnt_numba_kwargs: {'fastemit_lambda': 0.0, 'clamp': -1.0}
+[NeMo I 2026-10-16 04:07:16 nemo_logging:393] Changed decoding strategy of the RNNT decoder to 
+    model_type: rnnt
+    strategy: greedy_batch
+    compute_hypothesis_token_set: false
+    preserve_alignments: true
+    tdt_include_token_duration: null
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    fused_batch_size: null
+    compute_timestamps: true
+    compute_langs: false
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    rnnt_timestamp_type: all
+    greedy:
+      max_symbols_per_step: 10
+      preserve_alignments: false
+      preserve_frame_confidence: false
+      tdt_include_token_duration: false
+      tdt_include_duration_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      loop_labels: true
+      use_cuda_graph_decoder: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      max_symbols: 10
+    beam:
+      beam_size: 2
+      search_type: default
+      score_norm: true
+      return_best_hypothesis: false
+      tsd_max_sym_exp_per_step: 50
+      alsd_max_target_len: 2.0
+      nsc_max_timesteps_expansion: 1
+      nsc_prefix_alpha: 1
+      maes_num_steps: 2
+      maes_prefix_alpha: 1
+      maes_expansion_gamma: 2.3
+      maes_expansion_beta: 2
+      language_model: null
+      softmax_temperature: 1.0
+      preserve_alignments: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      hat_subtract_ilm: false
+      hat_ilm_weight: 0.0
+      max_symbols_per_step: 10
+      blank_lm_score_mode: LM_WEIGHTED_FULL
+      pruning_mode: LATE
+      allow_cuda_graphs: true
+      tsd_max_sym_exp: 50
+    temperature: 1.0
+    durations: []
+    big_blank_durations: []
+    
+nemo shatri-098 rnnt OK 14.27
+[NeMo I 2026-10-16 04:07:30 nemo_logging:393] Changed decoding strategy of the CTC decoder to 
+    strategy: greedy_batch
+    preserve_alignments: true
+    compute_timestamps: true
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    ctc_timestamp_type: all
+    batch_dim_index: 0
+    greedy:
+      preserve_alignments: false
+      compute_timestamps: false
+      preserve_frame_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      allow_cuda_graphs: true
+    beam:
+      beam_size: 4
+      search_type: default
+      preserve_alignments: false
+      compute_timestamps: false
+      return_best_hypothesis: true
+      allow_cuda_graphs: true
+      beam_alpha: null
+      beam_beta: 1.0
+      beam_threshold: 20.0
+      kenlm_path: null
+      ngram_lm_alpha: 1.0
+      ngram_lm_model: null
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      flashlight_cfg:
+        lexicon_path: null
+        boost_path: null
+        beam_size_token: 16
+        beam_threshold: 20.0
+        unk_weight: -.inf
+        sil_weight: 0.0
+      pyctcdecode_cfg:
+        beam_prune_logp: -10.0
+        token_min_logp: -5.0
+        prune_history: false
+        hotwords: null
+        hotword_weight: 10.0
+    wfst:
+      beam_size: 4
+      search_type: riva
+      return_best_hypothesis: true
+      preserve_alignments: false
+      compute_timestamps: false
+      decoding_mode: nbest
+      open_vocabulary_decoding: false
+      beam_width: 10.0
+      lm_weight: 1.0
+      device: cuda
+      arpa_lm_path: null
+      wfst_lm_path: null
+      riva_decoding_cfg: {}
+      k2_decoding_cfg:
+        search_beam: 20.0
+        output_beam: 10.0
+        min_active_states: 30
+        max_active_states: 10000
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    temperature: 1.0
+    
+nemo shatri-112 ctc OK 4.14
+[NeMo I 2026-10-16 04:07:34 nemo_logging:393] Using RNNT Loss : warprnnt_numba
+    Loss warprnnt_numba_kwargs: {'fastemit_lambda': 0.0, 'clamp': -1.0}
+[NeMo I 2026-10-16 04:07:34 nemo_logging:393] Changed decoding strategy of the RNNT decoder to 
+    model_type: rnnt
+    strategy: greedy_batch
+    compute_hypothesis_token_set: false
+    preserve_alignments: true
+    tdt_include_token_duration: null
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    fused_batch_size: null
+    compute_timestamps: true
+    compute_langs: false
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    rnnt_timestamp_type: all
+    greedy:
+      max_symbols_per_step: 10
+      preserve_alignments: false
+      preserve_frame_confidence: false
+      tdt_include_token_duration: false
+      tdt_include_duration_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      loop_labels: true
+      use_cuda_graph_decoder: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      max_symbols: 10
+    beam:
+      beam_size: 2
+      search_type: default
+      score_norm: true
+      return_best_hypothesis: false
+      tsd_max_sym_exp_per_step: 50
+      alsd_max_target_len: 2.0
+      nsc_max_timesteps_expansion: 1
+      nsc_prefix_alpha: 1
+      maes_num_steps: 2
+      maes_prefix_alpha: 1
+      maes_expansion_gamma: 2.3
+      maes_expansion_beta: 2
+      language_model: null
+      softmax_temperature: 1.0
+      preserve_alignments: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      hat_subtract_ilm: false
+      hat_ilm_weight: 0.0
+      max_symbols_per_step: 10
+      blank_lm_score_mode: LM_WEIGHTED_FULL
+      pruning_mode: LATE
+      allow_cuda_graphs: true
+      tsd_max_sym_exp: 50
+    temperature: 1.0
+    durations: []
+    big_blank_durations: []
+    
+nemo shatri-112 rnnt OK 6.6
+[NeMo I 2026-10-16 04:07:41 nemo_logging:393] Changed decoding strategy of the CTC decoder to 
+    strategy: greedy_batch
+    preserve_alignments: true
+    compute_timestamps: true
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    ctc_timestamp_type: all
+    batch_dim_index: 0
+    greedy:
+      preserve_alignments: false
+      compute_timestamps: false
+      preserve_frame_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      allow_cuda_graphs: true
+    beam:
+      beam_size: 4
+      search_type: default
+      preserve_alignments: false
+      compute_timestamps: false
+      return_best_hypothesis: true
+      allow_cuda_graphs: true
+      beam_alpha: null
+      beam_beta: 1.0
+      beam_threshold: 20.0
+      kenlm_path: null
+      ngram_lm_alpha: 1.0
+      ngram_lm_model: null
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      flashlight_cfg:
+        lexicon_path: null
+        boost_path: null
+        beam_size_token: 16
+        beam_threshold: 20.0
+        unk_weight: -.inf
+        sil_weight: 0.0
+      pyctcdecode_cfg:
+        beam_prune_logp: -10.0
+        token_min_logp: -5.0
+        prune_history: false
+        hotwords: null
+        hotword_weight: 10.0
+    wfst:
+      beam_size: 4
+      search_type: riva
+      return_best_hypothesis: true
+      preserve_alignments: false
+      compute_timestamps: false
+      decoding_mode: nbest
+      open_vocabulary_decoding: false
+      beam_width: 10.0
+      lm_weight: 1.0
+      device: cuda
+      arpa_lm_path: null
+      wfst_lm_path: null
+      riva_decoding_cfg: {}
+      k2_decoding_cfg:
+        search_beam: 20.0
+        output_beam: 10.0
+        min_active_states: 30
+        max_active_states: 10000
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    temperature: 1.0
+    
+nemo shatri-114 ctc OK 4.93
+[NeMo I 2026-10-16 04:07:46 nemo_logging:393] Using RNNT Loss : warprnnt_numba
+    Loss warprnnt_numba_kwargs: {'fastemit_lambda': 0.0, 'clamp': -1.0}
+[NeMo I 2026-10-16 04:07:46 nemo_logging:393] Changed decoding strategy of the RNNT decoder to 
+    model_type: rnnt
+    strategy: greedy_batch
+    compute_hypothesis_token_set: false
+    preserve_alignments: true
+    tdt_include_token_duration: null
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    fused_batch_size: null
+    compute_timestamps: true
+    compute_langs: false
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    rnnt_timestamp_type: all
+    greedy:
+      max_symbols_per_step: 10
+      preserve_alignments: false
+      preserve_frame_confidence: false
+      tdt_include_token_duration: false
+      tdt_include_duration_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      loop_labels: true
+      use_cuda_graph_decoder: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      max_symbols: 10
+    beam:
+      beam_size: 2
+      search_type: default
+      score_norm: true
+      return_best_hypothesis: false
+      tsd_max_sym_exp_per_step: 50
+      alsd_max_target_len: 2.0
+      nsc_max_timesteps_expansion: 1
+      nsc_prefix_alpha: 1
+      maes_num_steps: 2
+      maes_prefix_alpha: 1
+      maes_expansion_gamma: 2.3
+      maes_expansion_beta: 2
+      language_model: null
+      softmax_temperature: 1.0
+      preserve_alignments: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      hat_subtract_ilm: false
+      hat_ilm_weight: 0.0
+      max_symbols_per_step: 10
+      blank_lm_score_mode: LM_WEIGHTED_FULL
+      pruning_mode: LATE
+      allow_cuda_graphs: true
+      tsd_max_sym_exp: 50
+    temperature: 1.0
+    durations: []
+    big_blank_durations: []
+    
+nemo shatri-114 rnnt OK 8.32
+[NeMo I 2026-10-16 04:07:55 nemo_logging:393] Changed decoding strategy of the CTC decoder to 
+    strategy: greedy_batch
+    preserve_alignments: true
+    compute_timestamps: true
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    ctc_timestamp_type: all
+    batch_dim_index: 0
+    greedy:
+      preserve_alignments: false
+      compute_timestamps: false
+      preserve_frame_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      allow_cuda_graphs: true
+    beam:
+      beam_size: 4
+      search_type: default
+      preserve_alignments: false
+      compute_timestamps: false
+      return_best_hypothesis: true
+      allow_cuda_graphs: true
+      beam_alpha: null
+      beam_beta: 1.0
+      beam_threshold: 20.0
+      kenlm_path: null
+      ngram_lm_alpha: 1.0
+      ngram_lm_model: null
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      flashlight_cfg:
+        lexicon_path: null
+        boost_path: null
+        beam_size_token: 16
+        beam_threshold: 20.0
+        unk_weight: -.inf
+        sil_weight: 0.0
+      pyctcdecode_cfg:
+        beam_prune_logp: -10.0
+        token_min_logp: -5.0
+        prune_history: false
+        hotwords: null
+        hotword_weight: 10.0
+    wfst:
+      beam_size: 4
+      search_type: riva
+      return_best_hypothesis: true
+      preserve_alignments: false
+      compute_timestamps: false
+      decoding_mode: nbest
+      open_vocabulary_decoding: false
+      beam_width: 10.0
+      lm_weight: 1.0
+      device: cuda
+      arpa_lm_path: null
+      wfst_lm_path: null
+      riva_decoding_cfg: {}
+      k2_decoding_cfg:
+        search_beam: 20.0
+        output_beam: 10.0
+        min_active_states: 30
+        max_active_states: 10000
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    temperature: 1.0
+    
+nemo abdul_basit_mujawwad-098 ctc OK 232.27
+[NeMo I 2026-10-16 04:11:47 nemo_logging:393] Using RNNT Loss : warprnnt_numba
+    Loss warprnnt_numba_kwargs: {'fastemit_lambda': 0.0, 'clamp': -1.0}
+[NeMo I 2026-10-16 04:11:47 nemo_logging:393] Changed decoding strategy of the RNNT decoder to 
+    model_type: rnnt
+    strategy: greedy_batch
+    compute_hypothesis_token_set: false
+    preserve_alignments: true
+    tdt_include_token_duration: null
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    fused_batch_size: null
+    compute_timestamps: true
+    compute_langs: false
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    rnnt_timestamp_type: all
+    greedy:
+      max_symbols_per_step: 10
+      preserve_alignments: false
+      preserve_frame_confidence: false
+      tdt_include_token_duration: false
+      tdt_include_duration_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      loop_labels: true
+      use_cuda_graph_decoder: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      max_symbols: 10
+    beam:
+      beam_size: 2
+      search_type: default
+      score_norm: true
+      return_best_hypothesis: false
+      tsd_max_sym_exp_per_step: 50
+      alsd_max_target_len: 2.0
+      nsc_max_timesteps_expansion: 1
+      nsc_prefix_alpha: 1
+      maes_num_steps: 2
+      maes_prefix_alpha: 1
+      maes_expansion_gamma: 2.3
+      maes_expansion_beta: 2
+      language_model: null
+      softmax_temperature: 1.0
+      preserve_alignments: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      hat_subtract_ilm: false
+      hat_ilm_weight: 0.0
+      max_symbols_per_step: 10
+      blank_lm_score_mode: LM_WEIGHTED_FULL
+      pruning_mode: LATE
+      allow_cuda_graphs: true
+      tsd_max_sym_exp: 50
+    temperature: 1.0
+    durations: []
+    big_blank_durations: []
+    
+nemo abdul_basit_mujawwad-098 rnnt OK 214.94
+[NeMo I 2026-10-16 04:15:22 nemo_logging:393] Changed decoding strategy of the CTC decoder to 
+    strategy: greedy_batch
+    preserve_alignments: true
+    compute_timestamps: true
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    ctc_timestamp_type: all
+    batch_dim_index: 0
+    greedy:
+      preserve_alignments: false
+      compute_timestamps: false
+      preserve_frame_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      allow_cuda_graphs: true
+    beam:
+      beam_size: 4
+      search_type: default
+      preserve_alignments: false
+      compute_timestamps: false
+      return_best_hypothesis: true
+      allow_cuda_graphs: true
+      beam_alpha: null
+      beam_beta: 1.0
+      beam_threshold: 20.0
+      kenlm_path: null
+      ngram_lm_alpha: 1.0
+      ngram_lm_model: null
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      flashlight_cfg:
+        lexicon_path: null
+        boost_path: null
+        beam_size_token: 16
+        beam_threshold: 20.0
+        unk_weight: -.inf
+        sil_weight: 0.0
+      pyctcdecode_cfg:
+        beam_prune_logp: -10.0
+        token_min_logp: -5.0
+        prune_history: false
+        hotwords: null
+        hotword_weight: 10.0
+    wfst:
+      beam_size: 4
+      search_type: riva
+      return_best_hypothesis: true
+      preserve_alignments: false
+      compute_timestamps: false
+      decoding_mode: nbest
+      open_vocabulary_decoding: false
+      beam_width: 10.0
+      lm_weight: 1.0
+      device: cuda
+      arpa_lm_path: null
+      wfst_lm_path: null
+      riva_decoding_cfg: {}
+      k2_decoding_cfg:
+        search_beam: 20.0
+        output_beam: 10.0
+        min_active_states: 30
+        max_active_states: 10000
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    temperature: 1.0
+    
+nemo abdul_basit_mujawwad-112 ctc OK 12.47
+[NeMo I 2026-10-16 04:15:34 nemo_logging:393] Using RNNT Loss : warprnnt_numba
+    Loss warprnnt_numba_kwargs: {'fastemit_lambda': 0.0, 'clamp': -1.0}
+[NeMo I 2026-10-16 04:15:34 nemo_logging:393] Changed decoding strategy of the RNNT decoder to 
+    model_type: rnnt
+    strategy: greedy_batch
+    compute_hypothesis_token_set: false
+    preserve_alignments: true
+    tdt_include_token_duration: null
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    fused_batch_size: null
+    compute_timestamps: true
+    compute_langs: false
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    rnnt_timestamp_type: all
+    greedy:
+      max_symbols_per_step: 10
+      preserve_alignments: false
+      preserve_frame_confidence: false
+      tdt_include_token_duration: false
+      tdt_include_duration_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      loop_labels: true
+      use_cuda_graph_decoder: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      max_symbols: 10
+    beam:
+      beam_size: 2
+      search_type: default
+      score_norm: true
+      return_best_hypothesis: false
+      tsd_max_sym_exp_per_step: 50
+      alsd_max_target_len: 2.0
+      nsc_max_timesteps_expansion: 1
+      nsc_prefix_alpha: 1
+      maes_num_steps: 2
+      maes_prefix_alpha: 1
+      maes_expansion_gamma: 2.3
+      maes_expansion_beta: 2
+      language_model: null
+      softmax_temperature: 1.0
+      preserve_alignments: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      hat_subtract_ilm: false
+      hat_ilm_weight: 0.0
+      max_symbols_per_step: 10
+      blank_lm_score_mode: LM_WEIGHTED_FULL
+      pruning_mode: LATE
+      allow_cuda_graphs: true
+      tsd_max_sym_exp: 50
+    temperature: 1.0
+    durations: []
+    big_blank_durations: []
+    
+nemo abdul_basit_mujawwad-112 rnnt OK 9.09
+[NeMo I 2026-10-16 04:15:44 nemo_logging:393] Changed decoding strategy of the CTC decoder to 
+    strategy: greedy_batch
+    preserve_alignments: true
+    compute_timestamps: true
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    ctc_timestamp_type: all
+    batch_dim_index: 0
+    greedy:
+      preserve_alignments: false
+      compute_timestamps: false
+      preserve_frame_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      allow_cuda_graphs: true
+    beam:
+      beam_size: 4
+      search_type: default
+      preserve_alignments: false
+      compute_timestamps: false
+      return_best_hypothesis: true
+      allow_cuda_graphs: true
+      beam_alpha: null
+      beam_beta: 1.0
+      beam_threshold: 20.0
+      kenlm_path: null
+      ngram_lm_alpha: 1.0
+      ngram_lm_model: null
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      flashlight_cfg:
+        lexicon_path: null
+        boost_path: null
+        beam_size_token: 16
+        beam_threshold: 20.0
+        unk_weight: -.inf
+        sil_weight: 0.0
+      pyctcdecode_cfg:
+        beam_prune_logp: -10.0
+        token_min_logp: -5.0
+        prune_history: false
+        hotwords: null
+        hotword_weight: 10.0
+    wfst:
+      beam_size: 4
+      search_type: riva
+      return_best_hypothesis: true
+      preserve_alignments: false
+      compute_timestamps: false
+      decoding_mode: nbest
+      open_vocabulary_decoding: false
+      beam_width: 10.0
+      lm_weight: 1.0
+      device: cuda
+      arpa_lm_path: null
+      wfst_lm_path: null
+      riva_decoding_cfg: {}
+      k2_decoding_cfg:
+        search_beam: 20.0
+        output_beam: 10.0
+        min_active_states: 30
+        max_active_states: 10000
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    temperature: 1.0
+    
+nemo mahmoud_khalil_al_hussary-098 ctc OK 62.62
+[NeMo I 2026-10-16 04:16:47 nemo_logging:393] Using RNNT Loss : warprnnt_numba
+    Loss warprnnt_numba_kwargs: {'fastemit_lambda': 0.0, 'clamp': -1.0}
+[NeMo I 2026-10-16 04:16:47 nemo_logging:393] Changed decoding strategy of the RNNT decoder to 
+    model_type: rnnt
+    strategy: greedy_batch
+    compute_hypothesis_token_set: false
+    preserve_alignments: true
+    tdt_include_token_duration: null
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    fused_batch_size: null
+    compute_timestamps: true
+    compute_langs: false
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    rnnt_timestamp_type: all
+    greedy:
+      max_symbols_per_step: 10
+      preserve_alignments: false
+      preserve_frame_confidence: false
+      tdt_include_token_duration: false
+      tdt_include_duration_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      loop_labels: true
+      use_cuda_graph_decoder: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      max_symbols: 10
+    beam:
+      beam_size: 2
+      search_type: default
+      score_norm: true
+      return_best_hypothesis: false
+      tsd_max_sym_exp_per_step: 50
+      alsd_max_target_len: 2.0
+      nsc_max_timesteps_expansion: 1
+      nsc_prefix_alpha: 1
+      maes_num_steps: 2
+      maes_prefix_alpha: 1
+      maes_expansion_gamma: 2.3
+      maes_expansion_beta: 2
+      language_model: null
+      softmax_temperature: 1.0
+      preserve_alignments: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      hat_subtract_ilm: false
+      hat_ilm_weight: 0.0
+      max_symbols_per_step: 10
+      blank_lm_score_mode: LM_WEIGHTED_FULL
+      pruning_mode: LATE
+      allow_cuda_graphs: true
+      tsd_max_sym_exp: 50
+    temperature: 1.0
+    durations: []
+    big_blank_durations: []
+    
+nemo mahmoud_khalil_al_hussary-098 rnnt OK 32.89
+[NeMo I 2026-10-16 04:17:19 nemo_logging:393] Changed decoding strategy of the CTC decoder to 
+    strategy: greedy_batch
+    preserve_alignments: true
+    compute_timestamps: true
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    ctc_timestamp_type: all
+    batch_dim_index: 0
+    greedy:
+      preserve_alignments: false
+      compute_timestamps: false
+      preserve_frame_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      allow_cuda_graphs: true
+    beam:
+      beam_size: 4
+      search_type: default
+      preserve_alignments: false
+      compute_timestamps: false
+      return_best_hypothesis: true
+      allow_cuda_graphs: true
+      beam_alpha: null
+      beam_beta: 1.0
+      beam_threshold: 20.0
+      kenlm_path: null
+      ngram_lm_alpha: 1.0
+      ngram_lm_model: null
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      flashlight_cfg:
+        lexicon_path: null
+        boost_path: null
+        beam_size_token: 16
+        beam_threshold: 20.0
+        unk_weight: -.inf
+        sil_weight: 0.0
+      pyctcdecode_cfg:
+        beam_prune_logp: -10.0
+        token_min_logp: -5.0
+        prune_history: false
+        hotwords: null
+        hotword_weight: 10.0
+    wfst:
+      beam_size: 4
+      search_type: riva
+      return_best_hypothesis: true
+      preserve_alignments: false
+      compute_timestamps: false
+      decoding_mode: nbest
+      open_vocabulary_decoding: false
+      beam_width: 10.0
+      lm_weight: 1.0
+      device: cuda
+      arpa_lm_path: null
+      wfst_lm_path: null
+      riva_decoding_cfg: {}
+      k2_decoding_cfg:
+        search_beam: 20.0
+        output_beam: 10.0
+        min_active_states: 30
+        max_active_states: 10000
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    temperature: 1.0
+    
+nemo mahmoud_khalil_al_hussary-112 ctc OK 3.01
+[NeMo I 2026-10-16 04:17:22 nemo_logging:393] Using RNNT Loss : warprnnt_numba
+    Loss warprnnt_numba_kwargs: {'fastemit_lambda': 0.0, 'clamp': -1.0}
+[NeMo I 2026-10-16 04:17:22 nemo_logging:393] Changed decoding strategy of the RNNT decoder to 
+    model_type: rnnt
+    strategy: greedy_batch
+    compute_hypothesis_token_set: false
+    preserve_alignments: true
+    tdt_include_token_duration: null
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    fused_batch_size: null
+    compute_timestamps: true
+    compute_langs: false
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    rnnt_timestamp_type: all
+    greedy:
+      max_symbols_per_step: 10
+      preserve_alignments: false
+      preserve_frame_confidence: false
+      tdt_include_token_duration: false
+      tdt_include_duration_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      loop_labels: true
+      use_cuda_graph_decoder: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      max_symbols: 10
+    beam:
+      beam_size: 2
+      search_type: default
+      score_norm: true
+      return_best_hypothesis: false
+      tsd_max_sym_exp_per_step: 50
+      alsd_max_target_len: 2.0
+      nsc_max_timesteps_expansion: 1
+      nsc_prefix_alpha: 1
+      maes_num_steps: 2
+      maes_prefix_alpha: 1
+      maes_expansion_gamma: 2.3
+      maes_expansion_beta: 2
+      language_model: null
+      softmax_temperature: 1.0
+      preserve_alignments: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      hat_subtract_ilm: false
+      hat_ilm_weight: 0.0
+      max_symbols_per_step: 10
+      blank_lm_score_mode: LM_WEIGHTED_FULL
+      pruning_mode: LATE
+      allow_cuda_graphs: true
+      tsd_max_sym_exp: 50
+    temperature: 1.0
+    durations: []
+    big_blank_durations: []
+    
+nemo mahmoud_khalil_al_hussary-112 rnnt OK 3.69
+[NeMo I 2026-10-16 04:17:26 nemo_logging:393] Changed decoding strategy of the CTC decoder to 
+    strategy: greedy_batch
+    preserve_alignments: true
+    compute_timestamps: true
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    ctc_timestamp_type: all
+    batch_dim_index: 0
+    greedy:
+      preserve_alignments: false
+      compute_timestamps: false
+      preserve_frame_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      allow_cuda_graphs: true
+    beam:
+      beam_size: 4
+      search_type: default
+      preserve_alignments: false
+      compute_timestamps: false
+      return_best_hypothesis: true
+      allow_cuda_graphs: true
+      beam_alpha: null
+      beam_beta: 1.0
+      beam_threshold: 20.0
+      kenlm_path: null
+      ngram_lm_alpha: 1.0
+      ngram_lm_model: null
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      flashlight_cfg:
+        lexicon_path: null
+        boost_path: null
+        beam_size_token: 16
+        beam_threshold: 20.0
+        unk_weight: -.inf
+        sil_weight: 0.0
+      pyctcdecode_cfg:
+        beam_prune_logp: -10.0
+        token_min_logp: -5.0
+        prune_history: false
+        hotwords: null
+        hotword_weight: 10.0
+    wfst:
+      beam_size: 4
+      search_type: riva
+      return_best_hypothesis: true
+      preserve_alignments: false
+      compute_timestamps: false
+      decoding_mode: nbest
+      open_vocabulary_decoding: false
+      beam_width: 10.0
+      lm_weight: 1.0
+      device: cuda
+      arpa_lm_path: null
+      wfst_lm_path: null
+      riva_decoding_cfg: {}
+      k2_decoding_cfg:
+        search_beam: 20.0
+        output_beam: 10.0
+        min_active_states: 30
+        max_active_states: 10000
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    temperature: 1.0
+    
+nemo mohammed_siddiq_al_minshawi-098 ctc OK 29.89
+[NeMo I 2026-10-16 04:17:56 nemo_logging:393] Using RNNT Loss : warprnnt_numba
+    Loss warprnnt_numba_kwargs: {'fastemit_lambda': 0.0, 'clamp': -1.0}
+[NeMo I 2026-10-16 04:17:56 nemo_logging:393] Changed decoding strategy of the RNNT decoder to 
+    model_type: rnnt
+    strategy: greedy_batch
+    compute_hypothesis_token_set: false
+    preserve_alignments: true
+    tdt_include_token_duration: null
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    fused_batch_size: null
+    compute_timestamps: true
+    compute_langs: false
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    rnnt_timestamp_type: all
+    greedy:
+      max_symbols_per_step: 10
+      preserve_alignments: false
+      preserve_frame_confidence: false
+      tdt_include_token_duration: false
+      tdt_include_duration_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      loop_labels: true
+      use_cuda_graph_decoder: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      max_symbols: 10
+    beam:
+      beam_size: 2
+      search_type: default
+      score_norm: true
+      return_best_hypothesis: false
+      tsd_max_sym_exp_per_step: 50
+      alsd_max_target_len: 2.0
+      nsc_max_timesteps_expansion: 1
+      nsc_prefix_alpha: 1
+      maes_num_steps: 2
+      maes_prefix_alpha: 1
+      maes_expansion_gamma: 2.3
+      maes_expansion_beta: 2
+      language_model: null
+      softmax_temperature: 1.0
+      preserve_alignments: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      hat_subtract_ilm: false
+      hat_ilm_weight: 0.0
+      max_symbols_per_step: 10
+      blank_lm_score_mode: LM_WEIGHTED_FULL
+      pruning_mode: LATE
+      allow_cuda_graphs: true
+      tsd_max_sym_exp: 50
+    temperature: 1.0
+    durations: []
+    big_blank_durations: []
+    
+nemo mohammed_siddiq_al_minshawi-098 rnnt OK 19.44
+[NeMo I 2026-10-16 04:18:15 nemo_logging:393] Changed decoding strategy of the CTC decoder to 
+    strategy: greedy_batch
+    preserve_alignments: true
+    compute_timestamps: true
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    ctc_timestamp_type: all
+    batch_dim_index: 0
+    greedy:
+      preserve_alignments: false
+      compute_timestamps: false
+      preserve_frame_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      allow_cuda_graphs: true
+    beam:
+      beam_size: 4
+      search_type: default
+      preserve_alignments: false
+      compute_timestamps: false
+      return_best_hypothesis: true
+      allow_cuda_graphs: true
+      beam_alpha: null
+      beam_beta: 1.0
+      beam_threshold: 20.0
+      kenlm_path: null
+      ngram_lm_alpha: 1.0
+      ngram_lm_model: null
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      flashlight_cfg:
+        lexicon_path: null
+        boost_path: null
+        beam_size_token: 16
+        beam_threshold: 20.0
+        unk_weight: -.inf
+        sil_weight: 0.0
+      pyctcdecode_cfg:
+        beam_prune_logp: -10.0
+        token_min_logp: -5.0
+        prune_history: false
+        hotwords: null
+        hotword_weight: 10.0
+    wfst:
+      beam_size: 4
+      search_type: riva
+      return_best_hypothesis: true
+      preserve_alignments: false
+      compute_timestamps: false
+      decoding_mode: nbest
+      open_vocabulary_decoding: false
+      beam_width: 10.0
+      lm_weight: 1.0
+      device: cuda
+      arpa_lm_path: null
+      wfst_lm_path: null
+      riva_decoding_cfg: {}
+      k2_decoding_cfg:
+        search_beam: 20.0
+        output_beam: 10.0
+        min_active_states: 30
+        max_active_states: 10000
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    temperature: 1.0
+    
+nemo mohammed_siddiq_al_minshawi-112 ctc OK 3.18
+[NeMo I 2026-10-16 04:18:19 nemo_logging:393] Using RNNT Loss : warprnnt_numba
+    Loss warprnnt_numba_kwargs: {'fastemit_lambda': 0.0, 'clamp': -1.0}
+[NeMo I 2026-10-16 04:18:19 nemo_logging:393] Changed decoding strategy of the RNNT decoder to 
+    model_type: rnnt
+    strategy: greedy_batch
+    compute_hypothesis_token_set: false
+    preserve_alignments: true
+    tdt_include_token_duration: null
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    fused_batch_size: null
+    compute_timestamps: true
+    compute_langs: false
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    rnnt_timestamp_type: all
+    greedy:
+      max_symbols_per_step: 10
+      preserve_alignments: false
+      preserve_frame_confidence: false
+      tdt_include_token_duration: false
+      tdt_include_duration_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      loop_labels: true
+      use_cuda_graph_decoder: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      max_symbols: 10
+    beam:
+      beam_size: 2
+      search_type: default
+      score_norm: true
+      return_best_hypothesis: false
+      tsd_max_sym_exp_per_step: 50
+      alsd_max_target_len: 2.0
+      nsc_max_timesteps_expansion: 1
+      nsc_prefix_alpha: 1
+      maes_num_steps: 2
+      maes_prefix_alpha: 1
+      maes_expansion_gamma: 2.3
+      maes_expansion_beta: 2
+      language_model: null
+      softmax_temperature: 1.0
+      preserve_alignments: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      hat_subtract_ilm: false
+      hat_ilm_weight: 0.0
+      max_symbols_per_step: 10
+      blank_lm_score_mode: LM_WEIGHTED_FULL
+      pruning_mode: LATE
+      allow_cuda_graphs: true
+      tsd_max_sym_exp: 50
+    temperature: 1.0
+    durations: []
+    big_blank_durations: []
+    
+nemo mohammed_siddiq_al_minshawi-112 rnnt OK 2.63
+[NeMo I 2026-10-16 04:18:21 nemo_logging:393] Changed decoding strategy of the CTC decoder to 
+    strategy: greedy_batch
+    preserve_alignments: true
+    compute_timestamps: true
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    ctc_timestamp_type: all
+    batch_dim_index: 0
+    greedy:
+      preserve_alignments: false
+      compute_timestamps: false
+      preserve_frame_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      allow_cuda_graphs: true
+    beam:
+      beam_size: 4
+      search_type: default
+      preserve_alignments: false
+      compute_timestamps: false
+      return_best_hypothesis: true
+      allow_cuda_graphs: true
+      beam_alpha: null
+      beam_beta: 1.0
+      beam_threshold: 20.0
+      kenlm_path: null
+      ngram_lm_alpha: 1.0
+      ngram_lm_model: null
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      flashlight_cfg:
+        lexicon_path: null
+        boost_path: null
+        beam_size_token: 16
+        beam_threshold: 20.0
+        unk_weight: -.inf
+        sil_weight: 0.0
+      pyctcdecode_cfg:
+        beam_prune_logp: -10.0
+        token_min_logp: -5.0
+        prune_history: false
+        hotwords: null
+        hotword_weight: 10.0
+    wfst:
+      beam_size: 4
+      search_type: riva
+      return_best_hypothesis: true
+      preserve_alignments: false
+      compute_timestamps: false
+      decoding_mode: nbest
+      open_vocabulary_decoding: false
+      beam_width: 10.0
+      lm_weight: 1.0
+      device: cuda
+      arpa_lm_path: null
+      wfst_lm_path: null
+      riva_decoding_cfg: {}
+      k2_decoding_cfg:
+        search_beam: 20.0
+        output_beam: 10.0
+        min_active_states: 30
+        max_active_states: 10000
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    temperature: 1.0
+    
+nemo saad_al_ghamidi-098 ctc OK 6.56
+[NeMo I 2026-10-16 04:18:28 nemo_logging:393] Using RNNT Loss : warprnnt_numba
+    Loss warprnnt_numba_kwargs: {'fastemit_lambda': 0.0, 'clamp': -1.0}
+[NeMo I 2026-10-16 04:18:28 nemo_logging:393] Changed decoding strategy of the RNNT decoder to 
+    model_type: rnnt
+    strategy: greedy_batch
+    compute_hypothesis_token_set: false
+    preserve_alignments: true
+    tdt_include_token_duration: null
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    fused_batch_size: null
+    compute_timestamps: true
+    compute_langs: false
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    rnnt_timestamp_type: all
+    greedy:
+      max_symbols_per_step: 10
+      preserve_alignments: false
+      preserve_frame_confidence: false
+      tdt_include_token_duration: false
+      tdt_include_duration_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      loop_labels: true
+      use_cuda_graph_decoder: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      max_symbols: 10
+    beam:
+      beam_size: 2
+      search_type: default
+      score_norm: true
+      return_best_hypothesis: false
+      tsd_max_sym_exp_per_step: 50
+      alsd_max_target_len: 2.0
+      nsc_max_timesteps_expansion: 1
+      nsc_prefix_alpha: 1
+      maes_num_steps: 2
+      maes_prefix_alpha: 1
+      maes_expansion_gamma: 2.3
+      maes_expansion_beta: 2
+      language_model: null
+      softmax_temperature: 1.0
+      preserve_alignments: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      hat_subtract_ilm: false
+      hat_ilm_weight: 0.0
+      max_symbols_per_step: 10
+      blank_lm_score_mode: LM_WEIGHTED_FULL
+      pruning_mode: LATE
+      allow_cuda_graphs: true
+      tsd_max_sym_exp: 50
+    temperature: 1.0
+    durations: []
+    big_blank_durations: []
+    
+nemo saad_al_ghamidi-098 rnnt OK 6.71
+[NeMo I 2026-10-16 04:18:34 nemo_logging:393] Changed decoding strategy of the CTC decoder to 
+    strategy: greedy_batch
+    preserve_alignments: true
+    compute_timestamps: true
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    ctc_timestamp_type: all
+    batch_dim_index: 0
+    greedy:
+      preserve_alignments: false
+      compute_timestamps: false
+      preserve_frame_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      allow_cuda_graphs: true
+    beam:
+      beam_size: 4
+      search_type: default
+      preserve_alignments: false
+      compute_timestamps: false
+      return_best_hypothesis: true
+      allow_cuda_graphs: true
+      beam_alpha: null
+      beam_beta: 1.0
+      beam_threshold: 20.0
+      kenlm_path: null
+      ngram_lm_alpha: 1.0
+      ngram_lm_model: null
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      flashlight_cfg:
+        lexicon_path: null
+        boost_path: null
+        beam_size_token: 16
+        beam_threshold: 20.0
+        unk_weight: -.inf
+        sil_weight: 0.0
+      pyctcdecode_cfg:
+        beam_prune_logp: -10.0
+        token_min_logp: -5.0
+        prune_history: false
+        hotwords: null
+        hotword_weight: 10.0
+    wfst:
+      beam_size: 4
+      search_type: riva
+      return_best_hypothesis: true
+      preserve_alignments: false
+      compute_timestamps: false
+      decoding_mode: nbest
+      open_vocabulary_decoding: false
+      beam_width: 10.0
+      lm_weight: 1.0
+      device: cuda
+      arpa_lm_path: null
+      wfst_lm_path: null
+      riva_decoding_cfg: {}
+      k2_decoding_cfg:
+        search_beam: 20.0
+        output_beam: 10.0
+        min_active_states: 30
+        max_active_states: 10000
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    temperature: 1.0
+    
+nemo saad_al_ghamidi-112 ctc OK 2.75
+[NeMo I 2026-10-16 04:18:37 nemo_logging:393] Using RNNT Loss : warprnnt_numba
+    Loss warprnnt_numba_kwargs: {'fastemit_lambda': 0.0, 'clamp': -1.0}
+[NeMo I 2026-10-16 04:18:37 nemo_logging:393] Changed decoding strategy of the RNNT decoder to 
+    model_type: rnnt
+    strategy: greedy_batch
+    compute_hypothesis_token_set: false
+    preserve_alignments: true
+    tdt_include_token_duration: null
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    fused_batch_size: null
+    compute_timestamps: true
+    compute_langs: false
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    rnnt_timestamp_type: all
+    greedy:
+      max_symbols_per_step: 10
+      preserve_alignments: false
+      preserve_frame_confidence: false
+      tdt_include_token_duration: false
+      tdt_include_duration_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      loop_labels: true
+      use_cuda_graph_decoder: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      max_symbols: 10
+    beam:
+      beam_size: 2
+      search_type: default
+      score_norm: true
+      return_best_hypothesis: false
+      tsd_max_sym_exp_per_step: 50
+      alsd_max_target_len: 2.0
+      nsc_max_timesteps_expansion: 1
+      nsc_prefix_alpha: 1
+      maes_num_steps: 2
+      maes_prefix_alpha: 1
+      maes_expansion_gamma: 2.3
+      maes_expansion_beta: 2
+      language_model: null
+      softmax_temperature: 1.0
+      preserve_alignments: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      hat_subtract_ilm: false
+      hat_ilm_weight: 0.0
+      max_symbols_per_step: 10
+      blank_lm_score_mode: LM_WEIGHTED_FULL
+      pruning_mode: LATE
+      allow_cuda_graphs: true
+      tsd_max_sym_exp: 50
+    temperature: 1.0
+    durations: []
+    big_blank_durations: []
+    
+nemo saad_al_ghamidi-112 rnnt OK 2.35
+[NeMo I 2026-10-16 04:18:40 nemo_logging:393] Changed decoding strategy of the CTC decoder to 
+    strategy: greedy_batch
+    preserve_alignments: true
+    compute_timestamps: true
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    ctc_timestamp_type: all
+    batch_dim_index: 0
+    greedy:
+      preserve_alignments: false
+      compute_timestamps: false
+      preserve_frame_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      allow_cuda_graphs: true
+    beam:
+      beam_size: 4
+      search_type: default
+      preserve_alignments: false
+      compute_timestamps: false
+      return_best_hypothesis: true
+      allow_cuda_graphs: true
+      beam_alpha: null
+      beam_beta: 1.0
+      beam_threshold: 20.0
+      kenlm_path: null
+      ngram_lm_alpha: 1.0
+      ngram_lm_model: null
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      flashlight_cfg:
+        lexicon_path: null
+        boost_path: null
+        beam_size_token: 16
+        beam_threshold: 20.0
+        unk_weight: -.inf
+        sil_weight: 0.0
+      pyctcdecode_cfg:
+        beam_prune_logp: -10.0
+        token_min_logp: -5.0
+        prune_history: false
+        hotwords: null
+        hotword_weight: 10.0
+    wfst:
+      beam_size: 4
+      search_type: riva
+      return_best_hypothesis: true
+      preserve_alignments: false
+      compute_timestamps: false
+      decoding_mode: nbest
+      open_vocabulary_decoding: false
+      beam_width: 10.0
+      lm_weight: 1.0
+      device: cuda
+      arpa_lm_path: null
+      wfst_lm_path: null
+      riva_decoding_cfg: {}
+      k2_decoding_cfg:
+        search_beam: 20.0
+        output_beam: 10.0
+        min_active_states: 30
+        max_active_states: 10000
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    temperature: 1.0
+    
+nemo zero4 ctc OK 1.59
+[NeMo I 2026-10-16 04:18:41 nemo_logging:393] Using RNNT Loss : warprnnt_numba
+    Loss warprnnt_numba_kwargs: {'fastemit_lambda': 0.0, 'clamp': -1.0}
+[NeMo I 2026-10-16 04:18:41 nemo_logging:393] Changed decoding strategy of the RNNT decoder to 
+    model_type: rnnt
+    strategy: greedy_batch
+    compute_hypothesis_token_set: false
+    preserve_alignments: true
+    tdt_include_token_duration: null
+    confidence_cfg:
+      preserve_frame_confidence: false
+      preserve_token_confidence: false
+      preserve_word_confidence: false
+      exclude_blank: true
+      aggregation: min
+      tdt_include_duration: false
+      method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+    fused_batch_size: null
+    compute_timestamps: true
+    compute_langs: false
+    word_seperator: ' '
+    segment_seperators:
+    - .
+    - '!'
+    - '?'
+    segment_gap_threshold: null
+    rnnt_timestamp_type: all
+    greedy:
+      max_symbols_per_step: 10
+      preserve_alignments: false
+      preserve_frame_confidence: false
+      tdt_include_token_duration: false
+      tdt_include_duration_confidence: false
+      confidence_method_cfg:
+        name: entropy
+        entropy_type: tsallis
+        alpha: 0.33
+        entropy_norm: exp
+        temperature: DEPRECATED
+      loop_labels: true
+      use_cuda_graph_decoder: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      max_symbols: 10
+    beam:
+      beam_size: 2
+      search_type: default
+      score_norm: true
+      return_best_hypothesis: false
+      tsd_max_sym_exp_per_step: 50
+      alsd_max_target_len: 2.0
+      nsc_max_timesteps_expansion: 1
+      nsc_prefix_alpha: 1
+      maes_num_steps: 2
+      maes_prefix_alpha: 1
+      maes_expansion_gamma: 2.3
+      maes_expansion_beta: 2
+      language_model: null
+      softmax_temperature: 1.0
+      preserve_alignments: false
+      ngram_lm_model: null
+      ngram_lm_alpha: 0.0
+      boosting_tree:
+        model_path: null
+        key_phrases_file: null
+        key_phrases_list: null
+        context_score: 1.0
+        depth_scaling: 1.0
+        unk_score: 0.0
+        final_eos_score: 1.0
+        score_per_phrase: 0.0
+        source_lang: en
+        use_triton: true
+        uniform_weights: false
+        use_bpe_dropout: false
+        num_of_transcriptions: 5
+        bpe_alpha: 0.3
+      boosting_tree_alpha: 0.0
+      hat_subtract_ilm: false
+      hat_ilm_weight: 0.0
+      max_symbols_per_step: 10
+      blank_lm_score_mode: LM_WEIGHTED_FULL
+      pruning_mode: LATE
+      allow_cuda_graphs: true
+      tsd_max_sym_exp: 50
+    temperature: 1.0
+    durations: []
+    big_blank_durations: []
+    
+nemo zero4 rnnt OK 1.58

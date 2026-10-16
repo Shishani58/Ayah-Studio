@@ -1,0 +1,191 @@
+{
+  "exit": 0,
+  "wall_s": 11.397576832911,
+  "samples": [
+    {
+      "elapsed_s": 0.024363666074350476,
+      "tree_rss_kib": 1056
+    },
+    {
+      "elapsed_s": 0.5549940408673137,
+      "tree_rss_kib": 138624
+    },
+    {
+      "elapsed_s": 1.151470165932551,
+      "tree_rss_kib": 535520
+    },
+    {
+      "elapsed_s": 1.688493040855974,
+      "tree_rss_kib": 495056
+    },
+    {
+      "elapsed_s": 2.229124207980931,
+      "tree_rss_kib": 522256
+    },
+    {
+      "elapsed_s": 2.761335249990225,
+      "tree_rss_kib": 291552
+    },
+    {
+      "elapsed_s": 3.2935215830802917,
+      "tree_rss_kib": 345648
+    },
+    {
+      "elapsed_s": 3.9310276249889284,
+      "tree_rss_kib": 485424
+    },
+    {
+      "elapsed_s": 4.472360416082665,
+      "tree_rss_kib": 450192
+    },
+    {
+      "elapsed_s": 5.393064165953547,
+      "tree_rss_kib": 433104
+    },
+    {
+      "elapsed_s": 5.929685499984771,
+      "tree_rss_kib": 558784
+    },
+    {
+      "elapsed_s": 6.4669560410548,
+      "tree_rss_kib": 912288
+    },
+    {
+      "elapsed_s": 6.997842374956235,
+      "tree_rss_kib": 969776
+    },
+    {
+      "elapsed_s": 7.575386249925941,
+      "tree_rss_kib": 1033248
+    },
+    {
+      "elapsed_s": 8.111439040862024,
+      "tree_rss_kib": 1051072
+    },
+    {
+      "elapsed_s": 8.651187415933236,
+      "tree_rss_kib": 962800
+    },
+    {
+      "elapsed_s": 9.233695457922295,
+      "tree_rss_kib": 1052432
+    },
+    {
+      "elapsed_s": 9.831672749947757,
+      "tree_rss_kib": 874896
+    },
+    {
+      "elapsed_s": 10.363118458073586,
+      "tree_rss_kib": 764304
+    },
+    {
+      "elapsed_s": 10.892170374980196,
+      "tree_rss_kib": 841696
+    }
+  ],
+  "tree_peak_kib": 1052432,
+  "host_before": [
+    {
+      "pid": 80712,
+      "cpu_percent": 119.3,
+      "command": "/Users/ayub/.serena/language_servers/static/DartLanguageServer/dart-sdk/bin/dart"
+    },
+    {
+      "pid": 80412,
+      "cpu_percent": 98.0,
+      "command": "/Users/ayub/.surah-cutter/model-runtime/bin/python"
+    },
+    {
+      "pid": 633,
+      "cpu_percent": 66.7,
+      "command": "/System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer"
+    },
+    {
+      "pid": 1924,
+      "cpu_percent": 24.8,
+      "command": "/Applications/Happ.app/Contents/MacOS/Happ"
+    },
+    {
+      "pid": 1013,
+      "cpu_percent": 20.6,
+      "command": "/System/Library/CoreServices/NotificationCenter.app/Contents/MacOS/NotificationCenter"
+    },
+    {
+      "pid": 21375,
+      "cpu_percent": 10.0,
+      "command": "/Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/155.0.8059.40/Helpers/Codex (Renderer).app/Contents/MacOS/Codex (Renderer)"
+    },
+    {
+      "pid": 21280,
+      "cpu_percent": 8.2,
+      "command": "/Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/155.0.8059.40/Helpers/Codex (Service).app/Contents/MacOS/Codex (Service)"
+    },
+    {
+      "pid": 21450,
+      "cpu_percent": 7.6,
+      "command": "/Users/ayub/.codex/computer-use/Codex Computer Use.app/Contents/MacOS/SkyComputerUseService"
+    },
+    {
+      "pid": 80739,
+      "cpu_percent": 5.7,
+      "command": "/Users/ayub/Developer/surah-cutter/.venv/bin/python"
+    },
+    {
+      "pid": 10297,
+      "cpu_percent": 4.8,
+      "command": "/Applications/Happ.app/Contents/PlugIns/Tunnel.appex/Contents/MacOS/Tunnel"
+    }
+  ],
+  "host_after": [
+    {
+      "pid": 80412,
+      "cpu_percent": 151.6,
+      "command": "/Users/ayub/.surah-cutter/model-runtime/bin/python"
+    },
+    {
+      "pid": 80712,
+      "cpu_percent": 119.0,
+      "command": "/Users/ayub/.serena/language_servers/static/DartLanguageServer/dart-sdk/bin/dart"
+    },
+    {
+      "pid": 633,
+      "cpu_percent": 71.0,
+      "command": "/System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer"
+    },
+    {
+      "pid": 1924,
+      "cpu_percent": 34.0,
+      "command": "/Applications/Happ.app/Contents/MacOS/Happ"
+    },
+    {
+      "pid": 21450,
+      "cpu_percent": 8.7,
+      "command": "/Users/ayub/.codex/computer-use/Codex Computer Use.app/Contents/MacOS/SkyComputerUseService"
+    },
+    {
+      "pid": 21375,
+      "cpu_percent": 8.3,
+      "command": "/Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/155.0.8059.40/Helpers/Codex (Renderer).app/Contents/MacOS/Codex (Renderer)"
+    },
+    {
+      "pid": 10297,
+      "cpu_percent": 4.6,
+      "command": "/Applications/Happ.app/Contents/PlugIns/Tunnel.appex/Contents/MacOS/Tunnel"
+    },
+    {
+      "pid": 21280,
+      "cpu_percent": 4.2,
+      "command": "/Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/155.0.8059.40/Helpers/Codex (Service).app/Contents/MacOS/Codex (Service)"
+    },
+    {
+      "pid": 78583,
+      "cpu_percent": 3.3,
+      "command": "/Users/ayub/Developer/surah-cutter/.venv/bin/python"
+    },
+    {
+      "pid": 23674,
+      "cpu_percent": 2.1,
+      "command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/155.0.8059.40/Helpers/Google Chrome Helper (Renderer).app/Contents/MacOS/Google Chrome Helper (Renderer)"
+    }
+  ]
+}

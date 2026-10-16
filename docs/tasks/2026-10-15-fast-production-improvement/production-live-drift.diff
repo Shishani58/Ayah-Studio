@@ -1,0 +1,41 @@
+--- baseline/surah_cutter/core/align.py
++++ current/surah_cutter/core/align.py
+@@ -269,7 +269,7 @@
+     if trace is not None:
+         trace["model_source"] = bundle_source(bundle)
+ 
+-    if getattr(bundle, "text_kind", "phonetic") == "whisper":
++    if getattr(bundle, "text_kind", "phonetic") in ("whisper", "mfa"):
+         report("acoustic")
+         word_rows = bundle.emitter.align_words(pcm, words, intro=surah not in (1, 9), strict_words=False)
+         report("verify")
+@@ -280,9 +280,9 @@
+             first.setdefault(word.ayah, (word.ayah, start, confidence))
+         rows = list(first.values())
+         if any(b[1] <= a[1] for a, b in zip(rows, rows[1:])):
+-            raise ValueError("Границы аятов Whisper не различимы.")
++            raise ValueError("Границы аятов модели не различимы.")
+         if trace is not None:
+-            trace.update({"mode": "full", "backend": "whisper-attention-dtw",
++            trace.update({"mode": "full", "backend": ("mfa" if bundle.text_kind == "mfa" else "whisper-attention-dtw"),
+                           "align_lag_ms": 0, "ayahs": [
+                               {"ayah": a, "onset_ms": ms, "conf": c, "reliable": c >= .25}
+                               for a, ms, c in rows]})
+@@ -379,6 +379,9 @@
+         record_edges(checks, words, word_token_spans, target_spans, frame_scores, stride_ms,
+                      intro=bool(basmala_trs), targets=targets, delim_id=bundle.delim_id)
+         position_boundaries(checks, pcm, sr, trace=trace)
++        from surah_cutter.core.full_signal import refine_late_boundaries
++
++        refine_late_boundaries(checks, pcm, sr, trace=trace)
+         _review_pause_full_onsets(checks.values(), trace["full_windows"])
+     rows = [(a, checks[a]["onset_ms"], checks[a]["conf"]) for a, _, _ in rows]
+     if any(right[1] <= left[1] for left, right in zip(rows, rows[1:])):
+@@ -404,6 +407,7 @@
+                     "split-word-muaalem-proof": "начало фразы подтверждено локальной проверкой Muaalem",
+                     "weak-word-token": "звук первого слова не подтверждён, требуется ревью",
+                     "late-onset-in-pause": "сомнительное начало в длинной паузе, требуется ревью",
++                    "waveform-pause-recheck": "поздний разрез уточнён по звуковой волне и паузе, требуется ревью",
+                 }.get(check["reason"], check["reason"])
+                 log_event(
+                     f"Аят {check['ayah']}: {reason}, "

@@ -1,0 +1,213 @@
+{
+  "fast": {
+    "train_n": 493,
+    "train_recordings": 20,
+    "test": {
+      "n": 287,
+      "recordings": 10,
+      "brier": 0.048690483406025754,
+      "ece": 0.04104799494942193,
+      "histogram": [
+        {
+          "n": 277,
+          "predicted": 0.07261410788381742,
+          "observed": 0.039711191335740074
+        },
+        {
+          "n": 10,
+          "predicted": 0.8666666666666668,
+          "observed": 0.6
+        }
+      ],
+      "over500": 270,
+      "review": 277,
+      "found": 266,
+      "missed": 4,
+      "probabilities": [
+        0.07261410788381743,
+        0.8666666666666667
+      ]
+    },
+    "constant_test_brier": 0.056885806267567986,
+    "estimator": "Beta(1,1) posterior mean in fixed label-free timing strata; recording bootstrap interval",
+    "excluded_shatri2_control": {
+      "n": 286,
+      "recordings": 1,
+      "brier": 0.014238946260605673,
+      "ece": 0.06212459739430694,
+      "histogram": [
+        {
+          "n": 286,
+          "predicted": 0.07261410788381743,
+          "observed": 0.01048951048951049
+        }
+      ],
+      "over500": 283,
+      "review": 286,
+      "found": 283,
+      "missed": 0,
+      "probabilities": [
+        0.07261410788381743,
+        0.07261410788381743
+      ]
+    },
+    "thresholds": {
+      "0.5": {
+        "test": {
+          "review": 277,
+          "found": 266,
+          "total_errors": 270
+        },
+        "control": {
+          "review": 286,
+          "found": 283,
+          "total_errors": 283
+        }
+      },
+      "0.8": {
+        "test": {
+          "review": 277,
+          "found": 266,
+          "total_errors": 270
+        },
+        "control": {
+          "review": 286,
+          "found": 283,
+          "total_errors": 283
+        }
+      },
+      "0.9": {
+        "test": {
+          "review": 287,
+          "found": 270,
+          "total_errors": 270
+        },
+        "control": {
+          "review": 286,
+          "found": 283,
+          "total_errors": 283
+        }
+      },
+      "0.95": {
+        "test": {
+          "review": 287,
+          "found": 270,
+          "total_errors": 270
+        },
+        "control": {
+          "review": 286,
+          "found": 283,
+          "total_errors": 283
+        }
+      }
+    }
+  },
+  "full": {
+    "train_n": 712,
+    "train_recordings": 43,
+    "test": {
+      "n": 128,
+      "recordings": 8,
+      "brier": 0.09219721558171032,
+      "ece": 0.06264169304794301,
+      "histogram": [
+        {
+          "n": 15,
+          "predicted": 0.24242424242424232,
+          "observed": 0.5333333333333333
+        },
+        {
+          "n": 113,
+          "predicted": 0.9703938083761092,
+          "observed": 0.9380530973451328
+        }
+      ],
+      "over500": 14,
+      "review": 15,
+      "found": 7,
+      "missed": 7,
+      "probabilities": [
+        0.24242424242424243,
+        0.984
+      ]
+    },
+    "constant_test_brier": 0.09773909938770362,
+    "estimator": "Beta(1,1) posterior mean in fixed label-free timing strata; recording bootstrap interval",
+    "excluded_shatri2_control": {
+      "n": 286,
+      "recordings": 1,
+      "brier": 0.04015745409937528,
+      "ece": 0.016033631790624826,
+      "histogram": [
+        {
+          "n": 29,
+          "predicted": 0.2424242424242424,
+          "observed": 0.13793103448275862
+        },
+        {
+          "n": 257,
+          "predicted": 0.9710323566607614,
+          "observed": 0.9649805447470817
+        }
+      ],
+      "over500": 34,
+      "review": 29,
+      "found": 25,
+      "missed": 9,
+      "probabilities": [
+        0.24242424242424243,
+        0.984
+      ]
+    },
+    "thresholds": {
+      "0.5": {
+        "test": {
+          "review": 15,
+          "found": 7,
+          "total_errors": 14
+        },
+        "control": {
+          "review": 29,
+          "found": 25,
+          "total_errors": 34
+        }
+      },
+      "0.8": {
+        "test": {
+          "review": 15,
+          "found": 7,
+          "total_errors": 14
+        },
+        "control": {
+          "review": 29,
+          "found": 25,
+          "total_errors": 34
+        }
+      },
+      "0.9": {
+        "test": {
+          "review": 23,
+          "found": 7,
+          "total_errors": 14
+        },
+        "control": {
+          "review": 60,
+          "found": 33,
+          "total_errors": 34
+        }
+      },
+      "0.95": {
+        "test": {
+          "review": 23,
+          "found": 7,
+          "total_errors": 14
+        },
+        "control": {
+          "review": 60,
+          "found": 33,
+          "total_errors": 34
+        }
+      }
+    }
+  }
+}

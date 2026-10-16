@@ -97,19 +97,24 @@ def align_surah_tiled(
     from surah_cutter.core import align as A
     from surah_cutter.core._ctc import forced_align, forced_align_banded, aligned_segments
     from surah_cutter.core.phonetics import unit_len as _unit_len
-    from surah_cutter.data import reference_prior, transliteration
+    from surah_cutter.data import transliteration
 
     if not words:
         return []
     if surah is None:
         surah = words[0].surah
+    from surah_cutter.core.progress import report
+
     if bundle is None:
+        report("model")
         bundle = A.default_bundle()
     if trace is not None:
         trace["model_source"] = A.bundle_source(bundle)
         trace["backend"] = ("torch" if isinstance(bundle, A._Bundle) else
                             getattr(getattr(bundle, "emitter", None), "model_id", "onnx"))
         trace["align_lag_ms"] = getattr(bundle, "lag_ms", A.ALIGN_LAG_MS)
+    if getattr(bundle, "text_kind", "phonetic") == "mfa":
+        raise ValueError("MFA не поддерживает tiled. Выберите Полный или Слова.")
     if getattr(bundle, "text_kind", "phonetic") == "whisper":
         return A.align_surah(pcm, sr, words, model=bundle, surah=surah,
                              trace=trace, log_event=log_event, ayah_progress=ayah_progress)
@@ -131,8 +136,7 @@ def align_surah_tiled(
     n_ayahs = len(ayah_list)
 
     # Tempo units (long vowels ×2 — recited longer; see phonetics.unit_len).
-    # This remains the fallback prior when bundled reference timings are absent
-    # or incomplete for a sura.
+    # Window estimates depend only on canonical text, never external timings.
     text_wunit = {
         a: max(1.0, sum(_unit_len(word_trs[i]) for i in ayah_words[a] if i < len(word_trs)))
         for a in ayah_list
@@ -140,7 +144,6 @@ def align_surah_tiled(
     wunit, cum_u, total_units, prior_source = _position_prior_units(
         ayah_list,
         text_wunit,
-        reference_prior.surah_start_fractions(surah),
     )
     # Initial tempo guess (ms per prior unit); refined from real onsets per chunk.
     measured_tempo = total_ms / max(1e-9, total_units)
@@ -158,8 +161,10 @@ def align_surah_tiled(
         f"Сура {surah}: tiled, чтение аудио всей суры {total_ms / 1000.0:.2f} сек."
     )
     audio = np.ascontiguousarray(pcm, dtype=np.float32)
+    report("acoustic")
     full_emissions = (A._full_emissions(bundle, audio, np, trace=trace) if parallel_full else
                       A._emissions(bundle, audio, np))
+    report("verify")
     full_n_frames = int(full_emissions.shape[0])
     full_stride = A._stride_ms(len(pcm), sr, full_n_frames)
     onset_pauses = []
@@ -295,10 +300,8 @@ def align_surah_tiled(
         if rc >= n_ayahs:
             t1 = total_ms
         else:
-            # For the first chunk, empirical prior fractions are measured from
-            # the file start and include intro-basmala/silence before ayah 1.
-            # Later chunks are anchored on a trusted ayah onset, so use a local
-            # delta from the left-context ayah.
+            # The first chunk uses cumulative text units from the start.
+            # Later chunks use a local delta from the trusted left-context ayah.
             if i == 0:
                 next_u = cum_u[ayah_list[rc]]
             else:
@@ -376,6 +379,9 @@ def align_surah_tiled(
         from surah_cutter.core.full_pause_center import position_boundaries
 
         position_boundaries(trusted_checks, pcm, sr, trace=trace)
+        from surah_cutter.core.full_signal import refine_late_boundaries
+
+        refine_late_boundaries(trusted_checks, pcm, sr, trace=trace)
         for a, check in trusted_checks.items():
             starts_ms[a] = check["onset_ms"]
 
@@ -409,33 +415,8 @@ def align_surah_tiled(
 def _position_prior_units(
     ayah_list: list[int],
     text_wunit: dict[int, float],
-    start_fracs: dict[int, float],
 ) -> tuple[dict[int, float], dict[int, float], float, str]:
-    """Build duration/start units for tiled window sizing.
-
-    Prefer bundled-reference median start fractions when they cover every ayah
-    in the sura. Fall back to the text-length units used by the original tiled
-    implementation. The returned units are only a window prior; CTC alignment
-    still places the actual starts.
-    """
-    if ayah_list and all(a in start_fracs for a in ayah_list):
-        cum_u = {a: float(start_fracs[a]) for a in ayah_list}
-        wunit: dict[int, float] = {}
-        gaps: list[float] = []
-        for idx, a in enumerate(ayah_list):
-            if idx + 1 < len(ayah_list):
-                gap = cum_u[ayah_list[idx + 1]] - cum_u[a]
-            else:
-                gap = 1.0 - cum_u[a]
-            if gap > 0:
-                gaps.append(gap)
-            wunit[a] = gap
-        fallback_gap = sorted(gaps)[len(gaps) // 2] if gaps else 1.0 / len(ayah_list)
-        floor = min(fallback_gap, 1.0 / len(ayah_list)) * 0.25
-        for a in ayah_list:
-            wunit[a] = max(floor, wunit[a])
-        return wunit, cum_u, 1.0, "references"
-
+    """Build window sizing units from canonical phonetic text alone."""
     cum_u: dict[int, float] = {}
     acc = 0.0
     for a in ayah_list:

@@ -1,0 +1,28 @@
+reentry whisper-tarteel-base 78 positive 11 calls 37 seconds 162.56
+Traceback (most recent call last):
+  File "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-fast-rethink-implementation/measure.py", line 47, in <module>
+    rows = fast_executor.align_surah_sequential(pcm, 16000, quran_text.surah_words(surah),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_executor.py", line 1022, in align_surah_sequential
+    had_prefix = False
+              ^^^^^^^^^
+  File "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_reads.py", line 136, in read
+    observation = self.adapter.observe(
+                  ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_adapters.py", line 193, in observe
+    result = self.emitter.recognize_local(pcm, total_samples=total_samples)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/Developer/surah-cutter/tools/bench_fast_models.py", line 45, in recognize
+    return original(emitter, local, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/Developer/surah-cutter/surah_cutter/core/model_runtime.py", line 282, in recognize_local
+    return self.request("recognize_local", total_samples=total_samples)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/Developer/surah-cutter/surah_cutter/core/model_runtime.py", line 244, in request
+    return self._read_response()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/Developer/surah-cutter/surah_cutter/core/model_runtime.py", line 219, in _read_response
+    line = self.process.stdout.readline()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+[rtk] .venv/bin/python: process terminated by signal 2

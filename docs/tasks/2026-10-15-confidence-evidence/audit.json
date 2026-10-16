@@ -1,0 +1,3479 @@
+{
+  "input": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/Abu_Bakr_Ash-Shatri.logs/sura_002_full.json",
+  "input_sha256": "c74ee4d176cd0fd90d92e50ed7a29959bcae7b2b40c9cb073a4eedbdb5ec70c3",
+  "db_sha256_before": "88176bcb0ede0ad5912e40594b531a6173f378a182fbbf147e702f6b79164cff",
+  "db_sha256_after": "88176bcb0ede0ad5912e40594b531a6173f378a182fbbf147e702f6b79164cff",
+  "before": {
+    "unknown": 46,
+    "medium": 171,
+    "low": 69
+  },
+  "after": {
+    "high": 211,
+    "medium": 62,
+    "low": 13
+  },
+  "reasons": {
+    "local-ctc-pause": 211,
+    "contextual-pause": 48,
+    "contextual-onset": 9,
+    "weak-onset": 13,
+    "pause-edge-only": 4,
+    "alignment-only": 1
+  },
+  "saved_reader_rows": 286,
+  "snapshot_rows": 286,
+  "phrase_controls_passed": 2,
+  "known_error_220": {
+    "level": "low",
+    "reason": "weak-onset"
+  },
+  "reference_comparison": {
+    "high": {
+      "rows": 211,
+      "over500": 20
+    },
+    "medium": {
+      "rows": 62,
+      "over500": 13
+    },
+    "low": {
+      "rows": 13,
+      "over500": 1
+    }
+  },
+  "rows": [
+    {
+      "ayah": 1,
+      "time": 5785,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 2,
+      "time": 14925,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 3,
+      "time": 22960,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 4,
+      "time": 34420,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 5,
+      "time": 50070,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 6,
+      "time": 63940,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 7,
+      "time": 78085,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 8,
+      "time": 92600,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 9,
+      "time": 109070,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 10,
+      "time": 123760,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 11,
+      "time": 137855,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 12,
+      "time": 148735,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 13,
+      "time": 158460,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 14,
+      "time": 186160,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-onset"
+      }
+    },
+    {
+      "ayah": 15,
+      "time": 206160,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-onset"
+      }
+    },
+    {
+      "ayah": 16,
+      "time": 214920,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 17,
+      "time": 231120,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-onset"
+      }
+    },
+    {
+      "ayah": 18,
+      "time": 253720,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 19,
+      "time": 262180,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "low",
+        "reason": "weak-onset"
+      }
+    },
+    {
+      "ayah": 20,
+      "time": 290780,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 21,
+      "time": 323650,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 22,
+      "time": 339840,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 23,
+      "time": 383140,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 24,
+      "time": 411540,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 25,
+      "time": 437370,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 26,
+      "time": 479410,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 27,
+      "time": 520900,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-onset"
+      }
+    },
+    {
+      "ayah": 28,
+      "time": 544000,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 29,
+      "time": 560260,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 30,
+      "time": 581545,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 31,
+      "time": 610565,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 32,
+      "time": 631075,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 33,
+      "time": 643665,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 34,
+      "time": 675585,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 35,
+      "time": 693785,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 36,
+      "time": 712630,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 37,
+      "time": 732055,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 38,
+      "time": 746400,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "low",
+        "reason": "weak-onset"
+      }
+    },
+    {
+      "ayah": 39,
+      "time": 767970,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 40,
+      "time": 781015,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 41,
+      "time": 798635,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 42,
+      "time": 818055,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 43,
+      "time": 826010,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 44,
+      "time": 835150,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 45,
+      "time": 848790,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 46,
+      "time": 861060,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 47,
+      "time": 872275,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 48,
+      "time": 888125,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 49,
+      "time": 910345,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 50,
+      "time": 935625,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 51,
+      "time": 947740,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 52,
+      "time": 961095,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 53,
+      "time": 971119,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 54,
+      "time": 979125,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 55,
+      "time": 1008619,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      }
+    },
+    {
+      "ayah": 56,
+      "time": 1027025,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 57,
+      "time": 1035090,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 58,
+      "time": 1060760,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 59,
+      "time": 1082240,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 60,
+      "time": 1103039,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 61,
+      "time": 1127895,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 62,
+      "time": 1194150,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 63,
+      "time": 1220800,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 64,
+      "time": 1238120,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 65,
+      "time": 1251840,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 66,
+      "time": 1262320,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 67,
+      "time": 1273919,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 68,
+      "time": 1294640,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 69,
+      "time": 1314170,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 70,
+      "time": 1335739,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 71,
+      "time": 1355845,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 72,
+      "time": 1381359,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 73,
+      "time": 1393680,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 74,
+      "time": 1406315,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 75,
+      "time": 1447490,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 76,
+      "time": 1470420,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 77,
+      "time": 1499030,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 78,
+      "time": 1507990,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 79,
+      "time": 1520895,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 80,
+      "time": 1547930,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 81,
+      "time": 1572239,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 82,
+      "time": 1590560,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 83,
+      "time": 1602840,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 84,
+      "time": 1638535,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 85,
+      "time": 1658320,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 86,
+      "time": 1722875,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 87,
+      "time": 1736495,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 88,
+      "time": 1770410,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 89,
+      "time": 1782335,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 90,
+      "time": 1810599,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 91,
+      "time": 1838825,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 92,
+      "time": 1872739,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 93,
+      "time": 1885030,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 94,
+      "time": 1915059,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 95,
+      "time": 1933625,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 96,
+      "time": 1945065,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 97,
+      "time": 1975419,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 98,
+      "time": 1995175,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 99,
+      "time": 2011390,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 100,
+      "time": 2023195,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 101,
+      "time": 2034045,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 102,
+      "time": 2059619,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-onset"
+      }
+    },
+    {
+      "ayah": 103,
+      "time": 2135085,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 104,
+      "time": 2147475,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 105,
+      "time": 2160760,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 106,
+      "time": 2187519,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      }
+    },
+    {
+      "ayah": 107,
+      "time": 2204639,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 108,
+      "time": 2218735,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 109,
+      "time": 2234940,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 110,
+      "time": 2267600,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 111,
+      "time": 2285670,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 112,
+      "time": 2302690,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 113,
+      "time": 2321155,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 114,
+      "time": 2353495,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 115,
+      "time": 2381865,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 116,
+      "time": 2396935,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 117,
+      "time": 2408990,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 118,
+      "time": 2422315,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 119,
+      "time": 2446899,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-onset"
+      }
+    },
+    {
+      "ayah": 120,
+      "time": 2463279,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "low",
+        "reason": "weak-onset"
+      }
+    },
+    {
+      "ayah": 121,
+      "time": 2490339,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 122,
+      "time": 2509855,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 123,
+      "time": 2526205,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 124,
+      "time": 2550600,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 125,
+      "time": 2572930,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 126,
+      "time": 2606359,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 127,
+      "time": 2639570,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 128,
+      "time": 2656719,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 129,
+      "time": 2682259,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      }
+    },
+    {
+      "ayah": 130,
+      "time": 2701935,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 131,
+      "time": 2720675,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 132,
+      "time": 2729920,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 133,
+      "time": 2752639,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "low",
+        "reason": "weak-onset"
+      }
+    },
+    {
+      "ayah": 134,
+      "time": 2780235,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 135,
+      "time": 2796410,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 136,
+      "time": 2811279,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 137,
+      "time": 2856075,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 138,
+      "time": 2879119,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "low",
+        "reason": "weak-onset"
+      }
+    },
+    {
+      "ayah": 139,
+      "time": 2888245,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 140,
+      "time": 2905635,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 141,
+      "time": 2936615,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 142,
+      "time": 2954070,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 143,
+      "time": 2977395,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 144,
+      "time": 3028965,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 145,
+      "time": 3065965,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 146,
+      "time": 3100638,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 147,
+      "time": 3117998,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 148,
+      "time": 3124818,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-onset"
+      }
+    },
+    {
+      "ayah": 149,
+      "time": 3144355,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 150,
+      "time": 3161245,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 151,
+      "time": 3196170,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 152,
+      "time": 3217415,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 153,
+      "time": 3225638,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 154,
+      "time": 3238695,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 155,
+      "time": 3251400,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 156,
+      "time": 3269038,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 157,
+      "time": 3285610,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 158,
+      "time": 3299938,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 159,
+      "time": 3324638,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "low",
+        "reason": "weak-onset"
+      }
+    },
+    {
+      "ayah": 160,
+      "time": 3350950,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 161,
+      "time": 3363145,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 162,
+      "time": 3381655,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 163,
+      "time": 3390265,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 164,
+      "time": 3400410,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 165,
+      "time": 3456355,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 166,
+      "time": 3494190,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 167,
+      "time": 3505725,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 168,
+      "time": 3532765,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 169,
+      "time": 3553898,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 170,
+      "time": 3567690,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 171,
+      "time": 3590920,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 172,
+      "time": 3609800,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 173,
+      "time": 3627998,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 174,
+      "time": 3655218,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "alignment-only"
+      }
+    },
+    {
+      "ayah": 175,
+      "time": 3683920,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 176,
+      "time": 3697850,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 177,
+      "time": 3714730,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 178,
+      "time": 3776660,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 179,
+      "time": 3816945,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 180,
+      "time": 3825838,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 181,
+      "time": 3844870,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 182,
+      "time": 3860175,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 183,
+      "time": 3875920,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 184,
+      "time": 3890815,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 185,
+      "time": 3924515,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 186,
+      "time": 3970130,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 187,
+      "time": 3990325,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 188,
+      "time": 4054775,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 189,
+      "time": 4081170,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 190,
+      "time": 4107815,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 191,
+      "time": 4121058,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 192,
+      "time": 4150138,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 193,
+      "time": 4156360,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 194,
+      "time": 4171190,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 195,
+      "time": 4193270,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 196,
+      "time": 4206895,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 197,
+      "time": 4275438,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 198,
+      "time": 4303305,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 199,
+      "time": 4332478,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      }
+    },
+    {
+      "ayah": 200,
+      "time": 4344675,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 201,
+      "time": 4365945,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 202,
+      "time": 4381240,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 203,
+      "time": 4390970,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 204,
+      "time": 4421705,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 205,
+      "time": 4441275,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 206,
+      "time": 4454670,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 207,
+      "time": 4467660,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 208,
+      "time": 4481080,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 209,
+      "time": 4503465,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 210,
+      "time": 4518158,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 211,
+      "time": 4538155,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 212,
+      "time": 4560258,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 213,
+      "time": 4580445,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 214,
+      "time": 4640815,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 215,
+      "time": 4679635,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 216,
+      "time": 4704758,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "low",
+        "reason": "weak-onset"
+      }
+    },
+    {
+      "ayah": 217,
+      "time": 4728160,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 218,
+      "time": 4793750,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 219,
+      "time": 4815610,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 220,
+      "time": 4843477,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "low",
+        "reason": "weak-onset"
+      }
+    },
+    {
+      "ayah": 221,
+      "time": 4872570,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 222,
+      "time": 4917980,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 223,
+      "time": 4948897,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 224,
+      "time": 4969140,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 225,
+      "time": 4982915,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 226,
+      "time": 4999997,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 227,
+      "time": 5014555,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 228,
+      "time": 5022490,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 229,
+      "time": 5070520,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 230,
+      "time": 5117050,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 231,
+      "time": 5149885,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 232,
+      "time": 5201540,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 233,
+      "time": 5244170,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 234,
+      "time": 5318330,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 235,
+      "time": 5358910,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 236,
+      "time": 5412390,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 237,
+      "time": 5441040,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 238,
+      "time": 5484937,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 239,
+      "time": 5493485,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 240,
+      "time": 5507855,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 241,
+      "time": 5537370,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 242,
+      "time": 5545085,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 243,
+      "time": 5554710,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 244,
+      "time": 5584125,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 245,
+      "time": 5593480,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 246,
+      "time": 5611917,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 247,
+      "time": 5666330,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 248,
+      "time": 5707217,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "low",
+        "reason": "weak-onset"
+      }
+    },
+    {
+      "ayah": 249,
+      "time": 5744520,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 250,
+      "time": 5822580,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 251,
+      "time": 5846365,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 252,
+      "time": 5886840,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 253,
+      "time": 5901097,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 254,
+      "time": 5961835,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 255,
+      "time": 5994577,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 256,
+      "time": 6044405,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 257,
+      "time": 6067877,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "low",
+        "reason": "weak-onset"
+      }
+    },
+    {
+      "ayah": 258,
+      "time": 6095737,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 259,
+      "time": 6139537,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "low",
+        "reason": "weak-onset"
+      }
+    },
+    {
+      "ayah": 260,
+      "time": 6203335,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 261,
+      "time": 6242845,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 262,
+      "time": 6269677,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 263,
+      "time": 6300257,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 264,
+      "time": 6315337,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-onset"
+      }
+    },
+    {
+      "ayah": 265,
+      "time": 6357655,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 266,
+      "time": 6394597,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-onset"
+      }
+    },
+    {
+      "ayah": 267,
+      "time": 6440340,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 268,
+      "time": 6482080,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 269,
+      "time": 6499137,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "low",
+        "reason": "weak-onset"
+      }
+    },
+    {
+      "ayah": 270,
+      "time": 6516580,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 271,
+      "time": 6532000,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 272,
+      "time": 6553695,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 273,
+      "time": 6585137,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 274,
+      "time": 6622237,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 275,
+      "time": 6642597,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 276,
+      "time": 6690237,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "medium",
+        "reason": "contextual-pause"
+      }
+    },
+    {
+      "ayah": 277,
+      "time": 6701557,
+      "before": {
+        "level": "low",
+        "reason": "weak-onset"
+      },
+      "after": {
+        "level": "low",
+        "reason": "weak-onset"
+      }
+    },
+    {
+      "ayah": 278,
+      "time": 6722325,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 279,
+      "time": 6737060,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 280,
+      "time": 6754565,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 281,
+      "time": 6769595,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 282,
+      "time": 6786100,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 283,
+      "time": 6930020,
+      "before": {
+        "level": "unknown",
+        "reason": "insufficient-timing-evidence"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 284,
+      "time": 6965825,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 285,
+      "time": 6995880,
+      "before": {
+        "level": "medium",
+        "reason": "pause-edge-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    },
+    {
+      "ayah": 286,
+      "time": 7026555,
+      "before": {
+        "level": "medium",
+        "reason": "alignment-only"
+      },
+      "after": {
+        "level": "high",
+        "reason": "local-ctc-pause"
+      }
+    }
+  ]
+}

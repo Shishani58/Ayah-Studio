@@ -18,8 +18,8 @@ def test_next_sparse_anchor_leaves_missing_current_for_review():
     fake.timing = False
     rows, trace = run(fake, [pause(1000), pause(6000), pause(15000)],
                       policy=Policy(sparse_anchors=True))
-    assert rows[2][2] == 0 and 3 in trace["review_required_ayahs"]
-    assert rows[3][1:] == (15100, .99)
+    assert trace["boundaries"][2]["confidence"] == 0 and 3 in trace["review_required_ayahs"]
+    assert rows[-1] == (4, 15100, .99)
     assert trace["boundaries"][3]["proof"]["unresolved_ayahs"] == [3]
     probes = [e for e in trace["transitions"] if e.get("reason") == "empty_tempo_region_next_dsp_pause"]
     assert len(probes) == 1
@@ -32,7 +32,7 @@ def test_unheard_owner_never_becomes_a_confirmation():
     fake.timing = False
     rows, trace = run(fake, [pause(1000), pause(6000), pause(15000)],
                       policy=Policy(sparse_anchors=True))
-    assert rows[2][2] == rows[3][2] == 0
+    assert trace["boundaries"][2]["confidence"] == trace["boundaries"][3]["confidence"] == 0
     assert len([r for r in trace["acoustic_reads"] if r["window_ms"][0] == 15000]) == 1
 
 
@@ -40,8 +40,8 @@ def test_next_pause_beyond_horizon_is_not_read():
     fake = Fake(responder)
     fake.timing = False
     rows, trace = run(fake, [pause(1000), pause(6000), pause(18000)],
-                      policy=Policy(sparse_anchors=True))
-    assert rows[2][2] == rows[3][2] == 0
+                      policy=Policy(sparse_anchors=True, independent_search=False))
+    assert trace["boundaries"][2]["confidence"] == trace["boundaries"][3]["confidence"] == 0
     assert not any(r["window_ms"][0] == 18000 for r in trace["acoustic_reads"])
 
 
@@ -51,6 +51,6 @@ def test_supported_wasl_recovery_keeps_its_existing_read():
                 else responder(f, start, duration))
     rows, trace = run(fake, [pause(1000), pause(6000), pause(15000)],
                       policy=Policy(sparse_anchors=True))
-    assert rows[2][2] > 0
+    assert trace["boundaries"][2]["confidence"] > 0
     assert trace["boundaries"][2]["evidence_kind"] == "wasl"
     assert not any(e.get("reason") == "empty_tempo_region_next_dsp_pause" for e in trace["transitions"])

@@ -39,15 +39,14 @@ def test_public_fast_uses_shared_executor_with_captured_inputs(model, monkeypatc
     assert progress == [1] and logs == ["shared"]
 
 
-def test_auto_selected_fast_keeps_proven_rows_without_lag_or_full_repair(monkeypatch):
+def test_explicit_fast_keeps_proven_rows_without_lag_or_full_repair(monkeypatch):
     bundle = object()
     trace = {}
     monkeypatch.setattr(align, "default_bundle", lambda: bundle)
     monkeypatch.setattr(decode, "decode", lambda _: np.zeros(120 * 16000, np.float32))
-    monkeypatch.setattr(pipeline, "AUTO_REPAIR", True)
 
     def forbidden(*args, **kwargs):
-        pytest.fail("auto FAST changed proof times or escalated")
+        pytest.fail("FAST changed proof times or escalated")
     def execute(pcm, sr, words, **kwargs):
         assert kwargs["bundle"] is bundle
         return [(1, 1234, .9), (2, 3456, 0.)]
@@ -58,36 +57,8 @@ def test_auto_selected_fast_keeps_proven_rows_without_lag_or_full_repair(monkeyp
     monkeypatch.setattr(align_tiled, "align_surah_tiled", forbidden)
     monkeypatch.setattr(lag, "calibrate_rows_to_pauses", forbidden)
     monkeypatch.setattr(repair, "repair_surah_timings", forbidden)
-    assert pipeline._auto_align("fake", 112, quran_text.surah_words(112), frozen=set(), trace=trace) == [
+    assert pipeline._fast_align("fake", 112, quran_text.surah_words(112), trace=trace) == [
         (112, 1, 1234), (112, 2, 3456)]
-    assert trace["auto_mode"] == "fast"
-    assert trace["lag_adjust_ms"] == 0 and trace["repair_enabled"] is False
-
-
-@pytest.mark.parametrize("seconds,mode", [(30, "full"), (700, "tiled")])
-def test_auto_nonfast_preserves_existing_postprocessing(seconds, mode, monkeypatch):
-    monkeypatch.setattr(align, "default_bundle", lambda: object())
-    monkeypatch.setattr(decode, "decode", lambda _: np.zeros(seconds * 16000, np.float32))
-    monkeypatch.setattr(pipeline, "AUTO_REPAIR", True)
-    calls = []
-    def execute(*args, **kwargs):
-        calls.append(mode)
-        return [(1, 100, .9)]
-    def calibrate(pcm, sr, rows, **kwargs):
-        calls.append("lag")
-        return [(s, a, t + 10) for s, a, t in rows], 10
-    def fix(pcm, sr, words, rows, **kwargs):
-        calls.append("repair")
-        return [(s, a, t + 20) for s, a, t in rows]
-
-    monkeypatch.setattr(align, "align_surah", execute)
-    monkeypatch.setattr(align_tiled, "align_surah_tiled", execute)
-    monkeypatch.setattr(lag, "calibrate_rows_to_pauses", calibrate)
-    monkeypatch.setattr(repair, "repair_surah_timings", fix)
-    trace = {}
-    assert pipeline._auto_align("fake", 112, [], frozen=set(), trace=trace) == [(112, 1, 130)]
-    assert calls == [mode, "lag", "repair"]
-    assert trace["auto_mode"] == mode and trace["repair_enabled"] is True
 
 
 def test_fast_debug_log_reports_shared_transitions_and_review_estimates():

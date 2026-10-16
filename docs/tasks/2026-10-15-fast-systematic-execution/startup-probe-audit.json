@@ -1,0 +1,26 @@
+{
+  "source": "tools/bench_fast_models.py:140 and frozen model_worker.py action=probe",
+  "runs": {
+    "baseline-a2": {
+      "synthetic_zero_pcm_ms": 2000,
+      "probe_requests": 2,
+      "encoder_forwards": 2,
+      "decoder_probe_forwards": 2
+    },
+    "after-a": {
+      "synthetic_zero_pcm_ms": 2000,
+      "probe_requests": 2,
+      "encoder_forwards": 2,
+      "decoder_probe_forwards": 2
+    },
+    "current-smoke": {
+      "synthetic_zero_pcm_ms": 2000,
+      "probe_requests": 2,
+      "encoder_forwards": 2,
+      "decoder_probe_forwards": 2
+    }
+  },
+  "recording_pcm_ms": 0,
+  "included_in_phase": "load_probe_seconds",
+  "CTC_probes": 0
+}

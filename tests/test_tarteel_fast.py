@@ -22,7 +22,7 @@ def test_tarteel_fast_pipeline_preserves_requested_mode_and_blocks_auto_fallback
     monkeypatch.setattr(pipeline, "_full_align", lambda *a, **kw: pytest.fail("hidden FULL"))
     assert pipeline.process_surah("unused", 112, mode="fast") == [(112, 1, 100)]
     assert seen == ["fast"]
-    with pytest.raises(ValueError, match="Выбранная модель"):
+    with pytest.raises(ValueError, match="unknown mode"):
         pipeline.process_surah("unused", 112, mode="auto")
     assert model_store.supports_fast() and not model_store.supports_fast("whisper-large-v3")
 

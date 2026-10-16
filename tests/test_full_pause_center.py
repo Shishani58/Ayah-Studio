@@ -94,6 +94,16 @@ def test_first_ayah_uses_intro_speech_not_its_delimiter():
     assert checks[1]["pause_center_reason"] == "positioned"
 
 
+def test_smoothed_pause_edge_cannot_move_cut_past_supported_first_sound(monkeypatch):
+    checks, pcm = fixture()
+    checks[2].update(onset_ms=1800, full_ctc_first_ms=1940)
+    monkeypatch.setattr(candidates, "detect_energy_pauses", lambda *a, **kw: [
+        candidates.Pause(1800, 1920, 120)])  # crop starts at 100 ms
+    full_pause_center.position_boundaries(checks, pcm, 16000)
+    assert checks[2]["onset_ms"] == 1800
+    assert checks[2]["pause_center_reason"] == "order-conflict"
+
+
 def test_records_last_word_end_and_absolute_tiled_offset():
     checks = {1: {}, 2: {}}
     words = [SimpleNamespace(ayah=a) for a in [1, 1, 2]]
@@ -124,6 +134,45 @@ def test_centering_preserves_weak_word_review():
     assert checks[2]["reason"] == "weak-word"
 
 
+@pytest.mark.parametrize("expanded", [
+    [(1200, 2000)], [(1000, 1800)], [], [(1000, 2000), (1100, 1900)],
+])
+def test_context_dependent_shelf_preserves_original_cut_and_requires_review(monkeypatch, expanded):
+    checks, pcm = fixture()
+    calls = []
+
+    def detect(crop, sr, **kwargs):
+        calls.append(len(crop))
+        # Original crop starts at 100 ms, the expanded crop at zero.
+        edges = [(900, 1900)] if len(calls) == 1 else expanded
+        return [candidates.Pause(a, b, b - a) for a, b in edges]
+
+    monkeypatch.setattr(candidates, "detect_energy_pauses", detect)
+    monkeypatch.setattr(candidates, "_dsp_accepts_pause", lambda metrics: True)
+    full_pause_center.position_boundaries(checks, pcm, 16000)
+    assert len(calls) == 2
+    assert calls[1] > calls[0]
+    assert checks[2]["onset_ms"] == 2040
+    assert checks[2]["pause_center_reason"] == "unstable-pause"
+    assert not checks[2]["reliable"]
+    assert checks[2]["pause_stability_crop_ms"][0] == 0
+    assert len(checks[2]["pause_stability_decisions"]) == len(expanded)
+
+
+@pytest.mark.parametrize("reliable", [False, True])
+def test_only_supported_word_can_move_right_in_stable_pause(reliable):
+    checks, pcm = fixture()
+    checks[2].update(onset_ms=1700, reliable=reliable, conf=.9 if reliable else .1)
+    full_pause_center.position_boundaries(checks, pcm, 16000)
+    if reliable:
+        assert checks[2]["onset_ms"] == pytest.approx(1750, abs=30)
+        assert checks[2]["pause_center_reason"] == "positioned"
+    else:
+        assert checks[2]["onset_ms"] == 1700
+        assert checks[2]["pause_center_reason"] == "weak-word-right-shift"
+        assert not checks[2]["reliable"]
+
+
 def test_local_recheck_is_not_downgraded_using_its_discarded_ctc_spans():
     checks, pcm = fixture()
     checks[2].update(repaired=True, full_ctc_first_ms=900, reason="split-word-local-recheck")
@@ -146,8 +195,9 @@ def test_intentional_capped_lead_does_not_trigger_old_late_midpoint_warning():
 
 @pytest.mark.parametrize("bounded", [False, True])
 def test_full_pipeline_centers_after_alignment(monkeypatch, bounded):
+    from surah_cutter.core import full_signal
     from surah_cutter.core.emissions import OnnxEmitter
-    from surah_cutter.data import reference_prior, transliteration
+    from surah_cutter.data import transliteration
 
     _, pcm = fixture()
     words = [SimpleNamespace(surah=1, ayah=a, text="ا", index=a - 1) for a in [1, 2]]
@@ -170,9 +220,22 @@ def test_full_pipeline_centers_after_alignment(monkeypatch, bounded):
     monkeypatch.setattr(align, "_full_ctc_requires_tiling", lambda *a: bounded)
     monkeypatch.setattr(align, "_build_targets", lambda *a: ([1, 2], [(0, 1), (1, 2)]))
     monkeypatch.setattr(transliteration, "surah_word_tr", lambda *a: ["a", "b"])
-    monkeypatch.setattr(reference_prior, "surah_start_fractions", lambda *a: {})
+    # Both FULL routes must call the new verifier after final positioning,
+    # with neighbouring evidence retained on the absolute audio timeline.
+    calls = []
+    original = full_signal.refine_late_boundaries
+
+    def recheck(checks, pcm, sr, **kwargs):
+        calls.append(checks[2]["onset_ms"])
+        assert checks[2]["pause_center_reason"] == "positioned"
+        assert "full_ctc_end_ms" in checks[1]
+        assert "full_ctc_first_ms" in checks[2]
+        return original(checks, pcm, sr, **kwargs)
+
+    monkeypatch.setattr(full_signal, "refine_late_boundaries", recheck)
     trace = {}
     rows = align.align_surah(pcm, 16000, words, model=model, trace=trace)
     assert rows[1][1] == pytest.approx(1750, abs=30)
     assert trace["ayahs"][1]["pre_center_onset_ms"] == 2040
     assert trace["ayahs"][1]["pause_center_reason"] == "positioned"
+    assert calls == [rows[1][1]]

@@ -45,7 +45,7 @@ _STATIC_DIR = Path(__file__).resolve().parent / "static"
 #: Bundled Qur'an (QPC Hafs Uthmani) font, served at /fonts for the review text.
 _FONTS_DIR = resource_path("assets", "fonts")
 _WORD_LOCK = threading.Lock()
-_GEN_MODES = {"auto", "full", "fast", "hybrid", "tiled", "words"}
+_GEN_MODES = {"full", "fast", "hybrid", "tiled", "words"}
 
 
 def _model_runtime(handler):
@@ -83,13 +83,13 @@ class _GenJob:
         self.cancel = threading.Event()
         self.overwrite_manual = False
 
-    def start(self, suras: list[int], mode: str, reciter: str | None) -> None:
+    def start(self, suras: list[int], mode: str) -> None:
         self.suras = list(suras)
         self.mode = mode
         self.started_at_ms = int(time.time() * 1000)
         self.running = True
         self.thread = threading.Thread(
-            target=self._run, args=(suras, mode, reciter), daemon=True
+            target=self._run, args=(suras, mode), daemon=True
         )
         self.thread.start()
 
@@ -109,11 +109,18 @@ class _GenJob:
             "overwrite_manual": self.overwrite_manual,
         }
 
-    def _run(self, suras: list[int], mode: str, reciter: str | None) -> None:
-        with model_store.RUNTIME_LOCK, cancellation_scope(self.cancel):
-            self._run_selected(suras, mode, reciter)
+    def _run(self, suras: list[int], mode: str) -> None:
+        from surah_cutter.core.progress import progress_scope
 
-    def _run_selected(self, suras: list[int], mode: str, reciter: str | None) -> None:
+        with model_store.RUNTIME_LOCK, cancellation_scope(self.cancel), progress_scope(self._work_progress):
+            self._run_selected(suras, mode)
+
+    def _work_progress(self, fields) -> None:
+        check_cancelled()
+        self._emit({"type": "stage_progress", **fields})
+
+    def _run_selected(self, suras: list[int], mode: str) -> None:
+        from surah_cutter.core.progress import current_stage, report
         from surah_cutter.core.pipeline import process_surah
         from surah_cutter.data.project_db import ProjectDB
 
@@ -139,6 +146,7 @@ class _GenJob:
                     self._emit({"type": "sura_start", "surah": surah, "index": i,
                                 "ayah": 0, "ayah_count": counts[surah],
                                 "ayahs_done": completed_ayahs, "total_ayahs": total_ayahs})
+                    report("prepare")
                     audio = self.audio_map.get(surah)
                     if audio is None:
                         self._emit(
@@ -153,6 +161,8 @@ class _GenJob:
                     def ayah_progress(ayah: int) -> None:
                         check_cancelled()
                         if 1 <= ayah <= counts[surah]:
+                            if mode == "words" or current_stage() == "verify":
+                                report("words" if mode == "words" else "verify", ayah - 1, counts[surah])
                             self._emit({
                                 "type": "ayah_progress", "surah": surah, "index": i,
                                 "ayah": ayah, "ayah_count": counts[surah],
@@ -171,7 +181,8 @@ class _GenJob:
                             "line": text,
                         })
 
-                    existing = [(s, a, t) for s, a, t in db.get_timings() if s == surah]
+                    usable, _ = _sura_timings_reviews(surah, self.db_path)
+                    existing = [(surah, a, t) for a, t in sorted(usable.items())]
                     complete = {a for _, a, _ in existing} == set(
                         range(1, quran_text.ayah_count(surah) + 1)
                     )
@@ -183,13 +194,14 @@ class _GenJob:
                     else:
                         boundary_mode = ("fast" if model_store.supports_fast() else "full") if mode == "words" else mode
                         rows = process_surah(
-                            str(audio), surah, reciter=reciter, mode=boundary_mode,
+                            str(audio), surah, mode=boundary_mode,
                             project_db=None if self.overwrite_manual else db,
                             trace=trace,
                             log_event=log_event,
                             **({"ayah_progress": ayah_progress} if mode != "words" else {}),
                         )
                         check_cancelled()
+                        report("save")
                         save_result = write_alignment_result(
                             db, rows, trace=trace, requested_mode=mode,
                             db_path=self.db_path, log_lines=log_lines,
@@ -216,6 +228,8 @@ class _GenJob:
                     event = {
                         "type": "sura", "surah": surah, "index": i,
                         "ayahs": len(rows), "written": written, **word_result,
+                        "unresolved_ayahs": list(save_result.unresolved_ayahs) if save_result else [],
+                        "result_complete": trace.get("result_complete", True),
                         "ayahs_done": completed_ayahs, "total_ayahs": total_ayahs,
                     }
                     if log_paths:
@@ -260,8 +274,15 @@ _JOB: _GenJob | None = None
 _PROJECT_LOCK = threading.RLock()
 
 
+def _saved_generation_mode(cfg: dict[str, Any]) -> str:
+    mode = cfg.get("mode", "full")
+    return mode if isinstance(mode, str) and mode in _GEN_MODES else "full"
+
+
 def _initialize_app_settings() -> None:
     _restore_from_settings()
+    if settings.load().get("mode") == "auto":
+        settings.update(mode="full")
     selected = settings.load().get("alignment_model", "quran-phonetics")
     valid_ids = {item["id"] for item in model_store.available_catalog()}
     model_store.ACTIVE_ID = selected if selected in valid_ids else "quran-phonetics"
@@ -358,7 +379,7 @@ def create_app(*, restore_settings: bool = True) -> FastAPI:
             from surah_cutter.core.model_runtime import release_runtimes
 
             release_runtimes(keep=emitter)
-            return {**model_store.listing(), "mode": settings.load().get("mode", "auto")}
+            return {**model_store.listing(), "mode": _saved_generation_mode(settings.load())}
 
     @app.post("/api/models/{model_id}/remove")
     @_model_runtime
@@ -384,7 +405,7 @@ def create_app(*, restore_settings: bool = True) -> FastAPI:
             "db_path": str(STATE.db_path) if STATE.db_path else None,
             "audio_count": len(STATE.audio_map),
             "suras_with_audio": sorted(STATE.audio_map),
-            "mode": cfg.get("mode", "auto"),
+            "mode": _saved_generation_mode(cfg),
             "project_id": managed.get("id"),
             "reciter": managed.get("reciter", external.get("reciter", STATE.audio_dir.name if STATE.audio_dir else "")),
             "recording": managed.get("recording", external.get("recording", "Внешний проект")),
@@ -393,6 +414,8 @@ def create_app(*, restore_settings: bool = True) -> FastAPI:
             "arabic_size": cfg.get("arabic_size", 30),
             "theme": cfg.get("theme", "light"),
             "language": settings.language(),
+            "playback_mode": cfg.get("playback_mode", "continuous"),
+            "playback_rate": cfg.get("playback_rate", 1),
             "alignment_model": model_store.ACTIVE_ID,
         }
 
@@ -472,7 +495,16 @@ def create_app(*, restore_settings: bool = True) -> FastAPI:
     @app.post("/api/settings")
     def set_settings(payload: dict[str, Any] = Body(default={})) -> dict[str, Any]:
         with _PROJECT_LOCK:
-            allowed = {k: v for k, v in payload.items() if k in ("mode", "time_step", "arabic_size", "theme", "language")}
+            allowed = {k: v for k, v in payload.items() if k in (
+                "mode", "time_step", "arabic_size", "theme", "language",
+                "playback_mode", "playback_rate",
+            )}
+            if "playback_mode" in allowed and allowed["playback_mode"] not in ("continuous", "single", "repeat"):
+                raise HTTPException(400, "Invalid playback mode")
+            if "playback_rate" in allowed:
+                rate = allowed["playback_rate"]
+                if type(rate) not in (int, float) or not 0.2 <= rate <= 2:
+                    raise HTTPException(400, "Playback rate must be between 0.2 and 2")
             if "language" in allowed and allowed["language"] not in ("ru", "en"):
                 raise HTTPException(400, "Выберите русский или английский язык.")
             if "theme" in allowed and allowed["theme"] not in ("light", "dark"):
@@ -575,7 +607,7 @@ def create_app(*, restore_settings: bool = True) -> FastAPI:
             if type(overwrite_manual) is not bool:
                 raise HTTPException(400, "overwrite_manual must be a boolean")
             suras = _generation_suras(payload)
-            mode = payload.get("mode", "auto")
+            mode = payload.get("mode", "full")
             if mode not in _GEN_MODES:
                 raise HTTPException(400, f"unknown mode: {mode}")
             if (model_store.active_kind() != "phonetic" and mode not in ("full", "tiled", "words")
@@ -583,11 +615,10 @@ def create_app(*, restore_settings: bool = True) -> FastAPI:
                 raise HTTPException(400, "Для выбранной модели выберите полный, точный или пословный режим.")
             if not suras:
                 raise HTTPException(400, "no suras to process (all done or no audio)")
-            reciter = payload.get("reciter")
             settings.update(mode=mode)  # remember last-used mode
             _JOB = _GenJob(STATE.db_path, STATE.audio_map)
             _JOB.overwrite_manual = overwrite_manual
-            _JOB.start(suras, mode, reciter)
+            _JOB.start(suras, mode)
             return {"started": True, "suras": suras, "mode": mode, "job_id": _JOB.job_id}
 
     @app.get("/api/generate/status")
@@ -799,7 +830,7 @@ def create_app(*, restore_settings: bool = True) -> FastAPI:
         if audio is None:
             raise HTTPException(404, f"no audio for sura {surah}")
         mode = payload.get("mode", "tiled")
-        if mode not in ("auto", "full", "fast", "tiled"):
+        if mode not in ("full", "fast", "tiled"):
             raise HTTPException(400, f"unknown correction mode: {mode}")
         from surah_cutter.core.pipeline import process_surah
         from surah_cutter.data.project_db import ProjectDB
@@ -1118,6 +1149,21 @@ def create_app(*, restore_settings: bool = True) -> FastAPI:
         return FileResponse(str(audio))
 
     # -- local word review ------------------------------------------------
+    @app.get("/api/audio/{surah}/clip")
+    def get_audio_clip(surah: int, start_ms: int, end_ms: int):
+        from fastapi.responses import Response
+        from surah_cutter.webgui.playback import audio_clip
+
+        _check_surah(surah)
+        audio = STATE.audio_for(surah)
+        if audio is None:
+            raise HTTPException(404, f"no audio for sura {surah}")
+        try:
+            data = audio_clip(audio, start_ms, end_ms)
+        except ValueError as exc:
+            raise HTTPException(400, str(exc)) from exc
+        return Response(data, media_type="audio/wav", headers={"Cache-Control": "no-store"})
+
     @app.get("/api/sura/{surah}/words")
     def get_sura_words(surah: int) -> dict[str, Any]:
         from surah_cutter.core.decode import duration_ms
@@ -1224,6 +1270,7 @@ def create_app(*, restore_settings: bool = True) -> FastAPI:
             _require_db()
             if payload.get("db_path") and Path(payload["db_path"]).resolve() != STATE.db_path.resolve():
                 raise HTTPException(409, "Проект изменился. Откройте суру заново перед правкой.")
+            _check_manual_start(surah, time)
             with ProjectDB.open(str(STATE.db_path), DB_CODE, DB_VERSION) as db:
                 try:
                     db.set_time(surah, ayah, time)
@@ -1250,6 +1297,10 @@ def create_app(*, restore_settings: bool = True) -> FastAPI:
                 raise HTTPException(409, "Проект изменился. Откройте суру заново перед правкой.")
             with ProjectDB.open(str(STATE.db_path), DB_CODE, DB_VERSION) as db:
                 try:
+                    if status in ("edited", "verified"):
+                        time = next((t for s, a, t in db.get_timings()
+                                     if (s, a) == (surah, ayah)), None)
+                        _check_manual_start(surah, time)
                     db.set_status(surah, ayah, status)
                 except ValueError as exc:
                     raise HTTPException(400, str(exc)) from exc
@@ -1301,7 +1352,9 @@ def _generation_suras(payload: dict[str, Any]) -> list[int]:
         raise HTTPException(409, "Проект изменился. Откройте суру заново перед расчётом.")
     suras = payload.get("suras") or sorted(STATE.audio_map)
     suras = [s for s in suras if s in STATE.audio_map]
-    mode = payload.get("mode", "auto")
+    mode = payload.get("mode", "full")
+    if mode not in _GEN_MODES:
+        raise HTTPException(400, f"unknown mode: {mode}")
     if payload.get("only_missing"):
         if mode == "fast":
             from surah_cutter.data.alignment_identity import fast_resume_suras
@@ -1311,15 +1364,13 @@ def _generation_suras(payload: dict[str, Any]) -> list[int]:
             # legacy source says requested_mode=fast. Protected surahs can skip.
             done = fast_resume_suras(STATE.db_path)
         elif mode == "full":
-            from surah_cutter.core import full_windows, model_store
             from surah_cutter.data.alignment_identity import full_resume_suras
 
-            done = full_resume_suras(STATE.db_path, model_id=model_store.ACTIVE_ID,
-                                     onset_policy=full_windows.FULL_ONSET_POLICY)
+            done = full_resume_suras(STATE.db_path)
         else:
             done = ({s for s, p in _word_progress().items() if p["complete"]}
                     if mode == "words" else _processed_suras())
-        if mode not in ("auto", "words", "fast"):
+        if mode not in ("words", "fast"):
             modes = _generation_modes()
             done = {s for s in done if not modes.get(s) or modes[s] == {mode}}
         suras = [s for s in suras if s not in done]
@@ -1332,7 +1383,9 @@ def _align_sura_words(db, db_path, audio, surah, log_event, ayah_progress=None,
                       *, overwrite_manual=False):
     """Align all ayah clips, preserving saved ayah marks and manual word edits."""
     from surah_cutter.core import decode, word_align
+    from surah_cutter.core.progress import report
 
+    report("decode")
     pcm = decode.decode(str(audio))
     duration = round(len(pcm) * 1000 / decode.DEFAULT_SR)
     by_ayah = {}
@@ -1404,6 +1457,23 @@ def _word_progress(db_path: Path | None = None, surah: int | None = None):
     return result
 
 
+def _check_manual_start(surah: int, time: int | None) -> None:
+    """Reject manual approval/edits without a playable start in current audio."""
+    from surah_cutter.core import decode
+
+    if type(time) is not int or time < 0:
+        raise HTTPException(400, "Сначала укажите начало аята в пределах аудиозаписи.")
+    audio = STATE.audio_for(surah)
+    if audio is None:
+        raise HTTPException(400, "Для проверки начала аята нужно аудио суры.")
+    try:
+        duration = decode.duration_ms(str(audio))
+    except (OSError, decode.DecodeError) as exc:
+        raise HTTPException(400, "Не удалось прочитать аудио для проверки начала аята.") from exc
+    if time >= duration:
+        raise HTTPException(400, "Начало аята должно быть раньше конца аудиозаписи.")
+
+
 def _word_context(surah: int, ayah: int, payload: dict | None = None):
     """Require exact adjacent ayah boundaries, and snapshot project identity."""
     _check_surah(surah)
@@ -1461,7 +1531,7 @@ def _fast_trace_summary(trace: dict[str, Any]) -> dict[str, Any]:
     repaired = sum(1 for a in ayahs if a.get("repaired"))
     reliable = sum(1 for a in ayahs if a.get("reliable"))
     tempo = trace.get("tempo_forecast") or {}
-    unresolved = {
+    unresolved = set(trace.get("unresolved_ayahs", ())) | {
         event.get("ayah")
         for event in trace.get("pause_sequence_events") or []
         if event.get("action") == "unresolved_current"
@@ -1602,16 +1672,21 @@ def _reviews_by_sura() -> dict[int, list[str]]:
     out: dict[int, list[str]] = {}
     conn = sqlite3.connect(str(STATE.db_path))
     try:
+        columns = {r[1] for r in conn.execute("PRAGMA table_info(review_meta)")}
+        confidence_field = "r.confidence" if "confidence" in columns else "NULL"
+        source_field = "r.source" if "source" in columns else "NULL"
         rows = conn.execute(
-            "SELECT t.sura, COALESCE(r.status, 'auto') FROM timings t "
+            f"SELECT t.sura, COALESCE(r.status, 'auto'), {confidence_field}, {source_field} FROM timings t "
             "LEFT JOIN review_meta r ON r.sura = t.sura AND r.ayah = t.ayah"
         ).fetchall()
     except sqlite3.OperationalError:
         return {}
     finally:
         conn.close()
-    for sura, status in rows:
-        out.setdefault(sura, []).append(status)
+    from surah_cutter.data.alignment_identity import unresolved_fast_row
+    for sura, status, confidence, source in rows:
+        if not unresolved_fast_row(dict(status=status, confidence=confidence, source=source)):
+            out.setdefault(sura, []).append(status)
     return out
 
 
@@ -1642,6 +1717,8 @@ def _sura_timings_reviews(
             pass
     finally:
         conn.close()
+    from surah_cutter.data.alignment_identity import unresolved_fast_row
+    timings = {a: t for a, t in timings.items() if not unresolved_fast_row(reviews.get(a, {}))}
     return timings, reviews
 
 

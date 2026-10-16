@@ -1,0 +1,205 @@
+{
+  "cases": [
+    {
+      "key": "rejected-1-4-1500",
+      "role": "rejected-geometry",
+      "surah": 1,
+      "ayah": 4,
+      "phrase": [
+        "مالك"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "مالك",
+        "يوم",
+        "الدين"
+      ],
+      "event": {
+        "state": "SELECT_CANDIDATE",
+        "ayah": 4,
+        "candidate": 2,
+        "declined_geometry": "decaying_tail_midpoint_unproved"
+      },
+      "pause": {
+        "start_ms": 20160.0,
+        "end_ms": 21680.0,
+        "center_ms": 20920.0
+      },
+      "window_ms": [
+        21480.0,
+        22980.0
+      ],
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/001.mp3",
+      "audio_sha256": "6dedf8c3b88d2cd12c992710839443abebf26e7ef1fcea696acc8961b5836571",
+      "pcm_sha256": "8ab9afc49abd7d2a0951aa50aa78f3ab818d8139ec14f3c3b1c0117f3a4a4031",
+      "samples": 24000
+    },
+    {
+      "key": "rejected-1-4-4000",
+      "role": "rejected-geometry",
+      "surah": 1,
+      "ayah": 4,
+      "phrase": [
+        "مالك"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "مالك",
+        "يوم",
+        "الدين"
+      ],
+      "event": {
+        "state": "SELECT_CANDIDATE",
+        "ayah": 4,
+        "candidate": 2,
+        "declined_geometry": "decaying_tail_midpoint_unproved"
+      },
+      "pause": {
+        "start_ms": 20160.0,
+        "end_ms": 21680.0,
+        "center_ms": 20920.0
+      },
+      "window_ms": [
+        21480.0,
+        25480.0
+      ],
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/001.mp3",
+      "audio_sha256": "6dedf8c3b88d2cd12c992710839443abebf26e7ef1fcea696acc8961b5836571",
+      "pcm_sha256": "bb82ac1db223bcc2f954422aaea28d0ed7777ab3d9e1b753160596c572ef4225",
+      "samples": 64000
+    },
+    {
+      "key": "rejected-2-4-1500",
+      "role": "rejected-geometry",
+      "surah": 2,
+      "ayah": 4,
+      "phrase": [
+        "والذين",
+        "يؤمنون"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "والذين",
+        "يؤمنون",
+        "بما",
+        "انزل",
+        "اليك",
+        "وما",
+        "انزل",
+        "من",
+        "قبلك",
+        "وبالاخرة",
+        "هم",
+        "يوقنون"
+      ],
+      "event": {
+        "state": "SELECT_CANDIDATE",
+        "ayah": 4,
+        "candidate": 5,
+        "declined_geometry": "decaying_tail_midpoint_unproved"
+      },
+      "pause": {
+        "start_ms": 33760.0,
+        "end_ms": 34660.0,
+        "center_ms": 34210.0
+      },
+      "window_ms": [
+        34460.0,
+        35960.0
+      ],
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/002.mp3",
+      "audio_sha256": "511e1c23f9c51271d1da629761c0ccf26fd1e734532c09dc85983cea4b4c4177",
+      "pcm_sha256": "1ba061179e3ebfa4bcf87237f20f3568089ca7709f09702b052238c82d6b57c8",
+      "samples": 24000
+    },
+    {
+      "key": "rejected-2-4-4000",
+      "role": "rejected-geometry",
+      "surah": 2,
+      "ayah": 4,
+      "phrase": [
+        "والذين",
+        "يؤمنون"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "والذين",
+        "يؤمنون",
+        "بما",
+        "انزل",
+        "اليك",
+        "وما",
+        "انزل",
+        "من",
+        "قبلك",
+        "وبالاخرة",
+        "هم",
+        "يوقنون"
+      ],
+      "event": {
+        "state": "SELECT_CANDIDATE",
+        "ayah": 4,
+        "candidate": 5,
+        "declined_geometry": "decaying_tail_midpoint_unproved"
+      },
+      "pause": {
+        "start_ms": 33760.0,
+        "end_ms": 34660.0,
+        "center_ms": 34210.0
+      },
+      "window_ms": [
+        34460.0,
+        38460.0
+      ],
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/002.mp3",
+      "audio_sha256": "511e1c23f9c51271d1da629761c0ccf26fd1e734532c09dc85983cea4b4c4177",
+      "pcm_sha256": "137de2ff3d141dde40102427099a282cd74d6a88b0f8df9bb1a2a8260841be9c",
+      "samples": 64000
+    },
+    {
+      "key": "zero-1",
+      "role": "negative",
+      "surah": 1,
+      "ayah": 4,
+      "phrase": [
+        "مالك"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "مالك",
+        "يوم",
+        "الدين"
+      ],
+      "samples": 24000
+    },
+    {
+      "key": "zero-2",
+      "role": "negative",
+      "surah": 2,
+      "ayah": 4,
+      "phrase": [
+        "والذين",
+        "يؤمنون"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "والذين",
+        "يؤمنون",
+        "بما",
+        "انزل",
+        "اليك",
+        "وما",
+        "انزل",
+        "من",
+        "قبلك",
+        "وبالاخرة",
+        "هم",
+        "يوقنون"
+      ],
+      "samples": 24000
+    }
+  ],
+  "selection": "All unresolved declined_geometry events in frozen Base12; no reference read",
+  "baseline_sha256": "48913f6a911245e3dfdf9a3fb5af6dc8409d429d7bea45de1d0066e13e62b5a4",
+  "weights": "/Users/ayub/.surah-cutter/models/whisper-tarteel-base/5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c"
+}

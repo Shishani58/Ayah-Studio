@@ -64,7 +64,8 @@ def verify_dispatch(calls, pcm, trace):
 
 
 def validate(rows, trace, expected):
-    assert [a for a, _, _ in rows] == expected
+    from tools.bench_fast import sequence_contract_violations
+    assert not sequence_contract_violations(rows, expected, trace)
     violations = [{"ayah": a, "start_ms": ms, "reason": "outside_audio"}
                   for a, ms, _ in rows if not 0 <= ms < trace["total_ms"]]
     assert all(b[1] > a[1] for a, b in zip(rows, rows[1:]))
@@ -176,7 +177,9 @@ def main():
             truth = dict(conn.execute("SELECT ayah,time FROM timings WHERE sura=?", (item["surah"],)))
             errors = [abs(ms - truth[a]) for a, ms, _ in item["rows"]]
             item.update(reference_sha256=reference_sha, errors_ms=errors,
-                        median_ms=float(np.median(errors)), p95_ms=float(np.percentile(errors, 95)), max_ms=max(errors))
+                        median_ms=float(np.median(errors)) if errors else None,
+                        p95_ms=float(np.percentile(errors, 95)) if errors else None,
+                        max_ms=max(errors) if errors else None)
     summary = {}
     for model_id in args.models:
         subset = [i for i in items if i["model"] == model_id]
@@ -184,8 +187,10 @@ def main():
         false_confident = [(i["surah"], a, e, c) for i in subset
                            for (a, _, c), e in zip(i["rows"], i["errors_ms"]) if c > 0 and e > 500]
         summary[model_id] = {"surahs": len(subset), "ayahs": len(errors),
-                             "median_ms": float(np.median(errors)), "p95_ms": float(np.percentile(errors, 95)),
-                             "max_ms": int(errors.max()), "over500": int((errors > 500).sum()),
+                             "canonical_ayahs": sum(len(i["trace"].get("boundaries", i["rows"])) for i in subset),
+                             "median_ms": float(np.median(errors)) if len(errors) else None,
+                             "p95_ms": float(np.percentile(errors, 95)) if len(errors) else None,
+                             "max_ms": int(errors.max()) if len(errors) else None, "over500": int((errors > 500).sum()),
                              "positive_conf_over500": false_confident,
                              "sequence_violations": [{"surah": i["surah"], **v}
                                                      for i in subset for v in i["sequence_violations"]],

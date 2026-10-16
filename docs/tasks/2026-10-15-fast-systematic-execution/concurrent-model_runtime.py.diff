@@ -1,0 +1,36 @@
+--- initial/surah_cutter/core/model_runtime.py
++++ current/surah_cutter/core/model_runtime.py
+@@ -213,15 +213,26 @@
+             return self._read_response()
+ 
+     def _read_response(self) -> dict:
+-        line = self.process.stdout.readline()
+-        if not line:
+-            raise ValueError("Процесс модели завершился. См. локальный журнал модели.")
+-        response = json.loads(line)
+-        if "error" in response:
+-            raise ValueError(response["error"])
+-        return response
++        from surah_cutter.core.progress import advance
++
++        while True:
++            line = self.process.stdout.readline()
++            if not line:
++                raise ValueError("Процесс модели завершился. См. локальный журнал модели.")
++            response = json.loads(line)
++            if "progress" in response:
++                progress = response["progress"]
++                advance("acoustic", progress["done"], progress["total"])
++                continue
++            if "error" in response:
++                raise ValueError(response["error"])
++            return response
+ 
+     def request(self, action: str, **fields) -> dict:
++        from surah_cutter.core.progress import current_stage
++
++        if action in ("align", "emissions") and current_stage() == "acoustic":
++            fields["report_progress"] = True
+         with self._lock:
+             timeout = INFERENCE_TIMEOUT_S if action in ("align", "emissions") else RPC_TIMEOUT_S
+             with self._deadline(timeout):

@@ -24,3 +24,114 @@ quran-phonetics-fp32 2 4.25 review 286 coverage 0.001 calls 5
 quran-phonetics-fp32 79 2.18 review 46 coverage 0.082 calls 16
 whisper-tarteel-tiny 1 1.39 review 5 coverage 0.131 calls 6
 whisper-tarteel-tiny 32 1.14 review 30 coverage 0.016 calls 5
+whisper-tarteel-tiny 55 9.61 review 59 coverage 0.117 calls 44
+whisper-tarteel-tiny 59 4.42 review 21 coverage 0.05 calls 19
+whisper-tarteel-tiny 65 1.76 review 12 coverage 0.031 calls 8
+whisper-tarteel-tiny 73 8.9 review 3 coverage 0.221 calls 36
+whisper-tarteel-tiny 77 8.71 review 26 coverage 0.236 calls 39
+whisper-tarteel-tiny 80 4.32 review 33 coverage 0.138 calls 21
+whisper-tarteel-tiny 98 5.84 review 1 coverage 0.342 calls 26
+whisper-tarteel-tiny 112 1.56 review 0 coverage 0.348 calls 6
+whisper-tarteel-tiny 2 6.28 review 282 coverage 0.003 calls 16
+whisper-tarteel-tiny 79 7.45 review 30 coverage 0.191 calls 34
+whisper-tarteel-base 1 3.24 review 5 coverage 0.131 calls 6
+whisper-tarteel-base 32 1.5 review 30 coverage 0.013 calls 4
+whisper-tarteel-base 55 16.49 review 59 coverage 0.113 calls 42
+whisper-tarteel-base 59 36.5 review 3 coverage 0.244 calls 93
+whisper-tarteel-base 65 3.41 review 12 coverage 0.031 calls 8
+whisper-tarteel-base 73 12.28 review 1 coverage 0.215 calls 34
+whisper-tarteel-base 77 17.28 review 26 coverage 0.247 calls 42
+whisper-tarteel-base 80 8.48 review 32 coverage 0.146 calls 23
+whisper-tarteel-base 98 8.15 review 1 coverage 0.288 calls 23
+whisper-tarteel-base 112 2.58 review 0 coverage 0.348 calls 6
+whisper-tarteel-base 2 6.56 review 284 coverage 0.002 calls 9
+whisper-tarteel-base 79 12.55 review 24 coverage 0.207 calls 36
+{
+  "quran-phonetics": {
+    "surahs": 12,
+    "ayahs": 607,
+    "median_ms": 7610.0,
+    "p95_ms": 94810.79999999996,
+    "max_ms": 108982,
+    "over500": 580,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 605,
+    "load_probe_seconds": 0.4048900830093771,
+    "decode_seconds": 18.783324752235785,
+    "dsp_seconds": 2.009528917260468,
+    "inference_match_seconds": 32.58507816679776,
+    "search_seconds": 34.594607084058225,
+    "audio_ms": 259600.0,
+    "covered_audio_ms": 159220.0,
+    "total_ms": 10041365.0,
+    "model_reads": 120
+  },
+  "quran-phonetics-fp32": {
+    "surahs": 12,
+    "ayahs": 607,
+    "median_ms": 7610.0,
+    "p95_ms": 94810.79999999996,
+    "max_ms": 108982,
+    "over500": 580,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 605,
+    "load_probe_seconds": 0.8692089589312673,
+    "decode_seconds": 18.783324752235785,
+    "dsp_seconds": 2.009528917260468,
+    "inference_match_seconds": 33.89028770616278,
+    "search_seconds": 35.89981662342325,
+    "audio_ms": 236900.0,
+    "covered_audio_ms": 144720.0,
+    "total_ms": 10041365.0,
+    "model_reads": 111
+  },
+  "whisper-tarteel-tiny": {
+    "surahs": 12,
+    "ayahs": 607,
+    "median_ms": 7917.0,
+    "p95_ms": 69470.79999999997,
+    "max_ms": 79350,
+    "over500": 482,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 502,
+    "load_probe_seconds": 5.539592417189851,
+    "decode_seconds": 18.783324752235785,
+    "dsp_seconds": 2.009528917260468,
+    "inference_match_seconds": 61.373383874306455,
+    "search_seconds": 63.38291279156692,
+    "audio_ms": 461030.0,
+    "covered_audio_ms": 358120.0,
+    "total_ms": 10041365.0,
+    "model_reads": 260
+  },
+  "whisper-tarteel-base": {
+    "surahs": 12,
+    "ayahs": 607,
+    "median_ms": 8159.0,
+    "p95_ms": 75768.3,
+    "max_ms": 85790,
+    "over500": 456,
+    "positive_conf_over500": [
+      [
+        79,
+        26,
+        508,
+        0.9999970197767496
+      ]
+    ],
+    "sequence_violations": [],
+    "review_ayahs": 477,
+    "load_probe_seconds": 4.732907915953547,
+    "decode_seconds": 18.783324752235785,
+    "dsp_seconds": 2.009528917260468,
+    "inference_match_seconds": 129.02937995782122,
+    "search_seconds": 131.0389088750817,
+    "audio_ms": 558340.0,
+    "covered_audio_ms": 450220.0,
+    "total_ms": 10041365.0,
+    "model_reads": 326
+  }
+}

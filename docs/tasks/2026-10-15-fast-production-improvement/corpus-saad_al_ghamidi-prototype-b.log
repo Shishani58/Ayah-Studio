@@ -1,0 +1,48 @@
+whisper-tarteel-tiny 80 1.43 review 40 coverage 0.052 calls 7
+whisper-tarteel-tiny 98 2.21 review 4 coverage 0.134 calls 11
+whisper-tarteel-tiny 112 0.5 review 3 coverage 0.146 calls 2
+whisper-tarteel-base 80 3.61 review 39 coverage 0.067 calls 9
+whisper-tarteel-base 98 8.66 review 1 coverage 0.253 calls 21
+whisper-tarteel-base 112 0.89 review 3 coverage 0.146 calls 2
+{
+  "whisper-tarteel-tiny": {
+    "surahs": 3,
+    "ayahs": 54,
+    "median_ms": 1461.5,
+    "p95_ms": 3858.199999999997,
+    "max_ms": 5832,
+    "over500": 39,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 47,
+    "load_probe_seconds": 3.227394999936223,
+    "decode_seconds": 0.3921149177476764,
+    "dsp_seconds": 0.20115362363867462,
+    "inference_match_seconds": 4.135142666986212,
+    "search_seconds": 4.336296290624887,
+    "audio_ms": 31600.0,
+    "covered_audio_ms": 27880.0,
+    "total_ms": 321072.0,
+    "model_reads": 20
+  },
+  "whisper-tarteel-base": {
+    "surahs": 3,
+    "ayahs": 54,
+    "median_ms": 773.5,
+    "p95_ms": 3275.0499999999997,
+    "max_ms": 5330,
+    "over500": 32,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 43,
+    "load_probe_seconds": 4.378435457823798,
+    "decode_seconds": 0.3921149177476764,
+    "dsp_seconds": 0.20115362363867462,
+    "inference_match_seconds": 13.153295999858528,
+    "search_seconds": 13.354449623497203,
+    "audio_ms": 55200.0,
+    "covered_audio_ms": 44180.0,
+    "total_ms": 321072.0,
+    "model_reads": 32
+  }
+}

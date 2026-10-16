@@ -65,7 +65,7 @@ def test_noisy_first_word_uses_exact_later_anchor_for_finite_expansion():
     fake.rendered = tuple(render)
     fake.responder = lambda f, start, duration: observation(("noise", f.phrase(1)[1]) if duration < 2000 else f.phrase(1))
     rows, trace = run(fake, [pause(1000)])
-    assert rows[0][2] > 0
+    assert trace["boundaries"][0]["confidence"] > 0
     assert any(e.get("acoustic_anchor") == "exact_later_word_noisy_opening" for e in trace["transitions"])
     assert all(r["window_ms"][1] - r["window_ms"][0] <= 6000 for r in trace["acoustic_reads"])
 
@@ -138,7 +138,7 @@ def test_repeated_109_owner_requires_local_previous_tail():
     assert trace["boundaries"][4]["proof"]["contextual_owner"]
     fake.responder = lambda f, start, duration: observation(groups[starts[start]]) if start in starts else observation(groups[4])
     rows, trace = run(fake, [pause(p) for p in starts])
-    assert rows[2][2] == 0
+    assert trace["boundaries"][2]["confidence"] == 0
 
 
 def test_context_confidence_is_minimum_of_both_essential_reads():
@@ -155,7 +155,7 @@ def test_context_confidence_is_minimum_of_both_essential_reads():
         return observation(())
     fake.responder = respond
     rows, trace = run(fake, [pause(p) for p in starts])
-    assert rows[2][2] == pytest.approx(.61) and rows[4][2] == pytest.approx(.61)
+    assert trace["boundaries"][2]["confidence"] == pytest.approx(.61) and trace["boundaries"][4]["confidence"] == pytest.approx(.61)
     boundaries = [Boundary(**b) for b in trace["boundaries"]]
     boundaries[2] = replace(boundaries[2], confidence=.99)
     with pytest.raises(ValueError, match="unheard_previous_context"):
@@ -173,7 +173,7 @@ def test_repeated_refra_ins_have_distinguishing_seam(surah, ayah):
 def test_long_pause_keeps_full_dsp_center_with_right_edge_crop():
     fake = Fake(lambda f, start, duration: observation(f.phrase(1)) if start == 7800 else observation(()))
     rows, trace = run(fake, [pause(1000, 7000)])
-    assert rows[0][1] == 4500 and rows[0][2] > 0
+    assert trace["boundaries"][0]["start_ms"] == 4500 and trace["boundaries"][0]["confidence"] > 0
     read = trace["acoustic_reads"][trace["boundaries"][0]["read_id"]]
     assert read["window_ms"] == [7800., 9300.]
     assert trace["boundaries"][0]["proof"]["pause_ms"] == [1000., 8000.]
@@ -195,7 +195,7 @@ def test_long_current_wasl_recovers_tail_opening_after_future_pause():
         return observation(seam["combined"])
     fake.responder = respond
     rows, trace = run(fake, [pause(1000), pause(8000)])
-    assert rows[1][2] > 0 and trace["boundaries"][1]["evidence_kind"] == "wasl"
+    assert trace["boundaries"][1]["confidence"] > 0 and trace["boundaries"][1]["evidence_kind"] == "wasl"
     assert any(r["reason"].endswith("anchored_wasl_forecast") for r in trace["acoustic_reads"])
 
 
@@ -245,7 +245,7 @@ def test_sparse_anchor_preserves_unresolved_owner_and_blocks_late_repeat():
     from surah_cutter.core.fast_executor import Policy
     fake = Fake(lambda f, start, duration: observation(f.phrase(3)) if start==1000 else observation(f.phrase(1)))
     rows, trace = run(fake, [pause(1000),pause(10000)], policy=Policy(sparse_anchors=True))
-    assert rows[0][2] == rows[1][2] == 0 and rows[2][2] > 0
+    assert trace["boundaries"][0]["confidence"] == trace["boundaries"][1]["confidence"] == 0 and trace["boundaries"][2]["confidence"] > 0
     assert trace["boundaries"][0]["review_reason"] == "unresolved_before_unique_anchor"
     assert trace["boundaries"][2]["proof"]["unresolved_ayahs"] == [1,2]
     assert not any(b["ayah"]==1 and b["confidence"]>0 for b in trace["boundaries"])
@@ -254,11 +254,11 @@ def test_sparse_anchor_preserves_unresolved_owner_and_blocks_late_repeat():
 def test_sparse_anchor_never_accepts_global_repeat_or_far_future():
     from surah_cutter.core.fast_executor import Policy
     fake = Fake(lambda f, start, duration: observation(f.phrase(4)))
-    rows, _ = run(fake, [pause(1000)], policy=Policy(sparse_anchors=True,max_unresolved_ayahs=2))
+    rows, trace = run(fake, [pause(1000)], policy=Policy(sparse_anchors=True,max_unresolved_ayahs=2))
     assert not any(conf>0 for _,_,conf in rows)
     fake, groups, _ = canonical_fake(109)
     fake.responder = lambda *args: observation(groups[3])
-    rows, _ = run(fake, [pause(1000)], policy=Policy(sparse_anchors=True))
+    rows, trace = run(fake, [pause(1000)], policy=Policy(sparse_anchors=True))
     assert not any(conf>0 for _,_,conf in rows)
 
 
@@ -268,11 +268,11 @@ def test_spoken_partial_owner_rejects_explicit_contradictory_names():
             return tuple(tuple(range(1,len(u)+1)) for u in rendered)
     fake = Spoken(lambda *args: observation(("الف","لام","راء")))
     fake.rendered = (("الف","لام","ميم"),)+fake.rendered[1:]
-    rows, _ = run(fake,[pause(1000)])
-    assert rows[0][2] == 0
+    rows, trace = run(fake,[pause(1000)])
+    assert trace["boundaries"][0]["confidence"] == 0
     fake.responder = lambda *args: observation(("الف",))
     rows, trace = run(fake,[pause(1000)])
-    assert rows[0][2] > 0 and trace["boundaries"][0]["proof"]["spoken_owner_units"] == ("الف","لام","ميم")
+    assert trace["boundaries"][0]["confidence"] > 0 and trace["boundaries"][0]["proof"]["spoken_owner_units"] == ("الف","لام","ميم")
 
 
 def test_compact_decoded_letters_preserve_token_quality_and_reject_wrong_alias():
@@ -303,7 +303,7 @@ def test_future_partial_word_expands_locally_before_sparse_anchor():
     fake.rendered = tuple(rendered)
     fake.responder = lambda f,start,duration: observation(("anchor",) if duration<2000 else ("anchorword",))
     rows, trace = run(fake,[pause(1000)],policy=Policy(sparse_anchors=True))
-    assert rows[0][2]==0 and rows[1][2]>0
+    assert trace["boundaries"][0]["confidence"]==0 and trace["boundaries"][1]["confidence"]>0
     assert any(e.get("acoustic_anchor","").startswith("provisional_unique_anchor_partial") for e in trace["transitions"])
 
 
@@ -351,7 +351,7 @@ def test_failed_future_partial_does_not_block_current_after_intro():
         return observation(())
     fake.responder=respond
     rows,trace=run(fake,[pause(1000),pause(6000)],policy=Policy(sparse_anchors=True))
-    assert rows[0][2]>0 and rows[0][1]==6100
+    assert trace["boundaries"][0]["confidence"]>0 and trace["boundaries"][0]["start_ms"]==6100
     assert any(e.get("acoustic_anchor","").startswith("provisional_unique_anchor_partial") for e in trace["transitions"])
 
 
@@ -371,11 +371,11 @@ def test_far_unique_anchor_does_not_read_or_confirm_the_unresolved_gap():
     from surah_cutter.core.fast_executor import Policy
     fake=Fake(lambda f,start,duration: observation(f.phrase(4)))
     rows,trace=run(fake,[pause(1000)],policy=Policy(sparse_anchors=True,max_unresolved_ayahs=None))
-    assert all(r[2]==0 for r in rows[:3]) and rows[3][2]>0
+    assert all(b["start_ms"] is None for b in trace["boundaries"][:3]) and rows == [(4, 1100, .99)]
     assert len(fake.calls)==1
     assert trace["boundaries"][3]["proof"]["unresolved_ayahs"]==[1,2,3]
     fake.responder=lambda f,start,duration: observation(f.phrase(4),quality=.1)
-    rows,_=run(fake,[pause(1000)],policy=Policy(sparse_anchors=True,max_unresolved_ayahs=None))
+    rows, trace = run(fake,[pause(1000)],policy=Policy(sparse_anchors=True,max_unresolved_ayahs=None))
     assert not any(r[2]>0 for r in rows)
 
 
@@ -387,7 +387,7 @@ def test_hallucinated_wrong_or_repeated_far_identity_cannot_be_an_anchor():
     target=next(i for i,w in enumerate(fake.words) if w.ayah==4)
     render[1]=render[target]
     fake.rendered=tuple(render)
-    rows,_=run(fake,[pause(1000)],policy=Policy(sparse_anchors=True,max_unresolved_ayahs=None))
+    rows, trace = run(fake,[pause(1000)],policy=Policy(sparse_anchors=True,max_unresolved_ayahs=None))
     assert not any(r[2]>0 for r in rows)
 
 

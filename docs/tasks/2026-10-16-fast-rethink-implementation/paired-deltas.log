@@ -1,0 +1,18 @@
+current-shatri whisper-tarteel-base 78 0 -> 5 lost [] shifted [] inputs {'pcm_sha256': True, 'text_sha256': True, 'text_runtime': True, 'dsp_config': True, 'dsp_pauses_sha256': True, 'dsp_effective_identity': True}
+current-shatri whisper-tarteel-base 112 4 -> 4 lost [] shifted [] inputs {'pcm_sha256': True, 'text_sha256': True, 'text_runtime': True, 'dsp_config': True, 'dsp_pauses_sha256': True, 'dsp_effective_identity': True}
+current-shatri quran-phonetics 78 1 -> 1 lost [] shifted [] inputs {'pcm_sha256': True, 'text_sha256': True, 'text_runtime': True, 'dsp_config': True, 'dsp_pauses_sha256': True, 'dsp_effective_identity': True}
+current-shatri quran-phonetics 112 0 -> 0 lost [] shifted [] inputs {'pcm_sha256': True, 'text_sha256': True, 'text_runtime': True, 'dsp_config': True, 'dsp_pauses_sha256': True, 'dsp_effective_identity': True}
+current-ghamidi whisper-tarteel-base 80 2 -> 21 lost [] shifted [] inputs {'pcm_sha256': True, 'text_sha256': True, 'text_runtime': True, 'dsp_config': True, 'dsp_pauses_sha256': True, 'dsp_effective_identity': True}
+current-ghamidi whisper-tarteel-base 112 1 -> 1 lost [] shifted [] inputs {'pcm_sha256': True, 'text_sha256': True, 'text_runtime': True, 'dsp_config': True, 'dsp_pauses_sha256': True, 'dsp_effective_identity': True}
+current-ghamidi quran-phonetics 80 None -> None lost None shifted None inputs None
+current-ghamidi quran-phonetics 112 None -> None lost None shifted None inputs None
+final-replay2 whisper-tarteel-base 2 2 -> 29 lost [] shifted [] inputs {'pcm_sha256': True, 'text_sha256': True, 'text_runtime': True, 'dsp_config': True, 'dsp_pauses_sha256': True, 'dsp_effective_identity': True}
+final-regression80 whisper-tarteel-base 80 33 -> 33 lost [] shifted [] inputs {'pcm_sha256': True, 'text_sha256': True, 'text_runtime': True, 'dsp_config': True, 'dsp_pauses_sha256': True, 'dsp_effective_identity': True}
+final-smoke whisper-tarteel-base 112 4 -> 4 lost [] shifted [] inputs {'pcm_sha256': True, 'text_sha256': True, 'text_runtime': True, 'dsp_config': True, 'dsp_pauses_sha256': True, 'dsp_effective_identity': True}
+final-smoke quran-phonetics 112 0 -> 0 lost [] shifted [] inputs {'pcm_sha256': True, 'text_sha256': True, 'text_runtime': True, 'dsp_config': True, 'dsp_pauses_sha256': True, 'dsp_effective_identity': True}
+final-frozen-replay2 whisper-tarteel-base 2 2 -> 29 lost [] shifted [] inputs {'pcm_sha256': True, 'text_sha256': True, 'text_runtime': True, 'dsp_config': True, 'dsp_pauses_sha256': True, 'dsp_effective_identity': True}
+final-frozen-replay2 whisper-tarteel-base 78 0 -> 5 lost [] shifted [] inputs {'pcm_sha256': True, 'text_sha256': True, 'text_runtime': True, 'dsp_config': True, 'dsp_pauses_sha256': True, 'dsp_effective_identity': True}
+final-frozen-replay2 whisper-tarteel-base 80 33 -> 33 lost [] shifted [] inputs {'pcm_sha256': True, 'text_sha256': True, 'text_runtime': True, 'dsp_config': True, 'dsp_pauses_sha256': True, 'dsp_effective_identity': True}
+final-frozen-replay2 whisper-tarteel-base 112 4 -> 4 lost [] shifted [] inputs {'pcm_sha256': True, 'text_sha256': True, 'text_runtime': True, 'dsp_config': True, 'dsp_pauses_sha256': True, 'dsp_effective_identity': True}
+final-frozen-replay2 whisper-tarteel-base 80 2 -> 10 lost [] shifted [] inputs {'pcm_sha256': True, 'text_sha256': True, 'text_runtime': True, 'dsp_config': True, 'dsp_pauses_sha256': True, 'dsp_effective_identity': True}
+final-frozen-replay2 whisper-tarteel-base 112 1 -> 1 lost [] shifted [] inputs {'pcm_sha256': True, 'text_sha256': True, 'text_runtime': True, 'dsp_config': True, 'dsp_pauses_sha256': True, 'dsp_effective_identity': True}

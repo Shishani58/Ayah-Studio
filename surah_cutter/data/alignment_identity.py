@@ -81,8 +81,10 @@ def fast_resume_suras(
         return set()
     with sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True) as conn:
         try:
+            columns = {r[1] for r in conn.execute("PRAGMA table_info(review_meta)")}
+            confidence_column = "r.confidence" if "confidence" in columns else "NULL"
             rows = conn.execute(
-                "SELECT t.sura, t.ayah, t.time, r.status, r.source FROM timings t "
+                f"SELECT t.sura, t.ayah, t.time, r.status, r.source, {confidence_column} FROM timings t "
                 "LEFT JOIN review_meta r ON r.sura=t.sura AND r.ayah=t.ayah "
                 "ORDER BY t.sura, t.ayah"
             ).fetchall()
@@ -91,7 +93,9 @@ def fast_resume_suras(
     expected = counts if counts is not None else surah_ayah_counts()
     grouped: dict[int, list] = {}
     invalid_suras = set()
-    for surah, ayah, time, status, source in rows:
+    for surah, ayah, time, status, source, confidence in rows:
+        if unresolved_fast_row({"status": status, "source": source, "confidence": confidence}):
+            continue
         if type(surah) is int:
             grouped.setdefault(surah, []).append((ayah, time, status, source))
         else:
@@ -128,43 +132,37 @@ def fast_resume_suras(
     return done
 
 
-def full_resume_suras(db_path, *, model_id: str, onset_policy: str | None = None, counts=None) -> set[int]:
-    """Do not reuse old FULL auto rows after a model/boundary-policy change."""
-    if db_path is None or not Path(db_path).is_file():
-        return set()
-    with sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True) as conn:
-        try:
-            rows = conn.execute(
-                "SELECT t.sura,t.ayah,t.time,r.status,r.source FROM timings t "
-                "LEFT JOIN review_meta r ON r.sura=t.sura AND r.ayah=t.ayah "
-                "ORDER BY t.sura,t.ayah"
-            ).fetchall()
-        except sqlite3.OperationalError:
-            return set()
-    expected = counts if counts is not None else surah_ayah_counts()
-    grouped = {}
-    for surah, ayah, time, status, source in rows:
-        grouped.setdefault(surah, []).append((ayah, time, status, source))
-    done = set()
-    for surah, items in grouped.items():
-        count = expected.get(surah)
-        if type(surah) is not int or count is None or [r[0] for r in items] != list(range(1, count + 1)):
-            continue
-        times = [r[1] for r in items]
-        if (any(type(r[0]) is not int for r in items) or any(type(t) is not int or t < 0 for t in times)
-                or any(a >= b for a, b in zip(times, times[1:]))):
-            continue
-        auto_sources = [source for _, _, status, source in items if status not in ("edited", "verified")]
-        current = True
-        for source in auto_sources:
-            parts = source.split(":") if isinstance(source, str) else []
-            modes = [part.partition("=")[2] for part in parts if part.startswith("requested_mode=")]
-            policies = [part.partition("=")[2] for part in parts if part.startswith("full_onset_policy=")]
-            if (len(parts) < 2 or parts[1] != model_id or modes != ["full"]
-                    or (model_id in ("quran-phonetics", "quran-phonetics-fp32")
-                        and (not onset_policy or policies != [onset_policy]))):
-                current = False
-                break
-        if current:
-            done.add(surah)
-    return done
+def full_resume_suras(
+    db_path: str | Path | None,
+    *,
+    model_id: str | None = None,
+    onset_policy: str | None = None,
+    counts: dict[int, int] | None = None,
+) -> set[int]:
+    """Skip only complete protected surahs until FULL has execution identities.
+
+    A matching model ID or boundary policy does not prove the current recording,
+    model weights or effective settings produced the saved auto rows. FULL does
+    not yet capture and compare that complete identity, so recalculation is the
+    conservative choice for every surah containing unprotected rows. The legacy
+    selection arguments remain accepted for callers; neither authorizes reuse.
+    This read-only check leaves both manual and auto rows untouched.
+    """
+    return fast_resume_suras(db_path, counts=counts)
+
+
+def is_fast_source(source: str | None) -> bool:
+    """Recognize explicit FAST provenance, including historical model:fast."""
+    parts = str(source or "").split(":")
+    actual = [p.partition("=")[2] for p in parts if p.startswith("actual_mode=")]
+    if actual:
+        return actual == ["fast"]
+    return "requested_mode=fast" in parts or "fast" in parts
+
+
+def unresolved_fast_row(review: Mapping) -> bool:
+    """Historical automatic estimates are unknown, even if they contain a number."""
+    confidence = review.get("confidence")
+    return (review.get("status") not in ("edited", "verified")
+            and is_fast_source(review.get("source"))
+            and (confidence is None or confidence <= 0))

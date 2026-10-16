@@ -1,0 +1,262 @@
+.............ssssssssss................................................. [  7%]
+........................................................................ [ 14%]
+........................................................................ [ 21%]
+........................................................................ [ 29%]
+........................................................................ [ 36%]
+......................................................................FF [ 43%]
+FF...................................................................... [ 50%]
+........................................F............................... [ 58%]
+........................................................................ [ 65%]
+........................................................................ [ 72%]
+........................................................................ [ 80%]
+........................................................................ [ 87%]
+........................................................................ [ 94%]
+......................................................                   [100%]
+=================================== FAILURES ===================================
+_ test_sparse_identity_can_advance_while_unsupported_time_requires_review[False-0.5-False] _
+
+stationary = False, initial_quality = 0.5, reliable = False
+
+    @pytest.mark.parametrize('stationary,initial_quality,reliable', [
+        (False, .5, False), (True, .5, True), (False, .99, True),
+    ])
+    def test_sparse_identity_can_advance_while_unsupported_time_requires_review(
+            stationary, initial_quality, reliable):
+        from unittest.mock import patch
+        fake = Fake(lambda *args: observation(()))
+        fake.timing = False
+        def respond(f, start, duration):
+            if start == 1000:
+                return observation(f.phrase(2)[:1], quality=initial_quality if duration < 2000 else .99,
+                                   positions=False)
+            if start == 6000:
+                return observation(f.phrase(3)[:1], positions=False)
+            return observation((), positions=False)
+        fake.responder = respond
+        geometry = {'accepted': True, 'reason': 'measured_dsp_interval', 'quiet_stationarity': stationary}
+        with patch('surah_cutter.core.fast_executor.pause_geometry', return_value=geometry):
+>           rows, trace = run(fake, [pause(1000), pause(6000)], policy=Policy(sparse_anchors=True))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_fast_short_spoken_prefix.py:153: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_fast_executor.py:56: in run
+    rows = align_surah_sequential(pcm, 16000, fake.words, adapter=fake, trace=trace,
+surah_cutter/core/fast_executor.py:1609: in align_surah_sequential
+    reviewed, recovery_reviews = _review_addressed_recovery_onsets(confirmed, geometry, policy)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+boundaries = [Boundary(ayah=2, start_ms=1100, evidence_kind='pause', confidence=0.99, review_reason=None, read_id=1, proof={'phrase...itor_count': 14, 'offset': 0, 'quality_metric': 'asr_token_probability', 'pause_ms': [6000.0, 6200.0], 'pause_id': 1})]
+geometry = [{'accepted': True, 'reason': 'measured_dsp_interval', 'quiet_stationarity': False}, {'accepted': True, 'reason': 'measured_dsp_interval', 'quiet_stationarity': False}]
+policy = Policy(independent_search=True, landmark_probes=1, short_word_pause_radius_ms=500.0, speech_ms=(1300, 2500, 4000), noi...hors=True, max_unresolved_ayahs=None, expansion_lookahead=2, ctc_prefix_probability=0.9, ctc_expansion_probability=0.1)
+
+    def _review_addressed_recovery_onsets(boundaries, geometry, policy):
+        """Newly accessible identity anchors do not resolve a wide pause cut.
+    
+        Retain the internally validated owner/order for sparse recovery. Leave
+        uncertain timestamps unknown; never infer a replacement onset from ASR.
+        The original search path has no new publication restrictions.
+        """
+        recovered, disconnected = False, False
+        result, reviews = [], []
+        for boundary in boundaries:
+            proof = boundary.proof or {}
+            disconnected |= "independent_region_origin_ayah" in proof
+            recovered |= "bounded_following_origin_ayah" in proof or disconnected
+            index = proof.get("pause_id")
+>           wide = index is not None and geometry[index]["midpoint_interval_radius_ms"] > policy.short_word_pause_radius_ms
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'midpoint_interval_radius_ms'
+
+surah_cutter/core/fast_executor.py:531: KeyError
+_ test_sparse_identity_can_advance_while_unsupported_time_requires_review[True-0.5-True] _
+
+stationary = True, initial_quality = 0.5, reliable = True
+
+    @pytest.mark.parametrize('stationary,initial_quality,reliable', [
+        (False, .5, False), (True, .5, True), (False, .99, True),
+    ])
+    def test_sparse_identity_can_advance_while_unsupported_time_requires_review(
+            stationary, initial_quality, reliable):
+        from unittest.mock import patch
+        fake = Fake(lambda *args: observation(()))
+        fake.timing = False
+        def respond(f, start, duration):
+            if start == 1000:
+                return observation(f.phrase(2)[:1], quality=initial_quality if duration < 2000 else .99,
+                                   positions=False)
+            if start == 6000:
+                return observation(f.phrase(3)[:1], positions=False)
+            return observation((), positions=False)
+        fake.responder = respond
+        geometry = {'accepted': True, 'reason': 'measured_dsp_interval', 'quiet_stationarity': stationary}
+        with patch('surah_cutter.core.fast_executor.pause_geometry', return_value=geometry):
+>           rows, trace = run(fake, [pause(1000), pause(6000)], policy=Policy(sparse_anchors=True))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_fast_short_spoken_prefix.py:153: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_fast_executor.py:56: in run
+    rows = align_surah_sequential(pcm, 16000, fake.words, adapter=fake, trace=trace,
+surah_cutter/core/fast_executor.py:1609: in align_surah_sequential
+    reviewed, recovery_reviews = _review_addressed_recovery_onsets(confirmed, geometry, policy)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+boundaries = [Boundary(ayah=2, start_ms=1100, evidence_kind='pause', confidence=0.99, review_reason=None, read_id=1, proof={'phrase...itor_count': 14, 'offset': 0, 'quality_metric': 'asr_token_probability', 'pause_ms': [6000.0, 6200.0], 'pause_id': 1})]
+geometry = [{'accepted': True, 'reason': 'measured_dsp_interval', 'quiet_stationarity': True}, {'accepted': True, 'reason': 'measured_dsp_interval', 'quiet_stationarity': True}]
+policy = Policy(independent_search=True, landmark_probes=1, short_word_pause_radius_ms=500.0, speech_ms=(1300, 2500, 4000), noi...hors=True, max_unresolved_ayahs=None, expansion_lookahead=2, ctc_prefix_probability=0.9, ctc_expansion_probability=0.1)
+
+    def _review_addressed_recovery_onsets(boundaries, geometry, policy):
+        """Newly accessible identity anchors do not resolve a wide pause cut.
+    
+        Retain the internally validated owner/order for sparse recovery. Leave
+        uncertain timestamps unknown; never infer a replacement onset from ASR.
+        The original search path has no new publication restrictions.
+        """
+        recovered, disconnected = False, False
+        result, reviews = [], []
+        for boundary in boundaries:
+            proof = boundary.proof or {}
+            disconnected |= "independent_region_origin_ayah" in proof
+            recovered |= "bounded_following_origin_ayah" in proof or disconnected
+            index = proof.get("pause_id")
+>           wide = index is not None and geometry[index]["midpoint_interval_radius_ms"] > policy.short_word_pause_radius_ms
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'midpoint_interval_radius_ms'
+
+surah_cutter/core/fast_executor.py:531: KeyError
+_ test_sparse_identity_can_advance_while_unsupported_time_requires_review[False-0.99-True] _
+
+stationary = False, initial_quality = 0.99, reliable = True
+
+    @pytest.mark.parametrize('stationary,initial_quality,reliable', [
+        (False, .5, False), (True, .5, True), (False, .99, True),
+    ])
+    def test_sparse_identity_can_advance_while_unsupported_time_requires_review(
+            stationary, initial_quality, reliable):
+        from unittest.mock import patch
+        fake = Fake(lambda *args: observation(()))
+        fake.timing = False
+        def respond(f, start, duration):
+            if start == 1000:
+                return observation(f.phrase(2)[:1], quality=initial_quality if duration < 2000 else .99,
+                                   positions=False)
+            if start == 6000:
+                return observation(f.phrase(3)[:1], positions=False)
+            return observation((), positions=False)
+        fake.responder = respond
+        geometry = {'accepted': True, 'reason': 'measured_dsp_interval', 'quiet_stationarity': stationary}
+        with patch('surah_cutter.core.fast_executor.pause_geometry', return_value=geometry):
+>           rows, trace = run(fake, [pause(1000), pause(6000)], policy=Policy(sparse_anchors=True))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_fast_short_spoken_prefix.py:153: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_fast_executor.py:56: in run
+    rows = align_surah_sequential(pcm, 16000, fake.words, adapter=fake, trace=trace,
+surah_cutter/core/fast_executor.py:1609: in align_surah_sequential
+    reviewed, recovery_reviews = _review_addressed_recovery_onsets(confirmed, geometry, policy)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+boundaries = [Boundary(ayah=2, start_ms=1100, evidence_kind='pause', confidence=0.99, review_reason=None, read_id=0, proof={'phrase...itor_count': 14, 'offset': 0, 'quality_metric': 'asr_token_probability', 'pause_ms': [6000.0, 6200.0], 'pause_id': 1})]
+geometry = [{'accepted': True, 'reason': 'measured_dsp_interval', 'quiet_stationarity': False}, {'accepted': True, 'reason': 'measured_dsp_interval', 'quiet_stationarity': False}]
+policy = Policy(independent_search=True, landmark_probes=1, short_word_pause_radius_ms=500.0, speech_ms=(1300, 2500, 4000), noi...hors=True, max_unresolved_ayahs=None, expansion_lookahead=2, ctc_prefix_probability=0.9, ctc_expansion_probability=0.1)
+
+    def _review_addressed_recovery_onsets(boundaries, geometry, policy):
+        """Newly accessible identity anchors do not resolve a wide pause cut.
+    
+        Retain the internally validated owner/order for sparse recovery. Leave
+        uncertain timestamps unknown; never infer a replacement onset from ASR.
+        The original search path has no new publication restrictions.
+        """
+        recovered, disconnected = False, False
+        result, reviews = [], []
+        for boundary in boundaries:
+            proof = boundary.proof or {}
+            disconnected |= "independent_region_origin_ayah" in proof
+            recovered |= "bounded_following_origin_ayah" in proof or disconnected
+            index = proof.get("pause_id")
+>           wide = index is not None and geometry[index]["midpoint_interval_radius_ms"] > policy.short_word_pause_radius_ms
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'midpoint_interval_radius_ms'
+
+surah_cutter/core/fast_executor.py:531: KeyError
+______ test_weak_later_word_does_not_remove_a_strong_initial_localization ______
+
+    def test_weak_later_word_does_not_remove_a_strong_initial_localization():
+        from unittest.mock import patch
+        fake = Fake(lambda *args: observation(()))
+        fake.timing = False
+        rendered = list(fake.rendered)
+        a2 = [i for i, w in enumerate(fake.words) if w.ayah == 2]
+        a4 = [i for i, w in enumerate(fake.words) if w.ayah == 4]
+        rendered[a2[0]], rendered[a2[1]] = ('future',), ('unique',)
+        rendered[a4[0]], rendered[a4[1]] = ('future',), ('other',)
+        fake.rendered = tuple(rendered)
+        def respond(f, start, duration):
+            if start != 1000:
+                return observation((), positions=False)
+            obs = observation(('future', 'unique'), positions=False)
+            return replace(obs, unit_quality=(.99, .5)) if duration < 2000 else obs
+        fake.responder = respond
+        geometry = {'accepted': True, 'reason': 'measured_dsp_interval', 'quiet_stationarity': False}
+        with patch('surah_cutter.core.fast_executor.pause_geometry', return_value=geometry):
+>           rows, trace = run(fake, [pause(1000)], policy=Policy(sparse_anchors=True))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_fast_short_spoken_prefix.py:179: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_fast_executor.py:56: in run
+    rows = align_surah_sequential(pcm, 16000, fake.words, adapter=fake, trace=trace,
+surah_cutter/core/fast_executor.py:1609: in align_surah_sequential
+    reviewed, recovery_reviews = _review_addressed_recovery_onsets(confirmed, geometry, policy)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+boundaries = [Boundary(ayah=2, start_ms=1100, evidence_kind='pause', confidence=0.99, review_reason=None, read_id=1, proof={'phrase...'asr_token_probability', 'pause_ms': [1000.0, 1200.0], 'pause_id': 0, 'sparse_anchor': True, 'unresolved_ayahs': [1]})]
+geometry = [{'accepted': True, 'reason': 'measured_dsp_interval', 'quiet_stationarity': False}]
+policy = Policy(independent_search=True, landmark_probes=1, short_word_pause_radius_ms=500.0, speech_ms=(1300, 2500, 4000), noi...hors=True, max_unresolved_ayahs=None, expansion_lookahead=2, ctc_prefix_probability=0.9, ctc_expansion_probability=0.1)
+
+    def _review_addressed_recovery_onsets(boundaries, geometry, policy):
+        """Newly accessible identity anchors do not resolve a wide pause cut.
+    
+        Retain the internally validated owner/order for sparse recovery. Leave
+        uncertain timestamps unknown; never infer a replacement onset from ASR.
+        The original search path has no new publication restrictions.
+        """
+        recovered, disconnected = False, False
+        result, reviews = [], []
+        for boundary in boundaries:
+            proof = boundary.proof or {}
+            disconnected |= "independent_region_origin_ayah" in proof
+            recovered |= "bounded_following_origin_ayah" in proof or disconnected
+            index = proof.get("pause_id")
+>           wide = index is not None and geometry[index]["midpoint_interval_radius_ms"] > policy.short_word_pause_radius_ms
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'midpoint_interval_radius_ms'
+
+surah_cutter/core/fast_executor.py:531: KeyError
+_ test_fully_protected_surah_keeps_manual_values_and_does_not_need_provenance __
+
+tmp_path = PosixPath('/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/pytest-of-ayub/pytest-448/test_fully_protected_surah_kee0')
+
+    def test_fully_protected_surah_keeps_manual_values_and_does_not_need_provenance(tmp_path):
+        path = project(tmp_path, ['edited', 'verified'], ['manual', None])
+>       assert done(path) == {1}
+E       assert set() == {1}
+E         
+E         Extra items in the right set:
+E         1
+E         Use -v to get more diff
+
+tests/test_full_resume.py:79: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_fast_short_spoken_prefix.py::test_sparse_identity_can_advance_while_unsupported_time_requires_review[False-0.5-False]
+FAILED tests/test_fast_short_spoken_prefix.py::test_sparse_identity_can_advance_while_unsupported_time_requires_review[True-0.5-True]
+FAILED tests/test_fast_short_spoken_prefix.py::test_sparse_identity_can_advance_while_unsupported_time_requires_review[False-0.99-True]
+FAILED tests/test_fast_short_spoken_prefix.py::test_weak_later_word_does_not_remove_a_strong_initial_localization
+FAILED tests/test_full_resume.py::test_fully_protected_surah_keeps_manual_values_and_does_not_need_provenance
+5 failed, 975 passed, 10 skipped in 42.85s

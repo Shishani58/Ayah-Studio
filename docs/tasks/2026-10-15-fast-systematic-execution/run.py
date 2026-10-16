@@ -1,6 +1,5 @@
 """Serial fresh audio runner, real import guard and simultaneous tree RSS."""
 import argparse
-import hashlib
 import json
 import os
 from pathlib import Path

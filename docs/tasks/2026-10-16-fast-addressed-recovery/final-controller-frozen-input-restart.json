@@ -1,0 +1,6 @@
+{
+  "pids": [
+    52501
+  ],
+  "reason": "fresh final PF model reads with independently hashed frozen PCM/DSP inputs, avoid repeated large decode under host memory pressure; no model job interrupted"
+}

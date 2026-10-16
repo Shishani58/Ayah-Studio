@@ -1,0 +1,176 @@
+{
+  "measurement_kind": "independent aggregation of frozen sparse-14 artifacts",
+  "new_acoustic_calls": 0,
+  "physical_accuracy_measured": false,
+  "input_sha256": {
+    "docs/tasks/2026-10-16-fast-addressed-recovery/SF-per-record.json": "284a9018549f57776cdfeb522694d05f30ab168319a4cc9c97dcd325ec286e61",
+    "docs/tasks/2026-10-16-fast-addressed-recovery/SF-corpus-gate.json": "4d9209e78d2749ed647c19f2200728aad6abe41809709bcf26129ab89e7d47c4",
+    "docs/tasks/2026-10-16-fast-addressed-recovery/PF-legacy37-comparison.json": "a692006d4fcfa880e603af42de11daaae7f3ab8b7dbc9b6a47eebf387d28a087"
+  },
+  "inspected_source_sha256": {
+    "surah_cutter/core/fast_executor.py": "65301e9121f890565db34bffde05002896ced2636d58af8aedf02ccf4d5d4896",
+    "surah_cutter/core/fast_adapters.py": "ececb1374994d29084824c47a4dc8bba918f622363fffd2b4d01581260f3f539",
+    "surah_cutter/core/fast_reads.py": "06873fab6c2e402c29c88ba468444df23f04b22a907d30c516fc47d663126918",
+    "surah_cutter/core/pipeline.py": "fb8056d7ab83def441643c97926a69ab0c6acc91587ced00ef29c6752b2ab8da",
+    "surah_cutter/data/alignment_result.py": "4d42e3c4ca62de552ffb7130f2db8146ceb3266eb0fda34b04df3645dfc797bf",
+    "surah_cutter/data/project_db.py": "c71f0a798610179bcd7e7e823129d87c101645b46b2b457cbbd6b7dcecdeb85a",
+    "surah_cutter/data/export_db.py": "2991d223bda07742e8d2d066fc8b036d942eb41f4e7218d3b0dad0cb357c422c",
+    "data/quran_mushaf.db": "c35272ed2a80916f5665f18e150686cfe258249cdf3ad50d3ac787f8cfe3fd66"
+  },
+  "shatri": {
+    "before_proofs": 1186,
+    "after_proofs": 1422,
+    "before_calls": 3167,
+    "after_calls": 3742,
+    "before_input_ms": 5496390.0,
+    "after_input_ms": 6496340.0,
+    "after_union_ms": 5211280.0,
+    "duration_ms": 93958897.5,
+    "after_bad": 10,
+    "after_all_over500": 4618,
+    "after_blocked_ayahs": 4556,
+    "ayahs": 6236,
+    "unconfirmed": 4814,
+    "confirmed_fraction": 0.22803078896728673,
+    "reference_over500_fraction": 0.7405388069275176,
+    "union_fraction": 0.05546340089824915,
+    "submitted_fraction": 0.06914023230210849
+  },
+  "zero_proof_surahs": [
+    3,
+    5,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    27,
+    30,
+    31,
+    32,
+    47,
+    49,
+    60,
+    78,
+    101
+  ],
+  "no_gain_records": 93,
+  "length_buckets": {
+    "at_least_100_ayahs": {
+      "records": 18,
+      "ayahs": 2748,
+      "proofs": 157,
+      "confirmed_fraction": 0.057132459970887915
+    },
+    "20_to_99_ayahs": {
+      "records": 61,
+      "ayahs": 3145,
+      "proofs": 1016,
+      "confirmed_fraction": 0.3230524642289348
+    },
+    "under_20_ayahs": {
+      "records": 35,
+      "ayahs": 343,
+      "proofs": 249,
+      "confirmed_fraction": 0.7259475218658892
+    }
+  },
+  "reciters": {
+    "mahmoud_khalil_al_hussary": {
+      "records": 9,
+      "ayahs": 290,
+      "proofs": 54,
+      "confirmed_fraction": 0.18620689655172415
+    },
+    "mohammed_siddiq_al_minshawi": {
+      "records": 9,
+      "ayahs": 290,
+      "proofs": 24,
+      "confirmed_fraction": 0.08275862068965517
+    },
+    "saad_al_ghamidi": {
+      "records": 9,
+      "ayahs": 290,
+      "proofs": 108,
+      "confirmed_fraction": 0.3724137931034483
+    },
+    "shatri": {
+      "records": 114,
+      "ayahs": 6236,
+      "proofs": 1422,
+      "confirmed_fraction": 0.22803078896728673
+    }
+  },
+  "legacy37": {
+    "legacy": {
+      "positive_marks": 410,
+      "positive_over500": 9,
+      "all_over500": 66,
+      "calls": 1076,
+      "input_ms": 2213700.0
+    },
+    "F13_baseline": {
+      "positive_marks": 390,
+      "positive_over500": 4,
+      "all_over500": 147,
+      "calls": 730,
+      "input_ms": 1249660.0
+    },
+    "PF14": {
+      "positive_marks": 439,
+      "positive_over500": 4,
+      "all_over500": 95,
+      "calls": 821,
+      "input_ms": 1409120.0
+    }
+  },
+  "examples": [
+    {
+      "surah": 2,
+      "ayahs": 286,
+      "after_proofs": 2,
+      "after_calls": 10,
+      "after_union_ms": 14500.0,
+      "duration_ms": 7086576.3125,
+      "after_largest_review_block": 283
+    },
+    {
+      "surah": 3,
+      "ayahs": 200,
+      "after_proofs": 0,
+      "after_calls": 3,
+      "after_union_ms": 4000.0,
+      "duration_ms": 4149185.3125,
+      "after_largest_review_block": 200
+    },
+    {
+      "surah": 5,
+      "ayahs": 120,
+      "after_proofs": 0,
+      "after_calls": 12,
+      "after_union_ms": 17200.0,
+      "duration_ms": 3360287.375,
+      "after_largest_review_block": 120
+    },
+    {
+      "surah": 78,
+      "ayahs": 40,
+      "after_proofs": 0,
+      "after_calls": 5,
+      "after_union_ms": 7000.0,
+      "duration_ms": 278987.75,
+      "after_largest_review_block": 40
+    },
+    {
+      "surah": 80,
+      "ayahs": 42,
+      "after_proofs": 33,
+      "after_calls": 69,
+      "after_union_ms": 92560.0,
+      "duration_ms": 194011.4375,
+      "after_largest_review_block": 3
+    }
+  ]
+}

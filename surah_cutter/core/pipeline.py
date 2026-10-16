@@ -1,23 +1,4 @@
-"""Per-sura orchestration: known-reciter shortcut, auto, fast, tiled, or full.
-
-Three paths today:
-
-1. **Known reciter** — in auto mode, if the reciter has a reference timing set, use it
-   directly (no audio model needed).
-2. **Auto** (``mode='auto'``, default) — choose full/fast/tiled by duration, then
-   run conservative lag calibration and local repair of suspicious auto rows.
-3. **Hybrid** (``mode='hybrid'``) — decode the audio, get cheap
-   pause/boundary candidates (Silero VAD + structural prior, see
-   :mod:`surah_cutter.core.candidates`), take every ayah whose expected
-   boundary sits on a clear pause directly, and run the NN forced aligner only
-   when the cheap stage is unreliable (missing/ambiguous pauses, or the pause
-   count disagrees with the ayah count). Full-sura alignment is the accuracy
-   fallback.
-4. **Fast** (``mode='fast'``) — one sequential executor proves local boundaries
-   with CTC/Tarteel adapters; unresolved ayahs remain explicit review estimates.
-5. **Tiled** (``mode='tiled'``) — exact chunked CTC for long suras.
-6. **Full** (``mode='full'``) — always decode + run the forced aligner over the
-   sura's whole known word sequence (the original Phase-3 path).
+"""Per-sura orchestration for explicitly selected alignment modes.
 
 Output rows ``(sura, ayah, start_ms)`` are shaped to feed straight into
 ``data.project_db.write_timings`` (which takes confidence as a separate arg).
@@ -33,16 +14,12 @@ importable without torch/onnxruntime.
 
 from __future__ import annotations
 
-import os
 from typing import Callable
 
 #: Default minimum candidate confidence for taking a pause-backed boundary
 #: directly (no NN). Below this the ayah is "hard" and goes to the aligner.
 PAUSE_ACCEPT_CONFIDENCE = 0.5
 
-#: Local repair currently runs a second whole-sura emissions pass via recheck.
-#: Keep it opt-in until it can reuse emissions from the selected aligner.
-AUTO_REPAIR = os.environ.get("SC_AUTO_REPAIR", "0") == "1"
 LogEvent = Callable[[str], None]
 
 
@@ -56,8 +33,7 @@ def process_surah(
     surah: int,
     *,
     db_path: str | None = None,
-    reciter: str | None = None,
-    mode: str = "auto",
+    mode: str = "full",
     project_db: object | None = None,
     trace: dict | None = None,
     ayah_audio_dir: str | None = None,
@@ -74,19 +50,15 @@ def process_surah(
             used to read the sura's known word sequence and the structural
             prior. ``None`` uses the bundled default
             (:data:`quran_text.DEFAULT_DB_PATH`).
-        reciter: Optional reciter identifier. In auto mode, if it matches a
-            reference set, stored timings are returned without audio processing.
-            Explicit modes always run the selected alignment algorithm.
-        mode: ``'auto'`` (default), ``'hybrid'``, ``'fast'``, ``'tiled'``,
-            ``'full'`` or ``'fingerprint'``.
+        mode: ``'full'`` (default), ``'hybrid'``, ``'fast'``, ``'tiled'``
+            or ``'fingerprint'``.
         project_db: Optional working :class:`~data.project_db.ProjectDB` (or a
             path to one) for resumption. Ayahs whose review status is
             ``edited``/``verified`` keep their stored start and are not
             recomputed.
-        ayah_audio_dir: Optional directory of per-ayah clips from the same
-            recording. In ``fast`` mode, available clips can locally verify
-            high-correlation starts; ``fingerprint`` mode still requires every
-            ayah clip.
+        ayah_audio_dir: Directory of per-ayah clips from the same recording for
+            ``fingerprint`` mode, which requires every ayah clip. FAST rejects
+            clips and uses local acoustic evidence only.
         log_event: Optional realtime logger for human-readable per-sura
             diagnostics.
         ayah_progress: Called with the current ayah during the alignment pass.
@@ -94,7 +66,7 @@ def process_surah(
             Still requires explicit ``mode='fast'``; never selects legacy.
 
     Returns:
-        Rows ``(sura, ayah, start_ms)``, one per ayah of the sura, ordered by
+        Rows ``(sura, ayah, start_ms)``, resolved ayahs (FAST may be partial), ordered by
         ayah. Ready to pass to ``data.project_db.write_timings`` (confidence is
         a separate argument there).
 
@@ -103,16 +75,18 @@ def process_surah(
     """
     if experimental_fast and mode != "fast":
         raise ValueError("experimental_fast requires explicit fast mode")
-    if mode not in ("hybrid", "fast", "full", "tiled", "auto", "fingerprint"):
+    if mode not in ("hybrid", "fast", "full", "tiled", "fingerprint"):
         raise ValueError(
             f"unknown mode {mode!r}; use 'hybrid', 'fast', 'full', 'tiled', "
-            "'auto' or 'fingerprint'"
+            "or 'fingerprint'"
         )
 
     # Lazy imports: keep module import light and free of heavy deps.
-    from surah_cutter.data import quran_text, references
+    from surah_cutter.data import quran_text
     from surah_cutter.core import model_store
 
+    if model_store.ACTIVE_ID == "mfa-quran-hafs" and mode == "tiled":
+        raise ValueError("MFA не поддерживает tiled. Выберите Полный или Слова.")
     if (model_store.active_kind() != "phonetic" and mode not in ("full", "tiled", "fingerprint")
             and not (mode == "fast" and model_store.supports_fast())):
         raise ValueError("Выбранная модель поддерживает полный, точный и пословный режимы. Выберите «Полный».")
@@ -125,20 +99,6 @@ def process_surah(
             stat = audio_file.stat()
             trace["audio_signature"] = {"name": audio_file.name, "size": stat.st_size,
                                         "mtime_ns": stat.st_mtime_ns}
-
-    # 1. Known-reciter shortcut.
-    if reciter is not None and mode == "auto":
-        name = references.find_reciter(reciter)
-        if name is not None:
-            if trace is not None:
-                trace["model_source"] = f"reference:{name}"
-            # Reference start times for the whole DB; keep this sura, sorted.
-            timings = references.load_reference(name)
-            return sorted(
-                (sura, ayah, start_ms)
-                for (sura, ayah), start_ms in timings.items()
-                if sura == surah
-            )
 
     # Resumption: ayahs already finalised by a human keep their stored start.
     frozen = _frozen_ayahs(project_db, surah)
@@ -168,12 +128,6 @@ def process_surah(
     elif mode == "tiled":
         rows = _tiled_align(audio_path, surah, words, trace=trace, log_event=log_event,
                             **progress_kwargs)
-    elif mode == "auto":
-        rows = _auto_align(
-            audio_path, surah, words, frozen=set(frozen), trace=trace,
-            log_event=log_event,
-            **progress_kwargs,
-        )
     elif mode == "fingerprint":
         rows = _fingerprint_align(audio_path, surah, words, ayah_audio_dir=ayah_audio_dir)
     else:
@@ -186,70 +140,13 @@ def process_surah(
     # Overlay frozen (edited/verified) ayahs: never overwrite manual work.
     if frozen:
         rows = [(s, a, frozen.get(a, t)) for (s, a, t) in rows]
+        if mode == "fast":
+            present = {a for _, a, _ in rows}
+            rows.extend((surah, a, t) for a, t in frozen.items() if a not in present)
+            rows.sort(key=lambda row: row[1])
+            if trace is not None:
+                trace["protected_rows"] = [(surah, a, t) for a, t in frozen.items()]
 
-    return rows
-
-
-# --- automatic route ------------------------------------------------------
-
-
-def _auto_align(
-    audio_path: str,
-    surah: int,
-    words: list,
-    *,
-    frozen: set[int],
-    trace: dict | None = None,
-    log_event: LogEvent | None = None,
-    ayah_progress: Callable[[int], None] | None = None,
-) -> list[tuple[int, int, int]]:
-    """Decode once, choose the safest practical mode, then lag-calibrate."""
-    from surah_cutter.core import align, align_fast, align_tiled, decode, lag
-
-    bundle = align.default_bundle()
-    pcm = decode.decode(audio_path)
-    progress_kwargs = {"ayah_progress": ayah_progress} if ayah_progress is not None else {}
-    sr = decode.DEFAULT_SR
-    total_ms = len(pcm) * 1000.0 / sr if sr else 0.0
-    _emit_log(log_event, f"Сура {surah}: auto, длительность {total_ms / 1000.0:.2f} сек.")
-    if total_ms < 60_000:
-        selected = "full"
-        _emit_log(log_event, "Auto выбрал full: короткая сура")
-        ar = align.align_surah(pcm, sr, words, surah=surah, trace=trace, log_event=log_event,
-                               **progress_kwargs)
-    elif total_ms < 600_000:
-        selected = "fast"
-        _emit_log(log_event, "Auto выбрал fast: паузы + короткие нейро-окна")
-        ar = align_fast.align_surah_fast(
-            pcm, sr, words, bundle=bundle, surah=surah, trace=trace,
-            log_event=log_event, **progress_kwargs
-        )
-    else:
-        selected = "tiled"
-        _emit_log(log_event, "Auto выбрал tiled: точное выравнивание тайлами")
-        ar = align_tiled.align_surah_tiled(
-            pcm, sr, words, surah=surah, trace=trace, log_event=log_event, **progress_kwargs
-        )
-
-    rows = [(surah, ayah, start_ms) for ayah, start_ms, _conf in ar]
-    lag_adjust = 0
-    if selected != "fast":
-        rows, lag_adjust = lag.calibrate_rows_to_pauses(
-            pcm, sr, rows, surah=surah, frozen=frozen
-        )
-        _emit_log(log_event, f"Калибровка лага по паузам: {lag_adjust:+.0f} мс")
-    repair_enabled = AUTO_REPAIR and selected != "fast"
-    if repair_enabled:
-        from surah_cutter.core import repair
-
-        rows = repair.repair_surah_timings(
-            pcm, sr, words, rows, surah=surah, frozen=frozen
-        )
-        _emit_log(log_event, "Repair-pass: подозрительные auto-метки проверены")
-    if trace is not None:
-        trace["auto_mode"] = selected
-        trace["lag_adjust_ms"] = lag_adjust
-        trace["repair_enabled"] = repair_enabled
     return rows
 
 
@@ -288,6 +185,9 @@ def _full_align(
     """
     from surah_cutter.core import align, decode
 
+    from surah_cutter.core.progress import report
+
+    report("decode")
     pcm = decode.decode(audio_path)
     total_ms = len(pcm) * 1000.0 / decode.DEFAULT_SR
     _emit_log(
@@ -326,7 +226,12 @@ def _fast_align(
     if ayah_audio_dir:
         raise ValueError("Единый FAST не поддерживает внешние аятные клипы. Выберите режим fingerprint.")
     # Selection changes during a long decode cannot replace this run's bundle.
+    from surah_cutter.core.progress import report
+
+    report("model")
     kwargs = {"bundle": align.default_bundle()}
+
+    report("decode")
     pcm = decode.decode(audio_path)
     if ayah_progress is not None:
         kwargs["ayah_progress"] = ayah_progress
@@ -362,6 +267,9 @@ def _tiled_align(
     """
     from surah_cutter.core import align_tiled, decode
 
+    from surah_cutter.core.progress import report
+
+    report("decode")
     pcm = decode.decode(audio_path)
     progress_kwargs = {"ayah_progress": ayah_progress} if ayah_progress is not None else {}
     rows = align_tiled.align_surah_tiled(
@@ -402,6 +310,9 @@ def _hybrid(
     """
     from surah_cutter.core import candidates, decode
 
+    from surah_cutter.core.progress import report
+
+    report("decode")
     pcm = decode.decode(audio_path)
     sr = decode.DEFAULT_SR
     total_ms = len(pcm) * 1000.0 / sr if sr else 0.0
@@ -468,6 +379,9 @@ def _full_align_starts(
     from surah_cutter.core import align, decode
 
     if pcm is None:
+        from surah_cutter.core.progress import report
+
+        report("decode")
         pcm = decode.decode(audio_path)
         sr = decode.DEFAULT_SR
     rows = align.align_surah(pcm, sr or decode.DEFAULT_SR, words, surah=surah)

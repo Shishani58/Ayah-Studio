@@ -1,0 +1,63 @@
+{
+  "declared_in": "measurement-contract.md before local/prototype outputs",
+  "A": {
+    "reciter": "shatri",
+    "surahs": [
+      1,
+      2,
+      32,
+      55,
+      59,
+      65,
+      73,
+      77,
+      79,
+      80,
+      98,
+      112
+    ],
+    "models": "4",
+    "completed_pairs": 48
+  },
+  "B_C_D": {
+    "reciters": [
+      "saad_al_ghamidi",
+      "mohammed_siddiq_al_minshawi",
+      "mahmoud_khalil_al_hussary",
+      "abdul_basit_mujawwad"
+    ],
+    "surahs": [
+      80,
+      98,
+      112
+    ],
+    "models": [
+      "quran-phonetics",
+      "quran-phonetics-fp32"
+    ],
+    "completed_pairs": 24,
+    "ASR_exclusion": "branch exclusively ctc metric; all12 fresh ASR pairs permodel in A exactly identical"
+  },
+  "E": {
+    "surahs": [
+      9,
+      42,
+      83,
+      95,
+      109,
+      113,
+      114
+    ],
+    "models": [
+      "quran-phonetics",
+      "quran-phonetics-fp32"
+    ],
+    "completed_pairs": 14
+  },
+  "F": {
+    "status": "not_reached",
+    "reason": "cross-reciter positive transfer gate failed; no production algorithm change accepted"
+  },
+  "data_sha256": "data-manifest.json",
+  "paired_total": 86
+}

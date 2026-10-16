@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "files": 230,
+  "db_files": 98,
+  "mp3_files": 132,
+  "changed": [],
+  "canonical_tables": [
+    "ayahs_search_text_data",
+    "ayahs_search_text_idx",
+    "ayahs_search_text_content",
+    "ayahs_search_text_docsize",
+    "ayahs_search_text_config",
+    "words",
+    "ayahs_search_text",
+    "mushaf_page_metrics"
+  ],
+  "AGENTS_CLAUDE_identical": true,
+  "target_tables_unchanged": {
+    "data/quran_mushaf.db": true,
+    "data/model_text_targets.json": true,
+    "data/word_tr_cache.json": true
+  }
+}

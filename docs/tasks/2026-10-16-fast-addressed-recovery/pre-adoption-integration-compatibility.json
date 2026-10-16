@@ -1,0 +1,40 @@
+{
+  "decode.py": {
+    "whole_file_equal": true
+  },
+  "candidates.py": {
+    "whole_file_equal": true
+  },
+  "fast_reads.py": {
+    "whole_file_equal": true
+  },
+  "fast_adapters.py": {
+    "whole_file_equal": true
+  },
+  "model_runtime.py": {
+    "whole_file_equal": true
+  },
+  "model_worker.py": {
+    "whole_file_equal": true
+  },
+  "model_store.py": {
+    "whole_file_equal": false,
+    "changed_function_names": [
+      "_download",
+      "load_emitter",
+      "runtime_path",
+      "source",
+      "start_download"
+    ]
+  },
+  "align_fast.py": {
+    "whole_file_equal": true
+  },
+  "pipeline.py": {
+    "whole_file_equal": false,
+    "changed_function_names": [
+      "_auto_align",
+      "process_surah"
+    ]
+  }
+}

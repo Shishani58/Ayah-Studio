@@ -1,0 +1,18 @@
+whisper-tarteel-base 28 96.15 review 63 coverage 0.092 calls 120
+whisper-tarteel-base 41 7.96 review 48 coverage 0.026 calls 16
+whisper-tarteel-base 65 5.73 review 11 coverage 0.044 calls 12
+whisper-tarteel-base 72 22.26 review 19 coverage 0.173 calls 38
+whisper-tarteel-base 73 16.28 review 0 coverage 0.22 calls 35
+whisper-tarteel-base 82 18.19 review 1 coverage 0.426 calls 38
+whisper-tarteel-base 84 20.43 review 4 coverage 0.388 calls 41
+Traceback (most recent call last):
+  File "<string>", line 13, in <module>
+  File "<frozen runpy>", line 287, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/ayub/Developer/surah-cutter/tools/bench_fast_models.py", line 214, in <module>
+    main()
+  File "/Users/ayub/Developer/surah-cutter/tools/bench_fast_models.py", line 201, in main
+    assert source_sha == {str(p.relative_to(root)): _sha(p) for p in paths}, "Inference source changed during benchmark"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Inference source changed during benchmark

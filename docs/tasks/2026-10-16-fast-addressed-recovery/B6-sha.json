@@ -1,0 +1,9 @@
+{
+  "sha256": {
+    "surah_cutter/core/fast_executor.py": "f2c142b07c1996f99bba299be0895214e78594f2f73b2e4511acc4afdae8f6c3",
+    "surah_cutter/core/fast_adapters.py": "6591edff29e4338048c7360d5036830ef4f72cd00579ea389784f696ba8d70d5"
+  },
+  "proof_quality_unchanged": "all selected tokens per whole essential word >=0.6",
+  "cue_quality": "first3 independently decoded letters incl following diacritics, selected BPE minima >=0.6",
+  "control_results_seen": false
+}

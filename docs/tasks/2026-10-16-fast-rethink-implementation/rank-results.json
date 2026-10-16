@@ -1,0 +1,590 @@
+[
+  {
+    "surah": 2,
+    "ayah": 1,
+    "kind": "audio",
+    "window_ms": [
+      140.0,
+      1440.0
+    ],
+    "target": "aliflammeem",
+    "heard": "bis'mill\u0101",
+    "frames": 64,
+    "target_tokens": 11,
+    "expected_log_likelihood": -104.19619570007357,
+    "expected_per_token": -9.472381427279416,
+    "expected_per_frame": -1.6280655578136496,
+    "same_length_candidates": 904,
+    "same_length_rank": 348,
+    "best_same_length": {
+      "owner": [
+        78,
+        48
+      ],
+      "text": "wainhumill\u0101",
+      "kind": "canonical_rival",
+      "log_likelihood": -50.64998115191931
+    },
+    "best_per_token": {
+      "owner": [
+        85,
+        242
+      ],
+      "text": "minkumill\u0101",
+      "per_token": -4.191974110607207
+    },
+    "blank_log_likelihood": -74.3797378540039,
+    "unrestricted_best_path": -1.6343175172805786,
+    "expected_minus_blank": -29.816457846069667,
+    "expected_minus_unrestricted": -102.561878182793,
+    "ranking_seconds": 0.734331457875669,
+    "published_owner": null,
+    "published_timestamp": null
+  },
+  {
+    "surah": 2,
+    "ayah": 1,
+    "kind": "silence",
+    "window_ms": [
+      140.0,
+      1440.0
+    ],
+    "target": "aliflammeem",
+    "heard": "",
+    "frames": 64,
+    "target_tokens": 11,
+    "expected_log_likelihood": -150.90910183139127,
+    "expected_per_token": -13.719009257399206,
+    "expected_per_frame": -2.3579547161154886,
+    "same_length_candidates": 904,
+    "same_length_rank": 881,
+    "best_same_length": {
+      "owner": [
+        253,
+        262
+      ],
+      "text": "kafarawalaw",
+      "kind": "canonical_rival",
+      "log_likelihood": -137.69751298727067
+    },
+    "best_per_token": {
+      "owner": [
+        140,
+        118
+      ],
+      "text": "katama",
+      "per_token": -11.887841556344044
+    },
+    "blank_log_likelihood": -0.00024231939460150898,
+    "unrestricted_best_path": -0.00024231939460150898,
+    "expected_minus_blank": -150.90885951199667,
+    "expected_minus_unrestricted": -150.90885951199667,
+    "ranking_seconds": 0.730327291181311,
+    "published_owner": null,
+    "published_timestamp": null
+  },
+  {
+    "surah": 2,
+    "ayah": 3,
+    "kind": "audio",
+    "window_ms": [
+      19420.0,
+      20920.0
+    ],
+    "target": "alladh\u012bnayu'min\u016bna",
+    "heard": "fudalla'mu",
+    "frames": 74,
+    "target_tokens": 18,
+    "expected_log_likelihood": -161.76100697231735,
+    "expected_per_token": -8.986722609573185,
+    "expected_per_frame": -2.185959553679964,
+    "same_length_candidates": 936,
+    "same_length_rank": 268,
+    "best_same_length": {
+      "owner": [
+        282,
+        566
+      ],
+      "text": "\u02bfindallahiwaaqwamu",
+      "kind": "canonical_rival",
+      "log_likelihood": -119.32121660996367
+    },
+    "best_per_token": {
+      "owner": [
+        129,
+        55
+      ],
+      "text": "wayu\u02bfallimuhumu",
+      "per_token": -5.9015392258615
+    },
+    "blank_log_likelihood": -103.1966323852539,
+    "unrestricted_best_path": -2.953357458114624,
+    "expected_minus_blank": -58.56437458706344,
+    "expected_minus_unrestricted": -158.80764951420272,
+    "ranking_seconds": 1.249315207824111,
+    "published_owner": null,
+    "published_timestamp": null
+  },
+  {
+    "surah": 2,
+    "ayah": 4,
+    "kind": "audio",
+    "window_ms": [
+      50120.0,
+      51620.0
+    ],
+    "target": "waalladh\u012bnayu'min\u016bna",
+    "heard": "ul\u0101",
+    "frames": 74,
+    "target_tokens": 20,
+    "expected_log_likelihood": -231.40516590479626,
+    "expected_per_token": -11.570258295239814,
+    "expected_per_frame": -3.127096836551301,
+    "same_length_candidates": 881,
+    "same_length_rank": 94,
+    "best_same_length": {
+      "owner": [
+        111,
+        65
+      ],
+      "text": "qulh\u0101t\u016bbur'h\u0101nakumin",
+      "kind": "canonical_rival",
+      "log_likelihood": -213.1841076160679
+    },
+    "best_per_token": {
+      "owner": [
+        269,
+        85
+      ],
+      "text": "ul\u016blalb\u0101bi",
+      "per_token": -9.4215710569939
+    },
+    "blank_log_likelihood": -34.23991012573242,
+    "unrestricted_best_path": -0.005095562431961298,
+    "expected_minus_blank": -197.16525577906384,
+    "expected_minus_unrestricted": -231.4000703423643,
+    "ranking_seconds": 1.7464031667914242,
+    "published_owner": null,
+    "published_timestamp": null
+  },
+  {
+    "surah": 78,
+    "ayah": 1,
+    "kind": "audio",
+    "window_ms": [
+      220.0,
+      1520.0
+    ],
+    "target": "\u02bfamma",
+    "heard": "bis'mil\u0101",
+    "frames": 64,
+    "target_tokens": 5,
+    "expected_log_likelihood": -78.01315011035287,
+    "expected_per_token": -15.602630022070574,
+    "expected_per_frame": -1.2189554704742636,
+    "same_length_candidates": 24,
+    "same_length_rank": 4,
+    "best_same_length": {
+      "owner": [
+        4,
+        0
+      ],
+      "text": "kall\u0101",
+      "kind": "canonical_rival",
+      "log_likelihood": -66.01660896816969
+    },
+    "best_per_token": {
+      "owner": [
+        28,
+        9
+      ],
+      "text": "bi\u0101y\u0101tin\u0101",
+      "per_token": -6.731995052957331
+    },
+    "blank_log_likelihood": -79.41655731201172,
+    "unrestricted_best_path": -1.6574780941009521,
+    "expected_minus_blank": 1.403407201658851,
+    "expected_minus_unrestricted": -76.35567201625192,
+    "ranking_seconds": 0.006771499989554286,
+    "published_owner": null,
+    "published_timestamp": null
+  },
+  {
+    "surah": 78,
+    "ayah": 1,
+    "kind": "silence",
+    "window_ms": [
+      220.0,
+      1520.0
+    ],
+    "target": "\u02bfamma",
+    "heard": "",
+    "frames": 64,
+    "target_tokens": 5,
+    "expected_log_likelihood": -62.0019357192701,
+    "expected_per_token": -12.40038714385402,
+    "expected_per_frame": -0.9687802456135953,
+    "same_length_candidates": 24,
+    "same_length_rank": 10,
+    "best_same_length": {
+      "owner": [
+        40,
+        87
+      ],
+      "text": "kuntu",
+      "kind": "canonical_rival",
+      "log_likelihood": -58.9252811505624
+    },
+    "best_per_token": {
+      "owner": [
+        40,
+        87
+      ],
+      "text": "kuntu",
+      "per_token": -11.78505623011248
+    },
+    "blank_log_likelihood": -0.00024231939460150898,
+    "unrestricted_best_path": -0.00024231939460150898,
+    "expected_minus_blank": -62.0016933998755,
+    "expected_minus_unrestricted": -62.0016933998755,
+    "ranking_seconds": 0.007024124963209033,
+    "published_owner": null,
+    "published_timestamp": null
+  },
+  {
+    "surah": 80,
+    "ayah": 1,
+    "kind": "audio",
+    "window_ms": [
+      220.0,
+      1520.0
+    ],
+    "target": "\u02bfabasa",
+    "heard": "bis'mil\u0101",
+    "frames": 64,
+    "target_tokens": 6,
+    "expected_log_likelihood": -90.53152745678454,
+    "expected_per_token": -15.08858790946409,
+    "expected_per_frame": -1.4145551165122585,
+    "same_length_candidates": 26,
+    "same_length_rank": 16,
+    "best_same_length": {
+      "owner": [
+        11,
+        5
+      ],
+      "text": "innah\u0101",
+      "kind": "canonical_rival",
+      "log_likelihood": -67.99768344900943
+    },
+    "best_per_token": {
+      "owner": [
+        5,
+        8
+      ],
+      "text": "is'taghn\u0101",
+      "per_token": -7.212200365054841
+    },
+    "blank_log_likelihood": -79.41655731201172,
+    "unrestricted_best_path": -1.6574780941009521,
+    "expected_minus_blank": -11.114970144772826,
+    "expected_minus_unrestricted": -88.87404936268359,
+    "ranking_seconds": 0.007371584186330438,
+    "published_owner": null,
+    "published_timestamp": null
+  },
+  {
+    "surah": 80,
+    "ayah": 2,
+    "kind": "audio",
+    "window_ms": [
+      8680.0,
+      10180.0
+    ],
+    "target": "anj\u0101ahu",
+    "heard": "an",
+    "frames": 74,
+    "target_tokens": 7,
+    "expected_log_likelihood": -55.161790109717145,
+    "expected_per_token": -7.880255729959592,
+    "expected_per_frame": -0.7454295960772587,
+    "same_length_candidates": 32,
+    "same_length_rank": 1,
+    "best_same_length": {
+      "owner": [
+        17,
+        6
+      ],
+      "text": "lins\u0101nu",
+      "kind": "canonical_rival",
+      "log_likelihood": -66.183226145487
+    },
+    "best_per_token": {
+      "owner": [
+        25,
+        0
+      ],
+      "text": "ann\u0101",
+      "per_token": -5.11506628616606
+    },
+    "blank_log_likelihood": -30.9811954498291,
+    "unrestricted_best_path": -0.006898526567965746,
+    "expected_minus_blank": -24.180594659888044,
+    "expected_minus_unrestricted": -55.15489158314918,
+    "ranking_seconds": 0.06545345787890255,
+    "published_owner": null,
+    "published_timestamp": null
+  },
+  {
+    "surah": 80,
+    "ayah": 4,
+    "kind": "audio",
+    "window_ms": [
+      18180.0,
+      19680.0
+    ],
+    "target": "awyadhakkaru",
+    "heard": "amyadhaka",
+    "frames": 74,
+    "target_tokens": 12,
+    "expected_log_likelihood": -61.83017637119354,
+    "expected_per_token": -5.152514697599462,
+    "expected_per_frame": -0.8355429239350478,
+    "same_length_candidates": 21,
+    "same_length_rank": 1,
+    "best_same_length": {
+      "owner": [
+        3,
+        0
+      ],
+      "text": "wam\u0101yud'r\u012bka",
+      "kind": "canonical_rival",
+      "log_likelihood": -80.38383064852734
+    },
+    "best_per_token": {
+      "owner": [
+        23,
+        17
+      ],
+      "text": "amarahu",
+      "per_token": -6.6062721691747175
+    },
+    "blank_log_likelihood": -80.59662628173828,
+    "unrestricted_best_path": -1.39517080783844,
+    "expected_minus_blank": 18.766449910544743,
+    "expected_minus_unrestricted": -60.4350055633551,
+    "ranking_seconds": 0.04561012494377792,
+    "published_owner": null,
+    "published_timestamp": null
+  },
+  {
+    "surah": 2,
+    "ayah": 2,
+    "kind": "audio",
+    "window_ms": [
+      14900.0,
+      19100.0
+    ],
+    "target": "dh\u0101likalkit\u0101bu",
+    "heard": "d\u0101likalkit\u0101nmul\u0101naybat\u012b",
+    "frames": 209,
+    "target_tokens": 14,
+    "expected_log_likelihood": -64.26813301474849,
+    "expected_per_token": -4.590580929624892,
+    "expected_per_frame": -0.3075030287787009,
+    "same_length_candidates": 943,
+    "same_length_rank": 1,
+    "best_same_length": {
+      "owner": [
+        2,
+        7
+      ],
+      "text": "lkit\u0101bul\u0101rayba",
+      "kind": "canonical_rival",
+      "log_likelihood": -75.37845879539253
+    },
+    "best_per_token": {
+      "owner": [
+        2,
+        7
+      ],
+      "text": "lkit\u0101bul\u0101rayba",
+      "per_token": -5.384175628242324
+    },
+    "blank_log_likelihood": -180.64501953125,
+    "unrestricted_best_path": -2.5545570850372314,
+    "expected_minus_blank": 116.37688651650151,
+    "expected_minus_unrestricted": -61.713575929711254,
+    "ranking_seconds": 2.9117080001160502,
+    "published_owner": null,
+    "published_timestamp": null
+  },
+  {
+    "surah": 2,
+    "ayah": 3,
+    "kind": "audio",
+    "window_ms": [
+      22840.0,
+      27040.0
+    ],
+    "target": "alladh\u012bnayu'min\u016bna",
+    "heard": "ladhinayu'min\u016bnadighabiwayurimu",
+    "frames": 209,
+    "target_tokens": 18,
+    "expected_log_likelihood": -107.87927603749019,
+    "expected_per_token": -5.993293113193899,
+    "expected_per_frame": -0.5161687848683741,
+    "same_length_candidates": 936,
+    "same_length_rank": 1,
+    "best_same_length": {
+      "owner": [
+        3,
+        9
+      ],
+      "text": "yu'min\u016bnabilghaybi",
+      "kind": "canonical_rival",
+      "log_likelihood": -117.45159674913602
+    },
+    "best_per_token": {
+      "owner": [
+        118,
+        74
+      ],
+      "text": "alladh\u012bnaminqablihim",
+      "per_token": -5.3286891790728665
+    },
+    "blank_log_likelihood": -218.28076171875,
+    "unrestricted_best_path": -8.552464485168457,
+    "expected_minus_blank": 110.40148568125981,
+    "expected_minus_unrestricted": -99.32681155232173,
+    "ranking_seconds": 4.469258791068569,
+    "published_owner": null,
+    "published_timestamp": null
+  },
+  {
+    "surah": 80,
+    "ayah": 1,
+    "kind": "audio",
+    "window_ms": [
+      6180.0,
+      10380.0
+    ],
+    "target": "\u02bfabasa",
+    "heard": "abasawatawll\u0101anja",
+    "frames": 209,
+    "target_tokens": 6,
+    "expected_log_likelihood": -92.45096151096546,
+    "expected_per_token": -15.40849358516091,
+    "expected_per_frame": -0.4423490981385907,
+    "same_length_candidates": 26,
+    "same_length_rank": 6,
+    "best_same_length": {
+      "owner": [
+        6,
+        0
+      ],
+      "text": "faanta",
+      "kind": "canonical_rival",
+      "log_likelihood": -72.96740719934978
+    },
+    "best_per_token": {
+      "owner": [
+        1,
+        6
+      ],
+      "text": "watawall\u0101",
+      "per_token": -7.769381391748581
+    },
+    "blank_log_likelihood": -118.5177001953125,
+    "unrestricted_best_path": -3.958357095718384,
+    "expected_minus_blank": 26.066738684347044,
+    "expected_minus_unrestricted": -88.49260441524707,
+    "ranking_seconds": 0.08759291702881455,
+    "published_owner": null,
+    "published_timestamp": null
+  },
+  {
+    "surah": 80,
+    "ayah": 3,
+    "kind": "audio",
+    "window_ms": [
+      13500.0,
+      17700.0
+    ],
+    "target": "wam\u0101yud'r\u012bka",
+    "heard": "wam\u0101yuar\u012bkal\u0101llamyazatk\u0101",
+    "frames": 209,
+    "target_tokens": 12,
+    "expected_log_likelihood": -119.90888405800249,
+    "expected_per_token": -9.99240700483354,
+    "expected_per_frame": -0.5737267179808732,
+    "same_length_candidates": 21,
+    "same_length_rank": 2,
+    "best_same_length": {
+      "owner": [
+        7,
+        11
+      ],
+      "text": "all\u0101yazzakk\u0101",
+      "kind": "canonical_rival",
+      "log_likelihood": -96.79615866281478
+    },
+    "best_per_token": {
+      "owner": [
+        7,
+        11
+      ],
+      "text": "all\u0101yazzakk\u0101",
+      "per_token": -8.066346555234565
+    },
+    "blank_log_likelihood": -194.94778442382812,
+    "unrestricted_best_path": -7.4569549560546875,
+    "expected_minus_blank": 75.03890036582564,
+    "expected_minus_unrestricted": -112.4519291019478,
+    "ranking_seconds": 0.061750292079523206,
+    "published_owner": null,
+    "published_timestamp": null
+  },
+  {
+    "surah": 80,
+    "ayah": 4,
+    "kind": "audio",
+    "window_ms": [
+      18180.0,
+      22380.0
+    ],
+    "target": "awyadhakkaru",
+    "heard": "amyazakirfatanf\u0101hikur",
+    "frames": 209,
+    "target_tokens": 12,
+    "expected_log_likelihood": -114.05664664941209,
+    "expected_per_token": -9.504720554117673,
+    "expected_per_frame": -0.5457255820546033,
+    "same_length_candidates": 21,
+    "same_length_rank": 1,
+    "best_same_length": {
+      "owner": [
+        36,
+        0
+      ],
+      "text": "wa\u1e63\u0101\u1e25ibatihi",
+      "kind": "canonical_rival",
+      "log_likelihood": -119.3666838992602
+    },
+    "best_per_token": {
+      "owner": [
+        32,
+        7
+      ],
+      "text": "lakumwalian\u02bf\u0101mikum",
+      "per_token": -7.133810982616895
+    },
+    "blank_log_likelihood": -164.51889038085938,
+    "unrestricted_best_path": -6.496953010559082,
+    "expected_minus_blank": 50.46224373144729,
+    "expected_minus_unrestricted": -107.559693638853,
+    "ranking_seconds": 0.1051593329757452,
+    "published_owner": null,
+    "published_timestamp": null
+  }
+]

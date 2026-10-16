@@ -1,0 +1,46 @@
+{
+  "official_feature_extractor_parity": [
+    {
+      "surah": 1,
+      "exact_normalized_input_sha": true,
+      "input_shape": [
+        96000
+      ],
+      "mask_all_one": true
+    },
+    {
+      "surah": 80,
+      "exact_normalized_input_sha": true,
+      "input_shape": [
+        96000
+      ],
+      "mask_all_one": true
+    }
+  ],
+  "canonical_phrase": {
+    "surah": 1,
+    "ayah": 2,
+    "text": "ٱلۡحَمۡدُ لِلَّهِ رَبِّ ٱلۡعَٰلَمِينَ"
+  },
+  "muaalem_representations": [
+    {
+      "madd_aared_len": 2,
+      "phonemes": "ءَلۡحَمۡدُلِللَااهِرَببِلۡعَاالَمِۦۦن",
+      "count": 37
+    },
+    {
+      "madd_aared_len": 4,
+      "phonemes": "ءَلۡحَمۡدُلِللَااهِرَببِلۡعَاالَمِۦۦۦۦن",
+      "count": 39
+    },
+    {
+      "madd_aared_len": 6,
+      "phonemes": "ءَلۡحَمۡدُلِللَااهِرَببِلۡعَاالَمِۦۦۦۦۦۦن",
+      "count": 41
+    }
+  ],
+  "library_source_sha256": {
+    "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/quran_transcript/phonetics/phonetizer.py": "e9a55f5a998e8c4e9016e1e8313cbf4c1552e7aa32c1ee1c7fca1a9f4a18e242",
+    "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/transformers/models/wav2vec2/feature_extraction_wav2vec2.py": "3939510ca5498e433627dde737e3d15bcc567ad14ee90ed3b284472ef7b0da90"
+  }
+}

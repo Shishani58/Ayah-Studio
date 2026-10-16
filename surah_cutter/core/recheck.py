@@ -12,16 +12,11 @@ fallback (``_VERIFY_SIM`` in :mod:`surah_cutter.core.align_fast`), here as an
 explicit review aid. It is **strictly read-only**: it never writes timings or
 review status, so it cannot clobber manual work — it only reports.
 
-Robustness note: absolute similarity is a noisy per-ayah signal — on slow
-murattal it ranges ~0.14–0.78 even on *correct* boundaries (greedy decode is
-messy and confounds with *wasl* density; see the fast-mode failure landscape), so
-no absolute threshold separates right from wrong. Validation on a known-correct
-reciter confirmed this: an absolute floor flagged ~45% of correct ayahs, while
-the *relative* test below produced **zero** false positives there yet caught
-off-by-one (30/40), multi-second drift (+4 s → 20, +8 s → 26) and a localised
-slip (precisely the corrupted ayahs). So the verdict is **purely relative**: does
-a neighbouring ayah's opening match what's heard here better than this ayah's own
-opening? If so it is flagged ``shift`` ("звучит как аят N"); otherwise ``ok``.
+Similarity compares the decoded audio with competing canonical openings.
+A neighbouring opening with a strictly higher score is flagged ``shift``
+("звучит как аят N"); otherwise the verdict is ``ok``. There is no margin
+fitted to labelled recordings. This relative comparison is a review cue,
+not a measured probability of a correct timecode.
 Repeated refrains (e.g. ar-Rahman's "fa-bi-ayyi ālā'i…") are acoustically
 identical across ayahs and so score ``ok`` even when shifted — an inherent limit;
 those are fixed by ear.
@@ -35,12 +30,6 @@ from __future__ import annotations
 import os
 from typing import Any
 
-#: A neighbouring ayah's opening must beat this ayah's own score by this margin to
-#: be flagged as "звучит как аят N" (off-by-one / drift). Below the margin the lead
-#: is melodic-stretch noise, not a real mismatch. Calibrated on a known-correct
-#: reciter: 0.10 gave zero false positives while still catching off-by-one and
-#: multi-second drift (the lead there is large). Env-tunable.
-_SHIFT_MARGIN = float(os.environ.get("SC_RECHECK_SHIFT_MARGIN", "0.10"))
 #: How many ayahs either side to test for a better match (drift is local).
 _NEIGHBOR_BAND = int(os.environ.get("SC_RECHECK_BAND", "2"))
 #: Window of audio greedy-decoded at each timecode (ms). Long enough to reach a
@@ -173,7 +162,7 @@ def recheck_surah(
             if s > best_other_sim:
                 best_other_sim, best_other_ayah = s, b
 
-        if best_other_ayah is not None and best_other_sim > self_sim + _SHIFT_MARGIN:
+        if best_other_ayah is not None and best_other_sim > self_sim:
             verdict = "shift"
             hint = f"звучит как аят {best_other_ayah}"
         else:

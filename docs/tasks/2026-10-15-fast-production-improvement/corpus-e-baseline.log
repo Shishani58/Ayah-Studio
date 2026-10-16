@@ -1,0 +1,94 @@
+whisper-tarteel-tiny 9 3.49 review 128 coverage 0.005 calls 11
+whisper-tarteel-tiny 42 6.92 review 45 coverage 0.047 calls 32
+whisper-tarteel-tiny 83 17.11 review 2 coverage 0.479 calls 81
+whisper-tarteel-tiny 95 2.3 review 1 coverage 0.275 calls 10
+whisper-tarteel-tiny 109 2.89 review 0 coverage 0.418 calls 13
+whisper-tarteel-tiny 113 2.46 review 0 coverage 0.478 calls 12
+whisper-tarteel-tiny 114 1.65 review 1 coverage 0.333 calls 8
+whisper-tarteel-base 9 7.53 review 127 coverage 0.007 calls 15
+whisper-tarteel-base 42 13.78 review 45 coverage 0.047 calls 32
+whisper-tarteel-base 83 35.98 review 1 coverage 0.492 calls 84
+whisper-tarteel-base 95 4.0 review 1 coverage 0.275 calls 10
+whisper-tarteel-base 109 4.85 review 0 coverage 0.418 calls 13
+whisper-tarteel-base 113 4.58 review 0 coverage 0.474 calls 11
+whisper-tarteel-base 114 4.21 review 1 coverage 0.333 calls 8
+{
+  "whisper-tarteel-tiny": {
+    "surahs": 7,
+    "ayahs": 243,
+    "median_ms": 12610.0,
+    "p95_ms": 56105.09999999996,
+    "max_ms": 65076,
+    "over500": 173,
+    "positive_conf_over500": [
+      [
+        83,
+        10,
+        558,
+        0.9848794158873218
+      ],
+      [
+        83,
+        13,
+        628,
+        0.9983408605955946
+      ],
+      [
+        83,
+        31,
+        513,
+        0.9584847823210366
+      ]
+    ],
+    "sequence_violations": [],
+    "review_ayahs": 177,
+    "load_probe_seconds": 4.045751041965559,
+    "decode_seconds": 3.88088875124231,
+    "dsp_seconds": 0.6474781259894371,
+    "inference_match_seconds": 36.80725195980631,
+    "search_seconds": 37.454730085795745,
+    "audio_ms": 294980.0,
+    "covered_audio_ms": 226560.0,
+    "total_ms": 4431908.5625,
+    "model_reads": 167
+  },
+  "whisper-tarteel-base": {
+    "surahs": 7,
+    "ayahs": 243,
+    "median_ms": 11882.0,
+    "p95_ms": 55712.19999999996,
+    "max_ms": 64838,
+    "over500": 171,
+    "positive_conf_over500": [
+      [
+        83,
+        10,
+        558,
+        0.8378101824516986
+      ],
+      [
+        83,
+        13,
+        628,
+        0.9999865295319578
+      ],
+      [
+        83,
+        31,
+        513,
+        0.9998825926329088
+      ]
+    ],
+    "sequence_violations": [],
+    "review_ayahs": 175,
+    "load_probe_seconds": 5.428559208055958,
+    "decode_seconds": 3.88088875124231,
+    "dsp_seconds": 0.6474781259894371,
+    "inference_match_seconds": 74.93492174870335,
+    "search_seconds": 75.58239987469278,
+    "audio_ms": 308300.0,
+    "covered_audio_ms": 234980.0,
+    "total_ms": 4431908.5625,
+    "model_reads": 173
+  }
+}

@@ -1,0 +1,833 @@
+{
+  "cases": [
+    {
+      "key": "original-s1-a1-1500",
+      "reciter": "shatri",
+      "surah": 1,
+      "ayah": 1,
+      "window_ms": [
+        200,
+        1700
+      ],
+      "role": "prior-example",
+      "phrase": [
+        "بسم"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "بسم",
+        "الله",
+        "الرحمن",
+        "الرحيم"
+      ],
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/001.mp3",
+      "audio_sha256": "6dedf8c3b88d2cd12c992710839443abebf26e7ef1fcea696acc8961b5836571",
+      "pcm_sha256": "feda08c4a488cdb289c5adf41535770b27a8666d7f008bc6a9fa364b9eb286c3",
+      "samples": 24000
+    },
+    {
+      "key": "original-s80-a1-1500",
+      "reciter": "shatri",
+      "surah": 80,
+      "ayah": 1,
+      "window_ms": [
+        6180,
+        7680
+      ],
+      "role": "prior-example",
+      "phrase": [
+        "عبس"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "عبس",
+        "وتولى"
+      ],
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/080.mp3",
+      "audio_sha256": "4d91f378520caba3be8df904ee323be94815ca448a98ddda29b58a1b415dd13c",
+      "pcm_sha256": "6e2cd7de785023cc909356f03cbde0e2ded1b9ac0dee20288ee9a5beeabc9186",
+      "samples": 24000
+    },
+    {
+      "key": "original-s98-a2-1500",
+      "reciter": "shatri",
+      "surah": 98,
+      "ayah": 2,
+      "window_ms": [
+        16940,
+        18440
+      ],
+      "role": "prior-example",
+      "phrase": [
+        "رسول"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "رسول",
+        "من",
+        "الله",
+        "يتلو",
+        "صحفا",
+        "مطهرة"
+      ],
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/098.mp3",
+      "audio_sha256": "bc7a058fcc0c8130cfaca391f40c76c0bccba24e4956fc6eb82085c2460dbfcf",
+      "pcm_sha256": "e7a8fd2fba507c71e17ba256f767abbc2b94974e22697c16d28c02d9231e71f9",
+      "samples": 24000
+    },
+    {
+      "key": "original-s112-a1-1500",
+      "reciter": "shatri",
+      "surah": 112,
+      "ayah": 1,
+      "window_ms": [
+        6120,
+        7620
+      ],
+      "role": "prior-example",
+      "phrase": [
+        "قل",
+        "هو"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "قل",
+        "هو",
+        "الله",
+        "احد"
+      ],
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/112.mp3",
+      "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a",
+      "pcm_sha256": "39498ec805e33234cb219a6ca65d48fe786d626922b16f98b245a9e8be70e52b",
+      "samples": 24000
+    },
+    {
+      "key": "blocked-32-1-0",
+      "reciter": "shatri",
+      "surah": 32,
+      "ayah": 1,
+      "window_ms": [
+        2460.0,
+        3960.0
+      ],
+      "role": "blocked-original",
+      "historical_text": "الم",
+      "selection_read_id": 1,
+      "phrase": [
+        "الم"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "الم"
+      ],
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/032.mp3",
+      "audio_sha256": "9f112acb28284a51695931eee330a1e2ea4c7771f04a1d56ca715cce736c88ee",
+      "pcm_sha256": "6b95fc4b38013a98683bbdb4de6f395cde7e1885c837bdcd4ec3aa524acf5cc8",
+      "samples": 24000
+    },
+    {
+      "key": "blocked-32-1-1",
+      "reciter": "shatri",
+      "surah": 32,
+      "ayah": 1,
+      "window_ms": [
+        2460.0,
+        6460.0
+      ],
+      "role": "blocked-expanded",
+      "historical_text": "الم",
+      "selection_read_id": 1,
+      "phrase": [
+        "الم"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "الم"
+      ],
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/032.mp3",
+      "audio_sha256": "9f112acb28284a51695931eee330a1e2ea4c7771f04a1d56ca715cce736c88ee",
+      "pcm_sha256": "7bcf525f3c25c524bd9a0f8426c011c5baae658d38f23718a3f5e8de120c1be3",
+      "samples": 64000
+    },
+    {
+      "key": "blocked-65-1-0",
+      "reciter": "shatri",
+      "surah": 65,
+      "ayah": 1,
+      "window_ms": [
+        6180.0,
+        7680.0
+      ],
+      "role": "blocked-original",
+      "historical_text": "يَا",
+      "selection_read_id": 2,
+      "phrase": [
+        "يا",
+        "ايها"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "يا",
+        "ايها",
+        "النبي",
+        "اذا",
+        "طلقتم",
+        "النساء",
+        "فطلقوهن",
+        "لعدتهن",
+        "واحصوا",
+        "العدة",
+        "واتقوا",
+        "الله",
+        "ربكم",
+        "لا",
+        "تخرجوهن",
+        "من",
+        "بيوتهن",
+        "ولا",
+        "يخرجن",
+        "الا",
+        "ان",
+        "ياتين",
+        "بفاحشة",
+        "مبينة",
+        "وتلك",
+        "حدود",
+        "الله",
+        "ومن",
+        "يتعد",
+        "حدود",
+        "الله",
+        "فقد",
+        "ظلم",
+        "نفسه",
+        "لا",
+        "تدري",
+        "لعل",
+        "الله",
+        "يحدث",
+        "بعد",
+        "ذلك",
+        "امرا"
+      ],
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/065.mp3",
+      "audio_sha256": "25a839f16bd0c37827e2971561713d5bc09658db4fb097bbfffff0090fa15883",
+      "pcm_sha256": "e967ebe9f073a95cebd9d547d160fbc6206e0d8861bd3fe3b1f668b03babeb85",
+      "samples": 24000
+    },
+    {
+      "key": "blocked-65-1-1",
+      "reciter": "shatri",
+      "surah": 65,
+      "ayah": 1,
+      "window_ms": [
+        6180.0,
+        10180.0
+      ],
+      "role": "blocked-expanded",
+      "historical_text": "يَا",
+      "selection_read_id": 2,
+      "phrase": [
+        "يا",
+        "ايها"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "يا",
+        "ايها",
+        "النبي",
+        "اذا",
+        "طلقتم",
+        "النساء",
+        "فطلقوهن",
+        "لعدتهن",
+        "واحصوا",
+        "العدة",
+        "واتقوا",
+        "الله",
+        "ربكم",
+        "لا",
+        "تخرجوهن",
+        "من",
+        "بيوتهن",
+        "ولا",
+        "يخرجن",
+        "الا",
+        "ان",
+        "ياتين",
+        "بفاحشة",
+        "مبينة",
+        "وتلك",
+        "حدود",
+        "الله",
+        "ومن",
+        "يتعد",
+        "حدود",
+        "الله",
+        "فقد",
+        "ظلم",
+        "نفسه",
+        "لا",
+        "تدري",
+        "لعل",
+        "الله",
+        "يحدث",
+        "بعد",
+        "ذلك",
+        "امرا"
+      ],
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/065.mp3",
+      "audio_sha256": "25a839f16bd0c37827e2971561713d5bc09658db4fb097bbfffff0090fa15883",
+      "pcm_sha256": "3456e579b9cf6b044f9ec0249579dc485f3cf07fe0b14f391568cfba6a580d61",
+      "samples": 64000
+    },
+    {
+      "key": "blocked-80-12-0",
+      "reciter": "shatri",
+      "surah": 80,
+      "ayah": 12,
+      "window_ms": [
+        51760.0,
+        53260.0
+      ],
+      "role": "blocked-original",
+      "historical_text": "فَمَنْشَرَ",
+      "selection_read_id": 22,
+      "phrase": [
+        "فمن"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "فمن",
+        "شاء",
+        "ذكره"
+      ],
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/080.mp3",
+      "audio_sha256": "4d91f378520caba3be8df904ee323be94815ca448a98ddda29b58a1b415dd13c",
+      "pcm_sha256": "357dbb3ea47f73a2fabf3bf95aec3bae30a8e4468265f3a2f1d703502804b975",
+      "samples": 24000
+    },
+    {
+      "key": "blocked-80-12-1",
+      "reciter": "shatri",
+      "surah": 80,
+      "ayah": 12,
+      "window_ms": [
+        51760.0,
+        55760.0
+      ],
+      "role": "blocked-expanded",
+      "historical_text": "فَمَنْشَرَ",
+      "selection_read_id": 22,
+      "phrase": [
+        "فمن"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "فمن",
+        "شاء",
+        "ذكره"
+      ],
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/080.mp3",
+      "audio_sha256": "4d91f378520caba3be8df904ee323be94815ca448a98ddda29b58a1b415dd13c",
+      "pcm_sha256": "645d714b6115e934ad11a0b79fb1fafe9ee58e238182597edcca38fe92461447",
+      "samples": 64000
+    },
+    {
+      "key": "blocked-98-8-0",
+      "reciter": "shatri",
+      "surah": 98,
+      "ayah": 8,
+      "window_ms": [
+        80740.0,
+        82240.0
+      ],
+      "role": "blocked-original",
+      "historical_text": "جَزَاؤُهُ",
+      "selection_read_id": 19,
+      "phrase": [
+        "جزاؤهم"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "جزاؤهم",
+        "عند",
+        "ربهم",
+        "جنات",
+        "عدن",
+        "تجري",
+        "من",
+        "تحتها",
+        "الانهار",
+        "خالدين",
+        "فيها",
+        "ابدا",
+        "رضي",
+        "الله",
+        "عنهم",
+        "ورضوا",
+        "عنه",
+        "ذلك",
+        "لمن",
+        "خشي",
+        "ربه"
+      ],
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/098.mp3",
+      "audio_sha256": "bc7a058fcc0c8130cfaca391f40c76c0bccba24e4956fc6eb82085c2460dbfcf",
+      "pcm_sha256": "95283ff717bb508ccb726cefde900bad2a1b10082f8e19ef3d17894598c412f3",
+      "samples": 24000
+    },
+    {
+      "key": "blocked-98-8-1",
+      "reciter": "shatri",
+      "surah": 98,
+      "ayah": 8,
+      "window_ms": [
+        80740.0,
+        84740.0
+      ],
+      "role": "blocked-expanded",
+      "historical_text": "جَزَاؤُهُ",
+      "selection_read_id": 19,
+      "phrase": [
+        "جزاؤهم"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "جزاؤهم",
+        "عند",
+        "ربهم",
+        "جنات",
+        "عدن",
+        "تجري",
+        "من",
+        "تحتها",
+        "الانهار",
+        "خالدين",
+        "فيها",
+        "ابدا",
+        "رضي",
+        "الله",
+        "عنهم",
+        "ورضوا",
+        "عنه",
+        "ذلك",
+        "لمن",
+        "خشي",
+        "ربه"
+      ],
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/098.mp3",
+      "audio_sha256": "bc7a058fcc0c8130cfaca391f40c76c0bccba24e4956fc6eb82085c2460dbfcf",
+      "pcm_sha256": "239083b698d7f76c3d709c4a7764f1beeea074cede05e5d843643cf4653799fa",
+      "samples": 64000
+    },
+    {
+      "key": "blocked-2-4-0",
+      "reciter": "shatri",
+      "surah": 2,
+      "ayah": 4,
+      "window_ms": [
+        56740.0,
+        58240.0
+      ],
+      "role": "blocked-original",
+      "historical_text": "وَأُولَى",
+      "selection_read_id": 8,
+      "phrase": [
+        "والذين",
+        "يؤمنون"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "والذين",
+        "يؤمنون",
+        "بما",
+        "انزل",
+        "اليك",
+        "وما",
+        "انزل",
+        "من",
+        "قبلك",
+        "وبالاخرة",
+        "هم",
+        "يوقنون"
+      ],
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/002.mp3",
+      "audio_sha256": "511e1c23f9c51271d1da629761c0ccf26fd1e734532c09dc85983cea4b4c4177",
+      "pcm_sha256": "3d20a81eb51b239252c6c232c7ad88b120a77a6f4180814dc06b4cb0fe46796c",
+      "samples": 24000
+    },
+    {
+      "key": "blocked-2-4-1",
+      "reciter": "shatri",
+      "surah": 2,
+      "ayah": 4,
+      "window_ms": [
+        56740.0,
+        60740.0
+      ],
+      "role": "blocked-expanded",
+      "historical_text": "وَأُولَى",
+      "selection_read_id": 8,
+      "phrase": [
+        "والذين",
+        "يؤمنون"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "والذين",
+        "يؤمنون",
+        "بما",
+        "انزل",
+        "اليك",
+        "وما",
+        "انزل",
+        "من",
+        "قبلك",
+        "وبالاخرة",
+        "هم",
+        "يوقنون"
+      ],
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/002.mp3",
+      "audio_sha256": "511e1c23f9c51271d1da629761c0ccf26fd1e734532c09dc85983cea4b4c4177",
+      "pcm_sha256": "f515961e36a102adfbede570c1e44c8d6e1ba6d278b8e6d2f7ac5b3896a61d92",
+      "samples": 64000
+    },
+    {
+      "key": "blocked-79-27-0",
+      "reciter": "shatri",
+      "surah": 79,
+      "ayah": 27,
+      "window_ms": [
+        122520.0,
+        124020.0
+      ],
+      "role": "blocked-original",
+      "historical_text": "أَأَنْتَ",
+      "selection_read_id": 35,
+      "phrase": [
+        "اانتم"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "اانتم",
+        "اشد",
+        "خلقا",
+        "ام",
+        "السماء",
+        "بناها"
+      ],
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/079.mp3",
+      "audio_sha256": "3b423fbe3e9c2ccbbd0e89d9edce0f40e7dfa81410bfc1ad6b0216076f7d861b",
+      "pcm_sha256": "99d4c5712db73270cb66bd47747a64d66838261f458523b5eeaf9870e0d343f1",
+      "samples": 24000
+    },
+    {
+      "key": "blocked-79-27-1",
+      "reciter": "shatri",
+      "surah": 79,
+      "ayah": 27,
+      "window_ms": [
+        122520.0,
+        126520.0
+      ],
+      "role": "blocked-expanded",
+      "historical_text": "أَأَنْتَ",
+      "selection_read_id": 35,
+      "phrase": [
+        "اانتم"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "اانتم",
+        "اشد",
+        "خلقا",
+        "ام",
+        "السماء",
+        "بناها"
+      ],
+      "audio_path": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/079.mp3",
+      "audio_sha256": "3b423fbe3e9c2ccbbd0e89d9edce0f40e7dfa81410bfc1ad6b0216076f7d861b",
+      "pcm_sha256": "eba4181dadf7626dc5bee8c46b34adaafa73a36bbb8b673719a027b25d2499fd",
+      "samples": 64000
+    },
+    {
+      "key": "transfer-saad_al_ghamidi-80",
+      "reciter": "saad_al_ghamidi",
+      "surah": 80,
+      "ayah": 1,
+      "window_ms": [
+        5300.0,
+        6800.0
+      ],
+      "role": "transfer-selected",
+      "historical_text": "عَبَسَ وَتَوَى",
+      "phrase": [
+        "عبس"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "عبس",
+        "وتولى"
+      ],
+      "audio_path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi/080.mp3",
+      "audio_sha256": "01cbc697f10e8cb67347e83e42cc9bfd46dacf646655940921a7ce78f1f519e9",
+      "pcm_sha256": "0bbf41a39c6fff29862c511ddc6d150767590266555894d0377b778611a9e3db",
+      "samples": 24000
+    },
+    {
+      "key": "transfer-saad_al_ghamidi-98",
+      "reciter": "saad_al_ghamidi",
+      "surah": 98,
+      "ayah": 2,
+      "window_ms": [
+        16560.0,
+        18060.0
+      ],
+      "role": "transfer-selected",
+      "historical_text": "رَسُولٌ",
+      "phrase": [
+        "رسول"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "رسول",
+        "من",
+        "الله",
+        "يتلو",
+        "صحفا",
+        "مطهرة"
+      ],
+      "audio_path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi/098.mp3",
+      "audio_sha256": "ed0dff4f6de5d0c795aaf5f8fc0b6da2c8b79c4059e58a1c318876e19062c965",
+      "pcm_sha256": "c0896313a05832d7364316eac71298207923b7de89ed39814b5321d7e130b77c",
+      "samples": 24000
+    },
+    {
+      "key": "transfer-saad_al_ghamidi-112",
+      "reciter": "saad_al_ghamidi",
+      "surah": 112,
+      "ayah": 1,
+      "window_ms": [
+        10020.0,
+        11520.0
+      ],
+      "role": "transfer-selected",
+      "historical_text": "لَمْ يَلِدْ",
+      "phrase": [
+        "قل",
+        "هو"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "قل",
+        "هو",
+        "الله",
+        "احد"
+      ],
+      "audio_path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi/112.mp3",
+      "audio_sha256": "a58bccb959151791597f0e750784260429fedc8c685e20c45d0429368ca2e8db",
+      "pcm_sha256": "6d309de0524588d5b5d67576102c8011e6dc93fc9901dc29d5392d917f213fc1",
+      "samples": 24000
+    },
+    {
+      "key": "transfer-mahmoud_khalil_al_hussary-80",
+      "reciter": "mahmoud_khalil_al_hussary",
+      "surah": 80,
+      "ayah": 1,
+      "window_ms": [
+        12520.0,
+        14020.0
+      ],
+      "role": "transfer-selected",
+      "historical_text": "أَنْجَاجْاجَاجْنَاهُ",
+      "phrase": [
+        "عبس"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "عبس",
+        "وتولى"
+      ],
+      "audio_path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mahmoud_khalil_al_hussary/080.mp3",
+      "audio_sha256": "8330f7a327659a1a137471452f96e47d39c2a147a1de9f5f5b1ae1ccf77df7e1",
+      "pcm_sha256": "f14398bf9fa01ab2736eca8b9ac9211fd9f951c3c0f70f68db202a9b5b949121",
+      "samples": 24000
+    },
+    {
+      "key": "transfer-mahmoud_khalil_al_hussary-98",
+      "reciter": "mahmoud_khalil_al_hussary",
+      "surah": 98,
+      "ayah": 2,
+      "window_ms": [
+        32520.0,
+        34020.0
+      ],
+      "role": "transfer-selected",
+      "historical_text": "رَسُولُ",
+      "phrase": [
+        "رسول"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "رسول",
+        "من",
+        "الله",
+        "يتلو",
+        "صحفا",
+        "مطهرة"
+      ],
+      "audio_path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mahmoud_khalil_al_hussary/098.mp3",
+      "audio_sha256": "26cf4d3e75708d065c223fa5289bfce76f2e15d208d813d848272d82d58ea49e",
+      "pcm_sha256": "f4c4a64552cd3646603e462c1ff386655e982b8da5ecf81dc3f6101876d4447b",
+      "samples": 24000
+    },
+    {
+      "key": "transfer-mahmoud_khalil_al_hussary-112",
+      "reciter": "mahmoud_khalil_al_hussary",
+      "surah": 112,
+      "ayah": 1,
+      "window_ms": [
+        8560.0,
+        10060.0
+      ],
+      "role": "transfer-selected",
+      "historical_text": "قُلْ هُوَ",
+      "phrase": [
+        "قل",
+        "هو"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "قل",
+        "هو",
+        "الله",
+        "احد"
+      ],
+      "audio_path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mahmoud_khalil_al_hussary/112.mp3",
+      "audio_sha256": "c6d2edaa89cf4dfc52e1ae969cf491ac02061854bd5e63b927126536cff64223",
+      "pcm_sha256": "7a925a8b591dcefde7d4844ff28c07eae6016c271b3372872f84c220e1bba64e",
+      "samples": 24000
+    },
+    {
+      "key": "transfer-mohammed_siddiq_al_minshawi-80",
+      "reciter": "mohammed_siddiq_al_minshawi",
+      "surah": 80,
+      "ayah": 1,
+      "window_ms": [
+        13980.0,
+        15480.0
+      ],
+      "role": "transfer-selected",
+      "historical_text": "وَمَا يُدْرِ",
+      "phrase": [
+        "عبس"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "عبس",
+        "وتولى"
+      ],
+      "audio_path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mohammed_siddiq_al_minshawi/080.mp3",
+      "audio_sha256": "744f97a99c064eeda9cf26c679e454639606b5eb27e2997f394da58333fe0591",
+      "pcm_sha256": "9c3ddc48043e4f2f5403ff1732c5644f9527b8afb05febbe555b0f231d3bdd82",
+      "samples": 24000
+    },
+    {
+      "key": "transfer-mohammed_siddiq_al_minshawi-112",
+      "reciter": "mohammed_siddiq_al_minshawi",
+      "surah": 112,
+      "ayah": 1,
+      "window_ms": [
+        4700.0,
+        6200.0
+      ],
+      "role": "transfer-selected",
+      "historical_text": "قُلْ هُوَ اللَّهُ",
+      "phrase": [
+        "قل",
+        "هو"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "قل",
+        "هو",
+        "الله",
+        "احد"
+      ],
+      "audio_path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mohammed_siddiq_al_minshawi/112.mp3",
+      "audio_sha256": "f28c4886847ac4d7cb5fb48d377ffc1e62bc7108578e1f9c89b293174340a260",
+      "pcm_sha256": "129b5c4076e3988f1140c1f42bf3fefafbccd34006bf374ffaae3aa7361fcc41",
+      "samples": 24000
+    },
+    {
+      "key": "zero80",
+      "role": "negative",
+      "surah": 80,
+      "ayah": 1,
+      "phrase": [
+        "عبس"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "عبس",
+        "وتولى"
+      ],
+      "source": "original-s80-a1-1500",
+      "pcm_sha256": "55873fecc61a79e87ca550c7072e38ccdd7ecb600ace286fe4717952a97c42b0",
+      "samples": 24000
+    },
+    {
+      "key": "wrong80",
+      "role": "negative",
+      "surah": 80,
+      "ayah": 1,
+      "phrase": [
+        "عبس"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "عبس",
+        "وتولى"
+      ],
+      "source": "original-s98-a2-1500",
+      "pcm_sha256": "e7a8fd2fba507c71e17ba256f767abbc2b94974e22697c16d28c02d9231e71f9",
+      "samples": 24000
+    },
+    {
+      "key": "wrong98",
+      "role": "negative",
+      "surah": 98,
+      "ayah": 2,
+      "phrase": [
+        "رسول"
+      ],
+      "ambiguous": false,
+      "expected": [
+        "رسول",
+        "من",
+        "الله",
+        "يتلو",
+        "صحفا",
+        "مطهرة"
+      ],
+      "source": "original-s80-a1-1500",
+      "pcm_sha256": "6e2cd7de785023cc909356f03cbde0e2ded1b9ac0dee20288ee9a5beeabc9186",
+      "samples": 24000
+    }
+  ],
+  "skipped": [
+    {
+      "reciter": "mohammed_siddiq_al_minshawi",
+      "surah": 98,
+      "ayah": 2,
+      "reason": "no_historical_target_pause_read"
+    }
+  ],
+  "weights": "/Users/ayub/.surah-cutter/models/whisper-tarteel-base/5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c",
+  "source_sha256": {
+    "surah_cutter/core/fast_executor.py": "0eeb08005873e16096975caaecc0677ff8a48cf9f652be52f201e6a927cfde1e",
+    "surah_cutter/core/fast_adapters.py": "ececb1374994d29084824c47a4dc8bba918f622363fffd2b4d01581260f3f539",
+    "surah_cutter/core/model_worker.py": "52abc1e5a076596e96b21c275690344686c3436a04d1469686b3eca82cfa1d80"
+  }
+}

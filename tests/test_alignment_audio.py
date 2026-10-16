@@ -9,7 +9,8 @@ from pathlib import Path
 import pytest
 
 from surah_cutter.core import align, align_fast, decode, emissions
-from surah_cutter.data import quran_text, references
+from surah_cutter.data import quran_text
+from tools.research import references
 from tools.bench_fast import pause_contract_violations
 
 AUDIO = Path.home() / "Desktop/Abu_Bakr_Ash-Shatri"
@@ -65,12 +66,12 @@ def test_actual_alignment_starts_and_sequence(bundle, surah, mode, max_error_ms,
     assert [a for a, _, _ in rows] == list(range(1, quran_text.ayah_count(surah) + 1))
     assert all(left[1] < right[1] for left, right in zip(rows, rows[1:]))
     if mode == "full":
-        # The reference grades the former speech-edge placement. Keep that
-        # regression bound on the acoustic result, then check the new cut
-        # independently: it intentionally differs from the reference in silence.
+        # Historical bounds used a fitted -200ms correction, now removed.
+        # The triangle bound adds exactly that removed offset; it does not
+        # retune the runtime to this evaluation DB. Cuts are checked separately.
         checks = {c["ayah"]: c for c in trace["ayahs"]}
         assert max(abs(checks[a]["pre_center_onset_ms"] - reference[(surah, a)])
-                   for a, _, _ in rows) <= max_error_ms
+                   for a, _, _ in rows) <= max_error_ms + 200
         centered = [c for c in checks.values() if c.get("pause_center_reason") == "positioned"]
         assert centered
         for check in centered:
@@ -79,11 +80,25 @@ def test_actual_alignment_starts_and_sequence(bundle, surah, mode, max_error_ms,
             assert start < check["onset_ms"] < end
         assert trace["emission_passes"] == 1
         if surah == 1:
+            third = checks[3]
+            assert third["pause_center_reason"] == "unstable-pause"
+            assert third["reason"] == "waveform-pause-recheck"
+            assert third["onset_ms"] < third["pre_center_onset_ms"]
+            signal = {r["ayah"]: r for r in trace["full_signal_checks"]}
+            assert signal[3]["accepted"]
+            assert signal[3]["safe_interval_ms"][0] <= third["onset_ms"] <= signal[3]["safe_interval_ms"][1]
+            assert signal[3]["periodicity"] <= .8
+            assert signal[3]["rms_ratio"] <= signal[3]["rms_limit_ratio"]
+            assert signal[3]["peak_ratio"] <= signal[3]["peak_limit_ratio"]
+            assert not signal[7]["accepted"] and signal[7]["reason"] == "voiced-tail-in-waveform"
+            assert checks[7]["onset_ms"] == checks[7]["pre_center_onset_ms"]
+            assert not third["reliable"]
             first_word = next(c for c in trace["ayahs"] if c["ayah"] == 2)
             assert first_word["reason"] == "split-word-local-recheck"
             assert first_word["raw_onset_ms"] != first_word["onset_ms"]
-            assert len(trace["full_boundary_reads"]) == 1
-            assert trace["full_boundary_reads"][0]["accepted"]
+            phrase_reads = trace["full_boundary_reads"]
+            assert len(phrase_reads) == 1 and phrase_reads[0]["accepted"]
+            assert "full_transition_verifier" not in trace
     else:
         # A local FAST can explicitly decline proof. Large residual errors may
         # never be advertised as reliable merely to match former full-pass tests.
@@ -97,3 +112,37 @@ def test_actual_alignment_starts_and_sequence(bundle, surah, mode, max_error_ms,
         assert trace["bounded_ctc_fallback"] is None
         assert "full_ctc_fallback" not in trace
         assert pause_contract_violations(rows, trace) == []
+
+
+def test_actual_full_late_cut_has_both_owners_and_a_quiet_interval(bundle):
+    pcm = decode.decode(str(AUDIO / "080.mp3"))
+    trace = {}
+    rows = align.align_surah(pcm, 16000, quran_text.surah_words(80), surah=80, model=bundle, trace=trace)
+    read = next(r for r in trace["full_signal_checks"] if r["ayah"] == 35)
+    assert read["accepted"] and read["reason"] == "waveform-pause-recheck"
+    assert read["before_ms"] == next(c for c in trace["ayahs"] if c["ayah"] == 35)["pre_center_onset_ms"]
+    assert read["pause_ms"][0] < read["after_ms"] < read["pause_ms"][1]
+    assert dict((a, ms) for a, ms, _ in rows)[35] == read["after_ms"]
+    left, right = [next(c for c in trace["ayahs"] if c["ayah"] == a) for a in (34, 35)]
+    assert left["full_ctc_end_ms"] < read["safe_interval_ms"][0]
+    assert right["full_ctc_first_ms"] > read["safe_interval_ms"][1]
+    assert not trace.get("full_boundary_reads")
+    assert "full_transition_verifier" not in trace
+    check = next(c for c in trace["ayahs"] if c["ayah"] == 35)
+    assert check["raw_onset_ms"] == read["before_ms"]
+    assert check["repaired"] and not check["reliable"]
+
+
+def test_actual_bounded_full_runs_the_same_waveform_check(bundle, monkeypatch):
+    pcm = decode.decode(str(AUDIO / "001.mp3"))
+    monkeypatch.setattr(align, "_full_ctc_requires_tiling", lambda *args: True)
+    trace = {}
+    rows = align.align_surah(pcm, 16000, quran_text.surah_words(1), surah=1, model=bundle, trace=trace)
+    assert trace["n_chunks"] >= 1
+    assert [a for a, _, _ in rows] == list(range(1, 8))
+    assert all(a[1] < b[1] for a, b in zip(rows, rows[1:]))
+    signal = {r["ayah"]: r for r in trace["full_signal_checks"]}
+    assert signal[3]["accepted"]
+    assert not signal[7]["accepted"] and signal[7]["reason"] == "voiced-tail-in-waveform"
+    assert len(trace["full_boundary_reads"]) == 1
+    assert "full_transition_verifier" not in trace

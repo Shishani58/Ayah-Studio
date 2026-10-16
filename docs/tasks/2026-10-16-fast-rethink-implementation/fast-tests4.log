@@ -1,0 +1,66 @@
+...................................FF................................F.. [ 33%]
+........................................................................ [ 67%]
+...........................................F.........................    [100%]
+=================================== FAILURES ===================================
+___________ test_missing_current_never_confirms_future_or_reads_tail ___________
+
+    def test_missing_current_never_confirms_future_or_reads_tail():
+        fake = Fake(lambda f, start, duration: observation(f.phrase(2)))
+        rows, trace = run(fake, [pause(1000), pause(10000), pause(20000)])
+>       assert all(conf == 0 for _, _, conf in rows)
+E       assert False
+E        +  where False = all(<generator object test_missing_current_never_confirms_future_or_reads_tail.<locals>.<genexpr> at 0x10a84ac00>)
+
+tests/test_fast_executor.py:79: AssertionError
+____________ test_ambiguous_prefix_finishes_and_blocks_later_repeat ____________
+
+    def test_ambiguous_prefix_finishes_and_blocks_later_repeat():
+        fake = Fake(lambda f, start, duration: observation(f.phrase(1)[:1]))
+        fake.rendered = (("ان",),) + fake.rendered[1:]
+        _, trace = run(fake, [pause(p) for p in range(1000, 30000, 1000)])
+>       assert len(fake.calls) <= 3
+E       assert 6 <= 3
+E        +  where 6 = len([(1000, 24000), (1000, 43200), (1000, 67200), (16000, 24000), (16000, 43200), (16000, 67200)])
+E        +    where [(1000, 24000), (1000, 43200), (1000, 67200), (16000, 24000), (16000, 43200), (16000, 67200)] = <test_fast_executor.Fake object at 0x10a869370>.calls
+
+tests/test_fast_executor.py:89: AssertionError
+____ test_nonadjacent_future_cannot_be_ignored_in_favor_of_later_repetition ____
+
+    def test_nonadjacent_future_cannot_be_ignored_in_favor_of_later_repetition():
+        def respond(f, start, duration):
+            return observation(f.phrase(3) if start == 1000 else f.phrase(1) if start == 10000 else ())
+        rows, trace = run(Fake(respond), [pause(1000), pause(10000)])
+>       assert all(conf == 0 for _, _, conf in rows)
+E       assert False
+E        +  where False = all(<generator object test_nonadjacent_future_cannot_be_ignored_in_favor_of_later_repetition.<locals>.<genexpr> at 0x10ac0b760>)
+
+tests/test_fast_executor.py:455: AssertionError
+____ test_new_short_cue_cannot_erase_a_preexisting_supported_opening_block _____
+
+    def test_new_short_cue_cannot_erase_a_preexisting_supported_opening_block():
+        fake = vocative_fake(lambda duration: ())
+        later = fake.rendered[1][0]
+        rendered = list(fake.rendered)
+        rival = next(i for i, word in enumerate(fake.words) if word.ayah == 2)
+        rendered[rival] = ('يا', 'ايها')
+        fake.rendered = tuple(rendered)
+        def respond(f, start, duration):
+            if start == 1000:
+                units = ('wrong', 'wrong', later) if duration < 2000 else ('يا',) if duration < 3500 else ()
+            elif start == 6000:
+                units = ('يا', 'ايها', later)
+            else:
+                units = ()
+            return observation(units, positions=False)
+        fake.responder = respond
+        rows, trace = run(fake, [pause(1000), pause(6000)])
+>       assert trace["boundaries"][0]["confidence"] == 0
+E       assert 0.99 == 0
+
+tests/test_fast_short_spoken_prefix.py:128: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_fast_executor.py::test_missing_current_never_confirms_future_or_reads_tail
+FAILED tests/test_fast_executor.py::test_ambiguous_prefix_finishes_and_blocks_later_repeat
+FAILED tests/test_fast_executor.py::test_nonadjacent_future_cannot_be_ignored_in_favor_of_later_repetition
+FAILED tests/test_fast_short_spoken_prefix.py::test_new_short_cue_cannot_erase_a_preexisting_supported_opening_block
+4 failed, 209 passed in 24.55s

@@ -1,0 +1,6 @@
+{
+  "model": "whisper-tarteel-base",
+  "reason": "User explicitly requested one best model; Base has highest confirmed coverage among current measured supported local FAST models",
+  "scope": "all subsequent inference; running wide already executing Base, Tiny finished before request",
+  "does_not_change_application_default": true
+}

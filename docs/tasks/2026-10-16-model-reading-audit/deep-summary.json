@@ -1,0 +1,47 @@
+{
+  "groups": {
+    "blocked-expanded": {
+      "n": 6,
+      "greedy_necessary_pass": 3,
+      "any_beam_necessary_pass": 4
+    },
+    "blocked-original": {
+      "n": 6,
+      "greedy_necessary_pass": 0,
+      "any_beam_necessary_pass": 0
+    },
+    "negative": {
+      "n": 3,
+      "greedy_necessary_pass": 0,
+      "any_beam_necessary_pass": 0
+    },
+    "prior-example": {
+      "n": 4,
+      "greedy_necessary_pass": 4,
+      "any_beam_necessary_pass": 4
+    },
+    "transfer-selected": {
+      "n": 8,
+      "greedy_necessary_pass": 4,
+      "any_beam_necessary_pass": 5
+    }
+  },
+  "additional_necessary_passes": [
+    "blocked-98-8-1",
+    "transfer-saad_al_ghamidi-80"
+  ],
+  "not_proof": "necessary checks exclude geometry, all-rival/alias ownership, beam competing hypotheses and validator; all new branches still contain counterexamples",
+  "skipped": [
+    {
+      "reciter": "mohammed_siddiq_al_minshawi",
+      "surah": 98,
+      "ayah": 2,
+      "reason": "no_historical_target_pause_read"
+    }
+  ],
+  "median_encoder_s": 0.2054300419986248,
+  "median_decoder_s": {
+    "1": 0.25061445916071534,
+    "5": 0.8478017919696867
+  }
+}

@@ -1,0 +1,16 @@
+fixed30 current 12 {'n': 245, 'median_ms': 241.0, 'p95_ms': 2007.1999999999994, 'mean_ms': 495.39591836734695, 'max_ms': 4332.0, 'over500': 65} fixed/regressed 0 5
+fixed30 free_edges 12 {'n': 245, 'median_ms': 210.0, 'p95_ms': 2211.399999999999, 'mean_ms': 553.4489795918367, 'max_ms': 9013.0, 'over500': 61} fixed/regressed 3 4
+fixed30 no_delimiter 12 {'n': 245, 'median_ms': 205.0, 'p95_ms': 2007.1999999999994, 'mean_ms': 476.40408163265306, 'max_ms': 4332.0, 'over500': 60} fixed/regressed 3 3
+fixed30 phones 12 {'n': 245, 'median_ms': 205.0, 'p95_ms': 2027.7999999999997, 'mean_ms': 474.865306122449, 'max_ms': 4332.0, 'over500': 58} fixed/regressed 3 1
+strong20 blank_minus1 44 {'n': 1567, 'median_ms': 169.0, 'p95_ms': 1180.0, 'mean_ms': 316.8091895341417, 'max_ms': 4531.0, 'over500': 269} fixed/regressed 11 1
+strong20 current 44 {'n': 1567, 'median_ms': 179.0, 'p95_ms': 1198.5999999999985, 'mean_ms': 326.765794511806, 'max_ms': 4531.0, 'over500': 279} fixed/regressed 0 0
+strong20 free_edges 44 {'n': 1567, 'median_ms': 159.0, 'p95_ms': 1183.7999999999993, 'mean_ms': 318.5877472878111, 'max_ms': 5314.0, 'over500': 260} fixed/regressed 37 18
+strong20 no_delimiter 44 {'n': 1567, 'median_ms': 155.0, 'p95_ms': 1157.2999999999984, 'mean_ms': 307.64964901084875, 'max_ms': 4511.0, 'over500': 256} fixed/regressed 33 10
+strong20 phones 44 {'n': 1567, 'median_ms': 155.0, 'p95_ms': 1137.5999999999967, 'mean_ms': 305.7179323548181, 'max_ms': 4511.0, 'over500': 252} fixed/regressed 37 10
+strong20-fp32 current 12 {'n': 245, 'median_ms': 198.0, 'p95_ms': 2007.1999999999994, 'mean_ms': 471.4, 'max_ms': 4332.0, 'over500': 61} fixed/regressed 0 1
+strong20-localnorm current 12 {'n': 245, 'median_ms': 217.0, 'p95_ms': 2007.1999999999994, 'mean_ms': 477.069387755102, 'max_ms': 4332.0, 'over500': 61} fixed/regressed 0 1
+strong20-localnorm phones 12 {'n': 245, 'median_ms': 182.0, 'p95_ms': 1975.3999999999999, 'mean_ms': 462.1102040816327, 'max_ms': 4332.0, 'over500': 61} fixed/regressed 1 2
+strong6 current 12 {'n': 245, 'median_ms': 212.0, 'p95_ms': 2043.7999999999993, 'mean_ms': 467.25714285714287, 'max_ms': 4332.0, 'over500': 60} fixed/regressed 1 1
+strong6 free_edges 12 {'n': 245, 'median_ms': 159.0, 'p95_ms': 2007.1999999999994, 'mean_ms': 456.23673469387757, 'max_ms': 4332.0, 'over500': 58} fixed/regressed 3 1
+strong6 no_delimiter 12 {'n': 245, 'median_ms': 159.0, 'p95_ms': 2007.1999999999994, 'mean_ms': 452.55918367346936, 'max_ms': 4332.0, 'over500': 58} fixed/regressed 2 0
+strong6 phones 12 {'n': 245, 'median_ms': 159.0, 'p95_ms': 2007.1999999999994, 'mean_ms': 451.52244897959184, 'max_ms': 4332.0, 'over500': 57} fixed/regressed 3 0

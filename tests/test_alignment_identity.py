@@ -97,7 +97,7 @@ def test_exact_key_skips_only_complete_matching_auto_or_fully_protected(tmp_path
     key = fast_run_key(identity)
     source = f"test:requested_mode=fast:fast_run_key={key}"
     with ProjectDB.open(str(path), "test", 1) as db:
-        db.write_timings([(114, a, a * 1000) for a in range(1, 7)], source)
+        db.write_timings([(114, a, a * 1000) for a in range(1, 7)], source, confidence=.9)
         assert fast_resume_suras(path, {114: key}) == {114}
         assert fast_resume_suras(path) == set()
         db.write_timings([(114, 6, 6000)], "legacy:requested_mode=fast")
@@ -116,7 +116,8 @@ def test_exact_key_skips_only_complete_matching_auto_or_fully_protected(tmp_path
 def test_writer_persists_validated_key_in_same_transaction_as_auto_rows(tmp_path, identity):
     path = tmp_path / "p.db"
     key = fast_run_key(identity)
-    trace = {"model_source": "reference:test", "run_snapshot": identity, "fast_run_key": key}
+    trace = {"model_source": "reference:test", "run_snapshot": identity, "fast_run_key": key,
+             "ayahs": [{"ayah": a, "conf": .9} for a in range(1, 7)]}
     with ProjectDB.open(str(path), "test", 1) as db:
         write_alignment_result(db, [(114, a, a * 1000) for a in range(1, 7)],
                                trace=trace, requested_mode="fast", db_path=path)
@@ -155,7 +156,7 @@ def test_resume_readonly_uri_supports_desktop_filename_characters(tmp_path, iden
     key = fast_run_key(identity)
     with ProjectDB.open(str(path), "test", 1) as db:
         db.write_timings([(114, a, a * 1000) for a in range(1, 7)],
-                         f"test:requested_mode=fast:fast_run_key={key}")
+                         f"test:requested_mode=fast:fast_run_key={key}", confidence=.9)
     before = path.read_bytes()
     assert fast_resume_suras(path, {114: key}) == {114}
     assert path.read_bytes() == before

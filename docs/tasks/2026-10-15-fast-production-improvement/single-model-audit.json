@@ -1,0 +1,49 @@
+{
+  "passed": true,
+  "selected_at_unix": 1792099378.0942867,
+  "inference_runs": [
+    {
+      "command": "warm-baseline-command.json",
+      "models": [
+        "whisper-tarteel-base"
+      ]
+    },
+    {
+      "command": "final-f-mohammed_siddiq_al_minshawi-command.json",
+      "models": [
+        "whisper-tarteel-base"
+      ]
+    },
+    {
+      "command": "final-f-mahmoud_khalil_al_hussary-command.json",
+      "models": [
+        "whisper-tarteel-base"
+      ]
+    },
+    {
+      "command": "warm-prototype-c-command.json",
+      "models": [
+        "whisper-tarteel-base"
+      ]
+    },
+    {
+      "command": "production-smoke-command.json",
+      "models": [
+        "whisper-tarteel-base"
+      ]
+    },
+    {
+      "command": "final-f-saad_al_ghamidi-command.json",
+      "models": [
+        "whisper-tarteel-base"
+      ]
+    },
+    {
+      "command": "production-frozen-smoke-command.json",
+      "models": [
+        "whisper-tarteel-base"
+      ]
+    }
+  ],
+  "auxiliary": "prepause Base only; replay no inference"
+}

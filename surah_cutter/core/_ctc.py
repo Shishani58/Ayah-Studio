@@ -81,9 +81,12 @@ def forced_align(log_probs, targets, blank: int = 0):
     back = np.zeros((t_len, n_st), dtype=np.uint8)
     idx = np.arange(n_st)
 
+    from surah_cutter.core.progress import advance
+
     for t in range(1, t_len):
         if t % 64 == 0:
             check_cancelled()
+            advance("alignment", t, t_len)
         stay = dp
         prev1 = np.concatenate(([_NEG], dp[:-1]))
         prev2 = np.concatenate(([_NEG, _NEG], dp[:-2]))
@@ -106,6 +109,7 @@ def forced_align(log_probs, targets, blank: int = 0):
 
     path = ext[states]
     scores = emis[np.arange(t_len), path]
+    advance("alignment", t_len, t_len)
     return path[None, :], scores[None, :]
 
 

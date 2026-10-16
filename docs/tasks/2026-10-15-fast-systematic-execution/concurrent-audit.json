@@ -1,0 +1,94 @@
+{
+  "ast_comparison": {
+    "surah_cutter/core/fast_executor.py": {
+      "equal_after_only_removing_progress_calls_imports": true,
+      "baseline_sha": "dfe30f809f3d6e913a252aab0d8cd2dd9c23881f631ccb5a8daea1fbffb7f148",
+      "current_sha": "0eeb08005873e16096975caaecc0677ff8a48cf9f652be52f201e6a927cfde1e"
+    },
+    "surah_cutter/core/fast_adapters.py": {
+      "equal_after_only_removing_progress_calls_imports": true,
+      "baseline_sha": "ececb1374994d29084824c47a4dc8bba918f622363fffd2b4d01581260f3f539",
+      "current_sha": "ececb1374994d29084824c47a4dc8bba918f622363fffd2b4d01581260f3f539"
+    },
+    "surah_cutter/core/fast_ctc.py": {
+      "equal_after_only_removing_progress_calls_imports": true,
+      "baseline_sha": "7b681cc7fd4179fcde6b7654bb986de8984b86a5e884c653148fe1b3d6daca3d",
+      "current_sha": "7b681cc7fd4179fcde6b7654bb986de8984b86a5e884c653148fe1b3d6daca3d"
+    },
+    "surah_cutter/core/fast_reads.py": {
+      "equal_after_only_removing_progress_calls_imports": true,
+      "baseline_sha": "06873fab6c2e402c29c88ba468444df23f04b22a907d30c516fc47d663126918",
+      "current_sha": "06873fab6c2e402c29c88ba468444df23f04b22a907d30c516fc47d663126918"
+    },
+    "surah_cutter/core/emissions.py": {
+      "equal_after_only_removing_progress_calls_imports": true,
+      "baseline_sha": "dde1335cf3f5641dff8cc3e4803ebdb7c61cd766dc960e3f9f163f5b3bba158a",
+      "current_sha": "3f1b777cb90909f0572b9d24b93d466975d374c9dbee96a475e5f2064f44f4a7"
+    },
+    "surah_cutter/core/_ctc.py": {
+      "equal_after_only_removing_progress_calls_imports": true,
+      "baseline_sha": "58787b8534aadb15bcae29ece65f6c8a483eb6a02421dca9cbdbc575fdc9cabb",
+      "current_sha": "114e12d9159ee03f375520c249426af6550f3fb1ff0cda24e3988f37cf9a188a"
+    }
+  },
+  "current_fresh_smoke": [
+    {
+      "model": "quran-phonetics",
+      "surah": 112,
+      "compared": true,
+      "rows_equal": true,
+      "dispatch_equal": true
+    },
+    {
+      "model": "quran-phonetics",
+      "surah": 114,
+      "compared": true,
+      "rows_equal": true,
+      "dispatch_equal": true
+    },
+    {
+      "model": "quran-phonetics-fp32",
+      "surah": 112,
+      "compared": true,
+      "rows_equal": true,
+      "dispatch_equal": true
+    },
+    {
+      "model": "quran-phonetics-fp32",
+      "surah": 114,
+      "compared": true,
+      "rows_equal": true,
+      "dispatch_equal": true
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 112,
+      "compared": true,
+      "rows_equal": true,
+      "dispatch_equal": true
+    },
+    {
+      "model": "whisper-tarteel-tiny",
+      "surah": 114,
+      "compared": false,
+      "rows_equal": null,
+      "dispatch_equal": null
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 112,
+      "compared": true,
+      "rows_equal": true,
+      "dispatch_equal": true
+    },
+    {
+      "model": "whisper-tarteel-base",
+      "surah": 114,
+      "compared": false,
+      "rows_equal": null,
+      "dispatch_equal": null
+    }
+  ],
+  "model_runtime_change": "progress responses ignored; recognize_local payload and whisper_local unchanged; no FAST temporal forward enabled",
+  "production_transfer": false
+}

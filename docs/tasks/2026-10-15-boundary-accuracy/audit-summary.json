@@ -1,0 +1,151 @@
+{
+  "target": "reference agreement within 500ms; not human onset accuracy",
+  "probability_release": "rejected: no human labels/convention; domain/policy mismatch",
+  "development": {
+    "n": 286,
+    "reference_over500": 34,
+    "review": 72,
+    "found": 26,
+    "missed": 8,
+    "review_fraction": 0.2517482517482518,
+    "recall": 0.7647058823529411,
+    "precision": 0.3611111111111111,
+    "old_low_review": 13,
+    "old_low_found": 1,
+    "unassessed": 0
+  },
+  "heldout": {
+    "n": 354,
+    "reference_over500": 66,
+    "review": 147,
+    "found": 42,
+    "missed": 24,
+    "review_fraction": 0.4152542372881356,
+    "recall": 0.6363636363636364,
+    "precision": 0.2857142857142857,
+    "old_low_review": 146,
+    "old_low_found": 42,
+    "unassessed": 111
+  },
+  "empirical_grade_calibration": {
+    "bins": {
+      "high": {
+        "train_n": 211,
+        "fitted_reference_agreement": 0.9052132701421801,
+        "test_n": 6,
+        "test_reference_agreement": 1.0
+      },
+      "medium": {
+        "train_n": 62,
+        "fitted_reference_agreement": 0.7903225806451613,
+        "test_n": 91,
+        "test_reference_agreement": 0.967032967032967
+      },
+      "low": {
+        "train_n": 13,
+        "fitted_reference_agreement": 0.9230769230769231,
+        "test_n": 146,
+        "test_reference_agreement": 0.7123287671232876
+      },
+      "unknown": {
+        "train_n": 0,
+        "fitted_reference_agreement": null,
+        "test_n": 111,
+        "test_reference_agreement": 0.8108108108108109
+      }
+    },
+    "heldout_ece": 0.19513825641838695,
+    "scored_rows": 243,
+    "total_heldout_rows": 354,
+    "heldout_brier": 0.17365839477269088,
+    "constant_train_rate": 0.8811188811188811,
+    "constant_heldout_brier": 0.15528786158156788
+  },
+  "current_project": {
+    "latest_log": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/Abu_Bakr_Ash-Shatri.logs/sura_002_fast.json",
+    "mode": "fast",
+    "rows": 286,
+    "matching_evidence": 0,
+    "reference_over500": 283,
+    "db_sha256_before": "e4e65004cb4e9dafd81c0cf7150385f220c385c275756d2eb9a61911c3dd6e7f",
+    "db_sha256_after": "e4e65004cb4e9dafd81c0cf7150385f220c385c275756d2eb9a61911c3dd6e7f",
+    "note": "Latest FAST lacks first_token_conf; abstain, do not reuse older FULL evidence"
+  },
+  "window_stability": {
+    "n": 216,
+    "spread_over500": 8,
+    "stable_within100_but_wrong_over500": 52,
+    "examples": [
+      {
+        "reciter": "mahmoud_khalil_al_hussary",
+        "surah": 80,
+        "ayah": 18,
+        "spread": 0,
+        "error": 569
+      },
+      {
+        "reciter": "mahmoud_khalil_al_hussary",
+        "surah": 80,
+        "ayah": 23,
+        "spread": 0,
+        "error": 805
+      },
+      {
+        "reciter": "mahmoud_khalil_al_hussary",
+        "surah": 80,
+        "ayah": 24,
+        "spread": 0,
+        "error": 612
+      },
+      {
+        "reciter": "mahmoud_khalil_al_hussary",
+        "surah": 80,
+        "ayah": 25,
+        "spread": 80,
+        "error": 1212
+      },
+      {
+        "reciter": "mahmoud_khalil_al_hussary",
+        "surah": 80,
+        "ayah": 26,
+        "spread": 0,
+        "error": 1464
+      },
+      {
+        "reciter": "mahmoud_khalil_al_hussary",
+        "surah": 80,
+        "ayah": 33,
+        "spread": 20,
+        "error": 554
+      },
+      {
+        "reciter": "mahmoud_khalil_al_hussary",
+        "surah": 80,
+        "ayah": 34,
+        "spread": 20,
+        "error": 1483
+      },
+      {
+        "reciter": "mahmoud_khalil_al_hussary",
+        "surah": 80,
+        "ayah": 38,
+        "spread": 0,
+        "error": 559
+      },
+      {
+        "reciter": "mahmoud_khalil_al_hussary",
+        "surah": 98,
+        "ayah": 3,
+        "spread": 0,
+        "error": 864
+      },
+      {
+        "reciter": "mahmoud_khalil_al_hussary",
+        "surah": 112,
+        "ayah": 1,
+        "spread": 0,
+        "error": 629
+      }
+    ]
+  }
+}

@@ -62,6 +62,16 @@ def export_db(src_path: str, dst_path: str, *, strict: bool = True) -> str:
             src.execute("SELECT sura, ayah, time FROM timings ORDER BY sura, ayah")
         )
         versions = list(src.execute("SELECT code, version FROM db_version"))
+        if src.execute("SELECT 1 FROM sqlite_master WHERE name='review_meta'").fetchone():
+            from surah_cutter.data.alignment_identity import is_fast_source
+            unknown = [(s, a) for s, a, c, status, origin in src.execute(
+                "SELECT t.sura,t.ayah,r.confidence,r.status,r.source FROM timings t "
+                "JOIN review_meta r ON r.sura=t.sura AND r.ayah=t.ayah")
+                if status not in ("edited", "verified") and is_fast_source(origin)
+                and (c is None or c <= 0)]
+            if unknown:
+                raise ExportError("refusing to export unresolved legacy FAST estimates; "
+                                  "recalculate FAST or review the boundaries")
     finally:
         src.close()
 

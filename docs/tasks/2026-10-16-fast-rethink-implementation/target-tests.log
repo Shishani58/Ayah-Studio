@@ -1,0 +1,680 @@
+......FFF..........FFF........FFF....................................... [ 24%]
+..........FFFFFFF...FFFF.FF............................................. [ 48%]
+.F.......F.F..F....F....FFFFFF.FF.FFFFFF................................ [ 72%]
+........................................................................ [ 96%]
+............                                                             [100%]
+=================================== FAILURES ===================================
+____________ test_shorter_pause_seam_requires_previous_tail[wrong] _____________
+
+kind = 'wrong'
+
+    @pytest.mark.parametrize("kind", ["wrong", "weak", "truncated"])
+    def test_shorter_pause_seam_requires_previous_tail(kind):
+        rows, trace = run(contextual_fake(kind), [pause(1000), pause(6000)])
+>       assert rows[1][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_algorithm_gaps.py:143: IndexError
+_____________ test_shorter_pause_seam_requires_previous_tail[weak] _____________
+
+kind = 'weak'
+
+    @pytest.mark.parametrize("kind", ["wrong", "weak", "truncated"])
+    def test_shorter_pause_seam_requires_previous_tail(kind):
+        rows, trace = run(contextual_fake(kind), [pause(1000), pause(6000)])
+>       assert rows[1][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_algorithm_gaps.py:143: IndexError
+__________ test_shorter_pause_seam_requires_previous_tail[truncated] ___________
+
+kind = 'truncated'
+
+    @pytest.mark.parametrize("kind", ["wrong", "weak", "truncated"])
+    def test_shorter_pause_seam_requires_previous_tail(kind):
+        rows, trace = run(contextual_fake(kind), [pause(1000), pause(6000)])
+>       assert rows[1][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_algorithm_gaps.py:143: IndexError
+___ test_failed_alternative_tail_does_not_replace_future_opening_provenance ____
+
+    def test_failed_alternative_tail_does_not_replace_future_opening_provenance():
+        from surah_cutter.core.fast_executor import Policy
+    
+        fake = contextual_fake("weak")
+        original = fake.responder
+    
+        def respond(f, start, duration):
+            if start == 6000 and duration > 2000:
+                return observation(f.phrase(3), quality=0.99, positions=False)
+            return original(f, start, duration)
+    
+        fake.responder = respond
+        rows, trace = run(fake, [pause(1000), pause(6000)], policy=Policy(sparse_anchors=True))
+>       assert rows[1][2] == 0 and rows[2] == (3, 6100, 0.99)
+E       assert (0.99 == 0)
+
+tests/test_fast_algorithm_gaps.py:227: AssertionError
+___________ test_correct_tail_cannot_hide_strong_future_continuation ___________
+
+    def test_correct_tail_cannot_hide_strong_future_continuation():
+        fake = contextual_fake("correct")
+        original = fake.responder
+        fake.responder = lambda f, s, d: (
+            observation(f.phrase(3), positions=False) if s == 6000 else original(f, s, d)
+        )
+        rows, trace = run(fake, [pause(1000), pause(6000)])
+>       assert rows[1][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_algorithm_gaps.py:242: IndexError
+___ test_shorter_seam_distinguishes_strong_wrong_and_weak_continuation[0.99] ___
+
+quality = 0.99
+
+    @pytest.mark.parametrize("quality", [0.99, 0.59])
+    def test_shorter_seam_distinguishes_strong_wrong_and_weak_continuation(quality):
+        fake = contextual_fake("correct")
+        original = fake.responder
+    
+        def respond(f, s, d):
+            if s == 6000:
+                return replace(
+                    observation(("shared", "wrong"), positions=False), unit_quality=(0.99, quality)
+                )
+            return original(f, s, d)
+    
+        fake.responder = respond
+        rows, trace = run(fake, [pause(1000), pause(6000)])
+>       assert (rows[1][2] > 0) == (quality < 0.6)
+                ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_algorithm_gaps.py:261: IndexError
+__________ test_next_sparse_anchor_leaves_missing_current_for_review ___________
+
+    def test_next_sparse_anchor_leaves_missing_current_for_review():
+        fake = Fake(responder)
+        fake.timing = False
+        rows, trace = run(fake, [pause(1000), pause(6000), pause(15000)],
+                          policy=Policy(sparse_anchors=True))
+>       assert rows[2][2] == 0 and 3 in trace["review_required_ayahs"]
+E       assert (0.99 == 0)
+
+tests/test_fast_empty_region.py:21: AssertionError
+_______________ test_unheard_owner_never_becomes_a_confirmation ________________
+
+    def test_unheard_owner_never_becomes_a_confirmation():
+        fake = Fake(lambda f, start, duration: observation(("unknown",), positions=False)
+                    if start == 15000 else responder(f, start, duration))
+        fake.timing = False
+        rows, trace = run(fake, [pause(1000), pause(6000), pause(15000)],
+                          policy=Policy(sparse_anchors=True))
+>       assert rows[2][2] == rows[3][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_empty_region.py:35: IndexError
+__________________ test_next_pause_beyond_horizon_is_not_read __________________
+
+    def test_next_pause_beyond_horizon_is_not_read():
+        fake = Fake(responder)
+        fake.timing = False
+        rows, trace = run(fake, [pause(1000), pause(6000), pause(18000)],
+                          policy=Policy(sparse_anchors=True))
+>       assert rows[2][2] == rows[3][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_empty_region.py:44: IndexError
+________________ test_weak_body_cannot_authorize_an_unread_head ________________
+
+    def test_weak_body_cannot_authorize_an_unread_head():
+        rows,trace=scenario("weak")
+>       assert rows[3][2]==0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_head_boundary.py:48: IndexError
+______________ test_partial_body_cannot_authorize_an_unread_head _______________
+
+    def test_partial_body_cannot_authorize_an_unread_head():
+        rows,trace=scenario("partial")
+>       assert rows[3][2]==0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_head_boundary.py:54: IndexError
+_______ test_unrelated_initial_word_is_not_replaced_using_body_identity ________
+
+    def test_unrelated_initial_word_is_not_replaced_using_body_identity():
+        rows,trace=scenario(head="unrelated")
+>       assert rows[3][2]==0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_head_boundary.py:60: IndexError
+_________ test_failed_nonempty_region_gets_one_independent_next_anchor _________
+
+    def test_failed_nonempty_region_gets_one_independent_next_anchor():
+        rows, trace = run(probe_fake(), [pause(1000), pause(6000), pause(10000), pause(15000)],
+                          policy=Policy(sparse_anchors=True))
+>       assert rows[2][2] == 0 and rows[3] == (4, 15100, .99)
+E       assert (0.99 == 0)
+
+tests/test_fast_next_pause_recovery.py:25: AssertionError
+_________ test_base_probe_does_not_change_tiny_or_exceed_candidate_cap _________
+
+    def test_base_probe_does_not_change_tiny_or_exceed_candidate_cap():
+        for fake, policy in [(probe_fake('whisper-tarteel-tiny'), Policy(sparse_anchors=True)),
+                             (probe_fake(), Policy(sparse_anchors=True, max_candidates=1))]:
+            rows, trace = run(fake, [pause(1000), pause(6000), pause(10000), pause(15000)], policy=policy)
+>           assert rows[2][2] == rows[3][2] == 0
+                   ^^^^^^^
+E           IndexError: list index out of range
+
+tests/test_fast_next_pause_recovery.py:37: IndexError
+__ test_an_existing_strong_incomplete_prefix_blocks_the_optional_later_pause ___
+
+    def test_an_existing_strong_incomplete_prefix_blocks_the_optional_later_pause():
+        fake = probe_fake()
+        rendered = list(fake.rendered)
+        first3 = next(i for i, w in enumerate(fake.words) if w.ayah == 3)
+        rendered[-1] = rendered[first3]
+        fake.rendered = tuple(rendered)
+        fake.responder = lambda f, s, d: observation(f.phrase(3)[:1], positions=False) if s == 10000 else responder(f, s, d)
+        rows, trace = run(fake, [pause(1000), pause(6000), pause(10000), pause(15000)],
+                          policy=Policy(sparse_anchors=True))
+>       assert rows[2][2] == rows[3][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_next_pause_recovery.py:50: IndexError
+__________ test_optional_following_owner_cannot_jump_beyond_two_ayahs __________
+
+    def test_optional_following_owner_cannot_jump_beyond_two_ayahs():
+        fake = Fake(responder, words=quran_text.surah_words(114))
+        fake.timing, fake.model_id = False, 'whisper-tarteel-base'
+        fake.responder = lambda f, s, d: observation(f.phrase(6), positions=False) if s == 15000 else responder(f, s, d)
+        rows, trace = run(fake, [pause(1000), pause(6000), pause(10000), pause(15000)],
+                          policy=Policy(sparse_anchors=True))
+>       assert rows[5][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_next_pause_recovery.py:60: IndexError
+________ test_recovered_wide_interval_keeps_identity_for_review[False] _________
+
+stationary = False
+
+    @pytest.mark.parametrize('stationary', [False, True])
+    def test_recovered_wide_interval_keeps_identity_for_review(stationary):
+        earlier = Boundary(1, 1000, 'pause', .99, read_id=0, proof={'pause_id': 0})
+        recovered = Boundary(2, 2000, 'pause', .99, read_id=1,
+                             proof={'pause_id': 1, 'bounded_following_origin_ayah': 1})
+        downstream = Boundary(3, 3000, 'pause', .99, read_id=2, proof={'pause_id': 2})
+        narrow = Boundary(4, 4000, 'pause', .99, read_id=3, proof={'pause_id': 3})
+        geometry = [{'quiet_stationarity': stationary, 'midpoint_interval_radius_ms': x}
+                    for x in (1000, 200, 800, 500)]
+        rows, reviews = _review_addressed_recovery_onsets(
+            [earlier, recovered, downstream, narrow], geometry, Policy())
+        assert rows[:2] == [earlier, recovered] and rows[3] == narrow
+>       assert rows[2].start_ms == downstream.start_ms and rows[2].confidence == 0
+E       AssertionError: assert (None == 3000)
+E        +  where None = Boundary(ayah=3, start_ms=None, evidence_kind='unresolved', confidence=0.0, review_reason='recovered_wide_midpoint_unproved', read_id=None, proof=None).start_ms
+E        +  and   3000 = Boundary(ayah=3, start_ms=3000, evidence_kind='pause', confidence=0.99, review_reason=None, read_id=2, proof={'pause_id': 2}).start_ms
+
+tests/test_fast_next_pause_recovery.py:119: AssertionError
+_________ test_recovered_wide_interval_keeps_identity_for_review[True] _________
+
+stationary = True
+
+    @pytest.mark.parametrize('stationary', [False, True])
+    def test_recovered_wide_interval_keeps_identity_for_review(stationary):
+        earlier = Boundary(1, 1000, 'pause', .99, read_id=0, proof={'pause_id': 0})
+        recovered = Boundary(2, 2000, 'pause', .99, read_id=1,
+                             proof={'pause_id': 1, 'bounded_following_origin_ayah': 1})
+        downstream = Boundary(3, 3000, 'pause', .99, read_id=2, proof={'pause_id': 2})
+        narrow = Boundary(4, 4000, 'pause', .99, read_id=3, proof={'pause_id': 3})
+        geometry = [{'quiet_stationarity': stationary, 'midpoint_interval_radius_ms': x}
+                    for x in (1000, 200, 800, 500)]
+        rows, reviews = _review_addressed_recovery_onsets(
+            [earlier, recovered, downstream, narrow], geometry, Policy())
+        assert rows[:2] == [earlier, recovered] and rows[3] == narrow
+>       assert rows[2].start_ms == downstream.start_ms and rows[2].confidence == 0
+E       AssertionError: assert (None == 3000)
+E        +  where None = Boundary(ayah=3, start_ms=None, evidence_kind='unresolved', confidence=0.0, review_reason='recovered_wide_midpoint_unproved', read_id=None, proof=None).start_ms
+E        +  and   3000 = Boundary(ayah=3, start_ms=3000, evidence_kind='pause', confidence=0.99, review_reason=None, read_id=2, proof={'pause_id': 2}).start_ms
+
+tests/test_fast_next_pause_recovery.py:119: AssertionError
+_____ test_first_recovered_anchor_is_also_checked_for_temporal_uncertainty _____
+
+    def test_first_recovered_anchor_is_also_checked_for_temporal_uncertainty():
+        anchor = Boundary(1, 1000, 'pause', .99, read_id=0,
+                          proof={'pause_id': 0, 'bounded_following_origin_ayah': 1})
+        geometry = [{'quiet_stationarity': True, 'midpoint_interval_radius_ms': 800}]
+        rows, reviews = _review_addressed_recovery_onsets([anchor], geometry, Policy())
+>       assert rows[0].confidence == 0 and rows[0].start_ms == anchor.start_ms
+E       AssertionError: assert (0.0 == 0 and None == 1000)
+E        +  where 0.0 = Boundary(ayah=1, start_ms=None, evidence_kind='unresolved', confidence=0.0, review_reason='recovered_wide_midpoint_unproved', read_id=None, proof=None).confidence
+E        +  and   None = Boundary(ayah=1, start_ms=None, evidence_kind='unresolved', confidence=0.0, review_reason='recovered_wide_midpoint_unproved', read_id=None, proof=None).start_ms
+E        +  and   1000 = Boundary(ayah=1, start_ms=1000, evidence_kind='pause', confidence=0.99, review_reason=None, read_id=0, proof={'pause_id': 0, 'bounded_following_origin_ayah': 1}).start_ms
+
+tests/test_fast_next_pause_recovery.py:133: AssertionError
+_____ test_weak_recovery_anchor_cannot_hide_downstream_timing_uncertainty ______
+
+    def test_weak_recovery_anchor_cannot_hide_downstream_timing_uncertainty():
+        fake = Fake(responder, words=quran_text.surah_words(114))
+        fake.timing, fake.model_id = False, 'whisper-tarteel-base'
+    
+        def respond(f, start, duration):
+            if start == 15000:
+                return observation(f.phrase(4), quality=.4 if duration < 2000 else .99, positions=False)
+            if start == 21400:
+                return observation(f.phrase(5), positions=False)
+            return responder(f, start, duration)
+    
+        fake.responder = respond
+    
+        def geometry(pcm, sr, interval):
+            return {'accepted': True, 'quiet_stationarity': False,
+                    'midpoint_interval_radius_ms': (interval.end_ms - interval.start_ms) / 2}
+    
+        with patch('surah_cutter.core.fast_executor.pause_geometry', side_effect=geometry):
+            rows, trace = run(fake, [pause(1000), pause(6000), pause(10000), pause(15000),
+                                    pause(20000, 1600)], policy=Policy(sparse_anchors=True))
+>       assert rows[3][2] == rows[4][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_next_pause_recovery.py:157: IndexError
+__________ test_partial_rival_keeps_the_unresolved_opening_protected ___________
+
+    def test_partial_rival_keeps_the_unresolved_opening_protected():
+        rows, trace = scenario('partial')
+>       assert rows[3][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_previous_body.py:38: IndexError
+_____________ test_weak_rival_cannot_authorize_a_later_replacement _____________
+
+    def test_weak_rival_cannot_authorize_a_later_replacement():
+        rows, trace = scenario('weak')
+>       assert rows[3][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_previous_body.py:45: IndexError
+_____________ test_repeated_109_owner_requires_local_previous_tail _____________
+
+    def test_repeated_109_owner_requires_local_previous_tail():
+        fake, groups, ends = canonical_fake(109)
+        assert plan_phrase(groups, 3, ends)["ambiguous"]
+        assert plan_seam(groups, 3, ends) and plan_seam(groups, 5, ends)
+        starts = {1000 + 5000 * (a - 1): a for a in groups}
+        def respond(f, start, duration):
+            if start in starts:
+                return observation(groups[starts[start]])
+            for ayah in (3, 5):
+                if start + duration == 1000 + 5000 * (ayah - 1):
+                    return observation(groups[ayah - 1])
+            return observation(())
+        fake.responder = respond
+        rows, trace = run(fake, [pause(p) for p in starts])
+        assert all(r[2] > 0 for r in rows)
+        assert trace["boundaries"][2]["proof"]["contextual_owner"]
+        assert trace["boundaries"][4]["proof"]["contextual_owner"]
+        fake.responder = lambda f, start, duration: observation(groups[starts[start]]) if start in starts else observation(groups[4])
+        rows, trace = run(fake, [pause(p) for p in starts])
+>       assert rows[2][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_review_fixes.py:141: IndexError
+_____ test_sparse_anchor_preserves_unresolved_owner_and_blocks_late_repeat _____
+
+    def test_sparse_anchor_preserves_unresolved_owner_and_blocks_late_repeat():
+        from surah_cutter.core.fast_executor import Policy
+        fake = Fake(lambda f, start, duration: observation(f.phrase(3)) if start==1000 else observation(f.phrase(1)))
+        rows, trace = run(fake, [pause(1000),pause(10000)], policy=Policy(sparse_anchors=True))
+>       assert rows[0][2] == rows[1][2] == 0 and rows[2][2] > 0
+                             ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_review_fixes.py:248: IndexError
+________ test_spoken_partial_owner_rejects_explicit_contradictory_names ________
+
+    def test_spoken_partial_owner_rejects_explicit_contradictory_names():
+        class Spoken(Fake):
+            def proof_word_ends(self, words, rendered):
+                return tuple(tuple(range(1,len(u)+1)) for u in rendered)
+        fake = Spoken(lambda *args: observation(("الف","لام","راء")))
+        fake.rendered = (("الف","لام","ميم"),)+fake.rendered[1:]
+        rows, _ = run(fake,[pause(1000)])
+>       assert rows[0][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_review_fixes.py:272: IndexError
+________ test_future_partial_word_expands_locally_before_sparse_anchor _________
+
+    def test_future_partial_word_expands_locally_before_sparse_anchor():
+        from surah_cutter.core.fast_executor import Policy
+        fake = Fake(lambda *args: observation(()))
+        rendered = list(fake.rendered)
+        index = next(i for i,w in enumerate(fake.words) if w.ayah==2)
+        rendered[index] = ("anchorword",)
+        fake.rendered = tuple(rendered)
+        fake.responder = lambda f,start,duration: observation(("anchor",) if duration<2000 else ("anchorword",))
+        rows, trace = run(fake,[pause(1000)],policy=Policy(sparse_anchors=True))
+>       assert rows[0][2]==0 and rows[1][2]>0
+E       assert (0.99 == 0)
+
+tests/test_fast_review_fixes.py:306: AssertionError
+______ test_far_unique_anchor_does_not_read_or_confirm_the_unresolved_gap ______
+
+    def test_far_unique_anchor_does_not_read_or_confirm_the_unresolved_gap():
+        from surah_cutter.core.fast_executor import Policy
+        fake=Fake(lambda f,start,duration: observation(f.phrase(4)))
+        rows,trace=run(fake,[pause(1000)],policy=Policy(sparse_anchors=True,max_unresolved_ayahs=None))
+>       assert all(r[2]==0 for r in rows[:3]) and rows[3][2]>0
+E       assert (False)
+E        +  where False = all(<generator object test_far_unique_anchor_does_not_read_or_confirm_the_unresolved_gap.<locals>.<genexpr> at 0x10e4c7850>)
+
+tests/test_fast_review_fixes.py:374: AssertionError
+____________ test_cue_never_confirms_missing_or_wrong_rest[later0] _____________
+
+later = ('يا',)
+
+    @pytest.mark.parametrize('later', [('يا',), ('يا', 'اولي'), ('wrong',), ()])
+    def test_cue_never_confirms_missing_or_wrong_rest(later):
+        fake = vocative_fake(lambda duration: ('يا',) if duration < 2000 else later)
+        rows, _ = run(fake, [pause(1000)])
+>       assert rows[0][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_short_spoken_prefix.py:38: IndexError
+____________ test_cue_never_confirms_missing_or_wrong_rest[later1] _____________
+
+later = ('يا', 'اولي')
+
+    @pytest.mark.parametrize('later', [('يا',), ('يا', 'اولي'), ('wrong',), ()])
+    def test_cue_never_confirms_missing_or_wrong_rest(later):
+        fake = vocative_fake(lambda duration: ('يا',) if duration < 2000 else later)
+        rows, _ = run(fake, [pause(1000)])
+>       assert rows[0][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_short_spoken_prefix.py:38: IndexError
+____________ test_cue_never_confirms_missing_or_wrong_rest[later2] _____________
+
+later = ('wrong',)
+
+    @pytest.mark.parametrize('later', [('يا',), ('يا', 'اولي'), ('wrong',), ()])
+    def test_cue_never_confirms_missing_or_wrong_rest(later):
+        fake = vocative_fake(lambda duration: ('يا',) if duration < 2000 else later)
+        rows, _ = run(fake, [pause(1000)])
+>       assert rows[0][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_short_spoken_prefix.py:38: IndexError
+____________ test_cue_never_confirms_missing_or_wrong_rest[later3] _____________
+
+later = ()
+
+    @pytest.mark.parametrize('later', [('يا',), ('يا', 'اولي'), ('wrong',), ()])
+    def test_cue_never_confirms_missing_or_wrong_rest(later):
+        fake = vocative_fake(lambda duration: ('يا',) if duration < 2000 else later)
+        rows, _ = run(fake, [pause(1000)])
+>       assert rows[0][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_short_spoken_prefix.py:38: IndexError
+______________ test_weak_initial_unit_does_not_authorize_new_read ______________
+
+    def test_weak_initial_unit_does_not_authorize_new_read():
+        fake = vocative_fake(lambda duration: ('يا',))
+        fake.responder = lambda f, start, duration: observation(('يا',), quality=.59, positions=False)
+        rows, trace = run(fake, [pause(1000)])
+>       assert rows[0][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_short_spoken_prefix.py:45: IndexError
+_________ test_strong_foreign_continuation_does_not_authorize_new_read _________
+
+    def test_strong_foreign_continuation_does_not_authorize_new_read():
+        fake = vocative_fake(lambda duration: ('يا', 'اولي'))
+        rows, trace = run(fake, [pause(1000)])
+>       assert rows[0][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_short_spoken_prefix.py:53: IndexError
+____ test_wide_pause_keeps_cue_without_spending_new_read_or_confirming_time ____
+
+    def test_wide_pause_keeps_cue_without_spending_new_read_or_confirming_time():
+        fake = vocative_fake(lambda duration: ('يا',))
+        fake.responder = lambda f, start, duration: (
+            observation(('يا',), positions=False) if start == 2000 else observation((), positions=False))
+        rows, trace = run(fake, [pause(1000, width=1200)])
+>       assert rows[0][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_short_spoken_prefix.py:78: IndexError
+___________ test_weak_second_essential_unit_cannot_be_averaged_away ____________
+
+    def test_weak_second_essential_unit_cannot_be_averaged_away():
+        fake = vocative_fake(lambda duration: ('يا',))
+        fake.responder = lambda f, start, duration: (
+            observation(('يا',), positions=False) if duration < 2000
+            else replace(observation(('يا', 'ايها'), positions=False), unit_quality=(.99, .59)))
+        rows, _ = run(fake, [pause(1000)])
+>       assert rows[0][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_short_spoken_prefix.py:90: IndexError
+__ test_failed_new_short_word_reads_preserve_later_independent_sparse_anchor ___
+
+    def test_failed_new_short_word_reads_preserve_later_independent_sparse_anchor():
+        fake = vocative_fake(lambda duration: ('يا',))
+        fake.responder = lambda f, start, duration: (
+            observation(('يا',), positions=False) if start == 1000
+            else observation(('يا', 'اولي'), positions=False) if start == 6000
+            else observation((), positions=False))
+        rows, trace = run(fake, [pause(1000), pause(6000)], policy=Policy(sparse_anchors=True))
+>       assert rows[0][2] == 0 and rows[1][2] > 0 and rows[1][1] == 6100
+E       assert (0.99 == 0)
+
+tests/test_fast_short_spoken_prefix.py:106: AssertionError
+____ test_new_short_cue_cannot_erase_a_preexisting_supported_opening_block _____
+
+    def test_new_short_cue_cannot_erase_a_preexisting_supported_opening_block():
+        fake = vocative_fake(lambda duration: ())
+        later = fake.rendered[1][0]
+        rendered = list(fake.rendered)
+        rival = next(i for i, word in enumerate(fake.words) if word.ayah == 2)
+        rendered[rival] = ('يا', 'ايها')
+        fake.rendered = tuple(rendered)
+        def respond(f, start, duration):
+            if start == 1000:
+                units = ('wrong', 'wrong', later) if duration < 2000 else ('يا',) if duration < 3500 else ()
+            elif start == 6000:
+                units = ('يا', 'ايها', later)
+            else:
+                units = ()
+            return observation(units, positions=False)
+        fake.responder = respond
+        rows, trace = run(fake, [pause(1000), pause(6000)])
+>       assert rows[0][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_short_spoken_prefix.py:128: IndexError
+_ test_sparse_identity_can_advance_while_unsupported_time_requires_review[False-0.5-False] _
+
+stationary = False, initial_quality = 0.5, reliable = False
+
+    @pytest.mark.parametrize('stationary,initial_quality,reliable', [
+        (False, .5, False), (True, .5, True), (False, .99, True),
+    ])
+    def test_sparse_identity_can_advance_while_unsupported_time_requires_review(
+            stationary, initial_quality, reliable):
+        from unittest.mock import patch
+        fake = Fake(lambda *args: observation(()))
+        fake.timing = False
+        def respond(f, start, duration):
+            if start == 1000:
+                return observation(f.phrase(2)[:1], quality=initial_quality if duration < 2000 else .99,
+                                   positions=False)
+            if start == 6000:
+                return observation(f.phrase(3)[:1], positions=False)
+            return observation((), positions=False)
+        fake.responder = respond
+        geometry = {'accepted': True, 'reason': 'measured_dsp_interval', 'quiet_stationarity': stationary}
+        with patch('surah_cutter.core.fast_executor.pause_geometry', return_value=geometry):
+            rows, trace = run(fake, [pause(1000), pause(6000)], policy=Policy(sparse_anchors=True))
+>       assert bool(rows[1][2]) is reliable
+                    ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_short_spoken_prefix.py:154: IndexError
+_ test_sparse_identity_can_advance_while_unsupported_time_requires_review[True-0.5-True] _
+
+stationary = True, initial_quality = 0.5, reliable = True
+
+    @pytest.mark.parametrize('stationary,initial_quality,reliable', [
+        (False, .5, False), (True, .5, True), (False, .99, True),
+    ])
+    def test_sparse_identity_can_advance_while_unsupported_time_requires_review(
+            stationary, initial_quality, reliable):
+        from unittest.mock import patch
+        fake = Fake(lambda *args: observation(()))
+        fake.timing = False
+        def respond(f, start, duration):
+            if start == 1000:
+                return observation(f.phrase(2)[:1], quality=initial_quality if duration < 2000 else .99,
+                                   positions=False)
+            if start == 6000:
+                return observation(f.phrase(3)[:1], positions=False)
+            return observation((), positions=False)
+        fake.responder = respond
+        geometry = {'accepted': True, 'reason': 'measured_dsp_interval', 'quiet_stationarity': stationary}
+        with patch('surah_cutter.core.fast_executor.pause_geometry', return_value=geometry):
+            rows, trace = run(fake, [pause(1000), pause(6000)], policy=Policy(sparse_anchors=True))
+        assert bool(rows[1][2]) is reliable
+>       assert rows[2][2] > 0  # The heard identity still enables the following ayah.
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_short_spoken_prefix.py:155: IndexError
+_ test_sparse_identity_can_advance_while_unsupported_time_requires_review[False-0.99-True] _
+
+stationary = False, initial_quality = 0.99, reliable = True
+
+    @pytest.mark.parametrize('stationary,initial_quality,reliable', [
+        (False, .5, False), (True, .5, True), (False, .99, True),
+    ])
+    def test_sparse_identity_can_advance_while_unsupported_time_requires_review(
+            stationary, initial_quality, reliable):
+        from unittest.mock import patch
+        fake = Fake(lambda *args: observation(()))
+        fake.timing = False
+        def respond(f, start, duration):
+            if start == 1000:
+                return observation(f.phrase(2)[:1], quality=initial_quality if duration < 2000 else .99,
+                                   positions=False)
+            if start == 6000:
+                return observation(f.phrase(3)[:1], positions=False)
+            return observation((), positions=False)
+        fake.responder = respond
+        geometry = {'accepted': True, 'reason': 'measured_dsp_interval', 'quiet_stationarity': stationary}
+        with patch('surah_cutter.core.fast_executor.pause_geometry', return_value=geometry):
+            rows, trace = run(fake, [pause(1000), pause(6000)], policy=Policy(sparse_anchors=True))
+        assert bool(rows[1][2]) is reliable
+>       assert rows[2][2] > 0  # The heard identity still enables the following ayah.
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_short_spoken_prefix.py:155: IndexError
+______ test_weak_later_word_does_not_remove_a_strong_initial_localization ______
+
+    def test_weak_later_word_does_not_remove_a_strong_initial_localization():
+        from unittest.mock import patch
+        fake = Fake(lambda *args: observation(()))
+        fake.timing = False
+        rendered = list(fake.rendered)
+        a2 = [i for i, w in enumerate(fake.words) if w.ayah == 2]
+        a4 = [i for i, w in enumerate(fake.words) if w.ayah == 4]
+        rendered[a2[0]], rendered[a2[1]] = ('future',), ('unique',)
+        rendered[a4[0]], rendered[a4[1]] = ('future',), ('other',)
+        fake.rendered = tuple(rendered)
+        def respond(f, start, duration):
+            if start != 1000:
+                return observation((), positions=False)
+            obs = observation(('future', 'unique'), positions=False)
+            return replace(obs, unit_quality=(.99, .5)) if duration < 2000 else obs
+        fake.responder = respond
+        geometry = {'accepted': True, 'reason': 'measured_dsp_interval', 'quiet_stationarity': False}
+        with patch('surah_cutter.core.fast_executor.pause_geometry', return_value=geometry):
+            rows, _ = run(fake, [pause(1000)], policy=Policy(sparse_anchors=True))
+>       assert rows[1][2] > 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_short_spoken_prefix.py:180: IndexError
+=========================== short test summary info ============================
+FAILED tests/test_fast_algorithm_gaps.py::test_shorter_pause_seam_requires_previous_tail[wrong]
+FAILED tests/test_fast_algorithm_gaps.py::test_shorter_pause_seam_requires_previous_tail[weak]
+FAILED tests/test_fast_algorithm_gaps.py::test_shorter_pause_seam_requires_previous_tail[truncated]
+FAILED tests/test_fast_algorithm_gaps.py::test_failed_alternative_tail_does_not_replace_future_opening_provenance
+FAILED tests/test_fast_algorithm_gaps.py::test_correct_tail_cannot_hide_strong_future_continuation
+FAILED tests/test_fast_algorithm_gaps.py::test_shorter_seam_distinguishes_strong_wrong_and_weak_continuation[0.99]
+FAILED tests/test_fast_empty_region.py::test_next_sparse_anchor_leaves_missing_current_for_review
+FAILED tests/test_fast_empty_region.py::test_unheard_owner_never_becomes_a_confirmation
+FAILED tests/test_fast_empty_region.py::test_next_pause_beyond_horizon_is_not_read
+FAILED tests/test_fast_head_boundary.py::test_weak_body_cannot_authorize_an_unread_head
+FAILED tests/test_fast_head_boundary.py::test_partial_body_cannot_authorize_an_unread_head
+FAILED tests/test_fast_head_boundary.py::test_unrelated_initial_word_is_not_replaced_using_body_identity
+FAILED tests/test_fast_next_pause_recovery.py::test_failed_nonempty_region_gets_one_independent_next_anchor
+FAILED tests/test_fast_next_pause_recovery.py::test_base_probe_does_not_change_tiny_or_exceed_candidate_cap
+FAILED tests/test_fast_next_pause_recovery.py::test_an_existing_strong_incomplete_prefix_blocks_the_optional_later_pause
+FAILED tests/test_fast_next_pause_recovery.py::test_optional_following_owner_cannot_jump_beyond_two_ayahs
+FAILED tests/test_fast_next_pause_recovery.py::test_recovered_wide_interval_keeps_identity_for_review[False]
+FAILED tests/test_fast_next_pause_recovery.py::test_recovered_wide_interval_keeps_identity_for_review[True]
+FAILED tests/test_fast_next_pause_recovery.py::test_first_recovered_anchor_is_also_checked_for_temporal_uncertainty
+FAILED tests/test_fast_next_pause_recovery.py::test_weak_recovery_anchor_cannot_hide_downstream_timing_uncertainty
+FAILED tests/test_fast_previous_body.py::test_partial_rival_keeps_the_unresolved_opening_protected
+FAILED tests/test_fast_previous_body.py::test_weak_rival_cannot_authorize_a_later_replacement
+FAILED tests/test_fast_review_fixes.py::test_repeated_109_owner_requires_local_previous_tail
+FAILED tests/test_fast_review_fixes.py::test_sparse_anchor_preserves_unresolved_owner_and_blocks_late_repeat
+FAILED tests/test_fast_review_fixes.py::test_spoken_partial_owner_rejects_explicit_contradictory_names
+FAILED tests/test_fast_review_fixes.py::test_future_partial_word_expands_locally_before_sparse_anchor
+FAILED tests/test_fast_review_fixes.py::test_far_unique_anchor_does_not_read_or_confirm_the_unresolved_gap
+FAILED tests/test_fast_short_spoken_prefix.py::test_cue_never_confirms_missing_or_wrong_rest[later0]
+FAILED tests/test_fast_short_spoken_prefix.py::test_cue_never_confirms_missing_or_wrong_rest[later1]
+FAILED tests/test_fast_short_spoken_prefix.py::test_cue_never_confirms_missing_or_wrong_rest[later2]
+FAILED tests/test_fast_short_spoken_prefix.py::test_cue_never_confirms_missing_or_wrong_rest[later3]
+FAILED tests/test_fast_short_spoken_prefix.py::test_weak_initial_unit_does_not_authorize_new_read
+FAILED tests/test_fast_short_spoken_prefix.py::test_strong_foreign_continuation_does_not_authorize_new_read
+FAILED tests/test_fast_short_spoken_prefix.py::test_wide_pause_keeps_cue_without_spending_new_read_or_confirming_time
+FAILED tests/test_fast_short_spoken_prefix.py::test_weak_second_essential_unit_cannot_be_averaged_away
+FAILED tests/test_fast_short_spoken_prefix.py::test_failed_new_short_word_reads_preserve_later_independent_sparse_anchor
+FAILED tests/test_fast_short_spoken_prefix.py::test_new_short_cue_cannot_erase_a_preexisting_supported_opening_block
+FAILED tests/test_fast_short_spoken_prefix.py::test_sparse_identity_can_advance_while_unsupported_time_requires_review[False-0.5-False]
+FAILED tests/test_fast_short_spoken_prefix.py::test_sparse_identity_can_advance_while_unsupported_time_requires_review[True-0.5-True]
+FAILED tests/test_fast_short_spoken_prefix.py::test_sparse_identity_can_advance_while_unsupported_time_requires_review[False-0.99-True]
+FAILED tests/test_fast_short_spoken_prefix.py::test_weak_later_word_does_not_remove_a_strong_initial_localization
+41 failed, 259 passed in 15.54s

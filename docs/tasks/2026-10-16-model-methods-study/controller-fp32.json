@@ -1,0 +1,30 @@
+[
+  {
+    "name": "qpc-fp32",
+    "command": [
+      "/Users/ayub/Developer/surah-cutter/.venv/bin/python",
+      "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/predict_qpc.py",
+      "--precision",
+      "fp32",
+      "--variants",
+      "current",
+      "--ids",
+      "shatri-001",
+      "shatri-080",
+      "shatri-098",
+      "shatri-112",
+      "saad_al_ghamidi-080",
+      "saad_al_ghamidi-112",
+      "mahmoud_khalil_al_hussary-080",
+      "mahmoud_khalil_al_hussary-112",
+      "mohammed_siddiq_al_minshawi-080",
+      "mohammed_siddiq_al_minshawi-112",
+      "abdul_basit_mujawwad-080",
+      "abdul_basit_mujawwad-112"
+    ],
+    "started": 1792116668.6266618,
+    "state": "complete",
+    "exit_code": 0,
+    "finished": 1792116847.321624
+  }
+]

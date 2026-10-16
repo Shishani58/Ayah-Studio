@@ -1,0 +1,1936 @@
+--- baseline/surah_cutter/cli.py
++++ current/surah_cutter/cli.py
+@@ -112,6 +112,9 @@
+                 print(f"    FAILED sura {surah}: {exc}", file=sys.stderr, flush=True)
+                 continue
+             print(f"    sura {surah:03d}: {written} ayah timings written", flush=True)
++            if save_result.unresolved_ayahs:
++                print(f"    partial FAST: {len(save_result.unresolved_ayahs)} unresolved ayahs "
++                      "(no timestamps generated)", flush=True)
+             if save_result.diagnostics_error:
+                 print(f"    saved_with_diagnostics_error: {save_result.diagnostics_error}; "
+                       f"paths={save_result.log_paths}", file=sys.stderr, flush=True)
+--- baseline/surah_cutter/core/fast_executor.py
++++ current/surah_cutter/core/fast_executor.py
+@@ -16,11 +16,13 @@
+ from surah_cutter.core.fast_adapters import make_adapter, representation_sha, loaded_implementation_sha, arabic_units
+ from surah_cutter.core.fast_reads import LocalEvidenceReads
+ 
+-VERSION = "sequential-fast-v3-sparse-14-next-dsp-recovery"
++VERSION = "local-fast-v4-partial-identity-anchors"
+ 
+ 
+ @dataclass(frozen=True)
+ class Policy:
++    independent_search: bool = True
++    landmark_probes: int = 1
+     short_word_pause_radius_ms: float = 500.
+     speech_ms: tuple[int, ...] = (1300, 2500, 4000)
+     noisy_speech_ms: tuple[int, ...] = (1700, 1900, 2100)
+@@ -43,7 +45,7 @@
+ @dataclass(frozen=True)
+ class Boundary:
+     ayah: int
+-    start_ms: int
++    start_ms: int | None
+     evidence_kind: str
+     confidence: float
+     review_reason: str | None = None
+@@ -477,7 +479,7 @@
+     A complete unique prefix already heard below threshold gains no new onset
+     evidence just because its probability rises in a longer crop. If DSP also
+     lacks a stationary quiet interval, retain the owner for sequence recovery
+-    and publish its timestamp for review. No replacement time is inferred.
++    and leave its timestamp unknown. No replacement time is inferred.
+     """
+     initial = {}
+     for read in reads:
+@@ -506,7 +508,7 @@
+             reviews.append({"ayah": boundary.ayah, "reason": reason, "initial_read_id": first["id"],
+                             "initial_first_unit_quality": quality[0], "read_id": boundary.read_id,
+                             "internal_anchor_ms": boundary.start_ms, "identity_proof": proof})
+-            boundary = replace(boundary, evidence_kind="estimate", confidence=0., review_reason=reason,
++            boundary = replace(boundary, start_ms=None, evidence_kind="unresolved", confidence=0., review_reason=reason,
+                                read_id=None, proof=None)
+         result.append(boundary)
+     return result, reviews
+@@ -515,49 +517,66 @@
+ def _review_addressed_recovery_onsets(boundaries, geometry, policy):
+     """Newly accessible identity anchors do not resolve a wide pause cut.
+ 
+-    Retain the internally validated owner/order for sparse recovery. Publish
+-    uncertain timestamps for review; never infer a replacement onset from ASR.
++    Retain the internally validated owner/order for sparse recovery. Leave
++    uncertain timestamps unknown; never infer a replacement onset from ASR.
+     The original search path has no new publication restrictions.
+     """
+-    recovered = False
++    recovered, disconnected = False, False
+     result, reviews = [], []
+     for boundary in boundaries:
+         proof = boundary.proof or {}
+-        recovered |= "bounded_following_origin_ayah" in proof
++        disconnected |= "independent_region_origin_ayah" in proof
++        recovered |= "bounded_following_origin_ayah" in proof or disconnected
+         index = proof.get("pause_id")
++        wide = index is not None and geometry[index]["midpoint_interval_radius_ms"] > policy.short_word_pause_radius_ms
++        unstable = index is not None and not geometry[index].get("quiet_stationarity", False)
+         if (recovered and boundary.evidence_kind == "pause" and index is not None
+-                and geometry[index]["midpoint_interval_radius_ms"] > policy.short_word_pause_radius_ms):
+-            reason = "recovered_wide_midpoint_unproved"
++                and (wide or (disconnected and unstable))):
++            reason = ("recovered_wide_midpoint_unproved" if wide else
++                      "reacquired_nonstationary_midpoint_unproved")
+             reviews.append({"ayah": boundary.ayah, "reason": reason, "read_id": boundary.read_id,
+                             "internal_anchor_ms": boundary.start_ms, "identity_proof": proof})
+-            boundary = replace(boundary, evidence_kind="estimate", confidence=0., review_reason=reason,
++            boundary = replace(boundary, start_ms=None, evidence_kind="unresolved", confidence=0., review_reason=reason,
+                                read_id=None, proof=None)
+         result.append(boundary)
+     return result, reviews
+ 
+ 
+ def validate_boundaries(boundaries, ayahs, duration_ms, reads, *, groups=None, word_ends=None,
+-                        canonical_ends=None, threshold=0., pauses=None, policy=Policy(), pause_geometry_data=None):
++                        canonical_ends=None, threshold=0., pauses=None, policy=Policy(), pause_geometry_data=None,
++                        search_only=False):
+     if [b.ayah for b in boundaries] != list(ayahs):
+         raise ValueError("canonical_ayah_set_mismatch")
+     last = -1
+     for boundary in boundaries:
++        if boundary.evidence_kind == "unresolved":
++            if (boundary.start_ms is not None or boundary.confidence != 0 or not boundary.review_reason
++                    or boundary.read_id is not None or boundary.proof is not None):
++                raise ValueError("invalid_unresolved_boundary")
++            continue
+         ms = boundary.start_ms
+         if type(ms) is not int or not last < ms < duration_ms or ms < 0:
+             raise ValueError("invalid_boundary_timeline")
+         last = ms
+         if not math.isfinite(boundary.confidence) or not 0 <= boundary.confidence <= 1:
+             raise ValueError("invalid_boundary_quality")
+-        if boundary.evidence_kind == "estimate":
+-            if boundary.confidence != 0 or not boundary.review_reason or boundary.read_id is not None:
+-                raise ValueError("invalid_estimate")
+-            continue
+         proof = boundary.proof or {}
+         if boundary.review_reason or boundary.read_id is None or not 0 <= boundary.read_id < len(reads):
+             raise ValueError("missing_acoustic_proof")
+         read = reads[boundary.read_id]
+         if read["outcome"] != "completed" or not proof.get("complete") or proof.get("ambiguous"):
+             raise ValueError("incomplete_acoustic_proof")
++        if "independent_region_origin_ayah" in proof:
++            origin = proof["independent_region_origin_ayah"]
++            attempt = proof.get("independent_region_attempt")
++            nominations = {r["window_ms"][0] for r in reads
++                           if ":independent_region_identity" in r.get("reason", "")}
++            if (type(origin) is not int or not 1 <= origin < boundary.ayah
++                    or type(attempt) is not int or not 1 <= attempt <= policy.landmark_probes
++                    or read.get("reason") != f"ayah={origin}:independent_region_identity"
++                    or len(nominations) > policy.landmark_probes
++                    or "bounded_following_origin_ayah" in proof):
++                raise ValueError("invalid_independent_region_provenance")
+         observed = read["observed"]
+         if "prefix_comparison_id" in proof:
+             if boundary.evidence_kind != "pause":
+@@ -688,7 +707,7 @@
+                 if [left, right] != [pause.start_ms, pause.end_ms]:
+                     raise ValueError("mutated_pause_interval")
+                 if (pause_geometry_data is None or index >= len(pause_geometry_data)
+-                        or not pause_geometry_data[index]["accepted"]):
++                        or (not search_only and not pause_geometry_data[index]["accepted"])):
+                     raise ValueError("unproved_pause_geometry")
+             r0, r1 = read["window_ms"]
+             expected_left = max(left, right - 200.)
+@@ -711,6 +730,10 @@
+                     raise ValueError("unheard_previous_context")
+         elif boundary.evidence_kind in ("first_onset", "wasl"):
+             positions = observed["positions_ms"]
++            if positions is None and search_only and proof.get("identity_only") and boundary.evidence_kind == "first_onset":
++                if offset != 0 or ms != round(read["window_ms"][0]):
++                    raise ValueError("invalid_identity_search_location")
++                continue
+             if positions is None or offset >= len(positions):
+                 raise ValueError("unsupported_temporal_proof")
+             onset = round(read["window_ms"][0] + positions[offset])
+@@ -735,37 +758,11 @@
+             raise ValueError("unknown_boundary_evidence")
+ 
+ 
+-def _finish_estimates(confirmed, ayahs, groups, duration_ms, reason, unresolved=None):
+-    """Keep proven anchors exact; fill each unresolved block with honest conf0."""
++def _complete_result(confirmed, ayahs, reason, unresolved=None):
++    """Unknown boundaries carry no timestamp; identity anchors stay internal."""
+     anchors = {b.ayah: b for b in confirmed}
+-    result, previous, cursor = [], None, 0
+-    while cursor < len(ayahs):
+-        ayah = ayahs[cursor]
+-        if ayah in anchors:
+-            previous = anchors[ayah]
+-            result.append(previous)
+-            cursor += 1
+-            continue
+-        end = cursor
+-        while end < len(ayahs) and ayahs[end] not in anchors:
+-            end += 1
+-        remaining = ayahs[cursor:end]
+-        following = anchors.get(ayahs[end]) if end < len(ayahs) else None
+-        lower = previous.start_ms + 1 if previous else 0
+-        upper = following.start_ms - 1 if following else math.ceil(duration_ms) - 1
+-        if len(remaining) > upper - lower + 1:
+-            raise ValueError("unrepresentable_timeline")
+-        weights = [max(1, sum(map(len, groups[a]))) for a in remaining]
+-        free = upper - lower + 1 - len(remaining)
+-        previous_weight = max(1, sum(map(len, groups[previous.ayah]))) if previous else 0
+-        total, acc = sum(weights) + previous_weight, previous_weight
+-        for i, (current, weight) in enumerate(zip(remaining, weights)):
+-            ms = lower + i + (free * acc // total if total else 0)
+-            result.append(Boundary(current, ms, "estimate", 0.,
+-                                   (unresolved or {}).get(current, reason) if i == 0 else "blocked_by_unresolved_ayah"))
+-            acc += weight
+-        cursor = end
+-    return result
++    return [anchors.get(a) or Boundary(a, None, "unresolved", 0.,
++            (unresolved or {}).get(a, reason)) for a in ayahs]
+ 
+ 
+ def _silero_model_path():
+@@ -904,7 +901,7 @@
+     snapshot["proof_word_ends_sha256"] = hashlib.sha256(repr(proof_ends).encode()).hexdigest()
+     from surah_cutter.data.alignment_identity import fast_run_key
+     key = fast_run_key(snapshot)
+-    trace.update(align_lag_ms=adapter.lag_ms, backend=adapter.metric, fast_adapter=adapter.version,
++    trace.update(mode="fast", surah=surah, ayah_count=len(ayahs), result_contract="partial-v1", align_lag_ms=adapter.lag_ms, backend=adapter.metric, fast_adapter=adapter.version,
+                  fast_version=VERSION, fast_run_key=key, run_snapshot=snapshot,
+                  model_source=f"{adapter.model_id}:revision={adapter.revision}:adapter={adapter.version}",
+                  total_ms=duration, duration_ms=duration, transitions=events)
+@@ -950,6 +947,8 @@
+     reason = "no_local_evidence"
+     tried = set()
+     unresolved = {}
++    reentry_failures = 0
++    landmark_attempts = 0
+     try:
+         event("LOCATE_FIRST", ayahs[0])
+         report("local", 0, len(ayahs))
+@@ -979,7 +978,9 @@
+                 elapsed_weight = sum(len(u) for a in ayahs
+                                      if confirmed[0].ayah <= a < prev for u in groups[a])
+                 tempo = (confirmed[-1].start_ms - confirmed[0].start_ms) / max(1, elapsed_weight)
+-                predicted_span = tempo * sum(map(len, groups[prev]))
++                # After an unknown ayah the next target is a distinct search:
++                # account for the skipped canonical text, without inventing its time.
++                predicted_span = tempo * sum(len(u) for a in ayahs if prev <= a < ayah for u in groups[a])
+                 forecast = previous + predicted_span
+                 left = previous + predicted_span * policy.tempo_lower_ratio
+                 right = previous + predicted_span * policy.tempo_upper_ratio
+@@ -1013,8 +1014,10 @@
+                     start = max(pause.start_ms, pause.end_ms - 200.)
+                     if not geometry[index]["accepted"]:
+                         reason = geometry[index]["reason"]
+-                        event("SELECT_CANDIDATE", ayah, candidate=index, declined_geometry=reason)
+-                        continue
++                        event("SELECT_CANDIDATE", ayah, candidate=index, declined_geometry=reason,
++                              identity_search=policy.independent_search)
++                        if not policy.independent_search:
++                            continue
+                 event("SELECT_CANDIDATE", ayah, candidate=index, kind=kind)
+                 had_prefix = False
+                 soft_short_word_route = False
+@@ -1140,7 +1143,7 @@
+                             reason = "unproved_repeated_owner_context"
+                             blocked_prefix = True
+                             break
+-                        if kind == "first_onset" and obs.positions_ms is None:
++                        if kind == "first_onset" and obs.positions_ms is None and not policy.independent_search:
+                             reason = "unsupported_first_onset_timing"
+                             break
+                         proof = {"phrase": phrase, "complete": True, "ambiguous": False,
+@@ -1161,7 +1164,10 @@
+                             ms = round(pause.center_ms)
+                             proof.update(pause_ms=[pause.start_ms, pause.end_ms], pause_id=index)
+                         else:
+-                            ms = round(reads.calls[opening_id]["window_ms"][0] + obs.positions_ms[0])
++                            ms = round(reads.calls[opening_id]["window_ms"][0] +
++                                       (obs.positions_ms[0] if obs.positions_ms else 0))
++                            if obs.positions_ms is None:
++                                proof["identity_only"] = True
+                         if ms <= previous:
+                             reason = "quantized_boundary_collision"
+                             break
+@@ -1482,8 +1488,10 @@
+                     anchor = Boundary(future_ayah, round(pause.center_ms), "pause", quality,
+                                       read_id=read_id, proof=proof)
+                     validate_boundaries([anchor], [future_ayah], duration, reads.calls,
+-                                        groups=groups, word_ends=word_ends, canonical_ends=canonical_ends, threshold=threshold, pauses=pauses, policy=policy, pause_geometry_data=geometry)
++                                        groups=groups, word_ends=word_ends, canonical_ends=canonical_ends, threshold=threshold, pauses=pauses, policy=policy, pause_geometry_data=geometry,
++                                        search_only=policy.independent_search)
+                     confirmed.append(anchor)
++                    reentry_failures = 0
+                     unresolved[ayah] = "unresolved_before_unique_anchor"
+                     event("REVIEW_REQUIRED", ayah, reason=unresolved[ayah], block=proof["unresolved_ayahs"])
+                     event("CONFIRMED", future_ayah, evidence="pause", sparse_anchor=True)
+@@ -1491,21 +1499,130 @@
+                     if ayah_progress:
+                         ayah_progress(future_ayah)
+                     continue
++                unresolved[ayah] = reason
+                 event("REVIEW_REQUIRED", ayah, reason=reason)
++                if (policy.independent_search and confirmed and ayah < ayahs[-1]
++                        and reentry_failures < policy.max_block_ayahs):
++                    reentry_failures += 1
++                    event("REENTER_SEARCH", ayah + 1, unresolved_ayah=ayah,
++                          search_anchor_ayah=confirmed[-1].ayah,
++                          reason="independent_next_canonical_target", attempt=reentry_failures)
++                    continue
++                if (policy.independent_search and policy.sparse_anchors
++                        and landmark_attempts < policy.landmark_probes):
++                    # One deliberately separate unresolved region, not a scan
++                    # of all pauses. Duration/text nominate a hypothesis only;
++                    # the independently decoded complete phrase owns the anchor.
++                    landmark_attempts += 1
++                    remaining = [a for a in ayahs if a >= ayah]
++                    weights = [sum(map(len, groups[a])) for a in remaining]
++                    total_weight, cumulative = sum(weights), 0
++                    target = remaining[-1]
++                    for candidate_ayah, weight in zip(remaining, weights):
++                        cumulative += weight
++                        if cumulative >= total_weight / 2:
++                            target = candidate_ayah
++                            break
++                    lower = confirmed[-1].start_ms if confirmed else first
++                    ratio = sum(weights[:remaining.index(target)]) / max(1, total_weight)
++                    nomination = lower + (duration - lower) * ratio
++                    pool = [(i, p) for i, p in enumerate(pauses[:initial_pause_count])
++                            if p.start_ms > lower and p.end_ms + policy.speech_ms[0] < duration]
++                    selected = min(pool, key=lambda item: abs(item[1].center_ms - nomination), default=None)
++                    if selected is not None:
++                        index, pause = selected
++                        start = max(pause.start_ms, pause.end_ms - 200.)
++                        event("REACQUIRE_REGION", ayah, candidate=index, target_ayah=target,
++                              nominated_ms=nomination, pause_ms=[pause.start_ms, pause.end_ms],
++                              reason="unresolved_region_text_duration_hypothesis")
++                        found = None
++                        for speech in policy.speech_ms:
++                            obs = reads.read(start, min(duration, pause.end_ms + speech),
++                                             reason=f"ayah={ayah}:independent_region_identity")
++                            if obs is None:
++                                break
++                            read_id = reads.last_read_id
++                            eligible, found = False, None
++                            for owner in remaining:
++                                # A later repetition cannot replace the unresolved
++                                # current opening; locate an independent later owner.
++                                if owner <= ayah:
++                                    continue
++                                owner_plan = planned_opening(owner)
++                                if owner_plan["ambiguous"]:
++                                    continue
++                                owner_phrase = owner_plan["units"]
++                                view, beam = _beam_view(obs, owner_phrase, threshold, policy.beam_log_margin)
++                                qualities = view.unit_quality[:len(owner_phrase)]
++                                owner_word = rendered[word_map[owner][0]]
++                                spoken = len(proof_ends[word_map[owner][0]]) > 1
++                                conflict = any("spoken_alias" in a and tuple(a["source_units"]) != owner_word
++                                               for a in view.attribution[:len(owner_phrase)])
++                                if spoken:
++                                    conflict |= any(wanted != actual and q >= threshold
++                                                    for wanted, actual, q in zip(owner_word, view.units, view.unit_quality))
++                                if (_prefix(view.units, owner_phrase) == len(owner_phrase) and not view.truncated
++                                        and len(qualities) == len(owner_phrase) and all(math.isfinite(q) for q in qualities)
++                                        and min(qualities) >= threshold and not conflict):
++                                    proof = {"phrase": owner_phrase, "complete": True, "ambiguous": False,
++                                             "competitors_checked": True, "offset": 0, "quality_metric": adapter.metric,
++                                             "pause_ms": [pause.start_ms, pause.end_ms], "pause_id": index,
++                                             "independent_region_origin_ayah": ayah,
++                                             "independent_region_attempt": landmark_attempts}
++                                    proof.update(beam)
++                                    if spoken:
++                                        proof["spoken_owner_units"] = owner_word
++                                    found = Boundary(owner, round(pause.center_ms), "pause", min(qualities),
++                                                     read_id=read_id, proof=proof)
++                                    break
++                                eligible |= bool(_expansion_evidence(view, owner_phrase, word_ends[owner],
++                                                                   threshold, groups, owner, word_ends))
++                            if found:
++                                validate_boundaries([found], [found.ayah], duration, reads.calls,
++                                    groups=groups, word_ends=word_ends, canonical_ends=canonical_ends,
++                                    threshold=threshold, pauses=pauses, policy=policy,
++                                    pause_geometry_data=geometry, search_only=True)
++                                confirmed.append(found)
++                                reentry_failures = 0
++                                event("SEARCH_ANCHOR", found.ayah, candidate=index,
++                                      origin_ayah=ayah, read_id=read_id, evidence="independent_region")
++                                break
++                            if not eligible:
++                                break
++                        if found:
++                            continue
+                 break
++            reentry_failures = 0
+             if (following_probe_id is not None and boundary.evidence_kind == "pause"
+                     and boundary.proof.get("pause_id") == following_probe_id):
+                 boundary = replace(boundary, proof={**boundary.proof, "bounded_following_origin_ayah": ayah})
+             event("CONFIRMED", ayah, evidence=boundary.evidence_kind, start_ms=boundary.start_ms)
++            validate_boundaries([boundary], [ayah], duration, reads.calls,
++                                groups=groups, word_ends=word_ends, canonical_ends=canonical_ends,
++                                threshold=threshold, pauses=pauses, policy=policy,
++                                pause_geometry_data=geometry, search_only=policy.independent_search)
+             confirmed.append(boundary)
+             event("ADVANCE", ayah)
+             if ayah_progress:
+                 ayah_progress(ayah)
+-        result = _finish_estimates(confirmed, ayahs, groups, duration, reason, unresolved)
++        trace["search_anchors"] = [asdict(b) for b in confirmed]
++        reviewed, recovery_reviews = _review_addressed_recovery_onsets(confirmed, geometry, policy)
++        reviewed, temporal_reviews = _review_weak_sparse_onsets(reviewed, reads.calls, geometry, threshold)
++        temporal_reviews.extend(recovery_reviews)
++        publishable = []
++        for anchor in reviewed:
++            index = (anchor.proof or {}).get("pause_id")
++            missing_timing = ((anchor.proof or {}).get("identity_only") or
++                              (index is not None and not geometry[index]["accepted"]))
++            if missing_timing:
++                unresolved[anchor.ayah] = (geometry[index]["reason"] if index is not None
++                                           else "unsupported_first_onset_timing")
++                event("IDENTITY_ONLY", anchor.ayah, reason=unresolved[anchor.ayah],
++                      read_id=anchor.read_id, search_location_ms=anchor.start_ms)
++            else:
++                publishable.append(anchor)
++        result = _complete_result(publishable, ayahs, reason, unresolved)
+         report("verify")
+-        result, recovery_reviews = _review_addressed_recovery_onsets(result, geometry, policy)
+-        result, temporal_reviews = _review_weak_sparse_onsets(result, reads.calls, geometry, threshold)
+-        temporal_reviews.extend(recovery_reviews)
+         for review in temporal_reviews:
+             event("IDENTITY_ONLY", **review)
+             event("REVIEW_REQUIRED", review["ayah"], reason=review["reason"])
+@@ -1521,8 +1638,10 @@
+             "noisy_opening": "identity_only_missing_onset_not_reconstructed",
+         }
+         trace["ayahs"] = [{"ayah": b.ayah, "onset_ms": b.start_ms, "conf": b.confidence,
+-                            "reliable": b.evidence_kind != "estimate"} for b in result]
+-        trace["review_required_ayahs"] = [b.ayah for b in result if b.evidence_kind == "estimate"]
++                            "reliable": b.evidence_kind != "unresolved"} for b in result]
++        trace["result_complete"] = all(b.start_ms is not None for b in result)
++        trace["unresolved_ayahs"] = [b.ayah for b in result if b.start_ms is None]
++        trace["review_required_ayahs"] = [b.ayah for b in result if b.evidence_kind == "unresolved"]
+         trace["pause_matches"] = [{"ayah": b.ayah, "from_pause": b.evidence_kind == "pause",
+                                    "onset_ms": b.start_ms, "conf": b.confidence,
+                                    "boundary_evidence": b.evidence_kind,
+@@ -1532,7 +1651,7 @@
+         trace.update(n_pause=sum(b.evidence_kind == "pause" for b in result),
+                      n_wasl=sum(b.evidence_kind == "wasl" for b in result), bounded_ctc_fallback=None)
+         event("RESULT_READY")
+-        return [(b.ayah, b.start_ms, b.confidence) for b in result]
++        return [(b.ayah, b.start_ms, b.confidence) for b in result if b.start_ms is not None]
+     except GenerationCancelled:
+         events.append({"state": "CANCELLED"})
+         raise
+--- baseline/surah_cutter/core/pipeline.py
++++ current/surah_cutter/core/pipeline.py
+@@ -66,7 +66,7 @@
+             Still requires explicit ``mode='fast'``; never selects legacy.
+ 
+     Returns:
+-        Rows ``(sura, ayah, start_ms)``, one per ayah of the sura, ordered by
++        Rows ``(sura, ayah, start_ms)``, resolved ayahs (FAST may be partial), ordered by
+         ayah. Ready to pass to ``data.project_db.write_timings`` (confidence is
+         a separate argument there).
+ 
+@@ -140,6 +140,12 @@
+     # Overlay frozen (edited/verified) ayahs: never overwrite manual work.
+     if frozen:
+         rows = [(s, a, frozen.get(a, t)) for (s, a, t) in rows]
++        if mode == "fast":
++            present = {a for _, a, _ in rows}
++            rows.extend((surah, a, t) for a, t in frozen.items() if a not in present)
++            rows.sort(key=lambda row: row[1])
++            if trace is not None:
++                trace["protected_rows"] = [(surah, a, t) for a, t in frozen.items()]
+ 
+     return rows
+ 
+--- baseline/surah_cutter/data/alignment_identity.py
++++ current/surah_cutter/data/alignment_identity.py
+@@ -82,7 +82,7 @@
+     with sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True) as conn:
+         try:
+             rows = conn.execute(
+-                "SELECT t.sura, t.ayah, t.time, r.status, r.source FROM timings t "
++                "SELECT t.sura, t.ayah, t.time, r.status, r.source, r.confidence FROM timings t "
+                 "LEFT JOIN review_meta r ON r.sura=t.sura AND r.ayah=t.ayah "
+                 "ORDER BY t.sura, t.ayah"
+             ).fetchall()
+@@ -91,7 +91,9 @@
+     expected = counts if counts is not None else surah_ayah_counts()
+     grouped: dict[int, list] = {}
+     invalid_suras = set()
+-    for surah, ayah, time, status, source in rows:
++    for surah, ayah, time, status, source, confidence in rows:
++        if unresolved_fast_row({"status": status, "source": source, "confidence": confidence}):
++            continue
+         if type(surah) is int:
+             grouped.setdefault(surah, []).append((ayah, time, status, source))
+         else:
+@@ -145,3 +147,20 @@
+     This read-only check leaves both manual and auto rows untouched.
+     """
+     return fast_resume_suras(db_path, counts=counts)
++
++
++def is_fast_source(source: str | None) -> bool:
++    """Recognize explicit FAST provenance, including historical model:fast."""
++    parts = str(source or "").split(":")
++    actual = [p.partition("=")[2] for p in parts if p.startswith("actual_mode=")]
++    if actual:
++        return actual == ["fast"]
++    return "requested_mode=fast" in parts or "fast" in parts
++
++
++def unresolved_fast_row(review: Mapping) -> bool:
++    """Historical automatic estimates are unknown, even if they contain a number."""
++    confidence = review.get("confidence")
++    return (review.get("status") not in ("edited", "verified")
++            and is_fast_source(review.get("source"))
++            and (confidence is None or confidence <= 0))
+--- baseline/surah_cutter/data/alignment_result.py
++++ current/surah_cutter/data/alignment_result.py
+@@ -22,6 +22,7 @@
+     diagnostics_error: str | None = None
+     persisted_rows: tuple[tuple[int, int, int], ...] = ()
+     persisted_review: tuple[dict, ...] = ()
++    unresolved_ayahs: tuple[int, ...] = ()
+ 
+     def __iter__(self):
+         return iter((self.written, self.log_paths))
+@@ -40,6 +41,10 @@
+ 
+     model = str(trace.get("model_source") or model_store.source())
+     actual = str(trace.get("auto_mode") or trace.get("mode") or requested_mode)
++    if trace.get("result_contract") == "partial-v1":
++        if trace.get("mode") not in (None, "fast"):
++            raise ValueError("Partial FAST contract disagrees with actual mode")
++        actual = "fast"
+     backend = trace.get("backend")
+     if backend is None:
+         backend = next((part.partition("=")[2] for part in model.split(":")
+@@ -68,6 +73,8 @@
+             source += f":full_onset_policy={full['onset_policy']}"
+     if trace.get("full_boundary_verifier_source"):
+         source += f":full_boundary_verifier={trace['full_boundary_verifier_source']}"
++    if trace.get("result_contract") == "partial-v1":
++        source += ":fast_result=partial-v1"
+     key = trace_run_key(trace)
+     return f"{source}:fast_run_key={key}" if key is not None else source
+ 
+@@ -91,22 +98,44 @@
+ 
+     check_cancelled()
+     materialized = [tuple(row) for row in rows]
+-    if not materialized:
++    partial_fast = trace.get("result_contract") == "partial-v1"
++    unresolved = tuple(trace.get("unresolved_ayahs", ())) if partial_fast else ()
++    if not materialized and not partial_fast:
+         return AlignmentSaveResult(0, None)
+     # Re-read manual statuses under the writer lock, using the original model
+     # proposal rather than a potentially stale pipeline overlay.
+     model_rows = [tuple(row) for row in trace.get("generated_rows", materialized)]
+-    if {(r[0], r[1]) for r in model_rows} != {(r[0], r[1]) for r in materialized}:
++    model_keys = {(r[0], r[1]) for r in model_rows}
++    output_keys = {(r[0], r[1]) for r in materialized}
++    protected_keys = {(r[0], r[1]) for r in trace.get("protected_rows", ())} if partial_fast else set()
++    if model_keys | protected_keys != output_keys:
+         raise ValueError("Model result and output ayah keys disagree")
+     surahs = {row[0] for row in materialized}
+-    if len(surahs) != 1:
++    if partial_fast:
++        surahs.add(trace.get("surah"))
++    if len(surahs) != 1 or None in surahs:
+         raise ValueError("Alignment result must contain exactly one surah")
+     surah = next(iter(surahs))
++    if partial_fast:
++        from surah_cutter.data import quran_text
++        expected = set(range(1, quran_text.ayah_count(surah) + 1))
++        predicted = {r[1] for r in model_rows}
++        if (predicted & set(unresolved) or predicted | set(unresolved) != expected
++                or len(unresolved) != len(set(unresolved))):
++            raise ValueError("Incomplete partial FAST result contract")
+     confidences: dict[int, float | None] = {}
+     for item in trace.get("ayahs", ()):
+         if item.get("ayah") is not None:
+             value = item.get("conf")
+             confidences[int(item["ayah"])] = float(value) if value is not None else None
++    if partial_fast:
++        import math
++        checks = {c.get("ayah"): c for c in trace.get("ayahs", ())}
++        for _, ayah, ms in model_rows:
++            c = confidences.get(ayah)
++            if (type(c) not in (int, float) or not math.isfinite(c) or not 0 < c <= 1
++                    or checks[ayah].get("onset_ms") != ms or not checks[ayah].get("reliable")):
++                raise ValueError("Partial FAST row lacks a resolved boundary")
+     source = result_source(trace, requested_mode)
+     staged: list[tuple[Path, Path]] = []
+     log_paths: dict[str, str] | None = None
+@@ -138,11 +167,13 @@
+         model_rows, source=source, confidences=confidences,
+         overwrite_manual=overwrite_manual,
+         duration_ms=trace.get("duration_ms", trace.get("total_ms")), persisted=persisted,
++        **({"replace_fast_sura": surah} if partial_fast else {}),
+     )
+     persisted_rows = tuple((r["sura"], r["ayah"], r["time"]) for r in persisted)
+     if db_path is None:
+         return AlignmentSaveResult(written, None, persisted_rows=persisted_rows,
+-                                   persisted_review=tuple(persisted))
++                                   persisted_review=tuple(persisted),
++                                   unresolved_ayahs=unresolved)
+     error = None
+     try:
+         payload = {
+@@ -150,7 +181,7 @@
+             "log": log_lines or [], "rows": persisted_rows, "trace": trace,
+             "model_rows": model_rows, "persisted_review": persisted,
+             "source": source,
+-            "overwrite_manual": overwrite_manual,
++            "overwrite_manual": overwrite_manual, "unresolved_ayahs": unresolved,
+         }
+         staged.append((_stage_text(json_path, json.dumps(
+             payload, ensure_ascii=False, indent=2, default=str,
+@@ -196,7 +227,7 @@
+                 error = error or f"{type(exc).__name__}: {exc}"
+     return AlignmentSaveResult(
+         written, log_paths, "saved_with_diagnostics_error" if error else "saved",
+-        error, persisted_rows, tuple(persisted),
++        error, persisted_rows, tuple(persisted), unresolved,
+     )
+ 
+ 
+--- baseline/surah_cutter/data/alignment_runs.py
++++ current/surah_cutter/data/alignment_runs.py
+@@ -59,7 +59,12 @@
+         if evidence is not None:
+             item["onset_evidence"] = evidence
+         rows.append(item)
+-    if not rows:
++    partial = trace.get("result_contract") == "partial-v1"
++    unresolved = list(trace.get("unresolved_ayahs", ())) if partial else []
++    model_seen = {row[1] for row in payload.get("model_rows", payload.get("rows", []))}
++    if partial and (set(unresolved) & model_seen or set(unresolved) | model_seen != set(range(1, count + 1))):
++        raise ValueError("Некорректный частичный результат")
++    if not rows and not partial:
+         raise ValueError("Пустой результат")
+     rows.sort(key=lambda item: item["ayah"])
+     if any(a["time"] >= b["time"] for a, b in zip(rows, rows[1:])):
+@@ -70,6 +75,7 @@
+         "source": str(payload.get("source") or payload.get("trace", {}).get("model_source") or ""),
+         "audio_signature": payload.get("audio_signature"), "legacy": legacy,
+         "raw_model_result": payload.get("raw_model_result", False), "ayahs": rows,
++        "result_complete": not unresolved, "unresolved_ayahs": unresolved,
+     }
+ 
+ 
+--- baseline/surah_cutter/data/export_db.py
++++ current/surah_cutter/data/export_db.py
+@@ -62,6 +62,16 @@
+             src.execute("SELECT sura, ayah, time FROM timings ORDER BY sura, ayah")
+         )
+         versions = list(src.execute("SELECT code, version FROM db_version"))
++        if src.execute("SELECT 1 FROM sqlite_master WHERE name='review_meta'").fetchone():
++            from surah_cutter.data.alignment_identity import is_fast_source
++            unknown = [(s, a) for s, a, c, status, origin in src.execute(
++                "SELECT t.sura,t.ayah,r.confidence,r.status,r.source FROM timings t "
++                "JOIN review_meta r ON r.sura=t.sura AND r.ayah=t.ayah")
++                if status not in ("edited", "verified") and is_fast_source(origin)
++                and (c is None or c <= 0)]
++            if unknown:
++                raise ExportError("refusing to export unresolved legacy FAST estimates; "
++                                  "recalculate FAST or review the boundaries")
+     finally:
+         src.close()
+ 
+--- baseline/surah_cutter/data/project_db.py
++++ current/surah_cutter/data/project_db.py
+@@ -181,6 +181,7 @@
+         overwrite_manual: bool = False,
+         duration_ms: float | None = None,
+         persisted: list[dict] | None = None,
++        replace_fast_sura: int | None = None,
+     ) -> int:
+         """Merge auto-generated timings.
+ 
+@@ -214,11 +215,30 @@
+             if (sura, ayah) in keys:
+                 raise ValueError("Повторяющийся аят в результате разметки.")
+             keys.add((sura, ayah))
++        if replace_fast_sura is not None:
++            self._validate_key(replace_fast_sura, 1)
++            if any(s != replace_fast_sura for s, _ in keys):
++                raise ValueError("FAST replacement must contain one surah")
+         written = 0
+         now = _now()
+         snapshot = []
+         with self._write_transaction():
+             check_cancelled()
++            if replace_fast_sura is not None:
++                # A new partial FAST supersedes only previous machine FAST
++                # proposals. FULL and human work have independent provenance.
++                from surah_cutter.data.alignment_identity import is_fast_source
++                stale = self._conn.execute(
++                    "SELECT t.ayah, r.source FROM timings t JOIN review_meta r "
++                    "ON r.sura=t.sura AND r.ayah=t.ayah "
++                    "WHERE t.sura=? AND r.status='auto'", (replace_fast_sura,),
++                ).fetchall()
++                for ayah, old_source in stale:
++                    if (replace_fast_sura, ayah) not in keys and is_fast_source(old_source):
++                        self._conn.execute("DELETE FROM timings WHERE sura=? AND ayah=?",
++                                           (replace_fast_sura, ayah))
++                        self._conn.execute("DELETE FROM review_meta WHERE sura=? AND ayah=?",
++                                           (replace_fast_sura, ayah))
+             for sura, ayah, time in rows:
+                 status = self._status(sura, ayah)
+                 if status in ("edited", "verified"):
+@@ -244,7 +264,7 @@
+                      if confidences is not None else confidence, source, now),
+                 )
+                 written += 1
+-            for sura in {s for s, _ in keys}:
++            for sura in ({s for s, _ in keys} | ({replace_fast_sura} if replace_fast_sura is not None else set())):
+                 self._validate_order(sura)
+                 for ayah, time in self._conn.execute(
+                     "SELECT ayah, time FROM timings WHERE sura=? ORDER BY ayah", (sura,)
+--- baseline/surah_cutter/data/project_state.py
++++ current/surah_cutter/data/project_state.py
+@@ -48,7 +48,14 @@
+         return set()
+     with sqlite3.connect(f"file:{Path(db_path).resolve()}?mode=ro", uri=True) as conn:
+         try:
+-            rows = conn.execute("SELECT sura, ayah FROM timings").fetchall()
++            if conn.execute("SELECT 1 FROM sqlite_master WHERE name='review_meta'").fetchone():
++                from surah_cutter.data.alignment_identity import unresolved_fast_row
++                rows = [(s, a) for s, a, status, confidence, source in conn.execute(
++                    "SELECT t.sura,t.ayah,r.status,r.confidence,r.source FROM timings t "
++                    "LEFT JOIN review_meta r ON r.sura=t.sura AND r.ayah=t.ayah")
++                    if not unresolved_fast_row(dict(status=status, confidence=confidence, source=source))]
++            else:
++                rows = conn.execute("SELECT sura, ayah FROM timings").fetchall()
+         except sqlite3.OperationalError:
+             return set()
+     expected = counts if counts is not None else surah_ayah_counts()
+--- baseline/surah_cutter/gui/dashboard_view.py
++++ current/surah_cutter/gui/dashboard_view.py
+@@ -125,6 +125,7 @@
+ 
+         written = 0
+         skipped = 0
++        unresolved = 0
+         with ProjectDB.open(self._db_path, _DB_CODE, _DB_VERSION) as db:
+             for i, (surah, path) in enumerate(files):
+                 if self._cancel.is_set():
+@@ -162,14 +163,18 @@
+                     raise
+                 written += 1
+                 self.surah_done.emit(surah)
+-                self.progress.emit(i + 1, total, f"Wrote surah {surah}")
++                unresolved += len(save_result.unresolved_ayahs)
++                label = (f"Partial surah {surah}: {len(save_result.unresolved_ayahs)} boundaries unresolved"
++                         if save_result.unresolved_ayahs else f"Wrote surah {surah}")
++                self.progress.emit(i + 1, total, label)
+                 if save_result.diagnostics_error:
+                     self.progress.emit(
+                         i + 1, total,
+                         f"Saved surah {surah}; diagnostics error: {save_result.diagnostics_error}",
+                     )
+ 
+-        self.finished.emit(f"Done: {written} written, {skipped} skipped.")
++        self.finished.emit(f"{'Partial result' if unresolved else 'Done'}: {written} processed, "
++                           f"{skipped} skipped, {unresolved} boundaries unresolved.")
+ 
+ 
+ class _SurahCell(QFrame):
+--- baseline/surah_cutter/gui/review_view.py
++++ current/surah_cutter/gui/review_view.py
+@@ -257,6 +257,9 @@
+                     self._starts[ayah] = int(time)
+             for ayah in range(1, self._ayah_count + 1):
+                 self._reviews[ayah] = db.get_review(self._surah, ayah)
++        from surah_cutter.data.alignment_identity import unresolved_fast_row
++        self._starts = {a: t for a, t in self._starts.items()
++                        if not unresolved_fast_row(self._reviews.get(a) or {})}
+ 
+     # -- UI construction ---------------------------------------------------
+ 
+--- baseline/surah_cutter/webgui/generation.py
++++ current/surah_cutter/webgui/generation.py
+@@ -24,6 +24,7 @@
+         self._ayahs_done = 0
+         self._completed = 0
+         self._word_failures = 0
++        self._unresolved_boundaries = 0
+         self._stage = None
+ 
+     def emit(self, event: dict[str, Any]) -> None:
+@@ -40,6 +41,7 @@
+                 self._completed = event["index"] + 1
+             if event["type"] == "sura":
+                 self._word_failures += event.get("word_failures", 0)
++                self._unresolved_boundaries += len(event.get("unresolved_ayahs", ()))
+             if event["type"] == "stage_progress":
+                 self._stage = dict(event)
+             elif event["type"] == "sura_start":
+@@ -65,6 +67,7 @@
+                 "ayahs_done": self._ayahs_done,
+                 "completed": self._completed,
+                 "word_failures": self._word_failures,
++                "unresolved_boundaries": self._unresolved_boundaries,
+                 "stage": dict(self._stage) if self._stage else None,
+                 "progress": dict(self._progress) if self._progress else None,
+                 "terminal": dict(self._terminal[1]) if self._terminal else None,
+--- baseline/surah_cutter/webgui/server.py
++++ current/surah_cutter/webgui/server.py
+@@ -181,7 +181,8 @@
+                             "line": text,
+                         })
+ 
+-                    existing = [(s, a, t) for s, a, t in db.get_timings() if s == surah]
++                    usable, _ = _sura_timings_reviews(surah, self.db_path)
++                    existing = [(surah, a, t) for a, t in sorted(usable.items())]
+                     complete = {a for _, a, _ in existing} == set(
+                         range(1, quran_text.ayah_count(surah) + 1)
+                     )
+@@ -227,6 +228,8 @@
+                     event = {
+                         "type": "sura", "surah": surah, "index": i,
+                         "ayahs": len(rows), "written": written, **word_result,
++                        "unresolved_ayahs": list(save_result.unresolved_ayahs) if save_result else [],
++                        "result_complete": trace.get("result_complete", True),
+                         "ayahs_done": completed_ayahs, "total_ayahs": total_ayahs,
+                     }
+                     if log_paths:
+@@ -1528,7 +1531,7 @@
+     repaired = sum(1 for a in ayahs if a.get("repaired"))
+     reliable = sum(1 for a in ayahs if a.get("reliable"))
+     tempo = trace.get("tempo_forecast") or {}
+-    unresolved = {
++    unresolved = set(trace.get("unresolved_ayahs", ())) | {
+         event.get("ayah")
+         for event in trace.get("pause_sequence_events") or []
+         if event.get("action") == "unresolved_current"
+@@ -1709,6 +1712,8 @@
+             pass
+     finally:
+         conn.close()
++    from surah_cutter.data.alignment_identity import unresolved_fast_row
++    timings = {a: t for a, t in timings.items() if not unresolved_fast_row(reviews.get(a, {}))}
+     return timings, reviews
+ 
+ 
+--- baseline/surah_cutter/webgui/static/app.js
++++ current/surah_cutter/webgui/static/app.js
+@@ -543,6 +543,7 @@
+   $("genTitle").textContent = t("Генерация…");
+   $("genCur").textContent = t("подготовка…");
+   GEN.wordFailures = 0;
++  GEN.unresolvedBoundaries = 0;
+   GEN.diagnosticsErrors = 0;
+   GEN.startMs = Date.now();
+   $("genStart").textContent = new Date(GEN.startMs).toLocaleTimeString(uiLanguage);
+@@ -568,6 +569,7 @@
+   }
+   else if (d.type === "sura") {
+     GEN.wordFailures += d.word_failures || 0;
++    GEN.unresolvedBoundaries += d.unresolved_ayahs?.length || 0;
+     setProgress(ALIGN.done, GEN.total, t`${ALIGN.done} / ${GEN.total} аятов`);
+     const fast = d.fast_trace
+       ? t` · пауз ${d.fast_trace.n_pause}, wasl ${d.fast_trace.n_wasl}, unresolved ${d.fast_trace.unresolved || 0}, atomic ${d.fast_trace.atomic_wasl_reads || 0}, окно ${(d.fast_trace.coverage || 0).toFixed(2)}×${d.fast_trace.drift_detected ? " · drift" : ""}`
+@@ -591,6 +593,7 @@
+ function applyGenerationSnapshot(job) {
+   GEN.total = job.total_ayahs || job.progress?.total_ayahs || GEN.total;
+   GEN.wordFailures = job.word_failures ?? GEN.wordFailures;
++  GEN.unresolvedBoundaries = job.unresolved_boundaries ?? GEN.unresolvedBoundaries;
+   handleAlignmentEvent({ ...job.progress, total_ayahs: GEN.total, ayahs_done: job.ayahs_done || 0 });
+   if (job.stage) handleAlignmentEvent(job.stage);
+   setProgress(ALIGN.done, GEN.total, t`${ALIGN.done} / ${GEN.total} аятов`);
+@@ -629,8 +632,10 @@
+   $("cancelBtn").disabled = true;
+   const panel = $("genPanel");
+   if (kind === "done") {
+-    panel.classList.add("done"); $("genTitle").textContent = GEN.wordFailures ? t("Расчёт завершён · нужна проверка") : t("✓ Готово");
++    panel.classList.add("done"); $("genTitle").textContent = GEN.unresolvedBoundaries
++      ? t("Частичный результат") : GEN.wordFailures ? t("Расчёт завершён · нужна проверка") : t("✓ Готово");
+     $("genCur").textContent = t`обработано ${completed ?? ""} сур за ${elapsed}${GEN.wordFailures ? t` · требуют проверки ${GEN.wordFailures} аят.` : ""}`;
++    if (GEN.unresolvedBoundaries) $("genCur").textContent += t` · не найдены границы: ${GEN.unresolvedBoundaries}`;
+     setProgress(ALIGN.done, ALIGN.total, t`${ALIGN.done} / ${ALIGN.total} аятов`);
+   } else if (kind === "cancelled") {
+     panel.classList.add("cancelled"); $("genTitle").textContent = t("⏹ Отменено");
+@@ -640,6 +645,10 @@
+   }
+   $("suraGenStatus").className = "sura-gen-status " + (kind === "done" ? "ok" : kind === "error" ? "err" : "warn");
+   $("suraGenStatus").textContent = kind === "done" ? t("Разметка завершена") : kind === "cancelled" ? t("Разметка остановлена") : t("Ошибка разметки. Проверьте логи.");
++  if (kind === "done" && GEN.unresolvedBoundaries) {
++    $("suraGenStatus").textContent = t`Частичный результат · не найдены границы: ${GEN.unresolvedBoundaries}`;
++    $("suraGenStatus").className = "sura-gen-status warn";
++  }
+   if (GEN.diagnosticsErrors && kind !== "error") {
+     const warning = kind === "cancelled"
+       ? t("Разметка остановлена. Обработанные суры сохранены; диагностика — не полностью. Проверьте доступ к папке проекта.")
+@@ -1748,14 +1757,11 @@
+   if (suspect) return { priority: "suspect", span: 0 };
+   if (item.status === "verified") return { priority: "verified", span: 0 };
+   const evidence = item.onset_evidence;
+-  const accuracy = evidence?.timing_accuracy;
+-  const probability = typeof accuracy?.probability === "number" && Number.isFinite(accuracy.probability)
+-    && accuracy.probability >= 0 && accuracy.probability <= 1
+-    && accuracy.target === "reference-cut" && accuracy.tolerance_ms === 500 ? accuracy.probability : null;
++  const accuracy = evidence?.timing_accuracy?.target === "playback-cut" ? evidence.timing_accuracy : null;
+   const span = typeof accuracy?.cut_span_ms === "number" && Number.isFinite(accuracy.cut_span_ms)
+     && accuracy.cut_span_ms >= 0 ? accuracy.cut_span_ms : 0;
+   if (accuracy && ["suspect", "supported", "unassessed"].includes(accuracy.review_priority)) {
+-    return { priority: probability !== null && probability < .9 ? "suspect" : accuracy.review_priority, span, probability };
++    return { priority: accuracy.review_priority, span };
+   }
+   return { priority: evidence?.boundary?.level === "low" ? "suspect" : "unassessed", span };
+ }
+@@ -1764,28 +1770,19 @@
+   $("timingReviewTools").classList.toggle("hidden", W.mode);
+   if (W.mode) return;
+   const filter = $("timingReviewFilter").value || "all";
+-  const limit = $("timingAccuracyLimit").value || "all";
+   const rank = { suspect: 0, unassessed: 1, supported: 2, verified: 3 };
+   const rows = Array.from($("ayahList").children);
+   const review = row => timingReview(R.ayahs[+row.dataset.i],
+     ["shift", "insufficient_evidence"].includes(R.recheck?.[R.ayahs[+row.dataset.i].ayah]?.verdict));
+   if ($("timingReviewSort").value === "risk") rows.sort((a, b) => {
+     const x = review(a), y = review(b);
+-    if (typeof x.probability === "number" || typeof y.probability === "number") {
+-      if (x.priority === "verified" || y.priority === "verified") return rank[x.priority] - rank[y.priority];
+-      if (typeof x.probability !== "number") return -1;
+-      if (typeof y.probability !== "number") return 1;
+-      if (x.probability !== y.probability) return x.probability - y.probability;
+-    }
+     return rank[x.priority] - rank[y.priority] || y.span - x.span || +a.dataset.i - +b.dataset.i;
+   });
+   else rows.sort((a, b) => +a.dataset.i - +b.dataset.i);
+   for (const row of rows) {
+-    const {priority, probability} = review(row);
++    const {priority} = review(row);
+     row.hidden = filter !== "all" && (filter === "unverified" ? priority === "verified"
+       : filter === "review" ? !["suspect", "unassessed"].includes(priority) : priority !== filter);
+-    // Unknown probabilities stay visible so missing data cannot hide errors.
+-    if (limit !== "all" && typeof probability === "number" && probability * 100 > Number(limit)) row.hidden = true;
+     $("ayahList").appendChild(row);
+   }
+   const count = rows.filter(row => !row.hidden).length;
+@@ -1804,7 +1801,7 @@
+ 
+ function timingConfidence(item, suspect = false) {
+   const unknown = { level: "unknown", label: t("Точность: —"),
+-    title: t("Для этой метки нет подходящей калибровки времени.") };
++    title: t("Погрешность времени для этой метки не измерена.") };
+   if (item.time == null || item.stale || item.status === "edited") return unknown;
+   if (suspect) {
+     return { level: "low", label: t("Точность: — · проверить"),
+@@ -1816,21 +1813,6 @@
+   }
+   const evidence = item.onset_evidence;
+   const boundary = evidence && evidence.boundary;
+-  const accuracy = evidence?.timing_accuracy;
+-  const p = accuracy?.probability;
+-  if (typeof p === "number" && Number.isFinite(p) && p >= 0 && p <= 1
+-      && accuracy.target === "reference-cut" && accuracy.tolerance_ms === 500) {
+-    const percentage = new Intl.NumberFormat(uiLanguage, { style: "percent", maximumFractionDigits: 0 }).format(p);
+-    let title = t("Вероятность отклонения начала от эталонной метки не более чем на 500 мс. Это статистическая оценка, а не гарантия.");
+-    if (accuracy.calibration_n) title += " " + t`В группе калибровки: ${accuracy.calibration_n} меток.`;
+-    if (Array.isArray(accuracy.interval95) && accuracy.interval95.length === 2) {
+-      const bounds = accuracy.interval95.map(v => new Intl.NumberFormat(uiLanguage, {style: "percent", maximumFractionDigits: 0}).format(v));
+-      title += " " + t`Неопределённость оценки группы: ${bounds[0]}–${bounds[1]}.`;
+-    }
+-    let label = t`Точность: ≈${percentage}`;
+-    if (accuracy.calibration_n < 30) label += " · " + t("мало примеров");
+-    return {level: p < .9 ? "low" : p < .95 ? "medium" : "high", label, title};
+-  }
+   const reasons = {
+     "local-phrase-and-pause": t("Начальная фраза и положение границы проверены локально по речи и паузе."),
+     "local-ctc-pause": t("Локальная пауза согласуется с концом предыдущего аята и началом текущего. Метка стоит в этой паузе, порядок аятов сохранён."),
+@@ -2337,6 +2319,9 @@
+   if (!R.audio || !R.audioReady || !R.dataReady) return;
+   if (W.mode) { R.audio.paused ? playWord() : R.audio.pause(); return; }
+   if (!R.audio.paused) { R.audio.pause(); return; }
++  if (R.playbackMode !== "continuous" && ayahEndMs(R.current) == null) {
++    setStatus(t("Для воспроизведения аята нужна метка следующего аята.")); return;
++  }
+   if (R.playbackMode !== "continuous" && R.current >= 0
+       && mediaTimeMs(R.audio) >= ayahEndMs(R.current) - 2) {
+     seekAyah(R.current, true);
+@@ -2353,7 +2338,11 @@
+   const i = R.playbackAyah;
+   const end = i >= 0 && R.ayahs[i]?.time != null && ayahEndMs(i) > R.ayahs[i].time ? ayahEndMs(i) : null;
+   setAudioPlaybackEnd(R.audio, end);
+-  if (end == null || R.audio.paused) return;
++  if (end == null) {
++    R.audio.pause();
++    setStatus(t("Для воспроизведения аята нужна метка следующего аята.")); return;
++  }
++  if (R.audio.paused) return;
+   const delay = Math.max(0, (ayahEndMs(i) - mediaTimeMs(R.audio)) / R.audio.playbackRate);
+   R.playbackTimer = setTimeout(() => {
+     if (!finishAyahPlayback()) scheduleAyahStop();
+@@ -2363,6 +2352,7 @@
+   const i = R.playbackAyah;
+   if (W.mode || R.playbackMode === "continuous" || !R.audio || (!ended && R.audio.paused) || i < 0) return false;
+   const end = ayahEndMs(i);
++  if (end == null) return false;
+   if (mediaTimeMs(R.audio) + (ended ? 1 : 0) < end) return false;
+   clearTimeout(R.playbackTimer);
+   if (R.loop) seekAyah(i, true);
+@@ -2408,6 +2398,10 @@
+ }
+ function seekAyah(i, play) {
+   const a = R.ayahs[i]; if (!a || a.time == null || !R.audio || !R.audioReady) return;
++  if (play && R.playbackMode !== "continuous" && ayahEndMs(i) == null) {
++    R.audio.pause();
++    setStatus(t("Для воспроизведения аята нужна метка следующего аята.")); return;
++  }
+   seekAudioMs(R.audio, a.time);
+   R.playbackAyah = i;
+   syncPlaybackRate();
+@@ -2448,13 +2442,18 @@
+     if (first < 0) first = i;
+     if (t <= ms + 1) idx = i;
+   }
+-  // Before the first marker (e.g. the intro basmala), keep the first ayah active
+-  // so something is always highlighted while playing a generated sura.
+-  return idx >= 0 ? idx : first;
++  if (idx >= 0) {
++    const end = ayahEndMs(idx);
++    return end != null && ms < end ? idx : -1;
++  }
++  return first === 0 ? first : -1;
+ }
+ function ayahEndMs(i) {
+-  for (let j = i + 1; j < R.ayahs.length; j++) if (R.ayahs[j].time != null) return R.ayahs[j].time;
+-  return R.duration;
++  const current = R.ayahs[i];
++  if (!current || current.time == null) return null;
++  const next = R.ayahs[i + 1];
++  return next?.ayah === current.ayah + 1 ? next.time :
++    i === R.ayahs.length - 1 ? R.duration : null;
+ }
+ 
+ async function toggleVerify(i) {
+@@ -3019,7 +3018,6 @@
+ }
+ 
+ function wire() {
+-  $("timingAccuracyLimit").onchange = applyTimingReviewFilter;
+   $("timingReviewFilter").onchange = applyTimingReviewFilter;
+   $("timingReviewSort").onchange = applyTimingReviewFilter;
+   $("timingReviewNext").onclick = () => { $("timingReviewTools").open = false; nextTimingReview(); };
+--- baseline/surah_cutter/webgui/static/i18n.js
++++ current/surah_cutter/webgui/static/i18n.js
+@@ -2,6 +2,14 @@
+ "use strict";
+ let uiLanguage = document.documentElement.lang === "ru" ? "ru" : "en";
+ const EN = {
++  "Основная фонетическая модель. Поддерживает быстрый, полный и пословный режимы; границы проверяйте на слух.": "Main phonetic model. Supports fast, full and word alignment; listen to verify boundaries.",
++  "Кораническая фонетическая модель для выравнивания известного текста и проверки произношения.": "Quran phonetic model for known-text alignment and pronunciation checks.",
++  "Многоязычная модель Whisper. Для выравнивания получает известный текст; сложные границы требуют ревью.": "Multilingual Whisper model. Receives known text for alignment; complex boundaries require review.",
++  "Арабская модель FastConformer. Полный и пословный режимы используют сопоставление с известным текстом.": "Arabic FastConformer model. Full and word modes align against known text.",
++  "Компактная модель Whisper для чтения Корана. Поддерживает экспериментальный локальный FAST; границы требуют слуховой проверки.": "Compact Whisper model for Quran recitation. Supports experimental local FAST; listen to verify boundaries.",
++  "Модель Whisper для чтения Корана. Поддерживает экспериментальный локальный FAST и выравнивание известного текста в FULL.": "Whisper model for Quran recitation. Supports experimental local FAST and known-text alignment in FULL.",
++  "Погрешность времени для этой метки не измерена.": "Timing error has not been measured for this mark.",
++  "Сомнительные метки определяются по речи и паузам текущей записи. Нажмите номер аята, чтобы проверить начало.": "Suspect marks are identified from speech and pauses in this recording. Click an ayah number to check its start.",
+   "Обновления": "Updates",
+   "Обновления приложения": "Application updates",
+   "Проверка сразу скачает новую версию. Затем можно закрыть приложение и установить обновление автоматически.": "Checking will download a new version if available. You can then close the app and install it automatically.",
+@@ -20,9 +28,6 @@
+   "Не удалось подготовить обновление. Попробуйте снова.": "Unable to prepare the update. Try again.",
+   "Текущая версия: ${0}": "Current version: ${0}",
+   "Дождитесь завершения расчёта или загрузки модели.": "Wait for the calculation or model download to finish.",
+-  "Компактный экспериментальный FAST: на проверенных 37 сурах Шатри на треть меньше крупных ошибок, чем у основной INT8. Почти вдвое медленнее INT8 и почти вдвое быстрее Base; границы требуют слуховой проверки.": "Compact experimental FAST: one-third fewer large errors than the main INT8 model on 37 Ash-Shatri surahs. Almost twice as slow as INT8 and almost twice as fast as Base; listen to verify boundaries.",
+-  "FAST, Шатри 78–114: 564 аята; медиана 68 мс, p95 1758 мс, максимум 6062 мс; 72 ошибки >500 мс, 170 меток ревью. Расчёт 243,8 с без загрузки 4,4 с и декодирования 3,3 с. 8 крупных ошибок без метки ревью.": "FAST, Ash-Shatri 78–114: 564 ayahs; median 68 ms, p95 1758 ms, maximum 6062 ms; 72 errors >500 ms, 170 review flags. Calculation 243.8 s excluding loading (4.4 s) and decoding (3.3 s). 8 large errors without review flags.",
+-  "FAST: одинаковые DSP/VAD-паузы, локальные фразы 1,3 с; расширение до 2,5/4 с только при неполном или неоднозначном начале. Максимальный фактический вход 4,2 с, покрытие каждой записи ≤57,6%. Без полного прохода или перехода в FULL. FULL и слова используют отдельный алгоритм; heads исходной OpenAI Tiny для FULL не калиброваны под Tarteel. Mac ARM64 CPU, 4 потока; Шатри, других чтецов не проверяли. Уверенность не заменяет ревью.": "FAST: shared DSP/VAD pauses, local phrases of 1.3 s; expansion to 2.5/4 s only for incomplete or ambiguous openings. Maximum actual input 4.2 s; each recording coverage ≤57.6%. No complete pass or FULL fallback. FULL and words use a separate algorithm; original OpenAI Tiny heads for FULL have not been calibrated for Tarteel. Mac ARM64 CPU, 4 threads; Ash-Shatri, other reciters untested. Confidence does not replace review.",
+   "Сравнить прогоны": "Compare runs",
+   "Различий от 500 мс нет.": "No differences of 500 ms or more.",
+   "Аят": "Ayah",
+@@ -59,15 +64,8 @@
+   "Уверенность: нет оценки": "Confidence: unavailable",
+   "Начало: нет оценки": "Start: unassessed",
+   "Точность: —": "Accuracy: —",
+-  "Точность: ≈${0}": "Accuracy: ≈${0}",
+   "мало примеров": "few examples",
+-  "Для этой метки нет подходящей калибровки времени.": "No matching timing calibration is available for this mark.",
+-  "Вероятность отклонения начала от эталонной метки не более чем на 500 мс. Это статистическая оценка, а не гарантия.": "Probability of the start being within 500 ms of the reference mark. This is a statistical estimate, not a guarantee.",
+-  "В группе калибровки: ${0} меток.": "Calibration group: ${0} marks.",
+-  "Неопределённость оценки группы: ${0}–${1}.": "Uncertainty of the group estimate: ${0}–${1}.",
+-  "Точность не выше": "Accuracy at most",
+   "Любая": "Any",
+-  "Процент — вероятность совпадения с эталонной меткой в пределах ±500 мс. Метки без оценки остаются в фильтре. Нажмите номер аята, чтобы исправить начало.": "The percentage estimates agreement with a reference mark within ±500 ms. Unassessed marks stay in the filter. Click an ayah number to edit its start.",
+   "Точность: — · проверить": "Accuracy: — · review",
+   "Процент попадания в ±500 мс пока не рассчитан: нет независимой временной разметки.": "Probability of a cut within ±500 ms is unavailable: independent timing annotations are missing.",
+   "Другой разрез в сохранённом промежутке может отличаться на ${0} мс. Это не измеренная ошибка.": "Another cut in the saved gap may differ by ${0} ms. This is not measured error.",
+@@ -113,15 +111,8 @@
+   "Оценка модели, не гарантия точности. Проверьте начало на слух.": "Model score, not an accuracy guarantee. Listen to check the start.",
+   "недостающих сур и сур, размеченных другим режимом": "missing surahs and surahs aligned in a different mode",
+   "Быстрый режим доступен для Quran Phonetics и экспериментальных Tarteel Tiny/Base. Сложные границы требуют проверки. Другие модели доступны в полном, точном и пословном режимах.": "FAST is available for Quran Phonetics and experimental Tarteel Tiny/Base. Difficult boundaries need review. Other models support full, precise and word alignment.",
+-  "FAST, Шатри 78–114: 564 аята; медиана 73,5 мс, p95 4466 мс, максимум 26762 мс; 107 ошибок >500 мс, 288 меток ревью. Расчёт 136,3 с без загрузки и декодирования. 6 крупных ошибок без метки ревью.": "FAST, Ash-Shatri 78–114: 564 ayahs; median 73.5 ms, p95 4466 ms, maximum 26762 ms; 107 errors >500 ms, 288 review flags. Calculation 136.3 s excluding loading and decoding. 6 large errors without review flags.",
+-  "Экспериментальный локальный FAST: меньше крупных ошибок и меток ревью на проверенных 37 сурах Шатри, но медленнее основной INT8. Уверенные границы тоже могут ошибаться; результат требует слуховой проверки.": "Experimental local FAST: fewer large errors and review flags on 37 Ash-Shatri surahs, but slower than the main INT8 model. Confident boundaries can also be wrong; listen to verify the result.",
+-  "FAST, Шатри 78–114: 564 аята; медиана 67,5 мс, p95 1628 мс, максимум 6062 мс; 64 ошибки >500 мс, 153 метки ревью. Расчёт 516,4 с без загрузки 5,3 с и декодирования 3,8 с. 9 крупных ошибок без метки ревью.": "FAST, Ash-Shatri 78–114: 564 ayahs; median 67.5 ms, p95 1628 ms, maximum 6062 ms; 64 errors >500 ms, 153 review flags. Calculation 516.4 s excluding loading (5.3 s) and decoding (3.8 s). 9 large errors without review flags.",
+-  "FAST: одинаковые DSP/VAD-паузы, локальные фразы 1,3 с; расширение до 2,5/4 с только при неполном или неоднозначном начале. Максимальный фактический вход 4,2 с, покрытие каждой записи ≤57,1%. Без полного прохода или перехода в FULL. FULL и слова используют отдельный алгоритм; heads исходной OpenAI Base для FULL не калиброваны под Tarteel. Mac ARM64 CPU, 4 потока; Шатри, других чтецов не проверяли. Уверенность не заменяет ревью.": "FAST: shared DSP/VAD pauses, local phrases of 1.3 s; expansion to 2.5/4 s only for incomplete or ambiguous openings. Maximum actual input 4.2 s; each recording coverage ≤57.1%. No complete pass or FULL fallback. FULL and words use a separate algorithm; original OpenAI Base heads for FULL have not been calibrated for Tarteel. Mac ARM64 CPU, 4 threads; Ash-Shatri, other reciters untested. Confidence does not replace review.",
+   "Компактная экспериментальная модель Корана. В наших тестах границы заметно менее точны, чем у основной INT8; на длинной суре 78 расчёт отклонён. Оставлена для сравнения и локальных экспериментов.": "A compact experimental Quran model. Our timing tests were less accurate than the main INT8 model; calculation of long surah 78 was rejected. Kept for comparisons and local experiments.",
+   "Экспериментальная модель Корана, точнее Tiny на проверенных коротких записях, но уступает основной INT8. Полезна как компактный дополнительный вариант. Высокая уверенность в тексте не гарантирует точность границы.": "An experimental Quran model, more accurate than Tiny on the short recordings tested, but less accurate than the main INT8 model. Useful as a compact alternative. High text confidence does not guarantee accurate boundaries.",
+-  "Шатри 112/114: медианная ошибка 398/459 мс; p95 638/666 мс; FULL 0,25/1,93 с. Загрузка с probe 4,15 с отдельно. 78: отказ — недостаточно текстовых опор.": "Ash-Shatri 112/114: median error 398/459 ms; p95 638/666 ms; FULL 0.25/1.93 s. Load and probe: 4.15 s separately. Surah 78: rejected due to insufficient text anchors.",
+-  "Шатри 112/114: медианная ошибка 271/280 мс; p95 343/360 мс; FULL 0,34/3,45 с. Загрузка с probe 4,24 с отдельно. Сура 78: медиана 367 мс, p95 1226 мс, максимум 1337 мс; FULL 35,34 с.": "Ash-Shatri 112/114: median error 271/280 ms; p95 343/360 ms; FULL 0.34/3.45 s. Load and probe: 4.24 s separately. Surah 78: median 367 ms, p95 1226 ms, maximum 1337 ms; FULL 35.34 s.",
+-  "Шатри, суры 112/114/78, Mac ARM64 CPU, 4 потока. Время FULL не включает загрузку, декодирование и слова. Известный текст с огласовками; собственные веса Tarteel. Heads перенесены из исходной OpenAI Tiny/Base и отдельно Tarteel не калиброваны. Основная INT8: медиана 49/31 мс на 112/114. Пословные начала проверены без пословного эталона. FAST не подключён; локальный опыт не доказывает его качество.": "Ash-Shatri, surahs 112/114/78, Mac ARM64 CPU, 4 threads. FULL time excludes loading, decoding and words. Known vocalized text and Tarteel weights. Heads inherited from the original OpenAI Tiny/Base; not separately calibrated for Tarteel. Main INT8: median 49/31 ms on 112/114. Word starts checked without a word reference. FAST is unavailable; the local experiment does not establish FAST quality.",
+   "Перепроверка: ${0} аятов не удалось проверить": "Recheck: ${0} ayahs could not be checked",
+   "Соединение прервано. Подключаюсь к расчёту…": "Connection lost. Reconnecting to the calculation…",
+   "Расчёт изменился. Обновите состояние задания.": "The calculation changed. Refresh the job status.",
+@@ -347,6 +338,10 @@
+   "Повторять слово": "Repeat word",
+   "Повторять аят": "Repeat ayah",
+   "В режиме слов воспроизводится только выбранное слово.": "In word mode, only the selected word plays.",
++  "Частичный результат": "Partial result",
++  " · не найдены границы: ${0}": " · unresolved boundaries: ${0}",
++  "Частичный результат · не найдены границы: ${0}": "Partial result · unresolved boundaries: ${0}",
++  "Для воспроизведения аята нужна метка следующего аята.": "The next ayah marker is needed to play this ayah.",
+   "Границы берутся из текущей разметки.": "Boundaries use the current timings.",
+   "Статус не сохранён.": "Status not saved.",
+   "Время не сохранено. Укажите начало в пределах аудиозаписи.": "Time not saved. Set the start within the audio recording.",
+@@ -584,16 +579,7 @@
+   "— программа сама расставит начало каждого аята — это": "— the program finds the start of each ayah. This is a",
+   "— откройте суру: слушайте, смотрите на волну, при необходимости двигайте границы и отмечайте «проверено».": "— open a surah, listen and view the waveform. Adjust boundaries if needed and mark them as verified.",
+   "— когда все 114 сур готовы, выгрузите чистую": "— when all 114 surahs are ready, export a clean",
+-  "Замеры: Шатри, суры 112 и 114, полный режим на Mac (CPU). Ошибка — медианное отклонение начала аята от эталона. Время включает загрузку модели и проверку слов первого аята. На других записях результаты могут отличаться.": "Benchmarks: Shatri, surahs 112 and 114, Full mode on Mac (CPU). Error is the median ayah start deviation from the reference. Time includes loading the model and checking the first ayah's words. Results may differ on other recordings.",
+   "Для быстрого режима пока используйте Quran Phonetics. Сложные границы требуют проверки. Остальные модели доступны в полном, точном и пословном режимах.": "Use Quran Phonetics for Fast mode for now. Difficult boundaries need review. Other models support Full, Tiled and Word modes.",
+-  "Основная модель: точные границы и быстрый расчёт. Поддерживает быстрый режим; сложные участки проверяйте на слух.": "Main model: precise boundaries and fast calculation. Supports Fast mode; listen to verify difficult passages.",
+-  "Полный режим: ошибка 31–49 мс · расчёт 1–4 с": "Full mode: error 31–49 ms · calculation 1–4 s",
+-  "Дополнительная проверка коранического произношения и огласовок. Хорошие результаты на длинной суре, но медленнее основной модели.": "Additional verification of Quranic pronunciation and vowel marks. Good results on a long surah, but slower than the main model.",
+-  "Полный режим: ошибка 124–140 мс · расчёт 8–25 с": "Full mode: error 124–140 ms · calculation 8–25 s",
+-  "Дополнительная проверка сложных записей. Точнее остальных обычных Whisper в наших замерах, но требует больше времени.": "Additional verification of difficult recordings. More accurate than other standard Whisper models in our benchmarks, but takes longer.",
+-  "Полный режим: ошибка 112–140 мс · расчёт 19–83 с": "Full mode: error 112–140 ms · calculation 19–83 s",
+-  "Быстрый дополнительный вариант для сравнения границ. На проверенных записях уступает основной модели по точности.": "A fast additional option for comparing boundaries. Less accurate than the main model on the tested recordings.",
+-  "Полный режим: ошибка 133–209 мс · расчёт 1–12 с": "Full mode: error 133–209 ms · calculation 1–12 s",
+   "Выберите русский или английский язык.": "Choose Russian or English.",
+   "Выберите светлую или тёмную тему.": "Choose Light or Dark theme.",
+   "Выберите размер текста из списка.": "Choose a text size from the list.",
+--- baseline/tests/playback_ranges.cjs
++++ current/tests/playback_ranges.cjs
+@@ -34,7 +34,7 @@
+ const source=fs.readFileSync(path.join(root,'app.js'),'utf8');
+ function extract(name){const start=source.indexOf(`function ${name}(`);return source.slice(start,source.indexOf('\n}',start)+2);}
+ Object.assign(c,{R:{audio:a,dataReady:true,playbackAyah:0,playbackMode:'single',
+-  ayahs:[{time:1000},{time:5000}],duration:8000},W:{mode:false},
++  ayahs:[{ayah:1,time:1000},{ayah:2,time:5000}],duration:8000},W:{mode:false},
+   clearTimeout(){},setTimeout:()=>1,currentAyahByTime:()=>0,finishWord(){},setCurrent(){},drawWave(){}});
+ vm.runInContext(['ayahEndMs','scheduleAyahStop','finishAyahPlayback','scheduleWordStop'].map(extract).join('\n'),c);
+ a.currentTime=1;c.scheduleAyahStop();assert.equal(a.src,'/api/audio/112/clip?start_ms=1000&end_ms=5000');
+--- baseline/tests/player_preferences.cjs
++++ current/tests/player_preferences.cjs
+@@ -11,7 +11,7 @@
+ let timer;
+ const c = {
+   R: {audio: {currentTime: 0, playbackRate: 2, paused: false}, dataReady: true,
+-    duration: 16000, ayahs: [{time: 0}, {time: 10000}]},
++    duration: 16000, ayahs: [{ayah: 1, time: 0}, {ayah: 2, time: 10000}]},
+   W: {mode: false}, $: () => slider,
+   clearTimeout() { timer = null; }, setTimeout(fn, delay) { timer = {fn, delay}; return 1; },
+   syncPlayerSettings() {}, scheduleAyahStop() {}, updateRatePicker() {},
+--- baseline/tests/test_alignment_identity.py
++++ current/tests/test_alignment_identity.py
+@@ -97,7 +97,7 @@
+     key = fast_run_key(identity)
+     source = f"test:requested_mode=fast:fast_run_key={key}"
+     with ProjectDB.open(str(path), "test", 1) as db:
+-        db.write_timings([(114, a, a * 1000) for a in range(1, 7)], source)
++        db.write_timings([(114, a, a * 1000) for a in range(1, 7)], source, confidence=.9)
+         assert fast_resume_suras(path, {114: key}) == {114}
+         assert fast_resume_suras(path) == set()
+         db.write_timings([(114, 6, 6000)], "legacy:requested_mode=fast")
+@@ -116,7 +116,8 @@
+ def test_writer_persists_validated_key_in_same_transaction_as_auto_rows(tmp_path, identity):
+     path = tmp_path / "p.db"
+     key = fast_run_key(identity)
+-    trace = {"model_source": "reference:test", "run_snapshot": identity, "fast_run_key": key}
++    trace = {"model_source": "reference:test", "run_snapshot": identity, "fast_run_key": key,
++             "ayahs": [{"ayah": a, "conf": .9} for a in range(1, 7)]}
+     with ProjectDB.open(str(path), "test", 1) as db:
+         write_alignment_result(db, [(114, a, a * 1000) for a in range(1, 7)],
+                                trace=trace, requested_mode="fast", db_path=path)
+@@ -155,7 +156,7 @@
+     key = fast_run_key(identity)
+     with ProjectDB.open(str(path), "test", 1) as db:
+         db.write_timings([(114, a, a * 1000) for a in range(1, 7)],
+-                         f"test:requested_mode=fast:fast_run_key={key}")
++                         f"test:requested_mode=fast:fast_run_key={key}", confidence=.9)
+     before = path.read_bytes()
+     assert fast_resume_suras(path, {114: key}) == {114}
+     assert path.read_bytes() == before
+--- baseline/tests/test_fast_algorithm_gaps.py
++++ current/tests/test_fast_algorithm_gaps.py
+@@ -57,7 +57,7 @@
+         observation(tuple("bcdef" if d < 1800 else "bcdefghi")) if s == 1000 else observation(())
+     )
+     rows, trace = run(fake, [pause(1000)])
+-    assert rows[0][1] == 1100 and rows[0][2] > 0
++    assert trace["boundaries"][0]["start_ms"] == 1100 and trace["boundaries"][0]["confidence"] > 0
+     assert trace["boundaries"][0]["proof"]["opening_recovery"]["missing_initial_units"] == 1
+     assert sum(r["reason"].startswith("ayah=1:pause") for r in trace["acoustic_reads"]) == 2
+     assert trace["confidence_semantics"]["calibrated_probability"] is False
+@@ -127,7 +127,7 @@
+ 
+ def test_incomplete_distinct_opening_uses_shorter_pause_seam_without_timing():
+     rows, trace = run(contextual_fake(), [pause(1000), pause(6000)])
+-    assert rows[1][1] == 6100 and rows[1][2] == pytest.approx(0.71)
++    assert trace["boundaries"][1]["start_ms"] == 6100 and trace["boundaries"][1]["confidence"] == pytest.approx(0.71)
+     proof = trace["boundaries"][1]["proof"]
+     assert proof["contextual_owner"]
+     assert proof["previous_context_read_id"] != trace["boundaries"][1]["read_id"]
+@@ -140,7 +140,7 @@
+ @pytest.mark.parametrize("kind", ["wrong", "weak", "truncated"])
+ def test_shorter_pause_seam_requires_previous_tail(kind):
+     rows, trace = run(contextual_fake(kind), [pause(1000), pause(6000)])
+-    assert rows[1][2] == 0
++    assert trace["boundaries"][1]["confidence"] == 0
+     assert any("previous_tail" in r["reason"] for r in trace["acoustic_reads"])
+ 
+ 
+@@ -192,7 +192,7 @@
+ 
+     fake.responder = respond
+     rows, trace = run(fake, [pause(1000), pause(6000), pause(18000)])
+-    assert rows[1] == (2, 6100, 0.99)
++    assert (trace["boundaries"][1]["ayah"], trace["boundaries"][1]["start_ms"], trace["boundaries"][1]["confidence"]) == (2, 6100, 0.99)
+     proof = trace["boundaries"][1]["proof"]
+     assert not proof.get("contextual_owner")
+     read_id = trace["boundaries"][1]["read_id"]
+@@ -224,7 +224,7 @@
+ 
+     fake.responder = respond
+     rows, trace = run(fake, [pause(1000), pause(6000)], policy=Policy(sparse_anchors=True))
+-    assert rows[1][2] == 0 and rows[2] == (3, 6100, 0.99)
++    assert trace["boundaries"][1]["confidence"] == 0 and (trace["boundaries"][2]["ayah"], trace["boundaries"][2]["start_ms"], trace["boundaries"][2]["confidence"]) == (3, 6100, 0.99)
+     anchor = trace["boundaries"][2]
+     read = trace["acoustic_reads"][anchor["read_id"]]
+     assert read["window_ms"] == [6000.0, 8700.0]
+@@ -239,7 +239,7 @@
+         observation(f.phrase(3), positions=False) if s == 6000 else original(f, s, d)
+     )
+     rows, trace = run(fake, [pause(1000), pause(6000)])
+-    assert rows[1][2] == 0
++    assert trace["boundaries"][1]["confidence"] == 0
+     assert not trace["boundaries"][1]["proof"]
+     assert not any("previous_tail" in r["reason"] for r in trace["acoustic_reads"])
+ 
+@@ -258,7 +258,7 @@
+ 
+     fake.responder = respond
+     rows, trace = run(fake, [pause(1000), pause(6000)])
+-    assert (rows[1][2] > 0) == (quality < 0.6)
++    assert (trace["boundaries"][1]["confidence"] > 0) == (quality < 0.6)
+ 
+ 
+ def test_contextual_validator_rejects_hidden_strong_wrong_continuation():
+--- baseline/tests/test_fast_empty_region.py
++++ current/tests/test_fast_empty_region.py
+@@ -18,8 +18,8 @@
+     fake.timing = False
+     rows, trace = run(fake, [pause(1000), pause(6000), pause(15000)],
+                       policy=Policy(sparse_anchors=True))
+-    assert rows[2][2] == 0 and 3 in trace["review_required_ayahs"]
+-    assert rows[3][1:] == (15100, .99)
++    assert trace["boundaries"][2]["confidence"] == 0 and 3 in trace["review_required_ayahs"]
++    assert rows[-1] == (4, 15100, .99)
+     assert trace["boundaries"][3]["proof"]["unresolved_ayahs"] == [3]
+     probes = [e for e in trace["transitions"] if e.get("reason") == "empty_tempo_region_next_dsp_pause"]
+     assert len(probes) == 1
+@@ -32,7 +32,7 @@
+     fake.timing = False
+     rows, trace = run(fake, [pause(1000), pause(6000), pause(15000)],
+                       policy=Policy(sparse_anchors=True))
+-    assert rows[2][2] == rows[3][2] == 0
++    assert trace["boundaries"][2]["confidence"] == trace["boundaries"][3]["confidence"] == 0
+     assert len([r for r in trace["acoustic_reads"] if r["window_ms"][0] == 15000]) == 1
+ 
+ 
+@@ -40,8 +40,8 @@
+     fake = Fake(responder)
+     fake.timing = False
+     rows, trace = run(fake, [pause(1000), pause(6000), pause(18000)],
+-                      policy=Policy(sparse_anchors=True))
+-    assert rows[2][2] == rows[3][2] == 0
++                      policy=Policy(sparse_anchors=True, independent_search=False))
++    assert trace["boundaries"][2]["confidence"] == trace["boundaries"][3]["confidence"] == 0
+     assert not any(r["window_ms"][0] == 18000 for r in trace["acoustic_reads"])
+ 
+ 
+@@ -51,6 +51,6 @@
+                 else responder(f, start, duration))
+     rows, trace = run(fake, [pause(1000), pause(6000), pause(15000)],
+                       policy=Policy(sparse_anchors=True))
+-    assert rows[2][2] > 0
++    assert trace["boundaries"][2]["confidence"] > 0
+     assert trace["boundaries"][2]["evidence_kind"] == "wasl"
+     assert not any(e.get("reason") == "empty_tempo_region_next_dsp_pause" for e in trace["transitions"])
+--- baseline/tests/test_fast_executor.py
++++ current/tests/test_fast_executor.py
+@@ -78,7 +78,7 @@
+     rows, trace = run(fake, [pause(1000), pause(10000), pause(20000)])
+     assert all(conf == 0 for _, _, conf in rows)
+     assert not any(e["state"] == "ADVANCE" for e in trace["transitions"])
+-    assert trace["boundaries"][1]["review_reason"] == "blocked_by_unresolved_ayah"
++    assert trace["boundaries"][1]["start_ms"] is None
+     assert len(fake.calls) <= 3  # first onset, future pause, bounded block
+ 
+ 
+@@ -109,21 +109,21 @@
+     fake = Fake(lambda f, start, duration: observation(f.phrase(1)[:1] if duration < 2000 else f.phrase(1)))
+     fake.rendered = (("ان",),) + fake.rendered[1:]
+     rows, trace = run(fake, [pause(1000)])
+-    assert rows[0][2] > 0
++    assert trace["boundaries"][0]["confidence"] > 0
+     assert any(e["state"] == "EXPAND_LOCAL" for e in trace["transitions"])
+ 
+ 
+ def test_first_onset_no_fixed_six_seconds():
+     fake = Fake(lambda f, start, duration: observation(f.phrase(1)))
+-    rows, _ = run(fake)
+-    assert rows[0][1] == 3100 and rows[0][2] > 0
++    rows, trace = run(fake)
++    assert trace["boundaries"][0]["start_ms"] == 3100 and trace["boundaries"][0]["confidence"] > 0
+ 
+ 
+ def test_no_timing_cannot_confirm_first_onset():
+     fake = Fake(lambda f, start, duration: observation(f.phrase(1), positions=False))
+     fake.timing = False
+     rows, trace = run(fake)
+-    assert rows[0][2] == 0
++    assert not rows
+     assert trace["boundaries"][0]["review_reason"] == "unsupported_first_onset_timing"
+ 
+ 
+@@ -145,8 +145,8 @@
+     def respond(f, start, duration):
+         units = f.phrase(1)
+         return Observation(units, (0., 100.), .99, unit_quality=(.01, .99))
+-    rows, _ = run(Fake(respond), [pause(1000)])
+-    assert rows[0][2] == 0
++    rows, trace = run(Fake(respond), [pause(1000)])
++    assert not rows
+ 
+ 
+ def test_cache_eviction_preserves_started_budget():
+@@ -174,8 +174,10 @@
+ @pytest.mark.parametrize("surah", [1, 9])
+ def test_canonical_exceptions_no_rewrite(surah):
+     fake = Fake(lambda *args: observation(()), quran_text.surah_words(surah))
+-    rows, _ = run(fake)
+-    assert [r[0] for r in rows] == list(range(1, quran_text.ayah_count(surah) + 1))
++    rows, trace = run(fake)
++    assert not rows
++    assert [b["ayah"] for b in trace["boundaries"]] == list(range(1, quran_text.ayah_count(surah) + 1))
++    assert all(b["start_ms"] is None for b in trace["boundaries"])
+ 
+ 
+ def test_validator_rejects_false_proof_and_collision():
+@@ -233,9 +235,9 @@
+         return observation(())
+     fake.responder = respond
+     rows, trace = run(fake, [pause(1000)])
+-    assert rows[0][2] > 0 and rows[1][2] > 0
++    assert trace["boundaries"][0]["confidence"] > 0 and trace["boundaries"][1]["confidence"] > 0
+     assert trace["boundaries"][1]["evidence_kind"] == "wasl"
+-    assert rows[2][2] == 0  # no advancing through the next unresolved ayah
++    assert trace["boundaries"][2]["start_ms"] is None  # unresolved has no published time
+ 
+ 
+ def test_future_block_is_published_atomically_only_after_current_proof():
+@@ -249,7 +251,7 @@
+         return observation(())
+     fake.responder = respond
+     rows, trace = run(fake, [pause(5000)])
+-    assert rows[0][2] > 0 and rows[1][2] > 0
++    assert trace["boundaries"][0]["confidence"] > 0 and trace["boundaries"][1]["confidence"] > 0
+     confirms = [e for e in trace["transitions"] if e["state"] == "CONFIRMED"]
+     assert confirms[0]["block_ayahs"] == [1, 2]
+     assert trace["boundaries"][0]["read_id"] > trace["boundaries"][1]["read_id"]
+@@ -261,7 +263,7 @@
+     fake = Fake(respond)
+     rows, trace = run(fake, [pause(p) for p in (1000, 6000, 6050, 6100, 6200, 6250, 6300, 6400, 6450, 6500, 12000)])
+     assert any("forecast_ms" in e for e in trace["transitions"])
+-    assert rows[2][2] == 0
++    assert trace["boundaries"][2]["start_ms"] is None
+ 
+ 
+ @pytest.mark.parametrize("experimental", [False, True])
+@@ -348,12 +350,11 @@
+     assert trace["align_lag_ms"] == 0
+ 
+ 
+-def test_validator_rejects_mismatched_rows_and_impossible_duration():
+-    from surah_cutter.core.fast_executor import _finish_estimates
+-    with pytest.raises(ValueError, match="unrepresentable_timeline"):
+-        _finish_estimates([], [1, 2, 3], {1: ("a",), 2: ("b",), 3: ("c",)}, 2., "test")
++def test_validator_rejects_mismatched_rows_and_unknown_with_time():
++    with pytest.raises(ValueError, match="invalid_unresolved"):
++        validate_boundaries([Boundary(1, 0, "unresolved", 0, "test")], [1], 1000, [])
+     with pytest.raises(ValueError, match="canonical_ayah_set"):
+-        validate_boundaries([Boundary(2, 0, "estimate", 0, "test")], [1], 1000, [])
++        validate_boundaries([Boundary(2, None, "unresolved", 0, "test")], [1], 1000, [])
+ 
+ 
+ def test_explicit_settings_restore_runs_at_asgi_startup_only(monkeypatch):
+@@ -369,12 +370,12 @@
+     asyncio.run(start())
+ 
+ 
+-def test_estimates_reserve_duration_for_last_confirmed_ayah():
+-    from surah_cutter.core.fast_executor import _finish_estimates
+-    rows = _finish_estimates([Boundary(1, 1000, "first_onset", .9)], [1, 2, 3],
+-                             {1: ("longpreviousayah" * 10,), 2: ("small",), 3: ("small",)}, 10000, "test")
+-    assert 8000 < rows[1].start_ms < rows[2].start_ms < 10000
+-    assert rows[0].start_ms == 1000 and rows[1].confidence == rows[2].confidence == 0
++def test_unknown_boundaries_never_receive_text_weighted_times():
++    from surah_cutter.core.fast_executor import _complete_result
++    rows = _complete_result([Boundary(1, 1000, "first_onset", .9)], [1, 2, 3], "test")
++    assert rows[0].start_ms == 1000
++    assert rows[1].start_ms is rows[2].start_ms is None
++    assert rows[1].confidence == rows[2].confidence == 0
+ 
+ 
+ def test_wasl_tail_is_whole_word_and_distinguishes_repeated_ending():
+@@ -488,7 +489,7 @@
+     assert trace["phase1_pauses"] == []
+     hyp = trace["first_onset_hypotheses"]["supplemental_pauses"][0]
+     assert hyp["pause_id"] == trace["boundaries"][0]["proof"]["pause_id"]
+-    assert hyp["center_ms"] == rows[0][1]
++    assert hyp["center_ms"] == trace["boundaries"][0]["start_ms"]
+     bad = [Boundary(**b) for b in trace["boundaries"]]
+     with pytest.raises(ValueError, match="unknown_pause_owner"):
+         validate_boundaries(bad, [1, 2, 3, 4], 40000, trace["acoustic_reads"], pauses=[])
+@@ -521,8 +522,8 @@
+                                unit_quality=(.01,) + (.99,) * (len(units)-1))
+         return observation(())
+     fake.responder = respond
+-    rows, trace = run(fake, [pause(1000), pause(8000)])
+-    assert rows[0][2] > 0 and all(conf == 0 for _, _, conf in rows[1:])
++    rows, trace = run(fake, [pause(1000), pause(8000)], policy=Policy(sparse_anchors=False, independent_search=False))
++    assert trace["boundaries"][0]["confidence"] > 0 and all(conf == 0 for _, _, conf in rows[1:])
+     assert trace["boundaries"][1]["review_reason"] in ("unresolved_adjacent_block", "unresolved_local_block")
+     assert trace["transitions"][-1]["state"] == "RESULT_READY"
+ 
+--- baseline/tests/test_fast_head_boundary.py
++++ current/tests/test_fast_head_boundary.py
+@@ -45,17 +45,17 @@
+ 
+ def test_weak_body_cannot_authorize_an_unread_head():
+     rows,trace=scenario("weak")
+-    assert rows[3][2]==0
++    assert trace["boundaries"][3]["confidence"]==0
+     assert not any(e["state"]=="HEAD_BOUNDARY_RECHECK" for e in trace["transitions"])
+ 
+ 
+ def test_partial_body_cannot_authorize_an_unread_head():
+     rows,trace=scenario("partial")
+-    assert rows[3][2]==0
++    assert trace["boundaries"][3]["confidence"]==0
+     assert not any(e["state"]=="HEAD_BOUNDARY_RECHECK" for e in trace["transitions"])
+ 
+ 
+ def test_unrelated_initial_word_is_not_replaced_using_body_identity():
+     rows,trace=scenario(head="unrelated")
+-    assert rows[3][2]==0
++    assert trace["boundaries"][3]["confidence"]==0
+     assert not any(e["state"]=="HEAD_BOUNDARY_RECHECK" for e in trace["transitions"])
+--- baseline/tests/test_fast_next_pause_recovery.py
++++ current/tests/test_fast_next_pause_recovery.py
+@@ -22,7 +22,7 @@
+ def test_failed_nonempty_region_gets_one_independent_next_anchor():
+     rows, trace = run(probe_fake(), [pause(1000), pause(6000), pause(10000), pause(15000)],
+                       policy=Policy(sparse_anchors=True))
+-    assert rows[2][2] == 0 and rows[3] == (4, 15100, .99)
++    assert trace["boundaries"][2]["confidence"] == 0 and (trace["boundaries"][3]["ayah"], trace["boundaries"][3]["start_ms"], trace["boundaries"][3]["confidence"]) == (4, 15100, .99)
+     proof = trace['boundaries'][3]['proof']
+     assert proof['bounded_following_origin_ayah'] == 3
+     events = [e for e in trace['transitions'] if e.get('reason') == 'optional_after_unproved_tempo_candidates']
+@@ -31,10 +31,10 @@
+ 
+ 
+ def test_base_probe_does_not_change_tiny_or_exceed_candidate_cap():
+-    for fake, policy in [(probe_fake('whisper-tarteel-tiny'), Policy(sparse_anchors=True)),
+-                         (probe_fake(), Policy(sparse_anchors=True, max_candidates=1))]:
++    for fake, policy in [(probe_fake('whisper-tarteel-tiny'), Policy(sparse_anchors=True, independent_search=False)),
++                         (probe_fake(), Policy(sparse_anchors=True, max_candidates=1, independent_search=False))]:
+         rows, trace = run(fake, [pause(1000), pause(6000), pause(10000), pause(15000)], policy=policy)
+-        assert rows[2][2] == rows[3][2] == 0
++        assert trace["boundaries"][2]["confidence"] == trace["boundaries"][3]["confidence"] == 0
+         assert not any(r['window_ms'][0] == 15000 for r in trace['acoustic_reads'])
+ 
+ 
+@@ -46,8 +46,8 @@
+     fake.rendered = tuple(rendered)
+     fake.responder = lambda f, s, d: observation(f.phrase(3)[:1], positions=False) if s == 10000 else responder(f, s, d)
+     rows, trace = run(fake, [pause(1000), pause(6000), pause(10000), pause(15000)],
+-                      policy=Policy(sparse_anchors=True))
+-    assert rows[2][2] == rows[3][2] == 0
++                      policy=Policy(sparse_anchors=True, independent_search=False))
++    assert trace["boundaries"][2]["confidence"] == trace["boundaries"][3]["confidence"] == 0
+     assert not any(r['window_ms'][0] == 15000 for r in trace['acoustic_reads'])
+ 
+ 
+@@ -56,8 +56,8 @@
+     fake.timing, fake.model_id = False, 'whisper-tarteel-base'
+     fake.responder = lambda f, s, d: observation(f.phrase(6), positions=False) if s == 15000 else responder(f, s, d)
+     rows, trace = run(fake, [pause(1000), pause(6000), pause(10000), pause(15000)],
+-                      policy=Policy(sparse_anchors=True))
+-    assert rows[5][2] == 0
++                      policy=Policy(sparse_anchors=True, independent_search=False))
++    assert trace["boundaries"][5]["confidence"] == 0
+     assert any(r['window_ms'][0] == 15000 for r in trace['acoustic_reads'])
+     assert all(e.get('ayah', 0) != 6 for e in trace['transitions'] if e['state'] == 'CONFIRMED')
+ 
+@@ -116,8 +116,8 @@
+     rows, reviews = _review_addressed_recovery_onsets(
+         [earlier, recovered, downstream, narrow], geometry, Policy())
+     assert rows[:2] == [earlier, recovered] and rows[3] == narrow
+-    assert rows[2].start_ms == downstream.start_ms and rows[2].confidence == 0
+-    assert rows[2].evidence_kind == 'estimate' and rows[2].proof is None
++    assert rows[2].start_ms is None and rows[2].confidence == 0
++    assert rows[2].evidence_kind == 'unresolved' and rows[2].proof is None
+     assert reviews[0]['identity_proof'] == downstream.proof
+     assert reviews[0]['internal_anchor_ms'] == downstream.start_ms
+     assert reviews[0]['reason'] == 'recovered_wide_midpoint_unproved'
+@@ -130,7 +130,7 @@
+                       proof={'pause_id': 0, 'bounded_following_origin_ayah': 1})
+     geometry = [{'quiet_stationarity': True, 'midpoint_interval_radius_ms': 800}]
+     rows, reviews = _review_addressed_recovery_onsets([anchor], geometry, Policy())
+-    assert rows[0].confidence == 0 and rows[0].start_ms == anchor.start_ms
++    assert rows[0].confidence == 0 and rows[0].start_ms is None
+     assert reviews[0]['identity_proof'] == anchor.proof
+ 
+ 
+@@ -154,6 +154,6 @@
+     with patch('surah_cutter.core.fast_executor.pause_geometry', side_effect=geometry):
+         rows, trace = run(fake, [pause(1000), pause(6000), pause(10000), pause(15000),
+                                 pause(20000, 1600)], policy=Policy(sparse_anchors=True))
+-    assert rows[3][2] == rows[4][2] == 0
++    assert trace["boundaries"][3]["confidence"] == trace["boundaries"][4]["confidence"] == 0
+     assert trace['boundaries'][3]['review_reason'] == 'weak_complete_sparse_prefix_unproved_time'
+     assert trace['boundaries'][4]['review_reason'] == 'recovered_wide_midpoint_unproved'
+--- baseline/tests/test_fast_partial.py
++++ current/tests/test_fast_partial.py
+@@ -0,0 +1,175 @@
++"""Partial FAST is a model result, never synthetic timing data."""
++import json
++from pathlib import Path
++
++import pytest
++
++from surah_cutter.data.alignment_result import result_source, write_alignment_result
++from surah_cutter.data.alignment_runs import load_run
++from surah_cutter.data.project_db import ProjectDB
++from surah_cutter.data.export_db import ExportError, export_db
++from test_fast_executor import Fake, Policy, observation, pause, run
++
++
++def partial_trace(rows=()):
++    resolved = {a: t for _, a, t in rows}
++    return dict(mode='fast', result_contract='partial-v1', surah=112, ayah_count=4,
++        generated_rows=list(rows), unresolved_ayahs=[a for a in range(1, 5) if a not in resolved],
++        duration_ms=40000, ayahs=[dict(ayah=a, onset_ms=resolved.get(a),
++               conf=.9 if a in resolved else 0, reliable=a in resolved) for a in range(1, 5)])
++
++
++@pytest.mark.parametrize('requested', ['fast', 'words'])
++def test_empty_fast_supersedes_old_fast_but_protects_full_and_humans(tmp_path, requested):
++    path = tmp_path / 'p.db'
++    with ProjectDB.open(str(path), 'test', 1) as db:
++        db.write_timings([(112, 1, 1000), (112, 2, 2000)], 'old:actual_mode=fast', confidence=0)
++        db.write_timings([(112, 3, 3000)], 'model:actual_mode=full', confidence=.7)
++        db.set_time(112, 4, 4000)
++        before = [db.get_review(112, a) for a in (3, 4)]
++        result = write_alignment_result(db, [], trace=partial_trace(), requested_mode=requested, db_path=path)
++        assert db.get_timings() == [(112, 3, 3000), (112, 4, 4000)]
++        assert [db.get_review(112, a) for a in (3, 4)] == before
++        assert result.written == 0 and result.unresolved_ayahs == (1, 2, 3, 4)
++        assert result.persisted_rows == ((112, 3, 3000), (112, 4, 4000))
++        payload = json.loads(Path(result.log_paths['json']).read_text())
++        assert payload['model_rows'] == [] and len(payload['rows']) == 2
++        if requested == 'fast':
++            history = load_run(Path(result.log_paths['json']).parent, 112, Path(result.log_paths['run']).stem)
++            assert history['ayahs'] == [] and history['unresolved_ayahs'] == [1, 2, 3, 4]
++            latest = load_run(Path(result.log_paths['json']).parent, 112, 'legacy-fast')
++            assert [a['ayah'] for a in latest['ayahs']] == [3, 4]
++
++
++def test_partial_replacement_rolls_back_deletion_and_keeps_new_manual_status(tmp_path):
++    with ProjectDB.open(str(tmp_path / 'p.db'), 'test', 1) as db:
++        db.write_timings([(112, 1, 1000), (112, 2, 2000)], 'old:fast')
++        db.set_time(112, 3, 3000)
++        before = db.get_timings()
++        with pytest.raises(ValueError, match='порядку'):
++            write_alignment_result(db, [(112, 2, 3500)], trace=partial_trace([(112, 2, 3500)]),
++                                   requested_mode='fast')
++        assert db.get_timings() == before
++
++
++def test_partial_contract_rejects_unproven_numeric_rows(tmp_path):
++    trace = partial_trace([(112, 1, 1000)])
++    trace['ayahs'][0]['conf'] = 0
++    with ProjectDB.open(str(tmp_path / 'p.db'), 'test', 1) as db:
++        with pytest.raises(ValueError, match='resolved boundary'):
++            write_alignment_result(db, [(112, 1, 1000)], trace=trace, requested_mode='fast')
++        assert db.get_timings() == []
++
++
++def test_legacy_estimates_cannot_escape_through_export(tmp_path):
++    path = tmp_path / 'p.db'
++    with ProjectDB.open(str(path), 'test', 1) as db:
++        db.write_timings([(112, 1, 1000)], 'old:actual_mode=fast', confidence=0)
++    with pytest.raises(ExportError, match='unresolved legacy FAST'):
++        export_db(str(path), str(tmp_path / 'out.db'), strict=False)
++    assert not (tmp_path / 'out.db').exists()
++
++
++def test_implicit_words_fast_origin_is_unambiguous():
++    trace = partial_trace()
++    del trace['mode']
++    assert ':actual_mode=fast:' in result_source(trace, 'words')
++
++
++def test_geometry_failure_can_locate_identity_without_publishing_its_time(monkeypatch):
++    import surah_cutter.core.fast_executor as executor
++    original = executor.pause_geometry
++    def geometry(pcm, sr, p):
++        data = original(pcm, sr, p)
++        return {**data, 'accepted': p.start_ms != 6000, 'reason': 'uncertain_cut'}
++    monkeypatch.setattr(executor, 'pause_geometry', geometry)
++    fake = Fake(lambda f, s, d: observation(f.phrase({1000: 1, 6000: 2, 12000: 3}.get(s)))
++                if s in (1000, 6000, 12000) else observation(()))
++    rows, trace = run(fake, [pause(1000), pause(6000), pause(12000)])
++    assert [a for a, _, _ in rows] == [1, 3]
++    assert trace['boundaries'][1]['start_ms'] is None
++    assert [a['ayah'] for a in trace['search_anchors']] == [1, 2, 3]
++
++
++def test_independent_next_target_reenters_after_missing_owner():
++    fake = Fake(lambda f, s, d: observation(f.phrase({1000: 1, 6000: 2, 12000: 4}.get(s)))
++                if s in (1000, 6000, 12000) else observation(()))
++    fake.timing = False
++    rows, trace = run(fake, [pause(1000), pause(6000), pause(12000)],
++                      policy=Policy(sparse_anchors=False))
++    assert 3 not in [a for a, _, _ in rows]
++    assert 4 in [a for a, _, _ in rows]
++    assert any(e['state'] == 'REENTER_SEARCH' for e in trace['transitions'])
++
++
++def test_landmark_wide_pause_is_identity_only_and_provenance_is_validated():
++    from dataclasses import replace
++    from surah_cutter.core.fast_executor import (
++        Boundary, _review_addressed_recovery_onsets, validate_boundaries,
++    )
++    anchor = Boundary(4, 1000, 'pause', .99, read_id=0,
++        proof={'pause_id': 0, 'independent_region_origin_ayah': 1,
++               'independent_region_attempt': 1, 'phrase': ('unique',), 'complete': True,
++               'ambiguous': False, 'competitors_checked': True, 'offset': 0,
++               'pause_ms': [0, 2000]})
++    reviewed, reasons = _review_addressed_recovery_onsets([anchor],
++        [{'quiet_stationarity': True, 'midpoint_interval_radius_ms': 1000}], Policy())
++    assert reviewed[0].start_ms is None and reviewed[0].confidence == 0
++    assert reasons[0]['identity_proof'] == anchor.proof
++    read = dict(outcome='completed', window_ms=[1800, 3300],
++                reason='ayah=1:independent_region_identity', observed=dict(
++                    units=('unique',), unit_quality=(.99,), truncated=False))
++    validate_boundaries([anchor], [4], 10000, [read], threshold=.6)
++    for proof in [{**anchor.proof, 'independent_region_origin_ayah': 4},
++                  {**anchor.proof, 'independent_region_attempt': 2}]:
++        with pytest.raises(ValueError, match='independent_region_provenance'):
++            validate_boundaries([replace(anchor, proof=proof)], [4], 10000, [read], threshold=.6)
++    with pytest.raises(ValueError, match='independent_region_provenance'):
++        validate_boundaries([anchor], [4], 10000, [{**read, 'reason': 'unrelated'}], threshold=.6)
++
++
++def test_disconnected_search_does_not_publish_an_unstable_narrow_midpoint():
++    from surah_cutter.core.fast_executor import Boundary, _review_addressed_recovery_onsets
++    anchor = Boundary(3, 1000, 'pause', .99, read_id=0,
++                      proof={'pause_id': 0, 'independent_region_origin_ayah': 1})
++    following = Boundary(4, 2000, 'pause', .99, read_id=1, proof={'pause_id': 1})
++    stable = Boundary(5, 3000, 'pause', .99, read_id=2, proof={'pause_id': 2})
++    geometry = [{'quiet_stationarity': s, 'midpoint_interval_radius_ms': 400}
++                for s in (True, False, True)]
++    rows, reviews = _review_addressed_recovery_onsets([anchor, following, stable], geometry, Policy())
++    assert rows[0] == anchor and rows[2] == stable
++    assert rows[1].start_ms is None
++    assert reviews[0]['reason'] == 'reacquired_nonstationary_midpoint_unproved'
++
++
++def test_first_landmark_denied_by_budget_returns_partial_instead_of_crashing(monkeypatch):
++    from surah_cutter.core.fast_reads import LocalEvidenceReads
++    original = LocalEvidenceReads.read
++    def read(self, start, end, *, reason):
++        if reason.endswith(':independent_region_identity'):
++            self.audio_ms = self.total_ms * 2  # fault-inject an exhausted guard
++        return original(self, start, end, reason=reason)
++    monkeypatch.setattr(LocalEvidenceReads, 'read', read)
++    fake = Fake(lambda *args: observation(()))
++    rows, trace = run(fake, [pause(t) for t in range(1000, 55000, 3000)], duration=60000,
++                      policy=Policy(sparse_anchors=True))
++    assert rows == [] and trace['result_complete'] is False
++    assert any(e['state'] == 'REACQUIRE_REGION' for e in trace['transitions'])
++    assert any(e['reason'] == 'inference_budget' for e in trace['denied_acoustic_reads'])
++    assert trace['transitions'][-1]['state'] == 'RESULT_READY'
++
++
++def test_legacy_estimates_are_hidden_from_review_and_words_without_mutation(tmp_path, monkeypatch):
++    from types import SimpleNamespace
++    from surah_cutter.data.project_state import complete_suras
++    from surah_cutter.webgui import server
++    path = tmp_path / 'p.db'
++    with ProjectDB.open(str(path), 'test', 1) as db:
++        db.write_timings([(112, a, a*1000) for a in range(1, 5)], 'old:actual_mode=fast', confidence=0)
++        db.set_status(112, 2, 'verified')
++    before = path.read_bytes()
++    monkeypatch.setattr(server, 'STATE', SimpleNamespace(db_path=path))
++    times, _ = server._sura_timings_reviews(112)
++    assert times == {2: 2000}
++    assert complete_suras(path) == set()
++    assert path.read_bytes() == before
+--- baseline/tests/test_fast_previous_body.py
++++ current/tests/test_fast_previous_body.py
+@@ -35,14 +35,14 @@
+ 
+ def test_partial_rival_keeps_the_unresolved_opening_protected():
+     rows, trace = scenario('partial')
+-    assert rows[3][2] == 0
++    assert trace["boundaries"][3]["confidence"] == 0
+     assert not any(e['state'] == 'DECLINE_CANDIDATE' for e in trace['transitions'])
+     assert not any(r['window_ms'][0] == 20000 for r in trace['acoustic_reads'])
+ 
+ 
+ def test_weak_rival_cannot_authorize_a_later_replacement():
+     rows, trace = scenario('weak')
+-    assert rows[3][2] == 0
++    assert trace["boundaries"][3]["confidence"] == 0
+     assert not any(e['state'] == 'DECLINE_CANDIDATE' for e in trace['transitions'])
+ 
+ 
+--- baseline/tests/test_fast_review_fixes.py
++++ current/tests/test_fast_review_fixes.py
+@@ -65,7 +65,7 @@
+     fake.rendered = tuple(render)
+     fake.responder = lambda f, start, duration: observation(("noise", f.phrase(1)[1]) if duration < 2000 else f.phrase(1))
+     rows, trace = run(fake, [pause(1000)])
+-    assert rows[0][2] > 0
++    assert trace["boundaries"][0]["confidence"] > 0
+     assert any(e.get("acoustic_anchor") == "exact_later_word_noisy_opening" for e in trace["transitions"])
+     assert all(r["window_ms"][1] - r["window_ms"][0] <= 6000 for r in trace["acoustic_reads"])
+ 
+@@ -138,7 +138,7 @@
+     assert trace["boundaries"][4]["proof"]["contextual_owner"]
+     fake.responder = lambda f, start, duration: observation(groups[starts[start]]) if start in starts else observation(groups[4])
+     rows, trace = run(fake, [pause(p) for p in starts])
+-    assert rows[2][2] == 0
++    assert trace["boundaries"][2]["confidence"] == 0
+ 
+ 
+ def test_context_confidence_is_minimum_of_both_essential_reads():
+@@ -155,7 +155,7 @@
+         return observation(())
+     fake.responder = respond
+     rows, trace = run(fake, [pause(p) for p in starts])
+-    assert rows[2][2] == pytest.approx(.61) and rows[4][2] == pytest.approx(.61)
++    assert trace["boundaries"][2]["confidence"] == pytest.approx(.61) and trace["boundaries"][4]["confidence"] == pytest.approx(.61)
+     boundaries = [Boundary(**b) for b in trace["boundaries"]]
+     boundaries[2] = replace(boundaries[2], confidence=.99)
+     with pytest.raises(ValueError, match="unheard_previous_context"):
+@@ -173,7 +173,7 @@
+ def test_long_pause_keeps_full_dsp_center_with_right_edge_crop():
+     fake = Fake(lambda f, start, duration: observation(f.phrase(1)) if start == 7800 else observation(()))
+     rows, trace = run(fake, [pause(1000, 7000)])
+-    assert rows[0][1] == 4500 and rows[0][2] > 0
++    assert trace["boundaries"][0]["start_ms"] == 4500 and trace["boundaries"][0]["confidence"] > 0
+     read = trace["acoustic_reads"][trace["boundaries"][0]["read_id"]]
+     assert read["window_ms"] == [7800., 9300.]
+     assert trace["boundaries"][0]["proof"]["pause_ms"] == [1000., 8000.]
+@@ -195,7 +195,7 @@
+         return observation(seam["combined"])
+     fake.responder = respond
+     rows, trace = run(fake, [pause(1000), pause(8000)])
+-    assert rows[1][2] > 0 and trace["boundaries"][1]["evidence_kind"] == "wasl"
++    assert trace["boundaries"][1]["confidence"] > 0 and trace["boundaries"][1]["evidence_kind"] == "wasl"
+     assert any(r["reason"].endswith("anchored_wasl_forecast") for r in trace["acoustic_reads"])
+ 
+ 
+@@ -245,7 +245,7 @@
+     from surah_cutter.core.fast_executor import Policy
+     fake = Fake(lambda f, start, duration: observation(f.phrase(3)) if start==1000 else observation(f.phrase(1)))
+     rows, trace = run(fake, [pause(1000),pause(10000)], policy=Policy(sparse_anchors=True))
+-    assert rows[0][2] == rows[1][2] == 0 and rows[2][2] > 0
++    assert trace["boundaries"][0]["confidence"] == trace["boundaries"][1]["confidence"] == 0 and trace["boundaries"][2]["confidence"] > 0
+     assert trace["boundaries"][0]["review_reason"] == "unresolved_before_unique_anchor"
+     assert trace["boundaries"][2]["proof"]["unresolved_ayahs"] == [1,2]
+     assert not any(b["ayah"]==1 and b["confidence"]>0 for b in trace["boundaries"])
+@@ -254,11 +254,11 @@
+ def test_sparse_anchor_never_accepts_global_repeat_or_far_future():
+     from surah_cutter.core.fast_executor import Policy
+     fake = Fake(lambda f, start, duration: observation(f.phrase(4)))
+-    rows, _ = run(fake, [pause(1000)], policy=Policy(sparse_anchors=True,max_unresolved_ayahs=2))
++    rows, trace = run(fake, [pause(1000)], policy=Policy(sparse_anchors=True,max_unresolved_ayahs=2))
+     assert not any(conf>0 for _,_,conf in rows)
+     fake, groups, _ = canonical_fake(109)
+     fake.responder = lambda *args: observation(groups[3])
+-    rows, _ = run(fake, [pause(1000)], policy=Policy(sparse_anchors=True))
++    rows, trace = run(fake, [pause(1000)], policy=Policy(sparse_anchors=True))
+     assert not any(conf>0 for _,_,conf in rows)
+ 
+ 
+@@ -268,11 +268,11 @@
+             return tuple(tuple(range(1,len(u)+1)) for u in rendered)
+     fake = Spoken(lambda *args: observation(("الف","لام","راء")))
+     fake.rendered = (("الف","لام","ميم"),)+fake.rendered[1:]
+-    rows, _ = run(fake,[pause(1000)])
+-    assert rows[0][2] == 0
++    rows, trace = run(fake,[pause(1000)])
++    assert trace["boundaries"][0]["confidence"] == 0
+     fake.responder = lambda *args: observation(("الف",))
+     rows, trace = run(fake,[pause(1000)])
+-    assert rows[0][2] > 0 and trace["boundaries"][0]["proof"]["spoken_owner_units"] == ("الف","لام","ميم")
++    assert trace["boundaries"][0]["confidence"] > 0 and trace["boundaries"][0]["proof"]["spoken_owner_units"] == ("الف","لام","ميم")
+ 
+ 
+ def test_compact_decoded_letters_preserve_token_quality_and_reject_wrong_alias():
+@@ -303,7 +303,7 @@
+     fake.rendered = tuple(rendered)
+     fake.responder = lambda f,start,duration: observation(("anchor",) if duration<2000 else ("anchorword",))
+     rows, trace = run(fake,[pause(1000)],policy=Policy(sparse_anchors=True))
+-    assert rows[0][2]==0 and rows[1][2]>0
++    assert trace["boundaries"][0]["confidence"]==0 and trace["boundaries"][1]["confidence"]>0
+     assert any(e.get("acoustic_anchor","").startswith("provisional_unique_anchor_partial") for e in trace["transitions"])
+ 
+ 
+@@ -351,7 +351,7 @@
+         return observation(())
+     fake.responder=respond
+     rows,trace=run(fake,[pause(1000),pause(6000)],policy=Policy(sparse_anchors=True))
+-    assert rows[0][2]>0 and rows[0][1]==6100
++    assert trace["boundaries"][0]["confidence"]>0 and trace["boundaries"][0]["start_ms"]==6100
+     assert any(e.get("acoustic_anchor","").startswith("provisional_unique_anchor_partial") for e in trace["transitions"])
+ 
+ 
+@@ -371,11 +371,11 @@
+     from surah_cutter.core.fast_executor import Policy
+     fake=Fake(lambda f,start,duration: observation(f.phrase(4)))
+     rows,trace=run(fake,[pause(1000)],policy=Policy(sparse_anchors=True,max_unresolved_ayahs=None))
+-    assert all(r[2]==0 for r in rows[:3]) and rows[3][2]>0
++    assert all(b["start_ms"] is None for b in trace["boundaries"][:3]) and rows == [(4, 1100, .99)]
+     assert len(fake.calls)==1
+     assert trace["boundaries"][3]["proof"]["unresolved_ayahs"]==[1,2,3]
+     fake.responder=lambda f,start,duration: observation(f.phrase(4),quality=.1)
+-    rows,_=run(fake,[pause(1000)],policy=Policy(sparse_anchors=True,max_unresolved_ayahs=None))
++    rows, trace = run(fake,[pause(1000)],policy=Policy(sparse_anchors=True,max_unresolved_ayahs=None))
+     assert not any(r[2]>0 for r in rows)
+ 
+ 
+@@ -387,7 +387,7 @@
+     target=next(i for i,w in enumerate(fake.words) if w.ayah==4)
+     render[1]=render[target]
+     fake.rendered=tuple(render)
+-    rows,_=run(fake,[pause(1000)],policy=Policy(sparse_anchors=True,max_unresolved_ayahs=None))
++    rows, trace = run(fake,[pause(1000)],policy=Policy(sparse_anchors=True,max_unresolved_ayahs=None))
+     assert not any(r[2]>0 for r in rows)
+ 
+ 
+--- baseline/tests/test_fast_short_spoken_prefix.py
++++ current/tests/test_fast_short_spoken_prefix.py
+@@ -24,7 +24,7 @@
+ def test_complete_short_spoken_word_can_request_rest_of_canonical_word():
+     fake = vocative_fake(lambda duration: ('يا',) if duration < 2000 else ('يا', 'ايها'))
+     rows, trace = run(fake, [pause(1000)])
+-    assert rows[0][2] > 0 and rows[0][1] == 1100
++    assert trace["boundaries"][0]["confidence"] > 0 and trace["boundaries"][0]["start_ms"] == 1100
+     assert len([r for r in trace['acoustic_reads'] if r['reason'].startswith('ayah=1:pause')]) == 2
+     assert any(e.get('acoustic_anchor') == 'whole_spoken_prefix_incomplete_canonical_word'
+                for e in trace['transitions'])
+@@ -34,15 +34,15 @@
+ @pytest.mark.parametrize('later', [('يا',), ('يا', 'اولي'), ('wrong',), ()])
+ def test_cue_never_confirms_missing_or_wrong_rest(later):
+     fake = vocative_fake(lambda duration: ('يا',) if duration < 2000 else later)
+-    rows, _ = run(fake, [pause(1000)])
+-    assert rows[0][2] == 0
++    rows, trace = run(fake, [pause(1000)])
++    assert trace["boundaries"][0]["confidence"] == 0
+ 
+ 
+ def test_weak_initial_unit_does_not_authorize_new_read():
+     fake = vocative_fake(lambda duration: ('يا',))
+     fake.responder = lambda f, start, duration: observation(('يا',), quality=.59, positions=False)
+     rows, trace = run(fake, [pause(1000)])
+-    assert rows[0][2] == 0
++    assert trace["boundaries"][0]["confidence"] == 0
+     assert not any(e.get('acoustic_anchor') == 'whole_spoken_prefix_incomplete_canonical_word'
+                    for e in trace['transitions'])
+ 
+@@ -50,7 +50,7 @@
+ def test_strong_foreign_continuation_does_not_authorize_new_read():
+     fake = vocative_fake(lambda duration: ('يا', 'اولي'))
+     rows, trace = run(fake, [pause(1000)])
+-    assert rows[0][2] == 0
++    assert trace["boundaries"][0]["confidence"] == 0
+     assert not any(e.get('acoustic_anchor') == 'whole_spoken_prefix_incomplete_canonical_word'
+                    for e in trace['transitions'])
+ 
+@@ -75,7 +75,7 @@
+     fake.responder = lambda f, start, duration: (
+         observation(('يا',), positions=False) if start == 2000 else observation((), positions=False))
+     rows, trace = run(fake, [pause(1000, width=1200)])
+-    assert rows[0][2] == 0
++    assert trace["boundaries"][0]["confidence"] == 0
+     assert any(e['state'] == 'SEARCH_CUE_ONLY' and e['reason'] == 'short_word_pause_time_uncertain'
+                for e in trace['transitions'])
+     assert len([r for r in trace['acoustic_reads'] if r['reason'].startswith('ayah=1:pause')]) == 1
+@@ -86,8 +86,8 @@
+     fake.responder = lambda f, start, duration: (
+         observation(('يا',), positions=False) if duration < 2000
+         else replace(observation(('يا', 'ايها'), positions=False), unit_quality=(.99, .59)))
+-    rows, _ = run(fake, [pause(1000)])
+-    assert rows[0][2] == 0
++    rows, trace = run(fake, [pause(1000)])
++    assert trace["boundaries"][0]["confidence"] == 0
+ 
+ 
+ def test_single_character_ctc_units_do_not_get_asr_short_word_permission():
+@@ -103,7 +103,7 @@
+         else observation(('يا', 'اولي'), positions=False) if start == 6000
+         else observation((), positions=False))
+     rows, trace = run(fake, [pause(1000), pause(6000)], policy=Policy(sparse_anchors=True))
+-    assert rows[0][2] == 0 and rows[1][2] > 0 and rows[1][1] == 6100
++    assert trace["boundaries"][0]["confidence"] == 0 and trace["boundaries"][1]["confidence"] > 0 and trace["boundaries"][1]["start_ms"] == 6100
+     assert any(e.get('reason') == 'short_word_extension_unresolved_resume_candidates'
+                for e in trace['transitions'])
+ 
+@@ -125,7 +125,7 @@
+         return observation(units, positions=False)
+     fake.responder = respond
+     rows, trace = run(fake, [pause(1000), pause(6000)])
+-    assert rows[0][2] == 0
++    assert trace["boundaries"][0]["confidence"] == 0
+     assert any(e.get('acoustic_anchor') == 'exact_later_word_noisy_opening'
+                for e in trace['transitions'])
+     assert not any(e.get('reason') == 'short_word_extension_unresolved_resume_candidates'
+@@ -151,8 +151,8 @@
+     geometry = {'accepted': True, 'reason': 'measured_dsp_interval', 'quiet_stationarity': stationary}
+     with patch('surah_cutter.core.fast_executor.pause_geometry', return_value=geometry):
+         rows, trace = run(fake, [pause(1000), pause(6000)], policy=Policy(sparse_anchors=True))
+-    assert bool(rows[1][2]) is reliable
+-    assert rows[2][2] > 0  # The heard identity still enables the following ayah.
++    assert bool(trace["boundaries"][1]["confidence"]) is reliable
++    assert trace["boundaries"][2]["confidence"] > 0  # The heard identity still enables the following ayah.
+     if not reliable:
+         assert trace['boundaries'][1]['review_reason'] == 'weak_complete_sparse_prefix_unproved_time'
+         assert any(e['state'] == 'IDENTITY_ONLY' and e['ayah'] == 2 for e in trace['transitions'])
+@@ -176,5 +176,5 @@
+     fake.responder = respond
+     geometry = {'accepted': True, 'reason': 'measured_dsp_interval', 'quiet_stationarity': False}
+     with patch('surah_cutter.core.fast_executor.pause_geometry', return_value=geometry):
+-        rows, _ = run(fake, [pause(1000)], policy=Policy(sparse_anchors=True))
+-    assert rows[1][2] > 0
++        rows, trace = run(fake, [pause(1000)], policy=Policy(sparse_anchors=True))
++    assert trace["boundaries"][1]["confidence"] > 0

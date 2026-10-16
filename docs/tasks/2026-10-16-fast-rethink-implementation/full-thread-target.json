@@ -1,0 +1,9 @@
+{
+  "command": "rtk proxy .venv/bin/pytest -q 'tests/test_full_windows.py::test_strong_windows_support_six_workers_and_preserve_samples[6]'",
+  "exit_code": 1,
+  "seconds": 2.99,
+  "assertion": "assert model.session.maximum == workers",
+  "actual": 4,
+  "expected": 6,
+  "capture": "Structured transcription from exec tool output; full-suite stdout is full-tests-final2.log"
+}

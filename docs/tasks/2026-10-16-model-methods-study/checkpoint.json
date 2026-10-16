@@ -1,0 +1,24 @@
+{
+  "saved_at": 1792115970.2826471,
+  "processes": [],
+  "phase": "Complete",
+  "suspended_pid": null,
+  "suspension_release": "resume_process waits controller-controls8789/8791 and sends SIGCONT",
+  "queue": [
+    "main78810/78811 -> primary91200/91201 blank,fixed30,strong6,score",
+    "fp326055/6060 waits primary -> fp32 current12",
+    "controls8789/8791 waits fp32 -> negative controls,greedy offline",
+    "resume process releases Muaalem44626; retry controller6071/6072 finishes",
+    "secondary-final73107/73108 waits Muaalem -> nemo-forced,whisper-fast-methods,whisper-beam",
+    "normalization controller waits secondary-final -> qpc-localnorm current+phones12"
+  ],
+  "remaining": [],
+  "notes": [
+    "Production reference removal task completed incl GUI old probabilities/catalog benchmark stats/recheck fitted margin0.10; no userDB changes",
+    "Frozen prediction reference_prior returns{} and lag0; only canonical SQLite allowed. Full tiled computes common whole acoustic matrix then CTC tiles; all346 main S2 inputs same current/no_delimiter",
+    "Whisper wrapper num_return_sequences5 produced5 identical beam outputs; first dev result saved beam5_wrapper704.15s, interrupted wrong repetition. Corrected beam5 numreturn1. Token timestamps dict output handling fixed; initial harness errors archived",
+    "Tarteel checkpoint config use_cacheFalse but generation_config.use_cacheTrue; no evidence generation cache disabled. Added greedy_sdpa optional",
+    "Research normalization call vsrecord scheduled basedcode mismatch, no observed result yet. User explicit scope different model usage beyondFAST.",
+    "No subagents allowed/requested. Do not stop after just removal; complete study."
+  ]
+}

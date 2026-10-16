@@ -174,7 +174,7 @@ def test_status_retains_counters_and_job_start_time_for_resume(tmp_path, monkeyp
     monkeypatch.setattr(server._GenJob, "_run", lambda *_args: None)
     monkeypatch.setattr(server.time, "time", lambda: 123456.789)
     monkeypatch.setattr(server.STATE, "db_path", job.db_path)
-    job.start([113, 114], "fast", None)
+    job.start([113, 114], "fast")
     job.thread.join(timeout=1)
     job._emit({"type": "start", "total": 2, "total_ayahs": 11})
     job._emit({"type": "ayah_progress", "ayahs_done": 5, "total_ayahs": 11})

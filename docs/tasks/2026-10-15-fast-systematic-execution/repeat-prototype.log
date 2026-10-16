@@ -1,0 +1,54 @@
+quran-phonetics 112 0.88 review 3 coverage 0.482 calls 9
+quran-phonetics 112 0.75 review 3 coverage 0.482 calls 9
+quran-phonetics 112 0.74 review 3 coverage 0.482 calls 9
+quran-phonetics 114 0.99 review 4 coverage 0.492 calls 12
+quran-phonetics 114 0.99 review 4 coverage 0.492 calls 12
+quran-phonetics 114 1.0 review 4 coverage 0.492 calls 12
+quran-phonetics-fp32 112 1.01 review 3 coverage 0.482 calls 9
+quran-phonetics-fp32 112 1.01 review 3 coverage 0.482 calls 9
+quran-phonetics-fp32 112 1.01 review 3 coverage 0.482 calls 9
+quran-phonetics-fp32 114 1.35 review 4 coverage 0.492 calls 12
+quran-phonetics-fp32 114 1.36 review 4 coverage 0.492 calls 12
+quran-phonetics-fp32 114 1.35 review 4 coverage 0.492 calls 12
+{
+  "quran-phonetics": {
+    "surahs": 6,
+    "ayahs": 30,
+    "median_ms": 1120.5,
+    "p95_ms": 3750.0,
+    "max_ms": 3750,
+    "over500": 18,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 21,
+    "load_probe_seconds": 0.2249288340099156,
+    "decode_seconds": 0.23481837403960526,
+    "dsp_seconds": 0.30865512625314295,
+    "inference_match_seconds": 5.33715383335948,
+    "search_seconds": 5.645808959612623,
+    "audio_ms": 135000.0,
+    "covered_audio_ms": 85003.6875,
+    "total_ms": 174132.1875,
+    "model_reads": 63
+  },
+  "quran-phonetics-fp32": {
+    "surahs": 6,
+    "ayahs": 30,
+    "median_ms": 1120.5,
+    "p95_ms": 3750.0,
+    "max_ms": 3750,
+    "over500": 18,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 21,
+    "load_probe_seconds": 0.5133862919174135,
+    "decode_seconds": 0.23481837403960526,
+    "dsp_seconds": 0.30865512625314295,
+    "inference_match_seconds": 7.0938114589080215,
+    "search_seconds": 7.402466585161164,
+    "audio_ms": 135000.0,
+    "covered_audio_ms": 85003.6875,
+    "total_ms": 174132.1875,
+    "model_reads": 63
+  }
+}

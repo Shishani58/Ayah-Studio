@@ -75,7 +75,7 @@ def test_preview_matches_resume_scope_and_counts_stale_words(project):
     with ProjectDB.open(str(project), DB_CODE, DB_VERSION) as db:
         db.set_time(114, 1, 3800)  # Word snapshot is now stale but still protected.
     assert preview({"suras": [114], "mode": "words"})["manual_words"] == 1
-    with pytest.raises(HTTPException, match="all done"):
+    with pytest.raises(HTTPException, match="unknown mode"):
         preview({"suras": [114], "mode": "auto", "only_missing": True})
 
 

@@ -40,7 +40,8 @@ def worker_class(monkeypatch):
 
 
 @pytest.mark.parametrize("mode,protected,expected_calls", [
-    ("fast", False, [114]), ("fast", True, []), ("auto", False, []),
+    ("fast", False, [114]), ("fast", True, []),
+    ("full", False, [114]), ("full", True, []),
 ])
 def test_qt_explicit_fast_does_not_skip_unknown_auto_identity(
     worker_class, tmp_path, monkeypatch, mode, protected, expected_calls,

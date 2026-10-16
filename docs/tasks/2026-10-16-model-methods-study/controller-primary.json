@@ -1,0 +1,81 @@
+[
+  {
+    "name": "qpc-blank",
+    "command": [
+      "/Users/ayub/Developer/surah-cutter/.venv/bin/python",
+      "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/predict_qpc.py",
+      "--variants",
+      "blank_minus1"
+    ],
+    "started": 1792116072.140167,
+    "state": "complete",
+    "exit_code": 0,
+    "finished": 1792116229.575727
+  },
+  {
+    "name": "qpc-fixed30",
+    "command": [
+      "/Users/ayub/Developer/surah-cutter/.venv/bin/python",
+      "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/predict_qpc.py",
+      "--context",
+      "fixed30",
+      "--ids",
+      "shatri-001",
+      "shatri-080",
+      "shatri-098",
+      "shatri-112",
+      "saad_al_ghamidi-080",
+      "saad_al_ghamidi-112",
+      "mahmoud_khalil_al_hussary-080",
+      "mahmoud_khalil_al_hussary-112",
+      "mohammed_siddiq_al_minshawi-080",
+      "mohammed_siddiq_al_minshawi-112",
+      "abdul_basit_mujawwad-080",
+      "abdul_basit_mujawwad-112"
+    ],
+    "started": 1792116229.577446,
+    "state": "complete",
+    "exit_code": 0,
+    "finished": 1792116537.185148
+  },
+  {
+    "name": "qpc-strong6",
+    "command": [
+      "/Users/ayub/Developer/surah-cutter/.venv/bin/python",
+      "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/predict_qpc.py",
+      "--context",
+      "strong6",
+      "--ids",
+      "shatri-001",
+      "shatri-080",
+      "shatri-098",
+      "shatri-112",
+      "saad_al_ghamidi-080",
+      "saad_al_ghamidi-112",
+      "mahmoud_khalil_al_hussary-080",
+      "mahmoud_khalil_al_hussary-112",
+      "mohammed_siddiq_al_minshawi-080",
+      "mohammed_siddiq_al_minshawi-112",
+      "abdul_basit_mujawwad-080",
+      "abdul_basit_mujawwad-112"
+    ],
+    "started": 1792116537.18659,
+    "state": "complete",
+    "exit_code": 0,
+    "finished": 1792116666.119661
+  },
+  {
+    "name": "score-qpc",
+    "command": [
+      "/Users/ayub/Developer/surah-cutter/.venv/bin/python",
+      "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/score_qpc.py",
+      "strong20",
+      "fixed30",
+      "strong6"
+    ],
+    "started": 1792116666.120846,
+    "state": "complete",
+    "exit_code": 0,
+    "finished": 1792116668.101568
+  }
+]

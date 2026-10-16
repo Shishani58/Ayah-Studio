@@ -1,0 +1,582 @@
+{
+  "_id": "6a816130bbcf28bfb7abf677",
+  "id": "Quran-Lab/zipformer_p-arabic-v3",
+  "private": false,
+  "pipeline_tag": "automatic-speech-recognition",
+  "tags": [
+    "coreml",
+    "onnx",
+    "zipformer_ctc",
+    "quran",
+    "tajweed",
+    "phoneme-recognition",
+    "streaming",
+    "ctc",
+    "zipformer",
+    "automatic-speech-recognition",
+    "ar",
+    "license:other",
+    "model-index",
+    "region:us"
+  ],
+  "downloads": 443,
+  "likes": 74,
+  "modelId": "Quran-Lab/zipformer_p-arabic-v3",
+  "author": "Quran-Lab",
+  "sha": "3da514fc833b22c902ee466a7710cf399896f2f0",
+  "lastModified": "2026-09-29T22:02:20.000Z",
+  "gated": "manual",
+  "disabled": false,
+  "model-index": [
+    {
+      "name": "zipformer_p-arabic-v3",
+      "results": [
+        {
+          "task": {
+            "type": "automatic-speech-recognition"
+          },
+          "dataset": {
+            "name": "Quran-Lab/quranic-asr-benchmark (v1.1)",
+            "type": "Quran-Lab/quranic-asr-benchmark"
+          },
+          "metrics": [
+            {
+              "type": "per",
+              "value": 1.43,
+              "name": "Phoneme Error Rate, held-out studio reciters",
+              "verified": false
+            },
+            {
+              "type": "per",
+              "value": 3.65,
+              "name": "Phoneme Error Rate, real phone audio",
+              "verified": false
+            },
+            {
+              "type": "per",
+              "value": 9.1,
+              "name": "Phoneme Error Rate, unseen reciter",
+              "verified": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "config": {
+    "model_type": "zipformer_ctc"
+  },
+  "cardData": {
+    "license": "other",
+    "license_name": "quran-lab-npl-1.2",
+    "license_link": "LICENSE",
+    "language": [
+      "ar"
+    ],
+    "pipeline_tag": "automatic-speech-recognition",
+    "extra_gated_prompt": "This model is released under the Quran-Lab No-Profit License 1.2 (NPL-1.2). By requesting access you agree: (1) never to charge for the model, for access to it, or for any feature it powers, as defined in the LICENSE, noting that what you earn from your own teaching, services or labour is your own, (2) not to present its output as an authoritative religious ruling on anyone's recitation, and (3) to state clearly, in any application built on it, that automatic tajweed feedback can be wrong and does not replace a qualified teacher.",
+    "extra_gated_fields": {
+      "Name": "text",
+      "Affiliation / project": "text",
+      "Intended use": "text",
+      "I agree to the no-profit license terms (NPL) and the conditions above": "checkbox"
+    },
+    "extra_gated_button_content": "Request access",
+    "tags": [
+      "quran",
+      "tajweed",
+      "phoneme-recognition",
+      "streaming",
+      "ctc",
+      "zipformer"
+    ],
+    "model-index": [
+      {
+        "name": "zipformer_p-arabic-v3",
+        "results": [
+          {
+            "task": {
+              "type": "automatic-speech-recognition"
+            },
+            "dataset": {
+              "name": "Quran-Lab/quranic-asr-benchmark (v1.1)",
+              "type": "Quran-Lab/quranic-asr-benchmark"
+            },
+            "metrics": [
+              {
+                "type": "per",
+                "value": 1.43,
+                "name": "Phoneme Error Rate, held-out studio reciters",
+                "verified": false
+              },
+              {
+                "type": "per",
+                "value": 3.65,
+                "name": "Phoneme Error Rate, real phone audio",
+                "verified": false
+              },
+              {
+                "type": "per",
+                "value": 9.1,
+                "name": "Phoneme Error Rate, unseen reciter",
+                "verified": false
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "siblings": [
+    {
+      "rfilename": ".gitattributes",
+      "blobId": "eff9d70a9b4a5b44d92005e51aa223caca95914c",
+      "size": 1575
+    },
+    {
+      "rfilename": "LICENSE",
+      "blobId": "defd34f9748fac0ea9573cc8cec26c5534f8dabf",
+      "size": 7041
+    },
+    {
+      "rfilename": "README.md",
+      "blobId": "663a266a2796cec889c222f179ecf703dc9ad9ef",
+      "size": 14085
+    },
+    {
+      "rfilename": "config.json",
+      "blobId": "f1cd55ee575f5173ff5cbf684b5d4a5997b33a6d",
+      "size": 177
+    },
+    {
+      "rfilename": "decode_with_confidence.py",
+      "blobId": "3b8ea5f037d81beff1a3d8d7ce1dfb95c0fd69d4",
+      "size": 6313
+    },
+    {
+      "rfilename": "export_quran_streaming_onnx.py",
+      "blobId": "b905ac3ce60b452c9069f201809c098f0c3c7f47",
+      "size": 4376
+    },
+    {
+      "rfilename": "left_context_probe/README_probe.md",
+      "blobId": "9117fb9e4915f7eb99f911e4d6b758873c960fc8",
+      "size": 2201
+    },
+    {
+      "rfilename": "left_context_probe/packing_back_left64.json",
+      "blobId": "fd443bc7d9c76e54a738584c7c8cc842d490abeb",
+      "size": 2883
+    },
+    {
+      "rfilename": "left_context_probe/packing_front_left64.json",
+      "blobId": "b7b2c129495b0b00ae69e44d1928bd36142ffc9e",
+      "size": 2770
+    },
+    {
+      "rfilename": "left_context_probe/zipformer_p_arabic_v3.1_left128.int8.onnx",
+      "blobId": "f68648a9a35148794916efa45b6b4e294371f8f1",
+      "size": 72704353,
+      "lfs": {
+        "sha256": "9a27380054e814931216c2380d31b69a4ca6ea363e3ad65398dac3464f7111d4",
+        "size": 72704353,
+        "pointerSize": 133
+      }
+    },
+    {
+      "rfilename": "left_context_probe/zipformer_p_arabic_v3.1_left256.float16.mlpackage/Data/com.apple.CoreML/model.mlmodel",
+      "blobId": "fbe5815f2b4149a4dfc9a75478c0e8eb0906e893",
+      "size": 1120749,
+      "lfs": {
+        "sha256": "e8d0940f4bdecc6b3e4a31b5cb9d39eb92f5e716a0239683450e5f445f4133d3",
+        "size": 1120749,
+        "pointerSize": 132
+      }
+    },
+    {
+      "rfilename": "left_context_probe/zipformer_p_arabic_v3.1_left256.float16.mlpackage/Data/com.apple.CoreML/weights/weight.bin",
+      "blobId": "faab3484e12335990340adffa118a171df7405fb",
+      "size": 128971062,
+      "lfs": {
+        "sha256": "b04d67c72ab77f8612015e9445510f8e29f31ffe1eba331ed0710e2343183d25",
+        "size": 128971062,
+        "pointerSize": 134
+      }
+    },
+    {
+      "rfilename": "left_context_probe/zipformer_p_arabic_v3.1_left256.float16.mlpackage/Manifest.json",
+      "blobId": "61bcdcfad4bb090d810461872c4240f4f89c8ad3",
+      "size": 617
+    },
+    {
+      "rfilename": "left_context_probe/zipformer_p_arabic_v3.1_left256.float8.mlpackage/Data/com.apple.CoreML/model.mlmodel",
+      "blobId": "967bdf2aa7bd8dda4b09502ced587e8892d96871",
+      "size": 1206380,
+      "lfs": {
+        "sha256": "5f9d080839d66d1eb8eb6db203cc372572c0e48cc634eec817c9c7ffbc1e26c6",
+        "size": 1206380,
+        "pointerSize": 132
+      }
+    },
+    {
+      "rfilename": "left_context_probe/zipformer_p_arabic_v3.1_left256.float8.mlpackage/Data/com.apple.CoreML/weights/weight.bin",
+      "blobId": "162a0bc2d16bdd5f0dec169808e0fc033f6b51ec",
+      "size": 65145846,
+      "lfs": {
+        "sha256": "023438989798d272f4d6faf0e8f0e6905977d4dbc60cea833f0948ea10df115f",
+        "size": 65145846,
+        "pointerSize": 133
+      }
+    },
+    {
+      "rfilename": "left_context_probe/zipformer_p_arabic_v3.1_left256.float8.mlpackage/Manifest.json",
+      "blobId": "a99c58260eb14f4f0410cc196d0a585c9badb297",
+      "size": 617
+    },
+    {
+      "rfilename": "left_context_probe/zipformer_p_arabic_v3.1_left64.float16.mlpackage/Data/com.apple.CoreML/model.mlmodel",
+      "blobId": "19ef42fbccb621cd48eb2a67b8ddad144da8efd0",
+      "size": 1120703,
+      "lfs": {
+        "sha256": "8cb988d6427dff20b01567cf77ffdd38021f4717e65abd6cbf78ff829d0314e5",
+        "size": 1120703,
+        "pointerSize": 132
+      }
+    },
+    {
+      "rfilename": "left_context_probe/zipformer_p_arabic_v3.1_left64.float16.mlpackage/Data/com.apple.CoreML/weights/weight.bin",
+      "blobId": "f85865254a747637edae8e260ab90b965126c02e",
+      "size": 128831286,
+      "lfs": {
+        "sha256": "c00eecda8705d0c312c8b5ca68be21712606ab17748fd27fb7e71f4b0831ba82",
+        "size": 128831286,
+        "pointerSize": 134
+      }
+    },
+    {
+      "rfilename": "left_context_probe/zipformer_p_arabic_v3.1_left64.float16.mlpackage/Manifest.json",
+      "blobId": "7ec31c390d6fcb17029b426e5f2ba8db8803cf80",
+      "size": 617
+    },
+    {
+      "rfilename": "left_context_probe/zipformer_p_arabic_v3.1_left64.float8.mlpackage/Data/com.apple.CoreML/model.mlmodel",
+      "blobId": "97644545c02a43f41fa711066c15d5051dfa5830",
+      "size": 1204998,
+      "lfs": {
+        "sha256": "0e911fe0f82ea130e2f81afbd9d602480fbbbf01b07496609a7f7bf59dfcd18b",
+        "size": 1204998,
+        "pointerSize": 132
+      }
+    },
+    {
+      "rfilename": "left_context_probe/zipformer_p_arabic_v3.1_left64.float8.mlpackage/Data/com.apple.CoreML/weights/weight.bin",
+      "blobId": "31c1afa5767998e5ebdb0d7bcee85344bdbc14ca",
+      "size": 65044982,
+      "lfs": {
+        "sha256": "817f5ebc46cd32c99b19dcdbe803298e0b45b8be7bf5a8ebe9f7344cebcf329b",
+        "size": 65044982,
+        "pointerSize": 133
+      }
+    },
+    {
+      "rfilename": "left_context_probe/zipformer_p_arabic_v3.1_left64.float8.mlpackage/Manifest.json",
+      "blobId": "0ec65250c46ef0aa2f47a6c1bc3d64acf89d7441",
+      "size": 617
+    },
+    {
+      "rfilename": "left_context_probe/zipformer_p_arabic_v3.1_left64.int8.onnx",
+      "blobId": "7e48864bd2bd8bf1af868f3728b90ce18c9247e7",
+      "size": 72703825,
+      "lfs": {
+        "sha256": "d9422b243050bfce3ccb56f603e925be6926e66376aecdf4273ea3e1ce6788e7",
+        "size": 72703825,
+        "pointerSize": 133
+      }
+    },
+    {
+      "rfilename": "left_context_probe/zipformer_p_arabic_v3.1_left64.onnx",
+      "blobId": "aee6b1c3bfe33bf3ffd2297b0ce5de1be0991fff",
+      "size": 262976043,
+      "lfs": {
+        "sha256": "5ad6425dfa90c854c216ac1d809d16ecdf72bd7ba81862cbf62f57d1a27db5d9",
+        "size": 262976043,
+        "pointerSize": 134
+      }
+    },
+    {
+      "rfilename": "ordered_quran_phonemes.json",
+      "blobId": "8dc0fab9f128cde16ccc2cb32de5eee42e3ce850",
+      "size": 5106711
+    },
+    {
+      "rfilename": "packing_back.json",
+      "blobId": "f558cdf439b4fd956e5b49a4b2541ecec0b00845",
+      "size": 2896
+    },
+    {
+      "rfilename": "packing_front.json",
+      "blobId": "ed3f09eda71767a08657054e866ec7328ac4f3fd",
+      "size": 2782
+    },
+    {
+      "rfilename": "phoneme_units.json",
+      "blobId": "9ea207e78a5fbce8dbefe23602697c65440ad7b8",
+      "size": 3350
+    },
+    {
+      "rfilename": "quran_per_eval.py",
+      "blobId": "5b587f1592b8048fde94fa68c3ba687e9234f930",
+      "size": 6668
+    },
+    {
+      "rfilename": "quran_text2phoneme.json",
+      "blobId": "eed2fa2a86c23e269f9e7f8c4db58c5b7302a5a0",
+      "size": 3881782
+    },
+    {
+      "rfilename": "quran_wer_retrieval.py",
+      "blobId": "657fbb16478a0f224396d31d15a6a9b10f5cbae3",
+      "size": 4758
+    },
+    {
+      "rfilename": "sdk/v3.1/engine.zfs",
+      "blobId": "aa00adf0fbb9d19c16da2d382b395fe34dbbb310",
+      "size": 4117544,
+      "lfs": {
+        "sha256": "0a6471e4efaa3de4bc46d7c50d4b719f15711d1b4a501347d10c94e86ec11d6a",
+        "size": 4117544,
+        "pointerSize": 132
+      }
+    },
+    {
+      "rfilename": "sdk/v3.1/keeps_packed.bin",
+      "blobId": "5c1bb826fd48459cf5ae3e130811f0688452a5e8",
+      "size": 860200,
+      "lfs": {
+        "sha256": "6342eeb4c449ab11edf5b735cb4f7b438684d26b83104cc8078dbc8be21a0a3a",
+        "size": 860200,
+        "pointerSize": 131
+      }
+    },
+    {
+      "rfilename": "sdk/v3.1/manifest.json",
+      "blobId": "79643892a28ae92a5920a7126fffed180fefe06f",
+      "size": 1905
+    },
+    {
+      "rfilename": "sdk/v3.1/tokens.txt",
+      "blobId": "5b0ed53f48819bac097568c596c668aa14d21f50",
+      "size": 2346
+    },
+    {
+      "rfilename": "sdk/v3.1/zipformer_v31_ane.float16.mlmodelc/analytics/coremldata.bin",
+      "blobId": "fce7e9b6488445b63ed8edc74655a5e98c462ded",
+      "size": 243,
+      "lfs": {
+        "sha256": "17ae119bd1e00d98eb9b9158d1217dfa41e5d019ce206be6ae354343ccfbb09b",
+        "size": 243,
+        "pointerSize": 128
+      }
+    },
+    {
+      "rfilename": "sdk/v3.1/zipformer_v31_ane.float16.mlmodelc/coremldata.bin",
+      "blobId": "040f9eaf0618235e15fcd98191cc0c35816dd13c",
+      "size": 772,
+      "lfs": {
+        "sha256": "18d19b05d9657b2aa3fbede69c919b11a0f200a5280f6d997e933be753ccac0b",
+        "size": 772,
+        "pointerSize": 128
+      }
+    },
+    {
+      "rfilename": "sdk/v3.1/zipformer_v31_ane.float16.mlmodelc/metadata.json",
+      "blobId": "b80c5e236b0d1645d293fe697a686f86b5b097ec",
+      "size": 14139
+    },
+    {
+      "rfilename": "sdk/v3.1/zipformer_v31_ane.float16.mlmodelc/model.mil",
+      "blobId": "6a787ddf16f51660f184d8b78f2e3234beb7cf63",
+      "size": 3054885
+    },
+    {
+      "rfilename": "sdk/v3.1/zipformer_v31_ane.float16.mlmodelc/weights/weight.bin",
+      "blobId": "a9cd8437bfffba4995d2f91409525dddfa68f24b",
+      "size": 128932992,
+      "lfs": {
+        "sha256": "def00b422ddbb4aedf2509ec36fc3499aabba72f117a5b40bc61c8899061bc07",
+        "size": 128932992,
+        "pointerSize": 134
+      }
+    },
+    {
+      "rfilename": "tokens.txt",
+      "blobId": "5b0ed53f48819bac097568c596c668aa14d21f50",
+      "size": 2346
+    },
+    {
+      "rfilename": "zipformer_p_arabic_v3.1.float16.mlpackage/Data/com.apple.CoreML/model.mlmodel",
+      "blobId": "fbe5815f2b4149a4dfc9a75478c0e8eb0906e893",
+      "size": 1120749,
+      "lfs": {
+        "sha256": "e8d0940f4bdecc6b3e4a31b5cb9d39eb92f5e716a0239683450e5f445f4133d3",
+        "size": 1120749,
+        "pointerSize": 132
+      }
+    },
+    {
+      "rfilename": "zipformer_p_arabic_v3.1.float16.mlpackage/Data/com.apple.CoreML/weights/weight.bin",
+      "blobId": "faab3484e12335990340adffa118a171df7405fb",
+      "size": 128971062,
+      "lfs": {
+        "sha256": "b04d67c72ab77f8612015e9445510f8e29f31ffe1eba331ed0710e2343183d25",
+        "size": 128971062,
+        "pointerSize": 134
+      }
+    },
+    {
+      "rfilename": "zipformer_p_arabic_v3.1.float16.mlpackage/Manifest.json",
+      "blobId": "61bcdcfad4bb090d810461872c4240f4f89c8ad3",
+      "size": 617
+    },
+    {
+      "rfilename": "zipformer_p_arabic_v3.1.float8.mlpackage/Data/com.apple.CoreML/model.mlmodel",
+      "blobId": "967bdf2aa7bd8dda4b09502ced587e8892d96871",
+      "size": 1206380,
+      "lfs": {
+        "sha256": "5f9d080839d66d1eb8eb6db203cc372572c0e48cc634eec817c9c7ffbc1e26c6",
+        "size": 1206380,
+        "pointerSize": 132
+      }
+    },
+    {
+      "rfilename": "zipformer_p_arabic_v3.1.float8.mlpackage/Data/com.apple.CoreML/weights/weight.bin",
+      "blobId": "162a0bc2d16bdd5f0dec169808e0fc033f6b51ec",
+      "size": 65145846,
+      "lfs": {
+        "sha256": "023438989798d272f4d6faf0e8f0e6905977d4dbc60cea833f0948ea10df115f",
+        "size": 65145846,
+        "pointerSize": 133
+      }
+    },
+    {
+      "rfilename": "zipformer_p_arabic_v3.1.float8.mlpackage/Manifest.json",
+      "blobId": "a99c58260eb14f4f0410cc196d0a585c9badb297",
+      "size": 617
+    },
+    {
+      "rfilename": "zipformer_p_arabic_v3.1.int8.onnx",
+      "blobId": "12ee7351758192a6a4082def2f7071d2ea7fab8b",
+      "size": 72705392,
+      "lfs": {
+        "sha256": "31755836528da336a6192121cd7bc82cb41752dddb65566fd000b89c8686da6b",
+        "size": 72705392,
+        "pointerSize": 133
+      }
+    },
+    {
+      "rfilename": "zipformer_p_arabic_v3.1.onnx",
+      "blobId": "2ee39273e5033e9aebb040c442163cc768926a3d",
+      "size": 262977606,
+      "lfs": {
+        "sha256": "6e13abc046e6c27ee805da102c0bf2df4a248dc7bd50375223ef963b291eb8c7",
+        "size": 262977606,
+        "pointerSize": 134
+      }
+    },
+    {
+      "rfilename": "zipformer_p_arabic_v3.1.pt",
+      "blobId": "24ead65c357476d8693462a7a881b609066cf784",
+      "size": 263577418,
+      "lfs": {
+        "sha256": "ae26519dfe484842943d8ec1a5771e1ac055da12b0f674ff6ebaa0fb61c138ea",
+        "size": 263577418,
+        "pointerSize": 134
+      }
+    },
+    {
+      "rfilename": "zipformer_p_arabic_v3.float16.mlpackage/Data/com.apple.CoreML/model.mlmodel",
+      "blobId": "14f223807e31530d7b5bc3a462f739b644a384a0",
+      "size": 1120311,
+      "lfs": {
+        "sha256": "32a2d4ccd742bd4b79a18922777eb7601904552efe5861ccc13ed9640d435285",
+        "size": 1120311,
+        "pointerSize": 132
+      }
+    },
+    {
+      "rfilename": "zipformer_p_arabic_v3.float16.mlpackage/Data/com.apple.CoreML/weights/weight.bin",
+      "blobId": "c9e4128c9b7d35f3b12e8421614983bb457cec3f",
+      "size": 128971062,
+      "lfs": {
+        "sha256": "9e8d7c03a3b96c484d97af2875e9e45daad1a61e919ccfa08ccd00b8af558d30",
+        "size": 128971062,
+        "pointerSize": 134
+      }
+    },
+    {
+      "rfilename": "zipformer_p_arabic_v3.float16.mlpackage/Manifest.json",
+      "blobId": "1dfc107acbb34b18b2ea83842cf0b8812b9e1910",
+      "size": 617
+    },
+    {
+      "rfilename": "zipformer_p_arabic_v3.float8.mlpackage/Data/com.apple.CoreML/model.mlmodel",
+      "blobId": "4f85d700488788949a0f5fedcaa5bae4cbc96588",
+      "size": 1205942,
+      "lfs": {
+        "sha256": "6694abd14e770db7eb4cb7568158ea09c28f16d7d974a82ee48261a410361b71",
+        "size": 1205942,
+        "pointerSize": 132
+      }
+    },
+    {
+      "rfilename": "zipformer_p_arabic_v3.float8.mlpackage/Data/com.apple.CoreML/weights/weight.bin",
+      "blobId": "620cd8ff845df3939a1e7ef8891e962f7e221830",
+      "size": 65145846,
+      "lfs": {
+        "sha256": "192e83e9ffff61a2d87d98f7bc90a77e8b6f0665dc99b9bffa43c3374bf069de",
+        "size": 65145846,
+        "pointerSize": 133
+      }
+    },
+    {
+      "rfilename": "zipformer_p_arabic_v3.float8.mlpackage/Manifest.json",
+      "blobId": "beaf2165701a478e3988b0155364533f50c792a7",
+      "size": 617
+    },
+    {
+      "rfilename": "zipformer_p_arabic_v3.int8.onnx",
+      "blobId": "0905b9d8c5bd5d0984435ad2ab49270b4bb75dd8",
+      "size": 72705392,
+      "lfs": {
+        "sha256": "6a5ddafa9c5e5c01260d30264031b341785bdc152e9ef1d569b41c8c278508eb",
+        "size": 72705392,
+        "pointerSize": 133
+      }
+    },
+    {
+      "rfilename": "zipformer_p_arabic_v3.onnx",
+      "blobId": "5df863206d8a6c8e96a9679d7f973209ab31ab24",
+      "size": 262977606,
+      "lfs": {
+        "sha256": "65e5077932160ba9b5e4f418cf315d31dddf42210db4fea3113bf64359462cf2",
+        "size": 262977606,
+        "pointerSize": 134
+      }
+    },
+    {
+      "rfilename": "zipformer_p_arabic_v3.pt",
+      "blobId": "9ab31c9d403d23e01df251d0415a4763853eb151",
+      "size": 263399792,
+      "lfs": {
+        "sha256": "f3cc9200f67f852be9aef139387b16d8a7bc2d9a779d78621e12174a143378be",
+        "size": 263399792,
+        "pointerSize": 134
+      }
+    }
+  ],
+  "spaces": [
+    "Quran-Lab/quranic-asr-leaderboard"
+  ],
+  "createdAt": "2026-08-16T07:05:20.000Z",
+  "usedStorage": 2854964231
+}

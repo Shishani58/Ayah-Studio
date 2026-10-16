@@ -1,0 +1,18 @@
+...F.....................                                                [100%]
+=================================== FAILURES ===================================
+___ test_recheck_does_not_suppress_a_better_match_with_a_label_fitted_margin ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10bc13710>
+
+    def test_recheck_does_not_suppress_a_better_match_with_a_label_fitted_margin(monkeypatch):
+        words = [Word(1, 1, "first", 0), Word(1, 2, "second", 1)]
+        bundle = SimpleNamespace(text_kind="phonetic", blank_id=0, vocab={"[PAD]": 0, "a": 1})
+        monkeypatch.setattr(align, "_emissions", lambda *args: np.tile([-99., 0.], (500, 1)))
+        monkeypatch.setattr(transliteration, "surah_word_tr", lambda _: ["a", "b"])
+>       monkeypatch.setattr(recheck, "_sim", lambda decoded, expected: .50 if expected == "a" else .55)
+E       AttributeError: <module 'surah_cutter.core.recheck' from '/Users/ayub/Developer/surah-cutter/surah_cutter/core/recheck.py'> has no attribute '_sim'
+
+tests/test_reference_exclusion.py:62: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_reference_exclusion.py::test_recheck_does_not_suppress_a_better_match_with_a_label_fitted_margin
+1 failed, 24 passed in 3.30s

@@ -22,6 +22,7 @@ class AlignmentSaveResult:
     diagnostics_error: str | None = None
     persisted_rows: tuple[tuple[int, int, int], ...] = ()
     persisted_review: tuple[dict, ...] = ()
+    unresolved_ayahs: tuple[int, ...] = ()
 
     def __iter__(self):
         return iter((self.written, self.log_paths))
@@ -39,23 +40,24 @@ def result_source(trace: dict[str, Any], requested_mode: str) -> str:
     from surah_cutter.data.alignment_identity import trace_run_key
 
     model = str(trace.get("model_source") or model_store.source())
-    reference = model.startswith("reference:")
-    actual = ("reference" if reference else
-              str(trace.get("auto_mode") or trace.get("mode") or requested_mode))
+    actual = str(trace.get("auto_mode") or trace.get("mode") or requested_mode)
+    if trace.get("result_contract") == "partial-v1":
+        if trace.get("mode") not in (None, "fast"):
+            raise ValueError("Partial FAST contract disagrees with actual mode")
+        actual = "fast"
     backend = trace.get("backend")
     if backend is None:
         backend = next((part.partition("=")[2] for part in model.split(":")
                         if part.startswith("backend=")), None)
     if backend is None:
-        backend = ("reference" if reference else
-                   "onnx" if model.startswith("onnx-ctc:") else
+        backend = ("onnx" if model.startswith("onnx-ctc:") else
                    "runtime-worker" if model.startswith(("ctc:", "attention-dtw:")) else
                    requested_mode if requested_mode in ("fingerprint", "hybrid") else "unknown")
     align_lag = trace.get("align_lag_ms")
     if align_lag is None:
         align_lag = (trace.get("run_snapshot") or {}).get("lag_ms")
     if align_lag is None:
-        align_lag = 0 if reference else model_store.lag_ms()
+        align_lag = model_store.lag_ms()
     adjust = trace.get("lag_adjust_ms", 0)
     source = (f"{model}:backend={backend}:requested_mode={requested_mode}"
               f":actual_mode={actual}:align_lag_ms={align_lag}:lag_adjust_ms={adjust}")
@@ -71,6 +73,8 @@ def result_source(trace: dict[str, Any], requested_mode: str) -> str:
             source += f":full_onset_policy={full['onset_policy']}"
     if trace.get("full_boundary_verifier_source"):
         source += f":full_boundary_verifier={trace['full_boundary_verifier_source']}"
+    if trace.get("result_contract") == "partial-v1":
+        source += ":fast_result=partial-v1"
     key = trace_run_key(trace)
     return f"{source}:fast_run_key={key}" if key is not None else source
 
@@ -94,22 +98,44 @@ def write_alignment_result(
 
     check_cancelled()
     materialized = [tuple(row) for row in rows]
-    if not materialized:
+    partial_fast = trace.get("result_contract") == "partial-v1"
+    unresolved = tuple(trace.get("unresolved_ayahs", ())) if partial_fast else ()
+    if not materialized and not partial_fast:
         return AlignmentSaveResult(0, None)
     # Re-read manual statuses under the writer lock, using the original model
     # proposal rather than a potentially stale pipeline overlay.
     model_rows = [tuple(row) for row in trace.get("generated_rows", materialized)]
-    if {(r[0], r[1]) for r in model_rows} != {(r[0], r[1]) for r in materialized}:
+    model_keys = {(r[0], r[1]) for r in model_rows}
+    output_keys = {(r[0], r[1]) for r in materialized}
+    protected_keys = {(r[0], r[1]) for r in trace.get("protected_rows", ())} if partial_fast else set()
+    if model_keys | protected_keys != output_keys:
         raise ValueError("Model result and output ayah keys disagree")
     surahs = {row[0] for row in materialized}
-    if len(surahs) != 1:
+    if partial_fast:
+        surahs.add(trace.get("surah"))
+    if len(surahs) != 1 or None in surahs:
         raise ValueError("Alignment result must contain exactly one surah")
     surah = next(iter(surahs))
+    if partial_fast:
+        from surah_cutter.data import quran_text
+        expected = set(range(1, quran_text.ayah_count(surah) + 1))
+        predicted = {r[1] for r in model_rows}
+        if (predicted & set(unresolved) or predicted | set(unresolved) != expected
+                or len(unresolved) != len(set(unresolved))):
+            raise ValueError("Incomplete partial FAST result contract")
     confidences: dict[int, float | None] = {}
     for item in trace.get("ayahs", ()):
         if item.get("ayah") is not None:
             value = item.get("conf")
             confidences[int(item["ayah"])] = float(value) if value is not None else None
+    if partial_fast:
+        import math
+        checks = {c.get("ayah"): c for c in trace.get("ayahs", ())}
+        for _, ayah, ms in model_rows:
+            c = confidences.get(ayah)
+            if (type(c) not in (int, float) or not math.isfinite(c) or not 0 < c <= 1
+                    or checks[ayah].get("onset_ms") != ms or not checks[ayah].get("reliable")):
+                raise ValueError("Partial FAST row lacks a resolved boundary")
     source = result_source(trace, requested_mode)
     staged: list[tuple[Path, Path]] = []
     log_paths: dict[str, str] | None = None
@@ -141,11 +167,13 @@ def write_alignment_result(
         model_rows, source=source, confidences=confidences,
         overwrite_manual=overwrite_manual,
         duration_ms=trace.get("duration_ms", trace.get("total_ms")), persisted=persisted,
+        **({"replace_fast_sura": surah} if partial_fast else {}),
     )
     persisted_rows = tuple((r["sura"], r["ayah"], r["time"]) for r in persisted)
     if db_path is None:
         return AlignmentSaveResult(written, None, persisted_rows=persisted_rows,
-                                   persisted_review=tuple(persisted))
+                                   persisted_review=tuple(persisted),
+                                   unresolved_ayahs=unresolved)
     error = None
     try:
         payload = {
@@ -153,7 +181,7 @@ def write_alignment_result(
             "log": log_lines or [], "rows": persisted_rows, "trace": trace,
             "model_rows": model_rows, "persisted_review": persisted,
             "source": source,
-            "overwrite_manual": overwrite_manual,
+            "overwrite_manual": overwrite_manual, "unresolved_ayahs": unresolved,
         }
         staged.append((_stage_text(json_path, json.dumps(
             payload, ensure_ascii=False, indent=2, default=str,
@@ -199,7 +227,7 @@ def write_alignment_result(
                 error = error or f"{type(exc).__name__}: {exc}"
     return AlignmentSaveResult(
         written, log_paths, "saved_with_diagnostics_error" if error else "saved",
-        error, persisted_rows, tuple(persisted),
+        error, persisted_rows, tuple(persisted), unresolved,
     )
 
 

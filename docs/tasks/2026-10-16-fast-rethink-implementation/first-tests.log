@@ -1,0 +1,129 @@
+.F.....F..F..FF...F.F........F.F........................................ [ 69%]
+...............................                                          [100%]
+=================================== FAILURES ===================================
+___________ test_missing_current_never_confirms_future_or_reads_tail ___________
+
+    def test_missing_current_never_confirms_future_or_reads_tail():
+        fake = Fake(lambda f, start, duration: observation(f.phrase(2)))
+        rows, trace = run(fake, [pause(1000), pause(10000), pause(20000)])
+        assert all(conf == 0 for _, _, conf in rows)
+        assert not any(e["state"] == "ADVANCE" for e in trace["transitions"])
+>       assert trace["boundaries"][1]["review_reason"] == "blocked_by_unresolved_ayah"
+E       AssertionError: assert 'unresolved_adjacent_block' == 'blocked_by_unresolved_ayah'
+E         
+E         - blocked_by_unresolved_ayah
+E         + unresolved_adjacent_block
+
+tests/test_fast_executor.py:81: AssertionError
+__________________ test_no_timing_cannot_confirm_first_onset ___________________
+
+    def test_no_timing_cannot_confirm_first_onset():
+        fake = Fake(lambda f, start, duration: observation(f.phrase(1), positions=False))
+        fake.timing = False
+        rows, trace = run(fake)
+>       assert rows[0][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_executor.py:126: IndexError
+_____________ test_unit_quality_cannot_be_compensated_by_high_mean _____________
+
+    def test_unit_quality_cannot_be_compensated_by_high_mean():
+        def respond(f, start, duration):
+            units = f.phrase(1)
+            return Observation(units, (0., 100.), .99, unit_quality=(.01, .99))
+        rows, _ = run(Fake(respond), [pause(1000)])
+>       assert rows[0][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_executor.py:149: IndexError
+___________________ test_canonical_exceptions_no_rewrite[1] ____________________
+
+surah = 1
+
+    @pytest.mark.parametrize("surah", [1, 9])
+    def test_canonical_exceptions_no_rewrite(surah):
+        fake = Fake(lambda *args: observation(()), quran_text.surah_words(surah))
+        rows, _ = run(fake)
+>       assert [r[0] for r in rows] == list(range(1, quran_text.ayah_count(surah) + 1))
+E       assert [] == [1, 2, 3, 4, 5, 6, ...]
+E         
+E         Right contains 7 more items, first extra item: 1
+E         Use -v to get more diff
+
+tests/test_fast_executor.py:178: AssertionError
+___________________ test_canonical_exceptions_no_rewrite[9] ____________________
+
+surah = 9
+
+    @pytest.mark.parametrize("surah", [1, 9])
+    def test_canonical_exceptions_no_rewrite(surah):
+        fake = Fake(lambda *args: observation(()), quran_text.surah_words(surah))
+        rows, _ = run(fake)
+>       assert [r[0] for r in rows] == list(range(1, quran_text.ayah_count(surah) + 1))
+E       assert [] == [1, 2, 3, 4, 5, 6, ...]
+E         
+E         Right contains 129 more items, first extra item: 1
+E         Use -v to get more diff
+
+tests/test_fast_executor.py:178: AssertionError
+______ test_anchored_short_wasl_requires_previous_tail_and_real_position _______
+
+    def test_anchored_short_wasl_requires_previous_tail_and_real_position():
+        fake = Fake(lambda *args: observation(()))
+        groups = {a: tuple(u for w, us in zip(fake.words, fake.rendered) if w.ayah == a for u in us)
+                  for a in range(1, 5)}
+        def respond(f, start, duration):
+            if start == 1000:
+                return observation(f.phrase(1))
+            if duration > 5000:
+                return observation(groups[1][-2:] + f.phrase(2))
+            return observation(())
+        fake.responder = respond
+        rows, trace = run(fake, [pause(1000)])
+        assert rows[0][2] > 0 and rows[1][2] > 0
+        assert trace["boundaries"][1]["evidence_kind"] == "wasl"
+>       assert rows[2][2] == 0  # no advancing through the next unresolved ayah
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_executor.py:238: IndexError
+_______________ test_tempo_region_is_a_selection_hint_not_proof ________________
+
+    def test_tempo_region_is_a_selection_hint_not_proof():
+        def respond(f, start, duration):
+            return observation(f.phrase({1000: 1, 6000: 2}.get(start, 4)))
+        fake = Fake(respond)
+        rows, trace = run(fake, [pause(p) for p in (1000, 6000, 6050, 6100, 6200, 6250, 6300, 6400, 6450, 6500, 12000)])
+        assert any("forecast_ms" in e for e in trace["transitions"])
+>       assert rows[2][2] == 0
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_executor.py:264: IndexError
+________ test_validator_rejects_mismatched_rows_and_impossible_duration ________
+
+    def test_validator_rejects_mismatched_rows_and_impossible_duration():
+>       from surah_cutter.core.fast_executor import _finish_estimates
+E       ImportError: cannot import name '_finish_estimates' from 'surah_cutter.core.fast_executor' (/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_executor.py)
+
+tests/test_fast_executor.py:352: ImportError
+___________ test_estimates_reserve_duration_for_last_confirmed_ayah ____________
+
+    def test_estimates_reserve_duration_for_last_confirmed_ayah():
+>       from surah_cutter.core.fast_executor import _finish_estimates
+E       ImportError: cannot import name '_finish_estimates' from 'surah_cutter.core.fast_executor' (/Users/ayub/Developer/surah-cutter/surah_cutter/core/fast_executor.py)
+
+tests/test_fast_executor.py:373: ImportError
+=========================== short test summary info ============================
+FAILED tests/test_fast_executor.py::test_missing_current_never_confirms_future_or_reads_tail
+FAILED tests/test_fast_executor.py::test_no_timing_cannot_confirm_first_onset
+FAILED tests/test_fast_executor.py::test_unit_quality_cannot_be_compensated_by_high_mean
+FAILED tests/test_fast_executor.py::test_canonical_exceptions_no_rewrite[1]
+FAILED tests/test_fast_executor.py::test_canonical_exceptions_no_rewrite[9]
+FAILED tests/test_fast_executor.py::test_anchored_short_wasl_requires_previous_tail_and_real_position
+FAILED tests/test_fast_executor.py::test_tempo_region_is_a_selection_hint_not_proof
+FAILED tests/test_fast_executor.py::test_validator_rejects_mismatched_rows_and_impossible_duration
+FAILED tests/test_fast_executor.py::test_estimates_reserve_duration_for_last_confirmed_ayah
+9 failed, 94 passed in 44.78s

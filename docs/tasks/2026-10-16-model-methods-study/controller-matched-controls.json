@@ -1,0 +1,49 @@
+[
+  {
+    "name": "qpc-controls",
+    "command": [
+      "/Users/ayub/Developer/surah-cutter/.venv/bin/python",
+      "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/controls_qpc.py"
+    ],
+    "started": 1792118489.158391,
+    "state": "complete",
+    "exit_code": 0,
+    "finished": 1792118492.797587
+  },
+  {
+    "name": "negative-muaalem",
+    "command": [
+      "/Users/ayub/.surah-cutter/model-runtime/bin/python",
+      "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/negative_models.py",
+      "muaalem"
+    ],
+    "started": 1792118492.798082,
+    "state": "complete",
+    "exit_code": 0,
+    "finished": 1792118508.925471
+  },
+  {
+    "name": "nemo-negative",
+    "command": [
+      "/Users/ayub/.surah-cutter/nemo-runtime/bin/python",
+      "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/negative_models.py",
+      "fastconformer"
+    ],
+    "started": 1792118508.927283,
+    "state": "complete",
+    "exit_code": 0,
+    "finished": 1792118524.993674
+  },
+  {
+    "name": "negative-whisper",
+    "command": [
+      "/Users/ayub/.surah-cutter/model-runtime/bin/python",
+      "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/negative_models.py",
+      "whisper-tarteel-base"
+    ],
+    "started": 1792118524.994671,
+    "state": "complete",
+    "exit_code": 0,
+    "finished": 1792118532.0546129
+  }
+]

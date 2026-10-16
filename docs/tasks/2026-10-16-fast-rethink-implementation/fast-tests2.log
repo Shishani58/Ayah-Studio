@@ -1,0 +1,67 @@
+..............................F.....................................F... [ 35%]
+........................................................................ [ 70%]
+...................F.........................................            [100%]
+=================================== FAILURES ===================================
+__________ test_next_sparse_anchor_leaves_missing_current_for_review ___________
+
+    def test_next_sparse_anchor_leaves_missing_current_for_review():
+        fake = Fake(responder)
+        fake.timing = False
+        rows, trace = run(fake, [pause(1000), pause(6000), pause(15000)],
+                          policy=Policy(sparse_anchors=True))
+        assert trace["boundaries"][2]["confidence"] == 0 and 3 in trace["review_required_ayahs"]
+>       assert rows[3][1:] == (15100, .99)
+               ^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_fast_empty_region.py:22: IndexError
+_________ test_fast_pipeline_to_transaction_keeps_manual_and_identity __________
+
+tmp_path = PosixPath('/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/pytest-of-ayub/pytest-432/test_fast_pipeline_to_transact0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109172330>
+
+    def test_fast_pipeline_to_transaction_keeps_manual_and_identity(tmp_path, monkeypatch):
+        import json
+        from pathlib import Path
+        from surah_cutter.core import align, candidates, decode, fast_executor, model_store, pipeline
+        from surah_cutter.data.alignment_result import write_alignment_result
+        from surah_cutter.data.alignment_identity import fast_resume_suras
+        from surah_cutter.data.project_db import ProjectDB
+        fake = Fake(lambda f, start, duration: observation(f.phrase(
+            {1000: 1, 6000: 2, 12000: 3, 20000: 4}[start])) if start in (1000, 6000, 12000, 20000) else observation(()))
+        monkeypatch.setattr(model_store, "ACTIVE_ID", "quran-phonetics")
+        monkeypatch.setattr(align, "default_bundle", lambda: object())
+        monkeypatch.setattr(fast_executor, "make_adapter", lambda _: fake)
+        monkeypatch.setattr(decode, "decode", lambda _: np.repeat(np.arange(40000, dtype=np.float32), 16))
+        monkeypatch.setattr(candidates, "pause_pipeline_decisions", lambda *args, **kwargs: [pause(ms) for ms in (1000, 6000, 12000, 20000)])
+        path = tmp_path / "project.db"
+        with ProjectDB.open(str(path), "test", 1) as db:
+            db.write_timings([(112, 1, 1160)], "old", .4)
+            db.set_status(112, 1, "verified")
+            original_review = db.get_review(112, 1)
+            trace = {}
+            rows = pipeline.process_surah("fake.mp3", 112, mode="fast",
+                                          project_db=db, trace=trace)
+>           assert (trace["boundaries"][0]["ayah"], trace["boundaries"][0]["start_ms"], trace["boundaries"][0]["confidence"]) == (112, 1, 1160) and trace["generated_rows"][0] == (112, 1, 1100)
+E           assert ((1, 1100, 0.99) == (112, 1, 1160)
+E             
+E             At index 0 diff: 1 != 112
+E             Use -v to get more diff)
+
+tests/test_fast_executor.py:439: AssertionError
+______ test_far_unique_anchor_does_not_read_or_confirm_the_unresolved_gap ______
+
+    def test_far_unique_anchor_does_not_read_or_confirm_the_unresolved_gap():
+        from surah_cutter.core.fast_executor import Policy
+        fake=Fake(lambda f,start,duration: observation(f.phrase(4)))
+        rows,trace=run(fake,[pause(1000)],policy=Policy(sparse_anchors=True,max_unresolved_ayahs=None))
+>       assert all(r[2]==0 for r in rows[:3]) and trace["boundaries"][3]["confidence"]>0
+E       assert (False)
+E        +  where False = all(<generator object test_far_unique_anchor_does_not_read_or_confirm_the_unresolved_gap.<locals>.<genexpr> at 0x10c594040>)
+
+tests/test_fast_review_fixes.py:374: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_fast_empty_region.py::test_next_sparse_anchor_leaves_missing_current_for_review
+FAILED tests/test_fast_executor.py::test_fast_pipeline_to_transaction_keeps_manual_and_identity
+FAILED tests/test_fast_review_fixes.py::test_far_unique_anchor_does_not_read_or_confirm_the_unresolved_gap
+3 failed, 202 passed in 35.50s

@@ -12,8 +12,8 @@ rows = json.loads((TASK / "comparison.json").read_text())["comparison"][:10]
 pcm = decode.decode_range(str(Path.home() / "Desktop/Abu_Bakr_Ash-Shatri/002.mp3"),
                           start_ms=0, end_ms=145000)
 for start in (0, 5):
-    svg = ['<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="950" viewBox="0 0 1200 950">',
-           '<rect width="1200" height="950" fill="#fff"/>',
+    svg = ['<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">',
+           '<rect width="1200" height="1200" fill="#fff"/>',
            '<g font-family="Arial,sans-serif" fill="#18212b">',
            '<text x="40" y="36" font-size="24">Бахара — первые границы FULL</text>',
            '<text x="40" y="65" font-size="15">Серая волна: пиковая огибающая, 5 мс. Зелёный фон: выбранная тишина.</text>',
@@ -22,7 +22,7 @@ for start in (0, 5):
         old, new = row["old_ms"], row["new_ms"]
         left = min(old, new, row["pause_start_ms"] or new) - 400
         right = max(old, new, row["pause_end_ms"] or new) + 600
-        top = 120 + i * 163
+        top = 120 + i * 210
         center = top + 70
 
         def x(ms):

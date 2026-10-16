@@ -1,0 +1,220 @@
+ M docs/STATUS.md
+ M docs/project.md
+ M docs/tasks/2026-10-15-fast-systematic-execution/baseline-a2.json
+ M docs/tasks/2026-10-15-fast-systematic-execution/baseline-a2.log
+ M docs/tasks/2026-10-15-fast-systematic-execution/baseline-causes.json
+ M docs/tasks/2026-10-15-fast-systematic-execution/checkpoint.json
+ M docs/tasks/2026-10-15-fast-systematic-execution/hypotheses.csv
+ M docs/tasks/2026-10-15-fast-systematic-execution/measurement-contract.md
+ M docs/tasks/2026-10-15-fast-systematic-execution/run.py
+ M docs/tasks/2026-10-15-fast-systematic-execution/snapshot-paths.json
+ M docs/tasks/2026-10-15-fast-systematic-execution/task.md
+ M docs/tasks/2026-10-15-full-local-pause/run_baqara.py
+ M docs/tasks/2026-10-15-full-local-pause/task.md
+ M docs/tasks/2026-10-15-full-local-pause/waveforms.py
+ M surah_cutter/core/_ctc.py
+ M surah_cutter/core/align.py
+ M surah_cutter/core/align_tiled.py
+ M surah_cutter/core/emissions.py
+ M surah_cutter/core/fast_executor.py
+ M surah_cutter/core/full_windows.py
+ M surah_cutter/core/model_runtime.py
+ M surah_cutter/core/model_worker.py
+ M surah_cutter/core/pipeline.py
+ M surah_cutter/data/onset_evidence.py
+ M surah_cutter/webgui/generation.py
+ M surah_cutter/webgui/server.py
+ M surah_cutter/webgui/static/app.js
+ M surah_cutter/webgui/static/i18n.js
+ M surah_cutter/webgui/static/studio.css
+ M tests/test_full_pause_center.py
+ M tests/webgui_async.cjs
+?? docs/tasks/2026-10-15-confidence-evidence/
+?? docs/tasks/2026-10-15-fast-production-improvement/
+?? docs/tasks/2026-10-15-fast-systematic-execution/adapter-diagnosis.md
+?? docs/tasks/2026-10-15-fast-systematic-execution/after-a-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/after-a-imports.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/after-a-process.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/after-a.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/after-a.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/after-a.summary.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/after-e-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/after-e-imports.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/after-e-process.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/after-e.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/after-e.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/after-e.summary.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/agents-sync-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/agents-sync.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/analyze_pairs.py
+?? docs/tasks/2026-10-15-fast-systematic-execution/annotation-package/
+?? docs/tasks/2026-10-15-fast-systematic-execution/annotation-private-manifest.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/annotation-protocol.md
+?? docs/tasks/2026-10-15-fast-systematic-execution/annotations-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/annotations-initial-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/annotations-initial-error.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/annotations.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/artifact-manifest.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/attempts.md
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-a2-process.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-a2.summary.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-abdul_basit_mujawwad-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-abdul_basit_mujawwad-imports.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-abdul_basit_mujawwad-process.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-abdul_basit_mujawwad.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-abdul_basit_mujawwad.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-abdul_basit_mujawwad.summary.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-e-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-e-imports.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-e-process.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-e.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-e.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-e.summary.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-mahmoud_khalil_al_hussary-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-mahmoud_khalil_al_hussary-imports.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-mahmoud_khalil_al_hussary-process.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-mahmoud_khalil_al_hussary.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-mahmoud_khalil_al_hussary.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-mahmoud_khalil_al_hussary.summary.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-mohammed_siddiq_al_minshawi-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-mohammed_siddiq_al_minshawi-imports.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-mohammed_siddiq_al_minshawi-process.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-mohammed_siddiq_al_minshawi.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-mohammed_siddiq_al_minshawi.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-mohammed_siddiq_al_minshawi.summary.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-saad_al_ghamidi-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-saad_al_ghamidi-imports.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-saad_al_ghamidi-process.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-saad_al_ghamidi.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-saad_al_ghamidi.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline-saad_al_ghamidi.summary.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline.csv
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/baseline.md
+?? docs/tasks/2026-10-15-fast-systematic-execution/comparison.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/concurrent-_ctc.py.diff
+?? docs/tasks/2026-10-15-fast-systematic-execution/concurrent-align.py.diff
+?? docs/tasks/2026-10-15-fast-systematic-execution/concurrent-audit.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/concurrent-emissions.py.diff
+?? docs/tasks/2026-10-15-fast-systematic-execution/concurrent-fast_executor.py.diff
+?? docs/tasks/2026-10-15-fast-systematic-execution/concurrent-model_runtime.py.diff
+?? docs/tasks/2026-10-15-fast-systematic-execution/concurrent-model_worker.py.diff
+?? docs/tasks/2026-10-15-fast-systematic-execution/concurrent-pipeline.py.diff
+?? docs/tasks/2026-10-15-fast-systematic-execution/corpus-manifest.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/current-smoke-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/current-smoke-imports.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/current-smoke-process.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/current-smoke.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/current-smoke.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/current-smoke.summary.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/current-source-manifest.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/current-source.zip
+?? docs/tasks/2026-10-15-fast-systematic-execution/diff-check-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/diff-check.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/evidence-contract.md
+?? docs/tasks/2026-10-15-fast-systematic-execution/executed-scripts-prelint-sha.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/executed-scripts-prelint.zip
+?? docs/tasks/2026-10-15-fast-systematic-execution/final-audit.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/final-checks.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/final-status.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/final-task-scripts.zip
+?? docs/tasks/2026-10-15-fast-systematic-execution/final_checks.py
+?? docs/tasks/2026-10-15-fast-systematic-execution/historical-parity.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/local-ctc-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/local-ctc.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/local-diagnostics.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/local-ledger-quran-phonetics-1.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/local-ledger-quran-phonetics-112.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/local-ledger-quran-phonetics-80.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/local-ledger-quran-phonetics-98.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/local-ledger-quran-phonetics-fp32-1.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/local-ledger-quran-phonetics-fp32-112.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/local-ledger-quran-phonetics-fp32-80.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/local-ledger-quran-phonetics-fp32-98.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/local_diagnostics.py
+?? docs/tasks/2026-10-15-fast-systematic-execution/measured-short-prototype-manifest.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/measured-short-prototype-source.zip
+?? docs/tasks/2026-10-15-fast-systematic-execution/measurement-audit.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/measurement_audit.py
+?? docs/tasks/2026-10-15-fast-systematic-execution/memory-summary.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/negative-audio.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/negative-ctc-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/negative-ctc.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/negative_audio.py
+?? docs/tasks/2026-10-15-fast-systematic-execution/prepare_annotations.py
+?? docs/tasks/2026-10-15-fast-systematic-execution/prepare_short_prototype.py
+?? docs/tasks/2026-10-15-fast-systematic-execution/primary-source-manifest.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-abdul_basit_mujawwad-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-abdul_basit_mujawwad-imports.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-abdul_basit_mujawwad-process.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-abdul_basit_mujawwad.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-abdul_basit_mujawwad.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-abdul_basit_mujawwad.summary.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-contract-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-contract.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-mahmoud_khalil_al_hussary-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-mahmoud_khalil_al_hussary-imports.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-mahmoud_khalil_al_hussary-process.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-mahmoud_khalil_al_hussary.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-mahmoud_khalil_al_hussary.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-mahmoud_khalil_al_hussary.summary.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-mohammed_siddiq_al_minshawi-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-mohammed_siddiq_al_minshawi-imports.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-mohammed_siddiq_al_minshawi-process.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-mohammed_siddiq_al_minshawi.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-mohammed_siddiq_al_minshawi.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-mohammed_siddiq_al_minshawi.summary.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-saad_al_ghamidi-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-saad_al_ghamidi-imports.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-saad_al_ghamidi-process.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-saad_al_ghamidi.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-saad_al_ghamidi.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/prototype-saad_al_ghamidi.summary.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/pytest-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/pytest.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/regression_draft.py
+?? docs/tasks/2026-10-15-fast-systematic-execution/repeat-baseline-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/repeat-baseline-imports.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/repeat-baseline-process.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/repeat-baseline.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/repeat-baseline.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/repeat-baseline.summary.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/repeat-prototype-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/repeat-prototype-imports.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/repeat-prototype-process.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/repeat-prototype.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/repeat-prototype.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/repeat-prototype.summary.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/report.md
+?? docs/tasks/2026-10-15-fast-systematic-execution/risk-coverage.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/ruff-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/ruff.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/run_aux.py
+?? docs/tasks/2026-10-15-fast-systematic-execution/run_matrix.py
+?? docs/tasks/2026-10-15-fast-systematic-execution/scan_cues.py
+?? docs/tasks/2026-10-15-fast-systematic-execution/short-a-dev-command.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/short-a-dev-imports.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/short-a-dev-process.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/short-a-dev.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/short-a-dev.log
+?? docs/tasks/2026-10-15-fast-systematic-execution/short-a-dev.summary.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/short-prototype-sha.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/startup-probe-audit.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/temporal-evaluation.md
+?? docs/tasks/2026-10-15-fast-systematic-execution/training-README.md
+?? docs/tasks/2026-10-15-fast-systematic-execution/training-config.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/training-preprocessor_config.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/training-special_tokens_map.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/training-tokenizer_config.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/training-vocab.json
+?? docs/tasks/2026-10-15-fast-systematic-execution/unconsumed-cues.json
+?? docs/tasks/2026-10-15-full-local-pause/comparison.json
+?? docs/tasks/2026-10-15-full-local-pause/saved.json
+?? docs/tasks/2026-10-15-full-local-pause/waveforms-1-5.svg
+?? docs/tasks/2026-10-15-full-local-pause/waveforms-1-5.svg.png
+?? docs/tasks/2026-10-15-full-local-pause/waveforms-6-10.svg
+?? docs/tasks/2026-10-15-full-local-pause/waveforms-6-10.svg.png
+?? docs/tasks/2026-10-15-generation-stages/
+?? surah_cutter/core/progress.py
+?? tests/test_boundary_confidence.py
+?? tests/test_stage_progress.py

@@ -12,12 +12,7 @@
 <body data-focus-method="pointer">
   <header class="workspace-bar">
     <div class="workspace-navigation">
-    <span class="workspace-brand">Ayah Studio</span>
     <div class="workspace-sidebar-control"><button id="sidebarToggle" class="ghost icon-btn" title="Скрыть боковую панель" aria-label="Скрыть боковую панель" aria-expanded="true" aria-controls="suraSidebar"></button></div>
-    </div>
-    <div class="workspace-primary">
-      <button id="regenSuraBtn" class="primary alignment-start hidden" disabled title="Рассчитать разметку суры выбранным режимом">Начать разметку</button>
-      <button id="genBtn" class="primary" disabled>Начать разметку</button>
     </div>
     <div class="workspace-context">
     <details id="recordingMenu" class="toolbar-menu recording-menu">
@@ -45,6 +40,10 @@
           <div id="dashboardModePicker" class="toolbar-popover mode-picker" role="group" aria-label="Режим разметки"><div class="mode-picker-heading">Режим разметки</div></div>
         </details>
       </div>
+    </div>
+    <div class="workspace-primary">
+      <button id="regenSuraBtn" class="primary alignment-start hidden" disabled aria-label="Начать разметку суры" title="Рассчитать разметку суры выбранным режимом">Начать</button>
+      <button id="genBtn" class="primary" disabled aria-label="Начать разметку" title="Начать разметку">Начать</button>
     </div>
     <div id="workspaceSummary" class="workspace-summary hidden">
     <div id="suraProgress" class="sura-progress summary-counts hidden">
@@ -77,6 +76,27 @@
 
         </div>
       </div></details>
+      <details id="timingReviewTools" class="toolbar-menu timing-review-menu">
+        <summary id="timingReviewToggle" title="Фильтры и сортировка меток" aria-label="Фильтры и сортировка меток"></summary>
+        <div class="toolbar-popover timing-review-tools" role="group" aria-label="Фильтры и сортировка меток">
+          <div class="mode-picker-heading">Метки и точность</div>
+          <label>Показать метки <select id="timingReviewFilter" aria-label="Показать метки">
+            <option value="all">Все</option>
+            <option value="review">Сомнительные и без оценки</option>
+            <option value="suspect">Сомнительные</option>
+            <option value="unassessed">Без оснований для оценки</option>
+            <option value="unverified">Не проверенные вручную</option>
+            <option value="verified">Проверенные вручную</option>
+          </select></label>
+          <label>Порядок <select id="timingReviewSort" aria-label="Порядок">
+            <option value="ayah">По номеру аята</option>
+            <option value="risk">Сначала сомнительные</option>
+          </select></label>
+          <button id="timingReviewNext" type="button" class="ghost">Следующая метка</button>
+          <span id="timingReviewCount" role="status" aria-live="polite"></span>
+          <p>Сомнительные метки определяются по речи и паузам текущей записи. Нажмите номер аята, чтобы проверить начало.</p>
+          </div>
+      </details>
       <button id="showSuraLogBtn" class="ghost logs-btn" aria-label="Логи текущей суры" title="Логи текущей суры" aria-haspopup="dialog" aria-controls="suraLiveLogBox">Логи</button>
 
     </div>
@@ -295,8 +315,21 @@
       <button type="button" data-settings-panel="interfaceSettings" aria-pressed="true"><svg class="settings-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>Интерфейс</button>
       <button type="button" data-settings-panel="modelSettings" aria-pressed="false"><svg class="settings-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="3"/><path d="M9 1v4m6-4v4M9 19v4m6-4v4M1 9h4m-4 6h4m14-6h4m-4 6h4"/></svg>Модели</button>
       <button type="button" data-settings-panel="projectSettings" aria-pressed="false"><svg class="settings-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h6l2-3h10v16H3z"/></svg>Проекты</button>
+      <button type="button" data-settings-panel="updateSettings" aria-pressed="false">Обновления</button>
     </nav>
     <div class="settings-content">
+    <section id="updateSettings" class="settings-panel hidden">
+      <h3>Обновления приложения</h3>
+      <p id="appVersion" class="settings-help"></p>
+      <p class="settings-help">Проверка сразу скачает новую версию. Затем можно закрыть приложение и установить обновление автоматически.</p>
+      <p id="appUpdateMessage" class="settings-message" role="status" aria-live="polite"></p>
+      <progress id="appUpdateProgress" max="100" hidden aria-label="Загрузка обновления"></progress>
+      <div class="dialog-actions">
+        <button id="checkAppUpdateBtn" type="button">Проверить обновление</button>
+        <button id="installAppUpdateBtn" type="button" class="primary" hidden>Закрыть и установить</button>
+      </div>
+      <p id="appUpdateReadyHelp" class="settings-help" hidden>После установки приложение откроется автоматически. Можно продолжить работу и установить обновление позже.</p>
+    </section>
     <section id="projectSettings" class="settings-panel hidden">
       <div class="projects-heading"><h3>Проекты</h3><button id="addProjectBtn" type="button" class="primary">Добавить проект</button></div>
       <p class="settings-help">Для каждой записи — свои аудио и разметка. Откройте проект для работы или измените его название.</p>
@@ -328,7 +361,6 @@
       <p id="modelMessage" class="settings-message" role="status" aria-live="polite"></p>
       <div id="modelList" class="model-list" aria-label="Каталог моделей"></div>
       <template id="modelHelpTemplate">
-        <p class="model-meta">Замеры: Шатри, суры 112 и 114, полный режим на Mac (CPU). Ошибка — медианное отклонение начала аята от эталона. Время включает загрузку модели и проверку слов первого аята. На других записях результаты могут отличаться.</p>
         <p class="model-meta">Быстрый режим доступен для Quran Phonetics и экспериментальных Tarteel Tiny/Base. Сложные границы требуют проверки. Другие модели доступны в полном, точном и пословном режимах.</p>
       </template>
     </section>
@@ -364,6 +396,8 @@
   <script src="/models.js"></script>
   <script src="/sura-names.js"></script>
   <script src="/generation.js"></script>
+  <script src="/updates.js"></script>
+  <script src="/playback.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>

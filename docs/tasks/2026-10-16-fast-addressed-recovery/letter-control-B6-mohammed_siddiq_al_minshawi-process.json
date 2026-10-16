@@ -1,0 +1,287 @@
+{
+  "exit": 0,
+  "wall_s": 24.589410291053355,
+  "samples": [
+    {
+      "elapsed_s": 0.040520125068724155,
+      "tree_rss_kib": 7488
+    },
+    {
+      "elapsed_s": 0.5776658330578357,
+      "tree_rss_kib": 68640
+    },
+    {
+      "elapsed_s": 1.208281375002116,
+      "tree_rss_kib": 74448
+    },
+    {
+      "elapsed_s": 1.762344916118309,
+      "tree_rss_kib": 36032
+    },
+    {
+      "elapsed_s": 2.3127788330893964,
+      "tree_rss_kib": 157120
+    },
+    {
+      "elapsed_s": 2.850099958013743,
+      "tree_rss_kib": 191888
+    },
+    {
+      "elapsed_s": 3.39184012520127,
+      "tree_rss_kib": 477360
+    },
+    {
+      "elapsed_s": 3.922964333090931,
+      "tree_rss_kib": 580736
+    },
+    {
+      "elapsed_s": 4.468658125028014,
+      "tree_rss_kib": 581328
+    },
+    {
+      "elapsed_s": 5.086310333106667,
+      "tree_rss_kib": 579920
+    },
+    {
+      "elapsed_s": 5.671261916169897,
+      "tree_rss_kib": 575296
+    },
+    {
+      "elapsed_s": 6.237781833158806,
+      "tree_rss_kib": 581520
+    },
+    {
+      "elapsed_s": 6.8068078751675785,
+      "tree_rss_kib": 546448
+    },
+    {
+      "elapsed_s": 7.377544749993831,
+      "tree_rss_kib": 265056
+    },
+    {
+      "elapsed_s": 7.937032583169639,
+      "tree_rss_kib": 285856
+    },
+    {
+      "elapsed_s": 8.469722541049123,
+      "tree_rss_kib": 382720
+    },
+    {
+      "elapsed_s": 9.095633833203465,
+      "tree_rss_kib": 585856
+    },
+    {
+      "elapsed_s": 9.633873666170985,
+      "tree_rss_kib": 490928
+    },
+    {
+      "elapsed_s": 10.172621958190575,
+      "tree_rss_kib": 596816
+    },
+    {
+      "elapsed_s": 10.745460416190326,
+      "tree_rss_kib": 1031424
+    },
+    {
+      "elapsed_s": 11.293448583222926,
+      "tree_rss_kib": 1069920
+    },
+    {
+      "elapsed_s": 11.855171375209466,
+      "tree_rss_kib": 1186704
+    },
+    {
+      "elapsed_s": 12.399605415994301,
+      "tree_rss_kib": 1063024
+    },
+    {
+      "elapsed_s": 12.963530916022137,
+      "tree_rss_kib": 1221920
+    },
+    {
+      "elapsed_s": 13.547922125086188,
+      "tree_rss_kib": 1178848
+    },
+    {
+      "elapsed_s": 14.105079541215673,
+      "tree_rss_kib": 1032288
+    },
+    {
+      "elapsed_s": 14.656216375064105,
+      "tree_rss_kib": 817536
+    },
+    {
+      "elapsed_s": 15.242313708178699,
+      "tree_rss_kib": 840400
+    },
+    {
+      "elapsed_s": 15.783199791098014,
+      "tree_rss_kib": 839104
+    },
+    {
+      "elapsed_s": 16.32499008299783,
+      "tree_rss_kib": 835888
+    },
+    {
+      "elapsed_s": 16.877876583021134,
+      "tree_rss_kib": 836176
+    },
+    {
+      "elapsed_s": 17.416075541172177,
+      "tree_rss_kib": 825936
+    },
+    {
+      "elapsed_s": 17.984939000103623,
+      "tree_rss_kib": 754640
+    },
+    {
+      "elapsed_s": 18.53758666617796,
+      "tree_rss_kib": 751136
+    },
+    {
+      "elapsed_s": 19.20410095807165,
+      "tree_rss_kib": 703328
+    },
+    {
+      "elapsed_s": 19.744226208189502,
+      "tree_rss_kib": 738160
+    },
+    {
+      "elapsed_s": 20.27625541621819,
+      "tree_rss_kib": 751616
+    },
+    {
+      "elapsed_s": 20.817081375047565,
+      "tree_rss_kib": 750032
+    },
+    {
+      "elapsed_s": 21.358470083214343,
+      "tree_rss_kib": 748336
+    },
+    {
+      "elapsed_s": 21.904863416217268,
+      "tree_rss_kib": 789296
+    },
+    {
+      "elapsed_s": 22.450845500221476,
+      "tree_rss_kib": 722096
+    },
+    {
+      "elapsed_s": 22.985466832993552,
+      "tree_rss_kib": 792912
+    },
+    {
+      "elapsed_s": 23.516478083096445,
+      "tree_rss_kib": 793984
+    },
+    {
+      "elapsed_s": 24.08421391621232,
+      "tree_rss_kib": 785872
+    }
+  ],
+  "tree_peak_kib": 1221920,
+  "host_before": [
+    {
+      "pid": 50212,
+      "cpu_percent": 146.2,
+      "command": "/Users/ayub/.surah-cutter/model-runtime/bin/python"
+    },
+    {
+      "pid": 633,
+      "cpu_percent": 76.6,
+      "command": "/System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer"
+    },
+    {
+      "pid": 78184,
+      "cpu_percent": 76.5,
+      "command": "(swift-frontend)"
+    },
+    {
+      "pid": 78186,
+      "cpu_percent": 75.0,
+      "command": "/Applications/Xcode 27.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-frontend"
+    },
+    {
+      "pid": 78185,
+      "cpu_percent": 69.7,
+      "command": "(swift-frontend)"
+    },
+    {
+      "pid": 78168,
+      "cpu_percent": 69.1,
+      "command": "/Applications/Xcode 27.app/Contents/Developer/usr/bin/xcodebuild"
+    },
+    {
+      "pid": 74029,
+      "cpu_percent": 36.3,
+      "command": "node"
+    },
+    {
+      "pid": 1924,
+      "cpu_percent": 23.8,
+      "command": "/Applications/Happ.app/Contents/MacOS/Happ"
+    },
+    {
+      "pid": 21375,
+      "cpu_percent": 13.5,
+      "command": "/Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/155.0.8059.40/Helpers/Codex (Renderer).app/Contents/MacOS/Codex (Renderer)"
+    },
+    {
+      "pid": 21280,
+      "cpu_percent": 13.0,
+      "command": "/Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/155.0.8059.40/Helpers/Codex (Service).app/Contents/MacOS/Codex (Service)"
+    }
+  ],
+  "host_after": [
+    {
+      "pid": 78599,
+      "cpu_percent": 267.0,
+      "command": "/Users/ayub/Developer/surah-cutter/.venv/lib/python3.12/site-packages/imageio_ffmpeg/binaries/ffmpeg-macos-aarch64-v7.1"
+    },
+    {
+      "pid": 633,
+      "cpu_percent": 72.2,
+      "command": "/System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer"
+    },
+    {
+      "pid": 1924,
+      "cpu_percent": 32.8,
+      "command": "/Applications/Happ.app/Contents/MacOS/Happ"
+    },
+    {
+      "pid": 78583,
+      "cpu_percent": 27.8,
+      "command": "/Users/ayub/Developer/surah-cutter/.venv/bin/python"
+    },
+    {
+      "pid": 10059,
+      "cpu_percent": 21.6,
+      "command": "/Applications/Telegram.app/Contents/MacOS/Telegram"
+    },
+    {
+      "pid": 78617,
+      "cpu_percent": 20.2,
+      "command": "/Applications/Xcode 27.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang"
+    },
+    {
+      "pid": 78543,
+      "cpu_percent": 17.9,
+      "command": "/usr/libexec/biomesyncd"
+    },
+    {
+      "pid": 64427,
+      "cpu_percent": 17.5,
+      "command": "/usr/libexec/siriknowledged"
+    },
+    {
+      "pid": 78261,
+      "cpu_percent": 12.5,
+      "command": "/Users/ayub/Developer/surah-cutter/.venv/bin/python"
+    },
+    {
+      "pid": 48910,
+      "cpu_percent": 11.3,
+      "command": "/System/Applications/Siri AI.app/Contents/MacOS/Siri AI"
+    }
+  ]
+}

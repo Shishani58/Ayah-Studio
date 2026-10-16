@@ -1,0 +1,44 @@
+[
+  {
+    "name": "nemo-forced",
+    "command": [
+      "/Users/ayub/.surah-cutter/nemo-runtime/bin/python",
+      "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/nemo_forced.py"
+    ],
+    "started": 1792117088.82256,
+    "state": "complete",
+    "exit_code": 0,
+    "finished": 1792117125.893049
+  },
+  {
+    "name": "whisper-fast-methods",
+    "command": [
+      "/Users/ayub/.surah-cutter/model-runtime/bin/python",
+      "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/secondary_asr.py",
+      "whisper",
+      "--methods",
+      "greedy",
+      "token_timestamps",
+      "teacher_attention",
+      "greedy_sdpa"
+    ],
+    "started": 1792117125.8936331,
+    "state": "complete",
+    "exit_code": 0,
+    "finished": 1792117587.850167
+  },
+  {
+    "name": "whisper-beam",
+    "command": [
+      "/Users/ayub/.surah-cutter/model-runtime/bin/python",
+      "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/secondary_asr.py",
+      "whisper",
+      "--methods",
+      "beam5"
+    ],
+    "started": 1792117587.85115,
+    "state": "complete",
+    "exit_code": 0,
+    "finished": 1792117824.64656
+  }
+]

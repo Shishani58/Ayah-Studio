@@ -16,11 +16,14 @@ from surah_cutter.core.cancellation import GenerationCancelled, check_cancelled
 from surah_cutter.core.fast_adapters import make_adapter, representation_sha, loaded_implementation_sha, arabic_units
 from surah_cutter.core.fast_reads import LocalEvidenceReads
 
-VERSION = "sequential-fast-v3-sparse-12-split-opening"
+VERSION = "local-fast-v4-partial-identity-anchors"
 
 
 @dataclass(frozen=True)
 class Policy:
+    independent_search: bool = True
+    landmark_probes: int = 1
+    short_word_pause_radius_ms: float = 500.
     speech_ms: tuple[int, ...] = (1300, 2500, 4000)
     noisy_speech_ms: tuple[int, ...] = (1700, 1900, 2100)
     max_candidates: int = 8
@@ -42,7 +45,7 @@ class Policy:
 @dataclass(frozen=True)
 class Boundary:
     ayah: int
-    start_ms: int
+    start_ms: int | None
     evidence_kind: str
     confidence: float
     review_reason: str | None = None
@@ -171,6 +174,16 @@ def _expansion_evidence(observation, phrase, ends, threshold, groups=None, ayah=
     if _prefix(observation.units, phrase) >= ends[0]:
         return "exact_first_word"
     matched = _prefix(observation.units, phrase)
+    # The model can spell one canonical word as multiple independently spoken
+    # words (for example vocative ya + ayyuha). A complete short spoken word is
+    # a cue to resolve the remaining ambiguity, never a canonical-word proof.
+    if (groups is not None and matched == 1 and len(phrase[0]) == 2 and ends[0] > 1
+            and not observation.truncated and observation.unit_quality
+            and math.isfinite(observation.unit_quality[0])
+            and observation.unit_quality[0] >= threshold
+            and not _strong_continuation_conflict(observation.units, observation.unit_quality,
+                                                groups[ayah], matched, threshold)):
+        return "whole_spoken_prefix_incomplete_canonical_word"
     if groups is not None and matched > 0 and sum(map(len, phrase[:matched])) >= 3:
         fragment = phrase[:matched]
         rivals = [(a, i) for a, units in groups.items() for i in [0] + word_ends[a][:-1]
@@ -460,28 +473,124 @@ def pause_geometry(pcm, sr, pause):
             "temporal_probability": None}
 
 
+def _review_weak_sparse_onsets(boundaries, reads, geometry, threshold):
+    """Longer ASR context proves identity, not a previously weak pause onset.
+
+    A complete unique prefix already heard below threshold gains no new onset
+    evidence just because its probability rises in a longer crop. If DSP also
+    lacks a stationary quiet interval, retain the owner for sequence recovery
+    and leave its timestamp unknown. No replacement time is inferred.
+    """
+    initial = {}
+    for read in reads:
+        if ":pause:" not in read["reason"]:
+            continue
+        start, end = read["window_ms"]
+        if start not in initial or end < initial[start]["window_ms"][1]:
+            initial[start] = read
+    result, reviews = [], []
+    for boundary in boundaries:
+        proof = boundary.proof or {}
+        pause_id = proof.get("pause_id")
+        if (not proof.get("sparse_anchor") or proof.get("quality_metric") != "asr_token_probability"
+                or pause_id is None or geometry[pause_id].get("quiet_stationarity", False)):
+            result.append(boundary)
+            continue
+        final_read = reads[boundary.read_id]
+        first = initial.get(final_read["window_ms"][0])
+        observed = first.get("observed", {}) if first else {}
+        phrase = proof["phrase"]
+        quality = observed.get("unit_quality", ())
+        if (first and first["window_ms"][1] < final_read["window_ms"][1]
+                and not observed.get("truncated") and quality and math.isfinite(quality[0])
+                and quality[0] < threshold and _prefix(observed.get("units", ()), phrase) == len(phrase)):
+            reason = "weak_complete_sparse_prefix_unproved_time"
+            reviews.append({"ayah": boundary.ayah, "reason": reason, "initial_read_id": first["id"],
+                            "initial_first_unit_quality": quality[0], "read_id": boundary.read_id,
+                            "internal_anchor_ms": boundary.start_ms, "identity_proof": proof})
+            boundary = replace(boundary, start_ms=None, evidence_kind="unresolved", confidence=0., review_reason=reason,
+                               read_id=None, proof=None)
+        result.append(boundary)
+    return result, reviews
+
+
+def _review_addressed_recovery_onsets(boundaries, geometry, policy):
+    """Newly accessible identity anchors do not resolve a wide pause cut.
+
+    Retain the internally validated owner/order for sparse recovery. Leave
+    uncertain timestamps unknown; never infer a replacement onset from ASR.
+    The original search path has no new publication restrictions.
+    """
+    recovered, disconnected = False, False
+    result, reviews = [], []
+    for boundary in boundaries:
+        proof = boundary.proof or {}
+        disconnected |= ("independent_region_origin_ayah" in proof or "independent_target_origin_ayah" in proof)
+        recovered |= "bounded_following_origin_ayah" in proof or disconnected
+        index = proof.get("pause_id")
+        wide = recovered and index is not None and geometry[index]["midpoint_interval_radius_ms"] > policy.short_word_pause_radius_ms
+        unstable = index is not None and not geometry[index].get("quiet_stationarity", False)
+        if (recovered and boundary.evidence_kind == "pause" and index is not None
+                and (wide or (disconnected and unstable))):
+            reason = ("recovered_wide_midpoint_unproved" if wide else
+                      "reacquired_nonstationary_midpoint_unproved")
+            reviews.append({"ayah": boundary.ayah, "reason": reason, "read_id": boundary.read_id,
+                            "internal_anchor_ms": boundary.start_ms, "identity_proof": proof})
+            boundary = replace(boundary, start_ms=None, evidence_kind="unresolved", confidence=0., review_reason=reason,
+                               read_id=None, proof=None)
+        result.append(boundary)
+    return result, reviews
+
+
 def validate_boundaries(boundaries, ayahs, duration_ms, reads, *, groups=None, word_ends=None,
-                        canonical_ends=None, threshold=0., pauses=None, policy=Policy(), pause_geometry_data=None):
+                        canonical_ends=None, threshold=0., pauses=None, policy=Policy(), pause_geometry_data=None,
+                        search_only=False):
     if [b.ayah for b in boundaries] != list(ayahs):
         raise ValueError("canonical_ayah_set_mismatch")
     last = -1
     for boundary in boundaries:
+        if boundary.evidence_kind == "unresolved":
+            if (boundary.start_ms is not None or boundary.confidence != 0 or not boundary.review_reason
+                    or boundary.read_id is not None or boundary.proof is not None):
+                raise ValueError("invalid_unresolved_boundary")
+            continue
         ms = boundary.start_ms
         if type(ms) is not int or not last < ms < duration_ms or ms < 0:
             raise ValueError("invalid_boundary_timeline")
         last = ms
         if not math.isfinite(boundary.confidence) or not 0 <= boundary.confidence <= 1:
             raise ValueError("invalid_boundary_quality")
-        if boundary.evidence_kind == "estimate":
-            if boundary.confidence != 0 or not boundary.review_reason or boundary.read_id is not None:
-                raise ValueError("invalid_estimate")
-            continue
         proof = boundary.proof or {}
         if boundary.review_reason or boundary.read_id is None or not 0 <= boundary.read_id < len(reads):
             raise ValueError("missing_acoustic_proof")
         read = reads[boundary.read_id]
         if read["outcome"] != "completed" or not proof.get("complete") or proof.get("ambiguous"):
             raise ValueError("incomplete_acoustic_proof")
+        queries = read.get("queries", [{"reason": read.get("reason", ""),
+                                       "window_ms": read["window_ms"]}])
+        if "independent_target_origin_ayah" in proof:
+            origin = proof["independent_target_origin_ayah"]
+            attempt = proof.get("independent_target_attempt")
+            target = proof.get("search_target_ayah")
+            if (type(origin) is not int or not 1 <= origin < boundary.ayah
+                    or type(attempt) is not int or not 1 <= attempt <= policy.max_block_ayahs
+                    or type(target) is not int or not origin < target <= boundary.ayah
+                    or not any(q.get("reason", "").startswith(f"ayah={target}:")
+                               and q.get("window_ms") == read["window_ms"] for q in queries)):
+                raise ValueError("invalid_independent_target_provenance")
+        if "independent_region_origin_ayah" in proof:
+            origin = proof["independent_region_origin_ayah"]
+            attempt = proof.get("independent_region_attempt")
+            nominations = {r["window_ms"][0] for r in reads
+                           for q in r.get("queries", [{"reason": r.get("reason", "")}])
+                           if ":independent_region_identity" in q.get("reason", "")}
+            if (type(origin) is not int or not 1 <= origin < boundary.ayah
+                    or type(attempt) is not int or not 1 <= attempt <= policy.landmark_probes
+                    or not any(q.get("reason") == f"ayah={origin}:independent_region_identity"
+                               and q.get("window_ms") == read["window_ms"] for q in queries)
+                    or len(nominations) > policy.landmark_probes
+                    or "bounded_following_origin_ayah" in proof):
+                raise ValueError("invalid_independent_region_provenance")
         observed = read["observed"]
         if "prefix_comparison_id" in proof:
             if boundary.evidence_kind != "pause":
@@ -533,6 +642,10 @@ def validate_boundaries(boundaries, ayahs, duration_ms, reads, *, groups=None, w
             observed = {**observed, **selected}
         offset = proof.get("offset", 0)
         phrase = tuple(proof.get("phrase", ()))
+        if "bounded_following_origin_ayah" in proof:
+            origin = proof["bounded_following_origin_ayah"]
+            if type(origin) is not int or origin < 1 or not 0 <= boundary.ayah - origin <= policy.expansion_lookahead:
+                raise ValueError("unbounded_following_owner")
         recovery = proof.get("opening_recovery")
         segmented = proof.get("segmented_opening")
         if segmented:
@@ -596,6 +709,18 @@ def validate_boundaries(boundaries, ayahs, duration_ms, reads, *, groups=None, w
                         raise ValueError("contradictory_spoken_letter_alias")
         if observed["truncated"] or not proof.get("competitors_checked"):
             raise ValueError("unchecked_acoustic_proof")
+        root = proof.get("search_region_root")
+        if root is not None:
+            if (not isinstance(root, dict) or not isinstance(root.get("proof"), dict)
+                    or "search_region_root" in root["proof"]
+                    or not ({"independent_region_origin_ayah", "independent_target_origin_ayah"} & root["proof"].keys())
+                    or type(root.get("ayah")) is not int or root["ayah"] > boundary.ayah
+                    or type(root.get("start_ms")) is not int or root["start_ms"] > ms):
+                raise ValueError("invalid_search_region_root")
+            validate_boundaries([Boundary(**root)], [root["ayah"]], duration_ms, reads,
+                                groups=groups, word_ends=word_ends, canonical_ends=canonical_ends,
+                                threshold=threshold, pauses=pauses, policy=policy,
+                                pause_geometry_data=pause_geometry_data, search_only=True)
         if boundary.evidence_kind == "pause":
             left, right = proof["pause_ms"]
             if not left <= right or ms != round((left + right) / 2):
@@ -608,8 +733,15 @@ def validate_boundaries(boundaries, ayahs, duration_ms, reads, *, groups=None, w
                 if [left, right] != [pause.start_ms, pause.end_ms]:
                     raise ValueError("mutated_pause_interval")
                 if (pause_geometry_data is None or index >= len(pause_geometry_data)
-                        or not pause_geometry_data[index]["accepted"]):
+                        or (not search_only and not pause_geometry_data[index]["accepted"])):
                     raise ValueError("unproved_pause_geometry")
+            if not search_only and (root is not None or "independent_region_origin_ayah" in proof
+                                    or "independent_target_origin_ayah" in proof):
+                index = proof.get("pause_id")
+                if (type(index) is not int or pause_geometry_data is None or not 0 <= index < len(pause_geometry_data)
+                        or pause_geometry_data[index]["midpoint_interval_radius_ms"] > policy.short_word_pause_radius_ms
+                        or not pause_geometry_data[index].get("quiet_stationarity", False)):
+                    raise ValueError("unproved_reacquired_midpoint")
             r0, r1 = read["window_ms"]
             expected_left = max(left, right - 200.)
             if abs(r0 - expected_left) > .1 or r1 <= right or offset != 0:
@@ -631,6 +763,10 @@ def validate_boundaries(boundaries, ayahs, duration_ms, reads, *, groups=None, w
                     raise ValueError("unheard_previous_context")
         elif boundary.evidence_kind in ("first_onset", "wasl"):
             positions = observed["positions_ms"]
+            if positions is None and search_only and proof.get("identity_only") and boundary.evidence_kind == "first_onset":
+                if offset != 0 or ms != round(read["window_ms"][0]):
+                    raise ValueError("invalid_identity_search_location")
+                continue
             if positions is None or offset >= len(positions):
                 raise ValueError("unsupported_temporal_proof")
             onset = round(read["window_ms"][0] + positions[offset])
@@ -655,37 +791,11 @@ def validate_boundaries(boundaries, ayahs, duration_ms, reads, *, groups=None, w
             raise ValueError("unknown_boundary_evidence")
 
 
-def _finish_estimates(confirmed, ayahs, groups, duration_ms, reason, unresolved=None):
-    """Keep proven anchors exact; fill each unresolved block with honest conf0."""
+def _complete_result(confirmed, ayahs, reason, unresolved=None):
+    """Unknown boundaries carry no timestamp; identity anchors stay internal."""
     anchors = {b.ayah: b for b in confirmed}
-    result, previous, cursor = [], None, 0
-    while cursor < len(ayahs):
-        ayah = ayahs[cursor]
-        if ayah in anchors:
-            previous = anchors[ayah]
-            result.append(previous)
-            cursor += 1
-            continue
-        end = cursor
-        while end < len(ayahs) and ayahs[end] not in anchors:
-            end += 1
-        remaining = ayahs[cursor:end]
-        following = anchors.get(ayahs[end]) if end < len(ayahs) else None
-        lower = previous.start_ms + 1 if previous else 0
-        upper = following.start_ms - 1 if following else math.ceil(duration_ms) - 1
-        if len(remaining) > upper - lower + 1:
-            raise ValueError("unrepresentable_timeline")
-        weights = [max(1, sum(map(len, groups[a]))) for a in remaining]
-        free = upper - lower + 1 - len(remaining)
-        previous_weight = max(1, sum(map(len, groups[previous.ayah]))) if previous else 0
-        total, acc = sum(weights) + previous_weight, previous_weight
-        for i, (current, weight) in enumerate(zip(remaining, weights)):
-            ms = lower + i + (free * acc // total if total else 0)
-            result.append(Boundary(current, ms, "estimate", 0.,
-                                   (unresolved or {}).get(current, reason) if i == 0 else "blocked_by_unresolved_ayah"))
-            acc += weight
-        cursor = end
-    return result
+    return [anchors.get(a) or Boundary(a, None, "unresolved", 0.,
+            (unresolved or {}).get(a, reason)) for a in ayahs]
 
 
 def _silero_model_path():
@@ -760,7 +870,8 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
 
     if sr != 16000 or not words or not len(pcm):
         raise ValueError("invalid_fast_input")
-    if policy.max_candidates < 1 or policy.max_block_ayahs != 2 or not policy.speech_ms:
+    if (policy.max_candidates < 1 or policy.max_block_ayahs != 2 or not policy.speech_ms
+            or type(policy.landmark_probes) is not int or policy.landmark_probes not in (0, 1)):
         raise ValueError("invalid_fast_policy")
     surah = surah or words[0].surah
     canonical = quran_text.surah_words(surah)
@@ -775,6 +886,9 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
         check_cancelled()
         events.append({"state": state, "ayah": ayah, **details})
 
+    from surah_cutter.core.progress import report
+
+    report("model")
     event("PREPARE")
     adapter = adapter or make_adapter(bundle or align.default_bundle())
     rendered = adapter.represent(words)
@@ -821,10 +935,11 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
     snapshot["proof_word_ends_sha256"] = hashlib.sha256(repr(proof_ends).encode()).hexdigest()
     from surah_cutter.data.alignment_identity import fast_run_key
     key = fast_run_key(snapshot)
-    trace.update(align_lag_ms=adapter.lag_ms, backend=adapter.metric, fast_adapter=adapter.version,
+    trace.update(mode="fast", surah=surah, ayah_count=len(ayahs), result_contract="partial-v1", align_lag_ms=adapter.lag_ms, backend=adapter.metric, fast_adapter=adapter.version,
                  fast_version=VERSION, fast_run_key=key, run_snapshot=snapshot,
                  model_source=f"{adapter.model_id}:revision={adapter.revision}:adapter={adapter.version}",
                  total_ms=duration, duration_ms=duration, transitions=events)
+    report("pauses")
     event("DETECT_PAUSES")
     started = monotonic()
     decisions = pause_decisions if pause_decisions is not None else candidates.pause_pipeline_decisions(pcm, sr, surah=surah)
@@ -866,9 +981,14 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
     reason = "no_local_evidence"
     tried = set()
     unresolved = {}
+    reentry_failures = 0
+    reentry_origin = None
+    landmark_attempts = 0
     try:
         event("LOCATE_FIRST", ayahs[0])
+        report("local", 0, len(ayahs))
         for ayah in ayahs:
+            report("local", ayah - 1, len(ayahs))
             if confirmed and ayah <= confirmed[-1].ayah:
                 continue  # already validated and atomically published by RESOLVE_BLOCK
             event("PLAN_PHRASE", ayah)
@@ -887,42 +1007,56 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
                 candidates_here.append(("first_onset", -1, first, first, None))
             candidates_here.sort(key=lambda item: item[2])
             forecast = None
+            following_probe_id = None
             if len(confirmed) >= 2:
                 prev = confirmed[-1].ayah
                 elapsed_weight = sum(len(u) for a in ayahs
                                      if confirmed[0].ayah <= a < prev for u in groups[a])
                 tempo = (confirmed[-1].start_ms - confirmed[0].start_ms) / max(1, elapsed_weight)
-                predicted_span = tempo * sum(map(len, groups[prev]))
+                # After an unknown ayah the next target is a distinct search:
+                # account for the skipped canonical text, without inventing its time.
+                predicted_span = tempo * sum(len(u) for a in ayahs if prev <= a < ayah for u in groups[a])
                 forecast = previous + predicted_span
                 left = previous + predicted_span * policy.tempo_lower_ratio
                 right = previous + predicted_span * policy.tempo_upper_ratio
                 candidate_pool = candidates_here
                 candidates_here = [c for c in candidates_here if left <= c[2] <= right]
                 event("SELECT_CANDIDATE", ayah, forecast_ms=forecast, region_ms=[left, right])
-                if not candidates_here and not adapter.timing:
-                    # Without word positions the empty region cannot use wasl
-                    # recovery. One measured gap is a bounded next hypothesis;
-                    # tempo never supplies the owner proof or a timestamp.
+                if (not adapter.timing and (not candidates_here
+                        or (adapter.model_id == "whisper-tarteel-base" and len(candidates_here) < policy.max_candidates))):
+                    # One measured following gap is an optional bounded
+                    # hypothesis after the ordinary candidates fail. Tempo
+                    # never supplies the owner proof or a timestamp.
                     lookahead_right = right + predicted_span * policy.expansion_lookahead
                     following = next((c for c in candidate_pool if right < c[2] <= lookahead_right
-                                      and geometry[c[1]]["accepted"]), None)
+                                      and geometry[c[1]]["accepted"]
+                                      and (not candidates_here or geometry[c[1]]["midpoint_interval_radius_ms"]
+                                           <= policy.short_word_pause_radius_ms)), None)
                     if following is not None:
-                        candidates_here = [following]
+                        if candidates_here:
+                            following_probe_id = following[1]
+                        candidates_here.append(following)
                         event("SELECT_CANDIDATE", ayah, candidate=following[1],
-                              reason="empty_tempo_region_next_dsp_pause", region_ms=[left, right],
+                              reason=("empty_tempo_region_next_dsp_pause" if following_probe_id is None
+                                      else "optional_after_unproved_tempo_candidates"), region_ms=[left, right],
                               lookahead_region_ms=[right, lookahead_right])
             boundary, blocked_prefix, future = None, False, None
             for kind, index, start, speech_start, pause in candidates_here[:policy.max_candidates]:
+                following_probe = index == following_probe_id
                 # Geometry belongs to DSP. Acoustic identity needs speech at
                 # the right edge, not the entire already measured silence.
                 if pause:
                     start = max(pause.start_ms, pause.end_ms - 200.)
                     if not geometry[index]["accepted"]:
                         reason = geometry[index]["reason"]
-                        event("SELECT_CANDIDATE", ayah, candidate=index, declined_geometry=reason)
-                        continue
+                        event("SELECT_CANDIDATE", ayah, candidate=index, declined_geometry=reason,
+                              identity_search=policy.independent_search)
+                        if not policy.independent_search:
+                            continue
                 event("SELECT_CANDIDATE", ayah, candidate=index, kind=kind)
                 had_prefix = False
+                soft_short_word_route = False
+                short_word_base_plan, short_word_base_phrase = plan, phrase
                 speech_steps = list(policy.speech_ms)
                 for step, speech in enumerate(speech_steps):
                     end = min(duration, speech_start + speech)
@@ -1044,12 +1178,14 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
                             reason = "unproved_repeated_owner_context"
                             blocked_prefix = True
                             break
-                        if kind == "first_onset" and obs.positions_ms is None:
+                        if kind == "first_onset" and obs.positions_ms is None and not policy.independent_search:
                             reason = "unsupported_first_onset_timing"
                             break
                         proof = {"phrase": phrase, "complete": True, "ambiguous": False,
                                  "competitors_checked": True, "competitor_count": plan["competitor_count"],
                                  "offset": 0, "quality_metric": adapter.metric, **beam_proof}
+                        if following_probe:
+                            proof["bounded_following_origin_ayah"] = ayah
                         if noisy_proof:
                             proof.update(noisy_proof)
                         if segmented_proof:
@@ -1063,7 +1199,10 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
                             ms = round(pause.center_ms)
                             proof.update(pause_ms=[pause.start_ms, pause.end_ms], pause_id=index)
                         else:
-                            ms = round(reads.calls[opening_id]["window_ms"][0] + obs.positions_ms[0])
+                            ms = round(reads.calls[opening_id]["window_ms"][0] +
+                                       (obs.positions_ms[0] if obs.positions_ms else 0))
+                            if obs.positions_ms is None:
+                                proof["identity_only"] = True
                         if ms <= previous:
                             reason = "quantized_boundary_collision"
                             break
@@ -1126,7 +1265,10 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
                                 future_proof["spoken_owner_units"] = next_owner
                             quality = min(next_obs.unit_quality[:len(next_phrase)], default=0.)
                             if (not next_plan["ambiguous"] and _prefix(next_obs.units, next_phrase) == len(next_phrase)
-                                    and not next_obs.truncated and quality >= threshold and not conflict):
+                                    and not next_obs.truncated and quality >= threshold and not conflict
+                                    and (not following_probe or future_ayah - ayah <= policy.expansion_lookahead)):
+                                if following_probe:
+                                    future_proof["bounded_following_origin_ayah"] = ayah
                                 future = (future_ayah, next_phrase, pause, index, opening_id, quality, future_proof)
                                 reason = ("future_ayah_without_current" if future_ayah == ayah + 1
                                           else "future_outside_bounded_block")
@@ -1135,11 +1277,18 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
                                     and not next_plan["ambiguous"] and not conflict):
                                 anchor = _expansion_evidence(next_obs, next_phrase, word_ends[future_ayah], threshold,
                                                              groups, future_ayah, word_ends)
-                                if anchor:
+                                if (anchor and (anchor != "whole_spoken_prefix_incomplete_canonical_word"
+                                        or (pause.end_ms - pause.start_ms) / 2 <= policy.short_word_pause_radius_ms)):
                                     future_expansion = (future_ayah, anchor)
                         if future:
                             break
                     expansion = _expansion_evidence(obs, phrase, word_ends[ayah], threshold, groups, ayah, word_ends)
+                    if (expansion == "whole_spoken_prefix_incomplete_canonical_word" and pause
+                            and (pause.end_ms - pause.start_ms) / 2 > policy.short_word_pause_radius_ms):
+                        event("SEARCH_CUE_ONLY", ayah, read_id=opening_id,
+                              reason="short_word_pause_time_uncertain", observed=obs.units,
+                              pause_ms=[pause.start_ms, pause.end_ms])
+                        expansion = None
                     if not expansion and segmented_expansion:
                         expansion = "split_head_requires_whole_continuation"
                     if not expansion and noisy_expansion:
@@ -1152,7 +1301,11 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
                         speech_steps[step + 1:] = [ms for ms in policy.noisy_speech_ms if ms > speech]
                     if not expansion and posterior_expansion:
                         expansion = "canonical_prefix_vs_unresolved_residual"
-                    current_expansion = bool(expansion)
+                    # Only the new permission is provisional. An earlier
+                    # supported opening keeps its existing repetition block.
+                    soft_short_word_route |= (expansion == "whole_spoken_prefix_incomplete_canonical_word"
+                                              and not had_prefix)
+                    current_expansion = bool(expansion) and not soft_short_word_route
                     if not expansion and future_expansion:
                         expansion = "provisional_unique_anchor_partial:" + future_expansion[1]
                     speech_edge = None
@@ -1173,6 +1326,14 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
                     # be silently replaced by a later repetition.
                     blocked_prefix = blocked_prefix or had_prefix
                     break
+                if soft_short_word_route and boundary is None and future is None:
+                    # This additional permission is provisional. Its failed
+                    # reads cannot turn the original incomplete opening into
+                    # a sticky block that hides a later independent anchor.
+                    blocked_prefix = False
+                    plan, phrase = short_word_base_plan, short_word_base_phrase
+                    event("EVALUATE", ayah, candidate=index,
+                          reason="short_word_extension_unresolved_resume_candidates")
                 if boundary or blocked_prefix or future:
                     break
             if boundary is None and future:
@@ -1359,11 +1520,17 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
                              "competitors_checked": True, "offset": 0, "quality_metric": adapter.metric,
                              "pause_ms": [pause.start_ms, pause.end_ms], "pause_id": index,
                              "sparse_anchor": True, "unresolved_ayahs": list(range(ayah, future_ayah)), **future_proof}
+                    if reentry_failures:
+                        proof.update(independent_target_origin_ayah=reentry_origin,
+                                     independent_target_attempt=reentry_failures, search_target_ayah=ayah)
                     anchor = Boundary(future_ayah, round(pause.center_ms), "pause", quality,
                                       read_id=read_id, proof=proof)
                     validate_boundaries([anchor], [future_ayah], duration, reads.calls,
-                                        groups=groups, word_ends=word_ends, canonical_ends=canonical_ends, threshold=threshold, pauses=pauses, policy=policy, pause_geometry_data=geometry)
+                                        groups=groups, word_ends=word_ends, canonical_ends=canonical_ends, threshold=threshold, pauses=pauses, policy=policy, pause_geometry_data=geometry,
+                                        search_only=policy.independent_search)
                     confirmed.append(anchor)
+                    reentry_failures = 0
+                    reentry_origin = None
                     unresolved[ayah] = "unresolved_before_unique_anchor"
                     event("REVIEW_REQUIRED", ayah, reason=unresolved[ayah], block=proof["unresolved_ayahs"])
                     event("CONFIRMED", future_ayah, evidence="pause", sparse_anchor=True)
@@ -1371,14 +1538,146 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
                     if ayah_progress:
                         ayah_progress(future_ayah)
                     continue
+                unresolved[ayah] = reason
                 event("REVIEW_REQUIRED", ayah, reason=reason)
+                if (policy.independent_search and confirmed and ayah < ayahs[-1]
+                        and reentry_failures < policy.max_block_ayahs):
+                    if reentry_origin is None:
+                        reentry_origin = ayah
+                    reentry_failures += 1
+                    event("REENTER_SEARCH", ayah + 1, unresolved_ayah=ayah,
+                          search_anchor_ayah=confirmed[-1].ayah,
+                          reason="independent_next_canonical_target", attempt=reentry_failures)
+                    continue
+                if (policy.independent_search and policy.sparse_anchors
+                        and landmark_attempts < policy.landmark_probes):
+                    # One deliberately separate unresolved region, not a scan
+                    # of all pauses. Duration/text nominate a hypothesis only;
+                    # the independently decoded complete phrase owns the anchor.
+                    landmark_attempts += 1
+                    remaining = [a for a in ayahs if a >= ayah]
+                    weights = [sum(map(len, groups[a])) for a in remaining]
+                    total_weight, cumulative = sum(weights), 0
+                    target = remaining[-1]
+                    for candidate_ayah, weight in zip(remaining, weights):
+                        cumulative += weight
+                        if cumulative >= total_weight / 2:
+                            target = candidate_ayah
+                            break
+                    lower = confirmed[-1].start_ms if confirmed else first
+                    ratio = sum(weights[:remaining.index(target)]) / max(1, total_weight)
+                    nomination = lower + (duration - lower) * ratio
+                    pool = [(i, p) for i, p in enumerate(pauses[:initial_pause_count])
+                            if p.start_ms > lower and p.end_ms + policy.speech_ms[0] < duration]
+                    selected = min(pool, key=lambda item: abs(item[1].center_ms - nomination), default=None)
+                    if selected is not None:
+                        index, pause = selected
+                        start = max(pause.start_ms, pause.end_ms - 200.)
+                        event("REACQUIRE_REGION", ayah, candidate=index, target_ayah=target,
+                              nominated_ms=nomination, pause_ms=[pause.start_ms, pause.end_ms],
+                              reason="unresolved_region_text_duration_hypothesis")
+                        found = None
+                        for speech in policy.speech_ms:
+                            obs = reads.read(start, min(duration, pause.end_ms + speech),
+                                             reason=f"ayah={ayah}:independent_region_identity")
+                            if obs is None:
+                                break
+                            read_id = reads.last_read_id
+                            eligible, found = False, None
+                            for owner in remaining:
+                                # A later repetition cannot replace the unresolved
+                                # current opening; locate an independent later owner.
+                                if owner <= ayah:
+                                    continue
+                                owner_plan = planned_opening(owner)
+                                if owner_plan["ambiguous"]:
+                                    continue
+                                owner_phrase = owner_plan["units"]
+                                view, beam = _beam_view(obs, owner_phrase, threshold, policy.beam_log_margin)
+                                qualities = view.unit_quality[:len(owner_phrase)]
+                                owner_word = rendered[word_map[owner][0]]
+                                spoken = len(proof_ends[word_map[owner][0]]) > 1
+                                conflict = any("spoken_alias" in a and tuple(a["source_units"]) != owner_word
+                                               for a in view.attribution[:len(owner_phrase)])
+                                if spoken:
+                                    conflict |= any(wanted != actual and q >= threshold
+                                                    for wanted, actual, q in zip(owner_word, view.units, view.unit_quality))
+                                if (_prefix(view.units, owner_phrase) == len(owner_phrase) and not view.truncated
+                                        and len(qualities) == len(owner_phrase) and all(math.isfinite(q) for q in qualities)
+                                        and min(qualities) >= threshold and not conflict):
+                                    proof = {"phrase": owner_phrase, "complete": True, "ambiguous": False,
+                                             "competitors_checked": True, "offset": 0, "quality_metric": adapter.metric,
+                                             "pause_ms": [pause.start_ms, pause.end_ms], "pause_id": index,
+                                             "independent_region_origin_ayah": ayah,
+                                             "independent_region_attempt": landmark_attempts}
+                                    proof.update(beam)
+                                    if spoken:
+                                        proof["spoken_owner_units"] = owner_word
+                                    found = Boundary(owner, round(pause.center_ms), "pause", min(qualities),
+                                                     read_id=read_id, proof=proof)
+                                    break
+                                eligible |= bool(_expansion_evidence(view, owner_phrase, word_ends[owner],
+                                                                   threshold, groups, owner, word_ends))
+                            if found:
+                                validate_boundaries([found], [found.ayah], duration, reads.calls,
+                                    groups=groups, word_ends=word_ends, canonical_ends=canonical_ends,
+                                    threshold=threshold, pauses=pauses, policy=policy,
+                                    pause_geometry_data=geometry, search_only=True)
+                                confirmed.append(found)
+                                reentry_failures = 0
+                                event("SEARCH_ANCHOR", found.ayah, candidate=index,
+                                      origin_ayah=ayah, read_id=read_id, evidence="independent_region")
+                                break
+                            if not eligible:
+                                break
+                        if found:
+                            continue
                 break
+            if reentry_failures:
+                boundary = replace(boundary, proof={**boundary.proof,
+                    "independent_target_origin_ayah": reentry_origin,
+                    "independent_target_attempt": reentry_failures, "search_target_ayah": ayah})
+            reentry_failures = 0
+            reentry_origin = None
+            if (following_probe_id is not None and boundary.evidence_kind == "pause"
+                    and boundary.proof.get("pause_id") == following_probe_id):
+                boundary = replace(boundary, proof={**boundary.proof, "bounded_following_origin_ayah": ayah})
             event("CONFIRMED", ayah, evidence=boundary.evidence_kind, start_ms=boundary.start_ms)
+            validate_boundaries([boundary], [ayah], duration, reads.calls,
+                                groups=groups, word_ends=word_ends, canonical_ends=canonical_ends,
+                                threshold=threshold, pauses=pauses, policy=policy,
+                                pause_geometry_data=geometry, search_only=policy.independent_search)
             confirmed.append(boundary)
             event("ADVANCE", ayah)
             if ayah_progress:
                 ayah_progress(ayah)
-        result = _finish_estimates(confirmed, ayahs, groups, duration, reason, unresolved)
+        region_root = None
+        for i, anchor in enumerate(confirmed):
+            if ({"independent_region_origin_ayah", "independent_target_origin_ayah"} & (anchor.proof or {}).keys()):
+                region_root = asdict(anchor)
+            if region_root is not None:
+                confirmed[i] = replace(anchor, proof={**anchor.proof, "search_region_root": region_root})
+        trace["search_anchors"] = [asdict(b) for b in confirmed]
+        reviewed, recovery_reviews = _review_addressed_recovery_onsets(confirmed, geometry, policy)
+        reviewed, temporal_reviews = _review_weak_sparse_onsets(reviewed, reads.calls, geometry, threshold)
+        temporal_reviews.extend(recovery_reviews)
+        publishable = []
+        for anchor in reviewed:
+            index = (anchor.proof or {}).get("pause_id")
+            missing_timing = ((anchor.proof or {}).get("identity_only") or
+                              (index is not None and not geometry[index]["accepted"]))
+            if missing_timing:
+                unresolved[anchor.ayah] = (geometry[index]["reason"] if index is not None
+                                           else "unsupported_first_onset_timing")
+                event("IDENTITY_ONLY", anchor.ayah, reason=unresolved[anchor.ayah],
+                      read_id=anchor.read_id, search_location_ms=anchor.start_ms)
+            else:
+                publishable.append(anchor)
+        result = _complete_result(publishable, ayahs, reason, unresolved)
+        report("verify")
+        for review in temporal_reviews:
+            event("IDENTITY_ONLY", **review)
+            event("REVIEW_REQUIRED", review["ayah"], reason=review["reason"])
         event("VALIDATE")
         validate_boundaries(result, ayahs, duration, reads.calls,
                             groups=groups, word_ends=word_ends, canonical_ends=canonical_ends, threshold=threshold, pauses=pauses, policy=policy, pause_geometry_data=geometry)
@@ -1391,8 +1690,10 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
             "noisy_opening": "identity_only_missing_onset_not_reconstructed",
         }
         trace["ayahs"] = [{"ayah": b.ayah, "onset_ms": b.start_ms, "conf": b.confidence,
-                            "reliable": b.evidence_kind != "estimate"} for b in result]
-        trace["review_required_ayahs"] = [b.ayah for b in result if b.evidence_kind == "estimate"]
+                            "reliable": b.evidence_kind != "unresolved"} for b in result]
+        trace["result_complete"] = all(b.start_ms is not None for b in result)
+        trace["unresolved_ayahs"] = [b.ayah for b in result if b.start_ms is None]
+        trace["review_required_ayahs"] = [b.ayah for b in result if b.evidence_kind == "unresolved"]
         trace["pause_matches"] = [{"ayah": b.ayah, "from_pause": b.evidence_kind == "pause",
                                    "onset_ms": b.start_ms, "conf": b.confidence,
                                    "boundary_evidence": b.evidence_kind,
@@ -1402,7 +1703,7 @@ def align_surah_sequential(pcm, sr, words, *, bundle=None, adapter=None, surah=N
         trace.update(n_pause=sum(b.evidence_kind == "pause" for b in result),
                      n_wasl=sum(b.evidence_kind == "wasl" for b in result), bounded_ctc_fallback=None)
         event("RESULT_READY")
-        return [(b.ayah, b.start_ms, b.confidence) for b in result]
+        return [(b.ayah, b.start_ms, b.confidence) for b in result if b.start_ms is not None]
     except GenerationCancelled:
         events.append({"state": "CANCELLED"})
         raise

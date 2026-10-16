@@ -1,0 +1,32 @@
+{
+  "previous_F13_definitions_retained_verbatim": [
+    "Policy",
+    "Boundary",
+    "plan_phrase",
+    "plan_tail",
+    "_prefix",
+    "_strong_continuation_conflict",
+    "plan_seam",
+    "_beam_view",
+    "_expansion_evidence",
+    "_split_opening",
+    "_noisy_opening",
+    "_incomplete_speech_edge",
+    "_competing_prefix",
+    "pause_geometry",
+    "_review_weak_sparse_onsets",
+    "_finish_estimates",
+    "_silero_model_path",
+    "dsp_model_identity",
+    "first_pause_hypotheses"
+  ],
+  "changed_existing_definitions": [
+    "validate_boundaries",
+    "align_surah_sequential"
+  ],
+  "new_definitions": [
+    "_review_addressed_recovery_onsets"
+  ],
+  "policy_AST_identical": true,
+  "rejected_ASR_head_cue_absent": true
+}

@@ -1,0 +1,39 @@
+{
+  "cwd": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/baseline",
+  "modules": {
+    "surah_cutter.core.fast_executor": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/baseline/surah_cutter/core/fast_executor.py",
+    "surah_cutter.core.fast_adapters": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/baseline/surah_cutter/core/fast_adapters.py",
+    "surah_cutter.core.fast_ctc": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/baseline/surah_cutter/core/fast_ctc.py"
+  },
+  "policy": {
+    "speech_ms": [
+      1300,
+      2500,
+      4000
+    ],
+    "noisy_speech_ms": [
+      1700,
+      1900,
+      2100
+    ],
+    "max_candidates": 8,
+    "first_search_ms": 15000,
+    "cache_bytes": 33554432,
+    "ctc_quality": 0.25,
+    "asr_quality": 0.6,
+    "max_block_ayahs": 2,
+    "tempo_lower_ratio": 0.2,
+    "tempo_upper_ratio": 2.5,
+    "beam_log_margin": 2.1972245773362196,
+    "sparse_anchors": true,
+    "max_unresolved_ayahs": null,
+    "expansion_lookahead": 2,
+    "ctc_prefix_probability": 0.9,
+    "ctc_expansion_probability": 0.1
+  },
+  "sha256": {
+    "surah_cutter.core.fast_executor": "0eeb08005873e16096975caaecc0677ff8a48cf9f652be52f201e6a927cfde1e",
+    "surah_cutter.core.fast_adapters": "ececb1374994d29084824c47a4dc8bba918f622363fffd2b4d01581260f3f539",
+    "surah_cutter.core.fast_ctc": "7b681cc7fd4179fcde6b7654bb986de8984b86a5e884c653148fe1b3d6daca3d"
+  }
+}

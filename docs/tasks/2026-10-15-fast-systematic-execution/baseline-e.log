@@ -1,0 +1,56 @@
+quran-phonetics 9 2.88 review 128 coverage 0.007 calls 14
+quran-phonetics 42 3.76 review 51 coverage 0.051 calls 33
+quran-phonetics 83 2.71 review 35 coverage 0.129 calls 26
+quran-phonetics 95 1.0 review 7 coverage 0.257 calls 10
+quran-phonetics 109 0.71 review 5 coverage 0.271 calls 7
+quran-phonetics 113 0.98 review 3 coverage 0.355 calls 11
+quran-phonetics 114 0.54 review 5 coverage 0.333 calls 8
+quran-phonetics-fp32 9 3.4 review 128 coverage 0.007 calls 14
+quran-phonetics-fp32 42 4.99 review 51 coverage 0.051 calls 33
+quran-phonetics-fp32 83 3.78 review 34 coverage 0.124 calls 27
+quran-phonetics-fp32 95 1.39 review 7 coverage 0.257 calls 10
+quran-phonetics-fp32 109 0.98 review 5 coverage 0.271 calls 7
+quran-phonetics-fp32 113 1.38 review 3 coverage 0.355 calls 11
+quran-phonetics-fp32 114 0.77 review 5 coverage 0.333 calls 8
+{
+  "quran-phonetics": {
+    "surahs": 7,
+    "ayahs": 243,
+    "median_ms": 10528.0,
+    "p95_ms": 48865.499999999956,
+    "max_ms": 60531,
+    "over500": 225,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 234,
+    "load_probe_seconds": 0.20980291697196662,
+    "decode_seconds": 3.916939416201785,
+    "dsp_seconds": 0.5983039168640971,
+    "inference_match_seconds": 12.572222457965836,
+    "search_seconds": 13.170526374829933,
+    "audio_ms": 290540.0,
+    "covered_audio_ms": 147434.8125,
+    "total_ms": 4431908.5625,
+    "model_reads": 109
+  },
+  "quran-phonetics-fp32": {
+    "surahs": 7,
+    "ayahs": 243,
+    "median_ms": 10549.0,
+    "p95_ms": 48865.499999999956,
+    "max_ms": 60531,
+    "over500": 226,
+    "positive_conf_over500": [],
+    "sequence_violations": [],
+    "review_ayahs": 233,
+    "load_probe_seconds": 0.6109441670123488,
+    "decode_seconds": 3.916939416201785,
+    "dsp_seconds": 0.5983039168640971,
+    "inference_match_seconds": 16.69610912539065,
+    "search_seconds": 17.294413042254746,
+    "audio_ms": 292040.0,
+    "covered_audio_ms": 146284.5625,
+    "total_ms": 4431908.5625,
+    "model_reads": 110
+  }
+}

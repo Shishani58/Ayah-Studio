@@ -1,0 +1,99 @@
+[
+  {
+    "model": "mfa-quran-hafs",
+    "surah": 112,
+    "audio_sha256": "e0f594d0cb1b5a6e5de074dda01ecefc64bcd51ed13407261ba2ff4ec55abe0a",
+    "reference_sha256": "f36d9e57edd6b2f13de00d9b9f60c8df49c7ecda2bb4e386d1ca910aa5a8ce1f",
+    "decode_seconds": 0.2777,
+    "load_probe_seconds": 28.1872,
+    "full_seconds": 21.3134,
+    "source": "mfa:mfa-quran-hafs:revision=8386dceddf0fa816bd7f9b3c0667d992fa34bd36:adapter=mfa-hafs-v1:mfa=3.4.0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:lag=0:target=uthmani:lookup=nfkc:beam=40:retry-beam=160:boost-silence=1:confidence=uncalibrated",
+    "trace": {
+      "model_source": "mfa:mfa-quran-hafs:revision=8386dceddf0fa816bd7f9b3c0667d992fa34bd36:adapter=mfa-hafs-v1:mfa=3.4.0:text=c922bf9d60de49e28eff86f34e75d8d827d6bd4f572ad96e3418a6aa9066925a:lag=0:target=uthmani:lookup=nfkc:beam=40:retry-beam=160:boost-silence=1:confidence=uncalibrated",
+      "mode": "full",
+      "backend": "mfa",
+      "align_lag_ms": 0,
+      "ayahs": [
+        {
+          "ayah": 1,
+          "onset_ms": 5700,
+          "conf": 0.0,
+          "reliable": false
+        },
+        {
+          "ayah": 2,
+          "onset_ms": 8110,
+          "conf": 0.0,
+          "reliable": false
+        },
+        {
+          "ayah": 3,
+          "onset_ms": 8680,
+          "conf": 0.0,
+          "reliable": false
+        },
+        {
+          "ayah": 4,
+          "onset_ms": 10720,
+          "conf": 0.0,
+          "reliable": false
+        }
+      ]
+    },
+    "rows": [
+      [
+        1,
+        5700,
+        0.0
+      ],
+      [
+        2,
+        8110,
+        0.0
+      ],
+      [
+        3,
+        8680,
+        0.0
+      ],
+      [
+        4,
+        10720,
+        0.0
+      ]
+    ],
+    "absolute_errors_ms": [
+      394,
+      645,
+      2183,
+      2810
+    ],
+    "median_ms": 1414.0,
+    "p95_ms": 2715.95,
+    "max_ms": 2810,
+    "first_ayah_words": [
+      [
+        0,
+        190,
+        0.0
+      ],
+      [
+        1,
+        490,
+        0.0
+      ],
+      [
+        2,
+        910,
+        0.0
+      ],
+      [
+        3,
+        1740,
+        0.0
+      ]
+    ],
+    "words_seconds": 24.9917,
+    "seconds": 74.807
+  }
+]

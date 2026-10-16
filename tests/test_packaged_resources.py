@@ -1,5 +1,4 @@
 from surah_cutter.data.quran_text import surah_ayah_counts
-from surah_cutter.data.references import list_references
 from surah_cutter.resources import external_model_path, resource_path
 
 
@@ -9,7 +8,6 @@ def test_small_resources_are_available():
     assert resource_path("data", "word_tr_cache.json").is_file()
     assert resource_path("data", "model_text_targets.json").is_file()
     assert resource_path("assets", "fonts", "qpc_hafs.ttf").is_file()
-    assert list_references()
 
 
 def test_external_model_override_is_kept_out_of_wheel(tmp_path, monkeypatch):

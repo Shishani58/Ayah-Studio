@@ -53,6 +53,10 @@ def main():
     else:
         payload = json.loads(RAW.read_text())
         rows, trace = payload["rows"], payload["trace"]
+        stat = AUDIO.stat()
+        assert trace["audio_signature"] == dict(name=AUDIO.name, size=stat.st_size, mtime_ns=stat.st_mtime_ns)
+        assert all(c["onset_ms"] <= c["full_ctc_first_ms"] for c in trace["ayahs"]
+                   if c["pause_center_reason"] == "positioned")
         # Snapshot SQLite through its backup API, including any WAL changes.
         backup = CACHE / f"before-save-{time.time_ns()}.db"
         with sqlite3.connect(f"file:{DB}?mode=ro", uri=True) as src, sqlite3.connect(backup) as dst:
@@ -69,7 +73,8 @@ def main():
         (TASK / "saved.json").write_text(json.dumps(dict(backup=str(backup), written=saved.written,
                                                         protected=len(protected),
                                                         log_paths=saved.log_paths), indent=2) + "\n")
-        print("Saved", saved, flush=True)
+        print(json.dumps(dict(outcome=saved.outcome, written=saved.written,
+                              diagnostics_error=saved.diagnostics_error, paths=saved.log_paths)), flush=True)
 
     # Reference data is evaluation-only, opened after inference finishes.
     reference = references.load_reference("abu_bakr_ash_shatri")

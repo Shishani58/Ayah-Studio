@@ -1,0 +1,116 @@
+FF..                                                                     [100%]
+=================================== FAILURES ===================================
+___________ test_actual_alignment_starts_and_sequence[112-full-150] ____________
+
+bundle = <surah_cutter.core.align._OnnxBundle object at 0x1080e6b10>
+surah = 112, mode = 'full', max_error_ms = 150
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x108100ef0>
+
+    @pytest.mark.parametrize("surah, mode, max_error_ms", [
+        (1, "full", 100),
+        (112, "full", 150), (114, "full", 150),
+        (112, "fast", 150), (114, "fast", 150),
+        (80, "fast", 800), (88, "fast", 500),
+        (86, "fast", 150),
+    ])
+    def test_actual_alignment_starts_and_sequence(bundle, surah, mode, max_error_ms, monkeypatch):
+        pcm = decode.decode(str(AUDIO / f"{surah:03d}.mp3"))
+        words = quran_text.surah_words(surah)
+        trace = {}
+        actual_calls = []
+        original = align._emissions
+    
+        def local_infer(bundle, audio, np_module):
+            if mode == "fast":
+                assert len(audio) < len(pcm)
+                assert len(audio) <= 6 * 16000
+                actual_calls.append(len(audio))
+            return original(bundle, audio, np_module)
+    
+        monkeypatch.setattr(align, "_emissions", local_infer)
+        if mode == "fast":
+            from surah_cutter.core import align_tiled
+    
+            def forbidden(*args, **kwargs):
+                pytest.fail("FAST escalated to FULL/tiled")
+    
+            monkeypatch.setattr(align, "align_surah", forbidden)
+            monkeypatch.setattr(align_tiled, "align_surah_tiled", forbidden)
+        if mode == "full":
+            rows = align.align_surah(pcm, 16000, words, surah=surah, model=bundle, trace=trace)
+        else:
+            rows = align_fast.align_surah_fast(pcm, 16000, words, surah=surah, bundle=bundle, trace=trace)
+        reference = references.load_reference("abu_bakr_ash_shatri")
+    
+        assert [a for a, _, _ in rows] == list(range(1, quran_text.ayah_count(surah) + 1))
+        assert all(left[1] < right[1] for left, right in zip(rows, rows[1:]))
+        if mode == "full":
+            # The reference grades the former speech-edge placement. Keep that
+            # regression bound on the acoustic result, then check the new cut
+            # independently: it intentionally differs from the reference in silence.
+            checks = {c["ayah"]: c for c in trace["ayahs"]}
+>           assert max(abs(checks[a]["pre_center_onset_ms"] - reference[(surah, a)])
+                       for a, _, _ in rows) <= max_error_ms
+E           assert 182 <= 150
+E            +  where 182 = max(<generator object test_actual_alignment_starts_and_sequence.<locals>.<genexpr> at 0x108038040>)
+
+tests/test_alignment_audio.py:73: AssertionError
+___________ test_actual_alignment_starts_and_sequence[114-full-150] ____________
+
+bundle = <surah_cutter.core.align._OnnxBundle object at 0x1080e6b10>
+surah = 114, mode = 'full', max_error_ms = 150
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1087a2d80>
+
+    @pytest.mark.parametrize("surah, mode, max_error_ms", [
+        (1, "full", 100),
+        (112, "full", 150), (114, "full", 150),
+        (112, "fast", 150), (114, "fast", 150),
+        (80, "fast", 800), (88, "fast", 500),
+        (86, "fast", 150),
+    ])
+    def test_actual_alignment_starts_and_sequence(bundle, surah, mode, max_error_ms, monkeypatch):
+        pcm = decode.decode(str(AUDIO / f"{surah:03d}.mp3"))
+        words = quran_text.surah_words(surah)
+        trace = {}
+        actual_calls = []
+        original = align._emissions
+    
+        def local_infer(bundle, audio, np_module):
+            if mode == "fast":
+                assert len(audio) < len(pcm)
+                assert len(audio) <= 6 * 16000
+                actual_calls.append(len(audio))
+            return original(bundle, audio, np_module)
+    
+        monkeypatch.setattr(align, "_emissions", local_infer)
+        if mode == "fast":
+            from surah_cutter.core import align_tiled
+    
+            def forbidden(*args, **kwargs):
+                pytest.fail("FAST escalated to FULL/tiled")
+    
+            monkeypatch.setattr(align, "align_surah", forbidden)
+            monkeypatch.setattr(align_tiled, "align_surah_tiled", forbidden)
+        if mode == "full":
+            rows = align.align_surah(pcm, 16000, words, surah=surah, model=bundle, trace=trace)
+        else:
+            rows = align_fast.align_surah_fast(pcm, 16000, words, surah=surah, bundle=bundle, trace=trace)
+        reference = references.load_reference("abu_bakr_ash_shatri")
+    
+        assert [a for a, _, _ in rows] == list(range(1, quran_text.ayah_count(surah) + 1))
+        assert all(left[1] < right[1] for left, right in zip(rows, rows[1:]))
+        if mode == "full":
+            # The reference grades the former speech-edge placement. Keep that
+            # regression bound on the acoustic result, then check the new cut
+            # independently: it intentionally differs from the reference in silence.
+            checks = {c["ayah"]: c for c in trace["ayahs"]}
+>           assert max(abs(checks[a]["pre_center_onset_ms"] - reference[(surah, a)])
+                       for a, _, _ in rows) <= max_error_ms
+E           assert 261 <= 150
+E            +  where 261 = max(<generator object test_actual_alignment_starts_and_sequence.<locals>.<genexpr> at 0x107ff3780>)
+
+tests/test_alignment_audio.py:73: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_alignment_audio.py::test_actual_alignment_starts_and_sequence[112-full-150]
+FAILED tests/test_alignment_audio.py::test_actual_alignment_starts_and_sequence[114-full-150]
+2 failed, 2 passed, 6 deselected in 55.54s

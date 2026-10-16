@@ -1,0 +1,16 @@
+{
+  "variant": "prototype-d",
+  "root": "/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-short-unit-0s4xwatd/prototype-d",
+  "executor_sha256": "656537b4bf352ccdbaa78e2112bec47174abeaa00a92038d069b5fdc54d0c5f9",
+  "selected_before_after_run": true,
+  "reason": "failed new cue must preserve original candidate recovery",
+  "core_evidence": "50 row-equivalent replays;49 same windows; Minshawi65Base resumes old baseline windows; fresh final transfers queued",
+  "artifact_label_note": "wide/warm filenames retain orchestration label prototype-c; actual argv/cwd/imports and effective variant identify D. C historical source roots and files are unchanged.",
+  "pre_wide_hook": {
+    "label": "ctc-intro-probe",
+    "script": "intro_bootstrap_probe.py",
+    "kind": "separate diagnostic, not ASR corpus data"
+  },
+  "warm_variant": "prototype-f",
+  "warm_selection_reason": "Separate text identity from unsupported weak-initial sparse timing on nonstationary interval; F must match all D PCM inputs and preserve previous baseline confirmations"
+}

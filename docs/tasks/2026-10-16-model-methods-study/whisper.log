@@ -1,0 +1,89 @@
+whisper shatri-001 greedy OK 18.5
+whisper shatri-001 beam5 OK 704.15
+whisper shatri-001 token_timestamps ERROR 11.93
+whisper shatri-001 teacher_attention OK 39.86
+Traceback (most recent call last):
+  File "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/secondary_asr.py", line 114, in <module>
+    main()
+  File "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/secondary_asr.py", line 90, in main
+    generated = model.generate(processed.input_features, attention_mask=processed.attention_mask,
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/transformers/models/whisper/generation_whisper.py", line 866, in generate
+    ) = self.generate_with_fallback(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/transformers/models/whisper/generation_whisper.py", line 1038, in generate_with_fallback
+    seek_outputs = super().generate(
+                   ^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/transformers/generation/utils.py", line 2564, in generate
+    result = decoding_method(
+             ^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/transformers/generation/utils.py", line 2787, in _sample
+    outputs = model_forward(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/transformers/models/whisper/modeling_whisper.py", line 1289, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/transformers/models/whisper/modeling_whisper.py", line 1130, in forward
+    decoder_outputs = self.decoder(
+                      ^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/transformers/models/whisper/modeling_whisper.py", line 929, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/transformers/modeling_layers.py", line 94, in __call__
+    return super().__call__(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/transformers/models/whisper/modeling_whisper.py", line 519, in forward
+    hidden_states, cross_attn_weights = self.encoder_attn(
+                                        ^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/transformers/models/whisper/modeling_whisper.py", line 316, in forward
+    query_states = self.q_proj(hidden_states) * self.scaling
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.surah-cutter/model-runtime/lib/python3.11/site-packages/torch/nn/modules/linear.py", line 125, in forward
+    return F.linear(input, self.weight, self.bias)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

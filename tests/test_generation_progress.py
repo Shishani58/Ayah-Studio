@@ -27,7 +27,7 @@ def test_batch_progress_weights_canonical_ayahs_and_reports_current_before_work(
         return [(surah, a, a * 1000) for a in range(1, quran_text.ayah_count(surah) + 1)]
 
     monkeypatch.setattr(pipeline, "process_surah", process)
-    job._run([113, 114], "fast", None)
+    job._run([113, 114], "fast")
     assert events(job, "start") == [{"type": "start", "total": 2, "total_ayahs": 11}]
     progress = events(job, "ayah_progress")
     assert [e["ayahs_done"] for e in progress] == list(range(11))
@@ -52,7 +52,7 @@ def test_cancel_progress_never_reports_completion_or_writes_partial_sura(tmp_pat
         pytest.fail("Cancelled callback must interrupt the algorithm")
 
     monkeypatch.setattr(pipeline, "process_surah", process)
-    job._run([114], "full", None)
+    job._run([114], "full")
     assert [e["ayahs_done"] for e in events(job, "ayah_progress")] == [0, 1]
     assert events(job, "cancelled") == [{"type": "cancelled", "completed": 0}]
     assert not events(job, "sura")
@@ -76,7 +76,7 @@ def test_word_progress_counts_ayahs_once_even_with_boundary_pass_and_word_failur
     monkeypatch.setattr(pipeline, "process_surah", process)
     monkeypatch.setattr(decode, "decode", lambda _: np.zeros(8 * decode.DEFAULT_SR))
     monkeypatch.setattr(word_align, "align_ayah_words", word_rows)
-    job._run([114], "words", None)
+    job._run([114], "words")
     assert [e["ayahs_done"] for e in events(job, "ayah_progress")] == list(range(6))
     result = events(job, "sura")[0]
     assert result["ayahs_done"] == result["total_ayahs"] == 6

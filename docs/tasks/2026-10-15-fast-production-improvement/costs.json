@@ -1,0 +1,535 @@
+{
+  "wide-baseline": {
+    "models": {
+      "whisper-tarteel-base": {
+        "cases": 114,
+        "ayahs": 6236,
+        "confirmed": 1140,
+        "confirmed_reference_within500": 1130,
+        "confirmed_reference_over500": 10,
+        "executor_s": 1277.6413652955089,
+        "model_s": 1221.1683422555216,
+        "executor_other_s": 56.47302303998731,
+        "actual_dispatches": 3044,
+        "model_input_ms": 5244490.0,
+        "union_ms_sum_per_recording": 4249640.0,
+        "max_union_ratio": 0.5402260827905597,
+        "max_input_ratio": 0.853228694947928,
+        "max_actual_read_ms": 4200.0,
+        "max_cache_bytes": 834980,
+        "cache_hits": 0,
+        "cache_evictions": 0,
+        "load_probe_s": 5.409153334097937,
+        "synthetic_startup_probe": {
+          "calls": 1,
+          "input_ms": 1000,
+          "signal": "synthetic zeros; encoder+decoder; not recording input",
+          "cost_bucket": "load_probe_s"
+        },
+        "decode_s": 86.01126579218544,
+        "initial_dsp_s": 12.382755408762023
+      }
+    },
+    "process_wall_s": 2275.217220999999,
+    "tree_peak_kib": 2877840,
+    "rss_nominal_interval_s": 0.2,
+    "rss_observed_max_gap_s": 0.7088557919487357,
+    "rss_samples": 9911,
+    "rss_scope": "same-time sum of benchmark process and observed descendants; per-PID series retained",
+    "process_scope": "wide historical process includes prior Tiny stage; per-model fields filtered to Base",
+    "host_before": null,
+    "host_after": null,
+    "preprocessing_note": "wide decode/DSP shared by models, do not sum twice; warm repeats overwrite per-surah preprocessing metadata, so only warm executor/model times used"
+  },
+  "wide-prototype-c": {
+    "models": {
+      "whisper-tarteel-base": {
+        "cases": 114,
+        "ayahs": 6236,
+        "confirmed": 1186,
+        "confirmed_reference_within500": 1176,
+        "confirmed_reference_over500": 10,
+        "executor_s": 2241.166656413814,
+        "model_s": 2170.021420408506,
+        "executor_other_s": 71.1452360053081,
+        "actual_dispatches": 3167,
+        "model_input_ms": 5496390.0,
+        "union_ms_sum_per_recording": 4416700.0,
+        "max_union_ratio": 0.5402260827905597,
+        "max_input_ratio": 0.853228694947928,
+        "max_actual_read_ms": 4200.0,
+        "max_cache_bytes": 834980,
+        "cache_hits": 0,
+        "cache_evictions": 0,
+        "publication_source": "F same-input replay; timers and model inputs measured in D",
+        "load_probe_s": 5.1705681250896305,
+        "synthetic_startup_probe": {
+          "calls": 1,
+          "input_ms": 1000,
+          "signal": "synthetic zeros; encoder+decoder; not recording input",
+          "cost_bucket": "load_probe_s"
+        },
+        "decode_s": 82.79227771027945,
+        "initial_dsp_s": 12.17823804076761
+      }
+    },
+    "process_wall_s": 3268.3789957498666,
+    "tree_peak_kib": 2559040,
+    "rss_nominal_interval_s": 0.2,
+    "rss_observed_max_gap_s": 1.4897475419566035,
+    "rss_samples": 13164,
+    "rss_scope": "same-time sum of benchmark process and observed descendants; per-PID series retained",
+    "process_scope": "wide historical process includes prior Tiny stage; per-model fields filtered to Base",
+    "host_before": null,
+    "host_after": null,
+    "preprocessing_note": "wide decode/DSP shared by models, do not sum twice; warm repeats overwrite per-surah preprocessing metadata, so only warm executor/model times used"
+  },
+  "warm-baseline": {
+    "models": {
+      "whisper-tarteel-base": {
+        "cases": 6,
+        "ayahs": 96,
+        "confirmed": 57,
+        "confirmed_reference_within500": 57,
+        "confirmed_reference_over500": 0,
+        "executor_s": 80.99479358200915,
+        "model_s": 78.90740583161823,
+        "executor_other_s": 2.087387750390917,
+        "actual_dispatches": 126,
+        "model_input_ms": 197400.0,
+        "union_ms_sum_per_recording": 183900.0,
+        "max_union_ratio": 0.2147220136153277,
+        "max_input_ratio": 0.23424219667126656,
+        "max_actual_read_ms": 2700.0,
+        "max_cache_bytes": 139362,
+        "cache_hits": 0,
+        "cache_evictions": 0,
+        "load_probe_s": 7.648798875045031,
+        "synthetic_startup_probe": {
+          "calls": 1,
+          "input_ms": 1000,
+          "signal": "synthetic zeros; encoder+decoder; not recording input",
+          "cost_bucket": "load_probe_s"
+        },
+        "warm_repeats": {
+          "65": {
+            "executor_s": [
+              5.23014829098247,
+              4.537227499997243,
+              4.129398124990985
+            ],
+            "median_executor_s": 4.537227499997243,
+            "model_s": [
+              4.486369458725676,
+              4.269733499968424,
+              3.865717248991132
+            ],
+            "rows_identical": true,
+            "dispatches_identical": true
+          },
+          "73": {
+            "executor_s": [
+              21.509453375125304,
+              24.553202624898404,
+              21.035363666014746
+            ],
+            "median_executor_s": 21.509453375125304,
+            "model_s": [
+              21.240982291288674,
+              24.257948372745886,
+              20.786654959898442
+            ],
+            "rows_identical": true,
+            "dispatches_identical": true
+          }
+        }
+      }
+    },
+    "process_wall_s": 92.3587783749681,
+    "tree_peak_kib": 1040896,
+    "rss_nominal_interval_s": 0.2,
+    "rss_observed_max_gap_s": 0.9003351670689881,
+    "rss_samples": 362,
+    "rss_scope": "same-time sum of benchmark process and observed descendants; per-PID series retained",
+    "process_scope": "Base only",
+    "host_before": {
+      "unix": 1792101187.697949,
+      "top_cpu": [
+        {
+          "pid": 39220,
+          "cpu_percent": 265.7,
+          "rss_kib": 14528,
+          "executable": "/Users/ayub/Developer/surah-cutter/.venv/lib/python3.12/site-packages/imageio_ffmpeg/binaries/ffmpeg-macos-aarch64-v7.1"
+        },
+        {
+          "pid": 633,
+          "cpu_percent": 72.1,
+          "rss_kib": 101712,
+          "executable": "/System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer"
+        },
+        {
+          "pid": 39235,
+          "cpu_percent": 39.1,
+          "rss_kib": 799856,
+          "executable": "/Users/ayub/.surah-cutter/model-runtime/bin/python"
+        },
+        {
+          "pid": 3512,
+          "cpu_percent": 38.7,
+          "rss_kib": 38000,
+          "executable": "/Applications/Open Design.app/Contents/Frameworks/Open Design Helper.app/Contents/MacOS/Open Design Helper"
+        },
+        {
+          "pid": 28829,
+          "cpu_percent": 32.3,
+          "rss_kib": 195472,
+          "executable": "/Users/ayub/Developer/quran_flutter/build/macos/Build/Products/Debug/Quran.app/Contents/MacOS/Quran"
+        },
+        {
+          "pid": 39216,
+          "cpu_percent": 30.4,
+          "rss_kib": 75024,
+          "executable": "/Users/ayub/Developer/surah-cutter/.venv/bin/python"
+        },
+        {
+          "pid": 1924,
+          "cpu_percent": 25.4,
+          "rss_kib": 41104,
+          "executable": "/Applications/Happ.app/Contents/MacOS/Happ"
+        },
+        {
+          "pid": 1708,
+          "cpu_percent": 18.3,
+          "rss_kib": 109648,
+          "executable": "/Applications/Open Design.app/Contents/Frameworks/Open Design Helper (Renderer).app/Contents/MacOS/Open Design Helper (Renderer)"
+        },
+        {
+          "pid": 21375,
+          "cpu_percent": 16.4,
+          "rss_kib": 972144,
+          "executable": "/Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/155.0.8059.40/Helpers/Codex (Renderer).app/Contents/MacOS/Codex (Renderer)"
+        },
+        {
+          "pid": 39301,
+          "cpu_percent": 13.9,
+          "rss_kib": 24704,
+          "executable": "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mdworker_shared"
+        },
+        {
+          "pid": 39302,
+          "cpu_percent": 13.3,
+          "rss_kib": 24192,
+          "executable": "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mdworker_shared"
+        },
+        {
+          "pid": 10641,
+          "cpu_percent": 12.2,
+          "rss_kib": 28304,
+          "executable": "/usr/libexec/duetexpertd"
+        }
+      ]
+    },
+    "host_after": {
+      "unix": 1792101280.1028569,
+      "top_cpu": [
+        {
+          "pid": 40201,
+          "cpu_percent": 176.5,
+          "rss_kib": 718560,
+          "executable": "/Users/ayub/.surah-cutter/model-runtime/bin/python"
+        },
+        {
+          "pid": 40461,
+          "cpu_percent": 97.5,
+          "rss_kib": 228864,
+          "executable": "/Users/ayub/Developer/surah-cutter/.venv/bin/python"
+        },
+        {
+          "pid": 633,
+          "cpu_percent": 66.2,
+          "rss_kib": 93472,
+          "executable": "/System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer"
+        },
+        {
+          "pid": 3512,
+          "cpu_percent": 39.8,
+          "rss_kib": 36000,
+          "executable": "/Applications/Open Design.app/Contents/Frameworks/Open Design Helper.app/Contents/MacOS/Open Design Helper"
+        },
+        {
+          "pid": 1924,
+          "cpu_percent": 30.7,
+          "rss_kib": 33264,
+          "executable": "/Applications/Happ.app/Contents/MacOS/Happ"
+        },
+        {
+          "pid": 40680,
+          "cpu_percent": 29.3,
+          "rss_kib": 16080,
+          "executable": "/Applications/Xcode 27.app/Contents/SharedFrameworks/DVTSourceControl.framework/Versions/A/XPCServices/com.apple.dt.Xcode.sourcecontrol.Git.xpc/Contents/MacOS/com.apple.dt.Xcode.sourcecontrol.Git"
+        },
+        {
+          "pid": 1708,
+          "cpu_percent": 14.3,
+          "rss_kib": 80416,
+          "executable": "/Applications/Open Design.app/Contents/Frameworks/Open Design Helper (Renderer).app/Contents/MacOS/Open Design Helper (Renderer)"
+        },
+        {
+          "pid": 10059,
+          "cpu_percent": 9.7,
+          "rss_kib": 83168,
+          "executable": "/Applications/Telegram.app/Contents/MacOS/Telegram"
+        },
+        {
+          "pid": 21375,
+          "cpu_percent": 9.5,
+          "rss_kib": 573136,
+          "executable": "/Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/155.0.8059.40/Helpers/Codex (Renderer).app/Contents/MacOS/Codex (Renderer)"
+        },
+        {
+          "pid": 21450,
+          "cpu_percent": 8.6,
+          "rss_kib": 21936,
+          "executable": "/Users/ayub/.codex/computer-use/Codex Computer Use.app/Contents/MacOS/SkyComputerUseService"
+        },
+        {
+          "pid": 10297,
+          "cpu_percent": 4.3,
+          "rss_kib": 37248,
+          "executable": "/Applications/Happ.app/Contents/PlugIns/Tunnel.appex/Contents/MacOS/Tunnel"
+        },
+        {
+          "pid": 765,
+          "cpu_percent": 4.2,
+          "rss_kib": 35248,
+          "executable": "/System/Library/DriverExtensions/com.apple.DriverKit-AppleBCMWLAN.dext/com.apple.DriverKit-AppleBCMWLAN"
+        }
+      ]
+    },
+    "preprocessing_note": "wide decode/DSP shared by models, do not sum twice; warm repeats overwrite per-surah preprocessing metadata, so only warm executor/model times used"
+  },
+  "warm-prototype-c": {
+    "models": {
+      "whisper-tarteel-base": {
+        "cases": 6,
+        "ayahs": 96,
+        "confirmed": 63,
+        "confirmed_reference_within500": 63,
+        "confirmed_reference_over500": 0,
+        "executor_s": 87.99813562515192,
+        "model_s": 86.03059183200821,
+        "executor_other_s": 1.9675437931437045,
+        "actual_dispatches": 141,
+        "model_input_ms": 227100.0,
+        "union_ms_sum_per_recording": 202560.0,
+        "max_union_ratio": 0.21992739576357806,
+        "max_input_ratio": 0.24595430650482988,
+        "max_actual_read_ms": 2700.0,
+        "max_cache_bytes": 145272,
+        "cache_hits": 0,
+        "cache_evictions": 0,
+        "load_probe_s": 7.805708375060931,
+        "synthetic_startup_probe": {
+          "calls": 1,
+          "input_ms": 1000,
+          "signal": "synthetic zeros; encoder+decoder; not recording input",
+          "cost_bucket": "load_probe_s"
+        },
+        "warm_repeats": {
+          "65": {
+            "executor_s": [
+              9.918615916045383,
+              6.287282957928255,
+              5.994952792068943
+            ],
+            "median_executor_s": 6.287282957928255,
+            "model_s": [
+              9.373798418790102,
+              5.921345372451469,
+              5.706362458644435
+            ],
+            "rows_identical": true,
+            "dispatches_identical": true
+          },
+          "73": {
+            "executor_s": [
+              26.84736991696991,
+              20.047841208055615,
+              18.90207283408381
+            ],
+            "median_executor_s": 20.047841208055615,
+            "model_s": [
+              26.624969373457134,
+              19.758836209774017,
+              18.645279998891056
+            ],
+            "rows_identical": true,
+            "dispatches_identical": true
+          }
+        }
+      }
+    },
+    "process_wall_s": 99.39843258308247,
+    "tree_peak_kib": 947968,
+    "rss_nominal_interval_s": 0.2,
+    "rss_observed_max_gap_s": 0.6589856669306755,
+    "rss_samples": 402,
+    "rss_scope": "same-time sum of benchmark process and observed descendants; per-PID series retained",
+    "process_scope": "Base only",
+    "host_before": {
+      "unix": 1792101280.20465,
+      "top_cpu": [
+        {
+          "pid": 40201,
+          "cpu_percent": 185.7,
+          "rss_kib": 718736,
+          "executable": "/Users/ayub/.surah-cutter/model-runtime/bin/python"
+        },
+        {
+          "pid": 40461,
+          "cpu_percent": 96.6,
+          "rss_kib": 246320,
+          "executable": "/Users/ayub/Developer/surah-cutter/.venv/bin/python"
+        },
+        {
+          "pid": 633,
+          "cpu_percent": 66.2,
+          "rss_kib": 93504,
+          "executable": "/System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer"
+        },
+        {
+          "pid": 3512,
+          "cpu_percent": 40.9,
+          "rss_kib": 36064,
+          "executable": "/Applications/Open Design.app/Contents/Frameworks/Open Design Helper.app/Contents/MacOS/Open Design Helper"
+        },
+        {
+          "pid": 1924,
+          "cpu_percent": 30.7,
+          "rss_kib": 33280,
+          "executable": "/Applications/Happ.app/Contents/MacOS/Happ"
+        },
+        {
+          "pid": 40680,
+          "cpu_percent": 26.4,
+          "rss_kib": 16176,
+          "executable": "/Applications/Xcode 27.app/Contents/SharedFrameworks/DVTSourceControl.framework/Versions/A/XPCServices/com.apple.dt.Xcode.sourcecontrol.Git.xpc/Contents/MacOS/com.apple.dt.Xcode.sourcecontrol.Git"
+        },
+        {
+          "pid": 1708,
+          "cpu_percent": 14.8,
+          "rss_kib": 80496,
+          "executable": "/Applications/Open Design.app/Contents/Frameworks/Open Design Helper (Renderer).app/Contents/MacOS/Open Design Helper (Renderer)"
+        },
+        {
+          "pid": 40694,
+          "cpu_percent": 14.1,
+          "rss_kib": 8528,
+          "executable": "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mdworker_shared"
+        },
+        {
+          "pid": 21375,
+          "cpu_percent": 10.8,
+          "rss_kib": 599888,
+          "executable": "/Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/155.0.8059.40/Helpers/Codex (Renderer).app/Contents/MacOS/Codex (Renderer)"
+        },
+        {
+          "pid": 10059,
+          "cpu_percent": 9.1,
+          "rss_kib": 83184,
+          "executable": "/Applications/Telegram.app/Contents/MacOS/Telegram"
+        },
+        {
+          "pid": 21450,
+          "cpu_percent": 8.4,
+          "rss_kib": 21936,
+          "executable": "/Users/ayub/.codex/computer-use/Codex Computer Use.app/Contents/MacOS/SkyComputerUseService"
+        },
+        {
+          "pid": 10297,
+          "cpu_percent": 4.3,
+          "rss_kib": 37344,
+          "executable": "/Applications/Happ.app/Contents/PlugIns/Tunnel.appex/Contents/MacOS/Tunnel"
+        }
+      ]
+    },
+    "host_after": {
+      "unix": 1792101379.661202,
+      "top_cpu": [
+        {
+          "pid": 40201,
+          "cpu_percent": 149.8,
+          "rss_kib": 718512,
+          "executable": "/Users/ayub/.surah-cutter/model-runtime/bin/python"
+        },
+        {
+          "pid": 42114,
+          "cpu_percent": 92.8,
+          "rss_kib": 1232688,
+          "executable": "/Users/ayub/Developer/surah-cutter/.venv/bin/python"
+        },
+        {
+          "pid": 633,
+          "cpu_percent": 70.3,
+          "rss_kib": 98608,
+          "executable": "/System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer"
+        },
+        {
+          "pid": 3512,
+          "cpu_percent": 40.0,
+          "rss_kib": 37840,
+          "executable": "/Applications/Open Design.app/Contents/Frameworks/Open Design Helper.app/Contents/MacOS/Open Design Helper"
+        },
+        {
+          "pid": 1924,
+          "cpu_percent": 28.5,
+          "rss_kib": 38736,
+          "executable": "/Applications/Happ.app/Contents/MacOS/Happ"
+        },
+        {
+          "pid": 21375,
+          "cpu_percent": 21.8,
+          "rss_kib": 315616,
+          "executable": "/Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/155.0.8059.40/Helpers/Codex (Renderer).app/Contents/MacOS/Codex (Renderer)"
+        },
+        {
+          "pid": 1708,
+          "cpu_percent": 19.3,
+          "rss_kib": 130160,
+          "executable": "/Applications/Open Design.app/Contents/Frameworks/Open Design Helper (Renderer).app/Contents/MacOS/Open Design Helper (Renderer)"
+        },
+        {
+          "pid": 10059,
+          "cpu_percent": 12.3,
+          "rss_kib": 140448,
+          "executable": "/Applications/Telegram.app/Contents/MacOS/Telegram"
+        },
+        {
+          "pid": 42210,
+          "cpu_percent": 10.5,
+          "rss_kib": 34016,
+          "executable": "node"
+        },
+        {
+          "pid": 21280,
+          "cpu_percent": 10.0,
+          "rss_kib": 46112,
+          "executable": "/Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/155.0.8059.40/Helpers/Codex (Service).app/Contents/MacOS/Codex (Service)"
+        },
+        {
+          "pid": 21376,
+          "cpu_percent": 9.6,
+          "rss_kib": 167424,
+          "executable": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex"
+        },
+        {
+          "pid": 21450,
+          "cpu_percent": 8.8,
+          "rss_kib": 21152,
+          "executable": "/Users/ayub/.codex/computer-use/Codex Computer Use.app/Contents/MacOS/SkyComputerUseService"
+        }
+      ]
+    },
+    "preprocessing_note": "wide decode/DSP shared by models, do not sum twice; warm repeats overwrite per-surah preprocessing metadata, so only warm executor/model times used"
+  }
+}

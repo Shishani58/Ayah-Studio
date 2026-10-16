@@ -1,0 +1,91 @@
+...................................FF.FF..............                   [100%]
+=================================== FAILURES ===================================
+_____ test_exact_key_skips_only_complete_matching_auto_or_fully_protected ______
+
+tmp_path = PosixPath('/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/pytest-of-ayub/pytest-439/test_exact_key_skips_only_comp0')
+identity = {'algorithm': 'sequential-fast-v2-experimental-1', 'adapter': 'ctc-test-v1', 'model': 'captured-model', 'revision': 'captured-revision', ...}
+
+    def test_exact_key_skips_only_complete_matching_auto_or_fully_protected(tmp_path, identity):
+        path = tmp_path / "p.db"
+        key = fast_run_key(identity)
+        source = f"test:requested_mode=fast:fast_run_key={key}"
+        with ProjectDB.open(str(path), "test", 1) as db:
+            db.write_timings([(114, a, a * 1000) for a in range(1, 7)], source)
+>           assert fast_resume_suras(path, {114: key}) == {114}
+E           assert set() == {114}
+E             
+E             Extra items in the right set:
+E             114
+E             Use -v to get more diff
+
+tests/test_alignment_identity.py:101: AssertionError
+_____ test_writer_persists_validated_key_in_same_transaction_as_auto_rows ______
+
+tmp_path = PosixPath('/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/pytest-of-ayub/pytest-439/test_writer_persists_validated0')
+identity = {'algorithm': 'sequential-fast-v2-experimental-1', 'adapter': 'ctc-test-v1', 'model': 'captured-model', 'revision': 'captured-revision', ...}
+
+    def test_writer_persists_validated_key_in_same_transaction_as_auto_rows(tmp_path, identity):
+        path = tmp_path / "p.db"
+        key = fast_run_key(identity)
+        trace = {"model_source": "reference:test", "run_snapshot": identity, "fast_run_key": key}
+        with ProjectDB.open(str(path), "test", 1) as db:
+            write_alignment_result(db, [(114, a, a * 1000) for a in range(1, 7)],
+                                   trace=trace, requested_mode="fast", db_path=path)
+>           assert fast_resume_suras(path, {114: key}) == {114}
+E           assert set() == {114}
+E             
+E             Extra items in the right set:
+E             114
+E             Use -v to get more diff
+
+tests/test_alignment_identity.py:123: AssertionError
+_ test_resume_readonly_uri_supports_desktop_filename_characters[project#one.db] _
+
+tmp_path = PosixPath('/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/pytest-of-ayub/pytest-439/test_resume_readonly_uri_suppo0')
+identity = {'algorithm': 'sequential-fast-v2-experimental-1', 'adapter': 'ctc-test-v1', 'model': 'captured-model', 'revision': 'captured-revision', ...}
+name = 'project#one.db'
+
+    @pytest.mark.parametrize("name", ["project#one.db", "project?two.db"])
+    def test_resume_readonly_uri_supports_desktop_filename_characters(tmp_path, identity, name):
+        path = tmp_path / name
+        key = fast_run_key(identity)
+        with ProjectDB.open(str(path), "test", 1) as db:
+            db.write_timings([(114, a, a * 1000) for a in range(1, 7)],
+                             f"test:requested_mode=fast:fast_run_key={key}")
+        before = path.read_bytes()
+>       assert fast_resume_suras(path, {114: key}) == {114}
+E       assert set() == {114}
+E         
+E         Extra items in the right set:
+E         114
+E         Use -v to get more diff
+
+tests/test_alignment_identity.py:160: AssertionError
+_ test_resume_readonly_uri_supports_desktop_filename_characters[project?two.db] _
+
+tmp_path = PosixPath('/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/pytest-of-ayub/pytest-439/test_resume_readonly_uri_suppo1')
+identity = {'algorithm': 'sequential-fast-v2-experimental-1', 'adapter': 'ctc-test-v1', 'model': 'captured-model', 'revision': 'captured-revision', ...}
+name = 'project?two.db'
+
+    @pytest.mark.parametrize("name", ["project#one.db", "project?two.db"])
+    def test_resume_readonly_uri_supports_desktop_filename_characters(tmp_path, identity, name):
+        path = tmp_path / name
+        key = fast_run_key(identity)
+        with ProjectDB.open(str(path), "test", 1) as db:
+            db.write_timings([(114, a, a * 1000) for a in range(1, 7)],
+                             f"test:requested_mode=fast:fast_run_key={key}")
+        before = path.read_bytes()
+>       assert fast_resume_suras(path, {114: key}) == {114}
+E       assert set() == {114}
+E         
+E         Extra items in the right set:
+E         114
+E         Use -v to get more diff
+
+tests/test_alignment_identity.py:160: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_alignment_identity.py::test_exact_key_skips_only_complete_matching_auto_or_fully_protected
+FAILED tests/test_alignment_identity.py::test_writer_persists_validated_key_in_same_transaction_as_auto_rows
+FAILED tests/test_alignment_identity.py::test_resume_readonly_uri_supports_desktop_filename_characters[project#one.db]
+FAILED tests/test_alignment_identity.py::test_resume_readonly_uri_supports_desktop_filename_characters[project?two.db]
+4 failed, 50 passed in 3.22s

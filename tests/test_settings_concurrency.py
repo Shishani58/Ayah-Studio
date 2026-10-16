@@ -17,6 +17,38 @@ def settings_file(tmp_path, monkeypatch):
     return path
 
 
+def test_removed_auto_setting_migrates_to_full_without_changing_project(settings_file, monkeypatch):
+    from surah_cutter.webgui import server
+
+    settings.save({"mode": "auto", "db_path": "/old/project.db", "theme": "dark"})
+    monkeypatch.setattr(server, "_restore_from_settings", lambda: None)
+    monkeypatch.setattr(server.model_store, "available_catalog", lambda: [{"id": "quran-phonetics"}])
+    monkeypatch.setattr(server.model_store, "ACTIVE_ID", "quran-phonetics")
+    server._initialize_app_settings()
+    assert settings.load() == {"mode": "full", "db_path": "/old/project.db", "theme": "dark"}
+
+
+def test_removed_auto_setting_uses_full_when_migration_cannot_be_saved(settings_file, monkeypatch):
+    from surah_cutter.webgui import server
+    from surah_cutter.webgui.state import AppState
+
+    settings.save({"mode": "auto", "language": "ru"})
+    before = settings_file.read_bytes()
+
+    def fail_replace(*args):
+        raise PermissionError("read-only settings")
+
+    monkeypatch.setattr(Path, "replace", fail_replace)
+    monkeypatch.setattr(server, "_restore_from_settings", lambda: None)
+    monkeypatch.setattr(server, "STATE", AppState())
+    monkeypatch.setattr(server.model_store, "available_catalog", lambda: [{"id": "quran-phonetics"}])
+    monkeypatch.setattr(server.model_store, "ACTIVE_ID", "quran-phonetics")
+    server._initialize_app_settings()
+    get_project = next(r.endpoint for r in server.app.routes if r.path == "/api/project")
+    assert get_project()["mode"] == "full"
+    assert settings_file.read_bytes() == before
+
+
 def run_concurrently(actions):
     barrier = threading.Barrier(len(actions))
 
@@ -97,6 +129,35 @@ def test_failed_replace_keeps_confirmed_settings_and_cleans_temporary(settings_f
         settings.update(strict=True, theme="dark")
     assert settings_file.read_bytes() == before
     assert list(settings_file.parent.glob("*.tmp")) == []
+
+
+def test_player_preferences_survive_reload(settings_file, monkeypatch):
+    from surah_cutter.webgui import server
+
+    monkeypatch.setattr(server.settings, "system_language", lambda: "ru")
+    route = next(r.endpoint for r in server.app.routes if r.path == "/api/settings")
+    project = next(r.endpoint for r in server.app.routes if r.path == "/api/project")
+    route({"playback_mode": "repeat", "playback_rate": 1.75})
+    assert settings.load()["playback_rate"] == 1.75
+    assert (project()["playback_mode"], project()["playback_rate"]) == ("repeat", 1.75)
+    route({"theme": "dark"})
+    assert project()["playback_rate"] == 1.75
+
+
+@pytest.mark.parametrize("payload", [
+    {"playback_mode": "unknown"}, {"playback_rate": 0}, {"playback_rate": 2.1},
+    {"playback_rate": True}, {"playback_rate": "1"}, {"playback_rate": None},
+    {"playback_rate": float("nan")}, {"playback_rate": float("inf")},
+])
+def test_invalid_player_preferences_not_saved(settings_file, payload):
+    from fastapi import HTTPException
+    from surah_cutter.webgui import server
+
+    route = next(r.endpoint for r in server.app.routes if r.path == "/api/settings")
+    with pytest.raises(HTTPException) as exc:
+        route(payload)
+    assert exc.value.status_code == 400
+    assert settings.load() == {}
 
 
 def test_settings_mode_waits_for_concurrent_model_selection(settings_file, monkeypatch):

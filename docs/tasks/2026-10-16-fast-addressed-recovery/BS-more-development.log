@@ -1,0 +1,31 @@
+whisper-tarteel-base 79 30.25 review 21 coverage 0.236 calls 42
+whisper-tarteel-base 98 11.09 review 1 coverage 0.302 calls 24
+{
+  "whisper-tarteel-base": {
+    "surahs": 2,
+    "ayahs": 54,
+    "median_ms": 210.0,
+    "p95_ms": 7117.099999999991,
+    "max_ms": 8226,
+    "over500": 21,
+    "positive_conf_over500": [
+      [
+        79,
+        26,
+        508,
+        0.9999970197767496
+      ]
+    ],
+    "sequence_violations": [],
+    "review_ayahs": 22,
+    "load_probe_seconds": 6.765129624865949,
+    "decode_seconds": 0.4148965838830918,
+    "dsp_seconds": 0.175642958143726,
+    "inference_match_seconds": 41.335625041043386,
+    "search_seconds": 41.51126799918711,
+    "audio_ms": 115600.0,
+    "covered_audio_ms": 92480.0,
+    "total_ms": 360855.5625,
+    "model_reads": 66
+  }
+}

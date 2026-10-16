@@ -100,9 +100,14 @@ def test_remove_cannot_target_bundled_fp32_weights():
     assert exc.value.status_code == 400
 
 
-def test_closed_models_are_excluded_and_unknown_ids_rejected():
-    assert all(not item.get("gated") for item in model_store.catalog())
-    assert "zipformer" not in {item["id"] for item in model_store.catalog()}
+def test_gated_models_require_authorized_access_and_unknown_ids_are_rejected(tmp_path, monkeypatch):
+    monkeypatch.delenv("HF_TOKEN", raising=False)
+    monkeypatch.setenv("HF_TOKEN_PATH", str(tmp_path / "missing-token"))
+    assert {m["id"] for m in model_store.catalog() if m.get("gated")} == {
+        "zipformer-quran", "fastconformer-muno"}
+    for model_id in ("zipformer-quran", "fastconformer-muno"):
+        with pytest.raises(ValueError, match="токен"):
+            model_store.start_download(model_id)
     with pytest.raises(ValueError, match="каталоге"):
         model_store.start_download("zipformer")
     with pytest.raises(ValueError, match="каталоге"):

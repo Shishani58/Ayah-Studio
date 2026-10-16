@@ -1,0 +1,9 @@
+('shatri', 2) completed proof 29 calls 231 
+('shatri', 78) completed proof 5 calls 37 
+('shatri', 80) completed proof 33 calls 69 
+('shatri', 112) completed proof 4 calls 6 
+Traceback (most recent call last):
+  File "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-fast-rethink-implementation/replay.py", line 68, in <module>
+    case = cases[key]
+           ~~~~~^^^^^
+KeyError: ('ghamidi', 80)

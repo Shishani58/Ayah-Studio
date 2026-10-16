@@ -1,0 +1,89 @@
+torch 1 (1, 299, 40) 2.36
+torch 80 (1, 299, 40) 0.76
+torch zero (1, 299, 40) 0.64
+[
+  {
+    "model": "wav2vec2-quran-phonetics.fp32.onnx",
+    "case": "1",
+    "weight_sha": "5b2e9c350371feb5bb520acd0a09c7372c80915fce4e2f2e3df48cb803da87e3",
+    "input_sha": "70f717eda49e07286c7f2e28236eda959b7c83c37513f33acf3c3aec89c1c546",
+    "shape": [
+      1,
+      299,
+      40
+    ],
+    "max_abs_logit_difference": 4.38690185546875e-05,
+    "mean_abs_logit_difference": 2.736531541813747e-06,
+    "argmax_agreement": 1.0
+  },
+  {
+    "model": "wav2vec2-quran-phonetics.fp32.onnx",
+    "case": "80",
+    "weight_sha": "5b2e9c350371feb5bb520acd0a09c7372c80915fce4e2f2e3df48cb803da87e3",
+    "input_sha": "fce2ba10a7c4a7af643f273745816869a65b9364f343df07cef8d9e8fceb9e91",
+    "shape": [
+      1,
+      299,
+      40
+    ],
+    "max_abs_logit_difference": 5.9604644775390625e-05,
+    "mean_abs_logit_difference": 2.8309441404417157e-06,
+    "argmax_agreement": 1.0
+  },
+  {
+    "model": "wav2vec2-quran-phonetics.fp32.onnx",
+    "case": "zero",
+    "weight_sha": "5b2e9c350371feb5bb520acd0a09c7372c80915fce4e2f2e3df48cb803da87e3",
+    "input_sha": "fec9afb531a8e036eba1d81651896e1b2c1f78b0234dbadc8e7549563f09407b",
+    "shape": [
+      1,
+      299,
+      40
+    ],
+    "max_abs_logit_difference": 2.09808349609375e-05,
+    "mean_abs_logit_difference": 3.368302941453294e-06,
+    "argmax_agreement": 1.0
+  },
+  {
+    "model": "wav2vec2-quran-phonetics.onnx",
+    "case": "1",
+    "weight_sha": "423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a",
+    "input_sha": "70f717eda49e07286c7f2e28236eda959b7c83c37513f33acf3c3aec89c1c546",
+    "shape": [
+      1,
+      299,
+      40
+    ],
+    "max_abs_logit_difference": 3.106703758239746,
+    "mean_abs_logit_difference": 0.14228332042694092,
+    "argmax_agreement": 0.9866220735785953
+  },
+  {
+    "model": "wav2vec2-quran-phonetics.onnx",
+    "case": "80",
+    "weight_sha": "423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a",
+    "input_sha": "fce2ba10a7c4a7af643f273745816869a65b9364f343df07cef8d9e8fceb9e91",
+    "shape": [
+      1,
+      299,
+      40
+    ],
+    "max_abs_logit_difference": 2.8706023693084717,
+    "mean_abs_logit_difference": 0.1470082551240921,
+    "argmax_agreement": 0.9899665551839465
+  },
+  {
+    "model": "wav2vec2-quran-phonetics.onnx",
+    "case": "zero",
+    "weight_sha": "423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a",
+    "input_sha": "fec9afb531a8e036eba1d81651896e1b2c1f78b0234dbadc8e7549563f09407b",
+    "shape": [
+      1,
+      299,
+      40
+    ],
+    "max_abs_logit_difference": 0.7459743618965149,
+    "mean_abs_logit_difference": 0.17280073463916779,
+    "argmax_agreement": 1.0
+  }
+]

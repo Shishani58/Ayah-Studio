@@ -1,0 +1,287 @@
+....................F.................................F................. [ 30%]
+...............................F........................................ [ 61%]
+..............F......................................................... [ 91%]
+...................                                                      [100%]
+=================================== FAILURES ===================================
+___________ test_correct_tail_cannot_hide_strong_future_continuation ___________
+
+    def test_correct_tail_cannot_hide_strong_future_continuation():
+        fake = contextual_fake("correct")
+        original = fake.responder
+        fake.responder = lambda f, s, d: (
+            observation(f.phrase(3), positions=False) if s == 6000 else original(f, s, d)
+        )
+>       rows, trace = run(fake, [pause(1000), pause(6000)])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_fast_algorithm_gaps.py:241: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_fast_executor.py:56: in run
+    rows = align_surah_sequential(pcm, 16000, fake.words, adapter=fake, trace=trace,
+surah_cutter/core/fast_executor.py:1640: in align_surah_sequential
+    validate_boundaries([boundary], [ayah], duration, reads.calls,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+boundaries = [Boundary(ayah=3, start_ms=6100, evidence_kind='pause', confidence=0.99, review_reason=None, read_id=1, proof={'phrase...200.0], 'pause_id': 1, 'independent_target_origin_ayah': 2, 'independent_target_attempt': 1, 'search_target_ayah': 3})]
+ayahs = [3], duration_ms = 40000.0
+reads = [{'phase': 'independent-local', 'window_ms': [1000.0, 2500.0], 'frames': 0, 'outcome': 'completed', ...}, {'phase': 'independent-local', 'window_ms': [6000.0, 7500.0], 'frames': 0, 'outcome': 'completed', ...}]
+groups = {1: ('first', 'a1w1', 'a1w2', 'a1w3'), 2: ('shared', 'a2w5'), 3: ('shared', 'a3w7', 'a3w8', 'a3w9'), 4: ('last', 'a4w11', 'a4w12', 'a4w13', 'a4w14')}
+word_ends = {1: [1, 2, 3, 4], 2: [1, 2], 3: [1, 2, 3, 4], 4: [1, 2, 3, 4, 5]}
+canonical_ends = {1: [1, 2, 3, 4], 2: [1, 2], 3: [1, 2, 3, 4], 4: [1, 2, 3, 4, 5]}
+threshold = 0.6
+pauses = [namespace(start_ms=1000.0, end_ms=1200.0, center_ms=1100.0), namespace(start_ms=6000.0, end_ms=6200.0, center_ms=6100.0)]
+policy = Policy(independent_search=True, landmark_probes=1, short_word_pause_radius_ms=500.0, speech_ms=(1300, 2500, 4000), noi...ors=False, max_unresolved_ayahs=None, expansion_lookahead=2, ctc_prefix_probability=0.9, ctc_expansion_probability=0.1)
+pause_geometry_data = [{'accepted': True, 'reason': 'measured_dsp_interval', 'first_quarter_rms': 1019.5162963867188, 'last_quarter_rms': 11...ue, 'reason': 'measured_dsp_interval', 'first_quarter_rms': 6019.5029296875, 'last_quarter_rms': 6179.5029296875, ...}]
+search_only = True
+
+    def validate_boundaries(boundaries, ayahs, duration_ms, reads, *, groups=None, word_ends=None,
+                            canonical_ends=None, threshold=0., pauses=None, policy=Policy(), pause_geometry_data=None,
+                            search_only=False):
+        if [b.ayah for b in boundaries] != list(ayahs):
+            raise ValueError("canonical_ayah_set_mismatch")
+        last = -1
+        for boundary in boundaries:
+            if boundary.evidence_kind == "unresolved":
+                if (boundary.start_ms is not None or boundary.confidence != 0 or not boundary.review_reason
+                        or boundary.read_id is not None or boundary.proof is not None):
+                    raise ValueError("invalid_unresolved_boundary")
+                continue
+            ms = boundary.start_ms
+            if type(ms) is not int or not last < ms < duration_ms or ms < 0:
+                raise ValueError("invalid_boundary_timeline")
+            last = ms
+            if not math.isfinite(boundary.confidence) or not 0 <= boundary.confidence <= 1:
+                raise ValueError("invalid_boundary_quality")
+            proof = boundary.proof or {}
+            if boundary.review_reason or boundary.read_id is None or not 0 <= boundary.read_id < len(reads):
+                raise ValueError("missing_acoustic_proof")
+            read = reads[boundary.read_id]
+            if read["outcome"] != "completed" or not proof.get("complete") or proof.get("ambiguous"):
+                raise ValueError("incomplete_acoustic_proof")
+            if "independent_target_origin_ayah" in proof:
+                origin = proof["independent_target_origin_ayah"]
+                attempt = proof.get("independent_target_attempt")
+                target = proof.get("search_target_ayah")
+                if (type(origin) is not int or not 1 <= origin < boundary.ayah
+                        or type(attempt) is not int or not 1 <= attempt <= policy.max_block_ayahs
+                        or type(target) is not int or not origin < target <= boundary.ayah
+                        or not read.get("reason", "").startswith(f"ayah={target}:")):
+>                   raise ValueError("invalid_independent_target_provenance")
+E                   ValueError: invalid_independent_target_provenance
+
+surah_cutter/core/fast_executor.py:577: ValueError
+_______________ test_tempo_region_is_a_selection_hint_not_proof ________________
+
+    def test_tempo_region_is_a_selection_hint_not_proof():
+        def respond(f, start, duration):
+            return observation(f.phrase({1000: 1, 6000: 2}.get(start, 4)))
+        fake = Fake(respond)
+>       rows, trace = run(fake, [pause(p) for p in (1000, 6000, 6050, 6100, 6200, 6250, 6300, 6400, 6450, 6500, 12000)])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_fast_executor.py:264: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_fast_executor.py:56: in run
+    rows = align_surah_sequential(pcm, 16000, fake.words, adapter=fake, trace=trace,
+surah_cutter/core/fast_executor.py:1640: in align_surah_sequential
+    validate_boundaries([boundary], [ayah], duration, reads.calls,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+boundaries = [Boundary(ayah=4, start_ms=12100, evidence_kind='pause', confidence=0.99, review_reason=None, read_id=2, proof={'phras...00.0], 'pause_id': 10, 'independent_target_origin_ayah': 3, 'independent_target_attempt': 1, 'search_target_ayah': 4})]
+ayahs = [4], duration_ms = 40000.0
+reads = [{'phase': 'independent-local', 'window_ms': [1000.0, 2500.0], 'frames': 0, 'outcome': 'completed', ...}, {'phase': 'i...leted', ...}, {'phase': 'independent-local', 'window_ms': [6100.0, 11100.0], 'frames': 0, 'outcome': 'completed', ...}]
+groups = {1: ('a1w0', 'a1w1', 'a1w2', 'a1w3'), 2: ('a2w4', 'a2w5'), 3: ('a3w6', 'a3w7', 'a3w8', 'a3w9'), 4: ('a4w10', 'a4w11', 'a4w12', 'a4w13', 'a4w14')}
+word_ends = {1: [1, 2, 3, 4], 2: [1, 2], 3: [1, 2, 3, 4], 4: [1, 2, 3, 4, 5]}
+canonical_ends = {1: [1, 2, 3, 4], 2: [1, 2], 3: [1, 2, 3, 4], 4: [1, 2, 3, 4, 5]}
+threshold = 0.6
+pauses = [namespace(start_ms=1000.0, end_ms=1200.0, center_ms=1100.0), namespace(start_ms=6000.0, end_ms=6200.0, center_ms=6100...ce(start_ms=6200.0, end_ms=6400.0, center_ms=6300.0), namespace(start_ms=6250.0, end_ms=6450.0, center_ms=6350.0), ...]
+policy = Policy(independent_search=True, landmark_probes=1, short_word_pause_radius_ms=500.0, speech_ms=(1300, 2500, 4000), noi...ors=False, max_unresolved_ayahs=None, expansion_lookahead=2, ctc_prefix_probability=0.9, ctc_expansion_probability=0.1)
+pause_geometry_data = [{'accepted': True, 'reason': 'measured_dsp_interval', 'first_quarter_rms': 1019.5162963867188, 'last_quarter_rms': 11...ason': 'measured_dsp_interval', 'first_quarter_rms': 6269.50244140625, 'last_quarter_rms': 6429.50244140625, ...}, ...]
+search_only = True
+
+    def validate_boundaries(boundaries, ayahs, duration_ms, reads, *, groups=None, word_ends=None,
+                            canonical_ends=None, threshold=0., pauses=None, policy=Policy(), pause_geometry_data=None,
+                            search_only=False):
+        if [b.ayah for b in boundaries] != list(ayahs):
+            raise ValueError("canonical_ayah_set_mismatch")
+        last = -1
+        for boundary in boundaries:
+            if boundary.evidence_kind == "unresolved":
+                if (boundary.start_ms is not None or boundary.confidence != 0 or not boundary.review_reason
+                        or boundary.read_id is not None or boundary.proof is not None):
+                    raise ValueError("invalid_unresolved_boundary")
+                continue
+            ms = boundary.start_ms
+            if type(ms) is not int or not last < ms < duration_ms or ms < 0:
+                raise ValueError("invalid_boundary_timeline")
+            last = ms
+            if not math.isfinite(boundary.confidence) or not 0 <= boundary.confidence <= 1:
+                raise ValueError("invalid_boundary_quality")
+            proof = boundary.proof or {}
+            if boundary.review_reason or boundary.read_id is None or not 0 <= boundary.read_id < len(reads):
+                raise ValueError("missing_acoustic_proof")
+            read = reads[boundary.read_id]
+            if read["outcome"] != "completed" or not proof.get("complete") or proof.get("ambiguous"):
+                raise ValueError("incomplete_acoustic_proof")
+            if "independent_target_origin_ayah" in proof:
+                origin = proof["independent_target_origin_ayah"]
+                attempt = proof.get("independent_target_attempt")
+                target = proof.get("search_target_ayah")
+                if (type(origin) is not int or not 1 <= origin < boundary.ayah
+                        or type(attempt) is not int or not 1 <= attempt <= policy.max_block_ayahs
+                        or type(target) is not int or not origin < target <= boundary.ayah
+                        or not read.get("reason", "").startswith(f"ayah={target}:")):
+>                   raise ValueError("invalid_independent_target_provenance")
+E                   ValueError: invalid_independent_target_provenance
+
+surah_cutter/core/fast_executor.py:577: ValueError
+__________ test_independent_next_target_reenters_after_missing_owner ___________
+
+    def test_independent_next_target_reenters_after_missing_owner():
+        fake = Fake(lambda f, s, d: observation(f.phrase({1000: 1, 6000: 2, 12000: 4}.get(s)))
+                    if s in (1000, 6000, 12000) else observation(()))
+        fake.timing = False
+>       rows, trace = run(fake, [pause(1000), pause(6000), pause(12000)],
+                          policy=Policy(sparse_anchors=False))
+
+tests/test_fast_partial.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_fast_executor.py:56: in run
+    rows = align_surah_sequential(pcm, 16000, fake.words, adapter=fake, trace=trace,
+surah_cutter/core/fast_executor.py:1640: in align_surah_sequential
+    validate_boundaries([boundary], [ayah], duration, reads.calls,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+boundaries = [Boundary(ayah=4, start_ms=12100, evidence_kind='pause', confidence=0.99, review_reason=None, read_id=2, proof={'phras...200.0], 'pause_id': 2, 'independent_target_origin_ayah': 3, 'independent_target_attempt': 1, 'search_target_ayah': 4})]
+ayahs = [4], duration_ms = 40000.0
+reads = [{'phase': 'independent-local', 'window_ms': [1000.0, 2500.0], 'frames': 0, 'outcome': 'completed', ...}, {'phase': 'i...eted', ...}, {'phase': 'independent-local', 'window_ms': [12000.0, 13500.0], 'frames': 0, 'outcome': 'completed', ...}]
+groups = {1: ('a1w0', 'a1w1', 'a1w2', 'a1w3'), 2: ('a2w4', 'a2w5'), 3: ('a3w6', 'a3w7', 'a3w8', 'a3w9'), 4: ('a4w10', 'a4w11', 'a4w12', 'a4w13', 'a4w14')}
+word_ends = {1: [1, 2, 3, 4], 2: [1, 2], 3: [1, 2, 3, 4], 4: [1, 2, 3, 4, 5]}
+canonical_ends = {1: [1, 2, 3, 4], 2: [1, 2], 3: [1, 2, 3, 4], 4: [1, 2, 3, 4, 5]}
+threshold = 0.6
+pauses = [namespace(start_ms=1000.0, end_ms=1200.0, center_ms=1100.0), namespace(start_ms=6000.0, end_ms=6200.0, center_ms=6100.0), namespace(start_ms=12000.0, end_ms=12200.0, center_ms=12100.0)]
+policy = Policy(independent_search=True, landmark_probes=1, short_word_pause_radius_ms=500.0, speech_ms=(1300, 2500, 4000), noi...ors=False, max_unresolved_ayahs=None, expansion_lookahead=2, ctc_prefix_probability=0.9, ctc_expansion_probability=0.1)
+pause_geometry_data = [{'accepted': True, 'reason': 'measured_dsp_interval', 'first_quarter_rms': 1019.5162963867188, 'last_quarter_rms': 11...ue, 'reason': 'measured_dsp_interval', 'first_quarter_rms': 12019.501953125, 'last_quarter_rms': 12179.501953125, ...}]
+search_only = True
+
+    def validate_boundaries(boundaries, ayahs, duration_ms, reads, *, groups=None, word_ends=None,
+                            canonical_ends=None, threshold=0., pauses=None, policy=Policy(), pause_geometry_data=None,
+                            search_only=False):
+        if [b.ayah for b in boundaries] != list(ayahs):
+            raise ValueError("canonical_ayah_set_mismatch")
+        last = -1
+        for boundary in boundaries:
+            if boundary.evidence_kind == "unresolved":
+                if (boundary.start_ms is not None or boundary.confidence != 0 or not boundary.review_reason
+                        or boundary.read_id is not None or boundary.proof is not None):
+                    raise ValueError("invalid_unresolved_boundary")
+                continue
+            ms = boundary.start_ms
+            if type(ms) is not int or not last < ms < duration_ms or ms < 0:
+                raise ValueError("invalid_boundary_timeline")
+            last = ms
+            if not math.isfinite(boundary.confidence) or not 0 <= boundary.confidence <= 1:
+                raise ValueError("invalid_boundary_quality")
+            proof = boundary.proof or {}
+            if boundary.review_reason or boundary.read_id is None or not 0 <= boundary.read_id < len(reads):
+                raise ValueError("missing_acoustic_proof")
+            read = reads[boundary.read_id]
+            if read["outcome"] != "completed" or not proof.get("complete") or proof.get("ambiguous"):
+                raise ValueError("incomplete_acoustic_proof")
+            if "independent_target_origin_ayah" in proof:
+                origin = proof["independent_target_origin_ayah"]
+                attempt = proof.get("independent_target_attempt")
+                target = proof.get("search_target_ayah")
+                if (type(origin) is not int or not 1 <= origin < boundary.ayah
+                        or type(attempt) is not int or not 1 <= attempt <= policy.max_block_ayahs
+                        or type(target) is not int or not origin < target <= boundary.ayah
+                        or not read.get("reason", "").startswith(f"ayah={target}:")):
+>                   raise ValueError("invalid_independent_target_provenance")
+E                   ValueError: invalid_independent_target_provenance
+
+surah_cutter/core/fast_executor.py:577: ValueError
+_____________ test_repeated_109_owner_requires_local_previous_tail _____________
+
+    def test_repeated_109_owner_requires_local_previous_tail():
+        fake, groups, ends = canonical_fake(109)
+        assert plan_phrase(groups, 3, ends)["ambiguous"]
+        assert plan_seam(groups, 3, ends) and plan_seam(groups, 5, ends)
+        starts = {1000 + 5000 * (a - 1): a for a in groups}
+        def respond(f, start, duration):
+            if start in starts:
+                return observation(groups[starts[start]])
+            for ayah in (3, 5):
+                if start + duration == 1000 + 5000 * (ayah - 1):
+                    return observation(groups[ayah - 1])
+            return observation(())
+        fake.responder = respond
+        rows, trace = run(fake, [pause(p) for p in starts])
+        assert all(r[2] > 0 for r in rows)
+        assert trace["boundaries"][2]["proof"]["contextual_owner"]
+        assert trace["boundaries"][4]["proof"]["contextual_owner"]
+        fake.responder = lambda f, start, duration: observation(groups[starts[start]]) if start in starts else observation(groups[4])
+>       rows, trace = run(fake, [pause(p) for p in starts])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_fast_review_fixes.py:140: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_fast_executor.py:56: in run
+    rows = align_surah_sequential(pcm, 16000, fake.words, adapter=fake, trace=trace,
+surah_cutter/core/fast_executor.py:1640: in align_surah_sequential
+    validate_boundaries([boundary], [ayah], duration, reads.calls,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+boundaries = [Boundary(ayah=5, start_ms=11100, evidence_kind='pause', confidence=0.99, review_reason=None, read_id=2, proof={'phras...200.0], 'pause_id': 2, 'independent_target_origin_ayah': 3, 'independent_target_attempt': 2, 'search_target_ayah': 5})]
+ayahs = [5], duration_ms = 40000.0
+reads = [{'phase': 'independent-local', 'window_ms': [1000.0, 2500.0], 'frames': 0, 'outcome': 'completed', ...}, {'phase': 'i...', ...}, {'phase': 'independent-local', 'window_ms': [7000.0, 11000.0], 'frames': 0, 'outcome': 'completed', ...}, ...]
+groups = {1: ('قل', 'يايها', 'الكفرون'), 2: ('لا', 'اعبد', 'ما', 'تعبدون'), 3: ('ولا', 'انتم', 'عبدون', 'ما', 'اعبد'), 4: ('ولا', 'انا', 'عابد', 'ما', 'عبدتم'), ...}
+word_ends = {1: [1, 2, 3], 2: [1, 2, 3, 4], 3: [1, 2, 3, 4, 5], 4: [1, 2, 3, 4, 5], ...}
+canonical_ends = {1: [1, 2, 3], 2: [1, 2, 3, 4], 3: [1, 2, 3, 4, 5], 4: [1, 2, 3, 4, 5], ...}
+threshold = 0.6
+pauses = [namespace(start_ms=1000.0, end_ms=1200.0, center_ms=1100.0), namespace(start_ms=6000.0, end_ms=6200.0, center_ms=6100...e(start_ms=21000.0, end_ms=21200.0, center_ms=21100.0), namespace(start_ms=26000.0, end_ms=26200.0, center_ms=26100.0)]
+policy = Policy(independent_search=True, landmark_probes=1, short_word_pause_radius_ms=500.0, speech_ms=(1300, 2500, 4000), noi...ors=False, max_unresolved_ayahs=None, expansion_lookahead=2, ctc_prefix_probability=0.9, ctc_expansion_probability=0.1)
+pause_geometry_data = [{'accepted': True, 'reason': 'measured_dsp_interval', 'first_quarter_rms': 1019.5162963867188, 'last_quarter_rms': 11... {'accepted': True, 'reason': 'measured_dsp_interval', 'first_quarter_rms': 26019.5, 'last_quarter_rms': 26179.5, ...}]
+search_only = True
+
+    def validate_boundaries(boundaries, ayahs, duration_ms, reads, *, groups=None, word_ends=None,
+                            canonical_ends=None, threshold=0., pauses=None, policy=Policy(), pause_geometry_data=None,
+                            search_only=False):
+        if [b.ayah for b in boundaries] != list(ayahs):
+            raise ValueError("canonical_ayah_set_mismatch")
+        last = -1
+        for boundary in boundaries:
+            if boundary.evidence_kind == "unresolved":
+                if (boundary.start_ms is not None or boundary.confidence != 0 or not boundary.review_reason
+                        or boundary.read_id is not None or boundary.proof is not None):
+                    raise ValueError("invalid_unresolved_boundary")
+                continue
+            ms = boundary.start_ms
+            if type(ms) is not int or not last < ms < duration_ms or ms < 0:
+                raise ValueError("invalid_boundary_timeline")
+            last = ms
+            if not math.isfinite(boundary.confidence) or not 0 <= boundary.confidence <= 1:
+                raise ValueError("invalid_boundary_quality")
+            proof = boundary.proof or {}
+            if boundary.review_reason or boundary.read_id is None or not 0 <= boundary.read_id < len(reads):
+                raise ValueError("missing_acoustic_proof")
+            read = reads[boundary.read_id]
+            if read["outcome"] != "completed" or not proof.get("complete") or proof.get("ambiguous"):
+                raise ValueError("incomplete_acoustic_proof")
+            if "independent_target_origin_ayah" in proof:
+                origin = proof["independent_target_origin_ayah"]
+                attempt = proof.get("independent_target_attempt")
+                target = proof.get("search_target_ayah")
+                if (type(origin) is not int or not 1 <= origin < boundary.ayah
+                        or type(attempt) is not int or not 1 <= attempt <= policy.max_block_ayahs
+                        or type(target) is not int or not origin < target <= boundary.ayah
+                        or not read.get("reason", "").startswith(f"ayah={target}:")):
+>                   raise ValueError("invalid_independent_target_provenance")
+E                   ValueError: invalid_independent_target_provenance
+
+surah_cutter/core/fast_executor.py:577: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_fast_algorithm_gaps.py::test_correct_tail_cannot_hide_strong_future_continuation
+FAILED tests/test_fast_executor.py::test_tempo_region_is_a_selection_hint_not_proof
+FAILED tests/test_fast_partial.py::test_independent_next_target_reenters_after_missing_owner
+FAILED tests/test_fast_review_fixes.py::test_repeated_109_owner_requires_local_previous_tail
+4 failed, 231 passed in 10.42s

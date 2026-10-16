@@ -1,0 +1,40 @@
+.............ssssssssss................................................. [  7%]
+........................................................................ [ 14%]
+........................................................................ [ 21%]
+........................................................................ [ 29%]
+........................................................................ [ 36%]
+........................................................................ [ 43%]
+........................................................................ [ 50%]
+........................................................................ [ 58%]
+.........................................................F.............. [ 65%]
+........................................................................ [ 72%]
+........................................................................ [ 79%]
+........................................................................ [ 87%]
+........................................................................ [ 94%]
+.........................................................                [100%]
+=================================== FAILURES ===================================
+_______ test_strong_windows_support_six_workers_and_preserve_samples[6] ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10f780410>
+workers = 6
+
+    @pytest.mark.parametrize("workers", [5, 6])
+    def test_strong_windows_support_six_workers_and_preserve_samples(monkeypatch, workers):
+        pauses = [Pause(ms - 40, ms + 40, 80) for ms in range(1000, 12_000, 1000)]
+        monkeypatch.setattr(full_windows, "detect_strong_pauses", lambda *a, **kw: pauses)
+        pcm = np.linspace(0, 1, 192_123, dtype=np.float32)
+        model = emitter()
+        trace = {}
+        actual = full_windows.generate_pause_emissions(
+            model, pcm, window_s=1, context_s=.1, workers=workers,
+            strong_pauses=True, trace=trace,
+        )
+>       assert model.session.maximum == workers
+E       assert 5 == 6
+E        +  where 5 = <test_full_windows.SampleSession object at 0x10f781520>.maximum
+E        +    where <test_full_windows.SampleSession object at 0x10f781520> = <surah_cutter.core.emissions.OnnxEmitter object at 0x10b547340>.session
+
+tests/test_full_windows.py:206: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_full_windows.py::test_strong_windows_support_six_workers_and_preserve_samples[6]
+1 failed, 982 passed, 10 skipped in 199.28s (0:03:19)

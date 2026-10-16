@@ -1,0 +1,9 @@
+{
+  "hook": {
+    "label": "ctc-intro-probe",
+    "script": "intro_bootstrap_probe.py",
+    "kind": "separate diagnostic, not ASR corpus data"
+  },
+  "exit": 0,
+  "scope": "separate CTC diagnostic, no ASR comparison change"
+}

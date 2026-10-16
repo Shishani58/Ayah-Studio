@@ -1,0 +1,320 @@
+{
+  "scope": "historical sparse12 Base, fresh static reanalysis; not current production benchmark",
+  "counts": {
+    "rows": 607,
+    "confirmed": 130,
+    "unconfirmed": 477,
+    "explicit_review_events": 23,
+    "acoustic_reads": 326,
+    "passes_necessary_plain_opening_checks": 85,
+    "opening_text_differs_or_incomplete": 182,
+    "opening_token_quality_below_0.6": 3,
+    "strong_continuation_conflict": 11
+  },
+  "explicit_review_reasons": {
+    "unresolved_before_unique_anchor": 14,
+    "unsupported_wasl_timing": 7,
+    "incomplete_distinguishing_phrase": 1,
+    "no_local_evidence": 1
+  },
+  "records": [
+    {
+      "surah": 1,
+      "confirmed": 2,
+      "unconfirmed": 5,
+      "explicit_review_events": [
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 1,
+          "reason": "unresolved_before_unique_anchor",
+          "block": [
+            1
+          ]
+        },
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 4,
+          "reason": "unsupported_wasl_timing"
+        }
+      ],
+      "read_classification": {
+        "passes_necessary_plain_opening_checks": 1,
+        "opening_text_differs_or_incomplete": 2
+      }
+    },
+    {
+      "surah": 32,
+      "confirmed": 0,
+      "unconfirmed": 30,
+      "explicit_review_events": [
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 1,
+          "reason": "incomplete_distinguishing_phrase"
+        }
+      ],
+      "read_classification": {
+        "opening_text_differs_or_incomplete": 4
+      }
+    },
+    {
+      "surah": 55,
+      "confirmed": 19,
+      "unconfirmed": 59,
+      "explicit_review_events": [
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 4,
+          "reason": "unresolved_before_unique_anchor",
+          "block": [
+            4
+          ]
+        },
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 13,
+          "reason": "unresolved_before_unique_anchor",
+          "block": [
+            13
+          ]
+        },
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 22,
+          "reason": "unsupported_wasl_timing"
+        }
+      ],
+      "read_classification": {
+        "opening_text_differs_or_incomplete": 18,
+        "passes_necessary_plain_opening_checks": 11,
+        "opening_token_quality_below_0.6": 1,
+        "strong_continuation_conflict": 2
+      }
+    },
+    {
+      "surah": 59,
+      "confirmed": 21,
+      "unconfirmed": 3,
+      "explicit_review_events": [
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 8,
+          "reason": "unresolved_before_unique_anchor",
+          "block": [
+            8
+          ]
+        },
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 10,
+          "reason": "unresolved_before_unique_anchor",
+          "block": [
+            10
+          ]
+        },
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 18,
+          "reason": "unresolved_before_unique_anchor",
+          "block": [
+            18
+          ]
+        }
+      ],
+      "read_classification": {
+        "opening_text_differs_or_incomplete": 66,
+        "passes_necessary_plain_opening_checks": 11,
+        "strong_continuation_conflict": 2
+      }
+    },
+    {
+      "surah": 65,
+      "confirmed": 0,
+      "unconfirmed": 12,
+      "explicit_review_events": [
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 1,
+          "reason": "no_local_evidence"
+        }
+      ],
+      "read_classification": {
+        "opening_text_differs_or_incomplete": 8
+      }
+    },
+    {
+      "surah": 73,
+      "confirmed": 19,
+      "unconfirmed": 1,
+      "explicit_review_events": [
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 1,
+          "reason": "unresolved_before_unique_anchor",
+          "block": [
+            1
+          ]
+        }
+      ],
+      "read_classification": {
+        "opening_text_differs_or_incomplete": 15,
+        "passes_necessary_plain_opening_checks": 14,
+        "strong_continuation_conflict": 2,
+        "opening_token_quality_below_0.6": 1
+      }
+    },
+    {
+      "surah": 77,
+      "confirmed": 24,
+      "unconfirmed": 26,
+      "explicit_review_events": [
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 16,
+          "reason": "unresolved_before_unique_anchor",
+          "block": [
+            16,
+            17
+          ]
+        },
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 20,
+          "reason": "unresolved_before_unique_anchor",
+          "block": [
+            20
+          ]
+        },
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 26,
+          "reason": "unresolved_before_unique_anchor",
+          "block": [
+            26
+          ]
+        },
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 29,
+          "reason": "unsupported_wasl_timing"
+        }
+      ],
+      "read_classification": {
+        "opening_text_differs_or_incomplete": 18,
+        "passes_necessary_plain_opening_checks": 16,
+        "strong_continuation_conflict": 1
+      }
+    },
+    {
+      "surah": 80,
+      "confirmed": 10,
+      "unconfirmed": 32,
+      "explicit_review_events": [
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 2,
+          "reason": "unresolved_before_unique_anchor",
+          "block": [
+            2
+          ]
+        },
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 12,
+          "reason": "unsupported_wasl_timing"
+        }
+      ],
+      "read_classification": {
+        "opening_text_differs_or_incomplete": 11,
+        "passes_necessary_plain_opening_checks": 5,
+        "strong_continuation_conflict": 1
+      }
+    },
+    {
+      "surah": 98,
+      "confirmed": 7,
+      "unconfirmed": 1,
+      "explicit_review_events": [
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 8,
+          "reason": "unsupported_wasl_timing"
+        }
+      ],
+      "read_classification": {
+        "opening_text_differs_or_incomplete": 15,
+        "passes_necessary_plain_opening_checks": 6
+      }
+    },
+    {
+      "surah": 112,
+      "confirmed": 4,
+      "unconfirmed": 0,
+      "explicit_review_events": [],
+      "read_classification": {
+        "opening_text_differs_or_incomplete": 2,
+        "passes_necessary_plain_opening_checks": 3
+      }
+    },
+    {
+      "surah": 2,
+      "confirmed": 2,
+      "unconfirmed": 284,
+      "explicit_review_events": [
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 1,
+          "reason": "unresolved_before_unique_anchor",
+          "block": [
+            1
+          ]
+        },
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 4,
+          "reason": "unsupported_wasl_timing"
+        }
+      ],
+      "read_classification": {
+        "opening_text_differs_or_incomplete": 7,
+        "opening_token_quality_below_0.6": 1,
+        "passes_necessary_plain_opening_checks": 1
+      }
+    },
+    {
+      "surah": 79,
+      "confirmed": 22,
+      "unconfirmed": 24,
+      "explicit_review_events": [
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 1,
+          "reason": "unresolved_before_unique_anchor",
+          "block": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 25,
+          "reason": "unresolved_before_unique_anchor",
+          "block": [
+            25
+          ]
+        },
+        {
+          "state": "REVIEW_REQUIRED",
+          "ayah": 27,
+          "reason": "unsupported_wasl_timing"
+        }
+      ],
+      "read_classification": {
+        "opening_text_differs_or_incomplete": 16,
+        "passes_necessary_plain_opening_checks": 17,
+        "strong_continuation_conflict": 3
+      }
+    }
+  ]
+}

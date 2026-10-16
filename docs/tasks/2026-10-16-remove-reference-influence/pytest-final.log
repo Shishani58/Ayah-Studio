@@ -1,0 +1,67 @@
+.............ssssssssss................................................. [  7%]
+....F................................................................... [ 14%]
+........................................................................ [ 21%]
+........................................................................ [ 29%]
+........................................................................ [ 36%]
+........................................................................ [ 43%]
+........................................................................ [ 51%]
+....................................F................................... [ 58%]
+........................................................................ [ 65%]
+........................................................................ [ 73%]
+........................................................................ [ 80%]
+..............F......................................................... [ 87%]
+........................................................................ [ 94%]
+..................................................                       [100%]
+=================================== FAILURES ===================================
+_____ test_exact_key_skips_only_complete_matching_auto_or_fully_protected ______
+
+tmp_path = PosixPath('/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/pytest-of-ayub/pytest-443/test_exact_key_skips_only_comp0')
+identity = {'algorithm': 'sequential-fast-v2-experimental-1', 'adapter': 'ctc-test-v1', 'model': 'captured-model', 'revision': 'captured-revision', ...}
+
+    def test_exact_key_skips_only_complete_matching_auto_or_fully_protected(tmp_path, identity):
+        path = tmp_path / "p.db"
+        key = fast_run_key(identity)
+        source = f"test:requested_mode=fast:fast_run_key={key}"
+        with ProjectDB.open(str(path), "test", 1) as db:
+            db.write_timings([(114, a, a * 1000) for a in range(1, 7)], source)
+>           assert fast_resume_suras(path, {114: key}) == {114}
+E           assert set() == {114}
+E             
+E             Extra items in the right set:
+E             114
+E             Use -v to get more diff
+
+tests/test_alignment_identity.py:101: AssertionError
+_ test_fully_protected_surah_keeps_manual_values_and_does_not_need_provenance __
+
+tmp_path = PosixPath('/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/pytest-of-ayub/pytest-443/test_fully_protected_surah_kee0')
+
+    def test_fully_protected_surah_keeps_manual_values_and_does_not_need_provenance(tmp_path):
+        path = project(tmp_path, ['edited', 'verified'], ['manual', None])
+>       assert done(path) == {1}
+E       assert set() == {1}
+E         
+E         Extra items in the right set:
+E         1
+E         Use -v to get more diff
+
+tests/test_full_resume.py:79: AssertionError
+___ test_recheck_does_not_suppress_a_better_match_with_a_label_fitted_margin ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10cf2d160>
+
+    def test_recheck_does_not_suppress_a_better_match_with_a_label_fitted_margin(monkeypatch):
+        words = [Word(1, 1, "first", 0), Word(1, 2, "second", 1)]
+        bundle = SimpleNamespace(text_kind="phonetic", blank_id=0, vocab={"[PAD]": 0, "a": 1})
+        monkeypatch.setattr(align, "_emissions", lambda *args: np.tile([-99., 0.], (500, 1)))
+        monkeypatch.setattr(transliteration, "surah_word_tr", lambda _: ["a", "b"])
+>       monkeypatch.setattr(phonetics, "onset_similarity", lambda decoded, expected: .50 if expected == "a" else .55)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: <module 'surah_cutter.core.recheck' from '/Users/ayub/Developer/surah-cutter/surah_cutter/core/recheck.py'> has no attribute '_sim'
+
+tests/test_reference_exclusion.py:62: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_alignment_identity.py::test_exact_key_skips_only_complete_matching_auto_or_fully_protected
+FAILED tests/test_full_resume.py::test_fully_protected_surah_keeps_manual_values_and_does_not_need_provenance
+FAILED tests/test_reference_exclusion.py::test_recheck_does_not_suppress_a_better_match_with_a_label_fitted_margin
+3 failed, 973 passed, 10 skipped in 63.28s (0:01:03)

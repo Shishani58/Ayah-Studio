@@ -31,7 +31,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from surah_cutter.core import align, decode, emissions, full_windows  # noqa: E402
-from surah_cutter.data import quran_text, references  # noqa: E402
+from surah_cutter.data import quran_text  # noqa: E402
+from tools.research import references  # noqa: E402
 
 DEFAULT_CASES = ["fixed:30:1:0", "fixed:30:1:2"] + [
     f"pause:{window}:{workers}:2" for window in (10, 20, 30) for workers in (1, 2, 4)

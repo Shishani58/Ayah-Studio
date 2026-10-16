@@ -1,0 +1,109 @@
+{
+  "deep": {
+    "groups": {
+      "prior-example": {
+        "n": 4,
+        "greedy": 4,
+        "any_beam": 4
+      },
+      "blocked-original": {
+        "n": 6,
+        "greedy": 0,
+        "any_beam": 0
+      },
+      "blocked-expanded": {
+        "n": 6,
+        "greedy": 3,
+        "any_beam": 4
+      },
+      "transfer-selected": {
+        "n": 8,
+        "greedy": 4,
+        "any_beam": 5
+      },
+      "negative": {
+        "n": 3,
+        "greedy": 0,
+        "any_beam": 0
+      }
+    },
+    "alias_expansion_changed_results": [],
+    "beam_additional_necessary_pass": [
+      "blocked-98-8-1",
+      "transfer-saad_al_ghamidi-80"
+    ],
+    "greedy_necessary_pass": [
+      "original-s1-a1-1500",
+      "original-s80-a1-1500",
+      "original-s98-a2-1500",
+      "original-s112-a1-1500",
+      "blocked-65-1-1",
+      "blocked-80-12-1",
+      "blocked-79-27-1",
+      "transfer-saad_al_ghamidi-98",
+      "transfer-mahmoud_khalil_al_hussary-98",
+      "transfer-mahmoud_khalil_al_hussary-112",
+      "transfer-mohammed_siddiq_al_minshawi-112"
+    ],
+    "median_decoder_s": {
+      "1": 0.25061445916071534,
+      "5": 0.8478017919696867
+    }
+  },
+  "geometry": {
+    "groups": {
+      "rejected-geometry": {
+        "n": 4,
+        "greedy": 1,
+        "any_beam": 1
+      },
+      "negative": {
+        "n": 2,
+        "greedy": 0,
+        "any_beam": 0
+      }
+    },
+    "alias_expansion_changed_results": [],
+    "beam_additional_necessary_pass": [],
+    "greedy_necessary_pass": [
+      "rejected-2-4-4000"
+    ],
+    "median_decoder_s": {
+      "1": 0.35519647947512567,
+      "5": 1.4863819789607078
+    }
+  },
+  "recovery": {
+    "groups": {
+      "adjacent-recovery": {
+        "n": 4,
+        "greedy": 1,
+        "any_beam": 1
+      }
+    },
+    "alias_expansion_changed_results": [],
+    "beam_additional_necessary_pass": [],
+    "greedy_necessary_pass": [
+      "future-5-from-read-7-4000"
+    ],
+    "median_decoder_s": {
+      "1": 0.23799837508704513,
+      "5": 0.63552266638726
+    }
+  },
+  "historical_unconfirmed_reasons": {
+    "unresolved_before_unique_anchor": 14,
+    "unsupported_wasl_timing": 7,
+    "blocked_by_unresolved_ayah": 454,
+    "incomplete_distinguishing_phrase": 1,
+    "no_local_evidence": 1
+  },
+  "baseline_sha256": "48913f6a911245e3dfdf9a3fb5af6dc8409d429d7bea45de1d0066e13e62b5a4",
+  "scope": "Necessary lexical/quality checks only: not production proof, temporal accuracy or representative rate",
+  "source_sha256": {
+    "deep_probe.py": "c3e995cddee3c5f440f582cdc4b295db22382e9f8b87a0e059a9d4b4ee2489b1",
+    "geometry_prepare.py": "0b7efe3c3f235c1d90e168e20abc8b1f6297519cce1779a79b7d66e1eed06f92",
+    "recovery_prepare.py": "f48c141d1a41bad1821da5d6450b4b77b68c059261d53b02f09dfbc53477f5ca",
+    "analyze_deep.py": "cd439f67aaa3e64c5105879a9f04f3154990d3e30a3bbd4141a27fd636a841c3"
+  }
+}

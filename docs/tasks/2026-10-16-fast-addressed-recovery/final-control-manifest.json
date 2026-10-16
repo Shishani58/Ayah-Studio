@@ -1,0 +1,83 @@
+{
+  "selected": {
+    "variant": "BS",
+    "source_sha256": "f4f101601b3e53f341f554f51802dcc361701d8af83eb39e0877b2188e5fc387",
+    "scope": "fast_executor only; finite whole-word-quality head cue plus one optional next DSP candidate",
+    "rejected_letter_variant": "B6 control Hussary79:3 new benchmark error1750ms; not production",
+    "independent_gains": {
+      "shatri80": 27,
+      "hussary80": 10,
+      "minshawi79": 4
+    },
+    "requires_full_corpus_gate": true
+  },
+  "old_controls": "55/79 became development after B6 control failure / candidate selection",
+  "cases": [
+    {
+      "reciter": "saad_al_ghamidi",
+      "surah": 67,
+      "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi/067.mp3",
+      "url": "https://quran-audio.quranacademy.org/by-surah/Saad-Al-Ghamidi/067.mp3",
+      "role": "final holdout; no rule tuning",
+      "assigned_unix": 1792104272.0923038,
+      "outcome": "downloaded",
+      "bytes": 6194688,
+      "sha256": "c45be4963de8c6b1c7bd5383a7a2d6ccb6cd7c9bbae157ff8cb27ddbc1925724"
+    },
+    {
+      "reciter": "saad_al_ghamidi",
+      "surah": 77,
+      "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/saad_al_ghamidi/077.mp3",
+      "url": "https://quran-audio.quranacademy.org/by-surah/Saad-Al-Ghamidi/077.mp3",
+      "role": "final holdout; no rule tuning",
+      "assigned_unix": 1792104272.092313,
+      "outcome": "downloaded",
+      "bytes": 3922944,
+      "sha256": "3a0f3d274599967e6031fb3aa2ab6191bf9a930e8b0257d721cd7aca3fa6839f"
+    },
+    {
+      "reciter": "mahmoud_khalil_al_hussary",
+      "surah": 67,
+      "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mahmoud_khalil_al_hussary/067.mp3",
+      "url": "https://quran-audio.quranacademy.org/by-surah/Mahmoud_Khalil_Al-Hussary/067.mp3",
+      "role": "final holdout; no rule tuning",
+      "assigned_unix": 1792104272.09232,
+      "outcome": "downloaded",
+      "bytes": 10866520,
+      "sha256": "942f08a5d66cd0656a2609aa6717603c96953afd1107786ee6f608215a6ba2f9"
+    },
+    {
+      "reciter": "mahmoud_khalil_al_hussary",
+      "surah": 77,
+      "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mahmoud_khalil_al_hussary/077.mp3",
+      "url": "https://quran-audio.quranacademy.org/by-surah/Mahmoud_Khalil_Al-Hussary/077.mp3",
+      "role": "final holdout; no rule tuning",
+      "assigned_unix": 1792104272.092326,
+      "outcome": "downloaded",
+      "bytes": 7247830,
+      "sha256": "6d5dcef3abb7d321b0fec9b9501efd5986496bdc766d4b4c3e27ff6ff25d6c35"
+    },
+    {
+      "reciter": "mohammed_siddiq_al_minshawi",
+      "surah": 67,
+      "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mohammed_siddiq_al_minshawi/067.mp3",
+      "url": "https://quran-audio.quranacademy.org/by-surah/Mohammed_Siddiq_Al-Minshawi/067.mp3",
+      "role": "final holdout; no rule tuning",
+      "assigned_unix": 1792104272.0923321,
+      "outcome": "downloaded",
+      "bytes": 6712842,
+      "sha256": "7664b727f71faa57d2795b4ff6ee40fbde99a6f0b277976c4fcdc814ac350c28"
+    },
+    {
+      "reciter": "mohammed_siddiq_al_minshawi",
+      "surah": 77,
+      "path": "/Users/ayub/.cache/surah-cutter/full-reciter-audit/mohammed_siddiq_al_minshawi/077.mp3",
+      "url": "https://quran-audio.quranacademy.org/by-surah/Mohammed_Siddiq_Al-Minshawi/077.mp3",
+      "role": "final holdout; no rule tuning",
+      "assigned_unix": 1792104272.092337,
+      "outcome": "downloaded",
+      "bytes": 5004643,
+      "sha256": "aa68e8ad08034fdf6a46743de411eee0dd90397bc2bf263754fa41418789e7e1"
+    }
+  ]
+}

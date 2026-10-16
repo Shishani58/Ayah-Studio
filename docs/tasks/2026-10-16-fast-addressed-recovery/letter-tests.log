@@ -1,0 +1,28 @@
+.........................FF...................................           [100%]
+=================================== FAILURES ===================================
+________ test_split_utf8_and_combining_mark_scores_cannot_be_discarded _________
+
+    def test_split_utf8_and_combining_mark_scores_cannot_be_discarded():
+        raw = 'اانت'.encode()
+        split = decoded([raw[:1], raw[1:]], [.1, .99])
+>       assert split.attribution[0]['letter_quality'][0] == .1
+E       assert 0.10000000000000002 == 0.1
+
+/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-fast-addressed-recovery/letter_regression_draft.py:35: AssertionError
+_____ test_cross_word_token_remains_shared_without_promoting_weak_letters ______
+
+    def test_cross_word_token_remains_shared_without_promoting_weak_letters():
+        obs = decoded(['اولى عل', 'ى'], [.9, .1])
+>       assert obs.units == ('اولى', 'على') and obs.unit_quality == (.9, .1)
+E       AssertionError: assert (('اولى', 'على') == ('اولى', 'على')
+E         
+E         Use -v to get more diff and (0.9, 0.10000000000000002) == (0.9, 0.1)
+E         
+E         At index 1 diff: 0.10000000000000002 != 0.1
+E         Use -v to get more diff)
+
+/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-fast-addressed-recovery/letter_regression_draft.py:47: AssertionError
+=========================== short test summary info ============================
+FAILED ../../../../../../../../dev::test_split_utf8_and_combining_mark_scores_cannot_be_discarded
+FAILED ../../../../../../../../dev::test_cross_word_token_remains_shared_without_promoting_weak_letters
+2 failed, 60 passed in 1.16s

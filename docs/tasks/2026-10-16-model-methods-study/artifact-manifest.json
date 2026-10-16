@@ -1,0 +1,3162 @@
+{
+  "created_at": 1792120351.955575,
+  "files": {
+    "controller-primary.log": {
+      "sha256": "f773d277cbb1414cde91f296df2d2ac93414a86be3ba4f512e4ebd9a18d20835",
+      "bytes": 80
+    },
+    "runtime-assets-at-end.json": {
+      "sha256": "c4cee64dcd2e9ad2a203f45f92282feafaa88f481edb5a39a44e6c3090dde9ba",
+      "bytes": 753
+    },
+    "negative-whisper.log": {
+      "sha256": "5ffa93d2a396d281e5239730b172cf421d9bd6ed3b9919514c03ae3138a69451",
+      "bytes": 37
+    },
+    "controller-muaalem-retry.json": {
+      "sha256": "ca01dc95ce55a2caa5059fa757b6e254655e20355fa566aaf6112158c71b26db",
+      "bytes": 329
+    },
+    "qpc-blank.log": {
+      "sha256": "fdaf91c1e7e7c5e4cb4c29eedcca8723e48f7fd81e9192c4526b5d51f69bdf2e",
+      "bytes": 2671
+    },
+    "plot.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "qpc-fp32.log": {
+      "sha256": "02f636e3b367135b9124972cfbb5cfa768093849819e14f51e3578b4bac252b0",
+      "bytes": 664
+    },
+    "latency.py": {
+      "sha256": "24bedb5c798e2bbc3d07be9362f6c93be57c029430f6434c0c5e8528c6cc6426",
+      "bytes": 3564
+    },
+    "qpc-localnorm.log": {
+      "sha256": "240f60aa5747929a7a7f63dbaf2b321b12bfd7bf38459595cb39c081166d0248",
+      "bytes": 1307
+    },
+    "qpc-fixed30.log": {
+      "sha256": "48c2708167dc7206aa3ccb74b7e9f416443b6e5d6af9af67fec3f1ad8d0cf5bf",
+      "bytes": 2666
+    },
+    "score_secondary.py": {
+      "sha256": "aa039cc259433d105fe592395039cfb9b055d03e4ae75e026ab6162f9bb94d18",
+      "bytes": 6781
+    },
+    "corpus.json": {
+      "sha256": "2ea629a8dc568dbf78701ebd81dc35574355e7898c3aa8047d1e59eec6ce03b8",
+      "bytes": 12930
+    },
+    "resource-suspension.json": {
+      "sha256": "b94944cdde851a569b270505c791bc2fe5050ac03f6388134ba75c3189e09b94",
+      "bytes": 119
+    },
+    "controller.py": {
+      "sha256": "6c4017a680ac5d1efa1b84506981fdc5b414c2b286ec63d265313c903d560eac",
+      "bytes": 4012
+    },
+    "controller-latency.json": {
+      "sha256": "e43dcd2647b9e5b39e266127c89239ef435f82db1a25c58d5d17595dbf4154b0",
+      "bytes": 333
+    },
+    "checkpoint.json": {
+      "sha256": "19d96a2bf146db5387acf7a2ea4bfda80fefaaaa71659518cb6541de62b1cd12",
+      "bytes": 1716
+    },
+    "qpc-controls.log": {
+      "sha256": "a4a732936e9da97ec62b8f289b40899987b997af9fae91b6392cd1fdea4e8ffe",
+      "bytes": 292
+    },
+    "whisper-wrapper-note.json": {
+      "sha256": "9efa62a9f543eea776a8734ab7fdf4079f79d84054e79fc369820875742a02b0",
+      "bytes": 342
+    },
+    "qpc-pilot.log": {
+      "sha256": "fb9cbe28ba00a392dde3c5d3804abbe3f9500ebd9cf912d9a914088c9cbb25e9",
+      "bytes": 737
+    },
+    "analyze-final.log": {
+      "sha256": "bb42c4c564e905f88389f1cadb7c5e9206273674454f12d1d71c8353f172668f",
+      "bytes": 2662
+    },
+    "negative_models.py": {
+      "sha256": "ff800c8c6b0991a20f280ea660da54a854ff9b3128726bd9437da1ef311f7a38",
+      "bytes": 4053
+    },
+    "source.zip": {
+      "sha256": "0cfb1118e6bf4e06c92092078f37201236f227318c74441fb55340accd28660d",
+      "bytes": 581815
+    },
+    "parity.py": {
+      "sha256": "7385b5674cd91de2b1f53d1cf5d170927da9fc10eb171c7d8883b5c2d2b70bff",
+      "bytes": 3003
+    },
+    "parity.json": {
+      "sha256": "0e7463442588dfc9b0bdc8a277c6e673ed86b4c9d531dcbd1baeb8c1de555d48",
+      "bytes": 16955
+    },
+    "report.md": {
+      "sha256": "b8df55b8d12dc2148079b591d40500ac1e5d81147911b59a1e86768e5962bc03",
+      "bytes": 27536
+    },
+    "nemo-forced.log": {
+      "sha256": "9ec63775ad00405a7040ab6a1bdd55b457d65e0c564d6c969b16267bb91128b0",
+      "bytes": 7337
+    },
+    "integrity.log": {
+      "sha256": "f76769530726b158018e1a911dadb5a7c9bee7d70ab7547feccabd5ed4a5e99b",
+      "bytes": 405
+    },
+    "whisper-fast-methods.log": {
+      "sha256": "31a72b1f8e7122a57bdb96872dc71605f0c66e56fe00aedacc6af5bac9d92983",
+      "bytes": 2526
+    },
+    "analyze-secondary.log": {
+      "sha256": "357457bf999f80a8e870a55f27126acacf65798a80c469a2ae4a8fffc71b8f2e",
+      "bytes": 6971
+    },
+    "controller-matched-controls.json": {
+      "sha256": "04a76525e7f3b1dc2ae5869dee5fb982f4c92f02658b284c2ddc905769daeebc",
+      "bytes": 1432
+    },
+    "controller-known-controls.json": {
+      "sha256": "cf95fd3c58708be9d68710829ce81b4539a5cc31ab559848c098bf68aaeaa81a",
+      "bytes": 1094
+    },
+    "controller-overlap-nbest.json": {
+      "sha256": "454269be7c408d62ee76a881c317758c73d3e3b72c013c5e73bd56339f57c275",
+      "bytes": 789
+    },
+    "nemo-negative.log": {
+      "sha256": "033fa27678ea2da86ea5b94069d0177ec36c96c0a67abf2955b689e14f57c9ca",
+      "bytes": 6311
+    },
+    "controller-controls.json": {
+      "sha256": "d2728d09667f56d95cb95f2ceef388d95c1d1573d2ea8e50dad448f56f27da9b",
+      "bytes": 673
+    },
+    "whisper.log": {
+      "sha256": "392805db00b513717a0167c240a20f0083ff65487ef89ec60fcf951d7229e509",
+      "bytes": 6452
+    },
+    "comparison.png": {
+      "sha256": "69d1207018c5b62926ade294000200a8733e9f2fd600fa130d1248cdfd168839",
+      "bytes": 198129
+    },
+    "score-secondary.log": {
+      "sha256": "70bdb144392db39dfbcc21de119c8ef04b7fade6ebf273bb1abec5878c44c369",
+      "bytes": 10526
+    },
+    "secondary-inputs.json": {
+      "sha256": "2276c67e0487ad3d582dcfa4b8847d94896936bbff374d70e0227b2d15ff75e7",
+      "bytes": 6266
+    },
+    "snapshot.json": {
+      "sha256": "67ac5f5041a5a8fe7c0e86db3a2250424cfee2ad4644df11b06dc44e75818883",
+      "bytes": 9519
+    },
+    "runtime-shim-manifest.json": {
+      "sha256": "683b04cf433311a9d59ad0e5b2f95cb049d7fe9c5107a489215c2f46ff2d45e8",
+      "bytes": 1451
+    },
+    "qpc-latency.log": {
+      "sha256": "a113c335d025e1da0343c49dfb87604d14761cbd83f81db8231c604fc471932d",
+      "bytes": 334
+    },
+    "score-qpc-progress.log": {
+      "sha256": "be2553b0515bf4ab973cc4c7483ab20f038c3ab5b15dcdc50e83faddede82b98",
+      "bytes": 10120
+    },
+    "predict_qpc.py": {
+      "sha256": "43b7d71e81564b20a1f5454e63e4650d5a2f36c3b2c2ad30c1a4bfbe858ada7c",
+      "bytes": 9006
+    },
+    "validate.py": {
+      "sha256": "795ad6cd827fb75243eede70d5dfce6643505dc3a55ef0574914a43b93977529",
+      "bytes": 6106
+    },
+    "controller-secondary.json": {
+      "sha256": "8168336590e15e0a6fc347c898a1d45d4516f9a4a87077127cf741e537db42bc",
+      "bytes": 1340
+    },
+    "qpc-greedy-final.log": {
+      "sha256": "6cc97c44862fc042166f8f03469e2762628128eda3f2ec0ece88687f3edfb074",
+      "bytes": 5670
+    },
+    "common.py": {
+      "sha256": "5c799dfb6918601144d9e8daa97459dd4c2740c06c9291a7b695e8ee053bb34a",
+      "bytes": 1723
+    },
+    "controller-fp32.json": {
+      "sha256": "ddd190eaff55d9f6edbafc129892925d9aeaa5f55436bef4f0f97623790e9b6b",
+      "bytes": 788
+    },
+    "controller-primary.json": {
+      "sha256": "f51f5ab2c4faff268994969fd4a24f256136f96c611bac9861f555b0b6ed69b7",
+      "bytes": 2260
+    },
+    "resume_process.py": {
+      "sha256": "9e445e364749a8e6210041c3e7c3b473f96e1d760b0aaad223cfc82d26840549",
+      "bytes": 1054
+    },
+    "qpc-strong6.log": {
+      "sha256": "ca724037b15a8b5342244bb2f61c8ed332ab6e1177f5aaf6cad199504408a55c",
+      "bytes": 2675
+    },
+    "score_qpc.py": {
+      "sha256": "fef0af06ff992a659be2271c3858311abee6ec6ead1fb1870e4d508e6596e9a4",
+      "bytes": 4781
+    },
+    "qpc-scores.json": {
+      "sha256": "83e61a3f0b4d948b1c47cfe6ac2c0852cc2871214e8a618ba4427d9172d6c9f9",
+      "bytes": 334588
+    },
+    "score-qpc-final.log": {
+      "sha256": "3800a6996609ff5e864f282d27302ce620a3adbdcdfffaf5926aaf2f75a2a1f7",
+      "bytes": 11591
+    },
+    "muaalem.log": {
+      "sha256": "648ef0d02469577ee214aff3da27020b8a30b7631638fb1b47aa0fe70ea0017c",
+      "bytes": 1524
+    },
+    "secondary-truth.json": {
+      "sha256": "733cf52889af56b428c57d5a3aca8f84b4921d08c3f6d47ff4a54ede928840be",
+      "bytes": 47800
+    },
+    "analyze-secondary-final.log": {
+      "sha256": "4613737c2e84f7bfd0541636e3a9596e60f2bb92eec1545739bc93b6a50cfe48",
+      "bytes": 7728
+    },
+    "task.md": {
+      "sha256": "206fd97d7474d557bfa06c39bd5b1b04d61365cb1f71e4971f4e54e0a5eb8782",
+      "bytes": 9572
+    },
+    "nemo_forced.py": {
+      "sha256": "b8ad4602761eceab2f8e7943465838d6c9672e6d36bc23874ba8eeacb675b16c",
+      "bytes": 4036
+    },
+    "analyze_secondary.py": {
+      "sha256": "58da8e4e2e793061da66f95cd3193dab1576498c60944b4d0cd15c2a7e93113c",
+      "bytes": 3253
+    },
+    "whisper-overlap.log": {
+      "sha256": "50b48175eb5711f5429326e66020147b475fa0baee0ed0942539e466b9d96d4e",
+      "bytes": 670
+    },
+    "secondary-scores.json": {
+      "sha256": "bcee6ee9646bc56db830bf20a38ecc6d229e88aca83523eda9ef2489b6425925",
+      "bytes": 195591
+    },
+    "qpc-greedy.log": {
+      "sha256": "9ef5f2f9543106e9bdc29e0af7a3493da9f320a6201f9cf0acb43b97088ead3c",
+      "bytes": 1264
+    },
+    "score-secondary-final.log": {
+      "sha256": "9ba40f2a72b22b9a19a8dbf1f634925a99a9e1260bd9227ccda48567eea2acfb",
+      "bytes": 10992
+    },
+    "negative-muaalem.log": {
+      "sha256": "fa77022b2f3f3d9e36260e30dc7446e4fab6d9cd8ea735e645d0b0d3991389ab",
+      "bytes": 24
+    },
+    "phonetic-decode.json": {
+      "sha256": "d834bb910f54ea21286866976af09f28f2e27f622ca86273e378b468c56efa3a",
+      "bytes": 139509
+    },
+    "plot_results.py": {
+      "sha256": "dcd3ca49351f7f32e85fab6bf0c6f67bef3be980fa0f96683367967c325fea17",
+      "bytes": 5245
+    },
+    "controls_qpc.py": {
+      "sha256": "7ea5e3500b1b3a0fe93fc857ccdacecb999a63a4b8a0c328771a93167f3cd045",
+      "bytes": 2123
+    },
+    "qpc-lag0-wide.log": {
+      "sha256": "d1ad08f37b8c535f39527ed1314a6a40f6774073844d7a56a84e49b6d543bf7f",
+      "bytes": 10143
+    },
+    "controller.log": {
+      "sha256": "7a95bac667533d06d4b7b69cedfc99a430ebb1be2ddee47161e991bca2ab064e",
+      "bytes": 377
+    },
+    "whisper-nbest.log": {
+      "sha256": "3c762beb913b4a7a9a57638b5075df6805fba0239c2c43d58b97543ef03058ff",
+      "bytes": 570
+    },
+    "secondary-paired.json": {
+      "sha256": "4538b468df67f3674c9feac35c18cd066d3bc0f51dea03c8b040dbf29ea2d385",
+      "bytes": 7586
+    },
+    "whisper-beam.log": {
+      "sha256": "c7105a8005a2afa7ded36cab30aa3e10f000ad9f5b7d02febab99d01259e22cf",
+      "bytes": 556
+    },
+    "controller-normalization.json": {
+      "sha256": "f5d827946dbade498cc10a087d90fa1aa51c15a21bd6d4dc3be6bb72fc7a8c06",
+      "bytes": 812
+    },
+    "paired-analysis.json": {
+      "sha256": "a1f4df103598d8e817b49a57a2716062548bfaa5fa3a269bd4cea20c556a3396",
+      "bytes": 107592
+    },
+    "paired-metrics.csv": {
+      "sha256": "bb5681ee0b866bd1fccfa0fcd215fdba7102410214428b6fa931cd6da67bd4d6",
+      "bytes": 4500
+    },
+    "latency.json": {
+      "sha256": "d32861fd3772209bbae9b08d8faee4f62f309f6829148013cf1299ec8192e59a",
+      "bytes": 3602
+    },
+    "controller-secondary.log": {
+      "sha256": "aaf38d1255d0f1c44ddf538f55acef530f92bb1fca0f4da8e3d9bf35d6ecca53",
+      "bytes": 60
+    },
+    "parity.log": {
+      "sha256": "86dcdaa98be983779416fb0c6f29ae9435f9d15c7ab4bfdb02efbe16f62e5898",
+      "bytes": 2719
+    },
+    "score-qpc.log": {
+      "sha256": "8af7886e93af560d72e76fdad440b29fbd0aaa26f10e504e8cd5390e734d71ce",
+      "bytes": 9399
+    },
+    "qpc-wide.log": {
+      "sha256": "85ea1cabeb24c6516423a58821bc49bb5e88647aa1c2ff9d85f81d7ad0647065",
+      "bytes": 4868
+    },
+    "qpc_greedy.py": {
+      "sha256": "d407a85d0250865491dd99d66b6e26eb0b2ca3c83ddf4fa9af0c396e71baacab",
+      "bytes": 4560
+    },
+    "analyze.py": {
+      "sha256": "b89d8eeaf65cc69fade4fcda06f2a0c8b04f88a1c3e0e2280407480b37c406bf",
+      "bytes": 5135
+    },
+    "prepare_secondary.py": {
+      "sha256": "ce315f8d11f84312a1da84cfd7841a5d0ca567a44238b95f3df1715cd8893627",
+      "bytes": 2126
+    },
+    "nemo.log": {
+      "sha256": "16f137bcf90c0e1c3c6d8d981f82c7600463cf11d753af43a1ff5bb0394dffd2",
+      "bytes": 85892
+    },
+    "whisper-beam-sample.txt": {
+      "sha256": "93586ade1491547bc45acab0d998e21338cde7fca54d8ec0c120bd080838157f",
+      "bytes": 106787
+    },
+    "muaalem.py": {
+      "sha256": "e7f13795bb625a90c26a9d20e6f5128cf7673138a4cfdf5a263c559abe6aa4e2",
+      "bytes": 4091
+    },
+    "controller-secondary-final.json": {
+      "sha256": "7f9beb9f88aa8db99b0fe71351ed1cfcb0c4fdf7cf10ab435ae5533a797353f7",
+      "bytes": 1190
+    },
+    "protected-before.json": {
+      "sha256": "2cac1901a65c6f3c455aa94ff4f241c03882f09f424e5e9c6e16e3e69c1dbb6f",
+      "bytes": 13711
+    },
+    "protocol.md": {
+      "sha256": "16b1be93d55a716077f9ada5096a51e5166a5a2fbfbf2d66f9d3d67660625a40",
+      "bytes": 22833
+    },
+    "secondary_asr.py": {
+      "sha256": "5449a500c5700429f8999cddf93d4c919bd75ba102302fd8e8e7c3dfa216f54a",
+      "bytes": 10488
+    },
+    "integrity.json": {
+      "sha256": "641aaa105f4661404b03508753775546f668150c191438f2623227dd579c47b9",
+      "bytes": 809
+    },
+    "known-controls/muaalem-zero-matched.json": {
+      "sha256": "1d62d1459ec6cf830ec2b8d770dbc4c838be780cd8139af39984513f45320da1",
+      "bytes": 1660
+    },
+    "known-controls/fastconformer-zero.json": {
+      "sha256": "db5449bbd6f730275357c1954e45d75e1bdf305caf40564c12e311bcc64e0924",
+      "bytes": 1455
+    },
+    "known-controls/fastconformer-positive.json": {
+      "sha256": "d58dd7dbe628cd7772ac61dded7bf714100e39478116f2dd0cb01e1ff1ad86d2",
+      "bytes": 1615
+    },
+    "known-controls/fastconformer-wrong-surah.json": {
+      "sha256": "490f0eb82a3f445ba106e4262bd0f6be8fcd22a95963995a72f248d83c4c48bf",
+      "bytes": 2021
+    },
+    "known-controls/whisper-tarteel-base-positive.json": {
+      "sha256": "5c2319994ff1628cd07c213b9fb5e91d48912efe088196a77bae5423cfba3c95",
+      "bytes": 1368
+    },
+    "known-controls/muaalem-wrong-surah.json": {
+      "sha256": "a67a12d625ccc70e5d8ff7c678d64957912da196f04b4327699ecff173c9dbee",
+      "bytes": 2058
+    },
+    "known-controls/muaalem-zero.json": {
+      "sha256": "22e8db1925295e0c74a84d8cd7d47b5b3b7be0783833ebf6ca2c25737f60b38f",
+      "bytes": 1409
+    },
+    "known-controls/fastconformer-zero-matched.json": {
+      "sha256": "67f2f3871fbcb11af1ba0ceb3d2702c5c284beec0a62f1434a4c9b94e18301eb",
+      "bytes": 1624
+    },
+    "known-controls/whisper-tarteel-base-wrong-surah.json": {
+      "sha256": "f161a1ba6f2d02eba9d7ed322f771b044375a5ba02764268cf72d05034221e39",
+      "bytes": 1562
+    },
+    "known-controls/whisper-tarteel-base-zero.json": {
+      "sha256": "759cfe94319488822d14cb9fc5d3d218e5d2a0ad1edcd2b6da53a97a4af59069",
+      "bytes": 982
+    },
+    "known-controls/whisper-tarteel-base-zero-matched.json": {
+      "sha256": "ae439a7568a9ae2a388a3be8fba80ffe1f26ccb9d69cf2df6f8345cb44903ecc",
+      "bytes": 1069
+    },
+    "known-controls/muaalem-positive.json": {
+      "sha256": "643198d2aba8c9ebd07264657a358c715bcc9badb12e08c0461971c2ea9b3c8f",
+      "bytes": 1608
+    },
+    "asr-whisper/shatri-098-beam5.json": {
+      "sha256": "819ed46a67f17785671d777cf7693bdee8e60928df96093ba2f3136dacefaef6",
+      "bytes": 8967
+    },
+    "asr-whisper/shatri-098-greedy_overlap.json": {
+      "sha256": "d4f6b8089591bed063fe8b97ec1e92df9e4bf796fd7c84ea8b60b7de611bde35",
+      "bytes": 12021
+    },
+    "asr-whisper/mohammed_siddiq_al_minshawi-112-greedy_sdpa.json": {
+      "sha256": "d52f70dd82af4352bffa47e0f0b87008a206689b20f838b6292c0d4daebd2470",
+      "bytes": 2103
+    },
+    "asr-whisper/mohammed_siddiq_al_minshawi-112-greedy.json": {
+      "sha256": "f49c130a76e1f0badf2101dd27238daff50e80b7a8b27836bf4d00b1d9fcd154",
+      "bytes": 2099
+    },
+    "asr-whisper/shatri-098-token_timestamps.json": {
+      "sha256": "eee4166350e5a70c03f1a01f098b3c9dba761de45d3d7ad696791b6854e82226",
+      "bytes": 22843
+    },
+    "asr-whisper/zero4-teacher_attention.json": {
+      "sha256": "abf403a3244e4b2b46ea3a667b2b5629129633e7ded311179702f36b675b0eb3",
+      "bytes": 550
+    },
+    "asr-whisper/saad_al_ghamidi-112-greedy.json": {
+      "sha256": "c21854d2e698356a4ca8e75c0e3ab9afa060232ac5496e00661cdbea52de003e",
+      "bytes": 1710
+    },
+    "asr-whisper/mahmoud_khalil_al_hussary-098-token_timestamps.json": {
+      "sha256": "b35b7e1edf94b6172f16c41747c21ba5bc8b8a91bb22c3f1b01fb846755d7a15",
+      "bytes": 23538
+    },
+    "asr-whisper/mahmoud_khalil_al_hussary-112-greedy_sdpa.json": {
+      "sha256": "c9957c96d5b60887766ff929ae10e2fe2b22263360b152382348020af2cecd92",
+      "bytes": 1956
+    },
+    "asr-whisper/mahmoud_khalil_al_hussary-098-teacher_attention.json": {
+      "sha256": "aff3d7a46c282cdd4c5ec2b34b452269abce64b40691a01ab9b7a74d436a9ffd",
+      "bytes": 5874
+    },
+    "asr-whisper/abdul_basit_mujawwad-112-token_timestamps.json": {
+      "sha256": "2011684c24df546c2107f1e6783622760a9be442c7c21fe511a44a24531c49ac",
+      "bytes": 3600
+    },
+    "asr-whisper/abdul_basit_mujawwad-112-beam5.json": {
+      "sha256": "404403634f31fed083b6147a1321c787e9b35b18d3bdbd07bf2a0bf88fb7f211",
+      "bytes": 1857
+    },
+    "asr-whisper/shatri-114-greedy.json": {
+      "sha256": "28bc613f6596537aeb879a39d7b94b09789bf0fff4a89e46e03bae395c2e4e97",
+      "bytes": 2450
+    },
+    "asr-whisper/saad_al_ghamidi-098-greedy.json": {
+      "sha256": "77cd6c085a08dc215d0360c4c53ab4d8452dd65f90f828286e2966733a573e99",
+      "bytes": 8844
+    },
+    "asr-whisper/shatri-114-teacher_attention.json": {
+      "sha256": "922c18df1f1339a99f074d3a2101d8dc935647f335275259dbca8231000102ab",
+      "bytes": 1930
+    },
+    "asr-whisper/shatri-114-greedy_sdpa.json": {
+      "sha256": "260c52e4297e71fc17595bcc680e8a8c5639f0c6b05192be16f8fff654cd6ebc",
+      "bytes": 2453
+    },
+    "asr-whisper/mohammed_siddiq_al_minshawi-098-greedy.json": {
+      "sha256": "12e58a8cd79cec13fce04575c2cd8db412cdde15d20168e3c869121139634648",
+      "bytes": 9331
+    },
+    "asr-whisper/mohammed_siddiq_al_minshawi-098-nbest5.json": {
+      "sha256": "646d0c5ec4187d4cdd097ee880c31136dfbc0d929ce10e218a6cacec338db0b2",
+      "bytes": 36153
+    },
+    "asr-whisper/mahmoud_khalil_al_hussary-098-beam5.json": {
+      "sha256": "9f17b713ced2b4da3f85cf1f508153beb1b3e11ccf66dd80e14aa891879d1299",
+      "bytes": 9332
+    },
+    "asr-whisper/shatri-114-nbest5.json": {
+      "sha256": "ce43531654bcfd9c17dd82f99206924ac85fe7a6a8208d60aed8fe415aca4e65",
+      "bytes": 8728
+    },
+    "asr-whisper/saad_al_ghamidi-098-nbest5.json": {
+      "sha256": "36e2a6177cc32dcb8f2572ac90c30fcb79ac94955bca7fd65a493508a61d77ad",
+      "bytes": 34877
+    },
+    "asr-whisper/saad_al_ghamidi-098-greedy_overlap.json": {
+      "sha256": "1b729f0102c7e177713faeb93309630faaba3c142984db5fbca8c268c7fe62fb",
+      "bytes": 11905
+    },
+    "asr-whisper/mahmoud_khalil_al_hussary-112-teacher_attention.json": {
+      "sha256": "a75c211ce9f208d55530f86b4fc3523aa13a5deab6428b0be54af25ddabfcf7f",
+      "bytes": 1725
+    },
+    "asr-whisper/zero4-beam5.json": {
+      "sha256": "85ae680b550b42dc6610460fa65551a1d7680b4fffcdd1e907bcfa19c4db95e5",
+      "bytes": 3385
+    },
+    "asr-whisper/shatri-114-beam5.json": {
+      "sha256": "a75a97fa6615533f0461c709f919d6e72f6478248fed2f0d6f2f7391ef844717",
+      "bytes": 2448
+    },
+    "asr-whisper/abdul_basit_mujawwad-112-greedy_overlap.json": {
+      "sha256": "076ceb650f0aee00ee96828dd6a01f15129196072c24f12267b562a62b3a994c",
+      "bytes": 2387
+    },
+    "asr-whisper/mohammed_siddiq_al_minshawi-112-beam5.json": {
+      "sha256": "ce0e7c5a68e88392fcfa2cecddf495655735b49a9a889cf35e7283684f5bad82",
+      "bytes": 2097
+    },
+    "asr-whisper/saad_al_ghamidi-112-nbest5.json": {
+      "sha256": "73894c2a5264a1881cd3ff027c3147c4a46c98c5d73332e41a0516cfd58690eb",
+      "bytes": 5780
+    },
+    "asr-whisper/mohammed_siddiq_al_minshawi-112-token_timestamps.json": {
+      "sha256": "a6db87428d371b75ce9ca7254fb33a183fab98c16a5ce8fc958b7895fc571208",
+      "bytes": 4222
+    },
+    "asr-whisper/mohammed_siddiq_al_minshawi-112-nbest5.json": {
+      "sha256": "a1bcd2e7a26d27c4b4d79a55c005022732f2a68f28d9a8977d8e8eb08b471778",
+      "bytes": 6153
+    },
+    "asr-whisper/saad_al_ghamidi-112-greedy_overlap.json": {
+      "sha256": "4c95a2357cf9a1d15d68d3ae29ff4d4ac9d5efb7f690d4fab4365024da65f9ec",
+      "bytes": 1749
+    },
+    "asr-whisper/saad_al_ghamidi-098-beam5.json": {
+      "sha256": "e35ccc8bf92cccaf0895c026dc4995a00f800fb96594d725b952c6ad3f834c98",
+      "bytes": 8866
+    },
+    "asr-whisper/shatri-098-greedy.json": {
+      "sha256": "70b9c1a8ffa2a3185b638c9502cc995441c0a6c2c684e792972c598dd5a646a3",
+      "bytes": 9019
+    },
+    "asr-whisper/abdul_basit_mujawwad-112-greedy.json": {
+      "sha256": "67a51e120fe8ebf949be50431f322673e92dcef7b1cb594f19a4c96c89efe260",
+      "bytes": 1861
+    },
+    "asr-whisper/shatri-098-teacher_attention.json": {
+      "sha256": "34c70e2743d1170ef936a4384b40dd11d2e5243d31afba54f14162a99f57ca61",
+      "bytes": 5777
+    },
+    "asr-whisper/shatri-112-greedy.json": {
+      "sha256": "567204fec7384fb2d48120a1b4447290b3ecaa1e5e615560ccb2c77f87d6ac5a",
+      "bytes": 1990
+    },
+    "asr-whisper/abdul_basit_mujawwad-098-greedy.json": {
+      "sha256": "8d9ab8705a2ea2fe24652b83c81bd72590262a7191d4f05a39686e4b9858a070",
+      "bytes": 9252
+    },
+    "asr-whisper/abdul_basit_mujawwad-098-greedy_overlap.json": {
+      "sha256": "25b138377da8792dfefa4f8c6fc65f10646ebdd19b8fdb060f203d2a33605bd3",
+      "bytes": 14074
+    },
+    "asr-whisper/saad_al_ghamidi-112-teacher_attention.json": {
+      "sha256": "f4e196793c9ab6c80b00b03e62a85461cefc4849fa3a7f491fb1ebb4817e21f5",
+      "bytes": 1672
+    },
+    "asr-whisper/shatri-114-greedy_overlap.json": {
+      "sha256": "218d5377ebe1ff8d1d943e58a50ee587dea9516bfe53522714cab1fbf7554398",
+      "bytes": 2888
+    },
+    "asr-whisper/shatri-112-greedy_overlap.json": {
+      "sha256": "28f264b33694bd2d2b573d2f13964b143630ce84d276c4be7fce3ef52edf4781",
+      "bytes": 2032
+    },
+    "asr-whisper/mohammed_siddiq_al_minshawi-098-greedy_sdpa.json": {
+      "sha256": "08195e25d6578bb66a2cc231d0f3b757e710c620b500aa52516ec8152fc469aa",
+      "bytes": 9335
+    },
+    "asr-whisper/saad_al_ghamidi-098-teacher_attention.json": {
+      "sha256": "ee14f054e8a962864284b2ae5f3177dd3e70a20fc221b3b163a85920670e9d44",
+      "bytes": 5832
+    },
+    "asr-whisper/abdul_basit_mujawwad-098-nbest5.json": {
+      "sha256": "f858a7a49742c7948593239315a29842b50e972500a4f07cf372f48696d77f13",
+      "bytes": 36452
+    },
+    "asr-whisper/shatri-112-nbest5.json": {
+      "sha256": "cb1b8ea161b0095a1930c910e2723f5a69b9c521dd4c6d113b2520e3c126f684",
+      "bytes": 6088
+    },
+    "asr-whisper/shatri-112-teacher_attention.json": {
+      "sha256": "6a276877d1fd54b94fd28f98f89b89e2d0b09f6702d11f17507ee361ea23f774",
+      "bytes": 1643
+    },
+    "asr-whisper/abdul_basit_mujawwad-112-nbest5.json": {
+      "sha256": "aa9ab6107e520fa464d5d01c8a59e744c52da3d93a89b4ad37113c0e38ed2ae0",
+      "bytes": 6159
+    },
+    "asr-whisper/shatri-098-nbest5.json": {
+      "sha256": "bb1049a63b83ed8c69b2b930091a48161c1691990acf4a010395a4013723b578",
+      "bytes": 35070
+    },
+    "asr-whisper/saad_al_ghamidi-098-token_timestamps.json": {
+      "sha256": "4a65c710f040f4bbbb633894f5422eeee7c572889d88a60a8fc118a19d1aa21f",
+      "bytes": 22178
+    },
+    "asr-whisper/mahmoud_khalil_al_hussary-098-greedy_sdpa.json": {
+      "sha256": "576f9a7b468324ab0a0e0f7bb6860a7bab6486c11329181adea2826fc66a75c2",
+      "bytes": 9419
+    },
+    "asr-whisper/saad_al_ghamidi-098-greedy_sdpa.json": {
+      "sha256": "1c1430e0721299135f8a8d2c8c088ec02cb26c4cd1a396c5efdf31d42165f6f7",
+      "bytes": 8849
+    },
+    "asr-whisper/identity.json": {
+      "sha256": "8b98720778c14ccc598a5b8cb61e80f42024cbfd7eee03d74136684ffdd57986",
+      "bytes": 1079
+    },
+    "asr-whisper/shatri-001-beam5.json": {
+      "sha256": "25096daa675fc69184163aaabd33827bff016df87f1322756140030bfd7f15a8",
+      "bytes": 3268
+    },
+    "asr-whisper/shatri-001-teacher_attention.json": {
+      "sha256": "5128f23153baadc0c2507e322003c380a525eb447478bc850c9b12eff9573395",
+      "bytes": 2209
+    },
+    "asr-whisper/shatri-001-greedy_sdpa.json": {
+      "sha256": "33d81eea29f09acb8a4ad4da11cb12465ac24f3c6b82a69ee80c58ab017b1b60",
+      "bytes": 3283
+    },
+    "asr-whisper/saad_al_ghamidi-112-beam5.json": {
+      "sha256": "3275dce3197b40787167747d3904ff183dcdd8c5f50a6057f48f26205e068ff2",
+      "bytes": 1709
+    },
+    "asr-whisper/mohammed_siddiq_al_minshawi-112-greedy_overlap.json": {
+      "sha256": "8689f137be57625f18dc8c19ba045e765e694469e4d1e4f6a60b7db84d57f39c",
+      "bytes": 2140
+    },
+    "asr-whisper/shatri-001-token_timestamps.json": {
+      "sha256": "1366c18498702e412afeb1ad081bb64dad849047b648f13f897ba7ca931704a2",
+      "bytes": 7512
+    },
+    "asr-whisper/mahmoud_khalil_al_hussary-112-greedy_overlap.json": {
+      "sha256": "0d663fd7c18646672430d01b70bb58eb7822681f521531fa82cfe316337fbab0",
+      "bytes": 2249
+    },
+    "asr-whisper/shatri-114-token_timestamps.json": {
+      "sha256": "7cdce6dcb358058f720499f3306431f455b616b717d1b1793cc89924e6c9b868",
+      "bytes": 5175
+    },
+    "asr-whisper/saad_al_ghamidi-112-token_timestamps.json": {
+      "sha256": "379acd2350e599d4f296c27fd97eba879524553bacaa62f15f1101a7a4c48084",
+      "bytes": 3297
+    },
+    "asr-whisper/shatri-112-greedy_sdpa.json": {
+      "sha256": "3ca155a40e1f2b22fd1f64afbbd9f2f61aea90f68caaa80ffc4ec4caf3d197fb",
+      "bytes": 1995
+    },
+    "asr-whisper/abdul_basit_mujawwad-098-greedy_sdpa.json": {
+      "sha256": "2f3073ca9ce97afd7546436d4588f256650a01b48eb1e2da2b64d13db5841a39",
+      "bytes": 9256
+    },
+    "asr-whisper/shatri-001-greedy_overlap.json": {
+      "sha256": "81727530c15698d5c524b759a53a639318e0347a0f4635e738348933618c2e6a",
+      "bytes": 4289
+    },
+    "asr-whisper/mohammed_siddiq_al_minshawi-098-greedy_overlap.json": {
+      "sha256": "a1e149c3128b3a49ed2b60679ed16529e3e7d119cf13dab06e353baf2678b138",
+      "bytes": 12310
+    },
+    "asr-whisper/shatri-001-beam5_wrapper.json": {
+      "sha256": "6d8a50d1a24ebc32a1047842cc3852ee8a0f0bb64d378e8d4bdf6e7d031b36dc",
+      "bytes": 11165
+    },
+    "asr-whisper/zero4-greedy.json": {
+      "sha256": "a6f70e0fddee8c27dcdec3a3cf94bdf89ad3b83b438faf3041e0255998bf579e",
+      "bytes": 735
+    },
+    "asr-whisper/mahmoud_khalil_al_hussary-112-beam5.json": {
+      "sha256": "a01b4a695ea5a2dc4bb4a3d2def990604b62108239f372343bbe09b709c0d810",
+      "bytes": 1951
+    },
+    "asr-whisper/mahmoud_khalil_al_hussary-112-token_timestamps.json": {
+      "sha256": "d95daabf4cb5163f463519ed7442c1bb3c08bf512239e3c32671664688387766",
+      "bytes": 3755
+    },
+    "asr-whisper/shatri-112-token_timestamps.json": {
+      "sha256": "44589d8c56da17e2dcbeee32aa825ec18e4ec81dbebc711e706ebca6eee2e038",
+      "bytes": 4099
+    },
+    "asr-whisper/mahmoud_khalil_al_hussary-098-greedy.json": {
+      "sha256": "84162b6f4e00e092102fbd5af782de86bbe0abb8fb313252535d91d6ceff936b",
+      "bytes": 9415
+    },
+    "asr-whisper/mohammed_siddiq_al_minshawi-098-beam5.json": {
+      "sha256": "4ea7b5b85ebdc3fcb89a0b2e77e96ad927a9d05a645c957c82fc86c7d060b8c6",
+      "bytes": 9206
+    },
+    "asr-whisper/mahmoud_khalil_al_hussary-098-greedy_overlap.json": {
+      "sha256": "6f0bf648bab027671186d9a1ff4e57bb1072284c837c08a47797cc101fde2669",
+      "bytes": 13043
+    },
+    "asr-whisper/mahmoud_khalil_al_hussary-112-greedy.json": {
+      "sha256": "9a83b304cb964643fb9a879ef26904a67e811cc3afcca9714a6189fffb1356e5",
+      "bytes": 1953
+    },
+    "asr-whisper/mohammed_siddiq_al_minshawi-098-teacher_attention.json": {
+      "sha256": "65c854673927a5e027f911650188ae06e5021eda42a9b794266d40e07bcf1dcd",
+      "bytes": 5886
+    },
+    "asr-whisper/abdul_basit_mujawwad-098-teacher_attention.json": {
+      "sha256": "af7daf0f54db4cc1e22a91d7f0f3d276db72e1b3d807d01e9549572f63549dd1",
+      "bytes": 5903
+    },
+    "asr-whisper/shatri-001-nbest5.json": {
+      "sha256": "eea7949f87d4a40d683697e6edf6b02c401022c42eea40f7bd08a7cd321c71e1",
+      "bytes": 11139
+    },
+    "asr-whisper/abdul_basit_mujawwad-112-greedy_sdpa.json": {
+      "sha256": "924349633205f5a8e78ea69bb30abe0f640a978f1387b20cb13c99ee7e5d5735",
+      "bytes": 1865
+    },
+    "asr-whisper/zero4-greedy_sdpa.json": {
+      "sha256": "c183289e31af22ed5fbc977711482745a33341f2e31f11879975a4920dbf14eb",
+      "bytes": 737
+    },
+    "asr-whisper/shatri-098-greedy_sdpa.json": {
+      "sha256": "6cca0dbe76237ab526dd0deafef7e47dea7e79b12a32739ecdf8721bbec87386",
+      "bytes": 9024
+    },
+    "asr-whisper/zero4-token_timestamps.json": {
+      "sha256": "f8f16c625642b49b7e9bc94cff583200e467e10a9b8b3138884f34d6c0453e43",
+      "bytes": 1060
+    },
+    "asr-whisper/abdul_basit_mujawwad-098-token_timestamps.json": {
+      "sha256": "dd1b8918ec75e203eb1df6a0f1f6f0c7c5e4b7fdfaee560430721cf94975c685",
+      "bytes": 22817
+    },
+    "asr-whisper/saad_al_ghamidi-112-greedy_sdpa.json": {
+      "sha256": "4def44a8d9de60f189de5e088da3a641f5e999fe14db20a56be2435d30c5b538",
+      "bytes": 1714
+    },
+    "asr-whisper/shatri-001-greedy.json": {
+      "sha256": "e1466e57c8b68be4df989fc825145533d180f69dec17e35c71bf5dc6c2efe995",
+      "bytes": 3213
+    },
+    "asr-whisper/shatri-112-beam5.json": {
+      "sha256": "a5080c68ad82a77c2fe3d7b9560dcabc1a17a9a14cb6414c0b8e36ba2c7505ff",
+      "bytes": 1989
+    },
+    "asr-whisper/zero4-greedy_overlap.json": {
+      "sha256": "891861c4125e556dc9a3836208f5922842f030882d5202c11d4539db778f5c0c",
+      "bytes": 770
+    },
+    "asr-whisper/abdul_basit_mujawwad-112-teacher_attention.json": {
+      "sha256": "ee4497e4e41b48cad79f16642450dabbbd37fe678c0097633b6e1721bb9090b5",
+      "bytes": 1704
+    },
+    "asr-whisper/mohammed_siddiq_al_minshawi-112-teacher_attention.json": {
+      "sha256": "6b6c6c01cea106dd94d42745c718ab019dacc2b65515fa402f0da95d7d3bb75d",
+      "bytes": 1728
+    },
+    "asr-whisper/mahmoud_khalil_al_hussary-112-nbest5.json": {
+      "sha256": "28392607d0c8cfdbcc6b791c2d2cd06ed1d6a9b7ec324d01ffccd45af2f42032",
+      "bytes": 5802
+    },
+    "asr-whisper/mahmoud_khalil_al_hussary-098-nbest5.json": {
+      "sha256": "e3002399c53ed44b7bd46018bd73116113cd863f2798477ef703e3cafdb0753a",
+      "bytes": 35922
+    },
+    "asr-whisper/zero4-nbest5.json": {
+      "sha256": "bd801f7b0fb3488b7185e574a4cef2c83f8c1e13f2a40c2a41893a148e02a17e",
+      "bytes": 12178
+    },
+    "asr-whisper/mohammed_siddiq_al_minshawi-098-token_timestamps.json": {
+      "sha256": "3621515371c9c5ed01b5374490958a028337dda1d51d6f52148e10b1551b0e85",
+      "bytes": 23252
+    },
+    "asr-whisper/abdul_basit_mujawwad-098-beam5.json": {
+      "sha256": "76b9be451d51d015bfe306ba79d183db3f46c81969968f835e313b71dfb87afb",
+      "bytes": 9142
+    },
+    "muaalem/mahmoud_khalil_al_hussary-098-matrix.json": {
+      "sha256": "d5847966c8a5421f40ac233895398d88bf65d9488450b7fcd62d14b2f6605e0c",
+      "bytes": 196
+    },
+    "muaalem/shatri-098-madd2.json": {
+      "sha256": "e95894aaf77e51909fc5a8faf8e55cb24b3de98c0222d877644c71f320db5d78",
+      "bytes": 3142
+    },
+    "muaalem/shatri-001-madd6.json": {
+      "sha256": "67a570bcbb1525fcce006da635f0b2f5ce150bfda04dcf64131d1ae170eef897",
+      "bytes": 2936
+    },
+    "muaalem/abdul_basit_mujawwad-112-madd2.json": {
+      "sha256": "14a091e0eee32aa16998eed27f9f17a2cb04cbc06993bea92e29f4be671b7f0a",
+      "bytes": 2155
+    },
+    "muaalem/abdul_basit_mujawwad-098-connected4.json": {
+      "sha256": "6542d4bc4973e5fd971e8d8ec111d85eeb34168f61253f41cb5faf55b7885cc6",
+      "bytes": 3238
+    },
+    "muaalem/abdul_basit_mujawwad-112-connected4.json": {
+      "sha256": "68c46b0c1aa0912bb96f44f7149338f23fe31e173ee4a84c865f4af105a7807d",
+      "bytes": 2150
+    },
+    "muaalem/saad_al_ghamidi-098-madd4.json": {
+      "sha256": "3a9df42162c0d921d198b7754103eb4a31cf69599b8e4dea3734e2bf6b990c4c",
+      "bytes": 3178
+    },
+    "muaalem/mahmoud_khalil_al_hussary-112-matrix.json": {
+      "sha256": "fcba2d73579737444ad33c483c2d07d701a10a112ef8ef027b539710a4c7aeb8",
+      "bytes": 196
+    },
+    "muaalem/mahmoud_khalil_al_hussary-098-connected4.json": {
+      "sha256": "de2a665f922417f56e6f04112100ed2e08b9594fd09d3b2c3809a679eb199eec",
+      "bytes": 3251
+    },
+    "muaalem/mahmoud_khalil_al_hussary-098-madd2.json": {
+      "sha256": "8431671c2abfe7518e576bb97f57e4a76e77b9c707e63a5048f303e49920c6fd",
+      "bytes": 3240
+    },
+    "muaalem/shatri-001-matrix.json": {
+      "sha256": "56b5e47da10dd58f912f8cf5d3e9009883f2ad39258b8758df18345b702fb21a",
+      "bytes": 194
+    },
+    "muaalem/mahmoud_khalil_al_hussary-112-connected4.json": {
+      "sha256": "49f1cf7ef141631a498272e4df02095b952550f6ef293a13353f69d15f70a9d2",
+      "bytes": 2174
+    },
+    "muaalem/shatri-114-madd2.json": {
+      "sha256": "dccce47f8699050cda50c6664e7b199ed3e7952eaa938e28d688c8f65f945066",
+      "bytes": 2577
+    },
+    "muaalem/saad_al_ghamidi-112-madd6.json": {
+      "sha256": "4f6f52e9a7dbc556a1961d00060f8295684c879333df5a8e7c25e3e920aba44c",
+      "bytes": 2135
+    },
+    "muaalem/mohammed_siddiq_al_minshawi-112-madd2.json": {
+      "sha256": "9c49835e23f0852e5db49a00df9666586266f26c27477b6979f0d793754f2f38",
+      "bytes": 2180
+    },
+    "muaalem/abdul_basit_mujawwad-112-madd4.json": {
+      "sha256": "e45b6db0dbe013f57e6f83f9b6bf86d7dcbd9c01942abcdd21d9bb9fe90d40c2",
+      "bytes": 2154
+    },
+    "muaalem/mohammed_siddiq_al_minshawi-098-madd6.json": {
+      "sha256": "a112cc6252abcefa2ce7bfbbf3569027966826a5fd7d70cdf93a1c5bf2aa5e2a",
+      "bytes": 3251
+    },
+    "muaalem/saad_al_ghamidi-098-madd2.json": {
+      "sha256": "eeeddaac6f09db45406291ce8a7ae36f85ec5b252e6ef74a7930070cb35972c4",
+      "bytes": 3178
+    },
+    "muaalem/mohammed_siddiq_al_minshawi-112-connected4.json": {
+      "sha256": "1ce7abd1de188a98ed0d86ff25db6fca114677ff82c1029e33f906b99ea170a3",
+      "bytes": 2174
+    },
+    "muaalem/mahmoud_khalil_al_hussary-112-madd6.json": {
+      "sha256": "9ddc1e3ca9749d4ebb542ea19955b8a489d7532b4bcc8d8b617c5cf9c6c49efc",
+      "bytes": 2180
+    },
+    "muaalem/shatri-098-madd4.json": {
+      "sha256": "413791c0b2069aaae3d957a38f8ca650dcbd5df313eb1ee108b0e4288a278b88",
+      "bytes": 3142
+    },
+    "muaalem/mohammed_siddiq_al_minshawi-098-connected4.json": {
+      "sha256": "67d0001831a5dbdfa3b3268c5c599ec670ec715c38a0162c8a342e73cecf339b",
+      "bytes": 3260
+    },
+    "muaalem/shatri-001-connected4.json": {
+      "sha256": "65dbee9be3fb677156841d9088ed5fedee70bb39bbae5d6209e31945c0e15165",
+      "bytes": 2889
+    },
+    "muaalem/saad_al_ghamidi-098-connected4.json": {
+      "sha256": "f251fe544acd2e18da6aef34f7760d89c0822debc599593eadd5dcd7ae27328a",
+      "bytes": 3187
+    },
+    "muaalem/abdul_basit_mujawwad-098-madd6.json": {
+      "sha256": "df7b058c62622e4b99206179a54320c69ed2569eb2064fbbb25ee55c3745ebd5",
+      "bytes": 3230
+    },
+    "muaalem/shatri-114-madd4.json": {
+      "sha256": "11af45c9f9f18273e1bea8d82957edaa1acdda7dc36c9b20e02089b6229314fb",
+      "bytes": 2578
+    },
+    "muaalem/saad_al_ghamidi-112-connected4.json": {
+      "sha256": "a2992305c0994ad0cece272518d9a281d68f8f2683b5d046e6927b1a482d978d",
+      "bytes": 2125
+    },
+    "muaalem/mohammed_siddiq_al_minshawi-112-madd4.json": {
+      "sha256": "6db6b934f771d8f31256f9664b3b6bb4e80440027d6d91fe5425d1351aa30b44",
+      "bytes": 2180
+    },
+    "muaalem/shatri-112-madd6.json": {
+      "sha256": "a438cb7172f039e3ff8cbb23abc4150c53e9c2862338294262d69982c4fd0d34",
+      "bytes": 2079
+    },
+    "muaalem/mahmoud_khalil_al_hussary-098-madd4.json": {
+      "sha256": "bee6e79f56f198b6f01635187c6c85b73c918351096bd743fbed51516cae039f",
+      "bytes": 3241
+    },
+    "muaalem/shatri-098-matrix.json": {
+      "sha256": "a2da10e9e7da81e56f3d23ce4d1d7ada419d5c744f1ec81f8230f57680ef883c",
+      "bytes": 196
+    },
+    "muaalem/abdul_basit_mujawwad-112-matrix.json": {
+      "sha256": "721f2adac638eacdfb42ecd783469a4293e368c60a34269377d2c3087b683837",
+      "bytes": 195
+    },
+    "muaalem/mohammed_siddiq_al_minshawi-098-madd4.json": {
+      "sha256": "b7044b92dfeb823f727909ae0a04c73c7152edd6fab406aa9f3fe63f1436ecff",
+      "bytes": 3251
+    },
+    "muaalem/abdul_basit_mujawwad-112-madd6.json": {
+      "sha256": "404088bafa930effb457ede9519f7ef4a6ecabed5edcddf096cabe97ada06deb",
+      "bytes": 2155
+    },
+    "muaalem/identity.json": {
+      "sha256": "d60a8b0b415e31c464bd27a8606a5bbecc37bb1193e4c626ca0f95796b38f2f0",
+      "bytes": 272
+    },
+    "muaalem/shatri-001-madd2.json": {
+      "sha256": "832258c32a3ff33133ec5a007e1f0db57d7103be85585126bdb925da9bd36d16",
+      "bytes": 2935
+    },
+    "muaalem/shatri-098-connected4.json": {
+      "sha256": "68eb578284d91bb0da9fa491a3cf142ee7dd6e09e2312a0fec4e13e9b792c1fe",
+      "bytes": 3151
+    },
+    "muaalem/shatri-098-madd6.json": {
+      "sha256": "cd1b192e486a8a138be00ffe016278a24ee03a0e7dc2aab16478f25dc7cfff1f",
+      "bytes": 3142
+    },
+    "muaalem/mahmoud_khalil_al_hussary-112-madd4.json": {
+      "sha256": "f27e7dc93c5a3e4d3a5883c11d2e1f2d2be3b189f57a18532b70f3c65df5c7bf",
+      "bytes": 2180
+    },
+    "muaalem/shatri-112-matrix.json": {
+      "sha256": "2b8ac76deab7769cb15d2103c801cae7c39bf1f8a1f22a6c3d3c4a48a1e18f1a",
+      "bytes": 196
+    },
+    "muaalem/abdul_basit_mujawwad-098-matrix.json": {
+      "sha256": "cb105aac496215964452d3ff0f6027c23752ab560ab4188d1daf74940716fea1",
+      "bytes": 195
+    },
+    "muaalem/shatri-112-connected4.json": {
+      "sha256": "82f28d64b41510900aa280c1a25cbe346b2bfccf98aca74749f39d4c9f426fca",
+      "bytes": 2068
+    },
+    "muaalem/mohammed_siddiq_al_minshawi-112-madd6.json": {
+      "sha256": "f32180a795a5b30be11bf081f099fc915971236ca4c873c8d6fedab2b4d10d04",
+      "bytes": 2181
+    },
+    "muaalem/saad_al_ghamidi-112-madd2.json": {
+      "sha256": "fa242b26e871865b2c78504744ea85a79505b94c23651e071bcfd7ceafb08042",
+      "bytes": 2136
+    },
+    "muaalem/shatri-114-madd6.json": {
+      "sha256": "fc17287fae8aa905b554c5523fb030bdf40d04e634f620c1f577490ffb075251",
+      "bytes": 2578
+    },
+    "muaalem/abdul_basit_mujawwad-098-madd4.json": {
+      "sha256": "b2910caad210d73b2a73858b53de8e20658bc2e3677e6dc9a8c1f2f677ca3b74",
+      "bytes": 3230
+    },
+    "muaalem/mahmoud_khalil_al_hussary-098-madd6.json": {
+      "sha256": "e788cf383afa289eee379c3efeb3a1674d836142eb3f44c06cd003627693a6e3",
+      "bytes": 3241
+    },
+    "muaalem/shatri-112-madd4.json": {
+      "sha256": "4ef28d6cf48ff99735df114089dd0fbe5e79917a4c3c0b741608e5a7bf65c0cf",
+      "bytes": 2079
+    },
+    "muaalem/shatri-001-madd4.json": {
+      "sha256": "ea6d99d45211dd628d46069c85b4dccaab77b04e8884c1c6e744c819003f5a02",
+      "bytes": 2936
+    },
+    "muaalem/shatri-114-connected4.json": {
+      "sha256": "c0b049bb3f8ff57788ed9706ac6578b07c7878280955184dfc57ca37c0bc7527",
+      "bytes": 2569
+    },
+    "muaalem/saad_al_ghamidi-112-matrix.json": {
+      "sha256": "d2c1919598d27918198c54800262c684611ab23825dcfa21c991a50c1429517d",
+      "bytes": 195
+    },
+    "muaalem/mahmoud_khalil_al_hussary-112-madd2.json": {
+      "sha256": "24506d170df7751e23a6643311230841d182c58820ad56396788824634bed80a",
+      "bytes": 2179
+    },
+    "muaalem/mohammed_siddiq_al_minshawi-112-matrix.json": {
+      "sha256": "52baa0f8b421146a09d18a0ef2d804a19435ce1cdc888606065022070b0f946c",
+      "bytes": 195
+    },
+    "muaalem/mohammed_siddiq_al_minshawi-098-matrix.json": {
+      "sha256": "78eaefb331d0e680e2c00bf198faa54e3f835660f7be8a10b2533e4cbdeca28b",
+      "bytes": 196
+    },
+    "muaalem/saad_al_ghamidi-098-madd6.json": {
+      "sha256": "08bb43b6b11ea8da30e39e9b31440870c592e39438e00373b8dcceb0889c3b9c",
+      "bytes": 3177
+    },
+    "muaalem/saad_al_ghamidi-098-matrix.json": {
+      "sha256": "b7b56fe788a594ef5fa7b6549b7d0819f44ce4bdd0b704afeb6464d2898f1296",
+      "bytes": 195
+    },
+    "muaalem/shatri-114-matrix.json": {
+      "sha256": "45ea837b920ca0d85fe165016946194b6ca9930e5bbb707f62fdb87c347b2655",
+      "bytes": 195
+    },
+    "muaalem/mohammed_siddiq_al_minshawi-098-madd2.json": {
+      "sha256": "d8f495dcf00b475457e5c0dd62b5efff345d00258c771d5a39a707009bdc1623",
+      "bytes": 3251
+    },
+    "muaalem/shatri-112-madd2.json": {
+      "sha256": "22728d0dc1a42554525024d371531883218722191b3d0828bd6b274cc4ebeed1",
+      "bytes": 2078
+    },
+    "muaalem/saad_al_ghamidi-112-madd4.json": {
+      "sha256": "a0265f07f147c699d903a28f9291bab7acf7144855fb8db9860ea45ba57362a7",
+      "bytes": 2135
+    },
+    "muaalem/abdul_basit_mujawwad-098-madd2.json": {
+      "sha256": "8be86cbc5ae341188a57b5cd26adee6aeb1a126c9b456f4830d8998d83aaf4aa",
+      "bytes": 3230
+    },
+    "strong20-fp32/saad_al_ghamidi-080-current.json": {
+      "sha256": "874f9dca06fa62f772285d075ee5e226dbd78e8f6ab95471a61dbe08a7094827",
+      "bytes": 47182
+    },
+    "strong20-fp32/shatri-001-current.json": {
+      "sha256": "965ad94a954e60574c05cfbf38054eee58f4ddeaca90088fa02c407db3753a04",
+      "bytes": 11892
+    },
+    "strong20-fp32/mahmoud_khalil_al_hussary-080-current.json": {
+      "sha256": "abf7cdb019a5d47db547a0b1467fd374d14b5b43dc47f6a695934d0a024820d5",
+      "bytes": 59970
+    },
+    "strong20-fp32/mohammed_siddiq_al_minshawi-112-current.json": {
+      "sha256": "0ef15dd5d8b39f32f34a4fc921b8fe84f0771f15e953f48fcaf77ffee2fd2c3d",
+      "bytes": 7300
+    },
+    "strong20-fp32/abdul_basit_mujawwad-080-current.json": {
+      "sha256": "0d5456c69078da1f78906fe68a9b85c5d7aea98fd659bd3d92e804ed857beb7a",
+      "bytes": 53124
+    },
+    "strong20-fp32/shatri-112-current.json": {
+      "sha256": "6752c2db48b70b331f210cf43fbf740dfdf4b6a0342d48d2cbfc99641a772445",
+      "bytes": 6670
+    },
+    "strong20-fp32/saad_al_ghamidi-112-current.json": {
+      "sha256": "4a9729ea16a02cb9e653fe3e02158c2811b727b3ec1351dbe502e10bb0748195",
+      "bytes": 5615
+    },
+    "strong20-fp32/shatri-098-current.json": {
+      "sha256": "fc6d6556a17193a09cb97a3b772075f6d3d3cecef6efd0fd9a680e9624ef1940",
+      "bytes": 13666
+    },
+    "strong20-fp32/abdul_basit_mujawwad-112-current.json": {
+      "sha256": "36aa7dd1e9321903398df8ae5b6836640dd896f70e39ddf23a6de755d7826855",
+      "bytes": 8090
+    },
+    "strong20-fp32/shatri-080-current.json": {
+      "sha256": "5ae0968cf08ed9a7988ca717361643bcb1eec5e8d65875e58ef5f01fb98b1ca1",
+      "bytes": 57582
+    },
+    "strong20-fp32/mahmoud_khalil_al_hussary-112-current.json": {
+      "sha256": "9c14c9c83b493e9be8fb817b311a9f553fdeef8c6e464f327726a3f94f1d9cd2",
+      "bytes": 6984
+    },
+    "strong20-fp32/mohammed_siddiq_al_minshawi-080-current.json": {
+      "sha256": "0ffede0136d5c2865017acb10f7f4ac5b8d5d41cb338dda3a7286660ec9d65de",
+      "bytes": 52497
+    },
+    "historical-lag200-strong20/mahmoud_khalil_al_hussary-055-free_edges.json": {
+      "sha256": "7e2527f08e6e0df913f0f681bb11e07cecd8acc87018fec19ff6ba4cf2779926",
+      "bytes": 124637
+    },
+    "historical-lag200-strong20/shatri-059-free_edges.json": {
+      "sha256": "d8107338f0ebe5851bd41e21365d2758f10388876d247fe813e316a01ae43d93",
+      "bytes": 47428
+    },
+    "historical-lag200-strong20/mahmoud_khalil_al_hussary-055-no_delimiter.json": {
+      "sha256": "c7ed0ff087bde06d38e39837ba9a6f4ef79fce3b06cff3f0ff08b2c5c6ee35f1",
+      "bytes": 125563
+    },
+    "historical-lag200-strong20/abdul_basit_mujawwad-112-no_delimiter.json": {
+      "sha256": "f64af3f67a2f04f134992ce573fc242a076c49bfc272323dbbdee56424c7d0c7",
+      "bytes": 8089
+    },
+    "historical-lag200-strong20/mahmoud_khalil_al_hussary-067-free_edges.json": {
+      "sha256": "09c5414b55ec5898e5ccb0ee09fb9358dfbf025d66f1ac994af7ed7806ddb6dd",
+      "bytes": 58897
+    },
+    "historical-lag200-strong20/shatri-001-phones.json": {
+      "sha256": "ee064d7aa0d03a79a0e97b256e4ad058816c0057c432629b5a427d6e2a7eb425",
+      "bytes": 13874
+    },
+    "historical-lag200-strong20/abdul_basit_mujawwad-098-free_edges.json": {
+      "sha256": "b304bdb4d810bb853f241b646a0acc193ce4e6df415de1554ee01f739e1f3c62",
+      "bytes": 16998
+    },
+    "historical-lag200-strong20/shatri-073-no_delimiter.json": {
+      "sha256": "7ceb57a5dcab5197d4231e651f41a67c3418f294a396d4c96bb4e7253f830c50",
+      "bytes": 33707
+    },
+    "historical-lag200-strong20/abdul_basit_mujawwad-112-free_edges.json": {
+      "sha256": "4263dc5b74fd96d273d9f0da69dfdf387e900adf6595549c83a8501e2a929a25",
+      "bytes": 8065
+    },
+    "historical-lag200-strong20/shatri-032-free_edges.json": {
+      "sha256": "0e03ef359364a8ca17ee7308dcef570315aa987a2008dc8e7a6c7985b5afcfb1",
+      "bytes": 48613
+    },
+    "historical-lag200-strong20/abdul_basit_mujawwad-098-current.json": {
+      "sha256": "3770fc031498175ff3cf4a5b8d77a7ae49723f894487edfb95827d0a45f3d8ca",
+      "bytes": 17565
+    },
+    "historical-lag200-strong20/shatri-077-no_delimiter.json": {
+      "sha256": "b097c44b5ea864babcc5460b0110cc27e8c602a9f0fc54588e8014a5f2a74743",
+      "bytes": 62381
+    },
+    "historical-lag200-strong20/abdul_basit_mujawwad-080-phones.json": {
+      "sha256": "f0505ba872a4d18899ee70f3bd08d09c9b046321d7e0bd111e46999666e7c921",
+      "bytes": 54352
+    },
+    "historical-lag200-strong20/mahmoud_khalil_al_hussary-065-no_delimiter.json": {
+      "sha256": "37bb9aacf4967c10c62e06f74c1cb82d77bf06fd1b3d6df3399155931686db7c",
+      "bytes": 37206
+    },
+    "historical-lag200-strong20/shatri-080-phones.json": {
+      "sha256": "2e85a73a7a5de76bd40c4c464467fc2288aaf8c5d7fb5b9bb9b6a71df197c49f",
+      "bytes": 57431
+    },
+    "historical-lag200-strong20/mahmoud_khalil_al_hussary-065-phones.json": {
+      "sha256": "25358507e01e2492000124362dbbe5e6acd74d82d6aedfff3fc2d24a9788171b",
+      "bytes": 37034
+    },
+    "historical-lag200-strong20/shatri-114-no_delimiter.json": {
+      "sha256": "98fb49dd3d5135194aab8b6979e414ecbea599044905566669dc68c4b9fb10ba",
+      "bytes": 8755
+    },
+    "historical-lag200-strong20/mahmoud_khalil_al_hussary-067-current.json": {
+      "sha256": "8850c304ae70858e05aa68969ae0a23eda72a43c72c9b49f53e0c48935a9abe0",
+      "bytes": 59206
+    },
+    "historical-lag200-strong20/shatri-059-current.json": {
+      "sha256": "d7ff22460382f13ec088e092acab43108d6eabee42be06d296a17908ce9bfbac",
+      "bytes": 46481
+    },
+    "historical-lag200-strong20/shatri-112-no_delimiter.json": {
+      "sha256": "52ae70d32e67639efc00d06c383fc53ae89c72a9bf39862d842f6b51815d7b37",
+      "bytes": 6704
+    },
+    "historical-lag200-strong20/shatri-001-current.json": {
+      "sha256": "eeeeee7712382a32173d8a476446e0971c294d96349082797f12ea2f059ded02",
+      "bytes": 13892
+    },
+    "historical-lag200-strong20/abdul_basit_mujawwad-080-current.json": {
+      "sha256": "b3c9b3070c62b4103e88566e04f70a80e0fbefc77234de80744b205a2a7238c0",
+      "bytes": 53025
+    },
+    "historical-lag200-strong20/shatri-077-current.json": {
+      "sha256": "d5bbf201cf810a78f8c5fea63c256b8753caf47c734aed65a47231e1af5cd67a",
+      "bytes": 60069
+    },
+    "historical-lag200-strong20/shatri-001-free_edges.json": {
+      "sha256": "d5cb2c68db67fd2d8340488ffea2701fdc5975805684bad65c717b622dafddae",
+      "bytes": 13467
+    },
+    "historical-lag200-strong20/shatri-077-phones.json": {
+      "sha256": "59f9357ebd5e2284f06a001daae384749c7158d42127f77774d957cdafd44afd",
+      "bytes": 62279
+    },
+    "historical-lag200-strong20/shatri-059-no_delimiter.json": {
+      "sha256": "26aafcade50dfb92c797235e3a05b962770d627280f9ae1a1e5efe033a65eba7",
+      "bytes": 47982
+    },
+    "historical-lag200-strong20/shatri-065-current.json": {
+      "sha256": "6ab13ab66a72db9e85a2917447638ce34e11ebf30d9ef4c186bd7c49014eeaea",
+      "bytes": 34587
+    },
+    "historical-lag200-strong20/shatri-059-phones.json": {
+      "sha256": "ac57b49e67390b9c3b276538f4da67a3bf4c7bdee7c1e871d3363b72b0651e7f",
+      "bytes": 47840
+    },
+    "historical-lag200-strong20/shatri-112-current.json": {
+      "sha256": "bcc226eea495cd9e4f5a5398395dac9c59f259d326af153766003905a38fb6b3",
+      "bytes": 6693
+    },
+    "historical-lag200-strong20/shatri-065-free_edges.json": {
+      "sha256": "5b21b9fe8b742b725e58de0e9e5f979ac43a424e24dfd3776c4f8b3ddc1fcb2a",
+      "bytes": 34865
+    },
+    "historical-lag200-strong20/shatri-055-current.json": {
+      "sha256": "697a3392d3a6c684cf6a85abddb7bd8261983287a79ed8ea25543ca9068048a0",
+      "bytes": 91255
+    },
+    "historical-lag200-strong20/mahmoud_khalil_al_hussary-067-no_delimiter.json": {
+      "sha256": "f8495a8ca2060d9f8a8c6a3a51d094ddcc38e89bee22d50be4d0d59466470bd9",
+      "bytes": 60132
+    },
+    "historical-lag200-strong20/shatri-067-phones.json": {
+      "sha256": "1d8a6be51386b03028949ef793d4a955ebcd77042219a6e5975300d1b2710dc2",
+      "bytes": 46036
+    },
+    "historical-lag200-strong20/shatri-114-current.json": {
+      "sha256": "927e3981889ed4052227456268b1464b3a292d0d716d59305dd3bd86c66bc17a",
+      "bytes": 8104
+    },
+    "historical-lag200-strong20/shatri-073-free_edges.json": {
+      "sha256": "3ee00d14a5c09c96f8ea20ff35a53ba5101c6fce7ba3dcd6fac6360bffc98001",
+      "bytes": 33526
+    },
+    "historical-lag200-strong20/shatri-055-phones.json": {
+      "sha256": "9a78cd43227129d2ab468390de86a1b596cd82efe4ea802b62565c3ba9bc76bd",
+      "bytes": 94426
+    },
+    "historical-lag200-strong20/abdul_basit_mujawwad-080-free_edges.json": {
+      "sha256": "e76505b667257c3f8de5a6217473c933642b6581746fe00d64cd11b72f6d4a89",
+      "bytes": 54436
+    },
+    "historical-lag200-strong20/shatri-065-no_delimiter.json": {
+      "sha256": "19f8455b66499336f05bf36c2ab1fdee75ddfd09c3756e6100a6a6867ba62c3a",
+      "bytes": 35359
+    },
+    "historical-lag200-strong20/shatri-079-no_delimiter.json": {
+      "sha256": "1b3fe9492e7d987ea459f443673f7582d31f08c501afef4a883858b83ee2f916",
+      "bytes": 60783
+    },
+    "historical-lag200-strong20/shatri-098-free_edges.json": {
+      "sha256": "dda9e069f2d8c19e9f034648929fb64ddc72344ce6438ba8fda5c94c6a3e3076",
+      "bytes": 13758
+    },
+    "historical-lag200-strong20/shatri-079-free_edges.json": {
+      "sha256": "4d0d3876675711f474bc68eb6cef5a4f7eebbc6082cda4563636071dbbea97ee",
+      "bytes": 60767
+    },
+    "historical-lag200-strong20/shatri-098-no_delimiter.json": {
+      "sha256": "be6fb4c696415ee28bc5250e4ab6869b47ba8caf4c26a20f3c726ba6a221e2c9",
+      "bytes": 14188
+    },
+    "historical-lag200-strong20/shatri-073-current.json": {
+      "sha256": "02d24ae85304532e6efa8eebe49d0c9be4fe3d9079ab754cbcc923777175d0f5",
+      "bytes": 32695
+    },
+    "historical-lag200-strong20/shatri-112-free_edges.json": {
+      "sha256": "e978bec2cf73c0b6c63df14e696b1f0c56525460d9d6bfae1b77e96c2269149d",
+      "bytes": 6694
+    },
+    "historical-lag200-strong20/shatri-032-no_delimiter.json": {
+      "sha256": "93cc286c37cee0021d9fe75497deaaf42e5d2dda551ae8eb7a84edd87e6dd84c",
+      "bytes": 48691
+    },
+    "historical-lag200-strong20/shatri-032-phones.json": {
+      "sha256": "222e659690a3b1c31d510e20c90ae66b697ea7127991910a5295cc4d6252afef",
+      "bytes": 48527
+    },
+    "historical-lag200-strong20/shatri-067-free_edges.json": {
+      "sha256": "0b35ae5ba93b51f2de694142dbcc4291a11a3344b327b81aa471c145a82effa9",
+      "bytes": 45689
+    },
+    "historical-lag200-strong20/abdul_basit_mujawwad-098-phones.json": {
+      "sha256": "c794aeb3719a8a9e1d6c092b9b32b3f64ca46188b0a0d8713d0b2874ed48cf01",
+      "bytes": 16827
+    },
+    "historical-lag200-strong20/shatri-080-no_delimiter.json": {
+      "sha256": "f1fc29744b8ff590df41047671aeb6b46db8274070e1ba778f4c6ad05c65c4c9",
+      "bytes": 57280
+    },
+    "historical-lag200-strong20/shatri-112-phones.json": {
+      "sha256": "c053ba87dd9f5e523571398a235791cc21033773b847be29c427a958b8edd977",
+      "bytes": 6689
+    },
+    "historical-lag200-strong20/abdul_basit_mujawwad-112-phones.json": {
+      "sha256": "a2fd63563d3852f9b783c8ac75b28cb3da2c48973850ff38f44593c6afa84eb4",
+      "bytes": 8058
+    },
+    "historical-lag200-strong20/shatri-065-phones.json": {
+      "sha256": "e3e5656fa206b5261ef91f937dc4df209f6eb0156fcc3c716893c7df48b0d257",
+      "bytes": 35208
+    },
+    "historical-lag200-strong20/shatri-098-phones.json": {
+      "sha256": "7121ad38f6132ff0398db0c93ba6d787edb29351da21f2811cf04a7d46d761b5",
+      "bytes": 14154
+    },
+    "historical-lag200-strong20/shatri-032-current.json": {
+      "sha256": "12d6b0f9da178e2de3edd410794ab1d6ac8d8d1b9c80517d779eb97595a7b797",
+      "bytes": 46093
+    },
+    "historical-lag200-strong20/shatri-067-current.json": {
+      "sha256": "d9d4077c205078905618db87bcab5a413817f22a176972b905aa6f72fe77a09c",
+      "bytes": 44229
+    },
+    "historical-lag200-strong20/shatri-098-current.json": {
+      "sha256": "787dda3e3d02aa5f5284ff99ffaa742c592e06652e29c66b9ab9405cc257dd47",
+      "bytes": 14724
+    },
+    "historical-lag200-strong20/shatri-079-phones.json": {
+      "sha256": "21edb10acbb670b670c243e3ec71918afc48b1b44912d3e027fe09a195999185",
+      "bytes": 60720
+    },
+    "historical-lag200-strong20/shatri-055-no_delimiter.json": {
+      "sha256": "4475f1132db0b53599d200b628c0a71e7a8b6b333b8630d0b07eee3b59e87dea",
+      "bytes": 95112
+    },
+    "historical-lag200-strong20/shatri-055-free_edges.json": {
+      "sha256": "d75d9817961cabeef49d79de4627bd014b894b7d7cf892137004fc094f6c6300",
+      "bytes": 93927
+    },
+    "historical-lag200-strong20/shatri-114-free_edges.json": {
+      "sha256": "0878ea9862b5d4dbf55b076f0dec4d6e1fbad76e12ef52999d456acb54763ba1",
+      "bytes": 8679
+    },
+    "historical-lag200-strong20/abdul_basit_mujawwad-112-current.json": {
+      "sha256": "0df2f315017b92bcc575b90c79d57528a95dd112dce38ed37c89a4283e334aee",
+      "bytes": 8062
+    },
+    "historical-lag200-strong20/shatri-067-no_delimiter.json": {
+      "sha256": "31800dc3e32dbee1c7da8b1edcd62a2c54cb0cdbc0a4a9e3a52f295147a2f753",
+      "bytes": 46173
+    },
+    "historical-lag200-strong20/abdul_basit_mujawwad-098-no_delimiter.json": {
+      "sha256": "6ed92d6260e4d01c3b1713bf0a473195f0057ddc2944010ae339d9b22abeb028",
+      "bytes": 16849
+    },
+    "historical-lag200-strong20/shatri-001-no_delimiter.json": {
+      "sha256": "c174f4e5f9871134a0a14c679d37933464d9033096c652573a4f08e6fdb0821e",
+      "bytes": 13927
+    },
+    "historical-lag200-strong20/shatri-080-current.json": {
+      "sha256": "10ec1249e9ff528f7e495adce7e6292cf75ba5122039f69d923cf151b24bc9d9",
+      "bytes": 56923
+    },
+    "historical-lag200-strong20/shatri-073-phones.json": {
+      "sha256": "29233807b12c8e6518acb28628704d550e27689dd3e1c1f064843260c68f475b",
+      "bytes": 34067
+    },
+    "historical-lag200-strong20/mahmoud_khalil_al_hussary-065-free_edges.json": {
+      "sha256": "73c7f8cefbb830c72eebabb205791e08e9f6367f3e96451d613f82ccb358b308",
+      "bytes": 36621
+    },
+    "historical-lag200-strong20/mahmoud_khalil_al_hussary-065-current.json": {
+      "sha256": "f323911fcc3f02f37c79d4a17245e27245c1568f16d0763351696482adacea03",
+      "bytes": 36610
+    },
+    "historical-lag200-strong20/shatri-114-phones.json": {
+      "sha256": "45ed2aa30c173c9387c9df9cde3c110a1dc40b22684309373925ba8cb22c1bea",
+      "bytes": 8737
+    },
+    "historical-lag200-strong20/shatri-079-current.json": {
+      "sha256": "320fc0c717ee46b760eb0ad5e24d3455d02bfb863051961d6ce78ddfd0a028d3",
+      "bytes": 58456
+    },
+    "historical-lag200-strong20/shatri-077-free_edges.json": {
+      "sha256": "d6bb5fe2b353f75467f35ad1eca351282f0cd0cde7a037e69b94adc3bbd5b4c0",
+      "bytes": 61567
+    },
+    "historical-lag200-strong20/mahmoud_khalil_al_hussary-055-current.json": {
+      "sha256": "7a0836e31c539207b5eb0e73be84b9af47a708355c5f3e97f0ed6390451760cb",
+      "bytes": 123633
+    },
+    "historical-lag200-strong20/mahmoud_khalil_al_hussary-067-phones.json": {
+      "sha256": "0dd5d2c268dba77dfe58256a8feffbfbe44340163f4084cb53c9185f5b65e2a4",
+      "bytes": 59261
+    },
+    "historical-lag200-strong20/mahmoud_khalil_al_hussary-055-phones.json": {
+      "sha256": "c67658f49d82f527768721850189b8683694e50bea840eb02bc66075b6483fa9",
+      "bytes": 125590
+    },
+    "historical-lag200-strong20/shatri-080-free_edges.json": {
+      "sha256": "29ea334ff1b21d3e34b68107e36814414e8e2140b2df90833fda9f6ee8b8a962",
+      "bytes": 57474
+    },
+    "historical-lag200-strong20/abdul_basit_mujawwad-080-no_delimiter.json": {
+      "sha256": "10cb57034a1a02f27d72f69b90f51ae602ad0c2370a9a74f7df3515ac92cb8ac",
+      "bytes": 54529
+    },
+    "asr-nemo/mahmoud_khalil_al_hussary-098-rnnt.json": {
+      "sha256": "dcc43ea7ae12a88af85badaa671d3beff03d4c6ba688a4a3c01b466ae1e3bf65",
+      "bytes": 9264
+    },
+    "asr-nemo/saad_al_ghamidi-098-rnnt.json": {
+      "sha256": "45f2fed9e2577ba2c43c4d04e38af3220b02cbba8c2c77b88c2f152dde30e6bd",
+      "bytes": 7329
+    },
+    "asr-nemo/saad_al_ghamidi-098-ctc.json": {
+      "sha256": "b6320b4786df5c59c72dbdabce593e0ffb38b912b6215714efb556bf8730f8c0",
+      "bytes": 7788
+    },
+    "asr-nemo/abdul_basit_mujawwad-112-ctc.json": {
+      "sha256": "e6be56c1880986d4fbf06f9a06db94ccccf8f48ee78a5670aba90e9636fc2bb5",
+      "bytes": 2034
+    },
+    "asr-nemo/mohammed_siddiq_al_minshawi-098-rnnt.json": {
+      "sha256": "7c9eddf2bb10421b109f4fa651c2a84375dcb2bb6e6a4ca293fc674ab0ca4e17",
+      "bytes": 7916
+    },
+    "asr-nemo/shatri-114-rnnt.json": {
+      "sha256": "354c33e2c600705112a10e393ea8780946d231ecebbb863d616220d17ade21d6",
+      "bytes": 2629
+    },
+    "asr-nemo/abdul_basit_mujawwad-112-rnnt.json": {
+      "sha256": "bb810808801ec67d52a1aa1831c5c26ad269de6b9d234b1058f830e458092636",
+      "bytes": 2199
+    },
+    "asr-nemo/saad_al_ghamidi-112-ctc.json": {
+      "sha256": "476be15752ecd88e4d7c1523f41c29b9fd7b030b680c3c82147ca7b40998ef1b",
+      "bytes": 1953
+    },
+    "asr-nemo/shatri-112-rnnt.json": {
+      "sha256": "9cebf8fff05fad5bfda5e89ec8f7168a4dd610ed059bfb8ae53645dc1ae22cd8",
+      "bytes": 2221
+    },
+    "asr-nemo/zero4-rnnt.json": {
+      "sha256": "740b162372d539d50ce19b43fb467573e3df924fc9694a2e39388dae299efb2e",
+      "bytes": 438
+    },
+    "asr-nemo/abdul_basit_mujawwad-098-ctc.json": {
+      "sha256": "6edd600600a207a91ba6f588063d2162cfcb2ed47c7a9cf5f8c3525ea1d5e2aa",
+      "bytes": 8836
+    },
+    "asr-nemo/mahmoud_khalil_al_hussary-098-ctc.json": {
+      "sha256": "4dc68808a48b8453517aa9047b3559cec8cb8d56074a234db4cfe2b32cf8e036",
+      "bytes": 9251
+    },
+    "asr-nemo/shatri-098-rnnt.json": {
+      "sha256": "cd3e5984ec93533fb174b4fc8200ffadf6e8309421d9e77dc2213f66fd5ee9fa",
+      "bytes": 9406
+    },
+    "asr-nemo/identity.json": {
+      "sha256": "9eedf149afcfc8608f67846835287d340f780b0683a81f24e15adf892a13a1aa",
+      "bytes": 403
+    },
+    "asr-nemo/shatri-112-ctc.json": {
+      "sha256": "d74958da423eb04f044b13b12faa2f60f93e1292e709603d79b55f1ec61f6bf4",
+      "bytes": 2144
+    },
+    "asr-nemo/mohammed_siddiq_al_minshawi-112-rnnt.json": {
+      "sha256": "9cac6a2f11769287795947afde3c2426a99a02b963278e925e69ecdad37490d2",
+      "bytes": 1861
+    },
+    "asr-nemo/mohammed_siddiq_al_minshawi-098-ctc.json": {
+      "sha256": "3f479003249d4c68d725a9ed24b9d1cb7028a779020da123351a990e900b42d0",
+      "bytes": 8215
+    },
+    "asr-nemo/zero4-ctc.json": {
+      "sha256": "e363c178adc33c0f152c4884800f4a303fdae2abc3a53f18a585889c300235bf",
+      "bytes": 485
+    },
+    "asr-nemo/abdul_basit_mujawwad-098-rnnt.json": {
+      "sha256": "76f50ac95491b5ea8c5d44e7b2345ff0abb1f6b546fdbcd8ebfe82ffafa472c1",
+      "bytes": 9029
+    },
+    "asr-nemo/shatri-001-rnnt.json": {
+      "sha256": "85fc57bd28bf91d6865ce00c0c1517e89e727e9883cbcde77b14dac9b52f3738",
+      "bytes": 3237
+    },
+    "asr-nemo/saad_al_ghamidi-112-rnnt.json": {
+      "sha256": "4374d0ca3940cf76342d4cab8312411007306a366824fcab63de771d5c3534d4",
+      "bytes": 1808
+    },
+    "asr-nemo/shatri-001-ctc.json": {
+      "sha256": "36b70ef054fc9bbd3f3e8645b305708fc48a578527b4eedaefa3e489271d7ab8",
+      "bytes": 3236
+    },
+    "asr-nemo/mahmoud_khalil_al_hussary-112-ctc.json": {
+      "sha256": "3c55cf812d3512ea810a5a3ccf61c670e5c03cca06d5d6bd8545d2371858987f",
+      "bytes": 2219
+    },
+    "asr-nemo/shatri-098-ctc.json": {
+      "sha256": "5a83112b1c68e84a38eb10a9369718de0c7b56fa5e0b47e17774e04f621d43c3",
+      "bytes": 9423
+    },
+    "asr-nemo/mohammed_siddiq_al_minshawi-112-ctc.json": {
+      "sha256": "d981927b5bed4d64c3cdb0afef6234b0c023bc5e31b80d528265b84f76a7ca86",
+      "bytes": 2019
+    },
+    "asr-nemo/mahmoud_khalil_al_hussary-112-rnnt.json": {
+      "sha256": "f655dd538c1a1d8aa87b070fe49957cf8659b44037edcf765135a4f9f20d315d",
+      "bytes": 2224
+    },
+    "asr-nemo/shatri-114-ctc.json": {
+      "sha256": "8a5390e02d48e9aad58d536fa1e805c704caf9ed3c50fc76208cfc516b0e9729",
+      "bytes": 2510
+    },
+    "qpc-controls/manifest.json": {
+      "sha256": "d284bf621fc5fcafde54363701d42a1026ef772a372f0a17b6ce03b420d5c46a",
+      "bytes": 1811
+    },
+    "strong20/saad_al_ghamidi-080-no_delimiter.json": {
+      "sha256": "51770ffece8fb056492aba62be00bbc8ca1e2a32ee54f55251a845001fbb037b",
+      "bytes": 46221
+    },
+    "strong20/shatri-080-blank_minus1.json": {
+      "sha256": "26482b0bbc52e07baf2fff53690245cf4b928ff97af229d19def89b6d4900bd2",
+      "bytes": 59225
+    },
+    "strong20/mahmoud_khalil_al_hussary-073-blank_minus1.json": {
+      "sha256": "bc455caa4702d09aeb696d26e6e7ff31e583428d70323f59b188634bafccf1bc",
+      "bytes": 39216
+    },
+    "strong20/mahmoud_khalil_al_hussary-055-free_edges.json": {
+      "sha256": "42255915442291bc31ccd17c4b6d4cefcfccb3d67983dbb4f959a7a8469f2e30",
+      "bytes": 126394
+    },
+    "strong20/shatri-059-free_edges.json": {
+      "sha256": "c42b1d5c4627d5bcbd11d46e290498c1d8c0e629032fe4aa197edaa86e8f59a0",
+      "bytes": 47571
+    },
+    "strong20/mohammed_siddiq_al_minshawi-077-phones.json": {
+      "sha256": "71ab4a17d61583fc7300b562e766918c3117053e998043e454912f89211f2136",
+      "bytes": 64593
+    },
+    "strong20/shatri-002-blank_minus1.json": {
+      "sha256": "1f689ac48eaf65b162bd6eaa67abc40b27f05064cbd20053acf9b56ec39a88c3",
+      "bytes": 634933
+    },
+    "strong20/mahmoud_khalil_al_hussary-055-no_delimiter.json": {
+      "sha256": "13e1860309fd0fc07b750573782ba4f3aa09f9eac815754bae34db4c4b9139b7",
+      "bytes": 127330
+    },
+    "strong20/saad_al_ghamidi-080-free_edges.json": {
+      "sha256": "a3948ee586beac94cb7bb978d972d65b98646b7b409bc6bbeb42e539d5ea46ec",
+      "bytes": 46221
+    },
+    "strong20/saad_al_ghamidi-077-phones.json": {
+      "sha256": "c94c67ab4711108b03016eb68bb90cf26061b9bf9af473b03ab643de5f003fa8",
+      "bytes": 65280
+    },
+    "strong20/saad_al_ghamidi-055-no_delimiter.json": {
+      "sha256": "2af7456fb12bcfe6ab1c5710518605ad8e60ef32c90e3377b55466c075194527",
+      "bytes": 114367
+    },
+    "strong20/abdul_basit_mujawwad-112-no_delimiter.json": {
+      "sha256": "9c59ccebc920115eca57102bdd564fec4e90a73bd1cf9dedf015bae44fc8bd04",
+      "bytes": 8083
+    },
+    "strong20/mahmoud_khalil_al_hussary-067-free_edges.json": {
+      "sha256": "8ef63e6c16efe7326875d92f7b2d590772398800c0c4f10d1b2c8c4a49d77541",
+      "bytes": 58894
+    },
+    "strong20/shatri-001-phones.json": {
+      "sha256": "a020969fd011b3c83f2994f5ea7c1d7e4354755c66396ee3d37baed7232ff072",
+      "bytes": 12464
+    },
+    "strong20/shatri-055-blank_minus1.json": {
+      "sha256": "705d776c8043e63d1162f2c9597997da8eb30f007d21e63e12f1903e30aab81f",
+      "bytes": 94583
+    },
+    "strong20/abdul_basit_mujawwad-098-free_edges.json": {
+      "sha256": "14bf916dfc07b9d856c9299a80528010f447f45134e6196dd510cd3475966b94",
+      "bytes": 17000
+    },
+    "strong20/saad_al_ghamidi-079-current.json": {
+      "sha256": "a2e1b50606bcbf5c04c548659bd30589e2a78428fcb50e627f0962b71af182d9",
+      "bytes": 45300
+    },
+    "strong20/shatri-073-no_delimiter.json": {
+      "sha256": "b55e761349fb8978671af97673b8d9c98e95b9b5b3385b44077cc9388aa57b38",
+      "bytes": 33869
+    },
+    "strong20/mahmoud_khalil_al_hussary-073-current.json": {
+      "sha256": "2a0d21e3a4e10974824068c14bc9e9c3bb4ad018aeee35dee8f08d581ec7d128",
+      "bytes": 39070
+    },
+    "strong20/mahmoud_khalil_al_hussary-080-no_delimiter.json": {
+      "sha256": "688e90afc8b79ea8af2715b1e93ca7cf3d0d0a169d87b9b0edf62fed8b1c0c15",
+      "bytes": 61637
+    },
+    "strong20/saad_al_ghamidi-077-free_edges.json": {
+      "sha256": "fb455c788aa8cb787867613156c6788208683e2241c8e30c5e31d83248d6b115",
+      "bytes": 64943
+    },
+    "strong20/saad_al_ghamidi-073-blank_minus1.json": {
+      "sha256": "7ab61907d2d8c70f0ea903f28d9b5524fdc9ff196af76d8338df0eb2fe84eb30",
+      "bytes": 28337
+    },
+    "strong20/abdul_basit_mujawwad-112-free_edges.json": {
+      "sha256": "7e39eb80c3016eeff68a49466f2a3a5e8793eae1f8560b4d698a866b6f07af78",
+      "bytes": 8060
+    },
+    "strong20/mohammed_siddiq_al_minshawi-112-blank_minus1.json": {
+      "sha256": "3a82a71bdb2cc332a2402f0753d0892daa4ca83aafc74389e8861e86a9ecdf11",
+      "bytes": 6681
+    },
+    "strong20/shatri-079-blank_minus1.json": {
+      "sha256": "30e4530aaa8d217d7780285fb33944ace2b17132e229c09f168337aae7bf5362",
+      "bytes": 60569
+    },
+    "strong20/mahmoud_khalil_al_hussary-079-free_edges.json": {
+      "sha256": "ce5039c66cc221274250a2910911eef7b9dd035ff980a30665af9367992453e9",
+      "bytes": 76215
+    },
+    "strong20/mohammed_siddiq_al_minshawi-067-phones.json": {
+      "sha256": "28ca59f2942af656331f1ea33f14db817817fedacafb788c0c7e384ce8e2f731",
+      "bytes": 43678
+    },
+    "strong20/saad_al_ghamidi-079-no_delimiter.json": {
+      "sha256": "6887b7c15c29062b32d57905726e2a53bb31b28564f3949ef1da3260665f35cf",
+      "bytes": 45973
+    },
+    "strong20/saad_al_ghamidi-067-phones.json": {
+      "sha256": "3174bb7ae8a69b533ba1b9036f9ba37d75d75c923bdb5df2879e3d442f311dcb",
+      "bytes": 46857
+    },
+    "strong20/mahmoud_khalil_al_hussary-098-free_edges.json": {
+      "sha256": "57bd32f7c92f7ddde1520c6435e8c1675901d5f7f34f96438db585f6096f2288",
+      "bytes": 18691
+    },
+    "strong20/shatri-032-free_edges.json": {
+      "sha256": "3c7d0c61dc8a99261591c17d7731707f2fe668729139cea922a7bdd4afec3a99",
+      "bytes": 49013
+    },
+    "strong20/mahmoud_khalil_al_hussary-098-no_delimiter.json": {
+      "sha256": "80cfac22e360d176bb8521f52c4e0497feaa8e7f5615c63ea27bb384c5538fcc",
+      "bytes": 19226
+    },
+    "strong20/abdul_basit_mujawwad-098-current.json": {
+      "sha256": "65a8239887249fab0025e162d75ae6fbce5079740abc776c6ec2d9aad55c467c",
+      "bytes": 17566
+    },
+    "strong20/mohammed_siddiq_al_minshawi-077-free_edges.json": {
+      "sha256": "a6fa0cd1c463befa70fc2e7162d363858f525568956865a72a4c0ba37f55ab28",
+      "bytes": 64292
+    },
+    "strong20/shatri-077-no_delimiter.json": {
+      "sha256": "4def1213e43681d68bd36de07f804b65cd995dfa2e88d2706d8d9cc792a80837",
+      "bytes": 64271
+    },
+    "strong20/mahmoud_khalil_al_hussary-112-phones.json": {
+      "sha256": "9aad69ae4fa31a9cd6362e57c2fd1e42e51e50c5253f8afbe6c0571fe0dc6ab4",
+      "bytes": 7536
+    },
+    "strong20/abdul_basit_mujawwad-080-phones.json": {
+      "sha256": "16c4acb514ebd84a05c892603504d2283d0977492732c385a99fdb0039fd92e0",
+      "bytes": 54348
+    },
+    "strong20/mohammed_siddiq_al_minshawi-055-phones.json": {
+      "sha256": "1db1d6c3f4a881849caf25e92c351cfd9060997be6789259b15267cb15092766",
+      "bytes": 99063
+    },
+    "strong20/saad_al_ghamidi-065-no_delimiter.json": {
+      "sha256": "9778418d611fa9d4b8216383e98b43eada08401069586ac118d5ee281f41d80a",
+      "bytes": 29483
+    },
+    "strong20/saad_al_ghamidi-055-phones.json": {
+      "sha256": "4140095c2f9d922db0b5d2b535c493ef5db95ee4210c3a8beeb7ca6a6d6485e9",
+      "bytes": 113894
+    },
+    "strong20/mahmoud_khalil_al_hussary-112-free_edges.json": {
+      "sha256": "776aa95e7cd10bf6e349db0f455677953bf0869b0ba8a49e3d8d50e906d5fdb0",
+      "bytes": 7546
+    },
+    "strong20/shatri-065-blank_minus1.json": {
+      "sha256": "e8865da78c7cefd4017e2bb771924b1a4a16f4a149f579e576516c40520800bb",
+      "bytes": 35268
+    },
+    "strong20/saad_al_ghamidi-077-blank_minus1.json": {
+      "sha256": "4a541a06a3e24208156b3b797ac4fd749153f14d163b957b19c21459f9cc8094",
+      "bytes": 62743
+    },
+    "strong20/shatri-032-blank_minus1.json": {
+      "sha256": "844980f73414351a68b4d244efe979e9853e65f52eb43335e67ff44f84ea918c",
+      "bytes": 47373
+    },
+    "strong20/mahmoud_khalil_al_hussary-065-no_delimiter.json": {
+      "sha256": "310fdab27bba86ba1f16b6b384711c873e5e314d52fe4b9bab8445573a0a8b1b",
+      "bytes": 37209
+    },
+    "strong20/shatri-080-phones.json": {
+      "sha256": "87988f5c90189accd4f3ccfef6ff4ed3ef2d9f05a66607a9edae794870161af6",
+      "bytes": 58064
+    },
+    "strong20/mahmoud_khalil_al_hussary-098-phones.json": {
+      "sha256": "eaa9c52e6af490086a212d5e483ff9f14604b2cc30b1fe4e6d9c7a9466021944",
+      "bytes": 19165
+    },
+    "strong20/mahmoud_khalil_al_hussary-065-phones.json": {
+      "sha256": "5cb90d22022d4ffc9625b8b99d2fddd309f7632b1d4b490992965d0e5d7d8b9e",
+      "bytes": 37034
+    },
+    "strong20/mahmoud_khalil_al_hussary-077-blank_minus1.json": {
+      "sha256": "db0d0d2a67ba08a2081eebed3ed8400c7b192c2ff22940f14f81f0789e713ca1",
+      "bytes": 73458
+    },
+    "strong20/mohammed_siddiq_al_minshawi-067-no_delimiter.json": {
+      "sha256": "42fd18a086344bb476e338cf2a3b1964bd547ec9b22f52ded0b7efe120c601bb",
+      "bytes": 43294
+    },
+    "strong20/mohammed_siddiq_al_minshawi-080-free_edges.json": {
+      "sha256": "72f07fbab9c7e02d0d5d70011f3625434719a1ef7f9f92058d633804679b84a7",
+      "bytes": 54695
+    },
+    "strong20/shatri-114-no_delimiter.json": {
+      "sha256": "be14f3e686108faba14ccb75fa49db4dd08ddfb91758923dddf2d81963e79beb",
+      "bytes": 8751
+    },
+    "strong20/mahmoud_khalil_al_hussary-067-current.json": {
+      "sha256": "75a2d59c43819ce9316b815bc71d355953aebba7a3cd0de4f857eb5acd3f9c1f",
+      "bytes": 59217
+    },
+    "strong20/mahmoud_khalil_al_hussary-098-current.json": {
+      "sha256": "4e9375b5f7f1cd907cefbb08c8881b193bd3cc4389fcce9c7466638ee772bc33",
+      "bytes": 19216
+    },
+    "strong20/shatri-098-blank_minus1.json": {
+      "sha256": "ee9ede2c46097acd3380fdc24c7bca7d29325b80defadca84eff46be412f2e19",
+      "bytes": 14915
+    },
+    "strong20/mahmoud_khalil_al_hussary-079-phones.json": {
+      "sha256": "33f3a7d5b122801c80c47d6ccbcc1c02e81d2260312595549cc7c0f7eb0b7437",
+      "bytes": 76627
+    },
+    "strong20/saad_al_ghamidi-098-no_delimiter.json": {
+      "sha256": "93918ae13a71030074219dcc737092fb33043b4cea6b4bc42f9f736fd94853cf",
+      "bytes": 14926
+    },
+    "strong20/shatri-059-current.json": {
+      "sha256": "43b3aec320328aa393b4e4e2dfd28196e30497906a1252f7d51d8a8c68778f0f",
+      "bytes": 46654
+    },
+    "strong20/saad_al_ghamidi-080-current.json": {
+      "sha256": "8310bb809c5eda0d0b54064d79a6b00ecf84e32d0a4b29550296acbb79399954",
+      "bytes": 45006
+    },
+    "strong20/mahmoud_khalil_al_hussary-079-no_delimiter.json": {
+      "sha256": "6b3ef98515dd82fff8718006b9ddf053093fc7d5032e6578d6490ddaecba680a",
+      "bytes": 77551
+    },
+    "strong20/mohammed_siddiq_al_minshawi-077-current.json": {
+      "sha256": "3f21f3ba917b018a84601fd98dd0f4a34b1141d1d0f2bdca8b42fc73826ae4b1",
+      "bytes": 61301
+    },
+    "strong20/mohammed_siddiq_al_minshawi-073-blank_minus1.json": {
+      "sha256": "10a2209826f0c0ccffee427e032e5963aa24eef5c87fb04360eb491305a5788f",
+      "bytes": 31133
+    },
+    "strong20/saad_al_ghamidi-112-blank_minus1.json": {
+      "sha256": "12a00f1ea099ad851da02d0ea761df1d93224ec761a5fb3669dcf24ee83922b3",
+      "bytes": 5634
+    },
+    "strong20/shatri-112-no_delimiter.json": {
+      "sha256": "d2cda6d284910861b05b4bc8b63da8585c62bc1d10590286732aea963ecc01ac",
+      "bytes": 6699
+    },
+    "strong20/shatri-001-current.json": {
+      "sha256": "ac0dcd95a312e3c50a8a9e55b5f4b06ca5eb78a7a64687588374b69836e9752e",
+      "bytes": 12486
+    },
+    "strong20/mahmoud_khalil_al_hussary-080-current.json": {
+      "sha256": "f29681409abf52f9bfdd14d82e0c469eed11f6fa7cc4519679cb0030f53e3334",
+      "bytes": 60706
+    },
+    "strong20/mohammed_siddiq_al_minshawi-065-current.json": {
+      "sha256": "1b1b63cbf38aa50d3ee3dc437051a390cf4a17d52085ea32cf9ec3d8647bd2a4",
+      "bytes": 30815
+    },
+    "strong20/saad_al_ghamidi-055-free_edges.json": {
+      "sha256": "c885744e5f1a1ec7f52e82c1d46f156bbfb1a639b65857614da028f77c75f039",
+      "bytes": 113503
+    },
+    "strong20/mohammed_siddiq_al_minshawi-112-current.json": {
+      "sha256": "a69a3d01d5e7ba3cb8b50416383a2616cebeb81cb5b8c24138a49b0b25f9f7db",
+      "bytes": 6636
+    },
+    "strong20/mahmoud_khalil_al_hussary-080-free_edges.json": {
+      "sha256": "249887724c67310e9baa1e80eb8506692e0f597a49a32a60d7b7f60469853f43",
+      "bytes": 61587
+    },
+    "strong20/mohammed_siddiq_al_minshawi-055-no_delimiter.json": {
+      "sha256": "83dff557ac9576d5cfcbffc3a3232764d4ee8146817fd25d0cb4f5038c74a77a",
+      "bytes": 99532
+    },
+    "strong20/saad_al_ghamidi-067-current.json": {
+      "sha256": "09b2d57fcaa3e535fb16196bc18f9f12dab32ee23d7cb7eb9769ba29fdcb8fe3",
+      "bytes": 45620
+    },
+    "strong20/saad_al_ghamidi-098-current.json": {
+      "sha256": "50eb56e91902b5c6084b8bd1868b9cfd6e0067bd23209b453012f36c8327b0e7",
+      "bytes": 12397
+    },
+    "strong20/abdul_basit_mujawwad-080-blank_minus1.json": {
+      "sha256": "fd9935b1407cb55d95517cd0e698e1f97eb87fd93d368ed975df1a7aefd0f14c",
+      "bytes": 55839
+    },
+    "strong20/saad_al_ghamidi-067-free_edges.json": {
+      "sha256": "31af8193c80bd520c96f5deb4b91271ff3e67f9638e45288ea11b91bc7aa841f",
+      "bytes": 46425
+    },
+    "strong20/mahmoud_khalil_al_hussary-073-phones.json": {
+      "sha256": "4d058e41fe2c3159b7e1b6589b3f0a317785e8fe2ff4e7e8cab42601b1b34b3b",
+      "bytes": 41434
+    },
+    "strong20/abdul_basit_mujawwad-080-current.json": {
+      "sha256": "6d02fdf903137239558f4489cc6d6e68fa882c55b84659f871818ff7a262d8a7",
+      "bytes": 53032
+    },
+    "strong20/mohammed_siddiq_al_minshawi-112-free_edges.json": {
+      "sha256": "dc649136f0681f207c9ac34a908c9657a80fa30985850295563ee51e5addb90d",
+      "bytes": 6721
+    },
+    "strong20/shatri-077-current.json": {
+      "sha256": "973efcfdba8c198b844c6a4f8bebc4e740244da2f235c6fafda708d27a974c55",
+      "bytes": 62979
+    },
+    "strong20/mohammed_siddiq_al_minshawi-079-free_edges.json": {
+      "sha256": "f592c5aa91cd35812a9fc5b86f9bff3b3fe5b6ce9ddfc58a07324d51790c1043",
+      "bytes": 63048
+    },
+    "strong20/mahmoud_khalil_al_hussary-112-blank_minus1.json": {
+      "sha256": "fa4f970730357463995e8bc3f8c48d662aa289f9a5ecb9fb9dd714881284f31e",
+      "bytes": 7589
+    },
+    "strong20/shatri-001-free_edges.json": {
+      "sha256": "c0cc99f5131e7aabb0808e81d80b5e57c1fcab1418f809084f8d8715e098c3ee",
+      "bytes": 12061
+    },
+    "strong20/shatri-077-phones.json": {
+      "sha256": "1ae724d6ef1a1d34cfd710ae7ed444b3dbc1c3c631f9f5a848d1f145834caf31",
+      "bytes": 64090
+    },
+    "strong20/mahmoud_khalil_al_hussary-077-free_edges.json": {
+      "sha256": "660650c989a117a5a572f3a7dfd6137810862254433fbb2b0357e0da0e9fe0c7",
+      "bytes": 76722
+    },
+    "strong20/shatri-059-no_delimiter.json": {
+      "sha256": "2d19010627fa38313af3ebded354c93842c0939641ddfeb8a6624e3f62a90e8d",
+      "bytes": 48135
+    },
+    "strong20/mohammed_siddiq_al_minshawi-098-free_edges.json": {
+      "sha256": "ec5581a8ac4b16cd18c2ed0c6c67ca3c1cd9a58a85971d7be71c5320bd091855",
+      "bytes": 17554
+    },
+    "strong20/mohammed_siddiq_al_minshawi-080-no_delimiter.json": {
+      "sha256": "0c436a9442cf8c0f8a6630ebc3650e88daabc13c1ba0aa8b7f56d3d32f576786",
+      "bytes": 54771
+    },
+    "strong20/shatri-065-current.json": {
+      "sha256": "e414e220027788d988f0d1f3f129a230e4c03f4941c1416c7bd3f781cebb4e56",
+      "bytes": 35076
+    },
+    "strong20/shatri-059-phones.json": {
+      "sha256": "26ce0ace0acbb9ca016d2f653a80c1369790394b04b740c57f468ffc1c91a43c",
+      "bytes": 47989
+    },
+    "strong20/shatri-112-current.json": {
+      "sha256": "2d6abc1c847ba3bc405ba5bd2a86278210085632ea65cc43d80a5ae394e9f74a",
+      "bytes": 6691
+    },
+    "strong20/mahmoud_khalil_al_hussary-079-current.json": {
+      "sha256": "e854726fb95e0af9960a81cc56a71ce9e9e305039f10f68acfd425810a569a66",
+      "bytes": 75522
+    },
+    "strong20/mohammed_siddiq_al_minshawi-098-no_delimiter.json": {
+      "sha256": "5910b9650dc0c18fb893d5cec5d95811e9ff3d815ba72ba34ea4065a4c2f97f8",
+      "bytes": 17438
+    },
+    "strong20/saad_al_ghamidi-080-phones.json": {
+      "sha256": "17b0808f00fbaaf711e61817a1064ef6b5e8b1a36d6a07277152cd8248769394",
+      "bytes": 46118
+    },
+    "strong20/saad_al_ghamidi-079-free_edges.json": {
+      "sha256": "6f7a2d963823e83e7e057be71e5c679b888ce582a2788aedcec2e347854a8a98",
+      "bytes": 45749
+    },
+    "strong20/saad_al_ghamidi-098-free_edges.json": {
+      "sha256": "80595a29224fe17d9a9ce043480b19a6213110a2ec2faab62e39e81009198c86",
+      "bytes": 13657
+    },
+    "strong20/mohammed_siddiq_al_minshawi-080-phones.json": {
+      "sha256": "038b776124f1e7925f8a0c7f163637586f18e6fa1b217a693530250398b57c7d",
+      "bytes": 54649
+    },
+    "strong20/mohammed_siddiq_al_minshawi-067-free_edges.json": {
+      "sha256": "6c7053a096ebf7737e796ee59574504f079a8a83d6ae3fe40c4bc03deb4c05f9",
+      "bytes": 43321
+    },
+    "strong20/saad_al_ghamidi-067-no_delimiter.json": {
+      "sha256": "c3b1db9e5cb31b878b3260ec7963c96af1503ab24803885bf8ccc533fb1b7f51",
+      "bytes": 46996
+    },
+    "strong20/shatri-001-blank_minus1.json": {
+      "sha256": "6c4652b4f952e3cab9e28617070bca7ab64cbbff3ac5e9e59223cb14f3de869f",
+      "bytes": 12552
+    },
+    "strong20/saad_al_ghamidi-112-free_edges.json": {
+      "sha256": "0f0cabc24e703ecb013f32a5da0a0d10feebfb0a88c5931e4a92b719044fa0e7",
+      "bytes": 5127
+    },
+    "strong20/shatri-067-blank_minus1.json": {
+      "sha256": "dc24c77c8c616d928d0edd20f1b70a82dc2ad5de7da83809523c3d2f14539ea3",
+      "bytes": 47412
+    },
+    "strong20/shatri-065-free_edges.json": {
+      "sha256": "a6249c9f7506cfdbd2d6d707c690b00c32ae7862d5d01ca679cc89f66f672796",
+      "bytes": 35346
+    },
+    "strong20/saad_al_ghamidi-073-current.json": {
+      "sha256": "e50e8b5fde75a5ae0b92f596ae00736fdb1430223dd497476f77b6c1f735fcfe",
+      "bytes": 28167
+    },
+    "strong20/shatri-055-current.json": {
+      "sha256": "84d2381ac960132377a8c780e539cea407b877ed0c01519542bf6ed18795050a",
+      "bytes": 93173
+    },
+    "strong20/abdul_basit_mujawwad-098-blank_minus1.json": {
+      "sha256": "60e6c6217b0448cfe1be0ba9cf4a2f7a34f7e7c6396ba05bb25e0bbd62537487",
+      "bytes": 17666
+    },
+    "strong20/shatri-002-phones.json": {
+      "sha256": "c8ac13eb51aca6e450c63ceebe925aa7a20340be3c1ad5c4a674a791f9a991c6",
+      "bytes": 634347
+    },
+    "strong20/mahmoud_khalil_al_hussary-067-no_delimiter.json": {
+      "sha256": "9a7a271140e6be4ae2572fe35638e34a70aeade99a7b8f05c75842ceb5a8cd83",
+      "bytes": 60138
+    },
+    "strong20/shatri-067-phones.json": {
+      "sha256": "b164c15271425ca8155880c991e78c932ca1028c3f4179fe2a7836abe1f4ab1f",
+      "bytes": 46352
+    },
+    "strong20/mohammed_siddiq_al_minshawi-055-free_edges.json": {
+      "sha256": "ab22851c84a1b9256e9a5ac1b5db5fe5bc078b70fb43c0b82ac5c1ff4bbd9ed0",
+      "bytes": 98668
+    },
+    "strong20/mohammed_siddiq_al_minshawi-077-blank_minus1.json": {
+      "sha256": "c676bc18b0e1440dd62e6dc6788c207f7dc7ef6fc307d7ed0286223c1d740057",
+      "bytes": 61398
+    },
+    "strong20/shatri-114-current.json": {
+      "sha256": "dedb47eeed5a5e204422d6969bb2b3631fb61e899ebcc92a83d14d621dd8384a",
+      "bytes": 8107
+    },
+    "strong20/mohammed_siddiq_al_minshawi-065-no_delimiter.json": {
+      "sha256": "2bade4ac0672270512a181cbcc9db27eda4573a27b79dec66faac70152fea38c",
+      "bytes": 32460
+    },
+    "strong20/shatri-073-free_edges.json": {
+      "sha256": "98d4d4780e4c4b0fe07f4e891aa053591689d21ab9323ee6f4b302591b9351f5",
+      "bytes": 33677
+    },
+    "strong20/mohammed_siddiq_al_minshawi-079-no_delimiter.json": {
+      "sha256": "6dd0f03d51ce6ecdb985884ca917e9f9bff6fdc527f1a8698374e703edeac7dc",
+      "bytes": 64697
+    },
+    "strong20/shatri-055-phones.json": {
+      "sha256": "a3a28b7b6695c145a5a583ad570d779ce0cd5098704f4dff58a02952e2d59b41",
+      "bytes": 96588
+    },
+    "strong20/mohammed_siddiq_al_minshawi-055-current.json": {
+      "sha256": "dc06b81080dc5b6c0a12d5c763df6efa629f20556e1960173a070085c091f211",
+      "bytes": 94648
+    },
+    "strong20/abdul_basit_mujawwad-080-free_edges.json": {
+      "sha256": "9cad26751f7c7adbce8526f85ae048ff510fdb14dcde7a902981aff1391fad09",
+      "bytes": 54428
+    },
+    "strong20/shatri-065-no_delimiter.json": {
+      "sha256": "83783ed5dbdf84505f501dd81fba04047c19ab5e72face885e3de6302b75ec68",
+      "bytes": 35849
+    },
+    "strong20/saad_al_ghamidi-073-phones.json": {
+      "sha256": "123ec0bac0f7cb60a0024eef46f29c47e446f81b41ad80e33e6bb50de483d21f",
+      "bytes": 29314
+    },
+    "strong20/saad_al_ghamidi-077-no_delimiter.json": {
+      "sha256": "ecfabdf01e7036e1687565d35562479b4f8795e91524a31e8a9e0e73b2d4ede1",
+      "bytes": 65478
+    },
+    "strong20/mohammed_siddiq_al_minshawi-073-phones.json": {
+      "sha256": "4dce101d40796b3c97f0d7fe3e1ebc906602687f6e1495aadbb750bdb9a1e3b9",
+      "bytes": 30539
+    },
+    "strong20/shatri-077-blank_minus1.json": {
+      "sha256": "5bf8708cfd4254fe8dead4b618b7a1115be232de0e5a1d292b31380baceaaa1f",
+      "bytes": 63786
+    },
+    "strong20/saad_al_ghamidi-065-blank_minus1.json": {
+      "sha256": "aebdeb0d346c7add27f22cbbba924bd381b0c668f1173b770c8f505bb877c157",
+      "bytes": 29040
+    },
+    "strong20/saad_al_ghamidi-079-blank_minus1.json": {
+      "sha256": "eff82766bc79c58c55a05e7b7bde0cfd9deae3a51e567224b824071e38cfa458",
+      "bytes": 46170
+    },
+    "strong20/shatri-002-current.json": {
+      "sha256": "37a7c61b739cbe10c10d5549c57c59f100691d9bad72d724d63dbe7447817892",
+      "bytes": 623298
+    },
+    "strong20/mahmoud_khalil_al_hussary-098-blank_minus1.json": {
+      "sha256": "d0548f279129d1448f0e28905120c36b7cb1050350f80aebf35f0e6165226a5e",
+      "bytes": 19248
+    },
+    "strong20/saad_al_ghamidi-073-free_edges.json": {
+      "sha256": "20fd1fef07455abd775fbe4f374248649af52baafc460a9a33fc05f787ac658c",
+      "bytes": 28795
+    },
+    "strong20/shatri-079-no_delimiter.json": {
+      "sha256": "d10b89dfc47de806c43146321af49e0055d05091b97e66a6600b54ad150bea98",
+      "bytes": 61579
+    },
+    "strong20/mohammed_siddiq_al_minshawi-073-current.json": {
+      "sha256": "09a6406c43b221bcf4d78ba0453da0c561b734b38a8b87ab813935becd909c30",
+      "bytes": 30437
+    },
+    "strong20/shatri-098-free_edges.json": {
+      "sha256": "6950dca64aee25295122cfa959437567380fc3cf69c0f0d5c86fbd8ffe22942f",
+      "bytes": 13832
+    },
+    "strong20/saad_al_ghamidi-098-blank_minus1.json": {
+      "sha256": "181bbf819621479117084b1c66a5dbb454f91a1e830608a61ac8aeb6dff2b67f",
+      "bytes": 12466
+    },
+    "strong20/mahmoud_khalil_al_hussary-079-blank_minus1.json": {
+      "sha256": "110cfab85fd0cfe2418b0029a0ca34332601fc91c0533f21b8a00bde5e67556e",
+      "bytes": 76402
+    },
+    "strong20/shatri-079-free_edges.json": {
+      "sha256": "e26ed526d60a024df14e230761936ab7e7227c51188a424af09851cdbbfb9a79",
+      "bytes": 61483
+    },
+    "strong20/shatri-098-no_delimiter.json": {
+      "sha256": "3208fa05a199ac60597c44be2dd20b8824794bab112d7b957b97b86c206f8054",
+      "bytes": 14262
+    },
+    "strong20/saad_al_ghamidi-055-current.json": {
+      "sha256": "5a15b83e77b3b51a843f34f7189eff08374f69e15770f116d7d46359dd6c1877",
+      "bytes": 107971
+    },
+    "strong20/mahmoud_khalil_al_hussary-077-no_delimiter.json": {
+      "sha256": "20621ca795fc298b4623a49a334aadc095bd3ea8708c27ad3294ac3ff2493874",
+      "bytes": 77414
+    },
+    "strong20/shatri-073-current.json": {
+      "sha256": "b79b004c76fc065719da1f2e96f90d5d5dd85b669ab4d185e50f8520ad6220d9",
+      "bytes": 32936
+    },
+    "strong20/mohammed_siddiq_al_minshawi-067-blank_minus1.json": {
+      "sha256": "3f03c62f948ecef619ed28292fff8b3be87ea71b13417f5c8e31ad4b43cfd6c0",
+      "bytes": 43378
+    },
+    "strong20/shatri-112-free_edges.json": {
+      "sha256": "7bf39a3a6bfd51d43b52ab0cb44afd757754e0493dccff2512c7f906d2ca31bc",
+      "bytes": 6689
+    },
+    "strong20/shatri-114-blank_minus1.json": {
+      "sha256": "a73f310e4257bdb6594bdeae947d471ad5e872a1c480d2f0d781b3ba2b2fff89",
+      "bytes": 8720
+    },
+    "strong20/saad_al_ghamidi-065-free_edges.json": {
+      "sha256": "5b6b061e330b5f77c09755cd07dcb87ec8fe559ef8dc440265a940e3f37e570e",
+      "bytes": 29345
+    },
+    "strong20/shatri-032-no_delimiter.json": {
+      "sha256": "de4578ddbb01504edf9b6ef536611805f9b6cf7aeea0a49a6a1f76ba8f0fd7fb",
+      "bytes": 49096
+    },
+    "strong20/mahmoud_khalil_al_hussary-065-blank_minus1.json": {
+      "sha256": "b091d12b7277e302b25a560ddad0358cfb700d9e340ceeb645e6fab2a290d32b",
+      "bytes": 37454
+    },
+    "strong20/mohammed_siddiq_al_minshawi-065-free_edges.json": {
+      "sha256": "795c2a10a01b6e36dc38e949d2732a8306ea834fd312ea2b182eb9ab5b1c4234",
+      "bytes": 31891
+    },
+    "strong20/shatri-032-phones.json": {
+      "sha256": "4c5ae24461daf34dcbafc1b0af56caee35c88b8025c546d43f31f0d4960e34e3",
+      "bytes": 48930
+    },
+    "strong20/saad_al_ghamidi-077-current.json": {
+      "sha256": "dd97e2431aad89fb442dc2137db6cae711e489c4dc6812b02dcb8e7308417a59",
+      "bytes": 62513
+    },
+    "strong20/shatri-067-free_edges.json": {
+      "sha256": "e767b5c978dbfa025913678ed28d1c6fd2a267c37c2f70fdc52fc676355c7381",
+      "bytes": 45997
+    },
+    "strong20/shatri-002-no_delimiter.json": {
+      "sha256": "44408efa44e12ecb5974918681d9d41e8a5e802eda907955bbfa8f5a4d9339e6",
+      "bytes": 636992
+    },
+    "strong20/mahmoud_khalil_al_hussary-055-blank_minus1.json": {
+      "sha256": "7f394ff4bfc9f9471f5f8c0f78c4438f5c2f2e0b038a5610946a2b79a2e0bea6",
+      "bytes": 124542
+    },
+    "strong20/abdul_basit_mujawwad-098-phones.json": {
+      "sha256": "05f35eca7e055612b9a2a9183f85a4cd34cb5f60c11db63eda7bf0752c85307a",
+      "bytes": 16825
+    },
+    "strong20/shatri-080-no_delimiter.json": {
+      "sha256": "759e12cbde950a316cefbf396458b0f96e787b59fa4ec8824e4342fa8bd629b4",
+      "bytes": 58150
+    },
+    "strong20/saad_al_ghamidi-065-current.json": {
+      "sha256": "24e4b96a9ae1cd7cd4c8f764e5609506c6b4241539453349b951a10a4d5050e3",
+      "bytes": 28811
+    },
+    "strong20/shatri-112-phones.json": {
+      "sha256": "9a4fa36a348c3f21e667defd779e0c8c8ba74d84651f116ac6a8cf771fc343a1",
+      "bytes": 6683
+    },
+    "strong20/saad_al_ghamidi-112-current.json": {
+      "sha256": "f07d2ddd1fa6bd223a33f94e105f4f809f2900d181b08782c7273680f6994fc3",
+      "bytes": 5588
+    },
+    "strong20/mahmoud_khalil_al_hussary-073-no_delimiter.json": {
+      "sha256": "8f4c6b3726045e5f655f89b3bb2292a5244754d636752067ef7369afd55ddc27",
+      "bytes": 40368
+    },
+    "strong20/saad_al_ghamidi-080-blank_minus1.json": {
+      "sha256": "6174a7a58be7637699998599c913a6988f526b41e5f74f6a8c8a0e3d27377dec",
+      "bytes": 46406
+    },
+    "strong20/mohammed_siddiq_al_minshawi-098-current.json": {
+      "sha256": "63bb170978a835328692625810a3e33a98932c62c83fbdbaebca51aa5d64a2a4",
+      "bytes": 16414
+    },
+    "strong20/mohammed_siddiq_al_minshawi-067-current.json": {
+      "sha256": "ba09f28c00214e158413c442d60d998ccf87a446b942cb1f70b41ba9bf048112",
+      "bytes": 41735
+    },
+    "strong20/saad_al_ghamidi-073-no_delimiter.json": {
+      "sha256": "4db65f5261fe6ecd4c9f2fa6160122eb4373d7120282117ecd617f35e62c63a5",
+      "bytes": 29370
+    },
+    "strong20/mohammed_siddiq_al_minshawi-112-no_delimiter.json": {
+      "sha256": "42c3e54480fac684d9b6fd0cde6c20850e75188818b2529227d45e1d62f71d2c",
+      "bytes": 7278
+    },
+    "strong20/mohammed_siddiq_al_minshawi-073-free_edges.json": {
+      "sha256": "2d7291b428ffeca920d0202ad48ae7a7536123ef4806ae503d12557c3a6298ac",
+      "bytes": 30532
+    },
+    "strong20/abdul_basit_mujawwad-112-phones.json": {
+      "sha256": "fe7afb93bc64e1bafc7bf9d9a9307336c6220156afdeadcd48654d0898a02702",
+      "bytes": 8053
+    },
+    "strong20/shatri-073-blank_minus1.json": {
+      "sha256": "236b583c6ca31f466f50a84c9eacd1fbfe504adbc2ca6df3335bf4203f9cf79e",
+      "bytes": 33119
+    },
+    "strong20/shatri-065-phones.json": {
+      "sha256": "252650448ecf32563fe964a1fd0b6bf9f5f9287fbcd92d82f3417839b54f1727",
+      "bytes": 35690
+    },
+    "strong20/shatri-098-phones.json": {
+      "sha256": "0b09ea3a7264fe2026dd76d2d5f3096597d84566d6dad58c11bacfe18a84fb32",
+      "bytes": 14227
+    },
+    "strong20/mahmoud_khalil_al_hussary-080-phones.json": {
+      "sha256": "379f9cc4a3851bec83ef3bdae8777970fd246a738030995a92e93647d0f5c5b0",
+      "bytes": 61529
+    },
+    "strong20/mahmoud_khalil_al_hussary-080-blank_minus1.json": {
+      "sha256": "a305fffe3076de0aea589d54d9300e3b14c6c0ef40667506e4249a7ec235a1d0",
+      "bytes": 60836
+    },
+    "strong20/shatri-032-current.json": {
+      "sha256": "c871ff13581e2e9cc01aef4b3d745106063364722ca2cc6c2edd9667b8985f05",
+      "bytes": 46507
+    },
+    "strong20/shatri-067-current.json": {
+      "sha256": "27360f7c99447877f1dfbcae56a2a1e6f7bf37f5535636178049cb0fca9cc624",
+      "bytes": 44630
+    },
+    "strong20/shatri-098-current.json": {
+      "sha256": "53d85e658da1b6740d18ecec877702cb4429e44251f9230ebde7fb2b232c4abe",
+      "bytes": 14804
+    },
+    "strong20/shatri-079-phones.json": {
+      "sha256": "90802cecffb6be321fd8ed83e2b76548b9da3c08d8f26d371bfdff7fcb78dd68",
+      "bytes": 61436
+    },
+    "strong20/shatri-055-no_delimiter.json": {
+      "sha256": "add397a3d97a09e157eb4169787efa999d571cdef736fe0ecbd4bb061089256d",
+      "bytes": 97357
+    },
+    "strong20/saad_al_ghamidi-055-blank_minus1.json": {
+      "sha256": "19c0ea46ae17f2296c9696e073b72b84a52990a228b2252ce628c7b278a93fb3",
+      "bytes": 112141
+    },
+    "strong20/abdul_basit_mujawwad-112-blank_minus1.json": {
+      "sha256": "36400caa5792c838be96708715367f3249a617b5c24970594f85c829ce6c0859",
+      "bytes": 8109
+    },
+    "strong20/shatri-055-free_edges.json": {
+      "sha256": "8f0981e510fc0ad2a8941524adb552fce3d0a5fabfe1110498c29f38a6205b06",
+      "bytes": 96019
+    },
+    "strong20/shatri-114-free_edges.json": {
+      "sha256": "a19b11bd306e6c355a500d80b1740b3c566d91ffe7ead65691ccf7e89c223c2c",
+      "bytes": 8678
+    },
+    "strong20/abdul_basit_mujawwad-112-current.json": {
+      "sha256": "5b903d73cd7343da7ec288100c0639f004cbd37a5174cc0642f9196373608551",
+      "bytes": 8059
+    },
+    "strong20/shatri-067-no_delimiter.json": {
+      "sha256": "021f6a8afc6b097dcdb7fbad350f28396d6b14b48d78bd3e540204fbff3bb8a2",
+      "bytes": 46492
+    },
+    "strong20/abdul_basit_mujawwad-098-no_delimiter.json": {
+      "sha256": "ee1742c44b66af75058df0941699474cf471eeb934c29edd086c8a0c4505c823",
+      "bytes": 16844
+    },
+    "strong20/saad_al_ghamidi-067-blank_minus1.json": {
+      "sha256": "bcdd6b5d377c9e27b7fdd6f380f1df3a595b91e3175dc6698542012f9f042228",
+      "bytes": 45770
+    },
+    "strong20/shatri-001-no_delimiter.json": {
+      "sha256": "dfc227a07cac5ba7db95401b011e2b27a74818a7e0014e27182fa01c089b3b8d",
+      "bytes": 12516
+    },
+    "strong20/shatri-080-current.json": {
+      "sha256": "021c2edc4b7ea83c3686af31ceb5c3b5eccc0a10e9c926ccdda774ea4189b3ee",
+      "bytes": 57801
+    },
+    "strong20/mohammed_siddiq_al_minshawi-098-blank_minus1.json": {
+      "sha256": "4c16945a1dff7785fd2cf9cb5cec139491a99f439b14abb6e59a65caf23d4ea9",
+      "bytes": 16502
+    },
+    "strong20/mahmoud_khalil_al_hussary-073-free_edges.json": {
+      "sha256": "8b41f2101f723fd2fb76fdbb1e4e0e25fb8a6137c5bc35093cd255455e31e569",
+      "bytes": 40992
+    },
+    "strong20/mahmoud_khalil_al_hussary-077-current.json": {
+      "sha256": "8b5a6da4eafecdca69a3692af28933cf734d0312b2d9ae01589df6407ce83930",
+      "bytes": 70999
+    },
+    "strong20/mohammed_siddiq_al_minshawi-079-blank_minus1.json": {
+      "sha256": "e77bf1f31a65bbc3ca17ae4a529c40dc40660b0bbc789111dab273c253601329",
+      "bytes": 63706
+    },
+    "strong20/shatri-073-phones.json": {
+      "sha256": "3338c694f1efaf9a4ebe5e9d8c989be421d583fce6b4fbd131b1bac72d5f81a9",
+      "bytes": 34219
+    },
+    "strong20/mahmoud_khalil_al_hussary-077-phones.json": {
+      "sha256": "d09d7e3269e92e8b997cc4f73da23675d17ef74f78a71d5a09bd0d43ac740972",
+      "bytes": 77142
+    },
+    "strong20/mahmoud_khalil_al_hussary-065-free_edges.json": {
+      "sha256": "7f4db53d98d31b8c168bc8ddb379232d11365ca3c82b65fd72262cc990689e81",
+      "bytes": 36624
+    },
+    "strong20/mohammed_siddiq_al_minshawi-065-blank_minus1.json": {
+      "sha256": "e5711ef808903c9674e0813b42921aa5c6bc266757e6acbc71f0d23cbfcf4ad5",
+      "bytes": 31015
+    },
+    "strong20/mahmoud_khalil_al_hussary-112-current.json": {
+      "sha256": "c92069c22622e698cef2ecc40fbab53d5b6c9463f9f83b2d2e0a9e1b92b93eb1",
+      "bytes": 7541
+    },
+    "strong20/mahmoud_khalil_al_hussary-067-blank_minus1.json": {
+      "sha256": "25a3d039dd9a63f3026f13f3cd9adcf60f24eb75cb27b03d5b3f4a7b5d031819",
+      "bytes": 59338
+    },
+    "strong20/mahmoud_khalil_al_hussary-065-current.json": {
+      "sha256": "4d29e536dacfbbfa1d5a1c05235f42c2dd8eea2e630c69ca8cf7ba4dccc13495",
+      "bytes": 36617
+    },
+    "strong20/mohammed_siddiq_al_minshawi-080-current.json": {
+      "sha256": "1ad5f3ba7b0a6121a28c63376535a202633bcd42085711c0723a2cd65a02c14e",
+      "bytes": 51640
+    },
+    "strong20/mohammed_siddiq_al_minshawi-077-no_delimiter.json": {
+      "sha256": "bd2d0423e630ecd9f0fef72a657e120060ad6e20b6d2af6c3c83c8331082f288",
+      "bytes": 64786
+    },
+    "strong20/saad_al_ghamidi-065-phones.json": {
+      "sha256": "90af5359cb04f1fe748a00160f361e9739470d0b2412e04bc35eeddcdcb6c7a8",
+      "bytes": 29349
+    },
+    "strong20/mohammed_siddiq_al_minshawi-055-blank_minus1.json": {
+      "sha256": "33c6ca7c3ba730f41e525ae81347a681634eaba57d208e04e8515c6b5fda383a",
+      "bytes": 97253
+    },
+    "strong20/shatri-114-phones.json": {
+      "sha256": "b3bec575fc46aaa8988b0a73c3bbb00bfb7a143dff1eea9b8a22d9d4d8f06d61",
+      "bytes": 8735
+    },
+    "strong20/saad_al_ghamidi-098-phones.json": {
+      "sha256": "6e7c607ee18833a3cdbf3541a4a20926a471f12df4abe73a4edbfb29755d30a0",
+      "bytes": 14137
+    },
+    "strong20/shatri-079-current.json": {
+      "sha256": "d3f738450846fcb4b61364448550f9920f3483ea5dba793872ce341476a04954",
+      "bytes": 59178
+    },
+    "strong20/mohammed_siddiq_al_minshawi-098-phones.json": {
+      "sha256": "e43389d9fa65524c39dd172a1321d5390af98c01237f2fae66748ecb618e0433",
+      "bytes": 17398
+    },
+    "strong20/mohammed_siddiq_al_minshawi-065-phones.json": {
+      "sha256": "f8aa9edd1507a73d1048182112ceb617705960b73a6d95393e6dc1d9c0d478db",
+      "bytes": 32327
+    },
+    "strong20/shatri-112-blank_minus1.json": {
+      "sha256": "321f26deccd491817f4e2123e90385e0806c2f1f2537166cc3761b915620166b",
+      "bytes": 6728
+    },
+    "strong20/mohammed_siddiq_al_minshawi-079-phones.json": {
+      "sha256": "101345c0648dd243dbfda2e09dff73edf0b103c914609cbeeb4f0d632f865f45",
+      "bytes": 63493
+    },
+    "strong20/shatri-077-free_edges.json": {
+      "sha256": "dbaba51152b20030b6d3e04b925c9c2c79e86d2b4f6bec27ec1fcc6197c6f99f",
+      "bytes": 63376
+    },
+    "strong20/mohammed_siddiq_al_minshawi-073-no_delimiter.json": {
+      "sha256": "c7de405337d3346408f3df2ab3a2dc44c5da2096362bc676d7c0cb68c7c12622",
+      "bytes": 30646
+    },
+    "strong20/mahmoud_khalil_al_hussary-055-current.json": {
+      "sha256": "023841f16f899375c371d326c0a2701d1d64f74936e909a186d8d7952d8b6b11",
+      "bytes": 123648
+    },
+    "strong20/saad_al_ghamidi-112-no_delimiter.json": {
+      "sha256": "fa33f7db1a07d1a139343b2f781c5d131b179e17ee0be538e15bf923bfc7d4eb",
+      "bytes": 5651
+    },
+    "strong20/saad_al_ghamidi-079-phones.json": {
+      "sha256": "35e7dacf564af0076c7b024e096ccaa496b8645ca330ee9451c6ad291691c892",
+      "bytes": 45788
+    },
+    "strong20/mohammed_siddiq_al_minshawi-080-blank_minus1.json": {
+      "sha256": "07882bec61e9c25970742decd33e94b15b5232c172e69174936643f6f102850a",
+      "bytes": 51740
+    },
+    "strong20/shatri-059-blank_minus1.json": {
+      "sha256": "6b9c26ea2e1b8e7113c8d619c8df779b25fd93bcd5af4cce1fc06957e555680a",
+      "bytes": 46903
+    },
+    "strong20/mahmoud_khalil_al_hussary-067-phones.json": {
+      "sha256": "7005afe927d0c11b7100d3cfe2f5f112de61048a9c1e7685adfdc6d6f06d748e",
+      "bytes": 59262
+    },
+    "strong20/shatri-002-free_edges.json": {
+      "sha256": "64a5899a0c62ad4e8a455d8871a87c2848ae2ac1313dc83948f9c53af01aa647",
+      "bytes": 635261
+    },
+    "strong20/mohammed_siddiq_al_minshawi-079-current.json": {
+      "sha256": "b0c60aab5b754d9ebb41928bb005fd9dfc16ab7c631f807d6eba17709af47e61",
+      "bytes": 61126
+    },
+    "strong20/mahmoud_khalil_al_hussary-112-no_delimiter.json": {
+      "sha256": "75aa05444804fb6efdd33460089e68519b0c5784b119dda8a17f6d79b77d0269",
+      "bytes": 7562
+    },
+    "strong20/mohammed_siddiq_al_minshawi-112-phones.json": {
+      "sha256": "6d9412658c01a02c1de5280e026d2a175e0af6054c79415e4ad5b979036da534",
+      "bytes": 7258
+    },
+    "strong20/mahmoud_khalil_al_hussary-055-phones.json": {
+      "sha256": "7f221415f5db0c7525c71b6286f3f948aff5e1d142f103887c4762d09f3c1c6f",
+      "bytes": 127319
+    },
+    "strong20/shatri-080-free_edges.json": {
+      "sha256": "61eac01cb468b913a280fefe96003cf2bc9f662affc0e9c5a69dc131f5cf4f99",
+      "bytes": 58105
+    },
+    "strong20/saad_al_ghamidi-112-phones.json": {
+      "sha256": "b7f9e5a349f53d71928fbb373e91c3bdfac1aa14d53419fd1cf3dc7653b60aeb",
+      "bytes": 5630
+    },
+    "strong20/abdul_basit_mujawwad-080-no_delimiter.json": {
+      "sha256": "b62e1ed28cab6ae12238a219335b79b88b0cc2d54c5abfd6b1f75f739a19562b",
+      "bytes": 54534
+    },
+    "fixed30/saad_al_ghamidi-080-no_delimiter.json": {
+      "sha256": "02f2628d9bd92faf20a2e1ec9c9365cd6a7d1b1759fd5c868bee021af4110a56",
+      "bytes": 39224
+    },
+    "fixed30/saad_al_ghamidi-080-free_edges.json": {
+      "sha256": "59b95fabc45ab4261e7727070a3b3ecd19b1ee42b91d7179482f5e4e4c5b863e",
+      "bytes": 39158
+    },
+    "fixed30/abdul_basit_mujawwad-112-no_delimiter.json": {
+      "sha256": "a57aad16553aeea734dc29658d6ff33905d4ca02eefad8b65ce5f5942f368719",
+      "bytes": 5497
+    },
+    "fixed30/shatri-001-phones.json": {
+      "sha256": "558efb483c180c575d2e918abeb71cf046c8661e40e56de970ed73ae217bbc42",
+      "bytes": 9862
+    },
+    "fixed30/mahmoud_khalil_al_hussary-080-no_delimiter.json": {
+      "sha256": "8b50b714e8f7ee1ddf7742665c760261e9bae6c935e1860474c4a84072fe3025",
+      "bytes": 47313
+    },
+    "fixed30/abdul_basit_mujawwad-112-free_edges.json": {
+      "sha256": "4be54e04d3eb27afd9077a61e82c5b528718b82d4c80b1921c50a3c87b670a49",
+      "bytes": 5476
+    },
+    "fixed30/mahmoud_khalil_al_hussary-112-phones.json": {
+      "sha256": "3e6146f2e621a84b92a1e71865f5698cc21e23f29b855a2e6598bc6d5155d5c5",
+      "bytes": 6102
+    },
+    "fixed30/abdul_basit_mujawwad-080-phones.json": {
+      "sha256": "6ee7e8c745621cba67e312106d7b096e7f7388cdbf904b50322cd14fe99e8949",
+      "bytes": 38127
+    },
+    "fixed30/mahmoud_khalil_al_hussary-112-free_edges.json": {
+      "sha256": "20c8509148e89a38d468047bbd014c0fe03170ff7fb366c20932a89d6899e1d5",
+      "bytes": 6113
+    },
+    "fixed30/shatri-080-phones.json": {
+      "sha256": "ca71470775863ee5aa8efcd0d64ef6ecf46fc7593aa287b47397e0d032bfabf3",
+      "bytes": 44540
+    },
+    "fixed30/mohammed_siddiq_al_minshawi-080-free_edges.json": {
+      "sha256": "a88bc2a384db358df78305b2837976b7e3140b3a8c84051a2dce83ae8007516b",
+      "bytes": 39561
+    },
+    "fixed30/saad_al_ghamidi-080-current.json": {
+      "sha256": "31168673f484f749b9eb2ebb3de8727d380ce4d432d3ff224a8d86bc263d1d89",
+      "bytes": 36310
+    },
+    "fixed30/shatri-112-no_delimiter.json": {
+      "sha256": "c2f54ca89a18722d2ff9073ebaa151545f8182feadef775a83985cf2379cdf8f",
+      "bytes": 5663
+    },
+    "fixed30/shatri-001-current.json": {
+      "sha256": "f869bc9d3691bedc12d58cf742e5839fbe20cbbd10ce920fe231bb7150073d5a",
+      "bytes": 9380
+    },
+    "fixed30/mahmoud_khalil_al_hussary-080-current.json": {
+      "sha256": "4c0e11aa5745aec627f324ba748706cd7569ecef65944b934fd7d67ee749bf99",
+      "bytes": 45394
+    },
+    "fixed30/mohammed_siddiq_al_minshawi-112-current.json": {
+      "sha256": "a6d12663e38d28ffd7a3b93223cfc0156ccd31923534265bc88b9b23d6f1b512",
+      "bytes": 5980
+    },
+    "fixed30/mahmoud_khalil_al_hussary-080-free_edges.json": {
+      "sha256": "4d63e1ee121835e1f020206cf1db5e6149796d6cddbb731b6f61a0ead0f408d2",
+      "bytes": 47118
+    },
+    "fixed30/abdul_basit_mujawwad-080-current.json": {
+      "sha256": "9b2e5fdada83f5d0946609ceb7a9c77ca6944745934b5394312b28b155072aa2",
+      "bytes": 37194
+    },
+    "fixed30/mohammed_siddiq_al_minshawi-112-free_edges.json": {
+      "sha256": "af0409bd3c4c6b836bd71c524a73cb757dcf19f873c15ddbcdecc1f32b43d585",
+      "bytes": 5432
+    },
+    "fixed30/shatri-001-free_edges.json": {
+      "sha256": "c85d0ef7d18f8354e62caf224986b16c83756b8daa61d1ae595034ab0e669dbf",
+      "bytes": 9406
+    },
+    "fixed30/mohammed_siddiq_al_minshawi-080-no_delimiter.json": {
+      "sha256": "773d7a81c305f0ecfad46d085e7c45202234b92ff8ac7a106f1d06fa1df9b0d9",
+      "bytes": 40391
+    },
+    "fixed30/shatri-112-current.json": {
+      "sha256": "7fc47e160912e988c09a55b91e1371b1269b4d1a052efa7d7eb85190c7e09b69",
+      "bytes": 5709
+    },
+    "fixed30/saad_al_ghamidi-080-phones.json": {
+      "sha256": "87d29d7651ba2a5ce3f2d8c02e4a531366fb6b0fcac0b1fd1a25405c794eede4",
+      "bytes": 39127
+    },
+    "fixed30/mohammed_siddiq_al_minshawi-080-phones.json": {
+      "sha256": "8cd94a3e1086e5c77cfae1d03797469419a98e179cd63543f9e41e5c954c8b6e",
+      "bytes": 39526
+    },
+    "fixed30/saad_al_ghamidi-112-free_edges.json": {
+      "sha256": "d892d1229826dd1418f9e64bbda5e9f11b87e77ceb95e1c5792efe98a8ed12d8",
+      "bytes": 4882
+    },
+    "fixed30/abdul_basit_mujawwad-080-free_edges.json": {
+      "sha256": "4a8a77f0d0c85b48fa94b194982f3ac4bc48adf72aa41550e6e7d9b8495090f7",
+      "bytes": 37678
+    },
+    "fixed30/shatri-098-free_edges.json": {
+      "sha256": "7c11e51e6fc6d436e1ebd3e87fa4791d18f9d8aaa2df88bc8e4a770ae61552a4",
+      "bytes": 9417
+    },
+    "fixed30/shatri-098-no_delimiter.json": {
+      "sha256": "d7bac53752d108e3548fe0b4927b276b1435eb228b72eb1cf651ffae535aadf1",
+      "bytes": 9842
+    },
+    "fixed30/shatri-112-free_edges.json": {
+      "sha256": "7ad4a41f97f252946b6118058c682d324e28008eebfa84917449742b0d053039",
+      "bytes": 5648
+    },
+    "fixed30/shatri-080-no_delimiter.json": {
+      "sha256": "629bc1e387977b20b9363b0a81b860a23be0f8316f7bdd8ef01efd67979e2e73",
+      "bytes": 44478
+    },
+    "fixed30/shatri-112-phones.json": {
+      "sha256": "222889537d97a0fe35cb9d8640c0008ae18ef995b57bb8a61bbe272d307fbaf8",
+      "bytes": 5642
+    },
+    "fixed30/saad_al_ghamidi-112-current.json": {
+      "sha256": "5821953689c68821a1c60b0d4225a8fcea02e419e8dfb5bf5894ec37127408fa",
+      "bytes": 5344
+    },
+    "fixed30/mohammed_siddiq_al_minshawi-112-no_delimiter.json": {
+      "sha256": "dd1069badc3c89fc0faad78068cc672bbf4f59afe65ee371e9d0182be67439cd",
+      "bytes": 5993
+    },
+    "fixed30/abdul_basit_mujawwad-112-phones.json": {
+      "sha256": "15bf7592f13fd68058c28f8d05135b5af7a0569873c90dbc76cd77b5edbf5d8e",
+      "bytes": 5474
+    },
+    "fixed30/shatri-098-phones.json": {
+      "sha256": "fe6d2583855f6f798d52b724eb0959069e7eb41acaec2b4994424eda4589fd1c",
+      "bytes": 9814
+    },
+    "fixed30/mahmoud_khalil_al_hussary-080-phones.json": {
+      "sha256": "39ea42012e2c5eb4b278ff8864417a489495a07350958afdbec5be12ea51b775",
+      "bytes": 47082
+    },
+    "fixed30/shatri-098-current.json": {
+      "sha256": "d2b08a64e84541797968baa6b064463330ccb63b76d341fbca13df36fec8b5c0",
+      "bytes": 9827
+    },
+    "fixed30/abdul_basit_mujawwad-112-current.json": {
+      "sha256": "967814971bf272ef90a5aa18a7f31032c0cb2762933cfbe46b62d4386bb1b15f",
+      "bytes": 5478
+    },
+    "fixed30/shatri-001-no_delimiter.json": {
+      "sha256": "eca0f2073d2953c8ad59f4644ce33180ac5dc04305882f21542b6d7470687a4e",
+      "bytes": 9904
+    },
+    "fixed30/shatri-080-current.json": {
+      "sha256": "01088f04e461c88573a4e38e872c69093a47da7c61f176cc5f8de77b6a59dc03",
+      "bytes": 42388
+    },
+    "fixed30/mahmoud_khalil_al_hussary-112-current.json": {
+      "sha256": "af50c700e1d9742e9b1de28d9182a4f89621bdb1e90ab382e0edb23e69264acb",
+      "bytes": 6105
+    },
+    "fixed30/mohammed_siddiq_al_minshawi-080-current.json": {
+      "sha256": "1517ab617beb6a4344669ba1dd0c68df80e8ef6eb489c0a2b2018947c247b55c",
+      "bytes": 34375
+    },
+    "fixed30/saad_al_ghamidi-112-no_delimiter.json": {
+      "sha256": "b0b2692f599e6388c51d164501e63a9a976b5286ff57f99a16ad252912fddc18",
+      "bytes": 5405
+    },
+    "fixed30/mahmoud_khalil_al_hussary-112-no_delimiter.json": {
+      "sha256": "8acb986155aaa5a090d5b0374b9d218a4b42ec8f37c137aec5a15df9a9d09a25",
+      "bytes": 6131
+    },
+    "fixed30/mohammed_siddiq_al_minshawi-112-phones.json": {
+      "sha256": "91ea011e9a41a0774c706bb615c1a8770c73a1733c41a5a194854dc62761aa5c",
+      "bytes": 5979
+    },
+    "fixed30/shatri-080-free_edges.json": {
+      "sha256": "c3ccb731b2326066c298ed42f7dac26744ea1eb15325890dbd1e244e53f3a624",
+      "bytes": 44568
+    },
+    "fixed30/saad_al_ghamidi-112-phones.json": {
+      "sha256": "1341bbd544c9cee5ef20a5c8251ed8a729d0a9bfc450d465d998c53d1d45b98e",
+      "bytes": 5385
+    },
+    "fixed30/abdul_basit_mujawwad-080-no_delimiter.json": {
+      "sha256": "074a3017faf2eec465de7e83ef312ecf12c64db21349a60810ca8b5a8b63f224",
+      "bytes": 38848
+    },
+    "strong20-localnorm/shatri-001-phones.json": {
+      "sha256": "a29783c641cd65e420c2fc13775df6c402c5b71868b3a177bd95f1f38be8a5cb",
+      "bytes": 12045
+    },
+    "strong20-localnorm/mahmoud_khalil_al_hussary-112-phones.json": {
+      "sha256": "a183f1dbce672a26a61a7a4db15c0144c85c2f2a9526116db56a25d0df978811",
+      "bytes": 7574
+    },
+    "strong20-localnorm/abdul_basit_mujawwad-080-phones.json": {
+      "sha256": "67d2272a969684f0b63b69cefcdfa62c0f96fac537b9fdc8617e73cc443a40f0",
+      "bytes": 54348
+    },
+    "strong20-localnorm/shatri-080-phones.json": {
+      "sha256": "33eab886f34d4ae07f25ab7e2d772d893fdeedefde1668efd03f14a81ff25ee1",
+      "bytes": 58185
+    },
+    "strong20-localnorm/saad_al_ghamidi-080-current.json": {
+      "sha256": "0fae5a1a049d26da7695a149606a1a337be67b1b4260c26dd66f21240c59fb52",
+      "bytes": 45635
+    },
+    "strong20-localnorm/shatri-001-current.json": {
+      "sha256": "b8aa2f8756e1ba847a7b4e539c318aaa5731abd871d6d44ee548539231fbba14",
+      "bytes": 12237
+    },
+    "strong20-localnorm/mahmoud_khalil_al_hussary-080-current.json": {
+      "sha256": "a286b44d8809d21395c12711469513d1df40ab7ba6ae736497185c2333928023",
+      "bytes": 60707
+    },
+    "strong20-localnorm/mohammed_siddiq_al_minshawi-112-current.json": {
+      "sha256": "31e760d967ef555183e1ac47f0df3febed1105f047401c57d8ec54709341c57e",
+      "bytes": 6672
+    },
+    "strong20-localnorm/abdul_basit_mujawwad-080-current.json": {
+      "sha256": "a46887e677c4b2e825d03057b8990c4077eb926c316e045a58c94bc020355a0b",
+      "bytes": 52481
+    },
+    "strong20-localnorm/shatri-112-current.json": {
+      "sha256": "240428f7080b74f2f231e910ec974d844576bcdfa4086c68068f89a4b1b6bbff",
+      "bytes": 6738
+    },
+    "strong20-localnorm/saad_al_ghamidi-080-phones.json": {
+      "sha256": "e598e2849cd467dec4430382b4564bdafe5f0e9c0f289e6dceb72e49ba686f04",
+      "bytes": 47461
+    },
+    "strong20-localnorm/mohammed_siddiq_al_minshawi-080-phones.json": {
+      "sha256": "45d4e61af7f1d2e4b77a568a551c41b75e183227d75f2142b23ce4b6a3ee709f",
+      "bytes": 54784
+    },
+    "strong20-localnorm/shatri-112-phones.json": {
+      "sha256": "638f940aa27a0d2bec84091706a887c2792d654131f9a5aec9fd6fe5232157aa",
+      "bytes": 6675
+    },
+    "strong20-localnorm/saad_al_ghamidi-112-current.json": {
+      "sha256": "00557dfd52b4781bc05c3687757173e05293cebe7e05dac5c5beecdcc458cef8",
+      "bytes": 5627
+    },
+    "strong20-localnorm/abdul_basit_mujawwad-112-phones.json": {
+      "sha256": "deead05b5e4f26532e369cac348ec2b6931b37cd6d54d0a8c774c2b212b8ca08",
+      "bytes": 8084
+    },
+    "strong20-localnorm/shatri-098-phones.json": {
+      "sha256": "6fdd3eefa085ec271805c2b7504d54df2d38421f1c9f1d0cbbd910d1b7d242ce",
+      "bytes": 14261
+    },
+    "strong20-localnorm/mahmoud_khalil_al_hussary-080-phones.json": {
+      "sha256": "7eed0856c69e27b4af88718a0c66ee4a2f24803d5360f1b3350a532b134de882",
+      "bytes": 62716
+    },
+    "strong20-localnorm/shatri-098-current.json": {
+      "sha256": "0c3d6d3096235ca13a880caf7d7f72713adf4b3e5e6a0db75b0f015e64704f6c",
+      "bytes": 14249
+    },
+    "strong20-localnorm/abdul_basit_mujawwad-112-current.json": {
+      "sha256": "b11a632bda061972143749bc0c3a4dded73fe5a4f48f6ad89c7aa2f5e9eba7d5",
+      "bytes": 8091
+    },
+    "strong20-localnorm/shatri-080-current.json": {
+      "sha256": "c32b5526042acc4466a258c31e3cb290bb8c409799aaf80fa46d43112c08f553",
+      "bytes": 57049
+    },
+    "strong20-localnorm/mahmoud_khalil_al_hussary-112-current.json": {
+      "sha256": "db06b1358da98bfc06145549b339ca747faaa8de15a3c444831f5a2933f9df46",
+      "bytes": 7577
+    },
+    "strong20-localnorm/mohammed_siddiq_al_minshawi-080-current.json": {
+      "sha256": "f6a8fc73637d6294da30052eccefd57a409456afbcd5b0fe6b7403f386083bfa",
+      "bytes": 50752
+    },
+    "strong20-localnorm/mohammed_siddiq_al_minshawi-112-phones.json": {
+      "sha256": "aed07d0cff8ab30d6220545c5cffd91ab5b44d87b32f9a8fe437ba2196a4387d",
+      "bytes": 7296
+    },
+    "strong20-localnorm/saad_al_ghamidi-112-phones.json": {
+      "sha256": "aba338c899a00eed1d6855b588178328409a63cc910be88e2c6c72e21e452a69",
+      "bytes": 5666
+    },
+    "strong6/saad_al_ghamidi-080-no_delimiter.json": {
+      "sha256": "7fb2226a1f917c1cb56ad4b10e445628c27d6909c3157a7814bf310a74218afb",
+      "bytes": 54885
+    },
+    "strong6/saad_al_ghamidi-080-free_edges.json": {
+      "sha256": "fdfeb0d00450bc0fa2af74eec0378be7e92c9fe49cff6b1f6481fbdd0cd7656b",
+      "bytes": 54760
+    },
+    "strong6/abdul_basit_mujawwad-112-no_delimiter.json": {
+      "sha256": "c0f3ad356b1cf6cadefacdf9ab9cc10e63688f01ffa99ad9213d3912de9fd468",
+      "bytes": 9094
+    },
+    "strong6/shatri-001-phones.json": {
+      "sha256": "22b747bc4f3d1b30307785e6f4a9a5e2137af480bd423e2c155677bacc356322",
+      "bytes": 12871
+    },
+    "strong6/mahmoud_khalil_al_hussary-080-no_delimiter.json": {
+      "sha256": "d77a0521805d699248c99e74064845fa46250ae13ad4cfac349d450aa8e55a39",
+      "bytes": 81035
+    },
+    "strong6/abdul_basit_mujawwad-112-free_edges.json": {
+      "sha256": "350eb953f7137628d5698e465f1aa494815cfe9a8cb4142671dc49f495a1f702",
+      "bytes": 9074
+    },
+    "strong6/mahmoud_khalil_al_hussary-112-phones.json": {
+      "sha256": "a712875ceef73b5edeab098fd5c7d04ef17de2c0242d46f00ba5523c15a908d2",
+      "bytes": 9764
+    },
+    "strong6/abdul_basit_mujawwad-080-phones.json": {
+      "sha256": "7aa043e4ceba1860d2dae82634ce12ac585707fc2a12c828c26b2ec2978e5a96",
+      "bytes": 70020
+    },
+    "strong6/mahmoud_khalil_al_hussary-112-free_edges.json": {
+      "sha256": "1c8899a180d8a60ebc960bf0e6a7f1c7134d47946ec33331e0873f06a66cf1b6",
+      "bytes": 9332
+    },
+    "strong6/shatri-080-phones.json": {
+      "sha256": "34cff50ca3d3ff26f77f6f4e45fcbef77121a01b4922073abcd39f3bd4fe46eb",
+      "bytes": 71790
+    },
+    "strong6/mohammed_siddiq_al_minshawi-080-free_edges.json": {
+      "sha256": "eea1f176ccc8b586ecea4a7a045e2c4d2e99014baa1b477ad85d1e2fdd259df0",
+      "bytes": 74783
+    },
+    "strong6/saad_al_ghamidi-080-current.json": {
+      "sha256": "a97e0c8147a0cbdc075afae593148f6d3cb062799c6f3b01a993e183eb5c6e88",
+      "bytes": 54016
+    },
+    "strong6/shatri-112-no_delimiter.json": {
+      "sha256": "d8acf6ed8a78fbea3ff4f5b3fbe15622ecf9d27c4f8153dba10d2ae12a121a7e",
+      "bytes": 7712
+    },
+    "strong6/shatri-001-current.json": {
+      "sha256": "9ac78e452513d5046a39b45cd449aeaeb0f739eb1ee9fbcfcdcd4eca68cca6cc",
+      "bytes": 12798
+    },
+    "strong6/mahmoud_khalil_al_hussary-080-current.json": {
+      "sha256": "661937bb6b3798a6c65b99356c71d26e6281a8ce18739026a8986f362b0d0084",
+      "bytes": 80356
+    },
+    "strong6/mohammed_siddiq_al_minshawi-112-current.json": {
+      "sha256": "e7c25e800c72874ea0c3d31259b1e230856213a7d97596929d68df3b51a6ee59",
+      "bytes": 7518
+    },
+    "strong6/mahmoud_khalil_al_hussary-080-free_edges.json": {
+      "sha256": "69a8e555e9a1fc2a73e3c6c65e14bde3d48ec24061342e39f6723a5a5846c5ff",
+      "bytes": 80881
+    },
+    "strong6/abdul_basit_mujawwad-080-current.json": {
+      "sha256": "2356119d28445a852b7805c30202dc8a187746ab94e3d11616a635bcd1d5a359",
+      "bytes": 68298
+    },
+    "strong6/mohammed_siddiq_al_minshawi-112-free_edges.json": {
+      "sha256": "1ae33009e1a189030c1c4853b93310b18799f7ba921cbf1d438bd6088b5bc9b5",
+      "bytes": 8995
+    },
+    "strong6/shatri-001-free_edges.json": {
+      "sha256": "c4acb3153c37fa1b04dcbfdba804b1edecff884d607d43ee559e8ac7b868fa1a",
+      "bytes": 12901
+    },
+    "strong6/mohammed_siddiq_al_minshawi-080-no_delimiter.json": {
+      "sha256": "4b1a4ff9dbdda1da33b1d80472e5c2d58d7bdb4364c2730f07a4af49708c3d50",
+      "bytes": 74871
+    },
+    "strong6/shatri-112-current.json": {
+      "sha256": "5b2b3b2bbc431d8e5e40b7c410089798a14cbae2fb1837d62c39f7f6b3b55e1f",
+      "bytes": 7690
+    },
+    "strong6/saad_al_ghamidi-080-phones.json": {
+      "sha256": "0389d1c4d6225b231e3d0fd0da90df2f140e135179331dd4929c743e85d2cb14",
+      "bytes": 54729
+    },
+    "strong6/mohammed_siddiq_al_minshawi-080-phones.json": {
+      "sha256": "96ed23d41d41ed5b242520d1b46e7707df1587dc4d284021138a369afeb467ba",
+      "bytes": 74612
+    },
+    "strong6/saad_al_ghamidi-112-free_edges.json": {
+      "sha256": "13e4a1c42995b755c4f4f261f161c8786c0fa131460e339432dcc02d0f15f594",
+      "bytes": 6747
+    },
+    "strong6/abdul_basit_mujawwad-080-free_edges.json": {
+      "sha256": "d9b4f2b2e369aad95c17058c70faec4cfe21c8cddd38977817a125d3c5c5eec8",
+      "bytes": 70205
+    },
+    "strong6/shatri-098-free_edges.json": {
+      "sha256": "647c4ed27c78edb89cc830d505b9781e56707e838e8e6e6fb86436e5cf35dfba",
+      "bytes": 19897
+    },
+    "strong6/shatri-098-no_delimiter.json": {
+      "sha256": "be9722875a6c14b346d918eb4975e08b94b3c7342c2d28f55fb91e1c75826b21",
+      "bytes": 20350
+    },
+    "strong6/shatri-112-free_edges.json": {
+      "sha256": "96afe22f17a8867921bd89ef3d5637cf5296d7b3a3432ee3cf4dafd38539e4da",
+      "bytes": 7689
+    },
+    "strong6/shatri-080-no_delimiter.json": {
+      "sha256": "70a8d01ed356f4a8f966a0c37fc1aac0336e19b57dbe32f33b942d450db98e16",
+      "bytes": 72037
+    },
+    "strong6/shatri-112-phones.json": {
+      "sha256": "4bc7aa12fcd520b413fb9398692f68ecc1c6943acef6179743ab3b6bf475521b",
+      "bytes": 7678
+    },
+    "strong6/saad_al_ghamidi-112-current.json": {
+      "sha256": "e24bc273dec7dd444b01939f302274d450709bcae8f95606e4aa8bd2fcf85fe8",
+      "bytes": 7192
+    },
+    "strong6/mohammed_siddiq_al_minshawi-112-no_delimiter.json": {
+      "sha256": "2bc54b3f6aef7aeaad591ee14e4b61e64bb278761af81783983cf17926948f80",
+      "bytes": 8358
+    },
+    "strong6/abdul_basit_mujawwad-112-phones.json": {
+      "sha256": "bb35d285352eb1ef9a7cf67c5be78558b8be95812873d2ff4c7f3ecee9ed2e4d",
+      "bytes": 9051
+    },
+    "strong6/shatri-098-phones.json": {
+      "sha256": "9370720ec11fa5d8b3ec5a30599f7961d1a6b3db6191e1a24d005b84b8127fc6",
+      "bytes": 20251
+    },
+    "strong6/mahmoud_khalil_al_hussary-080-phones.json": {
+      "sha256": "088dcf1ceded9841671f722f6abcb6e76b68739efd4b9cb9325859aa061f99d1",
+      "bytes": 80705
+    },
+    "strong6/shatri-098-current.json": {
+      "sha256": "78595c881ab328c607eb0a6a34689582b1fc635fb77bbf51433c3f8174dd4ec5",
+      "bytes": 19033
+    },
+    "strong6/abdul_basit_mujawwad-112-current.json": {
+      "sha256": "232347d98db6b7c06ac51bc96cf4b5babae58a9f303c0c163054490b4ef99884",
+      "bytes": 9059
+    },
+    "strong6/shatri-001-no_delimiter.json": {
+      "sha256": "e53f86986c69d93c340e1c471c6f49432962ad554273bd62c9b62dba9a741b41",
+      "bytes": 12935
+    },
+    "strong6/shatri-080-current.json": {
+      "sha256": "5e1ed55e7cce1713a42445d157c92f98d36a018825f27b4a4c5d4fc342d48c79",
+      "bytes": 69232
+    },
+    "strong6/mahmoud_khalil_al_hussary-112-current.json": {
+      "sha256": "97bc89ef41920f7482050afca940275ae80abff4621a37803d0e5797f6a6260c",
+      "bytes": 9178
+    },
+    "strong6/mohammed_siddiq_al_minshawi-080-current.json": {
+      "sha256": "386e8c90afb272c6b41bbc6da606e078a457af72b16b58d2474d3e320a42b62d",
+      "bytes": 71327
+    },
+    "strong6/saad_al_ghamidi-112-no_delimiter.json": {
+      "sha256": "34be94a32b499e7154045db340b60cd63ec261aae5c1d89543a59de588ee5ec1",
+      "bytes": 7211
+    },
+    "strong6/mahmoud_khalil_al_hussary-112-no_delimiter.json": {
+      "sha256": "a91c1f16c1ded928b1b63cd295cef4e848c784de28b6323f48a1430203b1cffd",
+      "bytes": 9807
+    },
+    "strong6/mohammed_siddiq_al_minshawi-112-phones.json": {
+      "sha256": "8430d6134262bbee52dba5ee02f252aab466e953d770302e7c2d50eaed2dee8a",
+      "bytes": 8906
+    },
+    "strong6/shatri-080-free_edges.json": {
+      "sha256": "c3d32c3df00756eaecaf57fbbc0f1f5b3c0629b13c941bb7f7efab957ee3460b",
+      "bytes": 72031
+    },
+    "strong6/saad_al_ghamidi-112-phones.json": {
+      "sha256": "1cab442592228319c8aa045987fc040b01d57d9e09760e3a04082680f01bce41",
+      "bytes": 7180
+    },
+    "strong6/abdul_basit_mujawwad-080-no_delimiter.json": {
+      "sha256": "c1ca17f95302ef9167e970335d25e1ecedb363da3634096e2398eb0db514e5c9",
+      "bytes": 70352
+    },
+    "nemo-forced/mahmoud_khalil_al_hussary-098-matrix.json": {
+      "sha256": "6c1e848c64aea4227a010d89091504a91f1bb1fa07d7d4ac5de010c71da1e1a3",
+      "bytes": 18861
+    },
+    "nemo-forced/saad_al_ghamidi-112-forced_default_bpe.json": {
+      "sha256": "080e9338e9f96842d1e3282e932a57f333d4ba12ce42e891aeac5d48cc751582",
+      "bytes": 2103
+    },
+    "nemo-forced/mahmoud_khalil_al_hussary-112-forced_acoustic_bpe.json": {
+      "sha256": "99ab64046a7dd5dd15fdee523324e392e186fb4054d4dfe782d3e5f2f9683d95",
+      "bytes": 2160
+    },
+    "nemo-forced/abdul_basit_mujawwad-112-forced_acoustic_bpe.json": {
+      "sha256": "79273c7846c1bab67f37cc830047d74b20f062224ecf83b10bb7965f7c27c943",
+      "bytes": 2119
+    },
+    "nemo-forced/mahmoud_khalil_al_hussary-112-forced_default_bpe.json": {
+      "sha256": "4ba79960111c769eca3656f3cfa46533f2aaff1d3cd2110fcb08ba36e12da216",
+      "bytes": 2161
+    },
+    "nemo-forced/mahmoud_khalil_al_hussary-112-matrix.json": {
+      "sha256": "528bcad3806f2c705be4689814e8108ca02c66523ae3fe1f1f0d929b8f3db270",
+      "bytes": 2583
+    },
+    "nemo-forced/shatri-001-matrix.json": {
+      "sha256": "3b973851f695bf11f0055fa660f5fb4a04d2bf54d8e8a17ead318413fbfab01a",
+      "bytes": 6805
+    },
+    "nemo-forced/shatri-114-forced_acoustic_bpe.json": {
+      "sha256": "e53679638b4f3f20f87ad40494c3924cd2f1f5be0e7cc30ab15b84c5a65a342a",
+      "bytes": 2506
+    },
+    "nemo-forced/shatri-001-forced_default_bpe.json": {
+      "sha256": "a87aabed99c539111d091797e95a436721f0faa47159b665c212f0d1d7ceace8",
+      "bytes": 2823
+    },
+    "nemo-forced/shatri-114-forced_default_bpe.json": {
+      "sha256": "583bf613f00c416fb8282bf96dfd8891a4f6f7e9c2d4bfb425dfe442298775b8",
+      "bytes": 2505
+    },
+    "nemo-forced/mohammed_siddiq_al_minshawi-098-forced_acoustic_bpe.json": {
+      "sha256": "e305cc1a8f7ab2a7b5f180a282ccf0fc4ac9cbea94781f1daa2b7ce054a76102",
+      "bytes": 3062
+    },
+    "nemo-forced/shatri-098-forced_acoustic_bpe.json": {
+      "sha256": "6dd076084abcc1a92d5e4701afa113fdc0edd3d03131f5ca44b6867a671bf402",
+      "bytes": 2939
+    },
+    "nemo-forced/saad_al_ghamidi-098-forced_acoustic_bpe.json": {
+      "sha256": "272903da28c846c6993e54a48ec235d1e269ba6fd9a5ed41c007955bdc3dc728",
+      "bytes": 2998
+    },
+    "nemo-forced/mahmoud_khalil_al_hussary-098-forced_default_bpe.json": {
+      "sha256": "454a7bd0f07ebc9e2778ef0f2f53fd6e9c7967ac729d698038313e03a98fd4c7",
+      "bytes": 3024
+    },
+    "nemo-forced/saad_al_ghamidi-098-forced_default_bpe.json": {
+      "sha256": "6143e250a57bfcb2e889a28b883c9f7108add20a5ab0180b359e13b8e741d204",
+      "bytes": 2998
+    },
+    "nemo-forced/shatri-098-matrix.json": {
+      "sha256": "202b27b3c06d8d1c7805b924ca6464314be82a7bfe9e5304b8e4c0504be9f600",
+      "bytes": 20529
+    },
+    "nemo-forced/abdul_basit_mujawwad-112-matrix.json": {
+      "sha256": "25f1dd61ce0176faab3492778d8751807b768300af0f291c53053b45d37c5a9c",
+      "bytes": 2765
+    },
+    "nemo-forced/identity.json": {
+      "sha256": "98508cc16665bf9ebbe8ddf89dd8c0597ce7b3b643630a0995831b82f40c3ed2",
+      "bytes": 252
+    },
+    "nemo-forced/mohammed_siddiq_al_minshawi-098-forced_default_bpe.json": {
+      "sha256": "07ddf2559afa3293b5ca8e172ed47ff419a00d7e5ad409e2363a9b353acd0456",
+      "bytes": 3061
+    },
+    "nemo-forced/shatri-112-matrix.json": {
+      "sha256": "2bd06685b9b504ec3e1ff7a83b1eaded500ffa0acb70fd7d75f60fd214d047be",
+      "bytes": 3510
+    },
+    "nemo-forced/abdul_basit_mujawwad-098-matrix.json": {
+      "sha256": "7eb226bd3ca3ae9001e1a8da47b83efed3e654fbcefb14defce4c12f1d96ad59",
+      "bytes": 18349
+    },
+    "nemo-forced/shatri-112-forced_default_bpe.json": {
+      "sha256": "db1fadaa49afeb0c23f232700a8a2fa30dd1f14a656868bf5a2b9531020e76bb",
+      "bytes": 2054
+    },
+    "nemo-forced/mahmoud_khalil_al_hussary-098-forced_acoustic_bpe.json": {
+      "sha256": "c64da4f8a90ae71dd674ae70a2060db7de0a5a423f9f842c69d140a8d076633f",
+      "bytes": 3025
+    },
+    "nemo-forced/abdul_basit_mujawwad-098-forced_default_bpe.json": {
+      "sha256": "76fd2a258c7cdea790cee1730134efebf470404a1577918746e47562161df092",
+      "bytes": 3018
+    },
+    "nemo-forced/abdul_basit_mujawwad-098-forced_acoustic_bpe.json": {
+      "sha256": "360bec85089c470b7dd3ed1daf8d294f56be485d396a45880c6b8849f42ef0b7",
+      "bytes": 3019
+    },
+    "nemo-forced/saad_al_ghamidi-112-matrix.json": {
+      "sha256": "bf9ac9ca5c332ad71edc49cd720d6200962ddbf74d2bad8c569242992c818204",
+      "bytes": 2040
+    },
+    "nemo-forced/saad_al_ghamidi-112-forced_acoustic_bpe.json": {
+      "sha256": "fc4a8e83573ffe1c188289f06bd4a5c87d33f7c6db5fb34dafc8f2be9865c4ee",
+      "bytes": 2104
+    },
+    "nemo-forced/mohammed_siddiq_al_minshawi-112-matrix.json": {
+      "sha256": "0e1947b062057016407d54ca7633b63689537c2c4340df280d41ccd8f50a548e",
+      "bytes": 2080
+    },
+    "nemo-forced/mohammed_siddiq_al_minshawi-098-matrix.json": {
+      "sha256": "80aeeb6e2aa0c9b963fef0ff62d23d8fe156c40f2aa97267604e2611d9b84100",
+      "bytes": 11983
+    },
+    "nemo-forced/shatri-098-forced_default_bpe.json": {
+      "sha256": "51c943e5b99f2e0a91ba71794765cd25fab2ebd8ac65186cfb024a848b103c89",
+      "bytes": 2939
+    },
+    "nemo-forced/saad_al_ghamidi-098-matrix.json": {
+      "sha256": "6c6ce8813354c25e74ac5dc3cb01defbebd53e1fe73adc48716c1d17c5681b08",
+      "bytes": 12211
+    },
+    "nemo-forced/shatri-114-matrix.json": {
+      "sha256": "d7103f051a646a294f1f0ddfedff371d72ffc70d863d455f740a6ff94754bf46",
+      "bytes": 4060
+    },
+    "nemo-forced/shatri-001-forced_acoustic_bpe.json": {
+      "sha256": "43fa170970f6662d7a801b41fc777644717170fc76036f1af08611effd67bbfa",
+      "bytes": 2825
+    },
+    "nemo-forced/abdul_basit_mujawwad-112-forced_default_bpe.json": {
+      "sha256": "300e409d988085b891190c8b1229aa6dfb3f12fde2bd94081dc637707cd2661a",
+      "bytes": 2118
+    },
+    "nemo-forced/mohammed_siddiq_al_minshawi-112-forced_default_bpe.json": {
+      "sha256": "cd8ff5c457717384a67be1e35c3a1bcc818f2a4b1f2fa05835e0606d199da801",
+      "bytes": 2130
+    },
+    "nemo-forced/mohammed_siddiq_al_minshawi-112-forced_acoustic_bpe.json": {
+      "sha256": "4b51a1830d663942032b44be75494657e294e6d67c87749485ad0f02e8bc20b8",
+      "bytes": 2132
+    },
+    "nemo-forced/shatri-112-forced_acoustic_bpe.json": {
+      "sha256": "7641b56087b1f3021f63a2d539654344afc85577fa7b1d8625e84d04e3190852",
+      "bytes": 2056
+    },
+    "asr-whisper/initial-harness-errors/shatri-001-token_timestamps.json": {
+      "sha256": "2cee9c3a744253e82b945218b314ca2d803a01c2687533f97fb0d7451bef80c5",
+      "bytes": 909
+    },
+    "muaalem/initial-harness-errors/shatri-001-madd6.json": {
+      "sha256": "318b987df26261e61c43b25d802ce9c1f420fddcb8a1b153cdee98dbbd146571",
+      "bytes": 1783
+    },
+    "muaalem/initial-harness-errors/shatri-001-connected4.json": {
+      "sha256": "b321ac1f86b89096e53291500f0c7291bb3f0755bd8d95f10f6ed7fd7bbcf5d0",
+      "bytes": 1793
+    },
+    "muaalem/initial-harness-errors/shatri-001-madd2.json": {
+      "sha256": "d79b793755c2b198995593f280651fc70b18fe43745ed78e00ee0ab5723c2d15",
+      "bytes": 1782
+    },
+    "muaalem/initial-harness-errors/shatri-001-madd4.json": {
+      "sha256": "bedd642d75383d4939efeefcaed98a359b424d81490c66c88fb805208c3eef4b",
+      "bytes": 1783
+    },
+    "runtime-shim/ml_dtypes/_iinfo.py": {
+      "sha256": "7b3e39b48798517abe5d0b17468fee129a7dd7e62df28cd1183d6b1389820967",
+      "bytes": 2689
+    },
+    "runtime-shim/ml_dtypes/__init__.py": {
+      "sha256": "27f2950202ccf82ca03fd2d951a1acc71af2be03a70d11c72f24517282d2aaa5",
+      "bytes": 4133
+    },
+    "runtime-shim/ml_dtypes/_finfo.py": {
+      "sha256": "36ba89d7eaf76749959cf3342a6d6e93d6e30f113c218b3a6a8fced5b65f2600",
+      "bytes": 23416
+    },
+    "qpc-controls/strong20/wrong-shatri-080-target112-phones.json": {
+      "sha256": "7f56731a7955a7518d38059d707aca823dc31b1be022cecbb9fef6f5bf84b2f3",
+      "bytes": 18370
+    },
+    "qpc-controls/strong20/wrong-shatri-080-target112-free_edges.json": {
+      "sha256": "e3e1a61b04654b0581a48c195b9b7d97e3d7ee5df8cbc39955c80874adb06caf",
+      "bytes": 18366
+    },
+    "qpc-controls/strong20/zero-matched-target112-no_delimiter.json": {
+      "sha256": "d3fe032a318864d8796437d3c0e577b96c09f74a1f6d26f09c053d6afb4fb70e",
+      "bytes": 4271
+    },
+    "qpc-controls/strong20/shift600-shatri112-current.json": {
+      "sha256": "841d6753a04cf610a2d84180df4cdbd1a2b76ad122b52907a2e69493d7e3fef6",
+      "bytes": 6858
+    },
+    "qpc-controls/strong20/zero-target112-current.json": {
+      "sha256": "25a152b3bf8e0120547b057136630407afb1436ea0678c655a9784a0daef85da",
+      "bytes": 4023
+    },
+    "qpc-controls/strong20/zero-target112-no_delimiter.json": {
+      "sha256": "3c6ddf47503406cc4400dad59af06ca363ce4d614fe1a1e328d67a7f8a0f62e5",
+      "bytes": 4037
+    },
+    "qpc-controls/strong20/zero-target112-free_edges.json": {
+      "sha256": "6ea7e390942e4501ddaea7041ea39136fc0f65e098705d05819b48f5e31756be",
+      "bytes": 4086
+    },
+    "qpc-controls/strong20/zero-matched-target112-phones.json": {
+      "sha256": "b50a35229766241b9cab235ff2a0d3c5349acfec5488aeb4572f13bf8c08ef87",
+      "bytes": 4255
+    },
+    "qpc-controls/strong20/zero-target112-phones.json": {
+      "sha256": "42a9bbc7323ea24a70cc9f7d7a40987834a79ad0bd756581ada5d3c138fe0914",
+      "bytes": 4019
+    },
+    "qpc-controls/strong20/wrong-shatri-001-target112-no_delimiter.json": {
+      "sha256": "2ee07747e52c47f9ec5a64b25b67068c04fcac12bf670650347d4b403eb3d0d1",
+      "bytes": 7111
+    },
+    "qpc-controls/strong20/wrong-shatri-001-target112-current.json": {
+      "sha256": "13e225df4a4a1e29808c147f4efd9f0f1571d90c48e78c47403c0626bafa0bf9",
+      "bytes": 7971
+    },
+    "qpc-controls/strong20/zero-matched-target112-current.json": {
+      "sha256": "8d287a77dcd56a45c3852a4c7a6e36cb15c5fcc25e6223264101b4ec5e754394",
+      "bytes": 4260
+    },
+    "qpc-controls/strong20/wrong-shatri-112-target114-no_delimiter.json": {
+      "sha256": "9c077b087e4178b49b744795b0484784a1cedbc89ad1ba360f921416c400f171",
+      "bytes": 5999
+    },
+    "qpc-controls/strong20/wrong-shatri-080-target112-no_delimiter.json": {
+      "sha256": "4deb3d5662878412af535d04552ff81a063771a175584fffd732aac6e0a6df1f",
+      "bytes": 19419
+    },
+    "qpc-controls/strong20/shift600-shatri112-blank_minus1.json": {
+      "sha256": "85a6b471f65d0beb9496244298f9380c76ed3a5d95def92140d50de20c0b2886",
+      "bytes": 6816
+    },
+    "qpc-controls/strong20/wrong-shatri-001-target112-free_edges.json": {
+      "sha256": "92e7cbdb41e2024e0211f8752796986174053f127bd2d2e5b52faf596ee1ec9c",
+      "bytes": 7074
+    },
+    "qpc-controls/strong20/wrong-shatri-080-target112-current.json": {
+      "sha256": "6f501354a073a1592118ca177907dd58fb152062e7564c1f2c39eb6d1c510e08",
+      "bytes": 18371
+    },
+    "qpc-controls/strong20/zero-matched-target112-free_edges.json": {
+      "sha256": "61ba86da7bb39b060e5c30764060459c9238f33502c33b18796c7fa5443569bd",
+      "bytes": 4332
+    },
+    "qpc-controls/strong20/zero-target112-blank_minus1.json": {
+      "sha256": "0cea3f49c8ab19f689bd6ae6cec030b8e2fb04667911adcd3f053ef5d343df64",
+      "bytes": 4036
+    },
+    "qpc-controls/strong20/wrong-shatri-112-target114-current.json": {
+      "sha256": "6a5f59defd72d3240563059edf6cd8528f0030dc6c1fcba80c688f46766c9274",
+      "bytes": 5986
+    },
+    "qpc-controls/strong20/zero-matched-target112-blank_minus1.json": {
+      "sha256": "a069bf013cb12978093b4050b05a59e40377439c73b95f969b67036c8b3e8b1f",
+      "bytes": 4276
+    },
+    "qpc-controls/strong20/wrong-shatri-112-target114-free_edges.json": {
+      "sha256": "5ec6219d278cc133570f31c5296a9b34fccaf623c14b415238b63e569d0674af",
+      "bytes": 6223
+    },
+    "qpc-controls/strong20/shift600-shatri112-free_edges.json": {
+      "sha256": "c1d99c8974e7539722da67392331f7d2ad7cacd3e8bd58f2c72d8031de21854f",
+      "bytes": 6797
+    },
+    "qpc-controls/strong20/wrong-shatri-080-target112-blank_minus1.json": {
+      "sha256": "d52a1709144dc3ff50da7820ca8f92e6cec5b21f8486b2e273152612c54ffe18",
+      "bytes": 19079
+    },
+    "qpc-controls/strong20/shift600-shatri112-phones.json": {
+      "sha256": "81b8cbaf15c5630cde1f1ebb94aedac873cf5a7bb5776b24013004b60acbeb12",
+      "bytes": 6793
+    },
+    "qpc-controls/strong20/wrong-shatri-112-target114-blank_minus1.json": {
+      "sha256": "e8f8c0a8ad4f0b98da247b616d1bd9c366aac9a057f9fcf665c34810a43087b9",
+      "bytes": 6012
+    },
+    "qpc-controls/strong20/wrong-shatri-001-target112-phones.json": {
+      "sha256": "033a0cbfc7a2427636c31879480a6b586e2bea49df0eb2111ec4ad824e2aa67b",
+      "bytes": 7266
+    },
+    "qpc-controls/strong20/shift600-shatri112-no_delimiter.json": {
+      "sha256": "e4c2d4750284aa68ae68a25896b7f8fe3a457c69ef73f228bb906f217fa395f1",
+      "bytes": 6813
+    },
+    "qpc-controls/strong20/wrong-shatri-112-target114-phones.json": {
+      "sha256": "32a45c3a52d9a8b35c133eb47f7f5e748d848a994fe188ce18d0273395c33fc8",
+      "bytes": 5945
+    },
+    "qpc-controls/strong20/wrong-shatri-001-target112-blank_minus1.json": {
+      "sha256": "8e25984adcece7b2a67a11ab2ddd3ddc3ec98ca1484c7146e103addae5afddbe",
+      "bytes": 7992
+    }
+  },
+  "acoustic_arrays": "1447 QPC +24 secondary matrices separately checked in integrity.json"
+}

@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "live_cases": 7,
+  "live_rows_and_PCM_equal_F": true,
+  "live_benchmark_exit": 1,
+  "live_guard_failure": "unrelated FULL align_surah edited concurrently; preserved source guard rejection and audited relevant FAST AST/bytes",
+  "frozen_cases": 2,
+  "frozen_benchmark_exit": 0,
+  "frozen_rows_and_PCM_equal_F": true,
+  "Base_weights_config_worker_equal": true,
+  "live_FAST_sha256": "4ec2127ff87cdf9da4d6e06e15381e47161683be829d6e7d2b50e6f7c15d3469",
+  "evidence": [
+    "production-live-audit.json",
+    "production-live-drift.diff",
+    "production-frozen-smoke.summary.json",
+    "production-integrated-source-manifest.json"
+  ]
+}

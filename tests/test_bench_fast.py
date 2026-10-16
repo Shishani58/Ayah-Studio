@@ -4,6 +4,29 @@ from tools import bench_fast
 from tools.bench_fast import pause_contract_violations, sequence_contract_violations
 
 
+def _add_onset_proofs(rows, trace):
+    trace["total_ms"] = 10000
+    trace["acoustic_reads"] = []
+    trace["boundaries"] = []
+    for ayah, start_ms, confidence in rows:
+        match = next((m for m in trace["pause_matches"] if m["ayah"] == ayah), {})
+        evidence = match.get("boundary_evidence")
+        if evidence not in {"wasl", "first_onset"}:
+            continue
+        read_id = len(trace["acoustic_reads"])
+        trace["acoustic_reads"].append({
+            "outcome": "completed", "window_ms": [0, 5000],
+            "observed": {"units": ["tail", "start"], "positions_ms": [0, start_ms],
+                         "unit_quality": [confidence, confidence], "truncated": False},
+        })
+        trace["boundaries"].append({
+            "ayah": ayah, "start_ms": start_ms, "confidence": confidence,
+            "evidence_kind": evidence, "read_id": read_id,
+            "proof": {"complete": True, "competitors_checked": True, "phrase": ["start"],
+                      "offset": 1, "previous_tail": ["tail"]},
+        })
+
+
 def test_select_suras_keeps_medium_and_full_corpus_presets_distinct():
     assert bench_fast.select_suras(["long"])[0] == "078"
     assert bench_fast.select_suras(["all"])[0] == "078"
@@ -54,13 +77,15 @@ def test_pause_contract_accepts_real_pause_and_explicit_wasl():
             {
                 "ayah": 2,
                 "from_pause": True,
+                "boundary_evidence": "pause",
                 "pause_start_ms": 1100,
                 "pause_end_ms": 1300,
             },
-            {"ayah": 3, "from_pause": False, "match_action": "wasl"},
+            {"ayah": 3, "from_pause": False, "boundary_evidence": "wasl"},
         ]
     }
 
+    _add_onset_proofs(rows, trace)
     assert pause_contract_violations(rows, trace) == []
 
 
@@ -72,13 +97,15 @@ def test_pause_contract_rejects_off_center_owner_and_disguised_wasl_pause():
             {
                 "ayah": 2,
                 "from_pause": True,
+                "boundary_evidence": "pause",
                 "pause_start_ms": 1100,
                 "pause_end_ms": 1300,
             },
-            {"ayah": 3, "from_pause": False, "match_action": "wasl"},
+            {"ayah": 3, "from_pause": False, "boundary_evidence": "wasl"},
         ],
     }
 
+    _add_onset_proofs(rows, trace)
     assert pause_contract_violations(rows, trace) == [
         "ayah 2: pause-backed start 1110 is not centre 1200 of 1100-1300",
         "ayah 3: wasl start 2400 equals a detected pause centre",
@@ -90,26 +117,19 @@ def test_pause_contract_ignores_rejected_non_owner_pause_center():
     trace = {
         "phase1_pauses": [{"center_ms": 2400, "quality": "rejected"}],
         "pause_matches": [
-            {"ayah": 2, "from_pause": False, "match_action": "wasl"},
+            {"ayah": 2, "from_pause": False, "boundary_evidence": "wasl"},
         ],
     }
 
+    _add_onset_proofs(rows, trace)
     assert pause_contract_violations(rows, trace) == []
 
 
-def test_pause_contract_accepts_exact_fingerprint_after_owner_pause():
-    rows = [(2, 1_350, 0.95)]
-    trace = {
-        "pause_matches": [{
-            "ayah": 2,
-            "from_pause": True,
-            "pause_start_ms": 1_100,
-            "pause_end_ms": 1_300,
-            "boundary_evidence": "exact_fingerprint",
-        }]
-    }
-
-    assert pause_contract_violations(rows, trace) == []
+def test_pause_contract_rejects_legacy_fingerprint_exemption():
+    trace = {"pause_matches": [{
+        "ayah": 2, "from_pause": True, "boundary_evidence": "exact_fingerprint",
+    }]}
+    assert pause_contract_violations([(2, 1350, 0.95)], trace)
 
 
 def test_pause_contract_rejects_stale_pause_and_unclassified_non_pause_start():
@@ -119,16 +139,18 @@ def test_pause_contract_rejects_stale_pause_and_unclassified_non_pause_start():
             {
                 "ayah": 2,
                 "from_pause": True,
+                "boundary_evidence": "pause",
                 "pause_start_ms": 1100,
                 "pause_end_ms": 1300,
             },
-            {"ayah": 3, "from_pause": False, "match_action": "recovered"},
+            {"ayah": 3, "from_pause": False, "boundary_evidence": "recovered"},
         ]
     }
 
+    _add_onset_proofs(rows, trace)
     assert pause_contract_violations(rows, trace) == [
         "ayah 2: start 1500 outside pause 1100-1300",
-        "ayah 3: non-pause start 2400 has action 'recovered', not wasl",
+        "ayah 3: non-pause start 2400 has unknown evidence 'recovered'",
     ]
 
 
@@ -150,6 +172,7 @@ def test_outlier_diagnoses_classifies_weak_recovered_pause(monkeypatch):
             {
                 "ayah": 10,
                 "from_pause": True,
+                "boundary_evidence": "pause",
                 "match_action": "recovered",
                 "pause_sim": 0.37,
                 "pause_start_ms": 53_840,
@@ -187,12 +210,40 @@ def test_candidate_diagnoses_reports_ranked_pauses_near_reference(monkeypatch):
     ]
 
 
-def test_unresolved_local_boundary_requires_zero_confidence_and_review():
+def test_estimate_boundary_requires_zero_confidence_and_review():
     trace = {"review_required_ayahs": [2], "pause_matches": [
         {"ayah": 2, "from_pause": False, "match_action": "insufficient_audio",
-         "boundary_evidence": "unresolved_local"},
+         "boundary_evidence": "estimate"},
     ]}
     assert pause_contract_violations([(2, 1000, 0.0)], trace) == []
     assert pause_contract_violations([(2, 1000, 0.9)], trace)
     trace["review_required_ayahs"] = []
     assert pause_contract_violations([(2, 1000, 0.0)], trace)
+
+
+def test_first_onset_requires_a_matching_completed_local_read():
+    rows = [(1, 500, 0.9)]
+    trace = {"pause_matches": [{"ayah": 1, "from_pause": False, "boundary_evidence": "first_onset"}]}
+    _add_onset_proofs(rows, trace)
+    assert pause_contract_violations(rows, trace) == []
+    trace["acoustic_reads"][0]["observed"]["positions_ms"][1] += 100
+    assert "onset_proof_mismatch" in pause_contract_violations(rows, trace)[0]
+    trace["acoustic_reads"][0]["outcome"] = "failed"
+    assert "incomplete_acoustic_proof" in pause_contract_violations(rows, trace)[0]
+
+
+def test_wasl_evidence_label_alone_is_not_proof():
+    rows = [(2, 1000, 0.9)]
+    trace = {"pause_matches": [{"ayah": 2, "from_pause": False, "boundary_evidence": "wasl"}]}
+    assert pause_contract_violations(rows, trace)
+    _add_onset_proofs(rows, trace)
+    trace["boundaries"][0]["proof"]["previous_tail"] = []
+    assert "unidentified_wasl_context" in pause_contract_violations(rows, trace)[0]
+
+
+def test_pause_contract_requires_one_evidence_row_per_output():
+    assert pause_contract_violations([(1, 0, 0.0)], {}) == ["ayah 1: output has no boundary evidence"]
+    match = {"ayah": 1, "from_pause": False, "boundary_evidence": "estimate"}
+    assert "duplicate boundary evidence" in pause_contract_violations(
+        [(1, 0, 0.0)], {"review_required_ayahs": [1], "pause_matches": [match, match]},
+    )

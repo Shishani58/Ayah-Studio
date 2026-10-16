@@ -18,6 +18,7 @@ import unicodedata
 import numpy as np
 
 _RPC = sys.stdout
+_REPORT_PROGRESS = False
 SR = 16000
 WHISPER_FULL_VERSION = "pause-retry-spelled-letters-v2"
 BASMALA = ["بِسْمِ", "ٱللَّهِ", "ٱلرَّحْمَٰنِ", "ٱلرَّحِيمِ"]
@@ -30,6 +31,11 @@ class WhisperTextOverflow(ValueError):
 def reply(value):
     _RPC.write(json.dumps(value, ensure_ascii=False) + "\n")
     _RPC.flush()
+
+
+def work_progress(done, total):
+    if _REPORT_PROGRESS:
+        reply({"progress": {"done": done, "total": total}})
 
 
 def plain(text):
@@ -309,8 +315,11 @@ class Acoustic:
     def _window(self, audio, fps, run, axis=None):
         rate = 50 if axis == 0 else SR  # Muaalem feature rows are 20ms
         window, context = 30 * rate, 2 * rate
+        work_progress(0, len(audio))
         if len(audio) <= window:
-            return softmax_log(run(np.ascontiguousarray(audio, dtype=np.float32)))
+            result = softmax_log(run(np.ascontiguousarray(audio, dtype=np.float32)))
+            work_progress(len(audio), len(audio))
+            return result
         result = []
         for start in range(0, len(audio), window):
             lo, hi = max(0, start - context), min(len(audio), start + window + context)
@@ -318,6 +327,7 @@ class Acoustic:
             left = round((start - lo) / rate * fps)
             count = round(min(window, len(audio) - start) / rate * fps)
             result.append(logits[left:left + count])
+            work_progress(min(start + window, len(audio)), len(audio))
         return softmax_log(np.concatenate(result))
 
     def whisper_clip(self, pcm, words, strict_words=True):
@@ -366,6 +376,7 @@ class Acoustic:
         # silence. Text queries start at row 1. A standalone space token is
         # retained in teacher forcing but cannot mark a spoken word onset.
         rows = [(int(times[start + 1]), float(probs[start:end].mean())) for start, end in spans]
+        work_progress(len(words), len(words))
         if strict_words and any(b[0] <= a[0] for a, b in zip(rows, rows[1:])):
             raise ValueError("Whisper не различил начала канонических слов. Уточните границы записи.")
         for i in range(1, len(rows)):
@@ -474,12 +485,16 @@ class Acoustic:
 
     def whisper_align(self, pcm, words, strict_words=True):
         window_s = 30
+        work_progress(0, len(words))
         if len(pcm) <= window_s * SR:
-            return self.whisper_clip(pcm, words, strict_words=strict_words)
+            rows = self.whisper_clip(pcm, words, strict_words=strict_words)
+            work_progress(len(words), len(words))
+            return rows
         # ASR is only a coarse locator for bounded windows. All final timing
         # rows come from teacher forcing the original canonical word sequence.
         result, cursor, offset = [], 0, 0
         while cursor < len(words):
+            work_progress(cursor, len(words))
             clip = pcm[offset:offset + window_s * SR]
             if len(clip) < SR // 10:
                 raise ValueError("Недостаточно аудио для оставшегося текста Whisper.")
@@ -542,7 +557,7 @@ class Acoustic:
 
 
 def main():
-    global _RPC
+    global _RPC, _REPORT_PROGRESS
     _RPC = sys.stdout
     sys.stdout = sys.stderr  # libraries sometimes print during restore/import
     model_id, folder, work = sys.argv[1:]
@@ -587,6 +602,7 @@ def main():
         try:
             request = json.loads(line)
             action = request["action"]
+            _REPORT_PROGRESS = bool(request.get("report_progress"))
             if action == "targets":
                 targets, spans = acoustic.targets(request["words"], request["surah"], request["intro"],
                                                    request["renderings"], request["ayahs"])

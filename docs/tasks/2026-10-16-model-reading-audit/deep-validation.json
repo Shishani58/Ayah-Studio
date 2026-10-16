@@ -1,0 +1,22 @@
+{
+  "new_encoder_evaluations": {
+    "deep": 27,
+    "geometry": 6,
+    "recovery": 4
+  },
+  "AGENTS_CLAUDE_equal": true,
+  "scripts_syntax": true,
+  "audio_sha_unchanged": true,
+  "production_source_unchanged": {
+    "surah_cutter/core/fast_executor.py": true,
+    "surah_cutter/core/fast_adapters.py": true,
+    "surah_cutter/core/model_worker.py": true
+  },
+  "docs_updated": [
+    "plan.md",
+    "findings-deep.md",
+    "report.md",
+    "task.md",
+    "docs/STATUS.md"
+  ]
+}

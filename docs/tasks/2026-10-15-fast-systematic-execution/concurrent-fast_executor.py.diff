@@ -1,0 +1,38 @@
+--- initial/surah_cutter/core/fast_executor.py
++++ current/surah_cutter/core/fast_executor.py
+@@ -775,6 +775,9 @@
+         check_cancelled()
+         events.append({"state": state, "ayah": ayah, **details})
+ 
++    from surah_cutter.core.progress import report
++
++    report("model")
+     event("PREPARE")
+     adapter = adapter or make_adapter(bundle or align.default_bundle())
+     rendered = adapter.represent(words)
+@@ -825,6 +828,7 @@
+                  fast_version=VERSION, fast_run_key=key, run_snapshot=snapshot,
+                  model_source=f"{adapter.model_id}:revision={adapter.revision}:adapter={adapter.version}",
+                  total_ms=duration, duration_ms=duration, transitions=events)
++    report("pauses")
+     event("DETECT_PAUSES")
+     started = monotonic()
+     decisions = pause_decisions if pause_decisions is not None else candidates.pause_pipeline_decisions(pcm, sr, surah=surah)
+@@ -868,7 +872,9 @@
+     unresolved = {}
+     try:
+         event("LOCATE_FIRST", ayahs[0])
++        report("local", 0, len(ayahs))
+         for ayah in ayahs:
++            report("local", ayah - 1, len(ayahs))
+             if confirmed and ayah <= confirmed[-1].ayah:
+                 continue  # already validated and atomically published by RESOLVE_BLOCK
+             event("PLAN_PHRASE", ayah)
+@@ -1379,6 +1385,7 @@
+             if ayah_progress:
+                 ayah_progress(ayah)
+         result = _finish_estimates(confirmed, ayahs, groups, duration, reason, unresolved)
++        report("verify")
+         event("VALIDATE")
+         validate_boundaries(result, ayahs, duration, reads.calls,
+                             groups=groups, word_ends=word_ends, canonical_ends=canonical_ends, threshold=threshold, pauses=pauses, policy=policy, pause_geometry_data=geometry)

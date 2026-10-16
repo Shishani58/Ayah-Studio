@@ -155,7 +155,6 @@ def test_oracle_source_names_actual_weights_and_revision():
                                      "muaalem", "fastconformer-arabic"])
 def test_tiled_result_retains_actual_emitter_backend(backend, monkeypatch):
     from surah_cutter.core import align_tiled
-    from surah_cutter.data import reference_prior
     from surah_cutter.data.alignment_result import result_source
 
     vocab = {"[PAD]": 0, "a": 1, "|": 2}
@@ -175,7 +174,6 @@ def test_tiled_result_retains_actual_emitter_backend(backend, monkeypatch):
     monkeypatch.setattr(align, "_emissions", lambda *args: matrix)
     monkeypatch.setattr(align, "bundle_source", lambda _: f"test:{backend}:revision=immutable")
     monkeypatch.setattr(transliteration, "surah_word_tr", lambda _: ["a"])
-    monkeypatch.setattr(reference_prior, "surah_start_fractions", lambda _: {})
     trace = {}
     result = align_tiled.align_surah_tiled(
         np.zeros(16000, np.float32), 16000, [Word(1, 1, "word", 0)],

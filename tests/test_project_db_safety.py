@@ -24,6 +24,27 @@ def snapshot(db):
                           "word_edit_history")}
 
 
+@pytest.mark.parametrize("code,version", [("surah-cutter", 1), ("reciter", 1)])
+def test_open_preserves_existing_edition(tmp_path, code, version):
+    path = str(tmp_path / "edition.db")
+    with ProjectDB.open(path, "reciter", 7) as db:
+        db.write_timings([(114, 1, 1000)], "test")
+        before = snapshot(db)
+    with ProjectDB.open(path, code, version) as db:
+        assert db._conn.execute("SELECT code, version FROM db_version").fetchall() == [("reciter", 7)]
+        assert snapshot(db) == before
+
+
+def test_open_initializes_empty_edition_metadata_once(tmp_path):
+    path = str(tmp_path / "empty.db")
+    with sqlite3.connect(path) as conn:
+        conn.execute("CREATE TABLE db_version (code TEXT PRIMARY KEY, version INTEGER NOT NULL)")
+    with ProjectDB.open(path, "reciter", 7) as db:
+        assert db._conn.execute("SELECT code, version FROM db_version").fetchall() == [("reciter", 7)]
+    with ProjectDB.open(path, "other", 2) as db:
+        assert db._conn.execute("SELECT code, version FROM db_version").fetchall() == [("reciter", 7)]
+
+
 @pytest.mark.parametrize("status", ["edited", "verified"])
 def test_committing_review_wins_over_waiting_generator(project, status, monkeypatch):
     started, attempted = Event(), Event()

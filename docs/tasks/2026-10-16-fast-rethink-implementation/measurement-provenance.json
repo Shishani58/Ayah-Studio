@@ -1,0 +1,45 @@
+{
+  "historical_artifacts_unchanged": true,
+  "invalid_inherited_outer_source_sha256": [
+    "current-hybrid2.jsonl",
+    "final-replay2.jsonl"
+  ],
+  "reason": "Replay copied source_sha256 from baseline item; it is not the source of executed replay. Prediction rows, trace, run keys and saved ledger have not been relabelled or rewritten.",
+  "historical_loaded_code_field": "trace.run_snapshot.implementation_sha256",
+  "historical_final_replay_loaded_code": "58fd5af2bc9b2ba0a9f26c6d66e9427ec378e7f5b3410665f0abfbcf2fff084a",
+  "exact_executed_executor_source_archive_for_e61846": null,
+  "reproducibility_gap": "Exact historical e61846 source was not archived. Existing implementation-review-source.zip is an earlier e6c7a894 executor, not e61846. No reconstructed source is asserted as historical.",
+  "source_drift_vs_fresh80_manifest": {
+    "surah_cutter/core/fast_executor.py": {
+      "measurement": "e61846a0c67d3d35a1ea574f7a3132ba49e78c39f4cd687d3a9f08fd9f8b260b",
+      "current": "d4cfa2387aa2b01aea760556983e1c018e209f5bcf79ca7b15fb0015e5da68c3"
+    },
+    "surah_cutter/webgui/server.py": {
+      "measurement": "20107ed996accaec04c1e8bc5ca8b07d630006a575b0284a058b64182437d204",
+      "current": "18dba0a48bd48742f240162a5be8c76451dbd9bc2e6945db9eb1f6b90bb649b8"
+    },
+    "surah_cutter/data/project_state.py": {
+      "measurement": "5b22d0d3c21bc9d2b48a8221e239480787d387c0b725607f90d45c33c343b095",
+      "current": "8b759368cf00ae8ebb7e47cb14e1c4404bad2b78e770c09fe4ca1a0ac9694b5b"
+    }
+  },
+  "current_scheduler_evidence": "final-frozen-replay2.jsonl",
+  "current_source_archive": "final-frozen-replay2-source.zip",
+  "current_source_manifest": "final-frozen-replay2-source-sha.json",
+  "current_replay_scope": "6 Base cases, saved exact-PCM observations, zero fresh model dispatches. Confirms current scheduler on these observations, not inference latency.",
+  "qpc_scope": "Historical saved outputs revalidated only; no current scheduler replay because ledger lacks full posterior.",
+  "revalidation_artifact": "final-revalidation2.json",
+  "incomplete_first_freeze_replay": {
+    "artifact": "final-frozen-replay.jsonl",
+    "completed_cases": 4,
+    "error": "KeyError: ghamidi; corrected canonical reciter key in second runner; no overwritten artifact"
+  },
+  "historical_artifact_sha256": {
+    "current-hybrid2.jsonl": "c8ecac73a757fc71472d7b29e87d8d5af525958a5e0f7c6438f635ed506bd293",
+    "final-replay2.jsonl": "3c9538529a3b1ef506bfa3687800a8a9fd7c6ec2e5724a9b236d70510898fec6",
+    "final-regression80.jsonl": "d6ed19a593ca2f21684e253708437df2c2eb87dc5ea5e8d5d735502f477596e9",
+    "final-smoke.jsonl": "fa7ae7daed9bf897d61c993a0170aa5c77553c1ba65c728b74c036c358f3068f"
+  },
+  "loaded_code_hash_limit": "Runtime code fingerprint can change with process state/instrumentation. It is not retroactively replaced by a current hash; pre-run source archives and actual saved observations provide final replay provenance.",
+  "revalidation_scope_limit": "12 passes validate structural/acoustic fields actually saved. Old proofs lack some new independent-target/root context, so these passes do not approve intermediate Ghamidi21 under new temporal gate. Current scheduler replay10 supplies that separate check."
+}

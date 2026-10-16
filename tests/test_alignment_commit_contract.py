@@ -234,7 +234,7 @@ def test_web_reports_saved_surah_before_honouring_postcommit_cancel(tmp_path, mo
 
     monkeypatch.setattr(pipeline, "process_surah", process)
     monkeypatch.setattr(ProjectDB, "write_timings", cancel_after_save)
-    job._run([114, 113] if next_surah else [114], "fast", None)
+    job._run([114, 113] if next_surah else [114], "fast")
     events = job.events.snapshot()
     saved = next(e for e in events if e["type"] == "sura")
     assert saved["written"] == 6 and saved["outcome"] == "saved"
@@ -262,7 +262,7 @@ def test_web_diagnostic_failure_remains_saved_in_event_and_terminal(tmp_path, mo
 
     monkeypatch.setattr(pipeline, "process_surah", process)
     monkeypatch.setattr(alignment_result.os, "replace", fail)
-    job._run([114], "fast", None)
+    job._run([114], "fast")
     events = job.events.snapshot()
     saved = next(e for e in events if e["type"] == "sura")
     assert saved["outcome"] == "saved_with_diagnostics_error"
@@ -354,7 +354,7 @@ def test_web_failed_model_retains_ledger_without_saving_timings(tmp_path, monkey
         raise ValueError("original model failure")
 
     monkeypatch.setattr(pipeline, "process_surah", process)
-    job._run([114], "fast", None)
+    job._run([114], "fast")
     terminal = job.events.snapshot()[-1]
     assert terminal == ({"type": "cancelled", "completed": 0} if cancelled
                         else {"type": "error", "message": "original model failure"})

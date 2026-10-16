@@ -32,3 +32,13 @@ def test_cli_continues_after_writer_conflict(tmp_path, monkeypatch, capsys):
         assert db.get_timings() == [
             (1, 1, 1000), (1, 2, 2500), (1, 3, 3000), (2, 1, 100),
         ]
+
+
+def test_cli_defaults_full_and_rejects_removed_auto_and_reciter():
+    import pytest
+
+    parser = cli.build_parser()
+    assert parser.parse_args(["audio"]).mode == "full"
+    for removed in (["--mode", "auto"], ["--reciter", "reader"]):
+        with pytest.raises(SystemExit):
+            parser.parse_args(["audio", *removed])

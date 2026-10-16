@@ -1,0 +1,86 @@
+quran-phonetics 80 2.27 review 41 coverage 0.132 calls 25
+quran-phonetics 98 4.07 review 4 coverage 0.286 calls 46
+quran-phonetics 112 0.79 review 2 coverage 0.376 calls 8
+quran-phonetics-fp32 80 2.97 review 41 coverage 0.132 calls 25
+quran-phonetics-fp32 98 5.83 review 4 coverage 0.286 calls 46
+quran-phonetics-fp32 112 1.08 review 2 coverage 0.376 calls 8
+{
+  "quran-phonetics": {
+    "surahs": 3,
+    "ayahs": 54,
+    "median_ms": 3892.0,
+    "p95_ms": 7532.699999999996,
+    "max_ms": 8100,
+    "over500": 47,
+    "positive_conf_over500": [
+      [
+        98,
+        1,
+        994,
+        0.9986016154289246
+      ],
+      [
+        98,
+        2,
+        1226,
+        0.8967914581298828
+      ],
+      [
+        98,
+        5,
+        935,
+        0.9384638071060181
+      ]
+    ],
+    "sequence_violations": [],
+    "review_ayahs": 47,
+    "load_probe_seconds": 0.21968033304437995,
+    "decode_seconds": 0.4972179587930441,
+    "dsp_seconds": 0.22426670813001692,
+    "inference_match_seconds": 7.124943541130051,
+    "search_seconds": 7.349210249260068,
+    "audio_ms": 195800.0,
+    "covered_audio_ms": 108929.375,
+    "total_ms": 523702.875,
+    "model_reads": 79
+  },
+  "quran-phonetics-fp32": {
+    "surahs": 3,
+    "ayahs": 54,
+    "median_ms": 3892.0,
+    "p95_ms": 7532.699999999996,
+    "max_ms": 8100,
+    "over500": 47,
+    "positive_conf_over500": [
+      [
+        98,
+        1,
+        994,
+        0.9976612329483032
+      ],
+      [
+        98,
+        2,
+        1226,
+        0.9675735235214233
+      ],
+      [
+        98,
+        5,
+        935,
+        0.9391893148422241
+      ]
+    ],
+    "sequence_violations": [],
+    "review_ayahs": 47,
+    "load_probe_seconds": 0.48346729204058647,
+    "decode_seconds": 0.4972179587930441,
+    "dsp_seconds": 0.22426670813001692,
+    "inference_match_seconds": 9.876837874995545,
+    "search_seconds": 10.101104583125561,
+    "audio_ms": 195800.0,
+    "covered_audio_ms": 108929.375,
+    "total_ms": 523702.875,
+    "model_reads": 79
+  }
+}

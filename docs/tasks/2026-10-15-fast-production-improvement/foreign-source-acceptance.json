@@ -1,0 +1,23 @@
+{
+  "surah_cutter/core/align.py": {
+    "baseline_sha256": "5ab1e63ec8eeef9cf5b3125dd147fc803b27c8415caadb8a7ae70ae019b85cba",
+    "current_sha256": "335534e6826afef9360950e1ca0b1f4d3e370441507c7966ad71cacb55a01172",
+    "changed_functions": [
+      "align_surah"
+    ],
+    "reason": "Only FULL align_surah changed. FAST called entrypoint and _get_onnx_bundle/_emissions/_stride_ms AST unchanged. Second review: an additional FULL diagnostic label only; FAST AST unchanged."
+  },
+  "surah_cutter/core/model_store.py": {
+    "baseline_sha256": "dd252191dc413ae8450742e9b665510145cdc67c51ed87358ad6b55f0ba2831c",
+    "current_sha256": "f316ecaf23bc233a730453a6bd93bb375206fb1c55944190f3914f8b2f29c067",
+    "changed_functions": [
+      "runtime_path",
+      "source",
+      "load_emitter",
+      "start_download",
+      "_download"
+    ],
+    "reason": "Added MFA/awaiting-access branches and download credential lookup. For selected existing Base: same installed spec/revision/runtime; no download or MFA branch invoked.",
+    "Base_catalog_entry_equal": true
+  }
+}

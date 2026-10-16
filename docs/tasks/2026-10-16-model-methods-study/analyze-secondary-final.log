@@ -1,0 +1,330 @@
+{
+  "timing": [
+    {
+      "method": "connected4",
+      "records": 12,
+      "expected_ayahs": 73,
+      "paired_ayahs": 73,
+      "missing_ayahs": 0,
+      "qpc_on_same_ayahs": {
+        "n": 73,
+        "median_ms": 250.0,
+        "p95_ms": 3257.5999999999976,
+        "max_ms": 4531.0,
+        "over500": 18
+      },
+      "method_on_same_ayahs": {
+        "n": 73,
+        "median_ms": 299.0,
+        "p95_ms": 3432.799999999998,
+        "max_ms": 4497.0,
+        "over500": 18
+      },
+      "nonincreasing_pairs": 0
+    },
+    {
+      "method": "ctc",
+      "records": 12,
+      "expected_ayahs": 73,
+      "paired_ayahs": 68,
+      "missing_ayahs": 5,
+      "qpc_on_same_ayahs": {
+        "n": 68,
+        "median_ms": 247.5,
+        "p95_ms": 3329.8499999999995,
+        "max_ms": 4531.0,
+        "over500": 15
+      },
+      "method_on_same_ayahs": {
+        "n": 68,
+        "median_ms": 1255.5,
+        "p95_ms": 3172.2499999999995,
+        "max_ms": 4293.0,
+        "over500": 56
+      },
+      "nonincreasing_pairs": 0
+    },
+    {
+      "method": "forced_acoustic_bpe",
+      "records": 12,
+      "expected_ayahs": 73,
+      "paired_ayahs": 73,
+      "missing_ayahs": 0,
+      "qpc_on_same_ayahs": {
+        "n": 73,
+        "median_ms": 250.0,
+        "p95_ms": 3257.5999999999976,
+        "max_ms": 4531.0,
+        "over500": 18
+      },
+      "method_on_same_ayahs": {
+        "n": 73,
+        "median_ms": 398.0,
+        "p95_ms": 3345.7999999999975,
+        "max_ms": 4606.0,
+        "over500": 29
+      },
+      "nonincreasing_pairs": 0
+    },
+    {
+      "method": "forced_default_bpe",
+      "records": 12,
+      "expected_ayahs": 73,
+      "paired_ayahs": 73,
+      "missing_ayahs": 0,
+      "qpc_on_same_ayahs": {
+        "n": 73,
+        "median_ms": 250.0,
+        "p95_ms": 3257.5999999999976,
+        "max_ms": 4531.0,
+        "over500": 18
+      },
+      "method_on_same_ayahs": {
+        "n": 73,
+        "median_ms": 398.0,
+        "p95_ms": 3345.7999999999975,
+        "max_ms": 4606.0,
+        "over500": 29
+      },
+      "nonincreasing_pairs": 0
+    },
+    {
+      "method": "madd2",
+      "records": 12,
+      "expected_ayahs": 73,
+      "paired_ayahs": 73,
+      "missing_ayahs": 0,
+      "qpc_on_same_ayahs": {
+        "n": 73,
+        "median_ms": 250.0,
+        "p95_ms": 3257.5999999999976,
+        "max_ms": 4531.0,
+        "over500": 18
+      },
+      "method_on_same_ayahs": {
+        "n": 73,
+        "median_ms": 285.0,
+        "p95_ms": 3432.799999999998,
+        "max_ms": 4497.0,
+        "over500": 17
+      },
+      "nonincreasing_pairs": 0
+    },
+    {
+      "method": "madd4",
+      "records": 12,
+      "expected_ayahs": 73,
+      "paired_ayahs": 73,
+      "missing_ayahs": 0,
+      "qpc_on_same_ayahs": {
+        "n": 73,
+        "median_ms": 250.0,
+        "p95_ms": 3257.5999999999976,
+        "max_ms": 4531.0,
+        "over500": 18
+      },
+      "method_on_same_ayahs": {
+        "n": 73,
+        "median_ms": 285.0,
+        "p95_ms": 3432.799999999998,
+        "max_ms": 4497.0,
+        "over500": 17
+      },
+      "nonincreasing_pairs": 0
+    },
+    {
+      "method": "madd6",
+      "records": 12,
+      "expected_ayahs": 73,
+      "paired_ayahs": 73,
+      "missing_ayahs": 0,
+      "qpc_on_same_ayahs": {
+        "n": 73,
+        "median_ms": 250.0,
+        "p95_ms": 3257.5999999999976,
+        "max_ms": 4531.0,
+        "over500": 18
+      },
+      "method_on_same_ayahs": {
+        "n": 73,
+        "median_ms": 285.0,
+        "p95_ms": 3432.799999999998,
+        "max_ms": 4497.0,
+        "over500": 17
+      },
+      "nonincreasing_pairs": 0
+    },
+    {
+      "method": "qpc_current",
+      "records": 12,
+      "expected_ayahs": 73,
+      "paired_ayahs": 73,
+      "missing_ayahs": 0,
+      "qpc_on_same_ayahs": {
+        "n": 73,
+        "median_ms": 250.0,
+        "p95_ms": 3257.5999999999976,
+        "max_ms": 4531.0,
+        "over500": 18
+      },
+      "method_on_same_ayahs": {
+        "n": 73,
+        "median_ms": 250.0,
+        "p95_ms": 3257.5999999999976,
+        "max_ms": 4531.0,
+        "over500": 18
+      },
+      "nonincreasing_pairs": 0
+    },
+    {
+      "method": "qpc_phones",
+      "records": 12,
+      "expected_ayahs": 73,
+      "paired_ayahs": 73,
+      "missing_ayahs": 0,
+      "qpc_on_same_ayahs": {
+        "n": 73,
+        "median_ms": 250.0,
+        "p95_ms": 3257.5999999999976,
+        "max_ms": 4531.0,
+        "over500": 18
+      },
+      "method_on_same_ayahs": {
+        "n": 73,
+        "median_ms": 237.0,
+        "p95_ms": 3249.5999999999976,
+        "max_ms": 4511.0,
+        "over500": 18
+      },
+      "nonincreasing_pairs": 0
+    },
+    {
+      "method": "rnnt",
+      "records": 12,
+      "expected_ayahs": 73,
+      "paired_ayahs": 66,
+      "missing_ayahs": 7,
+      "qpc_on_same_ayahs": {
+        "n": 66,
+        "median_ms": 239.0,
+        "p95_ms": 3358.75,
+        "max_ms": 4531.0,
+        "over500": 15
+      },
+      "method_on_same_ayahs": {
+        "n": 66,
+        "median_ms": 408.5,
+        "p95_ms": 3654.5,
+        "max_ms": 4615.0,
+        "over500": 23
+      },
+      "nonincreasing_pairs": 0
+    },
+    {
+      "method": "teacher_attention",
+      "records": 12,
+      "expected_ayahs": 73,
+      "paired_ayahs": 73,
+      "missing_ayahs": 0,
+      "qpc_on_same_ayahs": {
+        "n": 73,
+        "median_ms": 250.0,
+        "p95_ms": 3257.5999999999976,
+        "max_ms": 4531.0,
+        "over500": 18
+      },
+      "method_on_same_ayahs": {
+        "n": 73,
+        "median_ms": 475.0,
+        "p95_ms": 3410.199999999997,
+        "max_ms": 4635.0,
+        "over500": 31
+      },
+      "nonincreasing_pairs": 0
+    },
+    {
+      "method": "token_timestamps",
+      "records": 12,
+      "expected_ayahs": 73,
+      "paired_ayahs": 68,
+      "missing_ayahs": 5,
+      "qpc_on_same_ayahs": {
+        "n": 68,
+        "median_ms": 247.5,
+        "p95_ms": 3329.8499999999995,
+        "max_ms": 4531.0,
+        "over500": 16
+      },
+      "method_on_same_ayahs": {
+        "n": 68,
+        "median_ms": 296.5,
+        "p95_ms": 7430.999999999998,
+        "max_ms": 9493.0,
+        "over500": 25
+      },
+      "nonincreasing_pairs": 0
+    }
+  ],
+  "recognition": [
+    {
+      "baseline": "ctc",
+      "method": "rnnt",
+      "records": 12,
+      "words": 638,
+      "baseline_wer": 0.0877742946708464,
+      "method_wer": 0.048589341692789965,
+      "improved_records": 5,
+      "regressed_records": 3
+    },
+    {
+      "baseline": "greedy",
+      "method": "beam5",
+      "records": 12,
+      "words": 638,
+      "baseline_wer": 0.13949843260188088,
+      "method_wer": 0.13322884012539185,
+      "improved_records": 3,
+      "regressed_records": 0
+    },
+    {
+      "baseline": "greedy",
+      "method": "token_timestamps",
+      "records": 12,
+      "words": 638,
+      "baseline_wer": 0.13949843260188088,
+      "method_wer": 0.13949843260188088,
+      "improved_records": 0,
+      "regressed_records": 0
+    },
+    {
+      "baseline": "greedy",
+      "method": "greedy_sdpa",
+      "records": 12,
+      "words": 638,
+      "baseline_wer": 0.13949843260188088,
+      "method_wer": 0.13949843260188088,
+      "improved_records": 0,
+      "regressed_records": 0
+    },
+    {
+      "baseline": "greedy",
+      "method": "greedy_overlap",
+      "records": 12,
+      "words": 638,
+      "baseline_wer": 0.13949843260188088,
+      "method_wer": 0.08463949843260188,
+      "improved_records": 7,
+      "regressed_records": 1
+    },
+    {
+      "baseline": "greedy",
+      "method": "nbest5",
+      "records": 12,
+      "words": 638,
+      "baseline_wer": 0.13949843260188088,
+      "method_wer": 0.13322884012539185,
+      "improved_records": 3,
+      "regressed_records": 0
+    }
+  ]
+}

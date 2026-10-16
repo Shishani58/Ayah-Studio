@@ -1,0 +1,68 @@
+--- 
++++ 
+@@ -206,7 +206,12 @@
+     """Decode once, choose the safest practical mode, then lag-calibrate."""
+     from surah_cutter.core import align, align_fast, align_tiled, decode, lag
+ 
++    from surah_cutter.core.progress import report
++
++    report("model")
+     bundle = align.default_bundle()
++
++    report("decode")
+     pcm = decode.decode(audio_path)
+     progress_kwargs = {"ayah_progress": ayah_progress} if ayah_progress is not None else {}
+     sr = decode.DEFAULT_SR
+@@ -288,6 +293,9 @@
+     """
+     from surah_cutter.core import align, decode
+ 
++    from surah_cutter.core.progress import report
++
++    report("decode")
+     pcm = decode.decode(audio_path)
+     total_ms = len(pcm) * 1000.0 / decode.DEFAULT_SR
+     _emit_log(
+@@ -326,7 +334,12 @@
+     if ayah_audio_dir:
+         raise ValueError("Единый FAST не поддерживает внешние аятные клипы. Выберите режим fingerprint.")
+     # Selection changes during a long decode cannot replace this run's bundle.
++    from surah_cutter.core.progress import report
++
++    report("model")
+     kwargs = {"bundle": align.default_bundle()}
++
++    report("decode")
+     pcm = decode.decode(audio_path)
+     if ayah_progress is not None:
+         kwargs["ayah_progress"] = ayah_progress
+@@ -362,6 +375,9 @@
+     """
+     from surah_cutter.core import align_tiled, decode
+ 
++    from surah_cutter.core.progress import report
++
++    report("decode")
+     pcm = decode.decode(audio_path)
+     progress_kwargs = {"ayah_progress": ayah_progress} if ayah_progress is not None else {}
+     rows = align_tiled.align_surah_tiled(
+@@ -402,6 +418,9 @@
+     """
+     from surah_cutter.core import candidates, decode
+ 
++    from surah_cutter.core.progress import report
++
++    report("decode")
+     pcm = decode.decode(audio_path)
+     sr = decode.DEFAULT_SR
+     total_ms = len(pcm) * 1000.0 / sr if sr else 0.0
+@@ -468,6 +487,9 @@
+     from surah_cutter.core import align, decode
+ 
+     if pcm is None:
++        from surah_cutter.core.progress import report
++
++        report("decode")
+         pcm = decode.decode(audio_path)
+         sr = decode.DEFAULT_SR
+     rows = align.align_surah(pcm, sr or decode.DEFAULT_SR, words, surah=surah)

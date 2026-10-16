@@ -1,0 +1,128 @@
+........................................................................ [ 28%]
+........................................................................ [ 57%]
+........................................................FF..FFF......... [ 85%]
+.................F..................                                     [100%]
+=================================== FAILURES ===================================
+_ test_tarteel_fast_pipeline_preserves_requested_mode_and_blocks_auto_fallback[whisper-tarteel-tiny] _
+
+model_id = 'whisper-tarteel-tiny'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1077e7d70>
+
+    @pytest.mark.parametrize("model_id", ["whisper-tarteel-tiny", "whisper-tarteel-base"])
+    def test_tarteel_fast_pipeline_preserves_requested_mode_and_blocks_auto_fallback(model_id, monkeypatch):
+        monkeypatch.setattr(model_store, "ACTIVE_ID", model_id)
+        seen = []
+        monkeypatch.setattr(pipeline, "_fast_align", lambda *a, **kw: seen.append("fast") or [(112, 1, 100)])
+        monkeypatch.setattr(pipeline, "_full_align", lambda *a, **kw: pytest.fail("hidden FULL"))
+        assert pipeline.process_surah("unused", 112, mode="fast") == [(112, 1, 100)]
+        assert seen == ["fast"]
+>       with pytest.raises(ValueError, match="unknown mode"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'unknown mode'
+E         Actual message: 'Выбранная модель поддерживает полный, точный и пословный режимы. Выберите «Полный».'
+
+/Users/ayub/Developer/surah-cutter/tests/test_tarteel_fast.py:25: AssertionError
+_ test_tarteel_fast_pipeline_preserves_requested_mode_and_blocks_auto_fallback[whisper-tarteel-base] _
+
+model_id = 'whisper-tarteel-base'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1090a16d0>
+
+    @pytest.mark.parametrize("model_id", ["whisper-tarteel-tiny", "whisper-tarteel-base"])
+    def test_tarteel_fast_pipeline_preserves_requested_mode_and_blocks_auto_fallback(model_id, monkeypatch):
+        monkeypatch.setattr(model_store, "ACTIVE_ID", model_id)
+        seen = []
+        monkeypatch.setattr(pipeline, "_fast_align", lambda *a, **kw: seen.append("fast") or [(112, 1, 100)])
+        monkeypatch.setattr(pipeline, "_full_align", lambda *a, **kw: pytest.fail("hidden FULL"))
+        assert pipeline.process_surah("unused", 112, mode="fast") == [(112, 1, 100)]
+        assert seen == ["fast"]
+>       with pytest.raises(ValueError, match="unknown mode"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'unknown mode'
+E         Actual message: 'Выбранная модель поддерживает полный, точный и пословный режимы. Выберите «Полный».'
+
+/Users/ayub/Developer/surah-cutter/tests/test_tarteel_fast.py:25: AssertionError
+_____________ test_open_preserves_existing_edition[surah-cutter-1] _____________
+
+tmp_path = PosixPath('/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/pytest-of-ayub/pytest-424/test_open_preserves_existing_e0')
+code = 'surah-cutter', version = 1
+
+    @pytest.mark.parametrize("code,version", [("surah-cutter", 1), ("reciter", 1)])
+    def test_open_preserves_existing_edition(tmp_path, code, version):
+        path = str(tmp_path / "edition.db")
+        with ProjectDB.open(path, "reciter", 7) as db:
+            db.write_timings([(114, 1, 1000)], "test")
+            before = snapshot(db)
+        with ProjectDB.open(path, code, version) as db:
+>           assert db._conn.execute("SELECT code, version FROM db_version").fetchall() == [("reciter", 7)]
+E           AssertionError: assert [('reciter', ...h-cutter', 1)] == [('reciter', 7)]
+E             
+E             Left contains one more item: ('surah-cutter', 1)
+E             Use -v to get more diff
+
+/Users/ayub/Developer/surah-cutter/tests/test_project_db_safety.py:34: AssertionError
+_______________ test_open_preserves_existing_edition[reciter-1] ________________
+
+tmp_path = PosixPath('/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/pytest-of-ayub/pytest-424/test_open_preserves_existing_e1')
+code = 'reciter', version = 1
+
+    @pytest.mark.parametrize("code,version", [("surah-cutter", 1), ("reciter", 1)])
+    def test_open_preserves_existing_edition(tmp_path, code, version):
+        path = str(tmp_path / "edition.db")
+        with ProjectDB.open(path, "reciter", 7) as db:
+            db.write_timings([(114, 1, 1000)], "test")
+            before = snapshot(db)
+        with ProjectDB.open(path, code, version) as db:
+>           assert db._conn.execute("SELECT code, version FROM db_version").fetchall() == [("reciter", 7)]
+E           AssertionError: assert [('reciter', 1)] == [('reciter', 7)]
+E             
+E             At index 0 diff: ('reciter', 1) != ('reciter', 7)
+E             Use -v to get more diff
+
+/Users/ayub/Developer/surah-cutter/tests/test_project_db_safety.py:34: AssertionError
+______________ test_open_initializes_empty_edition_metadata_once _______________
+
+tmp_path = PosixPath('/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/pytest-of-ayub/pytest-424/test_open_initializes_empty_ed0')
+
+    def test_open_initializes_empty_edition_metadata_once(tmp_path):
+        path = str(tmp_path / "empty.db")
+        with sqlite3.connect(path) as conn:
+            conn.execute("CREATE TABLE db_version (code TEXT PRIMARY KEY, version INTEGER NOT NULL)")
+        with ProjectDB.open(path, "reciter", 7) as db:
+            assert db._conn.execute("SELECT code, version FROM db_version").fetchall() == [("reciter", 7)]
+        with ProjectDB.open(path, "other", 2) as db:
+>           assert db._conn.execute("SELECT code, version FROM db_version").fetchall() == [("reciter", 7)]
+E           AssertionError: assert [('reciter', 7), ('other', 2)] == [('reciter', 7)]
+E             
+E             Left contains one more item: ('other', 2)
+E             Use -v to get more diff
+
+/Users/ayub/Developer/surah-cutter/tests/test_project_db_safety.py:45: AssertionError
+___________ test_preview_matches_resume_scope_and_counts_stale_words ___________
+
+project = PosixPath('/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/pytest-of-ayub/pytest-424/test_preview_matches_resume_sc0/choice.db')
+
+    def test_preview_matches_resume_scope_and_counts_stale_words(project):
+        preview = endpoint("/api/generate/preview")
+        assert preview({"suras": [114], "mode": "full"}) == {
+            "suras": [114], "manual_ayahs": 2, "manual_words": 0, "db_path": str(project),
+        }
+        with ProjectDB.open(str(project), DB_CODE, DB_VERSION) as db:
+            db.set_time(114, 1, 3800)  # Word snapshot is now stale but still protected.
+        assert preview({"suras": [114], "mode": "words"})["manual_words"] == 1
+>       with pytest.raises(HTTPException, match="unknown mode"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'unknown mode'
+E         Actual message: '400: no suras to process (all done or no audio)'
+
+/Users/ayub/Developer/surah-cutter/tests/test_generation_write_choice.py:78: AssertionError
+=========================== short test summary info ============================
+FAILED ../../../../../../../../dev::test_tarteel_fast_pipeline_preserves_requested_mode_and_blocks_auto_fallback[whisper-tarteel-tiny]
+FAILED ../../../../../../../../dev::test_tarteel_fast_pipeline_preserves_requested_mode_and_blocks_auto_fallback[whisper-tarteel-base]
+FAILED ../../../../../../../../dev::test_open_preserves_existing_edition[surah-cutter-1]
+FAILED ../../../../../../../../dev::test_open_preserves_existing_edition[reciter-1]
+FAILED ../../../../../../../../dev::test_open_initializes_empty_edition_metadata_once
+FAILED ../../../../../../../../dev::test_preview_matches_resume_scope_and_counts_stale_words
+6 failed, 246 passed in 6.51s

@@ -49,7 +49,7 @@ def main():
             verify_dispatch(calls, pcm, trace)
             assert not validate(rows, trace, [1, 2, 3])
             if name == "very_short_500ms":
-                assert not calls and all(conf == 0 for _, _, conf in rows)
+                assert not calls and not rows and trace["unresolved_ayahs"] == [1, 2, 3]
             outputs.append({"case": name, "model": model, "seconds": time.monotonic()-started,
                             "pcm_sha256": hashlib.sha256(memoryview(pcm)).hexdigest(),
                             "rows": rows, "trace": trace, "actual_dispatches": calls})

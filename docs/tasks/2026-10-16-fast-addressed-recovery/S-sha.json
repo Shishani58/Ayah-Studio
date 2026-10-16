@@ -1,0 +1,9 @@
+{
+  "sha256": "633eb08131c9fb8ec4b143434e1a62a9ec722b16e7cf591628295c630492e2a4",
+  "parent": "A",
+  "scope": "Base nonempty-region fallback; exactly one next eligible DSP candidate, only if spare max8 slot",
+  "owner_lookahead": 2,
+  "new_candidate_radius_cap_ms": 500,
+  "preserves_earlier_hard_prefix_block": true,
+  "control_results_used_for_rule": false
+}

@@ -1,0 +1,50 @@
+{
+  "benchmark_exit": 1,
+  "reason": "whole-file source drift guard after completed inference; no row/inference failure",
+  "changes": [
+    {
+      "path": "surah_cutter/core/align.py",
+      "before_reviewed": "335534e6826afef9360950e1ca0b1f4d3e370441507c7966ad71cacb55a01172",
+      "current": "08c1da64baa1068b203722c02f1b30dc32880a4abe16ccd6f0fdf5ffa7132b03"
+    }
+  ],
+  "actual_cases": [
+    {
+      "surah": 28,
+      "rows_equal": true,
+      "inputs_equal": true
+    },
+    {
+      "surah": 41,
+      "rows_equal": true,
+      "inputs_equal": true
+    },
+    {
+      "surah": 65,
+      "rows_equal": true,
+      "inputs_equal": true
+    },
+    {
+      "surah": 72,
+      "rows_equal": true,
+      "inputs_equal": true
+    },
+    {
+      "surah": 73,
+      "rows_equal": true,
+      "inputs_equal": true
+    },
+    {
+      "surah": 82,
+      "rows_equal": true,
+      "inputs_equal": true
+    },
+    {
+      "surah": 84,
+      "rows_equal": true,
+      "inputs_equal": true
+    }
+  ],
+  "core_sha": "4ec2127ff87cdf9da4d6e06e15381e47161683be829d6e7d2b50e6f7c15d3469",
+  "unix": 1792101867.7057972
+}

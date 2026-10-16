@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "/Users/ayub/Developer/surah-cutter/.venv/bin/python",
+    "-u",
+    "/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-addressed-e6zhmc74/B6/tools/bench_fast_models.py",
+    "--models",
+    "whisper-tarteel-base",
+    "--surahs",
+    "2",
+    "79",
+    "98",
+    "80",
+    "--audio-dir",
+    "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri",
+    "--reference",
+    "/Users/ayub/Developer/surah-cutter/data/references/abu_bakr_ash_shatri.db",
+    "--output",
+    "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-fast-addressed-recovery/B6-development.json"
+  ],
+  "cwd": "/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-addressed-e6zhmc74/B6",
+  "PYTHONPATH": "/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/fast-addressed-e6zhmc74/B6",
+  "profile_directory": null,
+  "started_unix": 1792103270.110341
+}

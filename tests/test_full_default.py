@@ -7,7 +7,7 @@ import pytest
 from surah_cutter.core import align, align_tiled, full_windows
 from surah_cutter.core.cancellation import GenerationCancelled, cancellation_scope
 from surah_cutter.core.emissions import OnnxEmitter
-from surah_cutter.data import reference_prior, transliteration
+from surah_cutter.data import transliteration
 from surah_cutter.data.alignment_result import result_source, write_alignment_result
 from surah_cutter.data.project_db import ProjectDB
 
@@ -84,7 +84,6 @@ def test_large_full_passes_pause_policy_to_bounded_ctc(monkeypatch):
 @pytest.mark.parametrize("parallel_full", [False, True])
 def test_tiled_uses_new_emissions_only_when_called_from_full(monkeypatch, parallel_full):
     words = targets(monkeypatch)
-    monkeypatch.setattr(reference_prior, "surah_start_fractions", lambda _: {})
     calls = []
 
     def old(*args):
@@ -149,7 +148,7 @@ def test_full_policy_is_saved_in_provenance_and_trace(tmp_path):
         review = db.get_review(1, 1)
     assert saved.written == 1
     assert ":full_window_s=20:full_workers=3:full_context_s=2:" in review["source"]
-    assert ":full_policy=qpc-full-pause-v1:" in review["source"]
+    assert f":full_policy={full_windows.FULL_POLICY}:" in review["source"]
     assert review["source"] == result_source(trace, "full")
 
 

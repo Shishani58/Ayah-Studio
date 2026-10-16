@@ -36,6 +36,30 @@ def record_edges(checks, words, word_token_spans, target_spans, frame_scores,
                 break
 
 
+def _local_pauses(pcm, sr, tail, first, policy, *, extra_ms=0):
+    from surah_cutter.core import candidates
+
+    lo = max(0, int((tail - policy["context_before_ms"] - extra_ms) // 10) * 10)
+    hi = min(len(pcm) * 1000 / sr, first + policy["context_after_ms"] + extra_ms)
+    crop = pcm[round(lo * sr / 1000):round(hi * sr / 1000)]
+    local = candidates.detect_energy_pauses(
+        crop, sr, min_pause_ms=policy["min_pause_ms"], frame_ms=policy["frame_ms"],
+        smooth_frames=policy["smooth_frames"], use_ten_vad=False)
+    decisions, supported = [], []
+    for local_pause in local:
+        p = candidates.Pause(lo + local_pause.start_ms, lo + local_pause.end_ms,
+                             local_pause.end_ms - local_pause.start_ms)
+        metrics = candidates._dsp_pause_metrics(crop, sr, local_pause)
+        owned = (p.start_ms >= tail - policy["edge_tolerance_ms"]
+                 and -policy["edge_tolerance_ms"] <= first - p.end_ms <= policy["max_onset_lag_ms"])
+        accepted = owned and candidates._dsp_accepts_pause(metrics)
+        decisions.append(dict(start_ms=p.start_ms, end_ms=p.end_ms,
+                              owned=owned, accepted=accepted, **metrics))
+        if accepted:
+            supported.append(p)
+    return [lo, hi], decisions, supported
+
+
 def position_boundaries(checks, pcm, sr, *, trace=None):
     """Locate quiet shelves locally; cap the silence preceding the next ayah.
 
@@ -43,11 +67,10 @@ def position_boundaries(checks, pcm, sr, *, trace=None):
     cannot be discarded to reach a later intraword pause. Local phrase repairs
     keep their separate proof. No acoustic inference is performed here.
     """
-    from surah_cutter.core import candidates
-
     policy = dict(max_lead_ms=250, min_pause_ms=120, frame_ms=10, smooth_frames=3,
                   max_gap_ms=6000, context_before_ms=800, context_after_ms=1000,
-                  edge_tolerance_ms=80, max_onset_lag_ms=450)
+                  edge_tolerance_ms=80, max_onset_lag_ms=450,
+                  stability_extra_ms=800, stability_tolerance_ms=80)
     if trace is not None:
         trace["full_pause_position"] = policy
     ordered = sorted(checks.values(), key=lambda c: c["ayah"])
@@ -77,29 +100,11 @@ def position_boundaries(checks, pcm, sr, *, trace=None):
             check.update(pause_center_reason="unbounded-gap", reliable=False)
             continue
         # Align crops to the DSP grid so rounding cannot drift between tiles.
-        lo = max(0, int((tail - policy["context_before_ms"]) // 10) * 10)
-        hi = min(len(pcm) * 1000 / sr, first + policy["context_after_ms"])
-        crop = pcm[round(lo * sr / 1000):round(hi * sr / 1000)]
-        check["pause_local_crop_ms"] = [lo, hi]
-        local = candidates.detect_energy_pauses(
-            crop, sr, min_pause_ms=policy["min_pause_ms"], frame_ms=policy["frame_ms"],
-            smooth_frames=policy["smooth_frames"], use_ten_vad=False)
-        decisions = []
-        supported = []
-        for local_pause in local:
-            p = candidates.Pause(lo + local_pause.start_ms, lo + local_pause.end_ms,
-                                 local_pause.end_ms - local_pause.start_ms)
-            metrics = candidates._dsp_pause_metrics(crop, sr, local_pause)
-            owned = (p.start_ms >= tail - policy["edge_tolerance_ms"]
-                     and -policy["edge_tolerance_ms"] <= first - p.end_ms <= policy["max_onset_lag_ms"])
-            accepted = owned and candidates._dsp_accepts_pause(metrics)
-            decisions.append(dict(start_ms=p.start_ms, end_ms=p.end_ms,
-                                  owned=owned, accepted=accepted, **metrics))
-            if accepted:
-                supported.append(p)
+        crop_ms, decisions, supported = _local_pauses(pcm, sr, tail, first, policy)
+        check["pause_local_crop_ms"] = crop_ms
         check["pause_local_decisions"] = decisions
         if len(supported) != 1:
-            if local:
+            if decisions:
                 check["pause_center_reason"] = "ambiguous-pause" if supported else "unproven-pause"
                 check["reliable"] = False
             continue
@@ -109,6 +114,19 @@ def position_boundaries(checks, pcm, sr, *, trace=None):
         right = original[i + 1] if i + 1 < len(original) else len(pcm) * 1000 / sr
         if new_ms > first or not (previous["onset_ms"] if previous else -1) < new_ms < right:
             check.update(pause_center_reason="order-conflict", reliable=False)
+            continue
+        check_cancelled()
+        crop_ms, decisions, expanded = _local_pauses(
+            pcm, sr, tail, first, policy, extra_ms=policy["stability_extra_ms"])
+        check["pause_stability_crop_ms"] = crop_ms
+        check["pause_stability_decisions"] = decisions
+        if (len(expanded) != 1
+                or abs(expanded[0].start_ms - pause.start_ms) > policy["stability_tolerance_ms"]
+                or abs(expanded[0].end_ms - pause.end_ms) > policy["stability_tolerance_ms"]):
+            check.update(pause_center_reason="unstable-pause", reliable=False)
+            continue
+        if new_ms > original[i] and not check.get("reliable", False):
+            check.update(pause_center_reason="weak-word-right-shift", reliable=False)
             continue
         check.update(onset_ms=new_ms, pause_center_reason="positioned", pause_lead_ms=lead,
                      center_pause_start_ms=pause.start_ms, center_pause_end_ms=pause.end_ms)

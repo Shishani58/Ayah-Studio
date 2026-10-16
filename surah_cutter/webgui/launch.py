@@ -52,7 +52,37 @@ class _NativeApi:
     """
 
     def __init__(self) -> None:
+        from surah_cutter.webgui.updates import AppUpdater
+
         self.window = None  # set after the window is created
+        self._updater = AppUpdater()
+
+    def update_status(self):
+        return self._updater.status()
+
+    def check_update(self):
+        return self._updater.check()
+
+    def install_update(self):
+        from surah_cutter.core.model_store import RUNTIME_LOCK
+        from surah_cutter.webgui import server
+
+        if not RUNTIME_LOCK.acquire(blocking=False):
+            return {"error": "Дождитесь завершения расчёта или загрузки модели."}
+        helper = None
+        try:
+            if server._JOB and server._JOB.running:
+                return {"error": "Дождитесь завершения расчёта или загрузки модели."}
+            helper = self._updater.install()
+            self.window.destroy()
+            return {"ok": True}
+        except Exception as exc:
+            if helper:
+                helper.terminate()
+                self._updater._set(phase="ready")
+            return {"error": str(exc)}
+        finally:
+            RUNTIME_LOCK.release()
 
     def pick_folder(self) -> str | None:
         import webview
@@ -106,6 +136,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         api.window = window
         webview.start()
+        api._updater.cleanup()
         return 0
     except Exception as exc:  # pywebview missing or no display
         print(f"Native window unavailable ({exc}); opening in browser: {url}")

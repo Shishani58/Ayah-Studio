@@ -1,0 +1,78 @@
+{
+  "unix": 1792098917.156499,
+  "top_cpu": [
+    {
+      "pid": 98525,
+      "cpu_percent": 243.1,
+      "rss_kib": 1619680,
+      "executable": "/Users/ayub/Developer/surah-cutter/.venv/bin/python"
+    },
+    {
+      "pid": 633,
+      "cpu_percent": 72.7,
+      "rss_kib": 84592,
+      "executable": "/System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer"
+    },
+    {
+      "pid": 3574,
+      "cpu_percent": 59.2,
+      "rss_kib": 394592,
+      "executable": "/Users/ayub/fvm/versions/3.47.4/bin/cache/dart-sdk/bin/dart"
+    },
+    {
+      "pid": 2970,
+      "cpu_percent": 56.5,
+      "rss_kib": 668720,
+      "executable": "/Users/ayub/fvm/versions/3.47.4/bin/cache/dart-sdk/bin/dartvm"
+    },
+    {
+      "pid": 89231,
+      "cpu_percent": 45.0,
+      "rss_kib": 722480,
+      "executable": "/Users/ayub/.surah-cutter/model-runtime/bin/python"
+    },
+    {
+      "pid": 2816,
+      "cpu_percent": 41.6,
+      "rss_kib": 9984,
+      "executable": "/Users/ayub/Developer/surah-cutter/.venv/lib/python3.12/site-packages/imageio_ffmpeg/binaries/ffmpeg-macos-aarch64-v7.1"
+    },
+    {
+      "pid": 3512,
+      "cpu_percent": 34.8,
+      "rss_kib": 48624,
+      "executable": "/Applications/Open Design.app/Contents/Frameworks/Open Design Helper.app/Contents/MacOS/Open Design Helper"
+    },
+    {
+      "pid": 3607,
+      "cpu_percent": 34.1,
+      "rss_kib": 44240,
+      "executable": "/Users/ayub/.surah-cutter/mfa-runtime/bin/python3.11"
+    },
+    {
+      "pid": 3587,
+      "cpu_percent": 32.9,
+      "rss_kib": 567408,
+      "executable": "/Users/ayub/fvm/versions/3.47.4/bin/cache/dart-sdk/bin/dartaotruntime"
+    },
+    {
+      "pid": 1924,
+      "cpu_percent": 28.3,
+      "rss_kib": 39376,
+      "executable": "/Applications/Happ.app/Contents/MacOS/Happ"
+    },
+    {
+      "pid": 21280,
+      "cpu_percent": 26.7,
+      "rss_kib": 57104,
+      "executable": "/Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/155.0.8059.40/Helpers/Codex (Service).app/Contents/MacOS/Codex (Service)"
+    },
+    {
+      "pid": 3609,
+      "cpu_percent": 20.4,
+      "rss_kib": 60240,
+      "executable": "/Users/ayub/fvm/versions/3.47.4/bin/cache/artifacts/engine/darwin-x64/flutter_tester"
+    }
+  ],
+  "vm_stat": "Mach Virtual Memory Statistics: (page size of 16384 bytes)\nPages free:                                     3035.\nPages active:                                 277290.\nPages inactive:                               269114.\nPages speculative:                              7074.\nPages throttled:                                   0.\nPages wired down:                             226004.\nPages purgeable:                                 515.\n\"Translation faults\":                    26498481715.\nPages copy-on-write:                      3097964118.\nPages zero filled:                       11345007510.\nPages reactivated:                        4313852199.\nPages purged:                              195520829.\nFile-backed pages:                            130197.\nAnonymous pages:                              423281.\nPages stored in compressor:                   407157.\nPages occupied by compressor:                 224960.\nDecompressions:                           3931050395.\nCompressions:                             4623459871.\nPageins:                                   862636485.\nPageouts:                                    2544828.\nSwapins:                                    94932076.\nSwapouts:                                  115247123.\n"
+}

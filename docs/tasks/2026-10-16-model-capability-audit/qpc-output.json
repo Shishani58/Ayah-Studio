@@ -1,0 +1,629 @@
+{
+  "purpose": "output contract, not alignment accuracy or FAST executor",
+  "inference_calls": 6,
+  "real_recording_reads": 4,
+  "zero_controls": 2,
+  "source_sha_before": {
+    "surah_cutter/core/emissions.py": "3f1b777cb90909f0572b9d24b93d466975d374c9dbee96a475e5f2064f44f4a7",
+    "surah_cutter/core/align.py": "08c1da64baa1068b203722c02f1b30dc32880a4abe16ccd6f0fdf5ffa7132b03",
+    "surah_cutter/core/full_windows.py": "91832c15090d683f64da476ee34f548dc30799984028e311ed1591f143d3e17f",
+    "surah_cutter/core/fast_adapters.py": "ececb1374994d29084824c47a4dc8bba918f622363fffd2b4d01581260f3f539",
+    "surah_cutter/core/model_worker.py": "52abc1e5a076596e96b21c275690344686c3436a04d1469686b3eca82cfa1d80",
+    "surah_cutter/core/model_catalog.json": "5bfa53840a387d9b5fa63333a9fcbdddde88195a208343643975ba120922fde0",
+    "surah_cutter/tools/export_onnx.py": "e58d7436a5bb9b8a9a16b8603f09b0260f0d6b6abe4aba80142e28c6c01a01fc"
+  },
+  "source_sha_after": {
+    "surah_cutter/core/emissions.py": "3f1b777cb90909f0572b9d24b93d466975d374c9dbee96a475e5f2064f44f4a7",
+    "surah_cutter/core/align.py": "08c1da64baa1068b203722c02f1b30dc32880a4abe16ccd6f0fdf5ffa7132b03",
+    "surah_cutter/core/full_windows.py": "91832c15090d683f64da476ee34f548dc30799984028e311ed1591f143d3e17f",
+    "surah_cutter/core/fast_adapters.py": "ececb1374994d29084824c47a4dc8bba918f622363fffd2b4d01581260f3f539",
+    "surah_cutter/core/model_worker.py": "52abc1e5a076596e96b21c275690344686c3436a04d1469686b3eca82cfa1d80",
+    "surah_cutter/core/model_catalog.json": "5bfa53840a387d9b5fa63333a9fcbdddde88195a208343643975ba120922fde0",
+    "surah_cutter/tools/export_onnx.py": "e58d7436a5bb9b8a9a16b8603f09b0260f0d6b6abe4aba80142e28c6c01a01fc"
+  },
+  "production_unchanged": true,
+  "results": [
+    {
+      "model": "wav2vec2-quran-phonetics.onnx",
+      "source": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/001.mp3",
+      "samples": 96000,
+      "start_ms": 1500,
+      "end_ms": 7500,
+      "audio_sha256": "6dedf8c3b88d2cd12c992710839443abebf26e7ef1fcea696acc8961b5836571",
+      "pcm_sha256": "49bec4775fddad803cdec6a26e6637377c9a450a3b0e93ac1843ccd250d984c3",
+      "normalized_sha256": "70f717eda49e07286c7f2e28236eda959b7c83c37513f33acf3c3aec89c1c546",
+      "seconds": 0.20444625010713935,
+      "frames": 299,
+      "vocab_columns": 40,
+      "blank_id": 37,
+      "greedy": "lhirakhnānirraḥiīmal-ḥadul",
+      "special": {
+        "[PAD]": {
+          "max_probability": 0.9999990463256836,
+          "mean_probability": 0.8767589926719666,
+          "argmax_frames": 262
+        },
+        " ": {
+          "max_probability": 9.3783215561416e-05,
+          "mean_probability": 5.389963462221203e-07,
+          "argmax_frames": 0
+        },
+        "-": {
+          "max_probability": 0.9996520280838013,
+          "mean_probability": 0.006731605157256126,
+          "argmax_frames": 2
+        },
+        "|": {
+          "max_probability": 0.0006921695894561708,
+          "mean_probability": 4.544433068076614e-06,
+          "argmax_frames": 0
+        },
+        "[UNK]": {
+          "max_probability": 9.51977854128927e-05,
+          "mean_probability": 5.28595421656064e-07,
+          "argmax_frames": 0
+        }
+      },
+      "runtime": {
+        "blank_id": 37,
+        "do_normalize": true,
+        "input_name": "input_values",
+        "numpy": "2.5.0",
+        "onnxruntime": "1.27.0",
+        "output_name": "logits",
+        "providers": [
+          "CPUExecutionProvider"
+        ],
+        "session_options": {
+          "execution_mode": "ExecutionMode.ORT_SEQUENTIAL",
+          "graph_optimization_level": "GraphOptimizationLevel.ORT_ENABLE_ALL",
+          "inter_op_num_threads": "0",
+          "intra_op_num_threads": "0"
+        },
+        "vocab": {
+          " ": 0,
+          "'": 1,
+          "-": 2,
+          "</s>": 39,
+          "<s>": 38,
+          "H": 3,
+          "[PAD]": 37,
+          "[UNK]": 36,
+          "a": 4,
+          "b": 5,
+          "d": 6,
+          "e": 7,
+          "f": 8,
+          "g": 9,
+          "h": 10,
+          "i": 11,
+          "j": 12,
+          "k": 13,
+          "l": 14,
+          "m": 15,
+          "n": 16,
+          "o": 17,
+          "q": 18,
+          "r": 19,
+          "s": 20,
+          "t": 21,
+          "u": 22,
+          "w": 23,
+          "y": 24,
+          "z": 25,
+          "|": 35,
+          "ā": 26,
+          "ī": 27,
+          "ū": 28,
+          "ʿ": 29,
+          "ḍ": 30,
+          "ḥ": 31,
+          "ṣ": 32,
+          "ṭ": 33,
+          "ẓ": 34
+        },
+        "weights_sha256": "423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a"
+      }
+    },
+    {
+      "model": "wav2vec2-quran-phonetics.onnx",
+      "source": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/080.mp3",
+      "samples": 96000,
+      "start_ms": 1500,
+      "end_ms": 7500,
+      "audio_sha256": "4d91f378520caba3be8df904ee323be94815ca448a98ddda29b58a1b415dd13c",
+      "pcm_sha256": "c6e77dd08675bdfa96810cc10d129a2f84ee92baedba3c7890226bb4697169ce",
+      "normalized_sha256": "fce2ba10a7c4a7af643f273745816869a65b9364f343df07cef8d9e8fceb9e91",
+      "seconds": 0.20925029087811708,
+      "frames": 299,
+      "vocab_columns": 40,
+      "blank_id": 37,
+      "greedy": "lkirurakhnānirraḥīnaabasawata",
+      "special": {
+        "[PAD]": {
+          "max_probability": 0.9999988079071045,
+          "mean_probability": 0.8759641051292419,
+          "argmax_frames": 261
+        },
+        " ": {
+          "max_probability": 5.0053880841005594e-05,
+          "mean_probability": 3.932209438062273e-07,
+          "argmax_frames": 0
+        },
+        "-": {
+          "max_probability": 0.047281306236982346,
+          "mean_probability": 0.00031902623595669866,
+          "argmax_frames": 0
+        },
+        "|": {
+          "max_probability": 0.0004968935390934348,
+          "mean_probability": 3.992520760220941e-06,
+          "argmax_frames": 0
+        },
+        "[UNK]": {
+          "max_probability": 4.5122727897251025e-05,
+          "mean_probability": 3.621456414748536e-07,
+          "argmax_frames": 0
+        }
+      },
+      "runtime": {
+        "blank_id": 37,
+        "do_normalize": true,
+        "input_name": "input_values",
+        "numpy": "2.5.0",
+        "onnxruntime": "1.27.0",
+        "output_name": "logits",
+        "providers": [
+          "CPUExecutionProvider"
+        ],
+        "session_options": {
+          "execution_mode": "ExecutionMode.ORT_SEQUENTIAL",
+          "graph_optimization_level": "GraphOptimizationLevel.ORT_ENABLE_ALL",
+          "inter_op_num_threads": "0",
+          "intra_op_num_threads": "0"
+        },
+        "vocab": {
+          " ": 0,
+          "'": 1,
+          "-": 2,
+          "</s>": 39,
+          "<s>": 38,
+          "H": 3,
+          "[PAD]": 37,
+          "[UNK]": 36,
+          "a": 4,
+          "b": 5,
+          "d": 6,
+          "e": 7,
+          "f": 8,
+          "g": 9,
+          "h": 10,
+          "i": 11,
+          "j": 12,
+          "k": 13,
+          "l": 14,
+          "m": 15,
+          "n": 16,
+          "o": 17,
+          "q": 18,
+          "r": 19,
+          "s": 20,
+          "t": 21,
+          "u": 22,
+          "w": 23,
+          "y": 24,
+          "z": 25,
+          "|": 35,
+          "ā": 26,
+          "ī": 27,
+          "ū": 28,
+          "ʿ": 29,
+          "ḍ": 30,
+          "ḥ": 31,
+          "ṣ": 32,
+          "ṭ": 33,
+          "ẓ": 34
+        },
+        "weights_sha256": "423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a"
+      }
+    },
+    {
+      "model": "wav2vec2-quran-phonetics.onnx",
+      "source": "synthetic-zero",
+      "samples": 96000,
+      "seconds": 0.20034816698171198,
+      "frames": 299,
+      "vocab_columns": 40,
+      "blank_id": 37,
+      "greedy": "",
+      "special": {
+        "[PAD]": {
+          "max_probability": 0.9999924898147583,
+          "mean_probability": 0.9999899864196777,
+          "argmax_frames": 299
+        },
+        " ": {
+          "max_probability": 5.276522621611157e-11,
+          "mean_probability": 4.696601788034549e-11,
+          "argmax_frames": 0
+        },
+        "-": {
+          "max_probability": 1.3995195331517607e-06,
+          "mean_probability": 1.291190073970938e-06,
+          "argmax_frames": 0
+        },
+        "|": {
+          "max_probability": 1.7154114795303599e-09,
+          "mean_probability": 1.5538740294473996e-09,
+          "argmax_frames": 0
+        },
+        "[UNK]": {
+          "max_probability": 4.962405833475181e-11,
+          "mean_probability": 4.431644981539584e-11,
+          "argmax_frames": 0
+        }
+      },
+      "runtime": {
+        "blank_id": 37,
+        "do_normalize": true,
+        "input_name": "input_values",
+        "numpy": "2.5.0",
+        "onnxruntime": "1.27.0",
+        "output_name": "logits",
+        "providers": [
+          "CPUExecutionProvider"
+        ],
+        "session_options": {
+          "execution_mode": "ExecutionMode.ORT_SEQUENTIAL",
+          "graph_optimization_level": "GraphOptimizationLevel.ORT_ENABLE_ALL",
+          "inter_op_num_threads": "0",
+          "intra_op_num_threads": "0"
+        },
+        "vocab": {
+          " ": 0,
+          "'": 1,
+          "-": 2,
+          "</s>": 39,
+          "<s>": 38,
+          "H": 3,
+          "[PAD]": 37,
+          "[UNK]": 36,
+          "a": 4,
+          "b": 5,
+          "d": 6,
+          "e": 7,
+          "f": 8,
+          "g": 9,
+          "h": 10,
+          "i": 11,
+          "j": 12,
+          "k": 13,
+          "l": 14,
+          "m": 15,
+          "n": 16,
+          "o": 17,
+          "q": 18,
+          "r": 19,
+          "s": 20,
+          "t": 21,
+          "u": 22,
+          "w": 23,
+          "y": 24,
+          "z": 25,
+          "|": 35,
+          "ā": 26,
+          "ī": 27,
+          "ū": 28,
+          "ʿ": 29,
+          "ḍ": 30,
+          "ḥ": 31,
+          "ṣ": 32,
+          "ṭ": 33,
+          "ẓ": 34
+        },
+        "weights_sha256": "423777f2d721bc5c40426463d4eab6e305d6aa8cde0ecd69628ac4a69eb1589a"
+      }
+    },
+    {
+      "model": "wav2vec2-quran-phonetics.fp32.onnx",
+      "source": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/001.mp3",
+      "samples": 96000,
+      "start_ms": 1500,
+      "end_ms": 7500,
+      "audio_sha256": "6dedf8c3b88d2cd12c992710839443abebf26e7ef1fcea696acc8961b5836571",
+      "pcm_sha256": "49bec4775fddad803cdec6a26e6637377c9a450a3b0e93ac1843ccd250d984c3",
+      "normalized_sha256": "70f717eda49e07286c7f2e28236eda959b7c83c37513f33acf3c3aec89c1c546",
+      "seconds": 0.28726416593417525,
+      "frames": 299,
+      "vocab_columns": 40,
+      "blank_id": 37,
+      "greedy": "lhirakhnānir'raḥīmal-hadul",
+      "special": {
+        "[PAD]": {
+          "max_probability": 0.9999990463256836,
+          "mean_probability": 0.8730515837669373,
+          "argmax_frames": 262
+        },
+        " ": {
+          "max_probability": 2.882956323446706e-05,
+          "mean_probability": 2.6454728185854037e-07,
+          "argmax_frames": 0
+        },
+        "-": {
+          "max_probability": 0.9996606111526489,
+          "mean_probability": 0.006728711538016796,
+          "argmax_frames": 2
+        },
+        "|": {
+          "max_probability": 0.0002824803232215345,
+          "mean_probability": 2.6476234324945835e-06,
+          "argmax_frames": 0
+        },
+        "[UNK]": {
+          "max_probability": 2.9272478059283458e-05,
+          "mean_probability": 2.5486571075816755e-07,
+          "argmax_frames": 0
+        }
+      },
+      "runtime": {
+        "blank_id": 37,
+        "do_normalize": true,
+        "input_name": "input_values",
+        "numpy": "2.5.0",
+        "onnxruntime": "1.27.0",
+        "output_name": "logits",
+        "providers": [
+          "CPUExecutionProvider"
+        ],
+        "session_options": {
+          "execution_mode": "ExecutionMode.ORT_SEQUENTIAL",
+          "graph_optimization_level": "GraphOptimizationLevel.ORT_ENABLE_ALL",
+          "inter_op_num_threads": "0",
+          "intra_op_num_threads": "0"
+        },
+        "vocab": {
+          " ": 0,
+          "'": 1,
+          "-": 2,
+          "</s>": 39,
+          "<s>": 38,
+          "H": 3,
+          "[PAD]": 37,
+          "[UNK]": 36,
+          "a": 4,
+          "b": 5,
+          "d": 6,
+          "e": 7,
+          "f": 8,
+          "g": 9,
+          "h": 10,
+          "i": 11,
+          "j": 12,
+          "k": 13,
+          "l": 14,
+          "m": 15,
+          "n": 16,
+          "o": 17,
+          "q": 18,
+          "r": 19,
+          "s": 20,
+          "t": 21,
+          "u": 22,
+          "w": 23,
+          "y": 24,
+          "z": 25,
+          "|": 35,
+          "ā": 26,
+          "ī": 27,
+          "ū": 28,
+          "ʿ": 29,
+          "ḍ": 30,
+          "ḥ": 31,
+          "ṣ": 32,
+          "ṭ": 33,
+          "ẓ": 34
+        },
+        "weights_sha256": "5b2e9c350371feb5bb520acd0a09c7372c80915fce4e2f2e3df48cb803da87e3"
+      }
+    },
+    {
+      "model": "wav2vec2-quran-phonetics.fp32.onnx",
+      "source": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/080.mp3",
+      "samples": 96000,
+      "start_ms": 1500,
+      "end_ms": 7500,
+      "audio_sha256": "4d91f378520caba3be8df904ee323be94815ca448a98ddda29b58a1b415dd13c",
+      "pcm_sha256": "c6e77dd08675bdfa96810cc10d129a2f84ee92baedba3c7890226bb4697169ce",
+      "normalized_sha256": "fce2ba10a7c4a7af643f273745816869a65b9364f343df07cef8d9e8fceb9e91",
+      "seconds": 0.28850045800209045,
+      "frames": 299,
+      "vocab_columns": 40,
+      "blank_id": 37,
+      "greedy": "lkirurakhnānirraḥīnaabasawata",
+      "special": {
+        "[PAD]": {
+          "max_probability": 0.9999985694885254,
+          "mean_probability": 0.8775111436843872,
+          "argmax_frames": 262
+        },
+        " ": {
+          "max_probability": 3.0133242034935392e-05,
+          "mean_probability": 2.1085229207074008e-07,
+          "argmax_frames": 0
+        },
+        "-": {
+          "max_probability": 0.013431647792458534,
+          "mean_probability": 0.0001588491431903094,
+          "argmax_frames": 0
+        },
+        "|": {
+          "max_probability": 0.0003164770023431629,
+          "mean_probability": 2.2877406991028693e-06,
+          "argmax_frames": 0
+        },
+        "[UNK]": {
+          "max_probability": 2.8283544452278875e-05,
+          "mean_probability": 1.9927391292640095e-07,
+          "argmax_frames": 0
+        }
+      },
+      "runtime": {
+        "blank_id": 37,
+        "do_normalize": true,
+        "input_name": "input_values",
+        "numpy": "2.5.0",
+        "onnxruntime": "1.27.0",
+        "output_name": "logits",
+        "providers": [
+          "CPUExecutionProvider"
+        ],
+        "session_options": {
+          "execution_mode": "ExecutionMode.ORT_SEQUENTIAL",
+          "graph_optimization_level": "GraphOptimizationLevel.ORT_ENABLE_ALL",
+          "inter_op_num_threads": "0",
+          "intra_op_num_threads": "0"
+        },
+        "vocab": {
+          " ": 0,
+          "'": 1,
+          "-": 2,
+          "</s>": 39,
+          "<s>": 38,
+          "H": 3,
+          "[PAD]": 37,
+          "[UNK]": 36,
+          "a": 4,
+          "b": 5,
+          "d": 6,
+          "e": 7,
+          "f": 8,
+          "g": 9,
+          "h": 10,
+          "i": 11,
+          "j": 12,
+          "k": 13,
+          "l": 14,
+          "m": 15,
+          "n": 16,
+          "o": 17,
+          "q": 18,
+          "r": 19,
+          "s": 20,
+          "t": 21,
+          "u": 22,
+          "w": 23,
+          "y": 24,
+          "z": 25,
+          "|": 35,
+          "ā": 26,
+          "ī": 27,
+          "ū": 28,
+          "ʿ": 29,
+          "ḍ": 30,
+          "ḥ": 31,
+          "ṣ": 32,
+          "ṭ": 33,
+          "ẓ": 34
+        },
+        "weights_sha256": "5b2e9c350371feb5bb520acd0a09c7372c80915fce4e2f2e3df48cb803da87e3"
+      }
+    },
+    {
+      "model": "wav2vec2-quran-phonetics.fp32.onnx",
+      "source": "synthetic-zero",
+      "samples": 96000,
+      "seconds": 0.2642725829500705,
+      "frames": 299,
+      "vocab_columns": 40,
+      "blank_id": 37,
+      "greedy": "",
+      "special": {
+        "[PAD]": {
+          "max_probability": 0.9999939203262329,
+          "mean_probability": 0.9999924302101135,
+          "argmax_frames": 299
+        },
+        " ": {
+          "max_probability": 4.509239162620027e-11,
+          "mean_probability": 4.1705791598012354e-11,
+          "argmax_frames": 0
+        },
+        "-": {
+          "max_probability": 8.91505578692886e-07,
+          "mean_probability": 8.008734653230931e-07,
+          "argmax_frames": 0
+        },
+        "|": {
+          "max_probability": 1.5397980668296896e-09,
+          "mean_probability": 1.4319413432772876e-09,
+          "argmax_frames": 0
+        },
+        "[UNK]": {
+          "max_probability": 4.354387336813481e-11,
+          "mean_probability": 4.0551718233361456e-11,
+          "argmax_frames": 0
+        }
+      },
+      "runtime": {
+        "blank_id": 37,
+        "do_normalize": true,
+        "input_name": "input_values",
+        "numpy": "2.5.0",
+        "onnxruntime": "1.27.0",
+        "output_name": "logits",
+        "providers": [
+          "CPUExecutionProvider"
+        ],
+        "session_options": {
+          "execution_mode": "ExecutionMode.ORT_SEQUENTIAL",
+          "graph_optimization_level": "GraphOptimizationLevel.ORT_ENABLE_ALL",
+          "inter_op_num_threads": "0",
+          "intra_op_num_threads": "0"
+        },
+        "vocab": {
+          " ": 0,
+          "'": 1,
+          "-": 2,
+          "</s>": 39,
+          "<s>": 38,
+          "H": 3,
+          "[PAD]": 37,
+          "[UNK]": 36,
+          "a": 4,
+          "b": 5,
+          "d": 6,
+          "e": 7,
+          "f": 8,
+          "g": 9,
+          "h": 10,
+          "i": 11,
+          "j": 12,
+          "k": 13,
+          "l": 14,
+          "m": 15,
+          "n": 16,
+          "o": 17,
+          "q": 18,
+          "r": 19,
+          "s": 20,
+          "t": 21,
+          "u": 22,
+          "w": 23,
+          "y": 24,
+          "z": 25,
+          "|": 35,
+          "ā": 26,
+          "ī": 27,
+          "ū": 28,
+          "ʿ": 29,
+          "ḍ": 30,
+          "ḥ": 31,
+          "ṣ": 32,
+          "ṭ": 33,
+          "ẓ": 34
+        },
+        "weights_sha256": "5b2e9c350371feb5bb520acd0a09c7372c80915fce4e2f2e3df48cb803da87e3"
+      }
+    }
+  ]
+}

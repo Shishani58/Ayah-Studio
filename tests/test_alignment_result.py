@@ -44,10 +44,10 @@ def test_local_export_source_identifies_artifact(tmp_path, monkeypatch):
     assert first != second
 
 
-def test_reference_shortcut_reports_reference_without_model_lag():
-    source = result_source({"model_source": "reference:reader"}, "auto")
+def test_ctc_source_uses_explicit_model_backend_without_a_default_lag():
+    source = result_source({"model_source": "ctc:reader", "mode": "full"}, "full")
     assert source.endswith(
-        "backend=reference:requested_mode=auto:actual_mode=reference:"
+        "backend=runtime-worker:requested_mode=full:actual_mode=full:"
         "align_lag_ms=0:lag_adjust_ms=0"
     )
 
@@ -64,7 +64,7 @@ def test_log_preflight_failure_leaves_project_untouched(tmp_path):
     with ProjectDB.open(str(path), "test", 1) as db:
         with pytest.raises(ValueError, match="symlink"):
             write_alignment_result(
-                db, [(1, 1, 100)], trace={"model_source": "reference:reader"},
+                db, [(1, 1, 100)], trace={"model_source": "ctc:reader"},
                 requested_mode="auto", db_path=path,
             )
         assert db.get_timings() == []

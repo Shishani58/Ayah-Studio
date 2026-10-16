@@ -1,0 +1,30 @@
+baseline shatri whisper-tarteel-base 2 proof 2 unknown 284 bad [] calls 10 seconds 61.32
+baseline shatri whisper-tarteel-base 78 proof 0 unknown 40 bad [] calls 5 seconds 72.72
+baseline shatri whisper-tarteel-base 80 proof 33 unknown 9 bad [] calls 69 seconds 411.74
+baseline shatri whisper-tarteel-base 112 proof 4 unknown 0 bad [] calls 6 seconds 70.58
+baseline shatri quran-phonetics 2 proof 0 unknown 286 bad [] calls 5 seconds 38.97
+baseline shatri quran-phonetics 78 proof 1 unknown 39 bad [] calls 13 seconds 18.17
+baseline shatri quran-phonetics 80 proof 0 unknown 42 bad [] calls 13 seconds 29.06
+baseline shatri quran-phonetics 112 proof 0 unknown 4 bad [] calls 6 seconds 6.24
+identity shatri whisper-tarteel-base 2 proof 27 unknown 259 bad [] calls 169 seconds 850.86
+identity shatri whisper-tarteel-base 78 proof 0 unknown 40 bad [] calls 5 seconds 20.12
+reentry shatri whisper-tarteel-base 78 proof 11 unknown 29 bad [(36, 191570, 0.7027735499351102, 654)] calls 37 seconds 162.56
+current-shatri shatri whisper-tarteel-base 78 proof 5 unknown 35 bad [] calls 37 seconds 270.82
+current-shatri shatri whisper-tarteel-base 112 proof 4 unknown 0 bad [] calls 6 seconds 12.96
+current-shatri shatri quran-phonetics 78 proof 1 unknown 39 bad [] calls 23 seconds 11.89
+current-shatri shatri quran-phonetics 112 proof 0 unknown 4 bad [] calls 6 seconds 6.69
+current-ghamidi saad_al_ghamidi whisper-tarteel-base 80 proof 21 unknown 21 bad [] calls 49 seconds 314.27
+current-ghamidi saad_al_ghamidi whisper-tarteel-base 112 proof 1 unknown 3 bad [] calls 3 seconds 12.46
+current-ghamidi saad_al_ghamidi quran-phonetics 80 proof 0 unknown 42 bad [] calls 14 seconds 3.73
+current-ghamidi saad_al_ghamidi quran-phonetics 112 proof 1 unknown 3 bad [] calls 5 seconds 1.5
+current-hybrid2 shatri whisper-tarteel-base 2 proof 39 unknown 247 bad [(58, 1061490, 0.6547484233876968, 850)] calls 231 seconds 232.85
+final-replay2 shatri whisper-tarteel-base 2 proof 29 unknown 257 bad [] calls 231 seconds 85.17
+final-smoke shatri whisper-tarteel-base 112 proof 4 unknown 0 bad [] calls 6 seconds 124.19
+final-smoke shatri quran-phonetics 112 proof 0 unknown 4 bad [] calls 6 seconds 15.97
+final-regression80 shatri whisper-tarteel-base 80 proof 33 unknown 9 bad [] calls 69 seconds 478.99
+final-frozen-replay2 shatri whisper-tarteel-base 2 proof 29 unknown 257 bad [] calls 231 seconds 11.96
+final-frozen-replay2 shatri whisper-tarteel-base 78 proof 5 unknown 35 bad [] calls 37 seconds 0.51
+final-frozen-replay2 shatri whisper-tarteel-base 80 proof 33 unknown 9 bad [] calls 69 seconds 0.35
+final-frozen-replay2 shatri whisper-tarteel-base 112 proof 4 unknown 0 bad [] calls 6 seconds 0.22
+final-frozen-replay2 saad_al_ghamidi whisper-tarteel-base 80 proof 10 unknown 32 bad [] calls 49 seconds 0.3
+final-frozen-replay2 saad_al_ghamidi whisper-tarteel-base 112 proof 1 unknown 3 bad [] calls 3 seconds 0.22

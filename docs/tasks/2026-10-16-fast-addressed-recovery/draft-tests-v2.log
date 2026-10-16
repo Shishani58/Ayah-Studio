@@ -1,0 +1,8 @@
+.................                                                        [100%]
+=============================== warnings summary ===============================
+../../../../../../../../Users/ayub/Developer/surah-cutter/.venv/lib/python3.12/site-packages/_pytest/cacheprovider.py:469
+  /Users/ayub/Developer/surah-cutter/.venv/lib/python3.12/site-packages/_pytest/cacheprovider.py:469: PytestCacheWarning: could not create cache path /dev/.pytest_cache/v/cache/nodeids: [Errno 1] Operation not permitted: '/dev/pytest-cache-files-w3_5ii0k'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+17 passed, 1 warning in 0.34s

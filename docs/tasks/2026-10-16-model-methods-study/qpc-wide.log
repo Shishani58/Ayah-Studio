@@ -1,0 +1,82 @@
+strong20 shatri-114 current OK 4.45 calls 2
+strong20 shatri-114 no_delimiter OK 0.04 calls 2
+strong20 shatri-114 phones OK 0.04 calls 2
+strong20 shatri-114 free_edges OK 0.03 calls 2
+strong20 shatri-032 current OK 80.25 calls 21
+strong20 shatri-032 no_delimiter OK 2.18 calls 21
+strong20 shatri-032 phones OK 2.08 calls 21
+strong20 shatri-032 free_edges OK 2.04 calls 21
+strong20 shatri-055 current OK 29.1 calls 25
+strong20 shatri-055 no_delimiter OK 1.36 calls 25
+strong20 shatri-055 phones OK 2.74 calls 25
+strong20 shatri-055 free_edges OK 2.56 calls 25
+strong20 shatri-059 current OK 36.1 calls 26
+strong20 shatri-059 no_delimiter OK 2.43 calls 26
+strong20 shatri-059 phones OK 2.34 calls 26
+strong20 shatri-059 free_edges OK 2.41 calls 26
+strong20 shatri-065 current OK 23.59 calls 20
+strong20 shatri-065 no_delimiter OK 1.73 calls 20
+strong20 shatri-065 phones OK 1.6 calls 20
+strong20 shatri-065 free_edges OK 1.62 calls 20
+strong20 shatri-067 current OK 29.54 calls 21
+strong20 shatri-067 no_delimiter OK 2.07 calls 21
+strong20 shatri-067 phones OK 1.59 calls 21
+strong20 shatri-067 free_edges OK 1.7 calls 21
+strong20 shatri-073 current OK 13.75 calls 12
+strong20 shatri-073 no_delimiter OK 0.68 calls 12
+strong20 shatri-073 phones OK 0.65 calls 12
+strong20 shatri-073 free_edges OK 0.64 calls 12
+strong20 shatri-077 current OK 11.88 calls 11
+strong20 shatri-077 no_delimiter OK 0.69 calls 11
+strong20 shatri-077 phones OK 0.67 calls 11
+strong20 shatri-077 free_edges OK 0.68 calls 11
+strong20 shatri-079 current OK 12.81 calls 12
+strong20 shatri-079 no_delimiter OK 0.71 calls 12
+strong20 shatri-079 phones OK 0.69 calls 12
+strong20 shatri-079 free_edges OK 0.68 calls 12
+strong20 abdul_basit_mujawwad-080 current OK 21.66 calls 20
+strong20 abdul_basit_mujawwad-080 no_delimiter OK 1.77 calls 20
+strong20 abdul_basit_mujawwad-080 phones OK 1.14 calls 20
+strong20 abdul_basit_mujawwad-080 free_edges OK 1.06 calls 20
+strong20 abdul_basit_mujawwad-098 current OK 17.68 calls 12
+strong20 abdul_basit_mujawwad-098 no_delimiter OK 0.42 calls 11
+strong20 abdul_basit_mujawwad-098 phones OK 0.41 calls 11
+strong20 abdul_basit_mujawwad-098 free_edges OK 0.41 calls 11
+strong20 abdul_basit_mujawwad-112 current OK 2.65 calls 3
+strong20 abdul_basit_mujawwad-112 no_delimiter OK 0.04 calls 3
+strong20 abdul_basit_mujawwad-112 phones OK 0.04 calls 3
+strong20 abdul_basit_mujawwad-112 free_edges OK 0.04 calls 3
+strong20 mahmoud_khalil_al_hussary-055 current OK 54.2 calls 54
+strong20 mahmoud_khalil_al_hussary-055 no_delimiter OK 2.55 calls 54
+strong20 mahmoud_khalil_al_hussary-055 phones OK 2.58 calls 55
+strong20 mahmoud_khalil_al_hussary-055 free_edges OK 2.59 calls 54
+strong20 mahmoud_khalil_al_hussary-065 current OK 32.06 calls 23
+strong20 mahmoud_khalil_al_hussary-065 no_delimiter OK 2.35 calls 23
+strong20 mahmoud_khalil_al_hussary-065 phones OK 2.83 calls 23
+strong20 mahmoud_khalil_al_hussary-065 free_edges OK 2.12 calls 23
+strong20 mahmoud_khalil_al_hussary-067 current OK 38.19 calls 34
+strong20 mahmoud_khalil_al_hussary-067 no_delimiter OK 2.1 calls 34
+strong20 mahmoud_khalil_al_hussary-067 phones OK 2.15 calls 34
+strong20 mahmoud_khalil_al_hussary-067 free_edges OK 2.71 calls 34
+Traceback (most recent call last):
+  File "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/predict_qpc.py", line 165, in <module>
+    
+  File "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/predict_qpc.py", line 149, in main
+    "reference_prior": "disabled-text-only", "auxiliary_models": "disabled",
+  File "/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/surah-model-methods-1duibqa2/surah_cutter/core/align.py", line 327, in align_surah
+    emissions = _full_emissions(bundle, pcm, np, trace=trace)  # float32 (T, V)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/predict_qpc.py", line 99, in full
+    
+  File "/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/surah-model-methods-1duibqa2/surah_cutter/core/align.py", line 531, in _full_emissions
+    matrix = full_windows.generate_pause_emissions(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/surah-model-methods-1duibqa2/surah_cutter/core/full_windows.py", line 213, in generate_pause_emissions
+    kept, interval = pending.popleft().result()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ayub/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/concurrent/futures/_base.py", line 451, in result
+    self._condition.wait(timeout)
+  File "/Users/ayub/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/threading.py", line 355, in wait
+    waiter.acquire()
+KeyboardInterrupt
+[rtk] .venv/bin/python: process terminated by signal 2

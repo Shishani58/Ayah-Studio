@@ -1,0 +1,50 @@
+--- 
++++ 
+@@ -253,6 +253,9 @@
+     from surah_cutter.core._ctc import forced_align, aligned_segments
+     from surah_cutter.data import transliteration
+ 
++    from surah_cutter.core.progress import report
++
++    report("model")
+     if use_onnx:
+         bundle = model if isinstance(model, _OnnxBundle) else _get_onnx_bundle()
+     else:
+@@ -267,7 +270,9 @@
+         trace["model_source"] = bundle_source(bundle)
+ 
+     if getattr(bundle, "text_kind", "phonetic") == "whisper":
++        report("acoustic")
+         word_rows = bundle.emitter.align_words(pcm, words, intro=surah not in (1, 9), strict_words=False)
++        report("verify")
+         first = {}
+         for word, (_, start, confidence) in zip(words, word_rows):
+             if ayah_progress is not None and word.ayah not in first:
+@@ -318,6 +323,7 @@
+         return rows
+ 
+     # --- 2. emissions: log-probs over the vocab, shape (T, V) ---------------
++    report("acoustic")
+     emissions = _full_emissions(bundle, pcm, np, trace=trace)  # float32 (T, V)
+     if getattr(bundle, "text_kind", "").startswith("fastconformer"):
+         targets, word_token_spans = _build_targets(words, word_trs, bundle, basmala_trs)
+@@ -333,7 +339,9 @@
+     log_probs = np.ascontiguousarray(emissions[None, :, :], dtype=np.float32)
+ 
+     # --- 3. forced alignment (CTC, no decoding) -----------------------------
++    report("alignment", 0, n_frames)
+     path, frame_scores = forced_align(log_probs, targets_arr, blank=bundle.blank_id)
++    report("verify")
+     path = np.asarray(path).reshape(-1)
+     frame_scores = np.asarray(frame_scores).reshape(-1)
+ 
+@@ -529,7 +537,8 @@
+     """Conservative FULL warnings; never move a boundary or change confidence.
+ 
+     High mean word probability can hide an unsupported phoneme. A late mark
+-    inside a long silence is also ambiguous despite high CTC probability.
++    inside a long silence is also ambiguous despite high CTC probability,
++    unless local DSP deliberately positioned a capped lead inside that silence.
+     These gates address the observed unflagged 83:10/95:8 without ayah IDs,
+     reference timings, extra inference, or changing FAST's onset checker.
+     """

@@ -1,0 +1,679 @@
+[
+  {
+    "model": "whisper-tarteel-tiny",
+    "original_trace": {
+      "total_ms": 384287.375,
+      "emission_passes": 0,
+      "emissions_frames": 0,
+      "acoustic_reads": [
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            6180.0,
+            7680.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 0,
+          "reason": "negative-control:independent-short-vocative",
+          "requested_window_ms": [
+            6180,
+            7680
+          ],
+          "samples": [
+            98880,
+            122880
+          ],
+          "observed": {
+            "units": [
+              "يا",
+              "سين"
+            ],
+            "positions_ms": null,
+            "quality": 0.9716966152191162,
+            "truncated": false,
+            "text": "يس",
+            "unit_quality": [
+              0.9197339256496577,
+              0.9197339256496577
+            ],
+            "frames": 0,
+            "attribution": [
+              {
+                "word": "يس",
+                "raw_word": "يس",
+                "selected_indices": [
+                  0,
+                  1
+                ],
+                "token_ids": [
+                  1829,
+                  3794
+                ],
+                "probabilities": [
+                  0.9998175238758823,
+                  0.9197339256496577
+                ],
+                "spoken_alias": "يس",
+                "source_units": [
+                  "يا",
+                  "سين"
+                ]
+              },
+              {
+                "word": "يس",
+                "raw_word": "يس",
+                "selected_indices": [
+                  0,
+                  1
+                ],
+                "token_ids": [
+                  1829,
+                  3794
+                ],
+                "probabilities": [
+                  0.9998175238758823,
+                  0.9197339256496577
+                ],
+                "spoken_alias": "يس",
+                "source_units": [
+                  "يا",
+                  "سين"
+                ]
+              }
+            ],
+            "hypotheses": [],
+            "null_log_probability": null,
+            "posterior_sha256": null,
+            "stride_ms": 0.0
+          },
+          "seconds": 0.1369051248766482
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            6180.0,
+            8880.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 1,
+          "reason": "negative-control:independent-full-vocative",
+          "requested_window_ms": [
+            6180,
+            8880
+          ],
+          "samples": [
+            98880,
+            142080
+          ],
+          "observed": {
+            "units": [
+              "يا",
+              "ايها"
+            ],
+            "positions_ms": null,
+            "quality": 0.9967861175537109,
+            "truncated": false,
+            "text": "يَا أَيُّهَا",
+            "unit_quality": [
+              0.9988221706605228,
+              0.9991238647256686
+            ],
+            "frames": 0,
+            "attribution": [
+              {
+                "word": "يا",
+                "raw_word": "يَا",
+                "selected_indices": [
+                  0,
+                  1,
+                  2
+                ],
+                "token_ids": [
+                  1829,
+                  6808,
+                  995
+                ],
+                "probabilities": [
+                  0.9999886752461923,
+                  0.9989195827087302,
+                  0.9988221706605228
+                ]
+              },
+              {
+                "word": "ايها",
+                "raw_word": "أَيُّهَا",
+                "selected_indices": [
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "token_ids": [
+                  5551,
+                  6808,
+                  1829,
+                  11703,
+                  10859,
+                  3224,
+                  6808,
+                  995
+                ],
+                "probabilities": [
+                  0.9991238647256686,
+                  0.9997755792832385,
+                  0.9999977350285647,
+                  0.9999945164027223,
+                  0.9999831917733143,
+                  0.9998543474648758,
+                  0.9999576824925632,
+                  0.9991821783687529
+                ]
+              }
+            ],
+            "hypotheses": [],
+            "null_log_probability": null,
+            "posterior_sha256": null,
+            "stride_ms": 0.0
+          },
+          "seconds": 0.18341354187577963
+        }
+      ],
+      "denied_acoustic_reads": [],
+      "audio_ms": 4200.0,
+      "covered_audio_ms": 2700.0,
+      "coverage": 0.007025991941577576,
+      "acoustic_intervals_ms": [
+        [
+          6180.0,
+          8880.0
+        ]
+      ],
+      "cache_hits": 0,
+      "cache_bytes": 7626,
+      "peak_cache_bytes": 7626,
+      "cache_evictions": 0,
+      "local_read_limits": {
+        "cache_limit_bytes": 33554432,
+        "max_read_ms": 6000.0,
+        "max_coverage": 0.65,
+        "max_audio_ratio": 2.0
+      },
+      "model_passes": 2
+    },
+    "actual_dispatches": [
+      {
+        "samples": 24000,
+        "sha256": "e967ebe9f073a95cebd9d547d160fbc6206e0d8861bd3fe3b1f668b03babeb85"
+      },
+      {
+        "samples": 43200,
+        "sha256": "ec8753f73a55dd8713b02ea868e68abe623191633ca42de5334e1a83086445c9"
+      }
+    ],
+    "independent_text": "يَا أَيُّهَا",
+    "quality": [
+      0.9988221706605228,
+      0.9991238647256686
+    ],
+    "correct_target_prefix": [
+      "يا",
+      "ايها"
+    ],
+    "wrong_internal_target": [
+      "يا",
+      "اولي"
+    ],
+    "wrong_target_would_confirm": false,
+    "short_cue": null,
+    "zero_trace": {
+      "total_ms": 384287.375,
+      "emission_passes": 0,
+      "emissions_frames": 0,
+      "acoustic_reads": [
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            6180.0,
+            8880.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 0,
+          "reason": "negative-control:zero",
+          "requested_window_ms": [
+            6180,
+            8880
+          ],
+          "samples": [
+            98880,
+            142080
+          ],
+          "observed": {
+            "units": [
+              "فبحر"
+            ],
+            "positions_ms": null,
+            "quality": 0.42672866582870483,
+            "truncated": false,
+            "text": "فَبِحْرِ",
+            "unit_quality": [
+              0.10913312252917678
+            ],
+            "frames": 0,
+            "attribution": [
+              {
+                "word": "فبحر",
+                "raw_word": "فَبِحْرِ",
+                "selected_indices": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "token_ids": [
+                  5172,
+                  6808,
+                  3555,
+                  11082,
+                  5016,
+                  17195,
+                  2288,
+                  11082
+                ],
+                "probabilities": [
+                  0.1768973177227328,
+                  0.6126125674271882,
+                  0.10913312252917678,
+                  0.7912555419189905,
+                  0.16483197297594873,
+                  0.8658622838064154,
+                  0.4131513235147351,
+                  0.9041023658238846
+                ]
+              }
+            ],
+            "hypotheses": [],
+            "null_log_probability": null,
+            "posterior_sha256": null,
+            "stride_ms": 0.0
+          },
+          "seconds": 0.15801625000312924
+        }
+      ],
+      "denied_acoustic_reads": [],
+      "audio_ms": 2700.0,
+      "covered_audio_ms": 2700.0,
+      "coverage": 0.007025991941577576,
+      "acoustic_intervals_ms": [
+        [
+          6180.0,
+          8880.0
+        ]
+      ],
+      "cache_hits": 0,
+      "cache_bytes": 3354,
+      "peak_cache_bytes": 3354,
+      "cache_evictions": 0,
+      "local_read_limits": {
+        "cache_limit_bytes": 33554432,
+        "max_read_ms": 6000.0,
+        "max_coverage": 0.65,
+        "max_audio_ratio": 2.0
+      },
+      "model_passes": 1
+    },
+    "zero_actual_dispatches": [
+      {
+        "samples": 43200,
+        "sha256": "53853188f83a941e2f45ec1383293ae935106c5721918079000dcb2254fc550b"
+      }
+    ],
+    "zero_text": "فَبِحْرِ",
+    "zero_would_confirm": false
+  },
+  {
+    "model": "whisper-tarteel-base",
+    "original_trace": {
+      "total_ms": 384287.375,
+      "emission_passes": 0,
+      "emissions_frames": 0,
+      "acoustic_reads": [
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            6180.0,
+            7680.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 0,
+          "reason": "negative-control:independent-short-vocative",
+          "requested_window_ms": [
+            6180,
+            7680
+          ],
+          "samples": [
+            98880,
+            122880
+          ],
+          "observed": {
+            "units": [
+              "يا"
+            ],
+            "positions_ms": null,
+            "quality": 0.9831923246383667,
+            "truncated": false,
+            "text": "يَا",
+            "unit_quality": [
+              0.9375508772665788
+            ],
+            "frames": 0,
+            "attribution": [
+              {
+                "word": "يا",
+                "raw_word": "يَا",
+                "selected_indices": [
+                  0,
+                  1,
+                  2
+                ],
+                "token_ids": [
+                  1829,
+                  6808,
+                  995
+                ],
+                "probabilities": [
+                  0.999444912230328,
+                  0.9375508772665788,
+                  0.9972569100658288
+                ]
+              }
+            ],
+            "hypotheses": [],
+            "null_log_probability": null,
+            "posterior_sha256": null,
+            "stride_ms": 0.0
+          },
+          "seconds": 0.4048640001565218
+        },
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            6180.0,
+            8880.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 1,
+          "reason": "negative-control:independent-full-vocative",
+          "requested_window_ms": [
+            6180,
+            8880
+          ],
+          "samples": [
+            98880,
+            142080
+          ],
+          "observed": {
+            "units": [
+              "يا",
+              "ايها"
+            ],
+            "positions_ms": null,
+            "quality": 0.9992266297340393,
+            "truncated": false,
+            "text": "يَا أَيُّهَا",
+            "unit_quality": [
+              0.9999874831811497,
+              0.9997532976492673
+            ],
+            "frames": 0,
+            "attribution": [
+              {
+                "word": "يا",
+                "raw_word": "يَا",
+                "selected_indices": [
+                  0,
+                  1,
+                  2
+                ],
+                "token_ids": [
+                  1829,
+                  6808,
+                  995
+                ],
+                "probabilities": [
+                  0.9999922514562126,
+                  0.9999874831811497,
+                  0.9999997615814777
+                ]
+              },
+              {
+                "word": "ايها",
+                "raw_word": "أَيُّهَا",
+                "selected_indices": [
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "token_ids": [
+                  5551,
+                  6808,
+                  1829,
+                  11703,
+                  10859,
+                  3224,
+                  6808,
+                  995
+                ],
+                "probabilities": [
+                  0.9999957084838798,
+                  0.9999994039539004,
+                  1.0,
+                  1.0,
+                  0.9999997615814777,
+                  0.9999996423722521,
+                  0.9999960661089133,
+                  0.9997532976492673
+                ]
+              }
+            ],
+            "hypotheses": [],
+            "null_log_probability": null,
+            "posterior_sha256": null,
+            "stride_ms": 0.0
+          },
+          "seconds": 1.3001832498703152
+        }
+      ],
+      "denied_acoustic_reads": [],
+      "audio_ms": 4200.0,
+      "covered_audio_ms": 2700.0,
+      "coverage": 0.007025991941577576,
+      "acoustic_intervals_ms": [
+        [
+          6180.0,
+          8880.0
+        ]
+      ],
+      "cache_hits": 0,
+      "cache_bytes": 7068,
+      "peak_cache_bytes": 7068,
+      "cache_evictions": 0,
+      "local_read_limits": {
+        "cache_limit_bytes": 33554432,
+        "max_read_ms": 6000.0,
+        "max_coverage": 0.65,
+        "max_audio_ratio": 2.0
+      },
+      "model_passes": 2
+    },
+    "actual_dispatches": [
+      {
+        "samples": 24000,
+        "sha256": "e967ebe9f073a95cebd9d547d160fbc6206e0d8861bd3fe3b1f668b03babeb85"
+      },
+      {
+        "samples": 43200,
+        "sha256": "ec8753f73a55dd8713b02ea868e68abe623191633ca42de5334e1a83086445c9"
+      }
+    ],
+    "independent_text": "يَا أَيُّهَا",
+    "quality": [
+      0.9999874831811497,
+      0.9997532976492673
+    ],
+    "correct_target_prefix": [
+      "يا",
+      "ايها"
+    ],
+    "wrong_internal_target": [
+      "يا",
+      "اولي"
+    ],
+    "wrong_target_would_confirm": false,
+    "short_cue": "whole_spoken_prefix_incomplete_canonical_word",
+    "zero_trace": {
+      "total_ms": 384287.375,
+      "emission_passes": 0,
+      "emissions_frames": 0,
+      "acoustic_reads": [
+        {
+          "phase": "independent-local",
+          "window_ms": [
+            6180.0,
+            8880.0
+          ],
+          "frames": 0,
+          "outcome": "completed",
+          "id": 0,
+          "reason": "negative-control:zero",
+          "requested_window_ms": [
+            6180,
+            8880
+          ],
+          "samples": [
+            98880,
+            142080
+          ],
+          "observed": {
+            "units": [
+              "والمؤمنين"
+            ],
+            "positions_ms": null,
+            "quality": 0.8829455375671387,
+            "truncated": false,
+            "text": "وَالْمُؤْمِنِينَ",
+            "unit_quality": [
+              0.4040377759528632
+            ],
+            "frames": 0,
+            "attribution": [
+              {
+                "word": "والمؤمنين",
+                "raw_word": "وَالْمُؤْمِنِينَ",
+                "selected_indices": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13
+                ],
+                "token_ids": [
+                  2407,
+                  6808,
+                  6027,
+                  17195,
+                  2304,
+                  10859,
+                  33604,
+                  17195,
+                  2304,
+                  11082,
+                  1863,
+                  11082,
+                  9957,
+                  6808
+                ],
+                "probabilities": [
+                  0.858939889794358,
+                  0.9999802116501774,
+                  0.4040377759528632,
+                  0.9658246303704344,
+                  0.717886338751448,
+                  0.8926283572546221,
+                  0.7589877427426124,
+                  0.9990713882643698,
+                  0.9652424013765175,
+                  0.9987980286900906,
+                  0.9997002784985602,
+                  0.993372784517707,
+                  0.9917861981260525,
+                  0.9998996358499792
+                ]
+              }
+            ],
+            "hypotheses": [],
+            "null_log_probability": null,
+            "posterior_sha256": null,
+            "stride_ms": 0.0
+          },
+          "seconds": 0.901968875201419
+        }
+      ],
+      "denied_acoustic_reads": [],
+      "audio_ms": 2700.0,
+      "covered_audio_ms": 2700.0,
+      "coverage": 0.007025991941577576,
+      "acoustic_intervals_ms": [
+        [
+          6180.0,
+          8880.0
+        ]
+      ],
+      "cache_hits": 0,
+      "cache_bytes": 4038,
+      "peak_cache_bytes": 4038,
+      "cache_evictions": 0,
+      "local_read_limits": {
+        "cache_limit_bytes": 33554432,
+        "max_read_ms": 6000.0,
+        "max_coverage": 0.65,
+        "max_audio_ratio": 2.0
+      },
+      "model_passes": 1
+    },
+    "zero_actual_dispatches": [
+      {
+        "samples": 43200,
+        "sha256": "53853188f83a941e2f45ec1383293ae935106c5721918079000dcb2254fc550b"
+      }
+    ],
+    "zero_text": "وَالْمُؤْمِنِينَ",
+    "zero_would_confirm": false
+  }
+]

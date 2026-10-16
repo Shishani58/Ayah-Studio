@@ -1,0 +1,290 @@
+{
+ "model": "obadx/muaalem-model-v3_2",
+ "revision": "01a1ef9fbe40d144ef845101e89ff924aed3fef5",
+ "frame_seconds": 0.04,
+ "output_frames": "T' = floor((T - 1) / 2) + 1 for T input rows ([1, T, 160])",
+ "outputs": {
+  "phonemes": {
+   "vocab_size": 43,
+   "blank_id": 0,
+   "id_to_text": {
+    "0": "[PAD]",
+    "1": "ء",
+    "2": "ب",
+    "3": "ت",
+    "4": "ث",
+    "5": "ج",
+    "6": "ح",
+    "7": "خ",
+    "8": "د",
+    "9": "ذ",
+    "10": "ر",
+    "11": "ز",
+    "12": "س",
+    "13": "ش",
+    "14": "ص",
+    "15": "ض",
+    "16": "ط",
+    "17": "ظ",
+    "18": "ع",
+    "19": "غ",
+    "20": "ف",
+    "21": "ق",
+    "22": "ك",
+    "23": "ل",
+    "24": "م",
+    "25": "ن",
+    "26": "ه",
+    "27": "و",
+    "28": "ي",
+    "29": "ا",
+    "30": "ۦ",
+    "31": "ۥ",
+    "32": "َ",
+    "33": "ُ",
+    "34": "ِ",
+    "35": "۪",
+    "36": "ـ",
+    "37": "ٲ",
+    "38": "ڇ",
+    "39": "ں",
+    "40": "۾",
+    "41": "ۜ",
+    "42": "ؙ"
+   },
+   "id_to_codepoints": {
+    "1": "U+0621",
+    "2": "U+0628",
+    "3": "U+062A",
+    "4": "U+062B",
+    "5": "U+062C",
+    "6": "U+062D",
+    "7": "U+062E",
+    "8": "U+062F",
+    "9": "U+0630",
+    "10": "U+0631",
+    "11": "U+0632",
+    "12": "U+0633",
+    "13": "U+0634",
+    "14": "U+0635",
+    "15": "U+0636",
+    "16": "U+0637",
+    "17": "U+0638",
+    "18": "U+0639",
+    "19": "U+063A",
+    "20": "U+0641",
+    "21": "U+0642",
+    "22": "U+0643",
+    "23": "U+0644",
+    "24": "U+0645",
+    "25": "U+0646",
+    "26": "U+0647",
+    "27": "U+0648",
+    "28": "U+064A",
+    "29": "U+0627",
+    "30": "U+06E6",
+    "31": "U+06E5",
+    "32": "U+064E",
+    "33": "U+064F",
+    "34": "U+0650",
+    "35": "U+06EA",
+    "36": "U+0640",
+    "37": "U+0672",
+    "38": "U+0687",
+    "39": "U+06BA",
+    "40": "U+06FE",
+    "41": "U+06DC",
+    "42": "U+0619"
+   },
+   "id_to_name": {
+    "1": "hamza",
+    "2": "baa",
+    "3": "taa",
+    "4": "thaa",
+    "5": "jeem",
+    "6": "haa_mohmala",
+    "7": "khaa",
+    "8": "daal",
+    "9": "thaal",
+    "10": "raa",
+    "11": "zay",
+    "12": "seen",
+    "13": "sheen",
+    "14": "saad",
+    "15": "daad",
+    "16": "taa_mofakhama",
+    "17": "zaa_mofakhama",
+    "18": "ayn",
+    "19": "ghyn",
+    "20": "faa",
+    "21": "qaf",
+    "22": "kaf",
+    "23": "lam",
+    "24": "meem",
+    "25": "noon",
+    "26": "haa",
+    "27": "waw",
+    "28": "yaa",
+    "29": "alif",
+    "30": "yaa_madd",
+    "31": "waw_madd",
+    "32": "fatha",
+    "33": "dama",
+    "34": "kasra",
+    "35": "fatha_momala",
+    "36": "alif_momala",
+    "37": "hamza_mosahala",
+    "38": "qlqla",
+    "39": "noon_mokhfah",
+    "40": "meem_mokhfah",
+    "41": "sakt",
+    "42": "dama_mokhtalasa"
+   }
+  },
+  "hams_or_jahr": {
+   "vocab_size": 3,
+   "blank_id": 0,
+   "id_to_text": {
+    "0": "[PAD]",
+    "1": "[همس]",
+    "2": "[جهر]"
+   },
+   "id_to_english": {
+    "1": "hams",
+    "2": "jahr"
+   }
+  },
+  "shidda_or_rakhawa": {
+   "vocab_size": 4,
+   "blank_id": 0,
+   "id_to_text": {
+    "0": "[PAD]",
+    "1": "[شديد]",
+    "2": "[بين الشدة والرخاوة]",
+    "3": "[رخو]"
+   },
+   "id_to_english": {
+    "1": "shadeed",
+    "2": "between",
+    "3": "rikhw"
+   }
+  },
+  "tafkheem_or_taqeeq": {
+   "vocab_size": 4,
+   "blank_id": 0,
+   "id_to_text": {
+    "0": "[PAD]",
+    "1": "[مفخم]",
+    "2": "[مرقق]",
+    "3": "[أدنى المفخم]"
+   },
+   "id_to_english": {
+    "1": "mofakham",
+    "2": "moraqaq",
+    "3": "low_mofakham"
+   }
+  },
+  "itbaq": {
+   "vocab_size": 3,
+   "blank_id": 0,
+   "id_to_text": {
+    "0": "[PAD]",
+    "1": "[منفتح]",
+    "2": "[مطبق]"
+   },
+   "id_to_english": {
+    "1": "monfateh",
+    "2": "motbaq"
+   }
+  },
+  "safeer": {
+   "vocab_size": 3,
+   "blank_id": 0,
+   "id_to_text": {
+    "0": "[PAD]",
+    "1": "[صفير]",
+    "2": "[لا صفير]"
+   },
+   "id_to_english": {
+    "1": "safeer",
+    "2": "no_safeer"
+   }
+  },
+  "qalqla": {
+   "vocab_size": 3,
+   "blank_id": 0,
+   "id_to_text": {
+    "0": "[PAD]",
+    "1": "[مقلقل]",
+    "2": "[لا قلقلة]"
+   },
+   "id_to_english": {
+    "1": "moqalqal",
+    "2": "not_moqalqal"
+   }
+  },
+  "tikraar": {
+   "vocab_size": 3,
+   "blank_id": 0,
+   "id_to_text": {
+    "0": "[PAD]",
+    "1": "[مكرر]",
+    "2": "[لا تكرار]"
+   },
+   "id_to_english": {
+    "1": "mokarar",
+    "2": "not_mokarar"
+   }
+  },
+  "tafashie": {
+   "vocab_size": 3,
+   "blank_id": 0,
+   "id_to_text": {
+    "0": "[PAD]",
+    "1": "[متفشي]",
+    "2": "[لا تفشي]"
+   },
+   "id_to_english": {
+    "1": "motafashie",
+    "2": "not_motafashie"
+   }
+  },
+  "istitala": {
+   "vocab_size": 3,
+   "blank_id": 0,
+   "id_to_text": {
+    "0": "[PAD]",
+    "1": "[مستطيل]",
+    "2": "[لا إستطالة]"
+   },
+   "id_to_english": {
+    "1": "mostateel",
+    "2": "not_mostateel"
+   }
+  },
+  "ghonna": {
+   "vocab_size": 3,
+   "blank_id": 0,
+   "id_to_text": {
+    "0": "[PAD]",
+    "1": "[مغن]",
+    "2": "[لا غنة]"
+   },
+   "id_to_english": {
+    "1": "maghnoon",
+    "2": "not_maghnoon"
+   }
+  }
+ },
+ "text_script": "Quran Phonetic Script (quran_transcript; compare with quran_phonetizer(uthmani, moshaf, remove_spaces=True).phonemes), one character per token, no spaces",
+ "not_in_any_head": "vocab.json ids 43-45 (<s>, </s>, <unk>) are tokenizer added tokens; the phonemes head has 43 outputs (0..42), so they never occur.",
+ "greedy_decode": [
+  "Take the `phonemes` logits [T', 43] (batch 1). softmax is only needed for confidences; argmax(logits) == argmax(softmax).",
+  "a[t] = argmax_v logits[t, v] for every frame t (ties: lowest id, as numpy/torch).",
+  "Split a[0..T'-1] into maximal runs of equal ids. Each run whose id != 0 (blank, '[PAD]') emits exactly ONE token; blank runs emit nothing. Output text = concatenation of id_to_text of the emitted tokens, in order, no separators (the phonetic script has no spaces).",
+  "Confidence of a token (quran_muaalem Unit.probs) = mean over the frames of its run of max_v softmax(logits[t])[v].",
+  "Repeated characters: equal ids in consecutive frames always merge, so a run of the same character in the text (madd 'اااا' / 'ۥۥ' / 'ۦۦۦۦ', ghunna 'نننن' / 'مممم', a doubled consonant 'لل') can only come from separate runs of that id split by >= 1 blank frame, e.g. frames [ن ن 0 ن 0 0 ن ن] -> 'ننن'. One run = one character regardless of how many frames it lasts; frame-run lengths carry no meaning. This is how the model was trained: Wav2Vec2CTCTokenizer splits the target string into single characters and CTC needs a blank between two equal labels.",
+  "quran_muaalem.decode.ctc_decode (used for the torch reference) has one deviation: when the LAST frame is non-blank and the frame before it is blank, that last token is dropped (the source says '# BUG: trailing zero id at the end'). The app rule above does not copy this; it matters only for clips ending mid-phoneme (see README parity numbers)."
+ ],
+ "sifat_note": "The 10 sifat heads are greedy-CTC decoded the same way, but quran_muaalem then aligns each sifa sequence to the phoneme groups (quran_transcript.chunck_phonemes) of the predicted and the REFERENCE phonetic script (multilevel_greedy_decode); that alignment needs the reference text and is not part of this export."
+}

@@ -62,11 +62,9 @@ function renderModel(m, downloading) {
   popover.setAttribute("popover", "auto");
   popover.setAttribute("aria-label", help.title);
   const details = modelElement("div", "");
-  details.append(modelElement("strong", names[m.id] || m.name), modelElement("p", t(m.description || "")), modelElement("p", t(m.benchmark_summary || ""), "model-meta"));
-  if (m.fast_benchmark_summary) details.append(modelElement("p", t(m.fast_benchmark_summary), "model-meta"));
+  details.append(modelElement("strong", names[m.id] || m.name), modelElement("p", t(m.description || "")));
   popover.append(details);
-  if (m.benchmark_conditions) popover.append(modelElement("p", t(m.benchmark_conditions), "model-meta"));
-  else popover.append($("modelHelpTemplate").content.cloneNode(true));
+  popover.append($("modelHelpTemplate").content.cloneNode(true));
   popover.addEventListener("toggle", event => {
     if (event.newState === "open") positionModelHelp(popover);
   });

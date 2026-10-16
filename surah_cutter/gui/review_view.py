@@ -257,6 +257,9 @@ class ReviewView(QWidget):
                     self._starts[ayah] = int(time)
             for ayah in range(1, self._ayah_count + 1):
                 self._reviews[ayah] = db.get_review(self._surah, ayah)
+        from surah_cutter.data.alignment_identity import unresolved_fast_row
+        self._starts = {a: t for a, t in self._starts.items()
+                        if not unresolved_fast_row(self._reviews.get(a) or {})}
 
     # -- UI construction ---------------------------------------------------
 

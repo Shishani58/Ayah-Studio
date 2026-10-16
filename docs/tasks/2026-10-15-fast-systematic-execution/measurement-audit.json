@@ -1,0 +1,917 @@
+{
+  "results": {
+    "baseline-a2": {
+      "models": {
+        "quran-phonetics": {
+          "confirmed_reference_errors_ms": {
+            "n": 2,
+            "median": 85.0,
+            "p95": 98.5,
+            "max": 100,
+            "over500": 0
+          },
+          "all_reference_errors_ms": {
+            "n": 607,
+            "median": 7610.0,
+            "p95": 94810.79999999996,
+            "max": 108982,
+            "over500": 580
+          },
+          "audio_ms": 259600.0,
+          "union_ms": 159220.0,
+          "duration_ms": 10041365.0,
+          "calls": 120,
+          "inference_s": 24.37889392161742,
+          "executor_s": 32.58507816679776,
+          "cache_peak_bytes": 569797,
+          "cache_hits": 0,
+          "max_union_ratio": 0.36109595603401246,
+          "max_input_ratio": 0.42582070287029766,
+          "risk_bins": [
+            {
+              "quality_min": 0,
+              "quality_max": 0.599999,
+              "confirmed": 1,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.6,
+              "quality_max": 0.899999,
+              "confirmed": 0,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.9,
+              "quality_max": 1.0,
+              "confirmed": 1,
+              "reference_outlier": 0
+            }
+          ]
+        },
+        "quran-phonetics-fp32": {
+          "confirmed_reference_errors_ms": {
+            "n": 2,
+            "median": 85.0,
+            "p95": 98.5,
+            "max": 100,
+            "over500": 0
+          },
+          "all_reference_errors_ms": {
+            "n": 607,
+            "median": 7610.0,
+            "p95": 94810.79999999996,
+            "max": 108982,
+            "over500": 580
+          },
+          "audio_ms": 236900.0,
+          "union_ms": 144720.0,
+          "duration_ms": 10041365.0,
+          "calls": 111,
+          "inference_s": 27.197005209280178,
+          "executor_s": 33.89028770616278,
+          "cache_peak_bytes": 574477,
+          "cache_hits": 0,
+          "max_union_ratio": 0.36109595603401246,
+          "max_input_ratio": 0.42582070287029766,
+          "risk_bins": [
+            {
+              "quality_min": 0,
+              "quality_max": 0.599999,
+              "confirmed": 0,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.6,
+              "quality_max": 0.899999,
+              "confirmed": 1,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.9,
+              "quality_max": 1.0,
+              "confirmed": 1,
+              "reference_outlier": 0
+            }
+          ]
+        },
+        "whisper-tarteel-tiny": {
+          "confirmed_reference_errors_ms": {
+            "n": 105,
+            "median": 59.0,
+            "p95": 218.2,
+            "max": 447,
+            "over500": 0
+          },
+          "all_reference_errors_ms": {
+            "n": 607,
+            "median": 7917.0,
+            "p95": 69470.79999999997,
+            "max": 79350,
+            "over500": 482
+          },
+          "audio_ms": 461030.0,
+          "union_ms": 358120.0,
+          "duration_ms": 10041365.0,
+          "calls": 260,
+          "inference_s": 55.634882871760055,
+          "executor_s": 61.373383874306455,
+          "cache_peak_bytes": 188944,
+          "cache_hits": 2,
+          "max_union_ratio": 0.3483213349479035,
+          "max_input_ratio": 0.470775442049148,
+          "risk_bins": [
+            {
+              "quality_min": 0,
+              "quality_max": 0.599999,
+              "confirmed": 0,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.6,
+              "quality_max": 0.899999,
+              "confirmed": 31,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.9,
+              "quality_max": 1.0,
+              "confirmed": 74,
+              "reference_outlier": 0
+            }
+          ]
+        },
+        "whisper-tarteel-base": {
+          "confirmed_reference_errors_ms": {
+            "n": 130,
+            "median": 51.5,
+            "p95": 227.79999999999995,
+            "max": 508,
+            "over500": 1
+          },
+          "all_reference_errors_ms": {
+            "n": 607,
+            "median": 8159.0,
+            "p95": 75768.3,
+            "max": 85790,
+            "over500": 456
+          },
+          "audio_ms": 558340.0,
+          "union_ms": 450220.0,
+          "duration_ms": 10041365.0,
+          "calls": 326,
+          "inference_s": 123.44482030440122,
+          "executor_s": 129.02937995782122,
+          "cache_peak_bytes": 423062,
+          "cache_hits": 0,
+          "max_union_ratio": 0.3483213349479035,
+          "max_input_ratio": 0.366205804468456,
+          "risk_bins": [
+            {
+              "quality_min": 0,
+              "quality_max": 0.599999,
+              "confirmed": 0,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.6,
+              "quality_max": 0.899999,
+              "confirmed": 6,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.9,
+              "quality_max": 1.0,
+              "confirmed": 124,
+              "reference_outlier": 1
+            }
+          ]
+        }
+      },
+      "tree_peak_MiB": 2171.359375,
+      "tree_sampling_s": 0.2,
+      "wall_s": 293.1445996661205
+    },
+    "after-a": {
+      "models": {
+        "quran-phonetics": {
+          "confirmed_reference_errors_ms": {
+            "n": 3,
+            "median": 74.0,
+            "p95": 97.39999999999999,
+            "max": 100,
+            "over500": 0
+          },
+          "all_reference_errors_ms": {
+            "n": 607,
+            "median": 7610.0,
+            "p95": 94810.79999999996,
+            "max": 108982,
+            "over500": 579
+          },
+          "audio_ms": 268500.0,
+          "union_ms": 162063.75,
+          "duration_ms": 10041365.0,
+          "calls": 123,
+          "inference_s": 9.48116703890264,
+          "executor_s": 15.40544116566889,
+          "cache_peak_bytes": 569797,
+          "cache_hits": 0,
+          "max_union_ratio": 0.48218871841275335,
+          "max_input_ratio": 0.8048011284248626,
+          "risk_bins": [
+            {
+              "quality_min": 0,
+              "quality_max": 0.599999,
+              "confirmed": 1,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.6,
+              "quality_max": 0.899999,
+              "confirmed": 0,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.9,
+              "quality_max": 1.0,
+              "confirmed": 2,
+              "reference_outlier": 0
+            }
+          ]
+        },
+        "quran-phonetics-fp32": {
+          "confirmed_reference_errors_ms": {
+            "n": 3,
+            "median": 74.0,
+            "p95": 97.39999999999999,
+            "max": 100,
+            "over500": 0
+          },
+          "all_reference_errors_ms": {
+            "n": 607,
+            "median": 7610.0,
+            "p95": 94810.79999999996,
+            "max": 108982,
+            "over500": 579
+          },
+          "audio_ms": 245800.0,
+          "union_ms": 147563.75,
+          "duration_ms": 10041365.0,
+          "calls": 114,
+          "inference_s": 11.894252877216786,
+          "executor_s": 17.69621216901578,
+          "cache_peak_bytes": 574477,
+          "cache_hits": 0,
+          "max_union_ratio": 0.48218871841275335,
+          "max_input_ratio": 0.8048011284248626,
+          "risk_bins": [
+            {
+              "quality_min": 0,
+              "quality_max": 0.599999,
+              "confirmed": 0,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.6,
+              "quality_max": 0.899999,
+              "confirmed": 1,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.9,
+              "quality_max": 1.0,
+              "confirmed": 2,
+              "reference_outlier": 0
+            }
+          ]
+        },
+        "whisper-tarteel-tiny": {
+          "confirmed_reference_errors_ms": {
+            "n": 105,
+            "median": 59.0,
+            "p95": 218.2,
+            "max": 447,
+            "over500": 0
+          },
+          "all_reference_errors_ms": {
+            "n": 607,
+            "median": 7917.0,
+            "p95": 69470.79999999997,
+            "max": 79350,
+            "over500": 482
+          },
+          "audio_ms": 461030.0,
+          "union_ms": 358120.0,
+          "duration_ms": 10041365.0,
+          "calls": 260,
+          "inference_s": 51.34202883555554,
+          "executor_s": 56.8283563319128,
+          "cache_peak_bytes": 188944,
+          "cache_hits": 2,
+          "max_union_ratio": 0.3483213349479035,
+          "max_input_ratio": 0.470775442049148,
+          "risk_bins": [
+            {
+              "quality_min": 0,
+              "quality_max": 0.599999,
+              "confirmed": 0,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.6,
+              "quality_max": 0.899999,
+              "confirmed": 31,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.9,
+              "quality_max": 1.0,
+              "confirmed": 74,
+              "reference_outlier": 0
+            }
+          ]
+        },
+        "whisper-tarteel-base": {
+          "confirmed_reference_errors_ms": {
+            "n": 130,
+            "median": 51.5,
+            "p95": 227.79999999999995,
+            "max": 508,
+            "over500": 1
+          },
+          "all_reference_errors_ms": {
+            "n": 607,
+            "median": 8159.0,
+            "p95": 75768.3,
+            "max": 85790,
+            "over500": 456
+          },
+          "audio_ms": 558340.0,
+          "union_ms": 450220.0,
+          "duration_ms": 10041365.0,
+          "calls": 326,
+          "inference_s": 118.41607046383433,
+          "executor_s": 123.98148283199407,
+          "cache_peak_bytes": 423062,
+          "cache_hits": 0,
+          "max_union_ratio": 0.3483213349479035,
+          "max_input_ratio": 0.366205804468456,
+          "risk_bins": [
+            {
+              "quality_min": 0,
+              "quality_max": 0.599999,
+              "confirmed": 0,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.6,
+              "quality_max": 0.899999,
+              "confirmed": 6,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.9,
+              "quality_max": 1.0,
+              "confirmed": 124,
+              "reference_outlier": 1
+            }
+          ]
+        }
+      },
+      "tree_peak_MiB": 2454.015625,
+      "tree_sampling_s": 0.2,
+      "wall_s": 237.47542229201645
+    },
+    "baseline-e": {
+      "models": {
+        "quran-phonetics": {
+          "confirmed_reference_errors_ms": {
+            "n": 9,
+            "median": 69.0,
+            "p95": 219.99999999999994,
+            "max": 264,
+            "over500": 0
+          },
+          "all_reference_errors_ms": {
+            "n": 243,
+            "median": 10528.0,
+            "p95": 48865.499999999956,
+            "max": 60531,
+            "over500": 225
+          },
+          "audio_ms": 290540.0,
+          "union_ms": 147434.8125,
+          "duration_ms": 4431908.5625,
+          "calls": 109,
+          "inference_s": 9.804341744631529,
+          "executor_s": 12.572222457965836,
+          "cache_peak_bytes": 1178080,
+          "cache_hits": 0,
+          "max_union_ratio": 0.35461853837328144,
+          "max_input_ratio": 0.8188806177630368,
+          "risk_bins": [
+            {
+              "quality_min": 0,
+              "quality_max": 0.599999,
+              "confirmed": 2,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.6,
+              "quality_max": 0.899999,
+              "confirmed": 3,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.9,
+              "quality_max": 1.0,
+              "confirmed": 4,
+              "reference_outlier": 0
+            }
+          ]
+        },
+        "quran-phonetics-fp32": {
+          "confirmed_reference_errors_ms": {
+            "n": 10,
+            "median": 67.5,
+            "p95": 214.4999999999999,
+            "max": 264,
+            "over500": 0
+          },
+          "all_reference_errors_ms": {
+            "n": 243,
+            "median": 10549.0,
+            "p95": 48865.499999999956,
+            "max": 60531,
+            "over500": 226
+          },
+          "audio_ms": 292040.0,
+          "union_ms": 146284.5625,
+          "duration_ms": 4431908.5625,
+          "calls": 110,
+          "inference_s": 14.042115417541936,
+          "executor_s": 16.69610912539065,
+          "cache_peak_bytes": 1181811,
+          "cache_hits": 0,
+          "max_union_ratio": 0.35461853837328144,
+          "max_input_ratio": 0.8188806177630368,
+          "risk_bins": [
+            {
+              "quality_min": 0,
+              "quality_max": 0.599999,
+              "confirmed": 2,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.6,
+              "quality_max": 0.899999,
+              "confirmed": 4,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.9,
+              "quality_max": 1.0,
+              "confirmed": 4,
+              "reference_outlier": 0
+            }
+          ]
+        }
+      },
+      "tree_peak_MiB": 1817.140625,
+      "tree_sampling_s": 0.2,
+      "wall_s": 35.50539266690612
+    },
+    "after-e": {
+      "models": {
+        "quran-phonetics": {
+          "confirmed_reference_errors_ms": {
+            "n": 10,
+            "median": 67.5,
+            "p95": 214.4999999999999,
+            "max": 264,
+            "over500": 0
+          },
+          "all_reference_errors_ms": {
+            "n": 243,
+            "median": 10528.0,
+            "p95": 48865.499999999956,
+            "max": 60531,
+            "over500": 223
+          },
+          "audio_ms": 303640.0,
+          "union_ms": 152945.625,
+          "duration_ms": 4431908.5625,
+          "calls": 113,
+          "inference_s": 10.20842233300209,
+          "executor_s": 12.98059304105118,
+          "cache_peak_bytes": 1178080,
+          "cache_hits": 0,
+          "max_union_ratio": 0.49221100983796295,
+          "max_input_ratio": 0.8188806177630368,
+          "risk_bins": [
+            {
+              "quality_min": 0,
+              "quality_max": 0.599999,
+              "confirmed": 2,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.6,
+              "quality_max": 0.899999,
+              "confirmed": 4,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.9,
+              "quality_max": 1.0,
+              "confirmed": 4,
+              "reference_outlier": 0
+            }
+          ]
+        },
+        "quran-phonetics-fp32": {
+          "confirmed_reference_errors_ms": {
+            "n": 11,
+            "median": 66.0,
+            "p95": 209.0,
+            "max": 264,
+            "over500": 0
+          },
+          "all_reference_errors_ms": {
+            "n": 243,
+            "median": 10549.0,
+            "p95": 48865.499999999956,
+            "max": 60531,
+            "over500": 224
+          },
+          "audio_ms": 305140.0,
+          "union_ms": 151795.375,
+          "duration_ms": 4431908.5625,
+          "calls": 114,
+          "inference_s": 14.595091046998277,
+          "executor_s": 17.232682375935838,
+          "cache_peak_bytes": 1181811,
+          "cache_hits": 0,
+          "max_union_ratio": 0.49221100983796295,
+          "max_input_ratio": 0.8188806177630368,
+          "risk_bins": [
+            {
+              "quality_min": 0,
+              "quality_max": 0.599999,
+              "confirmed": 2,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.6,
+              "quality_max": 0.899999,
+              "confirmed": 5,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.9,
+              "quality_max": 1.0,
+              "confirmed": 4,
+              "reference_outlier": 0
+            }
+          ]
+        }
+      },
+      "tree_peak_MiB": 1859.796875,
+      "tree_sampling_s": 0.2,
+      "wall_s": 36.295336624840274
+    },
+    "repeat-baseline": {
+      "models": {
+        "quran-phonetics": {
+          "confirmed_reference_errors_ms": {
+            "n": 3,
+            "median": 50.0,
+            "p95": 50.0,
+            "max": 50,
+            "over500": 0
+          },
+          "all_reference_errors_ms": {
+            "n": 30,
+            "median": 4007.0,
+            "p95": 6094.0,
+            "max": 6094,
+            "over500": 27
+          },
+          "audio_ms": 69000.0,
+          "union_ms": 59940.0,
+          "duration_ms": 174132.1875,
+          "calls": 42,
+          "inference_s": 2.3707425391767174,
+          "executor_s": 3.0996947090607136,
+          "cache_peak_bytes": 186641,
+          "cache_hits": 0,
+          "max_union_ratio": 0.36109595603401246,
+          "max_input_ratio": 0.42582070287029766,
+          "risk_bins": [
+            {
+              "quality_min": 0,
+              "quality_max": 0.599999,
+              "confirmed": 3,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.6,
+              "quality_max": 0.899999,
+              "confirmed": 0,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.9,
+              "quality_max": 1.0,
+              "confirmed": 0,
+              "reference_outlier": 0
+            }
+          ],
+          "warm": {
+            "112": {
+              "executor_median_s": 0.48750837496481836,
+              "inference_median_s": 0.3381200418807566,
+              "all_rows_identical": true,
+              "all_dispatches_identical": true
+            },
+            "114": {
+              "executor_median_s": 0.5383234170731157,
+              "inference_median_s": 0.43434395804069936,
+              "all_rows_identical": true,
+              "all_dispatches_identical": true
+            }
+          }
+        },
+        "quran-phonetics-fp32": {
+          "confirmed_reference_errors_ms": {
+            "n": 3,
+            "median": 50.0,
+            "p95": 50.0,
+            "max": 50,
+            "over500": 0
+          },
+          "all_reference_errors_ms": {
+            "n": 30,
+            "median": 4007.0,
+            "p95": 6094.0,
+            "max": 6094,
+            "over500": 27
+          },
+          "audio_ms": 69000.0,
+          "union_ms": 59940.0,
+          "duration_ms": 174132.1875,
+          "calls": 42,
+          "inference_s": 3.377420836361125,
+          "executor_s": 4.00686920969747,
+          "cache_peak_bytes": 187655,
+          "cache_hits": 0,
+          "max_union_ratio": 0.36109595603401246,
+          "max_input_ratio": 0.42582070287029766,
+          "risk_bins": [
+            {
+              "quality_min": 0,
+              "quality_max": 0.599999,
+              "confirmed": 3,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.6,
+              "quality_max": 0.899999,
+              "confirmed": 0,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.9,
+              "quality_max": 1.0,
+              "confirmed": 0,
+              "reference_outlier": 0
+            }
+          ],
+          "warm": {
+            "112": {
+              "executor_median_s": 0.5880891249980778,
+              "inference_median_s": 0.4878316668327898,
+              "all_rows_identical": true,
+              "all_dispatches_identical": true
+            },
+            "114": {
+              "executor_median_s": 0.735851916950196,
+              "inference_median_s": 0.6309125844854861,
+              "all_rows_identical": true,
+              "all_dispatches_identical": true
+            }
+          }
+        }
+      },
+      "tree_peak_MiB": 800.859375,
+      "tree_sampling_s": 0.2,
+      "wall_s": 9.141095374943689
+    },
+    "repeat-prototype": {
+      "models": {
+        "quran-phonetics": {
+          "confirmed_reference_errors_ms": {
+            "n": 9,
+            "median": 50.0,
+            "p95": 74.0,
+            "max": 74,
+            "over500": 0
+          },
+          "all_reference_errors_ms": {
+            "n": 30,
+            "median": 1120.5,
+            "p95": 3750.0,
+            "max": 3750,
+            "over500": 18
+          },
+          "audio_ms": 135000.0,
+          "union_ms": 85003.6875,
+          "duration_ms": 174132.1875,
+          "calls": 63,
+          "inference_s": 4.583160498645157,
+          "executor_s": 5.33715383335948,
+          "cache_peak_bytes": 351155,
+          "cache_hits": 0,
+          "max_union_ratio": 0.49221100983796295,
+          "max_input_ratio": 0.8048011284248626,
+          "risk_bins": [
+            {
+              "quality_min": 0,
+              "quality_max": 0.599999,
+              "confirmed": 3,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.6,
+              "quality_max": 0.899999,
+              "confirmed": 3,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.9,
+              "quality_max": 1.0,
+              "confirmed": 3,
+              "reference_outlier": 0
+            }
+          ],
+          "warm": {
+            "112": {
+              "executor_median_s": 0.745303416159004,
+              "inference_median_s": 0.6440708758309484,
+              "all_rows_identical": true,
+              "all_dispatches_identical": true
+            },
+            "114": {
+              "executor_median_s": 0.989670709008351,
+              "inference_median_s": 0.8803517892956734,
+              "all_rows_identical": true,
+              "all_dispatches_identical": true
+            }
+          }
+        },
+        "quran-phonetics-fp32": {
+          "confirmed_reference_errors_ms": {
+            "n": 9,
+            "median": 50.0,
+            "p95": 74.0,
+            "max": 74,
+            "over500": 0
+          },
+          "all_reference_errors_ms": {
+            "n": 30,
+            "median": 1120.5,
+            "p95": 3750.0,
+            "max": 3750,
+            "over500": 18
+          },
+          "audio_ms": 135000.0,
+          "union_ms": 85003.6875,
+          "duration_ms": 174132.1875,
+          "calls": 63,
+          "inference_s": 6.491162914317101,
+          "executor_s": 7.0938114589080215,
+          "cache_peak_bytes": 353249,
+          "cache_hits": 0,
+          "max_union_ratio": 0.49221100983796295,
+          "max_input_ratio": 0.8048011284248626,
+          "risk_bins": [
+            {
+              "quality_min": 0,
+              "quality_max": 0.599999,
+              "confirmed": 3,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.6,
+              "quality_max": 0.899999,
+              "confirmed": 3,
+              "reference_outlier": 0
+            },
+            {
+              "quality_min": 0.9,
+              "quality_max": 1.0,
+              "confirmed": 3,
+              "reference_outlier": 0
+            }
+          ],
+          "warm": {
+            "112": {
+              "executor_median_s": 1.008662834065035,
+              "inference_median_s": 0.9109872078988701,
+              "all_rows_identical": true,
+              "all_dispatches_identical": true
+            },
+            "114": {
+              "executor_median_s": 1.3548220000229776,
+              "inference_median_s": 1.2512661248911172,
+              "all_rows_identical": true,
+              "all_dispatches_identical": true
+            }
+          }
+        }
+      },
+      "tree_peak_MiB": 1289.953125,
+      "tree_sampling_s": 0.2,
+      "wall_s": 14.09222483402118
+    }
+  },
+  "production_source_changes_since_initial": {
+    "surah_cutter/__init__.py": {
+      "initial": "9c1c6a4be6dcfa1838de6f2901c044133728da6567ee1b6cef131ab9ac64df3c",
+      "current": "c4a585413ccb745ff41e8ef246f907b331e764668f91a6710e384ca39191725d"
+    },
+    "surah_cutter/core/_ctc.py": {
+      "initial": "58787b8534aadb15bcae29ece65f6c8a483eb6a02421dca9cbdbc575fdc9cabb",
+      "current": "114e12d9159ee03f375520c249426af6550f3fb1ff0cda24e3988f37cf9a188a"
+    },
+    "surah_cutter/core/align.py": {
+      "initial": "cafeb345b3bf9e7c92d656dc22ae7b8c95bf4234ba88730e1c15d8387d724285",
+      "current": "5ab1e63ec8eeef9cf5b3125dd147fc803b27c8415caadb8a7ae70ae019b85cba"
+    },
+    "surah_cutter/core/align_tiled.py": {
+      "initial": "2d4dda577a87a52fe44e21deb7915c2bb58d3b23155abfda4f9a81367774ddd7",
+      "current": "3be264cd4c2040661f1dcccad4251578ee5ee42c31991fb21ae4af52dae0784f"
+    },
+    "surah_cutter/core/emissions.py": {
+      "initial": "dde1335cf3f5641dff8cc3e4803ebdb7c61cd766dc960e3f9f163f5b3bba158a",
+      "current": "3f1b777cb90909f0572b9d24b93d466975d374c9dbee96a475e5f2064f44f4a7"
+    },
+    "surah_cutter/core/fast_executor.py": {
+      "initial": "dfe30f809f3d6e913a252aab0d8cd2dd9c23881f631ccb5a8daea1fbffb7f148",
+      "current": "0eeb08005873e16096975caaecc0677ff8a48cf9f652be52f201e6a927cfde1e"
+    },
+    "surah_cutter/core/full_pause_center.py": {
+      "initial": "dcaa4606dbf54c7a2b055c6be976f3738862e410b90c22f5887c572ded40b82a",
+      "current": "90c70dc97840e4e0140d596ace1e61b8e03ab5b3ce247adfe2eb31ac8239f77f"
+    },
+    "surah_cutter/core/full_windows.py": {
+      "initial": "b1b7271d9beff38995ae338b6a900d68a777424d219e676c70e69ac8dc6d3654",
+      "current": "4d3470254468fdb06088f69b8b877dbd912192d779ff2ebc086457cb8c4a49c4"
+    },
+    "surah_cutter/core/model_runtime.py": {
+      "initial": "f34bae23814e3a11e6230c0d5ae67b308257bef7af1cbdd56fb8dc166b0213a5",
+      "current": "787302405b58e7d7ae6f516ee02ce3682f10e15482364828398f88af7dd4f59a"
+    },
+    "surah_cutter/core/model_worker.py": {
+      "initial": "f4cd775a0d558384c68477b485f893a44640f0892e6bf180264c51e24fd313ab",
+      "current": "52abc1e5a076596e96b21c275690344686c3436a04d1469686b3eca82cfa1d80"
+    },
+    "surah_cutter/core/pipeline.py": {
+      "initial": "dc5e3aadb20334e3eeaab54c8d5ab4f21c01864b7d87bd98ed31e79944bff0f8",
+      "current": "752b3083d7bf93943b57eae029f30f9225207c5ff0b419d99279fa3c82f09bbd"
+    },
+    "surah_cutter/data/onset_evidence.py": {
+      "initial": "dcd741cbe9e73f0152552b5303d7355850af73b2e33e8fc986500bc784d80b4a",
+      "current": "bfa5d734bb81e6091412e57e7f263ef813487ba76e8c4aa9c64d2d07fe1d25c4"
+    },
+    "surah_cutter/webgui/generation.py": {
+      "initial": "bfb61be4dc3389838f19628843ad5ff8d68a52e2fc575f35c890bdbd4605c528",
+      "current": "d3dd02c62f8ac7480032a566c6517f685b040fc22caae510afd15c7956145d39"
+    },
+    "surah_cutter/webgui/server.py": {
+      "initial": "118f656ef9811b6f3a58a55263986de2ba81dacbc4330022d8041ba00e5146f6",
+      "current": "25203dda1a711649bf65095a09a16852e1eb0ce64c56040f20f99c74dcb6986f"
+    },
+    "surah_cutter/webgui/static/app.js": {
+      "initial": "8465ca0d1a5fa6c2a9678c8b2e7da9e8c1277c70b6b17436dda1f3941e7add69",
+      "current": "ce7aad6dea8d745520a6ed1555f6d0d2832d0da8c84ffb3f678e7ad19fb9cfb9"
+    },
+    "surah_cutter/webgui/static/i18n.js": {
+      "initial": "b752c1a3aa72fbe999884396c47c6690db005891ddaaa5131c43fb53ce5f5dad",
+      "current": "0fbaa9f3d65fa6d154b4c4463947b956c4284bcb1122f30f699f2ba8fcc1f0ed"
+    },
+    "surah_cutter/webgui/static/studio.css": {
+      "initial": "87f11848fca7827e2dc5046315ff88024837fd1c0819dc0402f5ef79ee87a3c6",
+      "current": "4019022486f7474aaef6d8bf13d8a7b3be149fcd131637987d009c2196a88d95"
+    }
+  },
+  "data_files_guarded": 224,
+  "data_changes": {},
+  "agents_sync": true,
+  "physical_label_evaluation": null,
+  "notes": [
+    "Risk bins are model score strata, not calibrated error probabilities.",
+    "Non-outlier reference timing does not establish correct physical owner/onset.",
+    "Tree RSS is concurrent sum sampled at200ms; short peaks may be missed."
+  ]
+}

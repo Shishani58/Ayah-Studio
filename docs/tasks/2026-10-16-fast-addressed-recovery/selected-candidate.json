@@ -1,0 +1,12 @@
+{
+  "variant": "BS",
+  "source_sha256": "f4f101601b3e53f341f554f51802dcc361701d8af83eb39e0877b2188e5fc387",
+  "scope": "fast_executor only; finite whole-word-quality head cue plus one optional next DSP candidate",
+  "rejected_letter_variant": "B6 control Hussary79:3 new benchmark error1750ms; not production",
+  "independent_gains": {
+    "shatri80": 27,
+    "hussary80": 10,
+    "minshawi79": 4
+  },
+  "requires_full_corpus_gate": true
+}

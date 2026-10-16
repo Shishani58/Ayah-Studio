@@ -1,0 +1,48 @@
+[
+  {
+    "name": "parity",
+    "command": [
+      "/Users/ayub/.surah-cutter/model-runtime/bin/python",
+      "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/parity.py"
+    ],
+    "started": 1792112456.6443882,
+    "state": "complete",
+    "exit_code": 0,
+    "finished": 1792112481.695457
+  },
+  {
+    "name": "muaalem",
+    "command": [
+      "/Users/ayub/.surah-cutter/model-runtime/bin/python",
+      "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/muaalem.py"
+    ],
+    "started": 1792112481.696508,
+    "state": "failed",
+    "exit_code": -2,
+    "finished": 1792112706.700469
+  },
+  {
+    "name": "nemo",
+    "command": [
+      "/Users/ayub/.surah-cutter/nemo-runtime/bin/python",
+      "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/secondary_asr.py",
+      "nemo"
+    ],
+    "started": 1792112706.710523,
+    "state": "complete",
+    "exit_code": 0,
+    "finished": 1792113527.693909
+  },
+  {
+    "name": "whisper",
+    "command": [
+      "/Users/ayub/.surah-cutter/model-runtime/bin/python",
+      "/Users/ayub/Developer/surah-cutter/docs/tasks/2026-10-16-model-methods-study/secondary_asr.py",
+      "whisper"
+    ],
+    "started": 1792113527.705462,
+    "state": "failed",
+    "exit_code": -2,
+    "finished": 1792114331.9367192
+  }
+]

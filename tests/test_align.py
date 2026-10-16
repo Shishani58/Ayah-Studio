@@ -136,7 +136,7 @@ def test_sliced_emissions_use_absolute_pause_times():
         pauses=[Pause(5500, 6000, 500)], base_ms=5000,
     )[2]
 
-    assert check["raw_onset_ms"] == 5000
+    assert check["raw_onset_ms"] == 5200
     assert check["onset_ms"] == 5750
 
 

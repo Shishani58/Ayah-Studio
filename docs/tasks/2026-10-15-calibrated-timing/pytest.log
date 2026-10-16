@@ -1,0 +1,65 @@
+.............sssssssss.................................................. [  8%]
+........................................................................ [ 17%]
+........................................................................ [ 25%]
+........................................................................ [ 34%]
+........................................................................ [ 42%]
+........................................................................ [ 51%]
+........................................................................ [ 60%]
+............................................................F.....F..... [ 68%]
+.......................F................................................ [ 77%]
+........................................................................ [ 85%]
+........................................................................ [ 94%]
+................................................                         [100%]
+=================================== FAILURES ===================================
+_______________ test_all_open_models_route_to_their_own_weights ________________
+
+tmp_path = PosixPath('/private/var/folders/xr/sk3g_x_53rdg9wkyjdkq44tc0000gn/T/pytest-of-ayub/pytest-375/test_all_open_models_route_to_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10f5b4dd0>
+
+    def test_all_open_models_route_to_their_own_weights(tmp_path, monkeypatch):
+        monkeypatch.setattr(model_store, "ROOT", tmp_path)
+        ids = [m["id"] for m in model_store.catalog() if m["id"] not in ("quran-phonetics", "arabic-ctc")]
+        for model_id in ids:
+            item = model_store.spec(model_id)
+            folder = model_store.installed_path(item)
+            folder.mkdir(parents=True)
+            (folder / "installation.json").write_text("{}")
+            for file in item["files"]:
+                path = folder / file["path"]
+                path.parent.mkdir(parents=True, exist_ok=True)
+                with path.open("wb") as output:
+                    output.truncate(file["size"])
+            path = model_store.runtime_path(model_id)
+>           assert path.is_relative_to(folder)
+                   ^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'is_relative_to'
+
+tests/test_model_runtimes.py:96: AttributeError
+___ test_public_catalog_keeps_only_shortlist_without_deleting_archived_specs ___
+
+    def test_public_catalog_keeps_only_shortlist_without_deleting_archived_specs():
+        expected = {"quran-phonetics", "muaalem", "fastconformer-arabic", "whisper-large-v3",
+                    "whisper-tarteel-tiny", "whisper-tarteel-base"}
+>       assert {item["id"] for item in model_store.listing()["models"]} == expected
+E       AssertionError: assert {'fastconform...arge-v3', ...} == {'fastconform...tarteel-tiny'}
+E         
+E         Extra items in the left set:
+E         'mfa-quran-hafs'
+E         'fastconformer-muno'
+E         'zipformer-quran'
+E         Use -v to get more diff
+
+tests/test_model_runtimes.py:131: AssertionError
+___________ test_closed_models_are_excluded_and_unknown_ids_rejected ___________
+
+    def test_closed_models_are_excluded_and_unknown_ids_rejected():
+>       assert all(not item.get("gated") for item in model_store.catalog())
+E       assert False
+E        +  where False = all(<generator object test_closed_models_are_excluded_and_unknown_ids_rejected.<locals>.<genexpr> at 0x10fc09080>)
+
+tests/test_model_store.py:104: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_model_runtimes.py::test_all_open_models_route_to_their_own_weights
+FAILED tests/test_model_runtimes.py::test_public_catalog_keeps_only_shortlist_without_deleting_archived_specs
+FAILED tests/test_model_store.py::test_closed_models_are_excluded_and_unknown_ids_rejected
+3 failed, 828 passed, 9 skipped in 17.03s

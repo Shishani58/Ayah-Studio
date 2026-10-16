@@ -1,0 +1,219 @@
+{
+  "exit": 0,
+  "wall_s": 14.951011042110622,
+  "samples": [
+    {
+      "elapsed_s": 0.030833959113806486,
+      "tree_rss_kib": 6592
+    },
+    {
+      "elapsed_s": 0.5571467091795057,
+      "tree_rss_kib": 87232
+    },
+    {
+      "elapsed_s": 1.092891750158742,
+      "tree_rss_kib": 456496
+    },
+    {
+      "elapsed_s": 1.6350257501471788,
+      "tree_rss_kib": 449488
+    },
+    {
+      "elapsed_s": 2.161666125059128,
+      "tree_rss_kib": 407152
+    },
+    {
+      "elapsed_s": 2.6896674591116607,
+      "tree_rss_kib": 242608
+    },
+    {
+      "elapsed_s": 3.224927125032991,
+      "tree_rss_kib": 250048
+    },
+    {
+      "elapsed_s": 3.7792070421855897,
+      "tree_rss_kib": 288448
+    },
+    {
+      "elapsed_s": 4.488980625057593,
+      "tree_rss_kib": 337760
+    },
+    {
+      "elapsed_s": 5.099017000058666,
+      "tree_rss_kib": 387120
+    },
+    {
+      "elapsed_s": 5.644124417100102,
+      "tree_rss_kib": 397088
+    },
+    {
+      "elapsed_s": 6.176037625176832,
+      "tree_rss_kib": 508688
+    },
+    {
+      "elapsed_s": 6.7076294999569654,
+      "tree_rss_kib": 604144
+    },
+    {
+      "elapsed_s": 7.249183041974902,
+      "tree_rss_kib": 697824
+    },
+    {
+      "elapsed_s": 7.827508833957836,
+      "tree_rss_kib": 1124000
+    },
+    {
+      "elapsed_s": 8.36785670905374,
+      "tree_rss_kib": 1221344
+    },
+    {
+      "elapsed_s": 8.916310167172924,
+      "tree_rss_kib": 1240944
+    },
+    {
+      "elapsed_s": 9.44869733415544,
+      "tree_rss_kib": 905952
+    },
+    {
+      "elapsed_s": 9.982139833969995,
+      "tree_rss_kib": 978176
+    },
+    {
+      "elapsed_s": 10.51419695909135,
+      "tree_rss_kib": 978816
+    },
+    {
+      "elapsed_s": 11.110756292007864,
+      "tree_rss_kib": 956896
+    },
+    {
+      "elapsed_s": 11.71173845906742,
+      "tree_rss_kib": 926976
+    },
+    {
+      "elapsed_s": 12.25086145917885,
+      "tree_rss_kib": 931888
+    },
+    {
+      "elapsed_s": 12.787882999982685,
+      "tree_rss_kib": 952976
+    },
+    {
+      "elapsed_s": 13.340541417011991,
+      "tree_rss_kib": 904928
+    },
+    {
+      "elapsed_s": 13.88375029200688,
+      "tree_rss_kib": 829056
+    },
+    {
+      "elapsed_s": 14.437203959096223,
+      "tree_rss_kib": 41376
+    }
+  ],
+  "tree_peak_kib": 1240944,
+  "host_before": [
+    {
+      "pid": 50212,
+      "cpu_percent": 153.4,
+      "command": "/Users/ayub/.surah-cutter/model-runtime/bin/python"
+    },
+    {
+      "pid": 61938,
+      "cpu_percent": 90.9,
+      "command": "/Users/ayub/.local/bin/codebase-memory-mcp"
+    },
+    {
+      "pid": 633,
+      "cpu_percent": 63.7,
+      "command": "/System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer"
+    },
+    {
+      "pid": 21375,
+      "cpu_percent": 54.3,
+      "command": "/Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/155.0.8059.40/Helpers/Codex (Renderer).app/Contents/MacOS/Codex (Renderer)"
+    },
+    {
+      "pid": 62056,
+      "cpu_percent": 35.7,
+      "command": "/Applications/Open Design.app/Contents/MacOS/Open Design"
+    },
+    {
+      "pid": 62047,
+      "cpu_percent": 34.5,
+      "command": "/Applications/Open Design.app/Contents/MacOS/Open Design"
+    },
+    {
+      "pid": 1924,
+      "cpu_percent": 28.7,
+      "command": "/Applications/Happ.app/Contents/MacOS/Happ"
+    },
+    {
+      "pid": 62053,
+      "cpu_percent": 24.4,
+      "command": "/Applications/Open Design.app/Contents/Frameworks/Open Design Helper.app/Contents/MacOS/Open Design Helper"
+    },
+    {
+      "pid": 62055,
+      "cpu_percent": 12.0,
+      "command": "/Applications/Open Design.app/Contents/Frameworks/Open Design Helper.app/Contents/MacOS/Open Design Helper"
+    },
+    {
+      "pid": 21450,
+      "cpu_percent": 8.5,
+      "command": "/Users/ayub/.codex/computer-use/Codex Computer Use.app/Contents/MacOS/SkyComputerUseService"
+    }
+  ],
+  "host_after": [
+    {
+      "pid": 21375,
+      "cpu_percent": 359.0,
+      "command": "/Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/155.0.8059.40/Helpers/Codex (Renderer).app/Contents/MacOS/Codex (Renderer)"
+    },
+    {
+      "pid": 50212,
+      "cpu_percent": 98.2,
+      "command": "/Users/ayub/.surah-cutter/model-runtime/bin/python"
+    },
+    {
+      "pid": 62455,
+      "cpu_percent": 89.7,
+      "command": "/Users/ayub/.local/bin/codebase-memory-mcp"
+    },
+    {
+      "pid": 62498,
+      "cpu_percent": 87.0,
+      "command": "/Users/ayub/.local/bin/codebase-memory-mcp"
+    },
+    {
+      "pid": 633,
+      "cpu_percent": 82.9,
+      "command": "/System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer"
+    },
+    {
+      "pid": 1924,
+      "cpu_percent": 35.1,
+      "command": "/Applications/Happ.app/Contents/MacOS/Happ"
+    },
+    {
+      "pid": 21280,
+      "cpu_percent": 17.8,
+      "command": "/Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/155.0.8059.40/Helpers/Codex (Service).app/Contents/MacOS/Codex (Service)"
+    },
+    {
+      "pid": 21242,
+      "cpu_percent": 14.4,
+      "command": "/Applications/ChatGPT.app/Contents/MacOS/ChatGPT"
+    },
+    {
+      "pid": 21450,
+      "cpu_percent": 8.3,
+      "command": "/Users/ayub/.codex/computer-use/Codex Computer Use.app/Contents/MacOS/SkyComputerUseService"
+    },
+    {
+      "pid": 10297,
+      "cpu_percent": 4.0,
+      "command": "/Applications/Happ.app/Contents/PlugIns/Tunnel.appex/Contents/MacOS/Tunnel"
+    }
+  ]
+}

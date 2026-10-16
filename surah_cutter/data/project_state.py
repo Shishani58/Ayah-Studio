@@ -48,7 +48,16 @@ def complete_suras(
         return set()
     with sqlite3.connect(f"file:{Path(db_path).resolve()}?mode=ro", uri=True) as conn:
         try:
-            rows = conn.execute("SELECT sura, ayah FROM timings").fetchall()
+            if conn.execute("SELECT 1 FROM sqlite_master WHERE name='review_meta'").fetchone():
+                from surah_cutter.data.alignment_identity import unresolved_fast_row
+                columns = {r[1] for r in conn.execute("PRAGMA table_info(review_meta)")}
+                confidence_field = "r.confidence" if "confidence" in columns else "NULL"
+                rows = [(s, a) for s, a, status, confidence, source in conn.execute(
+                    f"SELECT t.sura,t.ayah,r.status,{confidence_field},r.source FROM timings t "
+                    "LEFT JOIN review_meta r ON r.sura=t.sura AND r.ayah=t.ayah")
+                    if not unresolved_fast_row(dict(status=status, confidence=confidence, source=source))]
+            else:
+                rows = conn.execute("SELECT sura, ayah FROM timings").fetchall()
         except sqlite3.OperationalError:
             return set()
     expected = counts if counts is not None else surah_ayah_counts()

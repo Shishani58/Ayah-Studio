@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "production_functions_executed": [
+    "ayahEndMs",
+    "currentAyahByTime",
+    "scheduleAyahStop",
+    "seekAyah"
+  ],
+  "cases": [
+    "unknown clip end",
+    "unknown start",
+    "immediate successor",
+    "last ayah",
+    "unknown current ayah",
+    "known current ayah",
+    "reject while playing",
+    "valid clip",
+    "switch from continuous to bounded playback"
+  ],
+  "scope": "JavaScript function probes, not browser or native pywebview verification"
+}

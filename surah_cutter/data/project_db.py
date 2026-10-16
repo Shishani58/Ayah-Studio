@@ -88,16 +88,16 @@ class ProjectDB:
 
     @classmethod
     def open(cls, path: str, code: str, version: int) -> "ProjectDB":
-        """Open (or create) the DB at ``path`` and ensure schema + db_version.
+        """Open (or create) the DB and initialize missing edition metadata.
 
-        ``code``/``version`` identify the reciter/edition; the row is upserted
-        so an existing project keeps a single ``db_version`` entry in sync.
+        ``code``/``version`` identify a new reciter/edition. Opening an existing
+        project must preserve its edition, including its original version.
         """
         conn = sqlite3.connect(path)
         conn.executescript(_SCHEMA)
         conn.execute(
-            "INSERT INTO db_version (code, version) VALUES (?, ?) "
-            "ON CONFLICT(code) DO UPDATE SET version = excluded.version",
+            "INSERT INTO db_version (code, version) SELECT ?, ? "
+            "WHERE NOT EXISTS (SELECT 1 FROM db_version)",
             (code, version),
         )
         conn.commit()
@@ -181,6 +181,7 @@ class ProjectDB:
         overwrite_manual: bool = False,
         duration_ms: float | None = None,
         persisted: list[dict] | None = None,
+        replace_fast_sura: int | None = None,
     ) -> int:
         """Merge auto-generated timings.
 
@@ -214,11 +215,30 @@ class ProjectDB:
             if (sura, ayah) in keys:
                 raise ValueError("Повторяющийся аят в результате разметки.")
             keys.add((sura, ayah))
+        if replace_fast_sura is not None:
+            self._validate_key(replace_fast_sura, 1)
+            if any(s != replace_fast_sura for s, _ in keys):
+                raise ValueError("FAST replacement must contain one surah")
         written = 0
         now = _now()
         snapshot = []
         with self._write_transaction():
             check_cancelled()
+            if replace_fast_sura is not None:
+                # A new partial FAST supersedes only previous machine FAST
+                # proposals. FULL and human work have independent provenance.
+                from surah_cutter.data.alignment_identity import is_fast_source
+                stale = self._conn.execute(
+                    "SELECT t.ayah, r.source FROM timings t JOIN review_meta r "
+                    "ON r.sura=t.sura AND r.ayah=t.ayah "
+                    "WHERE t.sura=? AND r.status='auto'", (replace_fast_sura,),
+                ).fetchall()
+                for ayah, old_source in stale:
+                    if (replace_fast_sura, ayah) not in keys and is_fast_source(old_source):
+                        self._conn.execute("DELETE FROM timings WHERE sura=? AND ayah=?",
+                                           (replace_fast_sura, ayah))
+                        self._conn.execute("DELETE FROM review_meta WHERE sura=? AND ayah=?",
+                                           (replace_fast_sura, ayah))
             for sura, ayah, time in rows:
                 status = self._status(sura, ayah)
                 if status in ("edited", "verified"):
@@ -244,7 +264,7 @@ class ProjectDB:
                      if confidences is not None else confidence, source, now),
                 )
                 written += 1
-            for sura in {s for s, _ in keys}:
+            for sura in ({s for s, _ in keys} | ({replace_fast_sura} if replace_fast_sura is not None else set())):
                 self._validate_order(sura)
                 for ayah, time in self._conn.execute(
                     "SELECT ayah, time FROM timings WHERE sura=? ORDER BY ayah", (sura,)

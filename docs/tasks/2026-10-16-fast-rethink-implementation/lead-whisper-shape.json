@@ -1,0 +1,43 @@
+{
+  "observation": "archived from actual feature-extraction tool output; no model forward",
+  "worker_call": "processor(pcm, sampling_rate=16000, return_tensors=\"pt\", return_attention_mask=True)",
+  "installed_config": "/Users/ayub/.surah-cutter/models/whisper-tarteel-base/5c3c53fdf9272c4f6ee0bee09a1e5a4a615ee25c/preprocessor_config.json",
+  "config_sha256": "9b5cd03a36fbb8a627c64d98a5b5b126ead95a77720723944487311f0110b666",
+  "config": {
+    "chunk_length": 30,
+    "n_samples": 480000,
+    "nb_max_frames": 3000,
+    "sampling_rate": 16000,
+    "hop_length": 160
+  },
+  "probe": "WhisperFeatureExtractor() with numpy zeros; return_tensors=np, return_attention_mask=True",
+  "observed_shapes": [
+    {
+      "pcm_seconds": 1.3,
+      "input_features": [
+        1,
+        80,
+        3000
+      ],
+      "attention_mask": [
+        1,
+        3000
+      ]
+    },
+    {
+      "pcm_seconds": 4.0,
+      "input_features": [
+        1,
+        80,
+        3000
+      ],
+      "attention_mask": [
+        1,
+        3000
+      ]
+    }
+  ],
+  "recording_model_calls": 0,
+  "model_forwards": 0,
+  "limitation": "Feature shapes only. No causal latency claim; decoder work and mask/content differ."
+}

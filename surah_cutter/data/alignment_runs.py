@@ -59,7 +59,12 @@ def load_run(log_folder: Path, surah: int, run_id: str) -> dict[str, Any]:
         if evidence is not None:
             item["onset_evidence"] = evidence
         rows.append(item)
-    if not rows:
+    partial = trace.get("result_contract") == "partial-v1"
+    unresolved = list(trace.get("unresolved_ayahs", ())) if partial else []
+    model_seen = {row[1] for row in payload.get("model_rows", payload.get("rows", []))}
+    if partial and (set(unresolved) & model_seen or set(unresolved) | model_seen != set(range(1, count + 1))):
+        raise ValueError("Некорректный частичный результат")
+    if not rows and not partial:
         raise ValueError("Пустой результат")
     rows.sort(key=lambda item: item["ayah"])
     if any(a["time"] >= b["time"] for a, b in zip(rows, rows[1:])):
@@ -70,6 +75,7 @@ def load_run(log_folder: Path, surah: int, run_id: str) -> dict[str, Any]:
         "source": str(payload.get("source") or payload.get("trace", {}).get("model_source") or ""),
         "audio_signature": payload.get("audio_signature"), "legacy": legacy,
         "raw_model_result": payload.get("raw_model_result", False), "ayahs": rows,
+        "result_complete": not unresolved, "unresolved_ayahs": unresolved,
     }
 
 

@@ -1,0 +1,125 @@
+--- measured/surah_cutter/core/align.py
++++ current/surah_cutter/core/align.py
+@@ -269,7 +269,7 @@
+     if trace is not None:
+         trace["model_source"] = bundle_source(bundle)
+ 
+-    if getattr(bundle, "text_kind", "phonetic") == "whisper":
++    if getattr(bundle, "text_kind", "phonetic") in ("whisper", "mfa"):
+         report("acoustic")
+         word_rows = bundle.emitter.align_words(pcm, words, intro=surah not in (1, 9), strict_words=False)
+         report("verify")
+@@ -280,9 +280,9 @@
+             first.setdefault(word.ayah, (word.ayah, start, confidence))
+         rows = list(first.values())
+         if any(b[1] <= a[1] for a, b in zip(rows, rows[1:])):
+-            raise ValueError("Границы аятов Whisper не различимы.")
++            raise ValueError("Границы аятов модели не различимы.")
+         if trace is not None:
+-            trace.update({"mode": "full", "backend": "whisper-attention-dtw",
++            trace.update({"mode": "full", "backend": ("mfa" if bundle.text_kind == "mfa" else "whisper-attention-dtw"),
+                           "align_lag_ms": 0, "ayahs": [
+                               {"ayah": a, "onset_ms": ms, "conf": c, "reliable": c >= .25}
+                               for a, ms, c in rows]})
+@@ -379,6 +379,9 @@
+         record_edges(checks, words, word_token_spans, target_spans, frame_scores, stride_ms,
+                      intro=bool(basmala_trs), targets=targets, delim_id=bundle.delim_id)
+         position_boundaries(checks, pcm, sr, trace=trace)
++        from surah_cutter.core.full_transition import refine_late_boundaries
++
++        refine_late_boundaries(bundle, pcm, sr, words, checks, trace=trace, log_event=log_event)
+         _review_pause_full_onsets(checks.values(), trace["full_windows"])
+     rows = [(a, checks[a]["onset_ms"], checks[a]["conf"]) for a, _, _ in rows]
+     if any(right[1] <= left[1] for left, right in zip(rows, rows[1:])):
+@@ -404,6 +407,7 @@
+                     "split-word-muaalem-proof": "начало фразы подтверждено локальной проверкой Muaalem",
+                     "weak-word-token": "звук первого слова не подтверждён, требуется ревью",
+                     "late-onset-in-pause": "сомнительное начало в длинной паузе, требуется ревью",
++                    "two-sided-pause-recheck": "поздний разрез уточнён по обоим аятам и паузе, требуется ревью",
+                 }.get(check["reason"], check["reason"])
+                 log_event(
+                     f"Аят {check['ayah']}: {reason}, "
+
+--- measured/surah_cutter/core/model_store.py
++++ current/surah_cutter/core/model_store.py
+@@ -66,9 +66,13 @@
+         path = path.with_name("wav2vec2-quran-phonetics.fp32.onnx")
+         return path if path.is_file() else None
+     item = spec(model_id)
++    if item.get("integration_status") == "awaiting-access":
++        return None
+     if model_id == "arabic-ctc" and is_installed(item):
+         return installed_path(item) / "wav2vec2-ar-ctc-aligner/model.int8.onnx"
+     if is_installed(item):
++        if model_id == "mfa-quran-hafs":
++            return installed_path(item) / "quran_hafs_acoustic.zip"
+         if model_id == "muaalem":
+             return installed_path(item) / "muaalem/model.fp32.onnx"
+         if model_id == "mms-fa":
+@@ -117,6 +121,13 @@
+             revision = f"local-export:sha256={digest}"
+     else:
+         revision = spec(ACTIVE_ID)["revision"]
++    if ACTIVE_ID == "mfa-quran-hafs":
++        from surah_cutter.core.mfa_runtime import VERSION, MFA_VERSION
++
++        text_sha = hashlib.sha256(resource_path("data", "model_text_targets.json").read_bytes()).hexdigest()
++        return (f"mfa:{ACTIVE_ID}:revision={revision}:adapter={VERSION}:mfa={MFA_VERSION}:"
++                f"text={text_sha}:lag=0:target=uthmani:lookup=nfkc:beam=40:retry-beam=160:"
++                "boost-silence=1:confidence=uncalibrated")
+     if ACTIVE_ID in ("quran-phonetics", "quran-phonetics-fp32", "arabic-ctc"):
+         return f"onnx-ctc:{ACTIVE_ID}:revision={revision}:lag={lag_ms()}"
+     from surah_cutter.core.model_runtime import ADAPTER_VERSION, _WORKERS
+@@ -163,6 +174,10 @@
+                           external_model_path("wav2vec2-quran-phonetics.onnx"))) + ".vocab.json"
+                  if model_id == "quran-phonetics-fp32" else None)
+         return emissions.load_emitter(path, vocab_path=vocab)
++    if model_id == "mfa-quran-hafs":
++        from surah_cutter.core.mfa_runtime import MfaEmitter
++
++        return MfaEmitter(installed_path(spec(model_id)))
+     from surah_cutter.core.model_runtime import load_runtime
+ 
+     return load_runtime(model_id, installed_path(spec(model_id)))
+@@ -296,8 +311,19 @@
+     item = spec(model_id)
+     if item.get("hidden", False):
+         raise ValueError("Модель исключена из каталога.")
++    if item["gated"] and not token:
++        # Reuse a local Hugging Face login; never return or persist the credential.
++        token = os.environ.get("HF_TOKEN", "")
++        if not token:
++            hf_home = Path(os.environ.get("HF_HOME") or
++                           Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "huggingface")
++            token_path = Path(os.environ.get("HF_TOKEN_PATH") or hf_home / "token")
++            try:
++                token = token_path.read_text().strip()
++            except OSError:
++                pass
+     if item["gated"] and not token.strip():
+-        raise ValueError("После одобрения доступа автором введите токен Hugging Face.")
++        raise ValueError("Примите условия на странице модели и сохраните токен локально через hf auth login.")
+     if token and (not token.startswith("hf_") or any(c.isspace() for c in token)):
+         raise ValueError("Введите корректный токен Hugging Face.")
+     with _LOCK:
+@@ -410,11 +436,16 @@
+             # Preserve a prior installation; only publish an entire new revision.
+             raise ValueError("Папка версии уже существует. Проверьте её целостность.")
+         os.replace(temporary, destination)
+-        if item.get("runtime_family"):
+-            from surah_cutter.core.model_runtime import ensure_runtime
+-
++        if item.get("runtime_family") and item.get("integration_status") != "awaiting-access":
+             _progress(model_id, file="Подготовка модели")
+-            ensure_runtime(model_id, cancel)
++            if item["runtime_family"] == "mfa":
++                from surah_cutter.core.mfa_runtime import executable
++
++                executable()
++            else:
++                from surah_cutter.core.model_runtime import ensure_runtime
++
++                ensure_runtime(model_id, cancel)
+         _progress(model_id, state="installed", file="")
+     except InterruptedError:
+         _progress(model_id, state="cancelled", error="Загрузка отменена.")

@@ -1,0 +1,479 @@
+[
+  {
+    "context": "fixed30",
+    "variant": "current",
+    "split": "control",
+    "records": 8,
+    "stats": {
+      "n": 184,
+      "median_ms": 285.5,
+      "p95_ms": 2106.8,
+      "mean_ms": 604.5217391304348,
+      "max_ms": 4332.0,
+      "over500": 63
+    },
+    "bad_without_review": 2,
+    "over500_in_same_dsp_pause": 27,
+    "review": 163
+  },
+  {
+    "context": "fixed30",
+    "variant": "current",
+    "split": "development",
+    "records": 4,
+    "stats": {
+      "n": 61,
+      "median_ms": 124.0,
+      "p95_ms": 371.0,
+      "mean_ms": 166.2295081967213,
+      "max_ms": 962.0,
+      "over500": 2
+    },
+    "bad_without_review": 0,
+    "over500_in_same_dsp_pause": 0,
+    "review": 55
+  },
+  {
+    "context": "fixed30",
+    "variant": "free_edges",
+    "split": "control",
+    "records": 8,
+    "stats": {
+      "n": 184,
+      "median_ms": 270.5,
+      "p95_ms": 2359.0499999999993,
+      "mean_ms": 680.804347826087,
+      "max_ms": 9013.0,
+      "over500": 59
+    },
+    "bad_without_review": 2,
+    "over500_in_same_dsp_pause": 23,
+    "review": 161
+  },
+  {
+    "context": "fixed30",
+    "variant": "free_edges",
+    "split": "development",
+    "records": 4,
+    "stats": {
+      "n": 61,
+      "median_ms": 121.0,
+      "p95_ms": 443.0,
+      "mean_ms": 169.29508196721312,
+      "max_ms": 962.0,
+      "over500": 2
+    },
+    "bad_without_review": 0,
+    "over500_in_same_dsp_pause": 0,
+    "review": 51
+  },
+  {
+    "context": "fixed30",
+    "variant": "no_delimiter",
+    "split": "control",
+    "records": 8,
+    "stats": {
+      "n": 184,
+      "median_ms": 269.0,
+      "p95_ms": 2163.2499999999995,
+      "mean_ms": 582.4239130434783,
+      "max_ms": 4332.0,
+      "over500": 59
+    },
+    "bad_without_review": 2,
+    "over500_in_same_dsp_pause": 26,
+    "review": 162
+  },
+  {
+    "context": "fixed30",
+    "variant": "no_delimiter",
+    "split": "development",
+    "records": 4,
+    "stats": {
+      "n": 61,
+      "median_ms": 121.0,
+      "p95_ms": 371.0,
+      "mean_ms": 156.60655737704917,
+      "max_ms": 962.0,
+      "over500": 1
+    },
+    "bad_without_review": 0,
+    "over500_in_same_dsp_pause": 0,
+    "review": 51
+  },
+  {
+    "context": "fixed30",
+    "variant": "phones",
+    "split": "control",
+    "records": 8,
+    "stats": {
+      "n": 184,
+      "median_ms": 268.5,
+      "p95_ms": 2213.7999999999997,
+      "mean_ms": 580.375,
+      "max_ms": 4332.0,
+      "over500": 57
+    },
+    "bad_without_review": 2,
+    "over500_in_same_dsp_pause": 25,
+    "review": 161
+  },
+  {
+    "context": "fixed30",
+    "variant": "phones",
+    "split": "development",
+    "records": 4,
+    "stats": {
+      "n": 61,
+      "median_ms": 121.0,
+      "p95_ms": 371.0,
+      "mean_ms": 156.60655737704917,
+      "max_ms": 962.0,
+      "over500": 1
+    },
+    "bad_without_review": 0,
+    "over500_in_same_dsp_pause": 0,
+    "review": 51
+  },
+  {
+    "context": "strong20",
+    "variant": "blank_minus1",
+    "split": "control",
+    "records": 40,
+    "stats": {
+      "n": 1506,
+      "median_ms": 173.0,
+      "p95_ms": 1190.75,
+      "mean_ms": 324.04116865869855,
+      "max_ms": 4531.0,
+      "over500": 268
+    },
+    "bad_without_review": 14,
+    "over500_in_same_dsp_pause": 110,
+    "review": 1309
+  },
+  {
+    "context": "strong20",
+    "variant": "blank_minus1",
+    "split": "development",
+    "records": 4,
+    "stats": {
+      "n": 61,
+      "median_ms": 113.0,
+      "p95_ms": 358.0,
+      "mean_ms": 138.2622950819672,
+      "max_ms": 962.0,
+      "over500": 1
+    },
+    "bad_without_review": 0,
+    "over500_in_same_dsp_pause": 0,
+    "review": 48
+  },
+  {
+    "context": "strong20",
+    "variant": "current",
+    "split": "control",
+    "records": 40,
+    "stats": {
+      "n": 1506,
+      "median_ms": 188.5,
+      "p95_ms": 1226.0,
+      "mean_ms": 333.8764940239044,
+      "max_ms": 4531.0,
+      "over500": 278
+    },
+    "bad_without_review": 12,
+    "over500_in_same_dsp_pause": 104,
+    "review": 1339
+  },
+  {
+    "context": "strong20",
+    "variant": "current",
+    "split": "development",
+    "records": 4,
+    "stats": {
+      "n": 61,
+      "median_ms": 121.0,
+      "p95_ms": 371.0,
+      "mean_ms": 151.21311475409837,
+      "max_ms": 962.0,
+      "over500": 1
+    },
+    "bad_without_review": 0,
+    "over500_in_same_dsp_pause": 0,
+    "review": 50
+  },
+  {
+    "context": "strong20",
+    "variant": "free_edges",
+    "split": "control",
+    "records": 40,
+    "stats": {
+      "n": 1506,
+      "median_ms": 163.5,
+      "p95_ms": 1198.25,
+      "mean_ms": 324.7742363877822,
+      "max_ms": 5314.0,
+      "over500": 258
+    },
+    "bad_without_review": 17,
+    "over500_in_same_dsp_pause": 115,
+    "review": 1298
+  },
+  {
+    "context": "strong20",
+    "variant": "free_edges",
+    "split": "development",
+    "records": 4,
+    "stats": {
+      "n": 61,
+      "median_ms": 121.0,
+      "p95_ms": 415.0,
+      "mean_ms": 165.85245901639345,
+      "max_ms": 962.0,
+      "over500": 2
+    },
+    "bad_without_review": 0,
+    "over500_in_same_dsp_pause": 0,
+    "review": 47
+  },
+  {
+    "context": "strong20",
+    "variant": "no_delimiter",
+    "split": "control",
+    "records": 40,
+    "stats": {
+      "n": 1506,
+      "median_ms": 158.0,
+      "p95_ms": 1184.0,
+      "mean_ms": 313.9070385126162,
+      "max_ms": 4511.0,
+      "over500": 255
+    },
+    "bad_without_review": 14,
+    "over500_in_same_dsp_pause": 115,
+    "review": 1309
+  },
+  {
+    "context": "strong20",
+    "variant": "no_delimiter",
+    "split": "development",
+    "records": 4,
+    "stats": {
+      "n": 61,
+      "median_ms": 121.0,
+      "p95_ms": 409.0,
+      "mean_ms": 153.1639344262295,
+      "max_ms": 962.0,
+      "over500": 1
+    },
+    "bad_without_review": 0,
+    "over500_in_same_dsp_pause": 0,
+    "review": 49
+  },
+  {
+    "context": "strong20",
+    "variant": "phones",
+    "split": "control",
+    "records": 40,
+    "stats": {
+      "n": 1506,
+      "median_ms": 158.5,
+      "p95_ms": 1174.25,
+      "mean_ms": 311.8970783532537,
+      "max_ms": 4511.0,
+      "over500": 251
+    },
+    "bad_without_review": 16,
+    "over500_in_same_dsp_pause": 116,
+    "review": 1298
+  },
+  {
+    "context": "strong20",
+    "variant": "phones",
+    "split": "development",
+    "records": 4,
+    "stats": {
+      "n": 61,
+      "median_ms": 121.0,
+      "p95_ms": 409.0,
+      "mean_ms": 153.1639344262295,
+      "max_ms": 962.0,
+      "over500": 1
+    },
+    "bad_without_review": 0,
+    "over500_in_same_dsp_pause": 0,
+    "review": 47
+  },
+  {
+    "context": "strong20-fp32",
+    "variant": "current",
+    "split": "control",
+    "records": 8,
+    "stats": {
+      "n": 184,
+      "median_ms": 270.5,
+      "p95_ms": 2152.2,
+      "mean_ms": 575.4184782608696,
+      "max_ms": 4332.0,
+      "over500": 59
+    },
+    "bad_without_review": 3,
+    "over500_in_same_dsp_pause": 25,
+    "review": 160
+  },
+  {
+    "context": "strong20-fp32",
+    "variant": "current",
+    "split": "development",
+    "records": 4,
+    "stats": {
+      "n": 61,
+      "median_ms": 124.0,
+      "p95_ms": 371.0,
+      "mean_ms": 157.63934426229508,
+      "max_ms": 962.0,
+      "over500": 2
+    },
+    "bad_without_review": 0,
+    "over500_in_same_dsp_pause": 0,
+    "review": 51
+  },
+  {
+    "context": "strong6",
+    "variant": "current",
+    "split": "control",
+    "records": 8,
+    "stats": {
+      "n": 184,
+      "median_ms": 278.5,
+      "p95_ms": 2213.7999999999997,
+      "mean_ms": 568.0271739130435,
+      "max_ms": 4332.0,
+      "over500": 58
+    },
+    "bad_without_review": 2,
+    "over500_in_same_dsp_pause": 28,
+    "review": 154
+  },
+  {
+    "context": "strong6",
+    "variant": "current",
+    "split": "development",
+    "records": 4,
+    "stats": {
+      "n": 61,
+      "median_ms": 121.0,
+      "p95_ms": 371.0,
+      "mean_ms": 163.29508196721312,
+      "max_ms": 1215.0,
+      "over500": 2
+    },
+    "bad_without_review": 0,
+    "over500_in_same_dsp_pause": 1,
+    "review": 47
+  },
+  {
+    "context": "strong6",
+    "variant": "free_edges",
+    "split": "control",
+    "records": 8,
+    "stats": {
+      "n": 184,
+      "median_ms": 268.0,
+      "p95_ms": 2151.6999999999994,
+      "mean_ms": 561.7717391304348,
+      "max_ms": 4332.0,
+      "over500": 57
+    },
+    "bad_without_review": 3,
+    "over500_in_same_dsp_pause": 31,
+    "review": 150
+  },
+  {
+    "context": "strong6",
+    "variant": "free_edges",
+    "split": "development",
+    "records": 4,
+    "stats": {
+      "n": 61,
+      "median_ms": 113.0,
+      "p95_ms": 358.0,
+      "mean_ms": 137.9016393442623,
+      "max_ms": 1195.0,
+      "over500": 1
+    },
+    "bad_without_review": 0,
+    "over500_in_same_dsp_pause": 0,
+    "review": 41
+  },
+  {
+    "context": "strong6",
+    "variant": "no_delimiter",
+    "split": "control",
+    "records": 8,
+    "stats": {
+      "n": 184,
+      "median_ms": 262.5,
+      "p95_ms": 2163.2499999999995,
+      "mean_ms": 555.0815217391304,
+      "max_ms": 4332.0,
+      "over500": 57
+    },
+    "bad_without_review": 4,
+    "over500_in_same_dsp_pause": 31,
+    "review": 149
+  },
+  {
+    "context": "strong6",
+    "variant": "no_delimiter",
+    "split": "development",
+    "records": 4,
+    "stats": {
+      "n": 61,
+      "median_ms": 113.0,
+      "p95_ms": 358.0,
+      "mean_ms": 143.31147540983608,
+      "max_ms": 1195.0,
+      "over500": 1
+    },
+    "bad_without_review": 0,
+    "over500_in_same_dsp_pause": 0,
+    "review": 42
+  },
+  {
+    "context": "strong6",
+    "variant": "phones",
+    "split": "control",
+    "records": 8,
+    "stats": {
+      "n": 184,
+      "median_ms": 256.5,
+      "p95_ms": 2151.6999999999994,
+      "mean_ms": 553.7010869565217,
+      "max_ms": 4332.0,
+      "over500": 56
+    },
+    "bad_without_review": 4,
+    "over500_in_same_dsp_pause": 31,
+    "review": 148
+  },
+  {
+    "context": "strong6",
+    "variant": "phones",
+    "split": "development",
+    "records": 4,
+    "stats": {
+      "n": 61,
+      "median_ms": 113.0,
+      "p95_ms": 358.0,
+      "mean_ms": 143.31147540983608,
+      "max_ms": 1195.0,
+      "over500": 1
+    },
+    "bad_without_review": 0,
+    "over500_in_same_dsp_pause": 0,
+    "review": 41
+  }
+]
+failures 0

@@ -1,0 +1,163 @@
+"""Measured timing outcomes, inference scope, and separation from sound scores."""
+
+import copy
+
+import pytest
+
+from surah_cutter.data.onset_evidence import onset_evidence
+from surah_cutter.data.timing_probability import (
+    MODEL_SHA256,
+    calibration,
+    timing_probability,
+)
+
+
+def full(span=300):
+    time = 2500
+    check = dict(
+        ayah=2,
+        onset_ms=time,
+        conf=0.99,
+        first_token_conf=0.99,
+        pause_local_decisions=[
+            dict(start_ms=time - span, end_ms=time + 200, accepted=True, owned=True)
+        ],
+    )
+    trace = dict(
+        model_source=f"onnx-ctc:quran-phonetics:sha256={MODEL_SHA256}", mode="full", ayahs=[check]
+    )
+    trace["full_windows"] = dict(pause_decisions=copy.deepcopy(check["pause_local_decisions"]))
+    return check, trace
+
+
+def fast(kind="estimate"):
+    check = dict(ayah=2, onset_ms=2500, conf=0.0, reliable=False)
+    trace = dict(
+        model_source=f"quran-phonetics:revision={MODEL_SHA256}",
+        fast_version="sequential-fast-v3-sparse-12-split-opening",
+        ayahs=[check],
+        boundaries=[
+            dict(
+                ayah=2,
+                start_ms=2500,
+                evidence_kind=kind,
+                proof=dict(complete=True, ambiguous=False, competitors_checked=True),
+            )
+        ],
+    )
+    return check, trace
+
+
+def test_percent_is_fitted_timing_frequency_not_acoustic_probability():
+    c, t = full()
+    before = copy.deepcopy(t)
+    p = timing_probability(c, 2500, t)
+    assert 0.95 < p["probability"] < 1
+    assert p["probability"] == (p["calibration_successes"] + 1) / (p["calibration_n"] + 2)
+    assert p["target"] == "reference-cut" and p["tolerance_ms"] == 500
+    assert t == before
+    c["conf"] = 0
+    c["first_token_conf"] = 0
+    assert timing_probability(c, 2500, t) == p
+
+
+def test_wide_cut_range_gets_measured_lower_probability():
+    c, t = full(span=1400)
+    p = timing_probability(c, 2500, t)
+    assert 0 < p["probability"] < 0.5
+    assert len(p["interval95"]) == 2
+    assert p["calibration_recordings"] > 1
+
+
+def test_no_reference_lookup_or_ayah_specific_exception():
+    c, t = full(span=1400)
+    a = timing_probability(c, 2500, t)
+    c.update(ayah=220, reference_ms=-100000)
+    t["reference_times"] = {220: 2500}
+    assert timing_probability(c, 2500, t) == a
+
+
+def test_local_positioning_crop_cannot_change_the_calibrated_global_measurement():
+    c, t = full(span=1400)
+    p = timing_probability(c, 2500, t)
+    c["pause_local_decisions"][0]["start_ms"] = 2400
+    assert timing_probability(c, 2500, t) == p
+    assert p["probability"] < 0.5
+
+
+def test_fast_without_phoneme_score_has_its_own_temporal_estimate():
+    c, t = fast()
+    p = onset_evidence(c, 2500, 0.0, trace=t)
+    assert p["first_sound"] is None
+    assert p["word"] == 0.0
+    assert 0 < p["timing_accuracy"]["probability"] < 0.2
+    assert p["timing_accuracy"]["review_priority"] == "suspect"
+    proof, trace = fast("pause")
+    assert timing_probability(proof, 2500, trace)["probability"] > 0.8
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        "revision",
+        "model",
+        "algorithm",
+        "missing-version",
+        "time",
+        "duplicate",
+        "incomplete",
+        "kind",
+    ],
+)
+def test_out_of_scope_or_mismatched_proof_cannot_receive_percent(change):
+    c, t = fast("pause")
+    if change == "revision":
+        t["model_source"] = "quran-phonetics:revision=new-model"
+    elif change == "model":
+        t["model_source"] = f"whisper-tarteel-base:revision={MODEL_SHA256}"
+    elif change == "algorithm":
+        t["fast_version"] = "different-policy"
+    elif change == "missing-version":
+        del t["fast_version"]
+        t["mode"] = "fast"
+    elif change == "time":
+        t["boundaries"][0]["start_ms"] += 1
+    elif change == "duplicate":
+        t["boundaries"] *= 2
+    elif change == "incomplete":
+        t["boundaries"][0]["proof"]["complete"] = False
+    else:
+        t["boundaries"][0]["evidence_kind"] = "unknown"
+    assert timing_probability(c, 2500, t) is None
+
+
+def test_time_mismatch_does_not_inherit_old_probability():
+    c, t = full()
+    assert onset_evidence(c, 2501, 0.99, trace=t) is None
+    assert onset_evidence(c, 2500, 0.98, trace=t) is None
+
+
+@pytest.mark.parametrize("change", ["duplicate", "outside", "invalid", "flag-alone"])
+def test_ambiguous_or_invalid_local_pause_cannot_inherit_the_absent_pause_prior(change):
+    c, t = full()
+    if change == "duplicate":
+        c["pause_local_decisions"] *= 2
+    elif change == "outside":
+        c["pause_local_decisions"][0]["start_ms"] = 9000
+        c["pause_local_decisions"][0]["end_ms"] = 10000
+    elif change == "invalid":
+        c["pause_local_decisions"][0]["start_ms"] = float("nan")
+    else:
+        c["pause_center_reason"] = "positioned"
+        c["pause_local_decisions"].clear()
+    assert timing_probability(c, 2500, t) is None
+
+
+def test_bundled_calibration_has_outside_recording_validation():
+    artifact = calibration()
+    for mode in ("fast", "full"):
+        v = artifact["validation"][mode]
+        assert v["test"]["recordings"] >= 8
+        assert v["test"]["brier"] < v["constant_test_brier"]
+        assert v["test"]["ece"] < 0.1
+        assert v["excluded_shatri2_control"]["n"] == 286

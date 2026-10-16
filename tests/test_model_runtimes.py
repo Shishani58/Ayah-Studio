@@ -79,9 +79,10 @@ def test_tarteel_full_shrinks_audio_on_token_overflow_without_truncating_text():
     assert seen == [(30, words), (20, words), (10, words)]
 
 
-def test_all_open_models_route_to_their_own_weights(tmp_path, monkeypatch):
+def test_connected_models_route_to_their_own_weights(tmp_path, monkeypatch):
     monkeypatch.setattr(model_store, "ROOT", tmp_path)
-    ids = [m["id"] for m in model_store.catalog() if m["id"] not in ("quran-phonetics", "arabic-ctc")]
+    ids = [m["id"] for m in model_store.catalog() if m["id"] not in ("quran-phonetics", "arabic-ctc")
+           and m.get("integration_status") != "awaiting-access"]
     for model_id in ids:
         item = model_store.spec(model_id)
         folder = model_store.installed_path(item)
@@ -98,7 +99,8 @@ def test_all_open_models_route_to_their_own_weights(tmp_path, monkeypatch):
 
 
 @pytest.mark.parametrize("model_id", ["muaalem", "whisper-large-v3", "fastconformer-arabic",
-                                      "whisper-tarteel-tiny", "whisper-tarteel-base"])
+                                      "whisper-tarteel-tiny", "whisper-tarteel-base",
+                                      "mfa-quran-hafs", "fastconformer-muno"])
 def test_selection_probes_requested_model_before_saving(model_id, tmp_path, monkeypatch):
     monkeypatch.setattr(model_store, "ACTIVE_ID", "quran-phonetics")
     monkeypatch.setattr(align, "_ONNX_CACHE", {})
@@ -127,9 +129,11 @@ def test_selection_probes_requested_model_before_saving(model_id, tmp_path, monk
 
 def test_public_catalog_keeps_only_shortlist_without_deleting_archived_specs():
     expected = {"quran-phonetics", "muaalem", "fastconformer-arabic", "whisper-large-v3",
-                "whisper-tarteel-tiny", "whisper-tarteel-base"}
+                "whisper-tarteel-tiny", "whisper-tarteel-base", "mfa-quran-hafs",
+                "fastconformer-muno", "zipformer-quran"}
     assert {item["id"] for item in model_store.listing()["models"]} == expected
-    assert all(item["description"] and item["benchmark_summary"] for item in model_store.available_catalog())
+    assert all(item["description"] for item in model_store.available_catalog())
+    assert all(not any("benchmark" in key for key in item) for item in model_store.catalog())
     assert model_store.spec("whisper-medium")["hidden"]
 
 

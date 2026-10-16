@@ -1,0 +1,413 @@
+{
+  "complete": 85,
+  "expected": 114,
+  "missing": [
+    {
+      "surah": 1,
+      "reason": "missing_exact_pcm_observation:26ce692e33fa2508ee6c806df627bc667877bbd54e4dd6a61959322dffa0e4d7",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 7,
+        "candidate": 5,
+        "window_ms": [
+          38640.0,
+          40140.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 25,
+      "reason": "missing_exact_pcm_observation:4557730c6d4ad8f3cc9c45561a963a6ec0306e71b2bd55e0d43e2b287f89fc9e",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 3,
+        "candidate": 7,
+        "window_ms": [
+          60240.0,
+          62940.0
+        ],
+        "reason": "incomplete_distinguishing_phrase"
+      }
+    },
+    {
+      "surah": 29,
+      "reason": "missing_exact_pcm_observation:465c571b007a83ffaa79415dfdf3cae8ec2b6af4266407bbed8ebf70ed072364",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 9,
+        "candidate": 19,
+        "window_ms": [
+          114360.0,
+          115860.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 36,
+      "reason": "missing_exact_pcm_observation:ecb8ddec1e5fd2134c081ae3869f552c93bab9f98de81068441bca2f280bb992",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 10,
+        "candidate": 12,
+        "window_ms": [
+          70820.0,
+          73520.0
+        ],
+        "reason": "incomplete_distinguishing_phrase"
+      }
+    },
+    {
+      "surah": 43,
+      "reason": "missing_exact_pcm_observation:9cb4736f14e0dd9e8bf3184f3d44542969221b101be10f57562d8442561604fd",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 9,
+        "candidate": 13,
+        "window_ms": [
+          78140.0,
+          79640.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 45,
+      "reason": "missing_exact_pcm_observation:102a24815768dd537143b8088b7860abb6e21e158469099b0eabfb18412f909d",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 21,
+        "candidate": 54,
+        "window_ms": [
+          301960.0,
+          303460.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 46,
+      "reason": "missing_exact_pcm_observation:27380076123f167c005d328ebbdb51f993437fddd5008f93ae8ad8fc764fc917",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 13,
+        "candidate": 34,
+        "window_ms": [
+          237860.0,
+          239360.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 50,
+      "reason": "missing_exact_pcm_observation:fcac72ed72155d897b5cd9834bb5613037095bff34ec4218febda986b2c082b8",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 19,
+        "candidate": 34,
+        "window_ms": [
+          199040.0,
+          200540.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 51,
+      "reason": "missing_exact_pcm_observation:170811617831247072147666be920eb8d7c9db59c53e2695b5eb60ade24c37eb",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 49,
+        "candidate": 61,
+        "window_ms": [
+          308360.0,
+          309860.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 53,
+      "reason": "missing_exact_pcm_observation:a93fbe4919ce89c3921e103121ec1aedb8498ed41898b55611e4808fce5c79c7",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 26,
+        "candidate": 32,
+        "window_ms": [
+          146660.0,
+          148160.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 55,
+      "reason": "missing_exact_pcm_observation:c633944f74afc4daae4b9182b8533527bc2b6dd8374719f4fae830658dd9b5d2",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 22,
+        "candidate": 25,
+        "window_ms": [
+          124980.0,
+          126480.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 56,
+      "reason": "missing_exact_pcm_observation:7552ff4deb8fd7ca01342a29576e6dbbc3bb8e013af72797148220b6f4dc3019",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 23,
+        "candidate": 23,
+        "window_ms": [
+          104040.0,
+          105540.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 57,
+      "reason": "missing_exact_pcm_observation:fcd621cac33c4d99677a51c3aad7c570d16501e4f712c55167dd8ede37b925f7",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 7,
+        "candidate": 13,
+        "window_ms": [
+          98820.0,
+          100320.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 61,
+      "reason": "missing_exact_pcm_observation:3ddde56c8e67019b8a18bcf7d19201a79d6415d7ecd23c509424ea82992e7da4",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 10,
+        "candidate": 25,
+        "window_ms": [
+          183900.0,
+          185400.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 62,
+      "reason": "missing_exact_pcm_observation:159462e46729fb0db4c4ff98573785f18c4d1d0513958e54b43692a5f93fe09f",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 8,
+        "candidate": 19,
+        "window_ms": [
+          126480.0,
+          127980.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 66,
+      "reason": "missing_exact_pcm_observation:4585f906289d9c8940f9bd937dc623f44e64f1e0bc0c10e7b1a75ad4a96b9dc4",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 8,
+        "candidate": 28,
+        "window_ms": [
+          200100.0,
+          201600.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 67,
+      "reason": "missing_exact_pcm_observation:47635d13e95c63b55ad563ff385d48f51c9e271e7a50e4d5c78d565ff03a1e57",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 19,
+        "candidate": 37,
+        "window_ms": [
+          232980.0,
+          234480.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 68,
+      "reason": "missing_exact_pcm_observation:0fa5ed1a52dff04a382a92ae5ea70b0c23ce4ff8cc8f043a4db0010673a9cdbd",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 11,
+        "candidate": 13,
+        "window_ms": [
+          65740.0,
+          67240.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 69,
+      "reason": "missing_exact_pcm_observation:3b0ab32967588dc5d4a1f2491a96ae779fa407fa8f987cd23ee1bc56edebd48a",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 9,
+        "candidate": 15,
+        "window_ms": [
+          64540.0,
+          66040.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 70,
+      "reason": "missing_exact_pcm_observation:d3eda9cf5711fe6e0ca5c4ec449323679367a769a65080ef9b3c75fc951bb715",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 14,
+        "candidate": 17,
+        "window_ms": [
+          86100.0,
+          87600.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 72,
+      "reason": "missing_exact_pcm_observation:4cd068e776f22c30ebbc25fb318db7c5845421e53c1f90fa4e0650a7b70081ac",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 12,
+        "candidate": 24,
+        "window_ms": [
+          140380.0,
+          141880.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 74,
+      "reason": "missing_exact_pcm_observation:a6a727229ccce4d20fe26d28c1664c8ff03583727b2dc2d82f908e1e88077264",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 37,
+        "candidate": 46,
+        "window_ms": [
+          188360.0,
+          189860.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 76,
+      "reason": "missing_exact_pcm_observation:e6cfa5336e965c52f3ed83ba334ffe45124854de200abef453c2e39ef0a4bed8",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 27,
+        "candidate": 43,
+        "window_ms": [
+          230480.0,
+          231980.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 79,
+      "reason": "missing_exact_pcm_observation:94ef8bed5c25d31eeb98ff86124c7ebd55c7169414791d53929cfb1d2d5cfdda",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 27,
+        "candidate": 30,
+        "window_ms": [
+          129560.0,
+          131060.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 80,
+      "reason": "missing_exact_pcm_observation:f836b3d214391e2e46b748f1444d4d7a405128c6ef46f36c5e1c26f0e6834569",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 12,
+        "candidate": 14,
+        "window_ms": [
+          55980.0,
+          57480.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 81,
+      "reason": "missing_exact_pcm_observation:7f869d3d966b99e332256ea99290043987cd343b891d7b0b437464e80346dc43",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 15,
+        "candidate": 15,
+        "window_ms": [
+          56460.0,
+          57960.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 87,
+      "reason": "missing_exact_pcm_observation:63025ddd3aa1be703e9685490e2dcc2bf07a93d19e192262f8640cfd658f616b",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 11,
+        "candidate": 14,
+        "window_ms": [
+          51800.0,
+          53300.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 92,
+      "reason": "missing_exact_pcm_observation:99633dfc9358d065b96dd4eec44fa8f7527a71dfc1739d873c2a8c48987bf470",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 7,
+        "candidate": 9,
+        "window_ms": [
+          33960.0,
+          35460.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    },
+    {
+      "surah": 98,
+      "reason": "missing_exact_pcm_observation:20b3d38e3cee424604da51179d88e4e451110874bbe2dab18766dcf612c4e4b4",
+      "last_event": {
+        "state": "READ_LOCAL",
+        "ayah": 8,
+        "candidate": 17,
+        "window_ms": [
+          99880.0,
+          101380.0
+        ],
+        "reason": "minimal_phrase"
+      }
+    }
+  ],
+  "source_sha256": "a53752f70226bb399aa2ae83cdb12ef2e3a297725e6c5b10ebcc45f3aa4c794c"
+}

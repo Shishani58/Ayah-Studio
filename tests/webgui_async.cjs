@@ -22,7 +22,7 @@ function harness(names) {
     R: { request: 1, reloadRequest: 0, surah: 112, ayahs: [{ ayah: 1, time: 1000 }], current: 0 },
     currentProject: { db_path: 'one.db' }, editBusy: false, reviewLoading: false,
     W: { mode: false }, GEN: { epoch: 0, running: false }, generatingSurah: null,
-    $: id => elements[id] ||= {}, api: {},
+    $: id => elements[id] ||= {addEventListener() {}}, api: {},
     document: { querySelector: () => null, activeElement: null,
       body: {classList: {contains: () => false}} },
     innerWidth: 1200, innerHeight: 800,
@@ -32,13 +32,25 @@ function harness(names) {
   };
   for (const name of ['setStatus', 'renderAyahList', 'drawWave', 'updateGenHint',
     'updateSuraProgress', 'setCurrent', 'saveState', 'updateAyahStatusControls',
-    'syncSidebarStatus', 'resetWords', 'updatePauseOverlayUi']) context[name] = () => {};
+    'syncSidebarStatus', 'resetWords', 'updatePauseOverlayUi', 'scheduleAyahStop',
+    'setAudioPlaybackEnd']) context[name] = () => {};
   context.currentAyahByTime = () => 0;
   vm.createContext(context);
+  vm.runInContext(fs.readFileSync(path.join(root, 'playback.js'), 'utf8'), context);
+  context.setAudioPlaybackEnd = () => {};
   vm.runInContext(names.map(extract).join('\n'), context);
   return context;
 }
 async function reviewRaces() {
+  {
+    const c = harness(['commitMarker']);
+    c.R.duration = 10000;
+    c.api.post = () => assert.fail('cannot save a marker at or after audio end');
+    assert.equal(await c.commitMarker(0, 10000), false);
+    assert.equal(await c.commitMarker(0, 10001), false);
+    assert.equal(c.R.ayahs[0].time, 1000);
+    assert.equal(c.editBusy, false);
+  }
   for (const mutate of [c => ++c.R.request, c => c.currentProject = { db_path: 'two.db' },
     c => c.R.ayahs[0].time = 2000]) {
     const c = harness(['captureReviewContext', 'recheckSura']);
@@ -101,7 +113,7 @@ async function generationRaces() {
   await offline.onerror(); assert.equal(offline.closed, undefined); offline.close();
 }
 function confidenceAndModes() {
-  const c = harness(['timingConfidence', 'suraNeedsGeneration', 'applyTimingStatus']);
+  const c = harness(['timingReview', 'timingConfidence', 'suraNeedsGeneration', 'applyTimingStatus']);
   for (const value of [0, .32, .33, .65, .66, 1, null, NaN, Infinity, -.1, 1.1, '0.9']) {
     assert.equal(c.timingConfidence({time: 100, confidence: value, status: 'auto'}).level, 'unknown');
   }
@@ -112,29 +124,36 @@ function confidenceAndModes() {
   }
   const supported = c.timingConfidence({time: 100, confidence: .99,
     onset_evidence: {first_sound: .99, boundary: {level: 'medium', reason: 'alignment-only'}}});
-  assert.equal(supported.level, 'medium');
-  assert.equal(supported.label, 'Начало: предварительное');
+  assert.equal(supported.level, 'unknown');
+  assert.equal(supported.label, 'Точность: —');
   assert.doesNotMatch(supported.label, /%/);
   assert.match(supported.title, /независимо не проверено/);
   const local = c.timingConfidence({time: 100, confidence: .01,
     onset_evidence: {first_sound: .99, boundary: {level: 'high', reason: 'local-phrase-and-pause'}}});
-  assert.equal(local.level, 'high');
-  assert.equal(local.label, 'Начало: подтверждено');
+  assert.equal(local.level, 'unknown');
+  assert.equal(local.label, 'Точность: —');
+  const combined = c.timingConfidence({time: 100, confidence: .01,
+    onset_evidence: {boundary: {level: 'high', reason: 'local-ctc-pause'}}});
+  assert.equal(combined.level, 'unknown');
+  assert.match(combined.title, /концом предыдущего аята/);
+  const contextual = c.timingConfidence({time: 100, confidence: .01,
+    onset_evidence: {boundary: {level: 'medium', reason: 'contextual-onset'}}});
+  assert.match(contextual.title, /ближайшие звуки/);
   const weak = c.timingConfidence({time: 100, confidence: 0,
     onset_evidence: {first_sound: .0002, boundary: {level: 'low', reason: 'weak-onset'}}});
   assert.equal(weak.level, 'low');
-  assert.equal(weak.label, 'Начало: сомнительное');
+  assert.equal(weak.label, 'Точность: — · проверить');
   const ambiguous = c.timingConfidence({time: 100, confidence: .99,
     onset_evidence: {first_sound: .99, boundary: {level: 'low', reason: 'late-onset-in-pause'}}});
   assert.equal(ambiguous.level, 'low');
-  assert.match(c.timingConfidence({time: 100, confidence: .99}).label, /нет оценки/);
+  assert.equal(c.timingConfidence({time: 100, confidence: .99}).label, 'Точность: —');
   assert.equal(c.timingConfidence({time: 100, status: 'verified', confidence: null}).label, 'Начало: проверено');
-  assert.equal(c.timingConfidence({time: 100, status: 'verified', confidence: .99}, true).label, 'Начало: сомнительное');
+  assert.equal(c.timingConfidence({time: 100, status: 'verified', confidence: .99}, true).label, 'Точность: — · проверить');
   const badge = {dataset: {}}, row = {dataset: {}, querySelector: selector => selector === '.timing-confidence' ? badge : null};
   c.applyTimingStatus(row, {time: 100, status: 'auto', confidence: .99,
     onset_evidence: {boundary: {level: 'high', reason: 'local-phrase-and-pause'}}});
   assert.equal(row.dataset.timingStatus, 'uncertain'); // model confirmation never verifies a row
-  assert.equal(badge.dataset.level, 'high'); assert.equal(badge.textContent, 'Начало: подтверждено');
+  assert.equal(badge.dataset.level, 'unknown'); assert.equal(badge.textContent, 'Точность: —');
   c.applyTimingStatus(row, {time: 100, confidence: .99, status: 'edited'});
   assert.equal(badge.dataset.level, 'unknown');
   let mode = 'full'; c.selectedMode = () => mode;
@@ -147,6 +166,67 @@ function confidenceAndModes() {
   mode = 'words';
   assert.equal(c.suraNeedsGeneration({status: 'processed', words_complete: false}), true);
   assert.equal(c.suraNeedsGeneration({status: 'processed', words_complete: true}), false);
+}
+
+function timingReviewQueue() {
+  const c = harness(['timingReview', 'timingConfidence', 'applyTimingReviewFilter', 'nextTimingReview']);
+  const mark = (priority, span = 0) => ({time: 100, status: 'auto',
+    onset_evidence: {boundary: {level: 'high'}, timing_accuracy: {target: 'playback-cut', review_priority: priority, cut_span_ms: span}}});
+  c.R.ayahs = [mark('supported'), mark('suspect', 1200), mark('suspect', 600),
+    {...mark('suspect'), status: 'verified'}, {...mark('suspect'), status: 'edited'},
+    {...mark('suspect'), stale: true}, {...mark('suspect'), time: null}];
+  c.R.ayahs.forEach((a, i) => a.ayah = i + 1);
+  const list = { children: [], appendChild(row) {
+    this.children = this.children.filter(r => r !== row); this.children.push(row);
+  }};
+  list.children = c.R.ayahs.map((_, i) => ({dataset: {i}, querySelector: () => ({focus() {}})}));
+  c.$('ayahList').children = list.children;
+  c.$('ayahList').appendChild = list.appendChild;
+  c.$('timingReviewTools').classList = {toggle() {}};
+  c.$('timingReviewFilter').value = 'suspect'; c.$('timingReviewSort').value = 'risk';
+  c.applyTimingReviewFilter();
+  const visible = () => c.$('ayahList').children.filter(r => !r.hidden).map(r => +r.dataset.i);
+  assert.deepEqual(visible(), [1, 2]);
+  assert.equal(c.$('timingReviewCount').textContent, 'Показано 2 из 7');
+  assert.equal(c.timingConfidence(c.R.ayahs[1]).label, 'Точность: — · проверить');
+  assert.match(c.timingConfidence(c.R.ayahs[1]).title, /1200 мс/);
+  let selected;
+  c.seekAyah = i => selected = i; c.R.current = 1;
+  c.nextTimingReview(); assert.equal(selected, 2);
+  c.R.current = 2; c.nextTimingReview(); assert.equal(selected, 1);
+  c.$('timingReviewFilter').value = 'unassessed'; c.applyTimingReviewFilter();
+  assert.deepEqual(visible(), [4, 5, 6]);
+  c.$('timingReviewFilter').value = 'review'; c.applyTimingReviewFilter();
+  assert.deepEqual(visible(), [1, 2, 4, 5, 6]);
+  c.$('timingReviewFilter').value = 'unverified'; c.applyTimingReviewFilter();
+  assert.equal(visible().includes(3), false);
+  c.$('timingReviewFilter').value = 'all'; c.$('timingReviewSort').value = 'ayah';
+  c.applyTimingReviewFilter(); assert.deepEqual(visible(), [0, 1, 2, 3, 4, 5, 6]);
+}
+
+function numericTimingQueue() {
+  const c = harness(['timingReview', 'timingConfidence', 'applyTimingReviewFilter']);
+  const mark = p => ({time: 100, status: 'auto',
+    onset_evidence: {timing_accuracy: {probability: p, target: 'reference-cut', tolerance_ms: 500,
+      review_priority: 'suspect', cut_span_ms: 9000, calibration_n: 63, interval95: [.05, .72]}}});
+  for (const p of [0, .23, .98, 1, null, NaN, Infinity, -.1, 1.1, '0.9']) {
+    const estimate = c.timingConfidence(mark(p));
+    assert.equal(estimate.label, 'Точность: —');
+    assert.doesNotMatch(estimate.title, /63|9000|500 мс/);
+    assert.equal(c.timingReview(mark(p)).priority, 'unassessed');
+    assert.equal(c.timingReview(mark(p)).span, 0);
+  }
+  assert.equal(c.timingConfidence({...mark(.98), status:'verified'}).label, 'Начало: проверено');
+  c.R.ayahs = [mark(.98), mark(.23), {...mark(.98), status:'verified'}];
+  c.R.ayahs.forEach((a,i) => a.ayah = i+1);
+  const list = c.$('ayahList');
+  list.children = c.R.ayahs.map((_,i) => ({dataset:{i}}));
+  list.appendChild = function(row) { this.children = this.children.filter(r => r !== row); this.children.push(row); };
+  c.$('timingReviewTools').classList = {toggle() {}};
+  c.$('timingReviewFilter').value = 'all'; c.$('timingReviewSort').value = 'risk';
+  c.applyTimingReviewFilter();
+  assert.deepEqual(list.children.map(r => +r.dataset.i), [0,1,2]);
+  assert.equal(list.children.some(r => r.hidden), false);
 }
 async function comparisonRaces() {
   const c = harness(['comparisonActive', 'loadComparisonPair', 'comparisonStats', 'sameComparisonAudio', 'playComparison', 'stopComparison']);
@@ -248,5 +328,39 @@ function diagnosticSaveOutcome() {
   assert(c.$('genTitle').textContent.includes('суры сохранены'));
   assert(c.$('genTitle').textContent.includes('диагностика'));
 }
-(async () => { diagnosticSaveOutcome(); confidenceAndModes(); await generationWriteChoices(); await comparisonRaces(); await reviewRaces(); await generationRaces(); console.log('async UI regressions passed'); })()
+function structuredStageProgress() {
+  const c = harness(['stageProgressLabel', 'renderAlignmentProgress', 'handleAlignmentEvent',
+    'applyGenerationSnapshot', 'setProgress']);
+  c.GEN.running = true; c.alignmentCancelling = false;
+  c.ALIGN = {done: 0, total: 6, surah: 114, ayah: 0, count: 6};
+  const attrs = {};
+  const classes = new Set();
+  for (const id of ['progressFill', 'reviewGeneration']) c.$(id).classList = {
+    toggle(name, enabled) { if (enabled) classes.add(name); else classes.delete(name); },
+    remove(name) { classes.delete(name); }
+  };
+  c.$('progressFill').style = {};
+  Object.assign(c.$('reviewGeneration'), {firstElementChild: {style: {}},
+    setAttribute(k, v) {attrs[k] = v;}, removeAttribute(k) {delete attrs[k];}});
+  c.handleAlignmentEvent({type: 'stage_progress', stage: 'model', stage_started_at_ms: Date.now()});
+  assert.equal(c.$('alignmentPercent').textContent, '…');
+  assert.equal(attrs['aria-valuenow'], undefined);
+  assert(classes.has('indeterminate'));
+  const stage = {type: 'stage_progress', stage: 'acoustic', stage_done: 2, stage_total: 4,
+    stage_started_at_ms: Date.now() - 10000, stage_reported_at_ms: Date.now(), stage_eta_seconds: 10};
+  c.handleAlignmentEvent(stage);
+  assert.equal(c.$('alignmentPercent').textContent, '50% этапа');
+  assert.equal(c.$('reviewGeneration').firstElementChild.style.width, '50%');
+  assert(c.$('progressText').textContent.includes('0 / 6'));
+  assert.equal(attrs['aria-valuenow'], '2');
+  assert(!classes.has('indeterminate'));
+  c.applyGenerationSnapshot({total_ayahs: 6, ayahs_done: 0,
+    progress: {type: 'sura_start', surah: 114, ayah: 0, ayah_count: 6},
+    stage: {...stage, stage_reported_at_ms: Date.now() - 20000}});
+  assert(c.$('alignmentPosition').textContent.includes('уточняю время этапа'));
+  c.handleAlignmentEvent({type:'sura', ayahs_done:6});
+  assert.equal(c.ALIGN.stage, null);
+  assert.equal(c.$('alignmentPercent').textContent, '99%');
+}
+(async () => { structuredStageProgress(); diagnosticSaveOutcome(); confidenceAndModes(); timingReviewQueue(); numericTimingQueue(); await generationWriteChoices(); await comparisonRaces(); await reviewRaces(); await generationRaces(); console.log('async UI regressions passed'); })()
   .catch(error => { console.error(error); process.exitCode = 1; });

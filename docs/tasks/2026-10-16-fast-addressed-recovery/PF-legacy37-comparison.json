@@ -1,0 +1,962 @@
+{
+  "records": 37,
+  "ayahs": 564,
+  "summary": {
+    "legacy": {
+      "positive_marks": 410,
+      "positive_over500": 9,
+      "all_over500": 66,
+      "calls": 1076,
+      "input_ms": 2213700.0
+    },
+    "F13_baseline": {
+      "positive_marks": 390,
+      "positive_over500": 4,
+      "all_over500": 147,
+      "calls": 730,
+      "input_ms": 1249660.0
+    },
+    "PF14": {
+      "positive_marks": 439,
+      "positive_over500": 4,
+      "all_over500": 95,
+      "calls": 821,
+      "input_ms": 1409120.0
+    }
+  },
+  "comparison_limit": "legacy accepted marks and current independently validated proofs have different semantics; this does not redefine historical M5",
+  "matched": [
+    "audio SHA",
+    "initial DSP decisions SHA",
+    "reference SHA",
+    "actual installed model assets/config/runtime identity",
+    "decoder source"
+  ],
+  "records_detail": [
+    {
+      "surah": 78,
+      "ayahs": 40,
+      "legacy": {
+        "positive_marks": 26,
+        "positive_over500": 3,
+        "all_over500": 12,
+        "calls": 100,
+        "input_ms": 221100.0
+      },
+      "F13_baseline": {
+        "positive_marks": 0,
+        "positive_over500": 0,
+        "all_over500": 38,
+        "calls": 5,
+        "input_ms": 11200.0
+      },
+      "PF14": {
+        "positive_marks": 0,
+        "positive_over500": 0,
+        "all_over500": 38,
+        "calls": 5,
+        "input_ms": 11200.0
+      }
+    },
+    {
+      "surah": 79,
+      "ayahs": 46,
+      "legacy": {
+        "positive_marks": 32,
+        "positive_over500": 0,
+        "all_over500": 5,
+        "calls": 95,
+        "input_ms": 200700.0
+      },
+      "F13_baseline": {
+        "positive_marks": 22,
+        "positive_over500": 1,
+        "all_over500": 22,
+        "calls": 36,
+        "input_ms": 58600.0
+      },
+      "PF14": {
+        "positive_marks": 22,
+        "positive_over500": 1,
+        "all_over500": 22,
+        "calls": 37,
+        "input_ms": 60100.0
+      }
+    },
+    {
+      "surah": 80,
+      "ayahs": 42,
+      "legacy": {
+        "positive_marks": 31,
+        "positive_over500": 1,
+        "all_over500": 6,
+        "calls": 83,
+        "input_ms": 174300.0
+      },
+      "F13_baseline": {
+        "positive_marks": 10,
+        "positive_over500": 0,
+        "all_over500": 28,
+        "calls": 23,
+        "input_ms": 38430.0
+      },
+      "PF14": {
+        "positive_marks": 33,
+        "positive_over500": 0,
+        "all_over500": 4,
+        "calls": 69,
+        "input_ms": 119030.0
+      }
+    },
+    {
+      "surah": 81,
+      "ayahs": 29,
+      "legacy": {
+        "positive_marks": 23,
+        "positive_over500": 1,
+        "all_over500": 2,
+        "calls": 46,
+        "input_ms": 93600.0
+      },
+      "F13_baseline": {
+        "positive_marks": 14,
+        "positive_over500": 0,
+        "all_over500": 13,
+        "calls": 22,
+        "input_ms": 39600.0
+      },
+      "PF14": {
+        "positive_marks": 25,
+        "positive_over500": 0,
+        "all_over500": 2,
+        "calls": 40,
+        "input_ms": 72500.0
+      }
+    },
+    {
+      "surah": 82,
+      "ayahs": 19,
+      "legacy": {
+        "positive_marks": 12,
+        "positive_over500": 0,
+        "all_over500": 2,
+        "calls": 34,
+        "input_ms": 64500.0
+      },
+      "F13_baseline": {
+        "positive_marks": 18,
+        "positive_over500": 0,
+        "all_over500": 1,
+        "calls": 38,
+        "input_ms": 68270.0
+      },
+      "PF14": {
+        "positive_marks": 18,
+        "positive_over500": 0,
+        "all_over500": 1,
+        "calls": 38,
+        "input_ms": 68270.0
+      }
+    },
+    {
+      "surah": 83,
+      "ayahs": 36,
+      "legacy": {
+        "positive_marks": 21,
+        "positive_over500": 3,
+        "all_over500": 8,
+        "calls": 79,
+        "input_ms": 175500.0
+      },
+      "F13_baseline": {
+        "positive_marks": 35,
+        "positive_over500": 3,
+        "all_over500": 3,
+        "calls": 84,
+        "input_ms": 161000.0
+      },
+      "PF14": {
+        "positive_marks": 35,
+        "positive_over500": 3,
+        "all_over500": 3,
+        "calls": 84,
+        "input_ms": 161000.0
+      }
+    },
+    {
+      "surah": 84,
+      "ayahs": 25,
+      "legacy": {
+        "positive_marks": 20,
+        "positive_over500": 1,
+        "all_over500": 4,
+        "calls": 47,
+        "input_ms": 99000.0
+      },
+      "F13_baseline": {
+        "positive_marks": 21,
+        "positive_over500": 0,
+        "all_over500": 3,
+        "calls": 41,
+        "input_ms": 72000.0
+      },
+      "PF14": {
+        "positive_marks": 21,
+        "positive_over500": 0,
+        "all_over500": 3,
+        "calls": 41,
+        "input_ms": 72000.0
+      }
+    },
+    {
+      "surah": 85,
+      "ayahs": 22,
+      "legacy": {
+        "positive_marks": 18,
+        "positive_over500": 0,
+        "all_over500": 2,
+        "calls": 41,
+        "input_ms": 80100.0
+      },
+      "F13_baseline": {
+        "positive_marks": 21,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 36,
+        "input_ms": 63600.0
+      },
+      "PF14": {
+        "positive_marks": 21,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 36,
+        "input_ms": 63600.0
+      }
+    },
+    {
+      "surah": 86,
+      "ayahs": 17,
+      "legacy": {
+        "positive_marks": 14,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 31,
+        "input_ms": 65100.0
+      },
+      "F13_baseline": {
+        "positive_marks": 17,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 29,
+        "input_ms": 53500.0
+      },
+      "PF14": {
+        "positive_marks": 17,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 29,
+        "input_ms": 53500.0
+      }
+    },
+    {
+      "surah": 87,
+      "ayahs": 19,
+      "legacy": {
+        "positive_marks": 15,
+        "positive_over500": 0,
+        "all_over500": 2,
+        "calls": 29,
+        "input_ms": 53100.0
+      },
+      "F13_baseline": {
+        "positive_marks": 9,
+        "positive_over500": 0,
+        "all_over500": 7,
+        "calls": 15,
+        "input_ms": 22300.0
+      },
+      "PF14": {
+        "positive_marks": 16,
+        "positive_over500": 0,
+        "all_over500": 2,
+        "calls": 23,
+        "input_ms": 35500.0
+      }
+    },
+    {
+      "surah": 88,
+      "ayahs": 26,
+      "legacy": {
+        "positive_marks": 20,
+        "positive_over500": 0,
+        "all_over500": 3,
+        "calls": 43,
+        "input_ms": 85500.0
+      },
+      "F13_baseline": {
+        "positive_marks": 26,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 38,
+        "input_ms": 63000.0
+      },
+      "PF14": {
+        "positive_marks": 26,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 38,
+        "input_ms": 63000.0
+      }
+    },
+    {
+      "surah": 89,
+      "ayahs": 30,
+      "legacy": {
+        "positive_marks": 20,
+        "positive_over500": 0,
+        "all_over500": 3,
+        "calls": 59,
+        "input_ms": 115200.0
+      },
+      "F13_baseline": {
+        "positive_marks": 27,
+        "positive_over500": 0,
+        "all_over500": 1,
+        "calls": 48,
+        "input_ms": 79000.0
+      },
+      "PF14": {
+        "positive_marks": 27,
+        "positive_over500": 0,
+        "all_over500": 1,
+        "calls": 48,
+        "input_ms": 79000.0
+      }
+    },
+    {
+      "surah": 90,
+      "ayahs": 20,
+      "legacy": {
+        "positive_marks": 16,
+        "positive_over500": 0,
+        "all_over500": 2,
+        "calls": 36,
+        "input_ms": 71400.0
+      },
+      "F13_baseline": {
+        "positive_marks": 18,
+        "positive_over500": 0,
+        "all_over500": 2,
+        "calls": 30,
+        "input_ms": 47800.0
+      },
+      "PF14": {
+        "positive_marks": 18,
+        "positive_over500": 0,
+        "all_over500": 2,
+        "calls": 30,
+        "input_ms": 47800.0
+      }
+    },
+    {
+      "surah": 91,
+      "ayahs": 15,
+      "legacy": {
+        "positive_marks": 12,
+        "positive_over500": 0,
+        "all_over500": 1,
+        "calls": 24,
+        "input_ms": 44400.0
+      },
+      "F13_baseline": {
+        "positive_marks": 15,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 18,
+        "input_ms": 26800.0
+      },
+      "PF14": {
+        "positive_marks": 15,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 18,
+        "input_ms": 26800.0
+      }
+    },
+    {
+      "surah": 92,
+      "ayahs": 21,
+      "legacy": {
+        "positive_marks": 17,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 41,
+        "input_ms": 84900.0
+      },
+      "F13_baseline": {
+        "positive_marks": 5,
+        "positive_over500": 0,
+        "all_over500": 15,
+        "calls": 11,
+        "input_ms": 17500.0
+      },
+      "PF14": {
+        "positive_marks": 13,
+        "positive_over500": 0,
+        "all_over500": 3,
+        "calls": 28,
+        "input_ms": 47260.0
+      }
+    },
+    {
+      "surah": 93,
+      "ayahs": 11,
+      "legacy": {
+        "positive_marks": 8,
+        "positive_over500": 0,
+        "all_over500": 1,
+        "calls": 16,
+        "input_ms": 32700.0
+      },
+      "F13_baseline": {
+        "positive_marks": 10,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 19,
+        "input_ms": 33600.0
+      },
+      "PF14": {
+        "positive_marks": 10,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 19,
+        "input_ms": 33600.0
+      }
+    },
+    {
+      "surah": 94,
+      "ayahs": 8,
+      "legacy": {
+        "positive_marks": 8,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 16,
+        "input_ms": 35100.0
+      },
+      "F13_baseline": {
+        "positive_marks": 7,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 10,
+        "input_ms": 16000.0
+      },
+      "PF14": {
+        "positive_marks": 7,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 10,
+        "input_ms": 16000.0
+      }
+    },
+    {
+      "surah": 95,
+      "ayahs": 8,
+      "legacy": {
+        "positive_marks": 7,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 12,
+        "input_ms": 22800.0
+      },
+      "F13_baseline": {
+        "positive_marks": 7,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 10,
+        "input_ms": 16000.0
+      },
+      "PF14": {
+        "positive_marks": 7,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 10,
+        "input_ms": 16000.0
+      }
+    },
+    {
+      "surah": 96,
+      "ayahs": 19,
+      "legacy": {
+        "positive_marks": 17,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 29,
+        "input_ms": 54300.0
+      },
+      "F13_baseline": {
+        "positive_marks": 17,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 30,
+        "input_ms": 49560.0
+      },
+      "PF14": {
+        "positive_marks": 17,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 30,
+        "input_ms": 49560.0
+      }
+    },
+    {
+      "surah": 97,
+      "ayahs": 5,
+      "legacy": {
+        "positive_marks": 5,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 14,
+        "input_ms": 32400.0
+      },
+      "F13_baseline": {
+        "positive_marks": 5,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 8,
+        "input_ms": 11600.0
+      },
+      "PF14": {
+        "positive_marks": 5,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 8,
+        "input_ms": 11600.0
+      }
+    },
+    {
+      "surah": 98,
+      "ayahs": 8,
+      "legacy": {
+        "positive_marks": 5,
+        "positive_over500": 0,
+        "all_over500": 2,
+        "calls": 23,
+        "input_ms": 43500.0
+      },
+      "F13_baseline": {
+        "positive_marks": 7,
+        "positive_over500": 0,
+        "all_over500": 1,
+        "calls": 23,
+        "input_ms": 37500.0
+      },
+      "PF14": {
+        "positive_marks": 7,
+        "positive_over500": 0,
+        "all_over500": 1,
+        "calls": 24,
+        "input_ms": 39000.0
+      }
+    },
+    {
+      "surah": 99,
+      "ayahs": 8,
+      "legacy": {
+        "positive_marks": 6,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 15,
+        "input_ms": 27300.0
+      },
+      "F13_baseline": {
+        "positive_marks": 7,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 14,
+        "input_ms": 22800.0
+      },
+      "PF14": {
+        "positive_marks": 7,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 14,
+        "input_ms": 22800.0
+      }
+    },
+    {
+      "surah": 100,
+      "ayahs": 11,
+      "legacy": {
+        "positive_marks": 9,
+        "positive_over500": 0,
+        "all_over500": 1,
+        "calls": 18,
+        "input_ms": 33000.0
+      },
+      "F13_baseline": {
+        "positive_marks": 11,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 19,
+        "input_ms": 32300.0
+      },
+      "PF14": {
+        "positive_marks": 11,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 19,
+        "input_ms": 32300.0
+      }
+    },
+    {
+      "surah": 101,
+      "ayahs": 11,
+      "legacy": {
+        "positive_marks": 7,
+        "positive_over500": 0,
+        "all_over500": 3,
+        "calls": 24,
+        "input_ms": 56400.0
+      },
+      "F13_baseline": {
+        "positive_marks": 0,
+        "positive_over500": 0,
+        "all_over500": 11,
+        "calls": 5,
+        "input_ms": 11200.0
+      },
+      "PF14": {
+        "positive_marks": 0,
+        "positive_over500": 0,
+        "all_over500": 11,
+        "calls": 5,
+        "input_ms": 11200.0
+      }
+    },
+    {
+      "surah": 102,
+      "ayahs": 8,
+      "legacy": {
+        "positive_marks": 3,
+        "positive_over500": 0,
+        "all_over500": 1,
+        "calls": 17,
+        "input_ms": 40800.0
+      },
+      "F13_baseline": {
+        "positive_marks": 8,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 19,
+        "input_ms": 37400.0
+      },
+      "PF14": {
+        "positive_marks": 8,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 19,
+        "input_ms": 37400.0
+      }
+    },
+    {
+      "surah": 103,
+      "ayahs": 3,
+      "legacy": {
+        "positive_marks": 2,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 4,
+        "input_ms": 6000.0
+      },
+      "F13_baseline": {
+        "positive_marks": 3,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 5,
+        "input_ms": 7300.0
+      },
+      "PF14": {
+        "positive_marks": 3,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 5,
+        "input_ms": 7300.0
+      }
+    },
+    {
+      "surah": 104,
+      "ayahs": 9,
+      "legacy": {
+        "positive_marks": 7,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 16,
+        "input_ms": 28800.0
+      },
+      "F13_baseline": {
+        "positive_marks": 9,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 13,
+        "input_ms": 19300.0
+      },
+      "PF14": {
+        "positive_marks": 9,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 13,
+        "input_ms": 19300.0
+      }
+    },
+    {
+      "surah": 105,
+      "ayahs": 5,
+      "legacy": {
+        "positive_marks": 4,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 10,
+        "input_ms": 18600.0
+      },
+      "F13_baseline": {
+        "positive_marks": 5,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 7,
+        "input_ms": 10300.0
+      },
+      "PF14": {
+        "positive_marks": 5,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 7,
+        "input_ms": 10300.0
+      }
+    },
+    {
+      "surah": 106,
+      "ayahs": 4,
+      "legacy": {
+        "positive_marks": 3,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 9,
+        "input_ms": 18300.0
+      },
+      "F13_baseline": {
+        "positive_marks": 2,
+        "positive_over500": 0,
+        "all_over500": 1,
+        "calls": 6,
+        "input_ms": 8800.0
+      },
+      "PF14": {
+        "positive_marks": 2,
+        "positive_over500": 0,
+        "all_over500": 1,
+        "calls": 6,
+        "input_ms": 8800.0
+      }
+    },
+    {
+      "surah": 107,
+      "ayahs": 7,
+      "legacy": {
+        "positive_marks": 2,
+        "positive_over500": 0,
+        "all_over500": 1,
+        "calls": 8,
+        "input_ms": 17100.0
+      },
+      "F13_baseline": {
+        "positive_marks": 4,
+        "positive_over500": 0,
+        "all_over500": 1,
+        "calls": 11,
+        "input_ms": 23500.0
+      },
+      "PF14": {
+        "positive_marks": 4,
+        "positive_over500": 0,
+        "all_over500": 1,
+        "calls": 11,
+        "input_ms": 23500.0
+      }
+    },
+    {
+      "surah": 108,
+      "ayahs": 3,
+      "legacy": {
+        "positive_marks": 1,
+        "positive_over500": 0,
+        "all_over500": 1,
+        "calls": 7,
+        "input_ms": 15600.0
+      },
+      "F13_baseline": {
+        "positive_marks": 3,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 6,
+        "input_ms": 10000.0
+      },
+      "PF14": {
+        "positive_marks": 3,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 6,
+        "input_ms": 10000.0
+      }
+    },
+    {
+      "surah": 109,
+      "ayahs": 6,
+      "legacy": {
+        "positive_marks": 2,
+        "positive_over500": 0,
+        "all_over500": 3,
+        "calls": 10,
+        "input_ms": 22800.0
+      },
+      "F13_baseline": {
+        "positive_marks": 6,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 13,
+        "input_ms": 22300.0
+      },
+      "PF14": {
+        "positive_marks": 6,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 13,
+        "input_ms": 22300.0
+      }
+    },
+    {
+      "surah": 110,
+      "ayahs": 3,
+      "legacy": {
+        "positive_marks": 2,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 5,
+        "input_ms": 8700.0
+      },
+      "F13_baseline": {
+        "positive_marks": 2,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 5,
+        "input_ms": 7300.0
+      },
+      "PF14": {
+        "positive_marks": 2,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 5,
+        "input_ms": 7300.0
+      }
+    },
+    {
+      "surah": 111,
+      "ayahs": 5,
+      "legacy": {
+        "positive_marks": 3,
+        "positive_over500": 0,
+        "all_over500": 1,
+        "calls": 9,
+        "input_ms": 19800.0
+      },
+      "F13_baseline": {
+        "positive_marks": 5,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 8,
+        "input_ms": 13000.0
+      },
+      "PF14": {
+        "positive_marks": 5,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 8,
+        "input_ms": 13000.0
+      }
+    },
+    {
+      "surah": 112,
+      "ayahs": 4,
+      "legacy": {
+        "positive_marks": 3,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 5,
+        "input_ms": 8700.0
+      },
+      "F13_baseline": {
+        "positive_marks": 4,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 6,
+        "input_ms": 8600.0
+      },
+      "PF14": {
+        "positive_marks": 4,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 6,
+        "input_ms": 8600.0
+      }
+    },
+    {
+      "surah": 113,
+      "ayahs": 5,
+      "legacy": {
+        "positive_marks": 3,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 11,
+        "input_ms": 22800.0
+      },
+      "F13_baseline": {
+        "positive_marks": 5,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 11,
+        "input_ms": 15700.0
+      },
+      "PF14": {
+        "positive_marks": 5,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 11,
+        "input_ms": 15700.0
+      }
+    },
+    {
+      "surah": 114,
+      "ayahs": 6,
+      "legacy": {
+        "positive_marks": 6,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 10,
+        "input_ms": 19800.0
+      },
+      "F13_baseline": {
+        "positive_marks": 5,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 8,
+        "input_ms": 13000.0
+      },
+      "PF14": {
+        "positive_marks": 5,
+        "positive_over500": 0,
+        "all_over500": 0,
+        "calls": 8,
+        "input_ms": 13000.0
+      }
+    }
+  ]
+}
