@@ -23,6 +23,7 @@ Do not edit generated bundles by hand.
 
 import os
 import sys
+from importlib.metadata import version
 import uv
 from pathlib import Path
 
@@ -146,7 +147,7 @@ if sys.platform == "darwin":
         info_plist={
             "CFBundleName": "Ayah Studio",
             "CFBundleDisplayName": "Ayah Studio",
-            "CFBundleShortVersionString": "0.3.1",
+            "CFBundleShortVersionString": version("ayah-studio"),
             "NSHighResolutionCapable": True,
             "LSApplicationCategoryType": "public.app-category.music",
         },

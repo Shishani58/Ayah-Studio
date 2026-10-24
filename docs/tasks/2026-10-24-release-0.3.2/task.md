@@ -26,3 +26,8 @@
 
 ## Docs
 Docs updated: docs/STATUS.md, README.md, README.en.md, .github/release-notes.md, этот task-файл.
+
+## Исправление публикации
+Первый CI успешен, но macOS spec содержал старую константу 0.3.1.
+CFBundleShortVersionString теперь берётся из metadata установленного проекта,
+как версия Windows-архива; требуется повторная сборка macOS.
