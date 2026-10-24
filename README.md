@@ -11,10 +11,10 @@
 
 ## Установка
 
-| Платформа | Скачать 0.3.2 |
+| Платформа | Скачать 0.3.3 |
 | --- | --- |
-| macOS · Apple Silicon | [DMG](https://github.com/Shishani58/Ayah-Studio/releases/download/v0.3.2/Ayah-Studio-0.3.2-macOS-arm64.dmg) |
-| Windows · x64 | [ZIP с готовым EXE](https://github.com/Shishani58/Ayah-Studio/releases/download/v0.3.2/Ayah-Studio-0.3.2-Windows-x64.zip) |
+| macOS · Apple Silicon | [DMG](https://github.com/Shishani58/Ayah-Studio/releases/download/v0.3.3/Ayah-Studio-0.3.3-macOS-arm64.dmg) |
+| Windows · x64 | [ZIP с готовым EXE](https://github.com/Shishani58/Ayah-Studio/releases/download/v0.3.3/Ayah-Studio-0.3.3-Windows-x64.zip) |
 
 Для **Mac с Apple Silicon** (M1 и новее). Откройте DMG, перетащите
 **Ayah Studio** в **Applications / Программы** и запустите приложение.

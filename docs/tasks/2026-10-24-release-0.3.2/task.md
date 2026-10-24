@@ -31,3 +31,7 @@ Docs updated: docs/STATUS.md, README.md, README.en.md, .github/release-notes.md,
 Первый CI успешен, но macOS spec содержал старую константу 0.3.1.
 CFBundleShortVersionString теперь берётся из metadata установленного проекта,
 как версия Windows-архива; требуется повторная сборка macOS.
+
+Версия 0.3.2 заменяется выпуском 0.3.3: нет авторизации для workflow_dispatch,
+теги опубликованных выпусков не переписываются. Новый tag CI соберёт обе платформы
+из исправленного spec.
