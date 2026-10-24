@@ -82,15 +82,20 @@ def test_actual_alignment_starts_and_sequence(bundle, surah, mode, max_error_ms,
         if surah == 1:
             third = checks[3]
             assert third["pause_center_reason"] == "unstable-pause"
-            assert third["reason"] == "waveform-pause-recheck"
-            assert third["onset_ms"] < third["pre_center_onset_ms"]
+            # With the fitted lag removed, both shelves precede the raw
+            # onset. Neither v9 nor v10 can choose between them safely.
+            assert third["reason"] == "weak-word"
+            assert third["onset_ms"] == third["pre_center_onset_ms"]
+            shelves = {(p["start_ms"], p["end_ms"])
+                       for key in ("pause_local_decisions", "pause_stability_decisions")
+                       for p in third[key] if p["accepted"] and p["owned"]}
+            assert len(shelves) == 2
             signal = {r["ayah"]: r for r in trace["full_signal_checks"]}
-            assert signal[3]["accepted"]
-            assert signal[3]["safe_interval_ms"][0] <= third["onset_ms"] <= signal[3]["safe_interval_ms"][1]
-            assert signal[3]["periodicity"] <= .8
-            assert signal[3]["rms_ratio"] <= signal[3]["rms_limit_ratio"]
-            assert signal[3]["peak_ratio"] <= signal[3]["peak_limit_ratio"]
-            assert not signal[7]["accepted"] and signal[7]["reason"] == "voiced-tail-in-waveform"
+            assert 3 not in signal
+            for a in (5, 7):
+                assert not signal[a]["accepted"]
+                assert signal[a]["reason"] == "voiced-tail-in-waveform"
+                assert checks[a]["onset_ms"] == checks[a]["pre_center_onset_ms"]
             assert checks[7]["onset_ms"] == checks[7]["pre_center_onset_ms"]
             assert not third["reliable"]
             first_word = next(c for c in trace["ayahs"] if c["ayah"] == 2)
@@ -142,7 +147,14 @@ def test_actual_bounded_full_runs_the_same_waveform_check(bundle, monkeypatch):
     assert [a for a, _, _ in rows] == list(range(1, 8))
     assert all(a[1] < b[1] for a, b in zip(rows, rows[1:]))
     signal = {r["ayah"]: r for r in trace["full_signal_checks"]}
-    assert signal[3]["accepted"]
-    assert not signal[7]["accepted"] and signal[7]["reason"] == "voiced-tail-in-waveform"
+    checks = {c["ayah"]: c for c in trace["ayahs"]}
+    assert trace["full_signal_policy"]["quiet_window_ms"] == 40
+    assert 3 not in signal
+    for a in (5, 7):
+        assert not signal[a]["accepted"] and signal[a]["reason"] == "voiced-tail-in-waveform"
+    assert checks[3]["pause_center_reason"] == "unstable-pause"
+    assert not checks[3]["reliable"]
+    for a in (3, 7):
+        assert checks[a]["onset_ms"] == checks[a]["pre_center_onset_ms"]
     assert len(trace["full_boundary_reads"]) == 1
     assert "full_transition_verifier" not in trace

@@ -791,26 +791,6 @@ def _span_confidence(scores, start_frame: int, end_frame: int) -> float:
     return round(math.exp(mean_logp), 4)
 
 
-def _uniform_fallback(
-    words: list[Word],
-    n_frames: int,
-    stride_ms: float,
-) -> list[tuple[int, int, float]]:
-    """Last-resort even split when no target tokens could be built.
-
-    Distributes ayah starts uniformly across the audio so the pipeline still
-    emits one row per ayah. Confidence is ``0.0`` to flag the degeneracy.
-    """
-    ayahs = sorted({w.ayah for w in words})
-    total_ms = int(round(n_frames * stride_ms))
-    rows: list[tuple[int, int, float]] = []
-    n = len(ayahs)
-    for i, ayah in enumerate(ayahs):
-        start_ms = int(round(total_ms * i / n)) if n else 0
-        rows.append((ayah, start_ms, 0.0))
-    return rows
-
-
 # --- model loading & vocab resolution -------------------------------------
 
 

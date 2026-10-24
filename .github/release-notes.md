@@ -1,18 +1,17 @@
-## Ayah Studio 0.3.1
+## Ayah Studio 0.3.2
 
 Разметка аудио Корана по аятам и словам — локально на вашем компьютере.
 
-- Единый FAST: поиск пауз и локальные проверки границ с журналом прочитанных участков.
-- Улучшены проверки первого слова и разделённых ASR-слов; повторно используется RMS аудио.
-- FULL: локальная проверка границ, выбор центра паузы и возобновление расчёта.
-- Оценка уверенности начала аята и подсказки для ручного ревью.
-- Выбор ASR-моделей, русский и английский интерфейс.
-- Ручные и проверенные метки сохраняются при перегенерации.
+- FULL: исправлены границы при слабом начале речи и перекрывающихся окнах.
+- Исправлена обработка одинаковых CTC-оценок и порядок параллельных окон.
+- GUI сохраняет активность во время генерации; улучшена очистка ресурсов декодера.
+- Удалены устаревшие коррекции FAST и лишняя основная зависимость soundfile.
+- Сохранены локальный FAST, выбор моделей, ручные и проверенные метки.
 
-**macOS Apple Silicon:** скачайте `Ayah-Studio-0.3.1-macOS-arm64.dmg`
+**macOS Apple Silicon:** скачайте `Ayah-Studio-0.3.2-macOS-arm64.dmg`
 и перенесите приложение в **Applications / Программы**.
 
-**Windows x64:** скачайте `Ayah-Studio-0.3.1-Windows-x64.zip`, распакуйте
+**Windows x64:** скачайте `Ayah-Studio-0.3.2-Windows-x64.zip`, распакуйте
 целиком и запустите **Ayah Studio.exe**. Папка `_internal` должна оставаться
 рядом. Нужен [Microsoft WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/).
 
@@ -25,10 +24,10 @@ Apple ([инструкция запуска](https://support.apple.com/ru-ru/102
 
 ---
 
-**Ayah Studio 0.3.1:** unified local FAST with improved head-word checks,
-FULL boundary verification and pause centering, onset confidence review,
-ASR model selection and Russian/English interface. Manual and verified timings
-survive regeneration.
+**Ayah Studio 0.3.2:** improved FULL boundaries for weak speech onsets and
+overlapping windows, deterministic CTC ties and parallel window ordering,
+generation activity handling and simpler audio decoding. Manual and verified
+timings survive regeneration.
 
 **macOS Apple Silicon:** open the DMG and drag Ayah Studio to Applications.
 **Windows x64:** extract the complete ZIP and launch Ayah Studio.exe; keep

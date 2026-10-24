@@ -3,6 +3,12 @@
 from surah_cutter.core.cancellation import check_cancelled
 
 
+POSITION_POLICY = dict(max_lead_ms=250, min_pause_ms=120, frame_ms=10, smooth_frames=3,
+                       max_gap_ms=6000, context_before_ms=800, context_after_ms=1000,
+                       edge_tolerance_ms=80, max_onset_lag_ms=450,
+                       stability_extra_ms=800, stability_tolerance_ms=80)
+
+
 def record_edges(checks, words, word_token_spans, target_spans, frame_scores,
                  stride_ms, *, base_ms=0, intro=False, targets=None, delim_id=None):
     """Retain speech evidence across trusted tiles without moving tile anchors."""
@@ -67,10 +73,7 @@ def position_boundaries(checks, pcm, sr, *, trace=None):
     cannot be discarded to reach a later intraword pause. Local phrase repairs
     keep their separate proof. No acoustic inference is performed here.
     """
-    policy = dict(max_lead_ms=250, min_pause_ms=120, frame_ms=10, smooth_frames=3,
-                  max_gap_ms=6000, context_before_ms=800, context_after_ms=1000,
-                  edge_tolerance_ms=80, max_onset_lag_ms=450,
-                  stability_extra_ms=800, stability_tolerance_ms=80)
+    policy = dict(POSITION_POLICY)
     if trace is not None:
         trace["full_pause_position"] = policy
     ordered = sorted(checks.values(), key=lambda c: c["ayah"])

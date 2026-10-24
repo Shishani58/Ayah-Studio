@@ -273,12 +273,12 @@ def test_fast_pipeline_never_falls_back(monkeypatch, experimental):
     monkeypatch.setattr(decode, "decode", lambda _: np.ones(160000, dtype=np.float32))
     monkeypatch.setattr(align, "default_bundle", lambda: object())
     calls = []
-    def experimental(*args, **kwargs):
+    def execute(*args, **kwargs):
         calls.append("new")
         raise RuntimeError("new failed")
     def forbidden(*args, **kwargs):
         pytest.fail("legacy fallback")
-    monkeypatch.setattr(fast_executor, "align_surah_sequential", experimental)
+    monkeypatch.setattr(fast_executor, "align_surah_sequential", execute)
     monkeypatch.setattr(align_fast, "align_surah_fast_legacy", forbidden, raising=False)
     monkeypatch.setattr(pipeline, "_full_align", forbidden)
     with pytest.raises(RuntimeError, match="new failed"):

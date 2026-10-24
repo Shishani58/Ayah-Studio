@@ -1,0 +1,7032 @@
+[
+  {
+    "audio": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/001.mp3",
+    "checks": [
+      {
+        "ayah": 1,
+        "raw_onset_ms": 320,
+        "onset_ms": 320,
+        "conf": 0.2666,
+        "first_token_conf": 0.866,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.866,
+          0.988,
+          0.0243,
+          0.024,
+          0.999,
+          0.7187
+        ],
+        "full_ctc_first_ms": 319.9491697729583,
+        "full_ctc_tail_conf": 0.8967,
+        "full_ctc_end_ms": 3979.367799051169,
+        "pre_center_onset_ms": 320,
+        "pause_center_reason": "first-ayah"
+      },
+      {
+        "ayah": 2,
+        "raw_onset_ms": 5539,
+        "onset_ms": 6683,
+        "conf": 0.5305,
+        "first_token_conf": 0.0022,
+        "reliable": false,
+        "repaired": true,
+        "reason": "split-word-local-recheck",
+        "token_confs": [
+          0.0022,
+          0.9998,
+          0.9998,
+          0.9287,
+          0.9996,
+          0.8878,
+          0.9963,
+          0.9991
+        ],
+        "original_conf": 0.3485,
+        "original_first_token_conf": 0.8975,
+        "pause_start_ms": 5780.0,
+        "pause_end_ms": 6620.0,
+        "full_ctc_first_ms": 5539.120001694341,
+        "full_ctc_tail_conf": 0.9733,
+        "full_ctc_end_ms": 11018.249534056253,
+        "pre_center_onset_ms": 6683,
+        "pause_center_reason": "existing-recheck"
+      },
+      {
+        "ayah": 3,
+        "raw_onset_ms": 11798,
+        "onset_ms": 11798,
+        "conf": 0.0478,
+        "first_token_conf": 0.7211,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.7211,
+          0.0,
+          0.0001,
+          0.988,
+          0.001,
+          0.0004,
+          0.9763,
+          0.9931,
+          0.3676,
+          0.347
+        ],
+        "full_ctc_first_ms": 11798.125635377839,
+        "full_ctc_tail_conf": 0.2778,
+        "full_ctc_end_ms": 13817.804769569639,
+        "pre_center_onset_ms": 11798,
+        "pause_center_reason": "unstable-pause",
+        "pause_local_crop_ms": [
+          10210,
+          12798.125635377839
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 11600.0,
+            "end_ms": 11750.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.32290956306813756,
+            "zcr": 0.04169769173492182,
+            "rms_ratio": 0.06450487310241246
+          }
+        ],
+        "pause_stability_crop_ms": [
+          9410,
+          13598.125635377839
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 11410.0,
+            "end_ms": 11590.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.39046211411133913,
+            "zcr": 0.0595903165735568,
+            "rms_ratio": 0.08430893972742504
+          },
+          {
+            "start_ms": 12280.0,
+            "end_ms": 12430.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.42462004478694704,
+            "zcr": 0.114668652271035,
+            "rms_ratio": 0.33236061417534823
+          }
+        ]
+      },
+      {
+        "ayah": 4,
+        "raw_onset_ms": 16137,
+        "onset_ms": 15990,
+        "conf": 0.0697,
+        "first_token_conf": 0.9987,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9987,
+          0.8528,
+          0.9631,
+          0.0898,
+          0.0046,
+          0.0
+        ],
+        "full_ctc_first_ms": 16137.436250423585,
+        "full_ctc_tail_conf": 0.9993,
+        "full_ctc_end_ms": 19556.89300237208,
+        "pre_center_onset_ms": 16137,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          13010,
+          17137.436250423583
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 15910.0,
+            "end_ms": 16070.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2590728023003635,
+            "zcr": 0.034891835310537335,
+            "rms_ratio": 0.11294233215720768
+          }
+        ],
+        "pause_stability_crop_ms": [
+          12210,
+          17937.436250423583
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 12280.0,
+            "end_ms": 12430.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.42462004478694704,
+            "zcr": 0.114668652271035,
+            "rms_ratio": 0.3197155715894125
+          },
+          {
+            "start_ms": 15900.0,
+            "end_ms": 16070.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2618822266644199,
+            "zcr": 0.03479973736047275,
+            "rms_ratio": 0.11117434231156319
+          }
+        ],
+        "pause_lead_ms": 80.0,
+        "center_pause_start_ms": 15910.0,
+        "center_pause_end_ms": 16070.0
+      },
+      {
+        "ayah": 5,
+        "raw_onset_ms": 21777,
+        "onset_ms": 21777,
+        "conf": 0.0603,
+        "first_token_conf": 0.7071,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.7071,
+          0.0238,
+          0.0001,
+          0.0565,
+          0.9925,
+          0.9994
+        ],
+        "full_ctc_first_ms": 21776.540367671976,
+        "full_ctc_tail_conf": 0.9997,
+        "full_ctc_end_ms": 27195.679430701457,
+        "pre_center_onset_ms": 21777,
+        "pause_center_reason": "unstable-pause",
+        "pause_local_crop_ms": [
+          18750,
+          22776.540367671976
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 20800.0,
+            "end_ms": 21680.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.32685090074401624,
+            "zcr": 0.05486587377376508,
+            "rms_ratio": 0.020360190304220805
+          }
+        ],
+        "pause_stability_crop_ms": [
+          17950,
+          23576.540367671976
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 20710.0,
+            "end_ms": 21680.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2967895879611677,
+            "zcr": 0.051547187282969364,
+            "rms_ratio": 0.019190021244672117
+          }
+        ]
+      },
+      {
+        "ayah": 6,
+        "raw_onset_ms": 28076,
+        "onset_ms": 27740,
+        "conf": 0.171,
+        "first_token_conf": 0.9791,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9791,
+          0.8971,
+          0.7196,
+          0.1329,
+          0.9957,
+          0.8827,
+          0.0
+        ],
+        "full_ctc_first_ms": 28075.539647577094,
+        "full_ctc_tail_conf": 0.5536,
+        "full_ctc_end_ms": 31175.04722975263,
+        "pre_center_onset_ms": 28076,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          26390,
+          29075.539647577094
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 27450.0,
+            "end_ms": 27990.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4298322661053604,
+            "zcr": 0.060207270932719194,
+            "rms_ratio": 0.12533521481346607
+          }
+        ],
+        "pause_stability_crop_ms": [
+          25590,
+          29875.539647577094
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 27450.0,
+            "end_ms": 27990.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4298322661053604,
+            "zcr": 0.060207270932719194,
+            "rms_ratio": 0.10272750980440214
+          }
+        ],
+        "pause_lead_ms": 250,
+        "center_pause_start_ms": 27450.0,
+        "center_pause_end_ms": 27990.0
+      },
+      {
+        "ayah": 7,
+        "raw_onset_ms": 33595,
+        "onset_ms": 33595,
+        "conf": 0.1572,
+        "first_token_conf": 0.8755,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.8755,
+          0.9603,
+          0.9424,
+          0.9181,
+          0.0762,
+          0.0
+        ],
+        "full_ctc_first_ms": 33594.662826160624,
+        "full_ctc_tail_conf": 0.9542,
+        "full_ctc_end_ms": 50092.04189257879,
+        "pre_center_onset_ms": 33595,
+        "pause_center_reason": "unstable-pause",
+        "pause_local_crop_ms": [
+          30370,
+          34594.662826160624
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 33160.0,
+            "end_ms": 33350.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.31872764009721266,
+            "zcr": 0.02821869488536155,
+            "rms_ratio": 0.1564142245894211
+          }
+        ],
+        "pause_stability_crop_ms": [
+          29570,
+          35394.662826160624
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 30550.0,
+            "end_ms": 30670.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.4290648796174577,
+            "zcr": 0.17488372093023255,
+            "rms_ratio": 0.14634468960294417
+          },
+          {
+            "start_ms": 33130.0,
+            "end_ms": 33530.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3227487399804838,
+            "zcr": 0.02995571763480073,
+            "rms_ratio": 0.13994621825803752
+          }
+        ]
+      }
+    ],
+    "predicted_checks": [
+      {
+        "ayah": 1,
+        "raw_onset_ms": 320,
+        "onset_ms": 320,
+        "conf": 0.2666,
+        "first_token_conf": 0.866,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.866,
+          0.988,
+          0.0243,
+          0.024,
+          0.999,
+          0.7187
+        ],
+        "full_ctc_first_ms": 319.9491697729583,
+        "full_ctc_tail_conf": 0.8967,
+        "full_ctc_end_ms": 3979.367799051169,
+        "pre_center_onset_ms": 320,
+        "pause_center_reason": "first-ayah"
+      },
+      {
+        "ayah": 2,
+        "raw_onset_ms": 5539,
+        "onset_ms": 6683,
+        "conf": 0.5305,
+        "first_token_conf": 0.0022,
+        "reliable": false,
+        "repaired": true,
+        "reason": "split-word-local-recheck",
+        "token_confs": [
+          0.0022,
+          0.9998,
+          0.9998,
+          0.9287,
+          0.9996,
+          0.8878,
+          0.9963,
+          0.9991
+        ],
+        "original_conf": 0.3485,
+        "original_first_token_conf": 0.8975,
+        "pause_start_ms": 5780.0,
+        "pause_end_ms": 6620.0,
+        "full_ctc_first_ms": 5539.120001694341,
+        "full_ctc_tail_conf": 0.9733,
+        "full_ctc_end_ms": 11018.249534056253,
+        "pre_center_onset_ms": 6683,
+        "pause_center_reason": "existing-recheck"
+      },
+      {
+        "ayah": 3,
+        "raw_onset_ms": 11798,
+        "onset_ms": 11798,
+        "conf": 0.0478,
+        "first_token_conf": 0.7211,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.7211,
+          0.0,
+          0.0001,
+          0.988,
+          0.001,
+          0.0004,
+          0.9763,
+          0.9931,
+          0.3676,
+          0.347
+        ],
+        "full_ctc_first_ms": 11798.125635377839,
+        "full_ctc_tail_conf": 0.2778,
+        "full_ctc_end_ms": 13817.804769569639,
+        "pre_center_onset_ms": 11798,
+        "pause_center_reason": "unstable-pause",
+        "pause_local_crop_ms": [
+          10210,
+          12798.125635377839
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 11600.0,
+            "end_ms": 11750.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.32290956306813756,
+            "zcr": 0.04169769173492182,
+            "rms_ratio": 0.06450487310241246
+          }
+        ],
+        "pause_stability_crop_ms": [
+          9410,
+          13598.125635377839
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 11410.0,
+            "end_ms": 11590.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.39046211411133913,
+            "zcr": 0.0595903165735568,
+            "rms_ratio": 0.08430893972742504
+          },
+          {
+            "start_ms": 12280.0,
+            "end_ms": 12430.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.42462004478694704,
+            "zcr": 0.114668652271035,
+            "rms_ratio": 0.33236061417534823
+          }
+        ]
+      },
+      {
+        "ayah": 4,
+        "raw_onset_ms": 16137,
+        "onset_ms": 15990,
+        "conf": 0.0697,
+        "first_token_conf": 0.9987,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9987,
+          0.8528,
+          0.9631,
+          0.0898,
+          0.0046,
+          0.0
+        ],
+        "full_ctc_first_ms": 16137.436250423585,
+        "full_ctc_tail_conf": 0.9993,
+        "full_ctc_end_ms": 19556.89300237208,
+        "pre_center_onset_ms": 16137,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          13010,
+          17137.436250423583
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 15910.0,
+            "end_ms": 16070.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2590728023003635,
+            "zcr": 0.034891835310537335,
+            "rms_ratio": 0.11294233215720768
+          }
+        ],
+        "pause_stability_crop_ms": [
+          12210,
+          17937.436250423583
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 12280.0,
+            "end_ms": 12430.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.42462004478694704,
+            "zcr": 0.114668652271035,
+            "rms_ratio": 0.3197155715894125
+          },
+          {
+            "start_ms": 15900.0,
+            "end_ms": 16070.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2618822266644199,
+            "zcr": 0.03479973736047275,
+            "rms_ratio": 0.11117434231156319
+          }
+        ],
+        "pause_lead_ms": 80.0,
+        "center_pause_start_ms": 15910.0,
+        "center_pause_end_ms": 16070.0
+      },
+      {
+        "ayah": 5,
+        "raw_onset_ms": 21777,
+        "onset_ms": 21777,
+        "conf": 0.0603,
+        "first_token_conf": 0.7071,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.7071,
+          0.0238,
+          0.0001,
+          0.0565,
+          0.9925,
+          0.9994
+        ],
+        "full_ctc_first_ms": 21776.540367671976,
+        "full_ctc_tail_conf": 0.9997,
+        "full_ctc_end_ms": 27195.679430701457,
+        "pre_center_onset_ms": 21777,
+        "pause_center_reason": "unstable-pause",
+        "pause_local_crop_ms": [
+          18750,
+          22776.540367671976
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 20800.0,
+            "end_ms": 21680.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.32685090074401624,
+            "zcr": 0.05486587377376508,
+            "rms_ratio": 0.020360190304220805
+          }
+        ],
+        "pause_stability_crop_ms": [
+          17950,
+          23576.540367671976
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 20710.0,
+            "end_ms": 21680.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2967895879611677,
+            "zcr": 0.051547187282969364,
+            "rms_ratio": 0.019190021244672117
+          }
+        ]
+      },
+      {
+        "ayah": 6,
+        "raw_onset_ms": 28076,
+        "onset_ms": 27740,
+        "conf": 0.171,
+        "first_token_conf": 0.9791,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9791,
+          0.8971,
+          0.7196,
+          0.1329,
+          0.9957,
+          0.8827,
+          0.0
+        ],
+        "full_ctc_first_ms": 28075.539647577094,
+        "full_ctc_tail_conf": 0.5536,
+        "full_ctc_end_ms": 31175.04722975263,
+        "pre_center_onset_ms": 28076,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          26390,
+          29075.539647577094
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 27450.0,
+            "end_ms": 27990.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4298322661053604,
+            "zcr": 0.060207270932719194,
+            "rms_ratio": 0.12533521481346607
+          }
+        ],
+        "pause_stability_crop_ms": [
+          25590,
+          29875.539647577094
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 27450.0,
+            "end_ms": 27990.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4298322661053604,
+            "zcr": 0.060207270932719194,
+            "rms_ratio": 0.10272750980440214
+          }
+        ],
+        "pause_lead_ms": 250,
+        "center_pause_start_ms": 27450.0,
+        "center_pause_end_ms": 27990.0
+      },
+      {
+        "ayah": 7,
+        "raw_onset_ms": 33595,
+        "onset_ms": 33595,
+        "conf": 0.1572,
+        "first_token_conf": 0.8755,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.8755,
+          0.9603,
+          0.9424,
+          0.9181,
+          0.0762,
+          0.0
+        ],
+        "full_ctc_first_ms": 33594.662826160624,
+        "full_ctc_tail_conf": 0.9542,
+        "full_ctc_end_ms": 50092.04189257879,
+        "pre_center_onset_ms": 33595,
+        "pause_center_reason": "unstable-pause",
+        "pause_local_crop_ms": [
+          30370,
+          34594.662826160624
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 33160.0,
+            "end_ms": 33350.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.31872764009721266,
+            "zcr": 0.02821869488536155,
+            "rms_ratio": 0.1564142245894211
+          }
+        ],
+        "pause_stability_crop_ms": [
+          29570,
+          35394.662826160624
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 30550.0,
+            "end_ms": 30670.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.4290648796174577,
+            "zcr": 0.17488372093023255,
+            "rms_ratio": 0.14634468960294417
+          },
+          {
+            "start_ms": 33130.0,
+            "end_ms": 33530.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3227487399804838,
+            "zcr": 0.02995571763480073,
+            "rms_ratio": 0.13994621825803752
+          }
+        ]
+      }
+    ],
+    "align_lag_ms": 0,
+    "fresh": true
+  },
+  {
+    "audio": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/112.mp3",
+    "checks": [
+      {
+        "ayah": 1,
+        "raw_onset_ms": 6276,
+        "onset_ms": 6276,
+        "conf": 0.1131,
+        "first_token_conf": 0.0002,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-onset",
+        "token_confs": [
+          0.0002,
+          0.8953,
+          0.9962
+        ],
+        "full_ctc_first_ms": 6275.740957446808,
+        "full_intro_end_ms": 3937.327925531915,
+        "full_intro_tail_conf": 0.808,
+        "full_ctc_tail_conf": 0.3278,
+        "full_ctc_end_ms": 8394.303191489362,
+        "pre_center_onset_ms": 6276,
+        "pause_center_reason": "weak-evidence"
+      },
+      {
+        "ayah": 2,
+        "raw_onset_ms": 8914,
+        "onset_ms": 8914,
+        "conf": 0.0031,
+        "first_token_conf": 0.0081,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-onset",
+        "token_confs": [
+          0.0081,
+          0.0065,
+          0.3798,
+          0.0192,
+          0.0053,
+          0.0001,
+          0.0
+        ],
+        "full_ctc_first_ms": 8913.950531914894,
+        "full_ctc_tail_conf": 0.9428,
+        "full_ctc_end_ms": 10452.906117021277,
+        "pre_center_onset_ms": 8914,
+        "pause_center_reason": "weak-evidence"
+      },
+      {
+        "ayah": 3,
+        "raw_onset_ms": 10973,
+        "onset_ms": 10825,
+        "conf": 0.2598,
+        "first_token_conf": 0.9873,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9873,
+          0.998,
+          0.0178
+        ],
+        "full_ctc_first_ms": 10972.55345744681,
+        "full_ctc_tail_conf": 0.633,
+        "full_ctc_end_ms": 13111.102127659575,
+        "pre_center_onset_ms": 10973,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          9650,
+          11972.55345744681
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 10680.0,
+            "end_ms": 10970.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.43587742044144323,
+            "zcr": 0.11628802464381979,
+            "rms_ratio": 0.2503155685524915
+          }
+        ],
+        "pause_stability_crop_ms": [
+          8850,
+          12772.55345744681
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 9850.0,
+            "end_ms": 10050.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.6217505611538192,
+            "zcr": 0.4232272473478504,
+            "rms_ratio": 0.3583969058917652
+          },
+          {
+            "start_ms": 10680.0,
+            "end_ms": 10970.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.43587742044144323,
+            "zcr": 0.11628802464381979,
+            "rms_ratio": 0.22087320327735607
+          }
+        ],
+        "pause_lead_ms": 145.0,
+        "center_pause_start_ms": 10680.0,
+        "center_pause_end_ms": 10970.0
+      },
+      {
+        "ayah": 4,
+        "raw_onset_ms": 13691,
+        "onset_ms": 13550,
+        "conf": 0.3696,
+        "first_token_conf": 0.9828,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9828,
+          0.9946,
+          0.9996,
+          0.9899,
+          0.0071
+        ],
+        "full_ctc_first_ms": 13690.708776595744,
+        "full_ctc_tail_conf": 0.9683,
+        "full_ctc_end_ms": 16788.606382978724,
+        "pre_center_onset_ms": 13691,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          12310,
+          14690.708776595744
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 13410.0,
+            "end_ms": 13690.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3515991320177997,
+            "zcr": 0.13761467889908258,
+            "rms_ratio": 0.2399760782902707
+          }
+        ],
+        "pause_stability_crop_ms": [
+          11510,
+          15490.708776595744
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 13410.0,
+            "end_ms": 13690.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3515991320177997,
+            "zcr": 0.13761467889908258,
+            "rms_ratio": 0.22758476033963215
+          },
+          {
+            "start_ms": 14380.0,
+            "end_ms": 14500.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.3022157902243636,
+            "zcr": 0.09581395348837209,
+            "rms_ratio": 0.3373951876539216
+          }
+        ],
+        "pause_lead_ms": 140.0,
+        "center_pause_start_ms": 13410.0,
+        "center_pause_end_ms": 13690.0
+      }
+    ],
+    "predicted_checks": [
+      {
+        "ayah": 1,
+        "raw_onset_ms": 6276,
+        "onset_ms": 6276,
+        "conf": 0.1131,
+        "first_token_conf": 0.0002,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-onset",
+        "token_confs": [
+          0.0002,
+          0.8953,
+          0.9962
+        ],
+        "full_ctc_first_ms": 6275.740957446808,
+        "full_intro_end_ms": 3937.327925531915,
+        "full_intro_tail_conf": 0.808,
+        "full_ctc_tail_conf": 0.3278,
+        "full_ctc_end_ms": 8394.303191489362,
+        "pre_center_onset_ms": 6276,
+        "pause_center_reason": "weak-evidence"
+      },
+      {
+        "ayah": 2,
+        "raw_onset_ms": 8914,
+        "onset_ms": 8914,
+        "conf": 0.0031,
+        "first_token_conf": 0.0081,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-onset",
+        "token_confs": [
+          0.0081,
+          0.0065,
+          0.3798,
+          0.0192,
+          0.0053,
+          0.0001,
+          0.0
+        ],
+        "full_ctc_first_ms": 8913.950531914894,
+        "full_ctc_tail_conf": 0.9428,
+        "full_ctc_end_ms": 10452.906117021277,
+        "pre_center_onset_ms": 8914,
+        "pause_center_reason": "weak-evidence"
+      },
+      {
+        "ayah": 3,
+        "raw_onset_ms": 10973,
+        "onset_ms": 10825,
+        "conf": 0.2598,
+        "first_token_conf": 0.9873,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9873,
+          0.998,
+          0.0178
+        ],
+        "full_ctc_first_ms": 10972.55345744681,
+        "full_ctc_tail_conf": 0.633,
+        "full_ctc_end_ms": 13111.102127659575,
+        "pre_center_onset_ms": 10973,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          9650,
+          11972.55345744681
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 10680.0,
+            "end_ms": 10970.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.43587742044144323,
+            "zcr": 0.11628802464381979,
+            "rms_ratio": 0.2503155685524915
+          }
+        ],
+        "pause_stability_crop_ms": [
+          8850,
+          12772.55345744681
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 9850.0,
+            "end_ms": 10050.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.6217505611538192,
+            "zcr": 0.4232272473478504,
+            "rms_ratio": 0.3583969058917652
+          },
+          {
+            "start_ms": 10680.0,
+            "end_ms": 10970.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.43587742044144323,
+            "zcr": 0.11628802464381979,
+            "rms_ratio": 0.22087320327735607
+          }
+        ],
+        "pause_lead_ms": 145.0,
+        "center_pause_start_ms": 10680.0,
+        "center_pause_end_ms": 10970.0
+      },
+      {
+        "ayah": 4,
+        "raw_onset_ms": 13691,
+        "onset_ms": 13550,
+        "conf": 0.3696,
+        "first_token_conf": 0.9828,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9828,
+          0.9946,
+          0.9996,
+          0.9899,
+          0.0071
+        ],
+        "full_ctc_first_ms": 13690.708776595744,
+        "full_ctc_tail_conf": 0.9683,
+        "full_ctc_end_ms": 16788.606382978724,
+        "pre_center_onset_ms": 13691,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          12310,
+          14690.708776595744
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 13410.0,
+            "end_ms": 13690.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3515991320177997,
+            "zcr": 0.13761467889908258,
+            "rms_ratio": 0.2399760782902707
+          }
+        ],
+        "pause_stability_crop_ms": [
+          11510,
+          15490.708776595744
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 13410.0,
+            "end_ms": 13690.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3515991320177997,
+            "zcr": 0.13761467889908258,
+            "rms_ratio": 0.22758476033963215
+          },
+          {
+            "start_ms": 14380.0,
+            "end_ms": 14500.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.3022157902243636,
+            "zcr": 0.09581395348837209,
+            "rms_ratio": 0.3373951876539216
+          }
+        ],
+        "pause_lead_ms": 140.0,
+        "center_pause_start_ms": 13410.0,
+        "center_pause_end_ms": 13690.0
+      }
+    ],
+    "align_lag_ms": 0,
+    "fresh": true
+  },
+  {
+    "audio": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/114.mp3",
+    "checks": [
+      {
+        "ayah": 1,
+        "raw_onset_ms": 6300,
+        "onset_ms": 6300,
+        "conf": 0.028,
+        "first_token_conf": 0.0,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-onset",
+        "token_confs": [
+          0.0,
+          0.0006,
+          0.9864
+        ],
+        "full_ctc_first_ms": 6300.0,
+        "full_intro_end_ms": 3940.0,
+        "full_intro_tail_conf": 0.6491,
+        "full_ctc_tail_conf": 0.362,
+        "full_ctc_end_ms": 9980.0,
+        "pre_center_onset_ms": 6300,
+        "pause_center_reason": "weak-evidence"
+      },
+      {
+        "ayah": 2,
+        "raw_onset_ms": 10460,
+        "onset_ms": 10460,
+        "conf": 0.1748,
+        "first_token_conf": 0.0001,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-onset",
+        "token_confs": [
+          0.0001,
+          0.9882,
+          0.9896,
+          0.2962,
+          0.9813,
+          0.9986
+        ],
+        "full_ctc_first_ms": 10460.0,
+        "full_ctc_tail_conf": 0.818,
+        "full_ctc_end_ms": 12900.0,
+        "pre_center_onset_ms": 10460,
+        "pause_center_reason": "weak-evidence"
+      },
+      {
+        "ayah": 3,
+        "raw_onset_ms": 13360,
+        "onset_ms": 13120,
+        "conf": 0.278,
+        "first_token_conf": 0.996,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.996,
+          0.9898,
+          0.9996,
+          0.002,
+          0.8436
+        ],
+        "full_ctc_first_ms": 13360.0,
+        "full_ctc_tail_conf": 0.3227,
+        "full_ctc_end_ms": 15880.0,
+        "pre_center_onset_ms": 13360,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          12100,
+          14360.0
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 12960.0,
+            "end_ms": 13280.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.5180650056934863,
+            "zcr": 0.16393442622950818,
+            "rms_ratio": 0.17761722529529383
+          }
+        ],
+        "pause_stability_crop_ms": [
+          11300,
+          15160.0
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 12960.0,
+            "end_ms": 13280.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.5180650056934863,
+            "zcr": 0.16393442622950818,
+            "rms_ratio": 0.18106261108444788
+          }
+        ],
+        "pause_lead_ms": 160.0,
+        "center_pause_start_ms": 12960.0,
+        "center_pause_end_ms": 13280.0
+      },
+      {
+        "ayah": 4,
+        "raw_onset_ms": 16260,
+        "onset_ms": 16040,
+        "conf": 0.4247,
+        "first_token_conf": 0.5473,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.5473,
+          0.6309,
+          0.2218
+        ],
+        "full_ctc_first_ms": 16260.0,
+        "full_ctc_tail_conf": 0.9997,
+        "full_ctc_end_ms": 19700.0,
+        "pre_center_onset_ms": 16260,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          15080,
+          17260.0
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 15860.0,
+            "end_ms": 16220.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.5787480018660726,
+            "zcr": 0.1593798449612403,
+            "rms_ratio": 0.19740423569554919
+          }
+        ],
+        "pause_stability_crop_ms": [
+          14280,
+          18060.0
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 15860.0,
+            "end_ms": 16220.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.5787480018660726,
+            "zcr": 0.1593798449612403,
+            "rms_ratio": 0.21016212005523732
+          }
+        ],
+        "pause_lead_ms": 180.0,
+        "center_pause_start_ms": 15860.0,
+        "center_pause_end_ms": 16220.0
+      },
+      {
+        "ayah": 5,
+        "raw_onset_ms": 20740,
+        "onset_ms": 20740,
+        "conf": 0.0497,
+        "first_token_conf": 0.2214,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-onset",
+        "token_confs": [
+          0.2214,
+          0.9369,
+          0.9897,
+          0.9293,
+          0.0031,
+          0.0016,
+          0.0
+        ],
+        "full_ctc_first_ms": 20740.0,
+        "full_ctc_tail_conf": 0.7822,
+        "full_ctc_end_ms": 24680.0,
+        "pre_center_onset_ms": 20740,
+        "pause_center_reason": "weak-evidence"
+      },
+      {
+        "ayah": 6,
+        "raw_onset_ms": 25100,
+        "onset_ms": 25100,
+        "conf": 0.4768,
+        "first_token_conf": 0.0264,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-onset",
+        "token_confs": [
+          0.0264,
+          0.9909,
+          0.9492,
+          0.9997
+        ],
+        "full_ctc_first_ms": 25100.0,
+        "full_ctc_tail_conf": 0.9939,
+        "full_ctc_end_ms": 29220.0,
+        "pre_center_onset_ms": 25100,
+        "pause_center_reason": "weak-evidence"
+      }
+    ],
+    "predicted_checks": [
+      {
+        "ayah": 1,
+        "raw_onset_ms": 6300,
+        "onset_ms": 6300,
+        "conf": 0.028,
+        "first_token_conf": 0.0,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-onset",
+        "token_confs": [
+          0.0,
+          0.0006,
+          0.9864
+        ],
+        "full_ctc_first_ms": 6300.0,
+        "full_intro_end_ms": 3940.0,
+        "full_intro_tail_conf": 0.6491,
+        "full_ctc_tail_conf": 0.362,
+        "full_ctc_end_ms": 9980.0,
+        "pre_center_onset_ms": 6300,
+        "pause_center_reason": "weak-evidence"
+      },
+      {
+        "ayah": 2,
+        "raw_onset_ms": 10460,
+        "onset_ms": 10210,
+        "conf": 0.1748,
+        "first_token_conf": 0.0001,
+        "reliable": false,
+        "repaired": true,
+        "reason": "waveform-pause-recheck",
+        "token_confs": [
+          0.0001,
+          0.9882,
+          0.9896,
+          0.2962,
+          0.9813,
+          0.9986
+        ],
+        "full_ctc_first_ms": 10460.0,
+        "full_ctc_tail_conf": 0.818,
+        "full_ctc_end_ms": 12900.0,
+        "pre_center_onset_ms": 10460,
+        "pause_center_reason": "weak-evidence",
+        "pause_local_crop_ms": [
+          9180,
+          11460.0
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 9990.0,
+            "end_ms": 10360.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.5485289671566267,
+            "zcr": 0.19142601964870498,
+            "rms_ratio": 0.16233560363854477
+          }
+        ],
+        "pause_stability_crop_ms": [
+          8380,
+          12260.0
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 9990.0,
+            "end_ms": 10360.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.5485289671566267,
+            "zcr": 0.19142601964870498,
+            "rms_ratio": 0.15624545236019996
+          }
+        ],
+        "pre_signal_onset_ms": 10460,
+        "signal_pause_start_ms": 9990.0,
+        "signal_pause_end_ms": 10360.0
+      },
+      {
+        "ayah": 3,
+        "raw_onset_ms": 13360,
+        "onset_ms": 13120,
+        "conf": 0.278,
+        "first_token_conf": 0.996,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.996,
+          0.9898,
+          0.9996,
+          0.002,
+          0.8436
+        ],
+        "full_ctc_first_ms": 13360.0,
+        "full_ctc_tail_conf": 0.3227,
+        "full_ctc_end_ms": 15880.0,
+        "pre_center_onset_ms": 13360,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          12100,
+          14360.0
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 12960.0,
+            "end_ms": 13280.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.5180650056934863,
+            "zcr": 0.16393442622950818,
+            "rms_ratio": 0.17761722529529383
+          }
+        ],
+        "pause_stability_crop_ms": [
+          11300,
+          15160.0
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 12960.0,
+            "end_ms": 13280.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.5180650056934863,
+            "zcr": 0.16393442622950818,
+            "rms_ratio": 0.18106261108444788
+          }
+        ],
+        "pause_lead_ms": 160.0,
+        "center_pause_start_ms": 12960.0,
+        "center_pause_end_ms": 13280.0
+      },
+      {
+        "ayah": 4,
+        "raw_onset_ms": 16260,
+        "onset_ms": 16040,
+        "conf": 0.4247,
+        "first_token_conf": 0.5473,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.5473,
+          0.6309,
+          0.2218
+        ],
+        "full_ctc_first_ms": 16260.0,
+        "full_ctc_tail_conf": 0.9997,
+        "full_ctc_end_ms": 19700.0,
+        "pre_center_onset_ms": 16260,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          15080,
+          17260.0
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 15860.0,
+            "end_ms": 16220.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.5787480018660726,
+            "zcr": 0.1593798449612403,
+            "rms_ratio": 0.19740423569554919
+          }
+        ],
+        "pause_stability_crop_ms": [
+          14280,
+          18060.0
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 15860.0,
+            "end_ms": 16220.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.5787480018660726,
+            "zcr": 0.1593798449612403,
+            "rms_ratio": 0.21016212005523732
+          }
+        ],
+        "pause_lead_ms": 180.0,
+        "center_pause_start_ms": 15860.0,
+        "center_pause_end_ms": 16220.0
+      },
+      {
+        "ayah": 5,
+        "raw_onset_ms": 20740,
+        "onset_ms": 20495,
+        "conf": 0.0497,
+        "first_token_conf": 0.2214,
+        "reliable": false,
+        "repaired": true,
+        "reason": "waveform-pause-recheck",
+        "token_confs": [
+          0.2214,
+          0.9369,
+          0.9897,
+          0.9293,
+          0.0031,
+          0.0016,
+          0.0
+        ],
+        "full_ctc_first_ms": 20740.0,
+        "full_ctc_tail_conf": 0.7822,
+        "full_ctc_end_ms": 24680.0,
+        "pre_center_onset_ms": 20740,
+        "pause_center_reason": "weak-evidence",
+        "pause_local_crop_ms": [
+          18900,
+          21740.0
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 20330.0,
+            "end_ms": 20660.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.5226726460000208,
+            "zcr": 0.1746192893401015,
+            "rms_ratio": 0.16160198958284455
+          }
+        ],
+        "pause_stability_crop_ms": [
+          18100,
+          22540.0
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 20330.0,
+            "end_ms": 20660.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.5226726460000208,
+            "zcr": 0.1746192893401015,
+            "rms_ratio": 0.16837809524364705
+          }
+        ],
+        "pre_signal_onset_ms": 20740,
+        "signal_pause_start_ms": 20330.0,
+        "signal_pause_end_ms": 20660.0
+      },
+      {
+        "ayah": 6,
+        "raw_onset_ms": 25100,
+        "onset_ms": 24955,
+        "conf": 0.4768,
+        "first_token_conf": 0.0264,
+        "reliable": false,
+        "repaired": true,
+        "reason": "waveform-pause-recheck",
+        "token_confs": [
+          0.0264,
+          0.9909,
+          0.9492,
+          0.9997
+        ],
+        "full_ctc_first_ms": 25100.0,
+        "full_ctc_tail_conf": 0.9939,
+        "full_ctc_end_ms": 29220.0,
+        "pre_center_onset_ms": 25100,
+        "pause_center_reason": "weak-evidence",
+        "pause_local_crop_ms": [
+          23880,
+          26100.0
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 24750.0,
+            "end_ms": 25080.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.5168641943218176,
+            "zcr": 0.11979695431472082,
+            "rms_ratio": 0.21220789687298774
+          }
+        ],
+        "pause_stability_crop_ms": [
+          23080,
+          26900.0
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 24740.0,
+            "end_ms": 25080.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.5285280723245659,
+            "zcr": 0.11921182266009853,
+            "rms_ratio": 0.21147863666401012
+          }
+        ],
+        "pre_signal_onset_ms": 25100,
+        "signal_pause_start_ms": 24750.0,
+        "signal_pause_end_ms": 25080.0
+      }
+    ],
+    "align_lag_ms": 0,
+    "fresh": true
+  },
+  {
+    "audio": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/080.mp3",
+    "checks": [
+      {
+        "ayah": 1,
+        "raw_onset_ms": 6500,
+        "onset_ms": 6500,
+        "conf": 0.1304,
+        "first_token_conf": 0.0,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-onset",
+        "token_confs": [
+          0.0,
+          0.9636,
+          0.8126,
+          0.461,
+          0.6252,
+          0.6087
+        ],
+        "full_ctc_first_ms": 6499.713141686424,
+        "full_intro_end_ms": 4239.812880115452,
+        "full_intro_tail_conf": 0.9579,
+        "full_ctc_tail_conf": 0.9928,
+        "full_ctc_end_ms": 7999.64694361406,
+        "pre_center_onset_ms": 6500,
+        "pause_center_reason": "weak-evidence"
+      },
+      {
+        "ayah": 2,
+        "raw_onset_ms": 8980,
+        "onset_ms": 8980,
+        "conf": 0.2659,
+        "first_token_conf": 0.1607,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-onset",
+        "token_confs": [
+          0.1607,
+          0.4399
+        ],
+        "full_ctc_first_ms": 8979.603694206782,
+        "full_ctc_tail_conf": 0.9778,
+        "full_ctc_end_ms": 12939.428931295743,
+        "pre_center_onset_ms": 8980,
+        "pause_center_reason": "weak-evidence"
+      },
+      {
+        "ayah": 3,
+        "raw_onset_ms": 13739,
+        "onset_ms": 13505,
+        "conf": 0.1644,
+        "first_token_conf": 0.9956,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9956,
+          0.9795,
+          0.8733,
+          0.0001
+        ],
+        "full_ctc_first_ms": 13739.393625657149,
+        "full_ctc_tail_conf": 0.2756,
+        "full_ctc_end_ms": 17399.23210236058,
+        "pre_center_onset_ms": 13739,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          12130,
+          14739.393625657149
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 13310.0,
+            "end_ms": 13700.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4300746486765337,
+            "zcr": 0.11633596085892906,
+            "rms_ratio": 0.20759928293791216
+          }
+        ],
+        "pause_stability_crop_ms": [
+          11330,
+          15539.393625657149
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 13310.0,
+            "end_ms": 13700.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4300746486765337,
+            "zcr": 0.11633596085892906,
+            "rms_ratio": 0.20561542025698726
+          }
+        ],
+        "pause_lead_ms": 195.0,
+        "center_pause_start_ms": 13310.0,
+        "center_pause_end_ms": 13700.0
+      },
+      {
+        "ayah": 4,
+        "raw_onset_ms": 18439,
+        "onset_ms": 18265,
+        "conf": 0.1382,
+        "first_token_conf": 0.9527,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9527,
+          0.0029
+        ],
+        "full_ctc_first_ms": 18439.186205030408,
+        "full_ctc_tail_conf": 0.9994,
+        "full_ctc_end_ms": 22339.014090042263,
+        "pre_center_onset_ms": 18439,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          16590,
+          19439.186205030408
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 18150.0,
+            "end_ms": 18380.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3992665473824797,
+            "zcr": 0.13113161728994657,
+            "rms_ratio": 0.12263187276467576
+          }
+        ],
+        "pause_stability_crop_ms": [
+          15790,
+          20239.186205030408
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 17090.0,
+            "end_ms": 17270.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.28502311316180656,
+            "zcr": 0.10924891371818746,
+            "rms_ratio": 0.2943018355377229
+          },
+          {
+            "start_ms": 18150.0,
+            "end_ms": 18380.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3992665473824797,
+            "zcr": 0.13113161728994657,
+            "rms_ratio": 0.11977638718691434
+          },
+          {
+            "start_ms": 19400.0,
+            "end_ms": 19580.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.2677814253837737,
+            "zcr": 0.11359404096834265,
+            "rms_ratio": 0.29214734684005234
+          }
+        ],
+        "pause_lead_ms": 115.0,
+        "center_pause_start_ms": 18150.0,
+        "center_pause_end_ms": 18380.0
+      },
+      {
+        "ayah": 5,
+        "raw_onset_ms": 23539,
+        "onset_ms": 23310,
+        "conf": 0.04,
+        "first_token_conf": 0.9822,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9822,
+          0.0004,
+          0.0062,
+          0.9994
+        ],
+        "full_ctc_first_ms": 23538.961131584372,
+        "full_ctc_tail_conf": 0.978,
+        "full_ctc_end_ms": 25798.861393155345,
+        "pre_center_onset_ms": 23539,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          21530,
+          24538.961131584372
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 22040.0,
+            "end_ms": 22180.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.4662485789669059,
+            "zcr": 0.1564245810055866,
+            "rms_ratio": 0.2000305318467925
+          },
+          {
+            "start_ms": 23170.0,
+            "end_ms": 23450.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3508049813106226,
+            "zcr": 0.10131631431990427,
+            "rms_ratio": 0.10633819421866196
+          }
+        ],
+        "pause_stability_crop_ms": [
+          20730,
+          25338.961131584372
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 22040.0,
+            "end_ms": 22180.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.4662485789669059,
+            "zcr": 0.1564245810055866,
+            "rms_ratio": 0.1923283441533707
+          },
+          {
+            "start_ms": 23170.0,
+            "end_ms": 23450.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3508049813106226,
+            "zcr": 0.10131631431990427,
+            "rms_ratio": 0.10224363563658014
+          }
+        ],
+        "pause_lead_ms": 140.0,
+        "center_pause_start_ms": 23170.0,
+        "center_pause_end_ms": 23450.0
+      },
+      {
+        "ayah": 6,
+        "raw_onset_ms": 26719,
+        "onset_ms": 26610,
+        "conf": 0.778,
+        "first_token_conf": 0.7196,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.7196,
+          0.9512,
+          0.3373,
+          0.9252,
+          0.9708,
+          0.8812,
+          0.6492
+        ],
+        "full_ctc_first_ms": 26718.82079167096,
+        "full_ctc_tail_conf": 0.9996,
+        "full_ctc_end_ms": 29258.708696268426,
+        "pre_center_onset_ms": 26719,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          24990,
+          27718.82079167096
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 26480.0,
+            "end_ms": 26740.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.28298031620908465,
+            "zcr": 0.09617861743237441,
+            "rms_ratio": 0.17697243534029963
+          }
+        ],
+        "pause_stability_crop_ms": [
+          24190,
+          28518.82079167096
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 25030.0,
+            "end_ms": 25250.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.5994597431903613,
+            "zcr": 0.19381024860476914,
+            "rms_ratio": 0.28290756537793765
+          },
+          {
+            "start_ms": 26470.0,
+            "end_ms": 26740.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2972759332718673,
+            "zcr": 0.10004133939644481,
+            "rms_ratio": 0.159797527354291
+          }
+        ],
+        "pause_lead_ms": 130.0,
+        "center_pause_start_ms": 26480.0,
+        "center_pause_end_ms": 26740.0
+      },
+      {
+        "ayah": 7,
+        "raw_onset_ms": 30119,
+        "onset_ms": 29880,
+        "conf": 0.0412,
+        "first_token_conf": 0.3656,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.3656,
+          0.9802,
+          0.0034,
+          0.0001
+        ],
+        "full_ctc_first_ms": 30118.670742706938,
+        "full_ctc_tail_conf": 0.9997,
+        "full_ctc_end_ms": 33298.53040279353,
+        "pre_center_onset_ms": 30119,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          28450,
+          31118.670742706938
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 29690.0,
+            "end_ms": 30070.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.40305337943638203,
+            "zcr": 0.11054276783177039,
+            "rms_ratio": 0.20753174710612976
+          }
+        ],
+        "pause_stability_crop_ms": [
+          27650,
+          31918.670742706938
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 29690.0,
+            "end_ms": 30070.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.40305337943638203,
+            "zcr": 0.11054276783177039,
+            "rms_ratio": 0.20599020451509664
+          }
+        ],
+        "pause_lead_ms": 190.0,
+        "center_pause_start_ms": 29690.0,
+        "center_pause_end_ms": 30070.0
+      },
+      {
+        "ayah": 8,
+        "raw_onset_ms": 34218,
+        "onset_ms": 33965,
+        "conf": 0.1509,
+        "first_token_conf": 0.3542,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.3542,
+          0.7617,
+          0.2039,
+          0.1192,
+          0.0006,
+          0.0892,
+          0.9988
+        ],
+        "full_ctc_first_ms": 34218.489801309144,
+        "full_ctc_tail_conf": 0.9133,
+        "full_ctc_end_ms": 38778.28855916916,
+        "pre_center_onset_ms": 34218,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          32490,
+          35218.489801309144
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 33030.0,
+            "end_ms": 33190.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.3042281309536491,
+            "zcr": 0.14305652477320308,
+            "rms_ratio": 0.23171075920229633
+          },
+          {
+            "start_ms": 33750.0,
+            "end_ms": 34180.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4495820644285842,
+            "zcr": 0.12410280157443852,
+            "rms_ratio": 0.23866322553770994
+          }
+        ],
+        "pause_stability_crop_ms": [
+          31690,
+          36018.489801309144
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 33030.0,
+            "end_ms": 33190.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.3042281309536491,
+            "zcr": 0.14305652477320308,
+            "rms_ratio": 0.20390767894677575
+          },
+          {
+            "start_ms": 33750.0,
+            "end_ms": 34180.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4495820644285842,
+            "zcr": 0.12410280157443852,
+            "rms_ratio": 0.21002591565831352
+          }
+        ],
+        "pause_lead_ms": 215.0,
+        "center_pause_start_ms": 33750.0,
+        "center_pause_end_ms": 34180.0
+      },
+      {
+        "ayah": 9,
+        "raw_onset_ms": 39938,
+        "onset_ms": 39790,
+        "conf": 0.1168,
+        "first_token_conf": 0.991,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.991,
+          0.9649,
+          0.0002,
+          0.8514,
+          0.0024,
+          0.1401
+        ],
+        "full_ctc_first_ms": 39938.2373659932,
+        "full_ctc_tail_conf": 0.9994,
+        "full_ctc_end_ms": 41138.1844075353,
+        "pre_center_onset_ms": 39938,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          37970,
+          40938.2373659932
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 38670.0,
+            "end_ms": 38810.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.590956758282793,
+            "zcr": 0.37350359138068634,
+            "rms_ratio": 0.33846322008399676
+          },
+          {
+            "start_ms": 39620.0,
+            "end_ms": 39960.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4285677228586753,
+            "zcr": 0.11625615763546798,
+            "rms_ratio": 0.21118143922773147
+          }
+        ],
+        "pause_stability_crop_ms": [
+          37170,
+          41738.2373659932
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 38660.0,
+            "end_ms": 38810.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.6315107609847839,
+            "zcr": 0.379746835443038,
+            "rms_ratio": 0.31401770337626506
+          },
+          {
+            "start_ms": 39620.0,
+            "end_ms": 39960.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4285677228586753,
+            "zcr": 0.11625615763546798,
+            "rms_ratio": 0.19486163950355934
+          },
+          {
+            "start_ms": 40910.0,
+            "end_ms": 41030.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.6893315982096181,
+            "zcr": 0.34418604651162793,
+            "rms_ratio": 0.3178402763016529
+          }
+        ],
+        "pause_lead_ms": 170.0,
+        "center_pause_start_ms": 39620.0,
+        "center_pause_end_ms": 39960.0
+      },
+      {
+        "ayah": 10,
+        "raw_onset_ms": 41998,
+        "onset_ms": 41825,
+        "conf": 0.1624,
+        "first_token_conf": 0.6676,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.6676,
+          0.9963,
+          0.0017,
+          0.0002,
+          0.3205,
+          0.9604,
+          0.9641
+        ],
+        "full_ctc_first_ms": 41998.146453973815,
+        "full_ctc_tail_conf": 0.6313,
+        "full_ctc_end_ms": 44718.026414802596,
+        "pre_center_onset_ms": 41998,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          40330,
+          42998.146453973815
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 41630.0,
+            "end_ms": 42020.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4440512986772198,
+            "zcr": 0.09187279151943463,
+            "rms_ratio": 0.22475052098042944
+          }
+        ],
+        "pause_stability_crop_ms": [
+          39530,
+          43798.146453973815
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 41630.0,
+            "end_ms": 42020.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4440512986772198,
+            "zcr": 0.09187279151943463,
+            "rms_ratio": 0.22930713456593335
+          }
+        ],
+        "pause_lead_ms": 195.0,
+        "center_pause_start_ms": 41630.0,
+        "center_pause_end_ms": 42020.0
+      },
+      {
+        "ayah": 11,
+        "raw_onset_ms": 45918,
+        "onset_ms": 45760,
+        "conf": 0.7913,
+        "first_token_conf": 0.3592,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.3592,
+          0.8798,
+          0.999,
+          0.8285,
+          0.6696
+        ],
+        "full_ctc_first_ms": 45917.973456344705,
+        "full_ctc_tail_conf": 0.4167,
+        "full_ctc_end_ms": 51137.74308705288,
+        "pre_center_onset_ms": 45918,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          43910,
+          46917.973456344705
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 45570.0,
+            "end_ms": 45950.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3601459723220604,
+            "zcr": 0.10201761864165956,
+            "rms_ratio": 0.1511752721653974
+          }
+        ],
+        "pause_stability_crop_ms": [
+          43110,
+          47717.973456344705
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 45570.0,
+            "end_ms": 45950.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3601459723220604,
+            "zcr": 0.10201761864165956,
+            "rms_ratio": 0.15247439817482156
+          }
+        ],
+        "pause_lead_ms": 190.0,
+        "center_pause_start_ms": 45570.0,
+        "center_pause_end_ms": 45950.0
+      },
+      {
+        "ayah": 12,
+        "raw_onset_ms": 51918,
+        "onset_ms": 51805,
+        "conf": 0.6627,
+        "first_token_conf": 0.9988,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9988,
+          0.9005,
+          0.4106,
+          0.3885,
+          0.8373
+        ],
+        "full_ctc_first_ms": 51917.70866405525,
+        "full_ctc_tail_conf": 0.3006,
+        "full_ctc_end_ms": 55357.5568498093,
+        "pre_center_onset_ms": 51918,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          50330,
+          52917.70866405525
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 50700.0,
+            "end_ms": 50830.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.3188382242510117,
+            "zcr": 0.1289767841788478,
+            "rms_ratio": 0.27238690958136813
+          },
+          {
+            "start_ms": 51660.0,
+            "end_ms": 51950.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.26755502592529423,
+            "zcr": 0.07008086253369272,
+            "rms_ratio": 0.16341397502171656
+          }
+        ],
+        "pause_stability_crop_ms": [
+          49530,
+          53717.70866405525
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 50700.0,
+            "end_ms": 50830.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.3188382242510117,
+            "zcr": 0.1289767841788478,
+            "rms_ratio": 0.23782589976770718
+          },
+          {
+            "start_ms": 51660.0,
+            "end_ms": 51950.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.26755502592529423,
+            "zcr": 0.07008086253369272,
+            "rms_ratio": 0.14267967467264717
+          }
+        ],
+        "pause_lead_ms": 145.0,
+        "center_pause_start_ms": 51660.0,
+        "center_pause_end_ms": 51950.0
+      },
+      {
+        "ayah": 13,
+        "raw_onset_ms": 56158,
+        "onset_ms": 56020,
+        "conf": 0.2581,
+        "first_token_conf": 0.8461,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.8461,
+          0.0787
+        ],
+        "full_ctc_first_ms": 56157.521544170704,
+        "full_ctc_tail_conf": 0.9742,
+        "full_ctc_end_ms": 59037.394443871766,
+        "pre_center_onset_ms": 56158,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          54550,
+          57157.521544170704
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 55850.0,
+            "end_ms": 56190.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3305699578757084,
+            "zcr": 0.07257799671592775,
+            "rms_ratio": 0.16737810692443023
+          }
+        ],
+        "pause_stability_crop_ms": [
+          53750,
+          57957.521544170704
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 55850.0,
+            "end_ms": 56190.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3305699578757084,
+            "zcr": 0.07257799671592775,
+            "rms_ratio": 0.15050231278914092
+          }
+        ],
+        "pause_lead_ms": 170.0,
+        "center_pause_start_ms": 55850.0,
+        "center_pause_end_ms": 56190.0
+      },
+      {
+        "ayah": 14,
+        "raw_onset_ms": 59837,
+        "onset_ms": 59670,
+        "conf": 0.0575,
+        "first_token_conf": 0.9962,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9962,
+          0.9554,
+          0.9567,
+          0.0273,
+          0.7703,
+          0.0,
+          0.0001,
+          0.0045,
+          0.9992,
+          0.0012
+        ],
+        "full_ctc_first_ms": 59837.35913823317,
+        "full_ctc_tail_conf": 0.9997,
+        "full_ctc_end_ms": 62917.22321152458,
+        "pre_center_onset_ms": 59837,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          58230,
+          60837.35913823317
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 59510.0,
+            "end_ms": 59830.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.44256869723554354,
+            "zcr": 0.07220090687129403,
+            "rms_ratio": 0.18548260589507962
+          }
+        ],
+        "pause_stability_crop_ms": [
+          57430,
+          61637.35913823317
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 59510.0,
+            "end_ms": 59830.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.44256869723554354,
+            "zcr": 0.07220090687129403,
+            "rms_ratio": 0.18557627888153555
+          }
+        ],
+        "pause_lead_ms": 160.0,
+        "center_pause_start_ms": 59510.0,
+        "center_pause_end_ms": 59830.0
+      },
+      {
+        "ayah": 15,
+        "raw_onset_ms": 63757,
+        "onset_ms": 63757,
+        "conf": 0.0295,
+        "first_token_conf": 0.7959,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.7959,
+          0.9996,
+          0.1278,
+          0.9987,
+          0.9663,
+          0.0,
+          0.0
+        ],
+        "full_ctc_first_ms": 63757.186140604055,
+        "full_ctc_tail_conf": 0.6408,
+        "full_ctc_end_ms": 65297.118177249766,
+        "pre_center_onset_ms": 63757,
+        "pause_center_reason": "unstable-pause",
+        "pause_local_crop_ms": [
+          62110,
+          64757.186140604055
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 63490.0,
+            "end_ms": 63750.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.39569854360694595,
+            "zcr": 0.0798626019750966,
+            "rms_ratio": 0.16465323705751878
+          }
+        ],
+        "pause_stability_crop_ms": [
+          61310,
+          65557.18614060406
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 63270.0,
+            "end_ms": 63750.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4641821533139845,
+            "zcr": 0.09884743113889431,
+            "rms_ratio": 0.19140244639544568
+          }
+        ]
+      },
+      {
+        "ayah": 16,
+        "raw_onset_ms": 66337,
+        "onset_ms": 66337,
+        "conf": 0.5962,
+        "first_token_conf": 0.0123,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-onset",
+        "token_confs": [
+          0.0123,
+          0.9995,
+          0.9748,
+          0.9485,
+          0.9449,
+          0.9819,
+          0.9674
+        ],
+        "full_ctc_first_ms": 66337.0722799196,
+        "full_ctc_tail_conf": 0.7202,
+        "full_ctc_end_ms": 68516.97607205443,
+        "pre_center_onset_ms": 66337,
+        "pause_center_reason": "weak-evidence"
+      },
+      {
+        "ayah": 17,
+        "raw_onset_ms": 69377,
+        "onset_ms": 69377,
+        "conf": 0.6202,
+        "first_token_conf": 0.04,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-onset",
+        "token_confs": [
+          0.04,
+          0.9959,
+          0.8912,
+          0.9997,
+          0.9993,
+          0.9987
+        ],
+        "full_ctc_first_ms": 69376.93811849294,
+        "full_ctc_tail_conf": 0.8254,
+        "full_ctc_end_ms": 73716.74658540357,
+        "pre_center_onset_ms": 69377,
+        "pause_center_reason": "weak-evidence"
+      },
+      {
+        "ayah": 18,
+        "raw_onset_ms": 74477,
+        "onset_ms": 74245,
+        "conf": 0.5866,
+        "first_token_conf": 0.2864,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.2864,
+          0.9994,
+          0.7052
+        ],
+        "full_ctc_first_ms": 74476.7130450469,
+        "full_ctc_tail_conf": 0.5126,
+        "full_ctc_end_ms": 76916.6053628492,
+        "pre_center_onset_ms": 74477,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          72910,
+          75476.7130450469
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 73230.0,
+            "end_ms": 73390.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.5847832539848951,
+            "zcr": 0.21144452198185626,
+            "rms_ratio": 0.22371672743118054
+          },
+          {
+            "start_ms": 74010.0,
+            "end_ms": 74480.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4618729205904398,
+            "zcr": 0.11232103246622303,
+            "rms_ratio": 0.19551337423764462
+          }
+        ],
+        "pause_stability_crop_ms": [
+          72110,
+          76276.7130450469
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 73160.0,
+            "end_ms": 73390.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.5855950783013837,
+            "zcr": 0.16124332200097136,
+            "rms_ratio": 0.24010570395176406
+          },
+          {
+            "start_ms": 74010.0,
+            "end_ms": 74480.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4618729205904398,
+            "zcr": 0.11232103246622303,
+            "rms_ratio": 0.17779307207567632
+          }
+        ],
+        "pause_lead_ms": 235.0,
+        "center_pause_start_ms": 74010.0,
+        "center_pause_end_ms": 74480.0
+      },
+      {
+        "ayah": 19,
+        "raw_onset_ms": 77657,
+        "onset_ms": 77470,
+        "conf": 0.7181,
+        "first_token_conf": 0.4524,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.4524,
+          0.9987,
+          0.8198
+        ],
+        "full_ctc_first_ms": 77656.57270513348,
+        "full_ctc_tail_conf": 0.9958,
+        "full_ctc_end_ms": 81516.40235542727,
+        "pre_center_onset_ms": 77657,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          76110,
+          78656.57270513348
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 77320.0,
+            "end_ms": 77620.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4884711069668896,
+            "zcr": 0.12281354670636398,
+            "rms_ratio": 0.15787074879476706
+          }
+        ],
+        "pause_stability_crop_ms": [
+          75310,
+          79456.57270513348
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 77320.0,
+            "end_ms": 77620.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4884711069668896,
+            "zcr": 0.12281354670636398,
+            "rms_ratio": 0.156772785593408
+          }
+        ],
+        "pause_lead_ms": 150.0,
+        "center_pause_start_ms": 77320.0,
+        "center_pause_end_ms": 77620.0
+      },
+      {
+        "ayah": 20,
+        "raw_onset_ms": 82276,
+        "onset_ms": 82145,
+        "conf": 0.0896,
+        "first_token_conf": 0.9069,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9069,
+          0.2305,
+          0.5836,
+          0.0,
+          0.9795,
+          0.1939
+        ],
+        "full_ctc_first_ms": 82276.3688150706,
+        "full_ctc_tail_conf": 0.9899,
+        "full_ctc_end_ms": 84836.2558370271,
+        "pre_center_onset_ms": 82276,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          80710,
+          83276.3688150706
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 81960.0,
+            "end_ms": 82330.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4698614683831674,
+            "zcr": 0.09645727895206907,
+            "rms_ratio": 0.11206554111444442
+          }
+        ],
+        "pause_stability_crop_ms": [
+          79910,
+          84076.3688150706
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 81960.0,
+            "end_ms": 82330.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4698614683831674,
+            "zcr": 0.09645727895206907,
+            "rms_ratio": 0.10742728634246013
+          }
+        ],
+        "pause_lead_ms": 185.0,
+        "center_pause_start_ms": 81960.0,
+        "center_pause_end_ms": 82330.0
+      },
+      {
+        "ayah": 21,
+        "raw_onset_ms": 85656,
+        "onset_ms": 85545,
+        "conf": 0.0977,
+        "first_token_conf": 0.8679,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.8679,
+          0.044,
+          0.991,
+          0.0,
+          0.9618,
+          0.758
+        ],
+        "full_ctc_first_ms": 85656.21964874754,
+        "full_ctc_tail_conf": 0.5639,
+        "full_ctc_end_ms": 88516.09343108957,
+        "pre_center_onset_ms": 85656,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          84030,
+          86656.21964874754
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 85400.0,
+            "end_ms": 85690.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3571462653454942,
+            "zcr": 0.09742010011551791,
+            "rms_ratio": 0.13734874940513075
+          }
+        ],
+        "pause_stability_crop_ms": [
+          83230,
+          87456.21964874754
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 85400.0,
+            "end_ms": 85690.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3571462653454942,
+            "zcr": 0.09742010011551791,
+            "rms_ratio": 0.1304546032640827
+          }
+        ],
+        "pause_lead_ms": 145.0,
+        "center_pause_start_ms": 85400.0,
+        "center_pause_end_ms": 85690.0
+      },
+      {
+        "ayah": 22,
+        "raw_onset_ms": 89436,
+        "onset_ms": 89355,
+        "conf": 0.1935,
+        "first_token_conf": 0.7672,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.7672,
+          0.0688,
+          0.9868,
+          0.0002,
+          0.9642,
+          0.9638
+        ],
+        "full_ctc_first_ms": 89436.05282960519,
+        "full_ctc_tail_conf": 0.9996,
+        "full_ctc_end_ms": 93575.87012292547,
+        "pre_center_onset_ms": 89436,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          87710,
+          90436.05282960519
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 89230.0,
+            "end_ms": 89480.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.30969026801235294,
+            "zcr": 0.08262617239839214,
+            "rms_ratio": 0.16579210457041355
+          }
+        ],
+        "pause_stability_crop_ms": [
+          86910,
+          91236.05282960519
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 89230.0,
+            "end_ms": 89480.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.30969026801235294,
+            "zcr": 0.08262617239839214,
+            "rms_ratio": 0.1570958433018644
+          }
+        ],
+        "pause_lead_ms": 125.0,
+        "center_pause_start_ms": 89230.0,
+        "center_pause_end_ms": 89480.0
+      },
+      {
+        "ayah": 23,
+        "raw_onset_ms": 94436,
+        "onset_ms": 94310,
+        "conf": 0.5353,
+        "first_token_conf": 0.9309,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9309,
+          0.9976,
+          0.958,
+          0.015,
+          0.9904
+        ],
+        "full_ctc_first_ms": 94435.83216936397,
+        "full_ctc_tail_conf": 0.0,
+        "pre_center_onset_ms": 94436,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          92770,
+          95435.83216936397
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 94160.0,
+            "end_ms": 94460.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.42325536462102514,
+            "zcr": 0.0893189430591738,
+            "rms_ratio": 0.12036510176744011
+          }
+        ],
+        "pause_stability_crop_ms": [
+          91970,
+          96235.83216936397
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 94160.0,
+            "end_ms": 94460.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.42325536462102514,
+            "zcr": 0.0893189430591738,
+            "rms_ratio": 0.11821755458660378
+          }
+        ],
+        "pause_lead_ms": 150.0,
+        "center_pause_start_ms": 94160.0,
+        "center_pause_end_ms": 94460.0
+      },
+      {
+        "ayah": 24,
+        "raw_onset_ms": 99916,
+        "onset_ms": 99916,
+        "conf": 0.2747,
+        "first_token_conf": 0.9813,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9813,
+          0.9214,
+          0.4045,
+          0.9968,
+          0.9905,
+          0.0176,
+          0.0001,
+          0.9263,
+          0.8413,
+          0.0887
+        ],
+        "full_ctc_first_ms": 99915.59032573961,
+        "full_ctc_tail_conf": 0.9994,
+        "full_ctc_end_ms": 104815.37407870321,
+        "pre_center_onset_ms": 99916,
+        "pause_center_reason": "weak-evidence"
+      },
+      {
+        "ayah": 25,
+        "raw_onset_ms": 105755,
+        "onset_ms": 105755,
+        "conf": 0.3325,
+        "first_token_conf": 0.1594,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-onset",
+        "token_confs": [
+          0.1594,
+          0.1603,
+          0.9959,
+          0.9958
+        ],
+        "local_pause_crop_ms": [
+          104755.3125,
+          107575.3125
+        ],
+        "full_ctc_first_ms": 105755.33259457788,
+        "full_ctc_tail_conf": 0.8331,
+        "full_ctc_end_ms": 110055.14282677043,
+        "pre_center_onset_ms": 105755,
+        "pause_center_reason": "weak-evidence"
+      },
+      {
+        "ayah": 26,
+        "raw_onset_ms": 111235,
+        "onset_ms": 111060,
+        "conf": 0.0999,
+        "first_token_conf": 0.8777,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.8777,
+          0.024,
+          0.9854,
+          0.0001,
+          0.8931,
+          0.9774
+        ],
+        "full_ctc_first_ms": 111235.0907509535,
+        "full_ctc_tail_conf": 0.5965,
+        "full_ctc_end_ms": 114494.94688047623,
+        "pre_center_onset_ms": 111235,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          109250,
+          112235.0907509535
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 110840.0,
+            "end_ms": 111280.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.44727036942170184,
+            "zcr": 0.10448760884125921,
+            "rms_ratio": 0.19348198726612773
+          }
+        ],
+        "pause_stability_crop_ms": [
+          108450,
+          113035.0907509535
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 110840.0,
+            "end_ms": 111280.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.44727036942170184,
+            "zcr": 0.10448760884125921,
+            "rms_ratio": 0.17736642771853406
+          }
+        ],
+        "pause_lead_ms": 220.0,
+        "center_pause_start_ms": 110840.0,
+        "center_pause_end_ms": 111280.0
+      },
+      {
+        "ayah": 27,
+        "raw_onset_ms": 115715,
+        "onset_ms": 115590,
+        "conf": 0.4795,
+        "first_token_conf": 0.8186,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.8186,
+          0.9741,
+          0.005,
+          0.9807,
+          0.6303,
+          0.9388,
+          0.9939,
+          0.2113,
+          0.9986,
+          0.999
+        ],
+        "full_ctc_first_ms": 115714.89303937738,
+        "full_ctc_tail_conf": 0.9361,
+        "full_ctc_end_ms": 118754.75887795072,
+        "pre_center_onset_ms": 115715,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          113690,
+          116714.89303937738
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 114290.0,
+            "end_ms": 114510.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.3837104442508557,
+            "zcr": 0.11314053779807204,
+            "rms_ratio": 0.22737071537985012
+          },
+          {
+            "start_ms": 115440.0,
+            "end_ms": 115740.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2865814766511617,
+            "zcr": 0.09490137700037216,
+            "rms_ratio": 0.18997523700326951
+          }
+        ],
+        "pause_stability_crop_ms": [
+          112890,
+          117514.89303937738
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 114290.0,
+            "end_ms": 114510.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.3837104442508557,
+            "zcr": 0.11314053779807204,
+            "rms_ratio": 0.20553958763485208
+          },
+          {
+            "start_ms": 115440.0,
+            "end_ms": 115740.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2865814766511617,
+            "zcr": 0.09490137700037216,
+            "rms_ratio": 0.17173465725017345
+          }
+        ],
+        "pause_lead_ms": 150.0,
+        "center_pause_start_ms": 115440.0,
+        "center_pause_end_ms": 115740.0
+      },
+      {
+        "ayah": 28,
+        "raw_onset_ms": 120055,
+        "onset_ms": 119820,
+        "conf": 0.317,
+        "first_token_conf": 0.9608,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9608,
+          0.9398,
+          0.0183,
+          0.7265,
+          0.8968,
+          0.6271,
+          0.0167,
+          0.1303,
+          0.7452
+        ],
+        "full_ctc_first_ms": 120054.70150628801,
+        "full_ctc_tail_conf": 0.9946,
+        "full_ctc_end_ms": 122174.60794634573,
+        "pre_center_onset_ms": 120055,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          117950,
+          121054.70150628801
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 119640.0,
+            "end_ms": 120000.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.42210632567302675,
+            "zcr": 0.15689922480620155,
+            "rms_ratio": 0.1932612870900135
+          }
+        ],
+        "pause_stability_crop_ms": [
+          117150,
+          121854.70150628801
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 118930.0,
+            "end_ms": 119080.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.27199820505945416,
+            "zcr": 0.08786299329858525,
+            "rms_ratio": 0.36088414280250986
+          },
+          {
+            "start_ms": 119640.0,
+            "end_ms": 120000.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.42210632567302675,
+            "zcr": 0.15689922480620155,
+            "rms_ratio": 0.19177346729445532
+          }
+        ],
+        "pause_lead_ms": 180.0,
+        "center_pause_start_ms": 119640.0,
+        "center_pause_end_ms": 120000.0
+      },
+      {
+        "ayah": 29,
+        "raw_onset_ms": 123115,
+        "onset_ms": 122945,
+        "conf": 0.8659,
+        "first_token_conf": 0.9972,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9972,
+          0.9339,
+          0.9441,
+          0.9921,
+          0.4269,
+          0.7596,
+          0.9605,
+          0.9987,
+          0.8987,
+          0.7577
+        ],
+        "full_ctc_first_ms": 123114.56646222038,
+        "full_ctc_tail_conf": 0.9679,
+        "full_ctc_end_ms": 125554.45878002267,
+        "pre_center_onset_ms": 123115,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          121370,
+          124114.56646222038
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 122760.0,
+            "end_ms": 123130.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.48548952381845817,
+            "zcr": 0.10479309318249479,
+            "rms_ratio": 0.2559231598922952
+          }
+        ],
+        "pause_stability_crop_ms": [
+          120570,
+          124914.56646222038
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 122760.0,
+            "end_ms": 123130.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.48548952381845817,
+            "zcr": 0.10479309318249479,
+            "rms_ratio": 0.2518082732781225
+          }
+        ],
+        "pause_lead_ms": 185.0,
+        "center_pause_start_ms": 122760.0,
+        "center_pause_end_ms": 123130.0
+      },
+      {
+        "ayah": 30,
+        "raw_onset_ms": 126654,
+        "onset_ms": 126370,
+        "conf": 0.1676,
+        "first_token_conf": 0.9993,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9993,
+          0.9905,
+          0.0001,
+          0.9894,
+          0.9854,
+          0.9997,
+          0.9933,
+          0.0005,
+          0.0583
+        ],
+        "full_ctc_first_ms": 126654.4102347696,
+        "full_ctc_tail_conf": 0.964,
+        "full_ctc_end_ms": 128894.31137898154,
+        "pre_center_onset_ms": 126654,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          124750,
+          127654.4102347696
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 126250.0,
+            "end_ms": 126490.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.35988072972662,
+            "zcr": 0.0893438808748255,
+            "rms_ratio": 0.2471217544352362
+          }
+        ],
+        "pause_stability_crop_ms": [
+          123950,
+          128454.4102347696
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 125460.0,
+            "end_ms": 125600.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.3947696129943272,
+            "zcr": 0.11412609736632083,
+            "rms_ratio": 0.2506956210268135
+          },
+          {
+            "start_ms": 126250.0,
+            "end_ms": 126490.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.35988072972662,
+            "zcr": 0.0893438808748255,
+            "rms_ratio": 0.23747665523192496
+          }
+        ],
+        "pause_lead_ms": 120.0,
+        "center_pause_start_ms": 126250.0,
+        "center_pause_end_ms": 126490.0
+      },
+      {
+        "ayah": 31,
+        "raw_onset_ms": 129834,
+        "onset_ms": 129834,
+        "conf": 0.3494,
+        "first_token_conf": 0.9165,
+        "reliable": false,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9165,
+          0.9649,
+          0.9984,
+          0.0016,
+          0.9978,
+          0.9983,
+          0.002,
+          0.7683,
+          0.9991,
+          0.8344,
+          0.8419
+        ],
+        "full_ctc_first_ms": 129834.26989485619,
+        "full_ctc_tail_conf": 0.529,
+        "full_ctc_end_ms": 131894.1789828368,
+        "pre_center_onset_ms": 129834,
+        "pause_center_reason": "unstable-pause",
+        "pause_local_crop_ms": [
+          128090,
+          130834.26989485619
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 129590.0,
+            "end_ms": 129840.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2502303765327845,
+            "zcr": 0.09423849933005807,
+            "rms_ratio": 0.30112360013142553
+          }
+        ],
+        "pause_stability_crop_ms": [
+          127290,
+          131634.2698948562
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 129500.0,
+            "end_ms": 129850.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3423650105962537,
+            "zcr": 0.10334928229665072,
+            "rms_ratio": 0.28353932138395427
+          }
+        ]
+      },
+      {
+        "ayah": 32,
+        "raw_onset_ms": 133334,
+        "onset_ms": 133125,
+        "conf": 0.0292,
+        "first_token_conf": 0.95,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.95,
+          0.9996,
+          0.8103,
+          0.9947,
+          0.0,
+          0.0,
+          0.0234
+        ],
+        "full_ctc_first_ms": 133334.11543268734,
+        "full_ctc_tail_conf": 0.9922,
+        "full_ctc_end_ms": 136533.97421013296,
+        "pre_center_onset_ms": 133334,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          131090,
+          134334.11543268734
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 132920.0,
+            "end_ms": 133330.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4229557967791724,
+            "zcr": 0.10577644411102775,
+            "rms_ratio": 0.23277373449088734
+          }
+        ],
+        "pause_stability_crop_ms": [
+          130290,
+          135134.11543268734
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 132920.0,
+            "end_ms": 133330.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4229557967791724,
+            "zcr": 0.10577644411102775,
+            "rms_ratio": 0.23614896678581326
+          }
+        ],
+        "pause_lead_ms": 205.0,
+        "center_pause_start_ms": 132920.0,
+        "center_pause_end_ms": 133330.0
+      },
+      {
+        "ayah": 33,
+        "raw_onset_ms": 137314,
+        "onset_ms": 137220,
+        "conf": 0.1641,
+        "first_token_conf": 0.9986,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9986,
+          0.9881,
+          0.0027,
+          0.9584,
+          0.5939,
+          0.0004,
+          0.9653
+        ],
+        "full_ctc_first_ms": 137313.93978713534,
+        "full_ctc_tail_conf": 0.9044,
+        "full_ctc_end_ms": 142833.69617822903,
+        "pre_center_onset_ms": 137314,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          135730,
+          138313.93978713534
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 137090.0,
+            "end_ms": 137350.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.36970707627774557,
+            "zcr": 0.0790038643194504,
+            "rms_ratio": 0.14175578956545357
+          }
+        ],
+        "pause_stability_crop_ms": [
+          134930,
+          139113.93978713534
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 137090.0,
+            "end_ms": 137350.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.36970707627774557,
+            "zcr": 0.0790038643194504,
+            "rms_ratio": 0.12499284256894072
+          }
+        ],
+        "pause_lead_ms": 130.0,
+        "center_pause_start_ms": 137090.0,
+        "center_pause_end_ms": 137350.0
+      },
+      {
+        "ayah": 34,
+        "raw_onset_ms": 143674,
+        "onset_ms": 143510,
+        "conf": 0.9383,
+        "first_token_conf": 0.9939,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9939,
+          0.9872,
+          0.8398,
+          0.9794,
+          0.9572
+        ],
+        "full_ctc_first_ms": 143673.65910730851,
+        "full_ctc_tail_conf": 0.6491,
+        "full_ctc_end_ms": 146913.51611947222,
+        "pre_center_onset_ms": 143674,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          142030,
+          144673.65910730851
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 143360.0,
+            "end_ms": 143660.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.473043587016056,
+            "zcr": 0.09862299962783774,
+            "rms_ratio": 0.12157204094444027
+          }
+        ],
+        "pause_stability_crop_ms": [
+          141230,
+          145473.65910730851
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 143360.0,
+            "end_ms": 143660.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.473043587016056,
+            "zcr": 0.09862299962783774,
+            "rms_ratio": 0.10889678883103862
+          }
+        ],
+        "pause_lead_ms": 150.0,
+        "center_pause_start_ms": 143360.0,
+        "center_pause_end_ms": 143660.0
+      },
+      {
+        "ayah": 35,
+        "raw_onset_ms": 148273,
+        "onset_ms": 148273,
+        "conf": 0.0284,
+        "first_token_conf": 0.999,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.999,
+          0.9985,
+          0.0057,
+          0.4354,
+          0.0208,
+          0.8794,
+          0.0001,
+          0.0001,
+          0.0427
+        ],
+        "full_ctc_first_ms": 148273.4560998866,
+        "full_ctc_tail_conf": 0.2555,
+        "full_ctc_end_ms": 150233.36960107205,
+        "pre_center_onset_ms": 148273,
+        "pause_center_reason": "unstable-pause",
+        "pause_local_crop_ms": [
+          146110,
+          149273.4560998866
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 147800.0,
+            "end_ms": 148030.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.44492534142107415,
+            "zcr": 0.1146187469645459,
+            "rms_ratio": 0.2140142567590414
+          }
+        ],
+        "pause_stability_crop_ms": [
+          145310,
+          150073.4560998866
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 146710.0,
+            "end_ms": 146830.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.5513565008114759,
+            "zcr": 0.13023255813953488,
+            "rms_ratio": 0.3312612971799641
+          },
+          {
+            "start_ms": 148060.0,
+            "end_ms": 148300.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.35730181560336266,
+            "zcr": 0.0665425779432294,
+            "rms_ratio": 0.14894177251704363
+          }
+        ]
+      },
+      {
+        "ayah": 36,
+        "raw_onset_ms": 152233,
+        "onset_ms": 152045,
+        "conf": 0.0764,
+        "first_token_conf": 0.9975,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9975,
+          0.9991,
+          0.1828,
+          0.9776,
+          0.0084,
+          0.8404,
+          0.442,
+          0.9659,
+          0.9758,
+          0.0,
+          0.0001,
+          0.0002
+        ],
+        "full_ctc_first_ms": 152233.28133697557,
+        "full_ctc_tail_conf": 0.9942,
+        "full_ctc_end_ms": 154373.18689439233,
+        "pre_center_onset_ms": 152233,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          149430,
+          153233.28133697557
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 151830.0,
+            "end_ms": 152260.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.44759108564992395,
+            "zcr": 0.15975920351933318,
+            "rms_ratio": 0.16048818589307243
+          }
+        ],
+        "pause_stability_crop_ms": [
+          148630,
+          154033.28133697557
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 151820.0,
+            "end_ms": 152260.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.44430923763748914,
+            "zcr": 0.16387586514847063,
+            "rms_ratio": 0.16239584515847025
+          }
+        ],
+        "pause_lead_ms": 215.0,
+        "center_pause_start_ms": 151830.0,
+        "center_pause_end_ms": 152260.0
+      },
+      {
+        "ayah": 37,
+        "raw_onset_ms": 157153,
+        "onset_ms": 156900,
+        "conf": 0.3658,
+        "first_token_conf": 0.8588,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.8588,
+          0.9788,
+          0.9789,
+          0.9209,
+          0.6261,
+          0.5951,
+          0.0007
+        ],
+        "full_ctc_first_ms": 157153.06420729822,
+        "full_ctc_tail_conf": 0.875,
+        "full_ctc_end_ms": 163852.76852257497,
+        "pre_center_onset_ms": 157153,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          153570,
+          158153.06420729822
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 156390.0,
+            "end_ms": 157150.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.32558356971751873,
+            "zcr": 0.2045004687988332,
+            "rms_ratio": 0.03964809769228244
+          }
+        ],
+        "pause_stability_crop_ms": [
+          152770,
+          158953.06420729822
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 156390.0,
+            "end_ms": 157150.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.32558356971751873,
+            "zcr": 0.2045004687988332,
+            "rms_ratio": 0.036602389565889785
+          }
+        ],
+        "pause_lead_ms": 250,
+        "center_pause_start_ms": 156390.0,
+        "center_pause_end_ms": 157150.0
+      },
+      {
+        "ayah": 38,
+        "raw_onset_ms": 165193,
+        "onset_ms": 165193,
+        "conf": 0.0061,
+        "first_token_conf": 0.0021,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-onset",
+        "token_confs": [
+          0.0021,
+          0.9992,
+          0.002,
+          0.9904,
+          0.0,
+          0.0002,
+          0.017
+        ],
+        "full_ctc_first_ms": 165192.70938563033,
+        "full_ctc_tail_conf": 0.9224,
+        "full_ctc_end_ms": 169312.5275615916,
+        "pre_center_onset_ms": 165193,
+        "pause_center_reason": "weak-evidence"
+      },
+      {
+        "ayah": 39,
+        "raw_onset_ms": 170052,
+        "onset_ms": 170052,
+        "conf": 0.0407,
+        "first_token_conf": 0.0019,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-onset",
+        "token_confs": [
+          0.0019,
+          0.9785,
+          0.0002,
+          0.9968,
+          0.2359,
+          0.9892,
+          0.2803,
+          0.0002,
+          0.0029
+        ],
+        "full_ctc_first_ms": 170052.4949038759,
+        "full_ctc_tail_conf": 0.7906,
+        "full_ctc_end_ms": 173052.36250773116,
+        "pre_center_onset_ms": 170052,
+        "pause_center_reason": "weak-evidence"
+      },
+      {
+        "ayah": 40,
+        "raw_onset_ms": 173772,
+        "onset_ms": 173650,
+        "conf": 0.0039,
+        "first_token_conf": 0.8714,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.8714,
+          0.9505,
+          0.0071,
+          0.0044,
+          0.0,
+          0.0,
+          0.0001,
+          0.0,
+          0.5913
+        ],
+        "full_ctc_first_ms": 173772.3307326564,
+        "full_ctc_tail_conf": 0.9037,
+        "full_ctc_end_ms": 178432.12507731162,
+        "pre_center_onset_ms": 173772,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          172250,
+          174772.3307326564
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 173520.0,
+            "end_ms": 173780.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.45780936881866013,
+            "zcr": 0.1056247316444826,
+            "rms_ratio": 0.15571576449443492
+          }
+        ],
+        "pause_stability_crop_ms": [
+          171450,
+          175572.3307326564
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 173520.0,
+            "end_ms": 173780.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.45780936881866013,
+            "zcr": 0.1056247316444826,
+            "rms_ratio": 0.1543302981706962
+          }
+        ],
+        "pause_lead_ms": 130.0,
+        "center_pause_start_ms": 173520.0,
+        "center_pause_end_ms": 173780.0
+      },
+      {
+        "ayah": 41,
+        "raw_onset_ms": 179192,
+        "onset_ms": 179055,
+        "conf": 0.5756,
+        "first_token_conf": 0.9995,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9995,
+          0.9991,
+          0.9939,
+          0.7959,
+          0.9989,
+          0.0111,
+          0.7389,
+          0.3831,
+          0.9167
+        ],
+        "full_ctc_first_ms": 179192.09153695495,
+        "full_ctc_tail_conf": 0.978,
+        "full_ctc_end_ms": 181172.00415549942,
+        "pre_center_onset_ms": 179192,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          177630,
+          180192.09153695495
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 178880.0,
+            "end_ms": 179230.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.38392987339961565,
+            "zcr": 0.09441786283891547,
+            "rms_ratio": 0.1525185953348517
+          }
+        ],
+        "pause_stability_crop_ms": [
+          176830,
+          180992.09153695495
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 178870.0,
+            "end_ms": 179230.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.39806767751055994,
+            "zcr": 0.09457364341085271,
+            "rms_ratio": 0.14451463998059225
+          }
+        ],
+        "pause_lead_ms": 175.0,
+        "center_pause_start_ms": 178880.0,
+        "center_pause_end_ms": 179230.0
+      },
+      {
+        "ayah": 42,
+        "raw_onset_ms": 181992,
+        "onset_ms": 181770,
+        "conf": 0.8552,
+        "first_token_conf": 0.9988,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9988,
+          0.9139,
+          0.9995,
+          0.5311,
+          0.9843,
+          0.8104
+        ],
+        "full_ctc_first_ms": 181991.96796721985,
+        "full_ctc_tail_conf": 0.8404,
+        "full_ctc_end_ms": 186931.74995490155,
+        "pre_center_onset_ms": 181992,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          180370,
+          182991.96796721985
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 181650.0,
+            "end_ms": 181890.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3497406252189846,
+            "zcr": 0.09120521172638436,
+            "rms_ratio": 0.12129363210383179
+          }
+        ],
+        "pause_stability_crop_ms": [
+          179570,
+          183791.96796721985
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 181630.0,
+            "end_ms": 181890.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4022671860480892,
+            "zcr": 0.0953198797767282,
+            "rms_ratio": 0.11284106266908088
+          }
+        ],
+        "pause_lead_ms": 120.0,
+        "center_pause_start_ms": 181650.0,
+        "center_pause_end_ms": 181890.0
+      }
+    ],
+    "predicted_checks": [
+      {
+        "ayah": 1,
+        "raw_onset_ms": 6500,
+        "onset_ms": 6500,
+        "conf": 0.1304,
+        "first_token_conf": 0.0,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-onset",
+        "token_confs": [
+          0.0,
+          0.9636,
+          0.8126,
+          0.461,
+          0.6252,
+          0.6087
+        ],
+        "full_ctc_first_ms": 6499.713141686424,
+        "full_intro_end_ms": 4239.812880115452,
+        "full_intro_tail_conf": 0.9579,
+        "full_ctc_tail_conf": 0.9928,
+        "full_ctc_end_ms": 7999.64694361406,
+        "pre_center_onset_ms": 6500,
+        "pause_center_reason": "weak-evidence"
+      },
+      {
+        "ayah": 2,
+        "raw_onset_ms": 8980,
+        "onset_ms": 8980,
+        "conf": 0.2659,
+        "first_token_conf": 0.1607,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-onset",
+        "token_confs": [
+          0.1607,
+          0.4399
+        ],
+        "full_ctc_first_ms": 8979.603694206782,
+        "full_ctc_tail_conf": 0.9778,
+        "full_ctc_end_ms": 12939.428931295743,
+        "pre_center_onset_ms": 8980,
+        "pause_center_reason": "weak-evidence"
+      },
+      {
+        "ayah": 3,
+        "raw_onset_ms": 13739,
+        "onset_ms": 13505,
+        "conf": 0.1644,
+        "first_token_conf": 0.9956,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9956,
+          0.9795,
+          0.8733,
+          0.0001
+        ],
+        "full_ctc_first_ms": 13739.393625657149,
+        "full_ctc_tail_conf": 0.2756,
+        "full_ctc_end_ms": 17399.23210236058,
+        "pre_center_onset_ms": 13739,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          12130,
+          14739.393625657149
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 13310.0,
+            "end_ms": 13700.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4300746486765337,
+            "zcr": 0.11633596085892906,
+            "rms_ratio": 0.20759928293791216
+          }
+        ],
+        "pause_stability_crop_ms": [
+          11330,
+          15539.393625657149
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 13310.0,
+            "end_ms": 13700.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4300746486765337,
+            "zcr": 0.11633596085892906,
+            "rms_ratio": 0.20561542025698726
+          }
+        ],
+        "pause_lead_ms": 195.0,
+        "center_pause_start_ms": 13310.0,
+        "center_pause_end_ms": 13700.0
+      },
+      {
+        "ayah": 4,
+        "raw_onset_ms": 18439,
+        "onset_ms": 18265,
+        "conf": 0.1382,
+        "first_token_conf": 0.9527,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9527,
+          0.0029
+        ],
+        "full_ctc_first_ms": 18439.186205030408,
+        "full_ctc_tail_conf": 0.9994,
+        "full_ctc_end_ms": 22339.014090042263,
+        "pre_center_onset_ms": 18439,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          16590,
+          19439.186205030408
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 18150.0,
+            "end_ms": 18380.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3992665473824797,
+            "zcr": 0.13113161728994657,
+            "rms_ratio": 0.12263187276467576
+          }
+        ],
+        "pause_stability_crop_ms": [
+          15790,
+          20239.186205030408
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 17090.0,
+            "end_ms": 17270.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.28502311316180656,
+            "zcr": 0.10924891371818746,
+            "rms_ratio": 0.2943018355377229
+          },
+          {
+            "start_ms": 18150.0,
+            "end_ms": 18380.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3992665473824797,
+            "zcr": 0.13113161728994657,
+            "rms_ratio": 0.11977638718691434
+          },
+          {
+            "start_ms": 19400.0,
+            "end_ms": 19580.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.2677814253837737,
+            "zcr": 0.11359404096834265,
+            "rms_ratio": 0.29214734684005234
+          }
+        ],
+        "pause_lead_ms": 115.0,
+        "center_pause_start_ms": 18150.0,
+        "center_pause_end_ms": 18380.0
+      },
+      {
+        "ayah": 5,
+        "raw_onset_ms": 23539,
+        "onset_ms": 23310,
+        "conf": 0.04,
+        "first_token_conf": 0.9822,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9822,
+          0.0004,
+          0.0062,
+          0.9994
+        ],
+        "full_ctc_first_ms": 23538.961131584372,
+        "full_ctc_tail_conf": 0.978,
+        "full_ctc_end_ms": 25798.861393155345,
+        "pre_center_onset_ms": 23539,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          21530,
+          24538.961131584372
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 22040.0,
+            "end_ms": 22180.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.4662485789669059,
+            "zcr": 0.1564245810055866,
+            "rms_ratio": 0.2000305318467925
+          },
+          {
+            "start_ms": 23170.0,
+            "end_ms": 23450.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3508049813106226,
+            "zcr": 0.10131631431990427,
+            "rms_ratio": 0.10633819421866196
+          }
+        ],
+        "pause_stability_crop_ms": [
+          20730,
+          25338.961131584372
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 22040.0,
+            "end_ms": 22180.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.4662485789669059,
+            "zcr": 0.1564245810055866,
+            "rms_ratio": 0.1923283441533707
+          },
+          {
+            "start_ms": 23170.0,
+            "end_ms": 23450.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3508049813106226,
+            "zcr": 0.10131631431990427,
+            "rms_ratio": 0.10224363563658014
+          }
+        ],
+        "pause_lead_ms": 140.0,
+        "center_pause_start_ms": 23170.0,
+        "center_pause_end_ms": 23450.0
+      },
+      {
+        "ayah": 6,
+        "raw_onset_ms": 26719,
+        "onset_ms": 26610,
+        "conf": 0.778,
+        "first_token_conf": 0.7196,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.7196,
+          0.9512,
+          0.3373,
+          0.9252,
+          0.9708,
+          0.8812,
+          0.6492
+        ],
+        "full_ctc_first_ms": 26718.82079167096,
+        "full_ctc_tail_conf": 0.9996,
+        "full_ctc_end_ms": 29258.708696268426,
+        "pre_center_onset_ms": 26719,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          24990,
+          27718.82079167096
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 26480.0,
+            "end_ms": 26740.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.28298031620908465,
+            "zcr": 0.09617861743237441,
+            "rms_ratio": 0.17697243534029963
+          }
+        ],
+        "pause_stability_crop_ms": [
+          24190,
+          28518.82079167096
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 25030.0,
+            "end_ms": 25250.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.5994597431903613,
+            "zcr": 0.19381024860476914,
+            "rms_ratio": 0.28290756537793765
+          },
+          {
+            "start_ms": 26470.0,
+            "end_ms": 26740.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2972759332718673,
+            "zcr": 0.10004133939644481,
+            "rms_ratio": 0.159797527354291
+          }
+        ],
+        "pause_lead_ms": 130.0,
+        "center_pause_start_ms": 26480.0,
+        "center_pause_end_ms": 26740.0
+      },
+      {
+        "ayah": 7,
+        "raw_onset_ms": 30119,
+        "onset_ms": 29880,
+        "conf": 0.0412,
+        "first_token_conf": 0.3656,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.3656,
+          0.9802,
+          0.0034,
+          0.0001
+        ],
+        "full_ctc_first_ms": 30118.670742706938,
+        "full_ctc_tail_conf": 0.9997,
+        "full_ctc_end_ms": 33298.53040279353,
+        "pre_center_onset_ms": 30119,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          28450,
+          31118.670742706938
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 29690.0,
+            "end_ms": 30070.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.40305337943638203,
+            "zcr": 0.11054276783177039,
+            "rms_ratio": 0.20753174710612976
+          }
+        ],
+        "pause_stability_crop_ms": [
+          27650,
+          31918.670742706938
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 29690.0,
+            "end_ms": 30070.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.40305337943638203,
+            "zcr": 0.11054276783177039,
+            "rms_ratio": 0.20599020451509664
+          }
+        ],
+        "pause_lead_ms": 190.0,
+        "center_pause_start_ms": 29690.0,
+        "center_pause_end_ms": 30070.0
+      },
+      {
+        "ayah": 8,
+        "raw_onset_ms": 34218,
+        "onset_ms": 33965,
+        "conf": 0.1509,
+        "first_token_conf": 0.3542,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.3542,
+          0.7617,
+          0.2039,
+          0.1192,
+          0.0006,
+          0.0892,
+          0.9988
+        ],
+        "full_ctc_first_ms": 34218.489801309144,
+        "full_ctc_tail_conf": 0.9133,
+        "full_ctc_end_ms": 38778.28855916916,
+        "pre_center_onset_ms": 34218,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          32490,
+          35218.489801309144
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 33030.0,
+            "end_ms": 33190.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.3042281309536491,
+            "zcr": 0.14305652477320308,
+            "rms_ratio": 0.23171075920229633
+          },
+          {
+            "start_ms": 33750.0,
+            "end_ms": 34180.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4495820644285842,
+            "zcr": 0.12410280157443852,
+            "rms_ratio": 0.23866322553770994
+          }
+        ],
+        "pause_stability_crop_ms": [
+          31690,
+          36018.489801309144
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 33030.0,
+            "end_ms": 33190.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.3042281309536491,
+            "zcr": 0.14305652477320308,
+            "rms_ratio": 0.20390767894677575
+          },
+          {
+            "start_ms": 33750.0,
+            "end_ms": 34180.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4495820644285842,
+            "zcr": 0.12410280157443852,
+            "rms_ratio": 0.21002591565831352
+          }
+        ],
+        "pause_lead_ms": 215.0,
+        "center_pause_start_ms": 33750.0,
+        "center_pause_end_ms": 34180.0
+      },
+      {
+        "ayah": 9,
+        "raw_onset_ms": 39938,
+        "onset_ms": 39790,
+        "conf": 0.1168,
+        "first_token_conf": 0.991,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.991,
+          0.9649,
+          0.0002,
+          0.8514,
+          0.0024,
+          0.1401
+        ],
+        "full_ctc_first_ms": 39938.2373659932,
+        "full_ctc_tail_conf": 0.9994,
+        "full_ctc_end_ms": 41138.1844075353,
+        "pre_center_onset_ms": 39938,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          37970,
+          40938.2373659932
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 38670.0,
+            "end_ms": 38810.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.590956758282793,
+            "zcr": 0.37350359138068634,
+            "rms_ratio": 0.33846322008399676
+          },
+          {
+            "start_ms": 39620.0,
+            "end_ms": 39960.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4285677228586753,
+            "zcr": 0.11625615763546798,
+            "rms_ratio": 0.21118143922773147
+          }
+        ],
+        "pause_stability_crop_ms": [
+          37170,
+          41738.2373659932
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 38660.0,
+            "end_ms": 38810.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.6315107609847839,
+            "zcr": 0.379746835443038,
+            "rms_ratio": 0.31401770337626506
+          },
+          {
+            "start_ms": 39620.0,
+            "end_ms": 39960.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4285677228586753,
+            "zcr": 0.11625615763546798,
+            "rms_ratio": 0.19486163950355934
+          },
+          {
+            "start_ms": 40910.0,
+            "end_ms": 41030.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.6893315982096181,
+            "zcr": 0.34418604651162793,
+            "rms_ratio": 0.3178402763016529
+          }
+        ],
+        "pause_lead_ms": 170.0,
+        "center_pause_start_ms": 39620.0,
+        "center_pause_end_ms": 39960.0
+      },
+      {
+        "ayah": 10,
+        "raw_onset_ms": 41998,
+        "onset_ms": 41825,
+        "conf": 0.1624,
+        "first_token_conf": 0.6676,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.6676,
+          0.9963,
+          0.0017,
+          0.0002,
+          0.3205,
+          0.9604,
+          0.9641
+        ],
+        "full_ctc_first_ms": 41998.146453973815,
+        "full_ctc_tail_conf": 0.6313,
+        "full_ctc_end_ms": 44718.026414802596,
+        "pre_center_onset_ms": 41998,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          40330,
+          42998.146453973815
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 41630.0,
+            "end_ms": 42020.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4440512986772198,
+            "zcr": 0.09187279151943463,
+            "rms_ratio": 0.22475052098042944
+          }
+        ],
+        "pause_stability_crop_ms": [
+          39530,
+          43798.146453973815
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 41630.0,
+            "end_ms": 42020.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4440512986772198,
+            "zcr": 0.09187279151943463,
+            "rms_ratio": 0.22930713456593335
+          }
+        ],
+        "pause_lead_ms": 195.0,
+        "center_pause_start_ms": 41630.0,
+        "center_pause_end_ms": 42020.0
+      },
+      {
+        "ayah": 11,
+        "raw_onset_ms": 45918,
+        "onset_ms": 45760,
+        "conf": 0.7913,
+        "first_token_conf": 0.3592,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.3592,
+          0.8798,
+          0.999,
+          0.8285,
+          0.6696
+        ],
+        "full_ctc_first_ms": 45917.973456344705,
+        "full_ctc_tail_conf": 0.4167,
+        "full_ctc_end_ms": 51137.74308705288,
+        "pre_center_onset_ms": 45918,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          43910,
+          46917.973456344705
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 45570.0,
+            "end_ms": 45950.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3601459723220604,
+            "zcr": 0.10201761864165956,
+            "rms_ratio": 0.1511752721653974
+          }
+        ],
+        "pause_stability_crop_ms": [
+          43110,
+          47717.973456344705
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 45570.0,
+            "end_ms": 45950.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3601459723220604,
+            "zcr": 0.10201761864165956,
+            "rms_ratio": 0.15247439817482156
+          }
+        ],
+        "pause_lead_ms": 190.0,
+        "center_pause_start_ms": 45570.0,
+        "center_pause_end_ms": 45950.0
+      },
+      {
+        "ayah": 12,
+        "raw_onset_ms": 51918,
+        "onset_ms": 51805,
+        "conf": 0.6627,
+        "first_token_conf": 0.9988,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9988,
+          0.9005,
+          0.4106,
+          0.3885,
+          0.8373
+        ],
+        "full_ctc_first_ms": 51917.70866405525,
+        "full_ctc_tail_conf": 0.3006,
+        "full_ctc_end_ms": 55357.5568498093,
+        "pre_center_onset_ms": 51918,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          50330,
+          52917.70866405525
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 50700.0,
+            "end_ms": 50830.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.3188382242510117,
+            "zcr": 0.1289767841788478,
+            "rms_ratio": 0.27238690958136813
+          },
+          {
+            "start_ms": 51660.0,
+            "end_ms": 51950.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.26755502592529423,
+            "zcr": 0.07008086253369272,
+            "rms_ratio": 0.16341397502171656
+          }
+        ],
+        "pause_stability_crop_ms": [
+          49530,
+          53717.70866405525
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 50700.0,
+            "end_ms": 50830.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.3188382242510117,
+            "zcr": 0.1289767841788478,
+            "rms_ratio": 0.23782589976770718
+          },
+          {
+            "start_ms": 51660.0,
+            "end_ms": 51950.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.26755502592529423,
+            "zcr": 0.07008086253369272,
+            "rms_ratio": 0.14267967467264717
+          }
+        ],
+        "pause_lead_ms": 145.0,
+        "center_pause_start_ms": 51660.0,
+        "center_pause_end_ms": 51950.0
+      },
+      {
+        "ayah": 13,
+        "raw_onset_ms": 56158,
+        "onset_ms": 56020,
+        "conf": 0.2581,
+        "first_token_conf": 0.8461,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.8461,
+          0.0787
+        ],
+        "full_ctc_first_ms": 56157.521544170704,
+        "full_ctc_tail_conf": 0.9742,
+        "full_ctc_end_ms": 59037.394443871766,
+        "pre_center_onset_ms": 56158,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          54550,
+          57157.521544170704
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 55850.0,
+            "end_ms": 56190.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3305699578757084,
+            "zcr": 0.07257799671592775,
+            "rms_ratio": 0.16737810692443023
+          }
+        ],
+        "pause_stability_crop_ms": [
+          53750,
+          57957.521544170704
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 55850.0,
+            "end_ms": 56190.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3305699578757084,
+            "zcr": 0.07257799671592775,
+            "rms_ratio": 0.15050231278914092
+          }
+        ],
+        "pause_lead_ms": 170.0,
+        "center_pause_start_ms": 55850.0,
+        "center_pause_end_ms": 56190.0
+      },
+      {
+        "ayah": 14,
+        "raw_onset_ms": 59837,
+        "onset_ms": 59670,
+        "conf": 0.0575,
+        "first_token_conf": 0.9962,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9962,
+          0.9554,
+          0.9567,
+          0.0273,
+          0.7703,
+          0.0,
+          0.0001,
+          0.0045,
+          0.9992,
+          0.0012
+        ],
+        "full_ctc_first_ms": 59837.35913823317,
+        "full_ctc_tail_conf": 0.9997,
+        "full_ctc_end_ms": 62917.22321152458,
+        "pre_center_onset_ms": 59837,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          58230,
+          60837.35913823317
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 59510.0,
+            "end_ms": 59830.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.44256869723554354,
+            "zcr": 0.07220090687129403,
+            "rms_ratio": 0.18548260589507962
+          }
+        ],
+        "pause_stability_crop_ms": [
+          57430,
+          61637.35913823317
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 59510.0,
+            "end_ms": 59830.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.44256869723554354,
+            "zcr": 0.07220090687129403,
+            "rms_ratio": 0.18557627888153555
+          }
+        ],
+        "pause_lead_ms": 160.0,
+        "center_pause_start_ms": 59510.0,
+        "center_pause_end_ms": 59830.0
+      },
+      {
+        "ayah": 15,
+        "raw_onset_ms": 63757,
+        "onset_ms": 63620,
+        "conf": 0.0295,
+        "first_token_conf": 0.7959,
+        "reliable": false,
+        "repaired": true,
+        "reason": "waveform-pause-recheck",
+        "token_confs": [
+          0.7959,
+          0.9996,
+          0.1278,
+          0.9987,
+          0.9663,
+          0.0,
+          0.0
+        ],
+        "full_ctc_first_ms": 63757.186140604055,
+        "full_ctc_tail_conf": 0.6408,
+        "full_ctc_end_ms": 65297.118177249766,
+        "pre_center_onset_ms": 63757,
+        "pause_center_reason": "unstable-pause",
+        "pause_local_crop_ms": [
+          62110,
+          64757.186140604055
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 63490.0,
+            "end_ms": 63750.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.39569854360694595,
+            "zcr": 0.0798626019750966,
+            "rms_ratio": 0.16465323705751878
+          }
+        ],
+        "pause_stability_crop_ms": [
+          61310,
+          65557.18614060406
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 63270.0,
+            "end_ms": 63750.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4641821533139845,
+            "zcr": 0.09884743113889431,
+            "rms_ratio": 0.19140244639544568
+          }
+        ],
+        "pre_signal_onset_ms": 63757,
+        "signal_pause_start_ms": 63490.0,
+        "signal_pause_end_ms": 63750.0
+      },
+      {
+        "ayah": 16,
+        "raw_onset_ms": 66337,
+        "onset_ms": 66337,
+        "conf": 0.5962,
+        "first_token_conf": 0.0123,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-onset",
+        "token_confs": [
+          0.0123,
+          0.9995,
+          0.9748,
+          0.9485,
+          0.9449,
+          0.9819,
+          0.9674
+        ],
+        "full_ctc_first_ms": 66337.0722799196,
+        "full_ctc_tail_conf": 0.7202,
+        "full_ctc_end_ms": 68516.97607205443,
+        "pre_center_onset_ms": 66337,
+        "pause_center_reason": "weak-evidence",
+        "pause_local_crop_ms": [
+          64490,
+          67337.0722799196
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 66200.0,
+            "end_ms": 66370.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2945796758925722,
+            "zcr": 0.09192383453709783,
+            "rms_ratio": 0.12883685320589694
+          }
+        ],
+        "pause_stability_crop_ms": [
+          63690,
+          68137.0722799196
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 66200.0,
+            "end_ms": 66370.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2945796758925722,
+            "zcr": 0.09192383453709783,
+            "rms_ratio": 0.12397690468551874
+          }
+        ]
+      },
+      {
+        "ayah": 17,
+        "raw_onset_ms": 69377,
+        "onset_ms": 69190,
+        "conf": 0.6202,
+        "first_token_conf": 0.04,
+        "reliable": false,
+        "repaired": true,
+        "reason": "waveform-pause-recheck",
+        "token_confs": [
+          0.04,
+          0.9959,
+          0.8912,
+          0.9997,
+          0.9993,
+          0.9987
+        ],
+        "full_ctc_first_ms": 69376.93811849294,
+        "full_ctc_tail_conf": 0.8254,
+        "full_ctc_end_ms": 73716.74658540357,
+        "pre_center_onset_ms": 69377,
+        "pause_center_reason": "weak-evidence",
+        "pause_local_crop_ms": [
+          67710,
+          70376.93811849294
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 68980.0,
+            "end_ms": 69400.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.42183664780502345,
+            "zcr": 0.10507333493628276,
+            "rms_ratio": 0.13922849846026342
+          }
+        ],
+        "pause_stability_crop_ms": [
+          66910,
+          71176.93811849294
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 68980.0,
+            "end_ms": 69400.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.42183664780502345,
+            "zcr": 0.10507333493628276,
+            "rms_ratio": 0.1366000075055183
+          }
+        ],
+        "pre_signal_onset_ms": 69377,
+        "signal_pause_start_ms": 68980.0,
+        "signal_pause_end_ms": 69400.0
+      },
+      {
+        "ayah": 18,
+        "raw_onset_ms": 74477,
+        "onset_ms": 74245,
+        "conf": 0.5866,
+        "first_token_conf": 0.2864,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.2864,
+          0.9994,
+          0.7052
+        ],
+        "full_ctc_first_ms": 74476.7130450469,
+        "full_ctc_tail_conf": 0.5126,
+        "full_ctc_end_ms": 76916.6053628492,
+        "pre_center_onset_ms": 74477,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          72910,
+          75476.7130450469
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 73230.0,
+            "end_ms": 73390.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.5847832539848951,
+            "zcr": 0.21144452198185626,
+            "rms_ratio": 0.22371672743118054
+          },
+          {
+            "start_ms": 74010.0,
+            "end_ms": 74480.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4618729205904398,
+            "zcr": 0.11232103246622303,
+            "rms_ratio": 0.19551337423764462
+          }
+        ],
+        "pause_stability_crop_ms": [
+          72110,
+          76276.7130450469
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 73160.0,
+            "end_ms": 73390.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.5855950783013837,
+            "zcr": 0.16124332200097136,
+            "rms_ratio": 0.24010570395176406
+          },
+          {
+            "start_ms": 74010.0,
+            "end_ms": 74480.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4618729205904398,
+            "zcr": 0.11232103246622303,
+            "rms_ratio": 0.17779307207567632
+          }
+        ],
+        "pause_lead_ms": 235.0,
+        "center_pause_start_ms": 74010.0,
+        "center_pause_end_ms": 74480.0
+      },
+      {
+        "ayah": 19,
+        "raw_onset_ms": 77657,
+        "onset_ms": 77470,
+        "conf": 0.7181,
+        "first_token_conf": 0.4524,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.4524,
+          0.9987,
+          0.8198
+        ],
+        "full_ctc_first_ms": 77656.57270513348,
+        "full_ctc_tail_conf": 0.9958,
+        "full_ctc_end_ms": 81516.40235542727,
+        "pre_center_onset_ms": 77657,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          76110,
+          78656.57270513348
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 77320.0,
+            "end_ms": 77620.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4884711069668896,
+            "zcr": 0.12281354670636398,
+            "rms_ratio": 0.15787074879476706
+          }
+        ],
+        "pause_stability_crop_ms": [
+          75310,
+          79456.57270513348
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 77320.0,
+            "end_ms": 77620.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4884711069668896,
+            "zcr": 0.12281354670636398,
+            "rms_ratio": 0.156772785593408
+          }
+        ],
+        "pause_lead_ms": 150.0,
+        "center_pause_start_ms": 77320.0,
+        "center_pause_end_ms": 77620.0
+      },
+      {
+        "ayah": 20,
+        "raw_onset_ms": 82276,
+        "onset_ms": 82145,
+        "conf": 0.0896,
+        "first_token_conf": 0.9069,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9069,
+          0.2305,
+          0.5836,
+          0.0,
+          0.9795,
+          0.1939
+        ],
+        "full_ctc_first_ms": 82276.3688150706,
+        "full_ctc_tail_conf": 0.9899,
+        "full_ctc_end_ms": 84836.2558370271,
+        "pre_center_onset_ms": 82276,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          80710,
+          83276.3688150706
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 81960.0,
+            "end_ms": 82330.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4698614683831674,
+            "zcr": 0.09645727895206907,
+            "rms_ratio": 0.11206554111444442
+          }
+        ],
+        "pause_stability_crop_ms": [
+          79910,
+          84076.3688150706
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 81960.0,
+            "end_ms": 82330.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4698614683831674,
+            "zcr": 0.09645727895206907,
+            "rms_ratio": 0.10742728634246013
+          }
+        ],
+        "pause_lead_ms": 185.0,
+        "center_pause_start_ms": 81960.0,
+        "center_pause_end_ms": 82330.0
+      },
+      {
+        "ayah": 21,
+        "raw_onset_ms": 85656,
+        "onset_ms": 85545,
+        "conf": 0.0977,
+        "first_token_conf": 0.8679,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.8679,
+          0.044,
+          0.991,
+          0.0,
+          0.9618,
+          0.758
+        ],
+        "full_ctc_first_ms": 85656.21964874754,
+        "full_ctc_tail_conf": 0.5639,
+        "full_ctc_end_ms": 88516.09343108957,
+        "pre_center_onset_ms": 85656,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          84030,
+          86656.21964874754
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 85400.0,
+            "end_ms": 85690.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3571462653454942,
+            "zcr": 0.09742010011551791,
+            "rms_ratio": 0.13734874940513075
+          }
+        ],
+        "pause_stability_crop_ms": [
+          83230,
+          87456.21964874754
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 85400.0,
+            "end_ms": 85690.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3571462653454942,
+            "zcr": 0.09742010011551791,
+            "rms_ratio": 0.1304546032640827
+          }
+        ],
+        "pause_lead_ms": 145.0,
+        "center_pause_start_ms": 85400.0,
+        "center_pause_end_ms": 85690.0
+      },
+      {
+        "ayah": 22,
+        "raw_onset_ms": 89436,
+        "onset_ms": 89355,
+        "conf": 0.1935,
+        "first_token_conf": 0.7672,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.7672,
+          0.0688,
+          0.9868,
+          0.0002,
+          0.9642,
+          0.9638
+        ],
+        "full_ctc_first_ms": 89436.05282960519,
+        "full_ctc_tail_conf": 0.9996,
+        "full_ctc_end_ms": 93575.87012292547,
+        "pre_center_onset_ms": 89436,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          87710,
+          90436.05282960519
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 89230.0,
+            "end_ms": 89480.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.30969026801235294,
+            "zcr": 0.08262617239839214,
+            "rms_ratio": 0.16579210457041355
+          }
+        ],
+        "pause_stability_crop_ms": [
+          86910,
+          91236.05282960519
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 89230.0,
+            "end_ms": 89480.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.30969026801235294,
+            "zcr": 0.08262617239839214,
+            "rms_ratio": 0.1570958433018644
+          }
+        ],
+        "pause_lead_ms": 125.0,
+        "center_pause_start_ms": 89230.0,
+        "center_pause_end_ms": 89480.0
+      },
+      {
+        "ayah": 23,
+        "raw_onset_ms": 94436,
+        "onset_ms": 94310,
+        "conf": 0.5353,
+        "first_token_conf": 0.9309,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9309,
+          0.9976,
+          0.958,
+          0.015,
+          0.9904
+        ],
+        "full_ctc_first_ms": 94435.83216936397,
+        "full_ctc_tail_conf": 0.0,
+        "pre_center_onset_ms": 94436,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          92770,
+          95435.83216936397
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 94160.0,
+            "end_ms": 94460.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.42325536462102514,
+            "zcr": 0.0893189430591738,
+            "rms_ratio": 0.12036510176744011
+          }
+        ],
+        "pause_stability_crop_ms": [
+          91970,
+          96235.83216936397
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 94160.0,
+            "end_ms": 94460.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.42325536462102514,
+            "zcr": 0.0893189430591738,
+            "rms_ratio": 0.11821755458660378
+          }
+        ],
+        "pause_lead_ms": 150.0,
+        "center_pause_start_ms": 94160.0,
+        "center_pause_end_ms": 94460.0
+      },
+      {
+        "ayah": 24,
+        "raw_onset_ms": 99916,
+        "onset_ms": 99916,
+        "conf": 0.2747,
+        "first_token_conf": 0.9813,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9813,
+          0.9214,
+          0.4045,
+          0.9968,
+          0.9905,
+          0.0176,
+          0.0001,
+          0.9263,
+          0.8413,
+          0.0887
+        ],
+        "full_ctc_first_ms": 99915.59032573961,
+        "full_ctc_tail_conf": 0.9994,
+        "full_ctc_end_ms": 104815.37407870321,
+        "pre_center_onset_ms": 99916,
+        "pause_center_reason": "weak-evidence"
+      },
+      {
+        "ayah": 25,
+        "raw_onset_ms": 105755,
+        "onset_ms": 105545,
+        "conf": 0.3325,
+        "first_token_conf": 0.1594,
+        "reliable": false,
+        "repaired": true,
+        "reason": "waveform-pause-recheck",
+        "token_confs": [
+          0.1594,
+          0.1603,
+          0.9959,
+          0.9958
+        ],
+        "local_pause_crop_ms": [
+          104755.3125,
+          107575.3125
+        ],
+        "full_ctc_first_ms": 105755.33259457788,
+        "full_ctc_tail_conf": 0.8331,
+        "full_ctc_end_ms": 110055.14282677043,
+        "pre_center_onset_ms": 105755,
+        "pause_center_reason": "weak-evidence",
+        "pause_local_crop_ms": [
+          104010,
+          106755.33259457788
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 105440.0,
+            "end_ms": 105650.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.40383134774539525,
+            "zcr": 0.14885699096225413,
+            "rms_ratio": 0.06992953225718782
+          }
+        ],
+        "pause_stability_crop_ms": [
+          103210,
+          107555.33259457788
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 105440.0,
+            "end_ms": 105650.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.40383134774539525,
+            "zcr": 0.14885699096225413,
+            "rms_ratio": 0.0648524527513783
+          }
+        ],
+        "pre_signal_onset_ms": 105755,
+        "signal_pause_start_ms": 105440.0,
+        "signal_pause_end_ms": 105650.0
+      },
+      {
+        "ayah": 26,
+        "raw_onset_ms": 111235,
+        "onset_ms": 111060,
+        "conf": 0.0999,
+        "first_token_conf": 0.8777,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.8777,
+          0.024,
+          0.9854,
+          0.0001,
+          0.8931,
+          0.9774
+        ],
+        "full_ctc_first_ms": 111235.0907509535,
+        "full_ctc_tail_conf": 0.5965,
+        "full_ctc_end_ms": 114494.94688047623,
+        "pre_center_onset_ms": 111235,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          109250,
+          112235.0907509535
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 110840.0,
+            "end_ms": 111280.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.44727036942170184,
+            "zcr": 0.10448760884125921,
+            "rms_ratio": 0.19348198726612773
+          }
+        ],
+        "pause_stability_crop_ms": [
+          108450,
+          113035.0907509535
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 110840.0,
+            "end_ms": 111280.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.44727036942170184,
+            "zcr": 0.10448760884125921,
+            "rms_ratio": 0.17736642771853406
+          }
+        ],
+        "pause_lead_ms": 220.0,
+        "center_pause_start_ms": 110840.0,
+        "center_pause_end_ms": 111280.0
+      },
+      {
+        "ayah": 27,
+        "raw_onset_ms": 115715,
+        "onset_ms": 115590,
+        "conf": 0.4795,
+        "first_token_conf": 0.8186,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.8186,
+          0.9741,
+          0.005,
+          0.9807,
+          0.6303,
+          0.9388,
+          0.9939,
+          0.2113,
+          0.9986,
+          0.999
+        ],
+        "full_ctc_first_ms": 115714.89303937738,
+        "full_ctc_tail_conf": 0.9361,
+        "full_ctc_end_ms": 118754.75887795072,
+        "pre_center_onset_ms": 115715,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          113690,
+          116714.89303937738
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 114290.0,
+            "end_ms": 114510.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.3837104442508557,
+            "zcr": 0.11314053779807204,
+            "rms_ratio": 0.22737071537985012
+          },
+          {
+            "start_ms": 115440.0,
+            "end_ms": 115740.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2865814766511617,
+            "zcr": 0.09490137700037216,
+            "rms_ratio": 0.18997523700326951
+          }
+        ],
+        "pause_stability_crop_ms": [
+          112890,
+          117514.89303937738
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 114290.0,
+            "end_ms": 114510.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.3837104442508557,
+            "zcr": 0.11314053779807204,
+            "rms_ratio": 0.20553958763485208
+          },
+          {
+            "start_ms": 115440.0,
+            "end_ms": 115740.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2865814766511617,
+            "zcr": 0.09490137700037216,
+            "rms_ratio": 0.17173465725017345
+          }
+        ],
+        "pause_lead_ms": 150.0,
+        "center_pause_start_ms": 115440.0,
+        "center_pause_end_ms": 115740.0
+      },
+      {
+        "ayah": 28,
+        "raw_onset_ms": 120055,
+        "onset_ms": 119820,
+        "conf": 0.317,
+        "first_token_conf": 0.9608,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9608,
+          0.9398,
+          0.0183,
+          0.7265,
+          0.8968,
+          0.6271,
+          0.0167,
+          0.1303,
+          0.7452
+        ],
+        "full_ctc_first_ms": 120054.70150628801,
+        "full_ctc_tail_conf": 0.9946,
+        "full_ctc_end_ms": 122174.60794634573,
+        "pre_center_onset_ms": 120055,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          117950,
+          121054.70150628801
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 119640.0,
+            "end_ms": 120000.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.42210632567302675,
+            "zcr": 0.15689922480620155,
+            "rms_ratio": 0.1932612870900135
+          }
+        ],
+        "pause_stability_crop_ms": [
+          117150,
+          121854.70150628801
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 118930.0,
+            "end_ms": 119080.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.27199820505945416,
+            "zcr": 0.08786299329858525,
+            "rms_ratio": 0.36088414280250986
+          },
+          {
+            "start_ms": 119640.0,
+            "end_ms": 120000.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.42210632567302675,
+            "zcr": 0.15689922480620155,
+            "rms_ratio": 0.19177346729445532
+          }
+        ],
+        "pause_lead_ms": 180.0,
+        "center_pause_start_ms": 119640.0,
+        "center_pause_end_ms": 120000.0
+      },
+      {
+        "ayah": 29,
+        "raw_onset_ms": 123115,
+        "onset_ms": 122945,
+        "conf": 0.8659,
+        "first_token_conf": 0.9972,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9972,
+          0.9339,
+          0.9441,
+          0.9921,
+          0.4269,
+          0.7596,
+          0.9605,
+          0.9987,
+          0.8987,
+          0.7577
+        ],
+        "full_ctc_first_ms": 123114.56646222038,
+        "full_ctc_tail_conf": 0.9679,
+        "full_ctc_end_ms": 125554.45878002267,
+        "pre_center_onset_ms": 123115,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          121370,
+          124114.56646222038
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 122760.0,
+            "end_ms": 123130.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.48548952381845817,
+            "zcr": 0.10479309318249479,
+            "rms_ratio": 0.2559231598922952
+          }
+        ],
+        "pause_stability_crop_ms": [
+          120570,
+          124914.56646222038
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 122760.0,
+            "end_ms": 123130.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.48548952381845817,
+            "zcr": 0.10479309318249479,
+            "rms_ratio": 0.2518082732781225
+          }
+        ],
+        "pause_lead_ms": 185.0,
+        "center_pause_start_ms": 122760.0,
+        "center_pause_end_ms": 123130.0
+      },
+      {
+        "ayah": 30,
+        "raw_onset_ms": 126654,
+        "onset_ms": 126370,
+        "conf": 0.1676,
+        "first_token_conf": 0.9993,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9993,
+          0.9905,
+          0.0001,
+          0.9894,
+          0.9854,
+          0.9997,
+          0.9933,
+          0.0005,
+          0.0583
+        ],
+        "full_ctc_first_ms": 126654.4102347696,
+        "full_ctc_tail_conf": 0.964,
+        "full_ctc_end_ms": 128894.31137898154,
+        "pre_center_onset_ms": 126654,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          124750,
+          127654.4102347696
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 126250.0,
+            "end_ms": 126490.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.35988072972662,
+            "zcr": 0.0893438808748255,
+            "rms_ratio": 0.2471217544352362
+          }
+        ],
+        "pause_stability_crop_ms": [
+          123950,
+          128454.4102347696
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 125460.0,
+            "end_ms": 125600.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.3947696129943272,
+            "zcr": 0.11412609736632083,
+            "rms_ratio": 0.2506956210268135
+          },
+          {
+            "start_ms": 126250.0,
+            "end_ms": 126490.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.35988072972662,
+            "zcr": 0.0893438808748255,
+            "rms_ratio": 0.23747665523192496
+          }
+        ],
+        "pause_lead_ms": 120.0,
+        "center_pause_start_ms": 126250.0,
+        "center_pause_end_ms": 126490.0
+      },
+      {
+        "ayah": 31,
+        "raw_onset_ms": 129834,
+        "onset_ms": 129834,
+        "conf": 0.3494,
+        "first_token_conf": 0.9165,
+        "reliable": false,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9165,
+          0.9649,
+          0.9984,
+          0.0016,
+          0.9978,
+          0.9983,
+          0.002,
+          0.7683,
+          0.9991,
+          0.8344,
+          0.8419
+        ],
+        "full_ctc_first_ms": 129834.26989485619,
+        "full_ctc_tail_conf": 0.529,
+        "full_ctc_end_ms": 131894.1789828368,
+        "pre_center_onset_ms": 129834,
+        "pause_center_reason": "unstable-pause",
+        "pause_local_crop_ms": [
+          128090,
+          130834.26989485619
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 129590.0,
+            "end_ms": 129840.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2502303765327845,
+            "zcr": 0.09423849933005807,
+            "rms_ratio": 0.30112360013142553
+          }
+        ],
+        "pause_stability_crop_ms": [
+          127290,
+          131634.2698948562
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 129500.0,
+            "end_ms": 129850.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3423650105962537,
+            "zcr": 0.10334928229665072,
+            "rms_ratio": 0.28353932138395427
+          }
+        ]
+      },
+      {
+        "ayah": 32,
+        "raw_onset_ms": 133334,
+        "onset_ms": 133125,
+        "conf": 0.0292,
+        "first_token_conf": 0.95,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.95,
+          0.9996,
+          0.8103,
+          0.9947,
+          0.0,
+          0.0,
+          0.0234
+        ],
+        "full_ctc_first_ms": 133334.11543268734,
+        "full_ctc_tail_conf": 0.9922,
+        "full_ctc_end_ms": 136533.97421013296,
+        "pre_center_onset_ms": 133334,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          131090,
+          134334.11543268734
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 132920.0,
+            "end_ms": 133330.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4229557967791724,
+            "zcr": 0.10577644411102775,
+            "rms_ratio": 0.23277373449088734
+          }
+        ],
+        "pause_stability_crop_ms": [
+          130290,
+          135134.11543268734
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 132920.0,
+            "end_ms": 133330.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4229557967791724,
+            "zcr": 0.10577644411102775,
+            "rms_ratio": 0.23614896678581326
+          }
+        ],
+        "pause_lead_ms": 205.0,
+        "center_pause_start_ms": 132920.0,
+        "center_pause_end_ms": 133330.0
+      },
+      {
+        "ayah": 33,
+        "raw_onset_ms": 137314,
+        "onset_ms": 137220,
+        "conf": 0.1641,
+        "first_token_conf": 0.9986,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9986,
+          0.9881,
+          0.0027,
+          0.9584,
+          0.5939,
+          0.0004,
+          0.9653
+        ],
+        "full_ctc_first_ms": 137313.93978713534,
+        "full_ctc_tail_conf": 0.9044,
+        "full_ctc_end_ms": 142833.69617822903,
+        "pre_center_onset_ms": 137314,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          135730,
+          138313.93978713534
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 137090.0,
+            "end_ms": 137350.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.36970707627774557,
+            "zcr": 0.0790038643194504,
+            "rms_ratio": 0.14175578956545357
+          }
+        ],
+        "pause_stability_crop_ms": [
+          134930,
+          139113.93978713534
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 137090.0,
+            "end_ms": 137350.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.36970707627774557,
+            "zcr": 0.0790038643194504,
+            "rms_ratio": 0.12499284256894072
+          }
+        ],
+        "pause_lead_ms": 130.0,
+        "center_pause_start_ms": 137090.0,
+        "center_pause_end_ms": 137350.0
+      },
+      {
+        "ayah": 34,
+        "raw_onset_ms": 143674,
+        "onset_ms": 143510,
+        "conf": 0.9383,
+        "first_token_conf": 0.9939,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9939,
+          0.9872,
+          0.8398,
+          0.9794,
+          0.9572
+        ],
+        "full_ctc_first_ms": 143673.65910730851,
+        "full_ctc_tail_conf": 0.6491,
+        "full_ctc_end_ms": 146913.51611947222,
+        "pre_center_onset_ms": 143674,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          142030,
+          144673.65910730851
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 143360.0,
+            "end_ms": 143660.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.473043587016056,
+            "zcr": 0.09862299962783774,
+            "rms_ratio": 0.12157204094444027
+          }
+        ],
+        "pause_stability_crop_ms": [
+          141230,
+          145473.65910730851
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 143360.0,
+            "end_ms": 143660.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.473043587016056,
+            "zcr": 0.09862299962783774,
+            "rms_ratio": 0.10889678883103862
+          }
+        ],
+        "pause_lead_ms": 150.0,
+        "center_pause_start_ms": 143360.0,
+        "center_pause_end_ms": 143660.0
+      },
+      {
+        "ayah": 35,
+        "raw_onset_ms": 148273,
+        "onset_ms": 147930,
+        "conf": 0.0284,
+        "first_token_conf": 0.999,
+        "reliable": false,
+        "repaired": true,
+        "reason": "waveform-pause-recheck",
+        "token_confs": [
+          0.999,
+          0.9985,
+          0.0057,
+          0.4354,
+          0.0208,
+          0.8794,
+          0.0001,
+          0.0001,
+          0.0427
+        ],
+        "full_ctc_first_ms": 148273.4560998866,
+        "full_ctc_tail_conf": 0.2555,
+        "full_ctc_end_ms": 150233.36960107205,
+        "pre_center_onset_ms": 148273,
+        "pause_center_reason": "unstable-pause",
+        "pause_local_crop_ms": [
+          146110,
+          149273.4560998866
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 147800.0,
+            "end_ms": 148030.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.44492534142107415,
+            "zcr": 0.1146187469645459,
+            "rms_ratio": 0.2140142567590414
+          }
+        ],
+        "pause_stability_crop_ms": [
+          145310,
+          150073.4560998866
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 146710.0,
+            "end_ms": 146830.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.5513565008114759,
+            "zcr": 0.13023255813953488,
+            "rms_ratio": 0.3312612971799641
+          },
+          {
+            "start_ms": 148060.0,
+            "end_ms": 148300.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.35730181560336266,
+            "zcr": 0.0665425779432294,
+            "rms_ratio": 0.14894177251704363
+          }
+        ],
+        "pre_signal_onset_ms": 148273,
+        "signal_pause_start_ms": 147800.0,
+        "signal_pause_end_ms": 148030.0
+      },
+      {
+        "ayah": 36,
+        "raw_onset_ms": 152233,
+        "onset_ms": 152045,
+        "conf": 0.0764,
+        "first_token_conf": 0.9975,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9975,
+          0.9991,
+          0.1828,
+          0.9776,
+          0.0084,
+          0.8404,
+          0.442,
+          0.9659,
+          0.9758,
+          0.0,
+          0.0001,
+          0.0002
+        ],
+        "full_ctc_first_ms": 152233.28133697557,
+        "full_ctc_tail_conf": 0.9942,
+        "full_ctc_end_ms": 154373.18689439233,
+        "pre_center_onset_ms": 152233,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          149430,
+          153233.28133697557
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 151830.0,
+            "end_ms": 152260.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.44759108564992395,
+            "zcr": 0.15975920351933318,
+            "rms_ratio": 0.16048818589307243
+          }
+        ],
+        "pause_stability_crop_ms": [
+          148630,
+          154033.28133697557
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 151820.0,
+            "end_ms": 152260.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.44430923763748914,
+            "zcr": 0.16387586514847063,
+            "rms_ratio": 0.16239584515847025
+          }
+        ],
+        "pause_lead_ms": 215.0,
+        "center_pause_start_ms": 151830.0,
+        "center_pause_end_ms": 152260.0
+      },
+      {
+        "ayah": 37,
+        "raw_onset_ms": 157153,
+        "onset_ms": 156900,
+        "conf": 0.3658,
+        "first_token_conf": 0.8588,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.8588,
+          0.9788,
+          0.9789,
+          0.9209,
+          0.6261,
+          0.5951,
+          0.0007
+        ],
+        "full_ctc_first_ms": 157153.06420729822,
+        "full_ctc_tail_conf": 0.875,
+        "full_ctc_end_ms": 163852.76852257497,
+        "pre_center_onset_ms": 157153,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          153570,
+          158153.06420729822
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 156390.0,
+            "end_ms": 157150.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.32558356971751873,
+            "zcr": 0.2045004687988332,
+            "rms_ratio": 0.03964809769228244
+          }
+        ],
+        "pause_stability_crop_ms": [
+          152770,
+          158953.06420729822
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 156390.0,
+            "end_ms": 157150.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.32558356971751873,
+            "zcr": 0.2045004687988332,
+            "rms_ratio": 0.036602389565889785
+          }
+        ],
+        "pause_lead_ms": 250,
+        "center_pause_start_ms": 156390.0,
+        "center_pause_end_ms": 157150.0
+      },
+      {
+        "ayah": 38,
+        "raw_onset_ms": 165193,
+        "onset_ms": 165095,
+        "conf": 0.0061,
+        "first_token_conf": 0.0021,
+        "reliable": false,
+        "repaired": true,
+        "reason": "waveform-pause-recheck",
+        "token_confs": [
+          0.0021,
+          0.9992,
+          0.002,
+          0.9904,
+          0.0,
+          0.0002,
+          0.017
+        ],
+        "full_ctc_first_ms": 165192.70938563033,
+        "full_ctc_tail_conf": 0.9224,
+        "full_ctc_end_ms": 169312.5275615916,
+        "pre_center_onset_ms": 165193,
+        "pause_center_reason": "weak-evidence",
+        "pause_local_crop_ms": [
+          163050,
+          166192.70938563033
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 164930.0,
+            "end_ms": 165210.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4597868541908341,
+            "zcr": 0.05544475468687674,
+            "rms_ratio": 0.18825595516480192
+          }
+        ],
+        "pause_stability_crop_ms": [
+          162250,
+          166992.70938563033
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 164710.0,
+            "end_ms": 165210.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.49074001083037044,
+            "zcr": 0.07225592939878654,
+            "rms_ratio": 0.21007485793335778
+          }
+        ],
+        "pre_signal_onset_ms": 165193,
+        "signal_pause_start_ms": 164930.0,
+        "signal_pause_end_ms": 165210.0
+      },
+      {
+        "ayah": 39,
+        "raw_onset_ms": 170052,
+        "onset_ms": 169830,
+        "conf": 0.0407,
+        "first_token_conf": 0.0019,
+        "reliable": false,
+        "repaired": true,
+        "reason": "waveform-pause-recheck",
+        "token_confs": [
+          0.0019,
+          0.9785,
+          0.0002,
+          0.9968,
+          0.2359,
+          0.9892,
+          0.2803,
+          0.0002,
+          0.0029
+        ],
+        "full_ctc_first_ms": 170052.4949038759,
+        "full_ctc_tail_conf": 0.7906,
+        "full_ctc_end_ms": 173052.36250773116,
+        "pre_center_onset_ms": 170052,
+        "pause_center_reason": "weak-evidence",
+        "pause_local_crop_ms": [
+          168510,
+          171052.4949038759
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 169670.0,
+            "end_ms": 169990.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.48329392826311585,
+            "zcr": 0.11475409836065574,
+            "rms_ratio": 0.19972417039928586
+          }
+        ],
+        "pause_stability_crop_ms": [
+          167710,
+          171852.4949038759
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 169670.0,
+            "end_ms": 170040.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4879268416271951,
+            "zcr": 0.10955641559988091,
+            "rms_ratio": 0.18890861249726185
+          }
+        ],
+        "pre_signal_onset_ms": 170052,
+        "signal_pause_start_ms": 169670.0,
+        "signal_pause_end_ms": 169990.0
+      },
+      {
+        "ayah": 40,
+        "raw_onset_ms": 173772,
+        "onset_ms": 173650,
+        "conf": 0.0039,
+        "first_token_conf": 0.8714,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.8714,
+          0.9505,
+          0.0071,
+          0.0044,
+          0.0,
+          0.0,
+          0.0001,
+          0.0,
+          0.5913
+        ],
+        "full_ctc_first_ms": 173772.3307326564,
+        "full_ctc_tail_conf": 0.9037,
+        "full_ctc_end_ms": 178432.12507731162,
+        "pre_center_onset_ms": 173772,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          172250,
+          174772.3307326564
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 173520.0,
+            "end_ms": 173780.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.45780936881866013,
+            "zcr": 0.1056247316444826,
+            "rms_ratio": 0.15571576449443492
+          }
+        ],
+        "pause_stability_crop_ms": [
+          171450,
+          175572.3307326564
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 173520.0,
+            "end_ms": 173780.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.45780936881866013,
+            "zcr": 0.1056247316444826,
+            "rms_ratio": 0.1543302981706962
+          }
+        ],
+        "pause_lead_ms": 130.0,
+        "center_pause_start_ms": 173520.0,
+        "center_pause_end_ms": 173780.0
+      },
+      {
+        "ayah": 41,
+        "raw_onset_ms": 179192,
+        "onset_ms": 179055,
+        "conf": 0.5756,
+        "first_token_conf": 0.9995,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9995,
+          0.9991,
+          0.9939,
+          0.7959,
+          0.9989,
+          0.0111,
+          0.7389,
+          0.3831,
+          0.9167
+        ],
+        "full_ctc_first_ms": 179192.09153695495,
+        "full_ctc_tail_conf": 0.978,
+        "full_ctc_end_ms": 181172.00415549942,
+        "pre_center_onset_ms": 179192,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          177630,
+          180192.09153695495
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 178880.0,
+            "end_ms": 179230.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.38392987339961565,
+            "zcr": 0.09441786283891547,
+            "rms_ratio": 0.1525185953348517
+          }
+        ],
+        "pause_stability_crop_ms": [
+          176830,
+          180992.09153695495
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 178870.0,
+            "end_ms": 179230.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.39806767751055994,
+            "zcr": 0.09457364341085271,
+            "rms_ratio": 0.14451463998059225
+          }
+        ],
+        "pause_lead_ms": 175.0,
+        "center_pause_start_ms": 178880.0,
+        "center_pause_end_ms": 179230.0
+      },
+      {
+        "ayah": 42,
+        "raw_onset_ms": 181992,
+        "onset_ms": 181770,
+        "conf": 0.8552,
+        "first_token_conf": 0.9988,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.9988,
+          0.9139,
+          0.9995,
+          0.5311,
+          0.9843,
+          0.8104
+        ],
+        "full_ctc_first_ms": 181991.96796721985,
+        "full_ctc_tail_conf": 0.8404,
+        "full_ctc_end_ms": 186931.74995490155,
+        "pre_center_onset_ms": 181992,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          180370,
+          182991.96796721985
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 181650.0,
+            "end_ms": 181890.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3497406252189846,
+            "zcr": 0.09120521172638436,
+            "rms_ratio": 0.12129363210383179
+          }
+        ],
+        "pause_stability_crop_ms": [
+          179570,
+          183791.96796721985
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 181630.0,
+            "end_ms": 181890.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4022671860480892,
+            "zcr": 0.0953198797767282,
+            "rms_ratio": 0.11284106266908088
+          }
+        ],
+        "pause_lead_ms": 120.0,
+        "center_pause_start_ms": 181650.0,
+        "center_pause_end_ms": 181890.0
+      }
+    ],
+    "align_lag_ms": 0,
+    "fresh": true
+  },
+  {
+    "audio": "/Users/ayub/Desktop/Abu_Bakr_Ash-Shatri/001.mp3",
+    "checks": [
+      {
+        "ayah": 1,
+        "raw_onset_ms": 320,
+        "onset_ms": 320,
+        "conf": 0.2666,
+        "first_token_conf": 0.866,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.866,
+          0.988,
+          0.0243,
+          0.024,
+          0.999,
+          0.7187
+        ],
+        "full_ctc_first_ms": 319.9491697729583,
+        "full_ctc_tail_conf": 0.8967,
+        "full_ctc_end_ms": 3979.367799051169,
+        "pre_center_onset_ms": 320,
+        "pause_center_reason": "first-ayah"
+      },
+      {
+        "ayah": 2,
+        "raw_onset_ms": 5539,
+        "onset_ms": 6683,
+        "conf": 0.5305,
+        "first_token_conf": 0.0022,
+        "reliable": false,
+        "repaired": true,
+        "reason": "split-word-local-recheck",
+        "token_confs": [
+          0.0022,
+          0.9998,
+          0.9998,
+          0.9287,
+          0.9996,
+          0.8878,
+          0.9963,
+          0.9991
+        ],
+        "original_conf": 0.3485,
+        "original_first_token_conf": 0.8975,
+        "pause_start_ms": 5780.0,
+        "pause_end_ms": 6620.0,
+        "full_ctc_first_ms": 5539.120001694341,
+        "full_ctc_tail_conf": 0.9733,
+        "full_ctc_end_ms": 11018.249534056253,
+        "pre_center_onset_ms": 6683,
+        "pause_center_reason": "existing-recheck"
+      },
+      {
+        "ayah": 3,
+        "raw_onset_ms": 11798,
+        "onset_ms": 11798,
+        "conf": 0.0478,
+        "first_token_conf": 0.7211,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.7211,
+          0.0,
+          0.0001,
+          0.988,
+          0.001,
+          0.0004,
+          0.9763,
+          0.9931,
+          0.3676,
+          0.347
+        ],
+        "full_ctc_first_ms": 11798.125635377839,
+        "full_ctc_tail_conf": 0.2778,
+        "full_ctc_end_ms": 13817.804769569639,
+        "pre_center_onset_ms": 11798,
+        "pause_center_reason": "unstable-pause",
+        "pause_local_crop_ms": [
+          10210,
+          12798.125635377839
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 11600.0,
+            "end_ms": 11750.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.32290956306813756,
+            "zcr": 0.04169769173492182,
+            "rms_ratio": 0.06450487310241246
+          }
+        ],
+        "pause_stability_crop_ms": [
+          9410,
+          13598.125635377839
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 11410.0,
+            "end_ms": 11590.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.39046211411133913,
+            "zcr": 0.0595903165735568,
+            "rms_ratio": 0.08430893972742504
+          },
+          {
+            "start_ms": 12280.0,
+            "end_ms": 12430.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.42462004478694704,
+            "zcr": 0.114668652271035,
+            "rms_ratio": 0.33236061417534823
+          }
+        ]
+      },
+      {
+        "ayah": 4,
+        "raw_onset_ms": 16137,
+        "onset_ms": 15990,
+        "conf": 0.0697,
+        "first_token_conf": 0.9987,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9987,
+          0.8528,
+          0.9631,
+          0.0898,
+          0.0046,
+          0.0
+        ],
+        "full_ctc_first_ms": 16137.436250423585,
+        "full_ctc_tail_conf": 0.9993,
+        "full_ctc_end_ms": 19556.89300237208,
+        "pre_center_onset_ms": 16137,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          13010,
+          17137.436250423583
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 15910.0,
+            "end_ms": 16070.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2590728023003635,
+            "zcr": 0.034891835310537335,
+            "rms_ratio": 0.11294233215720768
+          }
+        ],
+        "pause_stability_crop_ms": [
+          12210,
+          17937.436250423583
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 12280.0,
+            "end_ms": 12430.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.42462004478694704,
+            "zcr": 0.114668652271035,
+            "rms_ratio": 0.3197155715894125
+          },
+          {
+            "start_ms": 15900.0,
+            "end_ms": 16070.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2618822266644199,
+            "zcr": 0.03479973736047275,
+            "rms_ratio": 0.11117434231156319
+          }
+        ],
+        "pause_lead_ms": 80.0,
+        "center_pause_start_ms": 15910.0,
+        "center_pause_end_ms": 16070.0
+      },
+      {
+        "ayah": 5,
+        "raw_onset_ms": 21777,
+        "onset_ms": 21777,
+        "conf": 0.0603,
+        "first_token_conf": 0.7071,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.7071,
+          0.0238,
+          0.0001,
+          0.0565,
+          0.9925,
+          0.9994
+        ],
+        "full_ctc_first_ms": 21776.540367671976,
+        "full_ctc_tail_conf": 0.9997,
+        "full_ctc_end_ms": 27195.679430701457,
+        "pre_center_onset_ms": 21777,
+        "pause_center_reason": "unstable-pause",
+        "pause_local_crop_ms": [
+          18750,
+          22776.540367671976
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 20800.0,
+            "end_ms": 21680.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.32685090074401624,
+            "zcr": 0.05486587377376508,
+            "rms_ratio": 0.020360190304220805
+          }
+        ],
+        "pause_stability_crop_ms": [
+          17950,
+          23576.540367671976
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 20710.0,
+            "end_ms": 21680.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2967895879611677,
+            "zcr": 0.051547187282969364,
+            "rms_ratio": 0.019190021244672117
+          }
+        ]
+      },
+      {
+        "ayah": 6,
+        "raw_onset_ms": 28076,
+        "onset_ms": 27740,
+        "conf": 0.171,
+        "first_token_conf": 0.9791,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9791,
+          0.8971,
+          0.7196,
+          0.1329,
+          0.9957,
+          0.8827,
+          0.0
+        ],
+        "full_ctc_first_ms": 28075.539647577094,
+        "full_ctc_tail_conf": 0.5536,
+        "full_ctc_end_ms": 31175.04722975263,
+        "pre_center_onset_ms": 28076,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          26390,
+          29075.539647577094
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 27450.0,
+            "end_ms": 27990.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4298322661053604,
+            "zcr": 0.060207270932719194,
+            "rms_ratio": 0.12533521481346607
+          }
+        ],
+        "pause_stability_crop_ms": [
+          25590,
+          29875.539647577094
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 27450.0,
+            "end_ms": 27990.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4298322661053604,
+            "zcr": 0.060207270932719194,
+            "rms_ratio": 0.10272750980440214
+          }
+        ],
+        "pause_lead_ms": 250,
+        "center_pause_start_ms": 27450.0,
+        "center_pause_end_ms": 27990.0
+      },
+      {
+        "ayah": 7,
+        "raw_onset_ms": 33595,
+        "onset_ms": 33595,
+        "conf": 0.1572,
+        "first_token_conf": 0.8755,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.8755,
+          0.9603,
+          0.9424,
+          0.9181,
+          0.0762,
+          0.0
+        ],
+        "full_ctc_first_ms": 33594.662826160624,
+        "full_ctc_tail_conf": 0.9542,
+        "full_ctc_end_ms": 50092.04189257879,
+        "pre_center_onset_ms": 33595,
+        "pause_center_reason": "unstable-pause",
+        "pause_local_crop_ms": [
+          30370,
+          34594.662826160624
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 33160.0,
+            "end_ms": 33350.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.31872764009721266,
+            "zcr": 0.02821869488536155,
+            "rms_ratio": 0.1564142245894211
+          }
+        ],
+        "pause_stability_crop_ms": [
+          29570,
+          35394.662826160624
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 30550.0,
+            "end_ms": 30670.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.4290648796174577,
+            "zcr": 0.17488372093023255,
+            "rms_ratio": 0.14634468960294417
+          },
+          {
+            "start_ms": 33130.0,
+            "end_ms": 33530.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3227487399804838,
+            "zcr": 0.02995571763480073,
+            "rms_ratio": 0.13994621825803752
+          }
+        ]
+      }
+    ],
+    "predicted_checks": [
+      {
+        "ayah": 1,
+        "raw_onset_ms": 320,
+        "onset_ms": 320,
+        "conf": 0.2666,
+        "first_token_conf": 0.866,
+        "reliable": true,
+        "repaired": false,
+        "reason": "ctc",
+        "token_confs": [
+          0.866,
+          0.988,
+          0.0243,
+          0.024,
+          0.999,
+          0.7187
+        ],
+        "full_ctc_first_ms": 319.9491697729583,
+        "full_ctc_tail_conf": 0.8967,
+        "full_ctc_end_ms": 3979.367799051169,
+        "pre_center_onset_ms": 320,
+        "pause_center_reason": "first-ayah"
+      },
+      {
+        "ayah": 2,
+        "raw_onset_ms": 5539,
+        "onset_ms": 6683,
+        "conf": 0.5305,
+        "first_token_conf": 0.0022,
+        "reliable": false,
+        "repaired": true,
+        "reason": "split-word-local-recheck",
+        "token_confs": [
+          0.0022,
+          0.9998,
+          0.9998,
+          0.9287,
+          0.9996,
+          0.8878,
+          0.9963,
+          0.9991
+        ],
+        "original_conf": 0.3485,
+        "original_first_token_conf": 0.8975,
+        "pause_start_ms": 5780.0,
+        "pause_end_ms": 6620.0,
+        "full_ctc_first_ms": 5539.120001694341,
+        "full_ctc_tail_conf": 0.9733,
+        "full_ctc_end_ms": 11018.249534056253,
+        "pre_center_onset_ms": 6683,
+        "pause_center_reason": "existing-recheck"
+      },
+      {
+        "ayah": 3,
+        "raw_onset_ms": 11798,
+        "onset_ms": 11798,
+        "conf": 0.0478,
+        "first_token_conf": 0.7211,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.7211,
+          0.0,
+          0.0001,
+          0.988,
+          0.001,
+          0.0004,
+          0.9763,
+          0.9931,
+          0.3676,
+          0.347
+        ],
+        "full_ctc_first_ms": 11798.125635377839,
+        "full_ctc_tail_conf": 0.2778,
+        "full_ctc_end_ms": 13817.804769569639,
+        "pre_center_onset_ms": 11798,
+        "pause_center_reason": "unstable-pause",
+        "pause_local_crop_ms": [
+          10210,
+          12798.125635377839
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 11600.0,
+            "end_ms": 11750.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.32290956306813756,
+            "zcr": 0.04169769173492182,
+            "rms_ratio": 0.06450487310241246
+          }
+        ],
+        "pause_stability_crop_ms": [
+          9410,
+          13598.125635377839
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 11410.0,
+            "end_ms": 11590.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.39046211411133913,
+            "zcr": 0.0595903165735568,
+            "rms_ratio": 0.08430893972742504
+          },
+          {
+            "start_ms": 12280.0,
+            "end_ms": 12430.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.42462004478694704,
+            "zcr": 0.114668652271035,
+            "rms_ratio": 0.33236061417534823
+          }
+        ]
+      },
+      {
+        "ayah": 4,
+        "raw_onset_ms": 16137,
+        "onset_ms": 15990,
+        "conf": 0.0697,
+        "first_token_conf": 0.9987,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9987,
+          0.8528,
+          0.9631,
+          0.0898,
+          0.0046,
+          0.0
+        ],
+        "full_ctc_first_ms": 16137.436250423585,
+        "full_ctc_tail_conf": 0.9993,
+        "full_ctc_end_ms": 19556.89300237208,
+        "pre_center_onset_ms": 16137,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          13010,
+          17137.436250423583
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 15910.0,
+            "end_ms": 16070.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2590728023003635,
+            "zcr": 0.034891835310537335,
+            "rms_ratio": 0.11294233215720768
+          }
+        ],
+        "pause_stability_crop_ms": [
+          12210,
+          17937.436250423583
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 12280.0,
+            "end_ms": 12430.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.42462004478694704,
+            "zcr": 0.114668652271035,
+            "rms_ratio": 0.3197155715894125
+          },
+          {
+            "start_ms": 15900.0,
+            "end_ms": 16070.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2618822266644199,
+            "zcr": 0.03479973736047275,
+            "rms_ratio": 0.11117434231156319
+          }
+        ],
+        "pause_lead_ms": 80.0,
+        "center_pause_start_ms": 15910.0,
+        "center_pause_end_ms": 16070.0
+      },
+      {
+        "ayah": 5,
+        "raw_onset_ms": 21777,
+        "onset_ms": 21777,
+        "conf": 0.0603,
+        "first_token_conf": 0.7071,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.7071,
+          0.0238,
+          0.0001,
+          0.0565,
+          0.9925,
+          0.9994
+        ],
+        "full_ctc_first_ms": 21776.540367671976,
+        "full_ctc_tail_conf": 0.9997,
+        "full_ctc_end_ms": 27195.679430701457,
+        "pre_center_onset_ms": 21777,
+        "pause_center_reason": "unstable-pause",
+        "pause_local_crop_ms": [
+          18750,
+          22776.540367671976
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 20800.0,
+            "end_ms": 21680.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.32685090074401624,
+            "zcr": 0.05486587377376508,
+            "rms_ratio": 0.020360190304220805
+          }
+        ],
+        "pause_stability_crop_ms": [
+          17950,
+          23576.540367671976
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 20710.0,
+            "end_ms": 21680.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.2967895879611677,
+            "zcr": 0.051547187282969364,
+            "rms_ratio": 0.019190021244672117
+          }
+        ]
+      },
+      {
+        "ayah": 6,
+        "raw_onset_ms": 28076,
+        "onset_ms": 27740,
+        "conf": 0.171,
+        "first_token_conf": 0.9791,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.9791,
+          0.8971,
+          0.7196,
+          0.1329,
+          0.9957,
+          0.8827,
+          0.0
+        ],
+        "full_ctc_first_ms": 28075.539647577094,
+        "full_ctc_tail_conf": 0.5536,
+        "full_ctc_end_ms": 31175.04722975263,
+        "pre_center_onset_ms": 28076,
+        "pause_center_reason": "positioned",
+        "pause_local_crop_ms": [
+          26390,
+          29075.539647577094
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 27450.0,
+            "end_ms": 27990.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4298322661053604,
+            "zcr": 0.060207270932719194,
+            "rms_ratio": 0.12533521481346607
+          }
+        ],
+        "pause_stability_crop_ms": [
+          25590,
+          29875.539647577094
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 27450.0,
+            "end_ms": 27990.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.4298322661053604,
+            "zcr": 0.060207270932719194,
+            "rms_ratio": 0.10272750980440214
+          }
+        ],
+        "pause_lead_ms": 250,
+        "center_pause_start_ms": 27450.0,
+        "center_pause_end_ms": 27990.0
+      },
+      {
+        "ayah": 7,
+        "raw_onset_ms": 33595,
+        "onset_ms": 33595,
+        "conf": 0.1572,
+        "first_token_conf": 0.8755,
+        "reliable": false,
+        "repaired": false,
+        "reason": "weak-word",
+        "token_confs": [
+          0.8755,
+          0.9603,
+          0.9424,
+          0.9181,
+          0.0762,
+          0.0
+        ],
+        "full_ctc_first_ms": 33594.662826160624,
+        "full_ctc_tail_conf": 0.9542,
+        "full_ctc_end_ms": 50092.04189257879,
+        "pre_center_onset_ms": 33595,
+        "pause_center_reason": "unstable-pause",
+        "pause_local_crop_ms": [
+          30370,
+          34594.662826160624
+        ],
+        "pause_local_decisions": [
+          {
+            "start_ms": 33160.0,
+            "end_ms": 33350.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.31872764009721266,
+            "zcr": 0.02821869488536155,
+            "rms_ratio": 0.1564142245894211
+          }
+        ],
+        "pause_stability_crop_ms": [
+          29570,
+          35394.662826160624
+        ],
+        "pause_stability_decisions": [
+          {
+            "start_ms": 30550.0,
+            "end_ms": 30670.0,
+            "owned": false,
+            "accepted": false,
+            "flatness": 0.4290648796174577,
+            "zcr": 0.17488372093023255,
+            "rms_ratio": 0.14634468960294417
+          },
+          {
+            "start_ms": 33130.0,
+            "end_ms": 33530.0,
+            "owned": true,
+            "accepted": true,
+            "flatness": 0.3227487399804838,
+            "zcr": 0.02995571763480073,
+            "rms_ratio": 0.13994621825803752
+          }
+        ]
+      }
+    ],
+    "align_lag_ms": 0,
+    "fresh": true
+  }
+]

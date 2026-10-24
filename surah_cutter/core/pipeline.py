@@ -220,7 +220,7 @@ def _fast_align(
     ayah_progress: Callable[[int], None] | None = None,
     experimental: bool = False,
 ) -> list[tuple[int, int, int]]:
-    """Capture the selected bundle, decode, then run the shared FAST executor."""
+    """Run shared FAST; ``experimental`` remains a compatibility alias."""
     from surah_cutter.core import align, align_fast, decode
 
     if ayah_audio_dir:
@@ -235,11 +235,7 @@ def _fast_align(
     pcm = decode.decode(audio_path)
     if ayah_progress is not None:
         kwargs["ayah_progress"] = ayah_progress
-    executor = align_fast.align_surah_fast
-    if experimental:
-        from surah_cutter.core.fast_executor import align_surah_sequential
-        executor = align_surah_sequential
-    rows = executor(
+    rows = align_fast.align_surah_fast(
         pcm, decode.DEFAULT_SR, words, surah=surah, trace=trace,
         log_event=log_event, **kwargs,
     )

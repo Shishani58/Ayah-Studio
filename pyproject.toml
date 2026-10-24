@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ayah-studio"
-version = "0.3.1"
+version = "0.3.2"
 description = "Generate per-ayah timecodes for Qur'an recitation audio, with visual/audio verification."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -20,7 +20,6 @@ keywords = ["quran", "forced-alignment", "timecodes", "ayah", "recitation"]
 dependencies = [
     "numpy>=1.24",
     "onnxruntime>=1.17",       # Silero VAD + int8 acoustic model (alignment)
-    "soundfile>=0.12",
     "imageio-ffmpeg>=0.4.9",   # bundled cross-platform ffmpeg binary for decode
     "fastapi>=0.110",          # local web-GUI server (API + SSE progress)
     "uvicorn>=0.27",           # ASGI server for the web GUI

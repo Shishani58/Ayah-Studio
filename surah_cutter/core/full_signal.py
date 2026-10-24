@@ -32,17 +32,17 @@ def refine_late_boundaries(checks, pcm, sr, *, trace=None):
     """Place cuts in owned quiet shelves using unsmoothed RMS and peaks.
 
     FULL supplies neighbouring ayah ownership. Different DSP contexts may
-    expose different shelves; only a unique earlier shelf is eligible. Check
+    expose different edges; only their common quiet shelf is eligible. Check
     it in every context, then require a quiet 40 ms window in the raw waveform.
     Never join across a brief sound or cut a supported previous ending.
     """
-    from surah_cutter.core import candidates
+    from surah_cutter.core import candidates, full_pause_center
 
     policy = dict(frame_ms=5, quiet_window_ms=40, max_shift_ms=500, max_lead_ms=250,
                   min_pause_ms=120, min_safe_ms=40, margin_ms=20,
                   max_rms_ratio=.30, max_peak_ratio=.50, max_periodicity=.8, max_gap_ms=6000,
                   noise_multiplier=3, min_rms_floor_ratio=.03, min_peak_floor_ratio=.05,
-                  voice_range_hz=[75, 400])
+                  voice_range_hz=[75, 400], min_word_token_conf=.5)
     if trace is not None:
         trace["full_signal_policy"] = policy
     records = trace.setdefault("full_signal_checks", []) if trace is not None else []
@@ -51,27 +51,52 @@ def refine_late_boundaries(checks, pcm, sr, *, trace=None):
         check, previous = checks[ayah], checks.get(ayah - 1)
         if (previous is None or check.get("repaired")
                 or check.get("pause_center_reason") == "positioned"
-                or check.get("first_token_conf", 0) < .25
                 or previous.get("full_ctc_tail_conf", 0) < .25):
             continue
         tail, first, raw = previous.get("full_ctc_end_ms"), check.get("full_ctc_first_ms"), check.get("raw_onset_ms")
         if None in (tail, first, raw) or not 0 < first - tail <= policy["max_gap_ms"]:
             continue
+        weak_head = check.get("first_token_conf", 0) < .25
+        if weak_head:
+            # A weak first phoneme is not proof that the whole opening word
+            # is absent. Its other aligned phonemes may support ownership.
+            # Only the raw-signal verifier may move this cut; keep review.
+            if (check.get("pause_center_reason") != "weak-evidence"
+                    or max(check.get("token_confs", []), default=0) < policy["min_word_token_conf"]):
+                continue
+            for prefix, extra in (("pause_local", 0), (
+                    "pause_stability", full_pause_center.POSITION_POLICY["stability_extra_ms"])):
+                crop_ms, decisions, _ = full_pause_center._local_pauses(
+                    pcm, sr, tail, first, full_pause_center.POSITION_POLICY, extra_ms=extra)
+                check[f"{prefix}_crop_ms"] = crop_ms
+                check[f"{prefix}_decisions"] = decisions
         margin = policy["margin_ms"]
         shelves = sorted({(p["start_ms"], p["end_ms"])
                           for key in ("pause_local_decisions", "pause_stability_decisions")
                           for p in check.get(key, [])
                           if p.get("accepted") and p.get("owned")
-                          and tail <= p["start_ms"] < p["end_ms"] <= raw + margin
-                          and p["end_ms"] - p["start_ms"] >= policy["min_pause_ms"]
-                          and p["end_ms"] - margin < check["onset_ms"]})
-        if len(shelves) != 1:
+                          and p["start_ms"] < min(raw, first) and p["end_ms"] > tail
+                          and p["end_ms"] - p["start_ms"] >= policy["min_pause_ms"]})
+        if not shelves:
             continue
-        start, end = shelves[0]
+        # Prefer shelves wholly supported by the speech brackets. A later
+        # candidate crossing the first sound must not veto an earlier proven
+        # pause (or pull the cut into that first word).
+        bounded_shelves = [p for p in shelves
+                           if tail <= p[0] and p[1] <= raw + margin
+                           and p[1] - margin < check["onset_ms"]]
+        if bounded_shelves:
+            shelves = bounded_shelves
+        # Different crops may trim the same pause differently. Use only the
+        # intersection; never bridge a sound between disjoint quiet shelves.
+        start, end = max(p[0] for p in shelves), min(p[1] for p in shelves)
+        if end - start < policy["min_pause_ms"]:
+            continue
+        half = policy["quiet_window_ms"] / 2
         guard = max(margin, min(80, (end - start) * .22))
         safe_start = max(start + guard, end - policy["max_lead_ms"],
-                         check["onset_ms"] - policy["max_shift_ms"], tail)
-        safe_end = min(end - guard, raw - margin, check["onset_ms"] - margin)
+                         check["onset_ms"] - policy["max_shift_ms"], tail + half)
+        safe_end = min(end - guard, raw - margin, first - half, check["onset_ms"] - margin)
         following = checks.get(ayah + 1)
         if (safe_end - safe_start < policy["min_safe_ms"]
                 or safe_start <= previous["onset_ms"]
@@ -88,7 +113,8 @@ def refine_late_boundaries(checks, pcm, sr, *, trace=None):
             candidates.Pause(start - a, end - a, end - start)) for a, b in contexts]
         record = dict(ayah=ayah, crop_ms=[lo, hi], pause_ms=[start, end],
                       before_ms=check["onset_ms"], safe_interval_ms=[safe_start, safe_end],
-                      accepted=False, dsp_context_metrics=metrics)
+                      accepted=False, dsp_context_metrics=metrics, weak_head=weak_head,
+                      pause_edges_cross_anchor=not bool(bounded_shelves))
         records.append(record)
         if not all(candidates._dsp_accepts_pause(m) for m in metrics):
             record["reason"] = "waveform-dsp-conflict"
@@ -121,7 +147,6 @@ def refine_late_boundaries(checks, pcm, sr, *, trace=None):
         desired = end - min((end - start) / 2, policy["max_lead_ms"])
         proposals = times[(times >= safe_start) & (times <= safe_end)]
         proposals = sorted(proposals, key=lambda t: (abs(t - desired), t))
-        half = policy["quiet_window_ms"] / 2
         for proposed in proposals:
             # No smoothing/merging: a brief syllable or click in this window
             # vetoes the cut instead of being absorbed into a quiet shelf.

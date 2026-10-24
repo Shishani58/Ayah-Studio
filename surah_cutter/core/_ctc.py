@@ -80,6 +80,12 @@ def forced_align(log_probs, targets, blank: int = 0):
     # not a full int64 state index (8x smaller, with identical tie breaking).
     back = np.zeros((t_len, n_st), dtype=np.uint8)
     idx = np.arange(n_st)
+    prev1 = np.empty(n_st)
+    prev2 = np.empty(n_st)
+    best = np.empty(n_st)
+    take = np.empty(n_st, dtype=bool)
+    disallowed_skip = ~allowed_skip
+    nonfinite = not np.isfinite(emis).all()
 
     from surah_cutter.core.progress import advance
 
@@ -87,15 +93,26 @@ def forced_align(log_probs, targets, blank: int = 0):
         if t % 64 == 0:
             check_cancelled()
             advance("alignment", t, t_len)
-        stay = dp
-        prev1 = np.concatenate(([_NEG], dp[:-1]))
-        prev2 = np.concatenate(([_NEG, _NEG], dp[:-2]))
-        prev2 = np.where(allowed_skip, prev2, _NEG)
-        stacked = np.stack((stay, prev1, prev2))  # (3, n_st)
-        choice = np.argmax(stacked, axis=0)  # 0:stay 1:-1 2:-2
-        best = stacked[choice, idx]
-        dp = best + emis[t, ext]
-        back[t] = choice
+        prev1[0], prev1[1:] = _NEG, dp[:-1]
+        prev2[:2], prev2[2:] = _NEG, dp[:-2]
+        prev2[disallowed_skip] = _NEG
+        if nonfinite:
+            # Preserve argmax's first-NaN and infinity arithmetic behaviour too.
+            stacked = np.stack((dp, prev1, prev2))
+            choice = np.argmax(stacked, axis=0)
+            dp = stacked[choice, idx] + emis[t, ext]
+            back[t] = choice
+        else:
+            # Strict > keeps the original tie order: stay, then -1, then -2.
+            # Reuse O(states) scratch instead of stacking/reducing every frame.
+            choice = back[t]
+            np.greater(prev1, dp, out=take)
+            np.copyto(choice, np.uint8(1), where=take)
+            np.maximum(dp, prev1, out=best)
+            np.greater(prev2, best, out=take)
+            np.copyto(choice, np.uint8(2), where=take)
+            np.maximum(best, prev2, out=best)
+            np.add(best, emis[t, ext], out=dp)
 
     if max(dp[n_st - 1], dp[n_st - 2]) <= _NEG / 2:
         raise ValueError("CTC target sequence cannot fit in audio")

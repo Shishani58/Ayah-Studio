@@ -4,7 +4,7 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
-from surah_cutter.core import align, align_fast, align_tiled, decode, fast_executor, lag, pipeline, repair
+from surah_cutter.core import align, align_fast, align_tiled, decode, fast_executor, pipeline
 from surah_cutter.data import quran_text
 
 
@@ -55,8 +55,6 @@ def test_explicit_fast_keeps_proven_rows_without_lag_or_full_repair(monkeypatch)
     monkeypatch.setattr(align_fast, "align_surah_fast_legacy", forbidden, raising=False)
     monkeypatch.setattr(align, "align_surah", forbidden)
     monkeypatch.setattr(align_tiled, "align_surah_tiled", forbidden)
-    monkeypatch.setattr(lag, "calibrate_rows_to_pauses", forbidden)
-    monkeypatch.setattr(repair, "repair_surah_timings", forbidden)
     assert pipeline._fast_align("fake", 112, quran_text.surah_words(112), trace=trace) == [
         (112, 1, 1234), (112, 2, 3456)]
 

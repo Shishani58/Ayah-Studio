@@ -120,7 +120,7 @@ wheels = [
 
 [[package]]
 name = "ayah-studio"
-version = "0.3.1"
+version = "0.3.2"
 source = { editable = "." }
 dependencies = [
     { name = "fastapi" },
@@ -131,7 +131,6 @@ dependencies = [
     { name = "onnxruntime", version = "1.24.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "onnxruntime", version = "1.27.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "pywebview" },
-    { name = "soundfile" },
     { name = "uv" },
     { name = "uvicorn" },
 ]
@@ -191,7 +190,6 @@ requires-dist = [
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0" },
     { name = "pywebview", specifier = ">=4.4" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.4" },
-    { name = "soundfile", specifier = ">=0.12" },
     { name = "ten-vad", marker = "extra == 'ten-vad'", specifier = ">=1.0.6.8" },
     { name = "torch", marker = "extra == 'align'", specifier = ">=2.1" },
     { name = "transformers", marker = "extra == 'align'", specifier = ">=4.38" },

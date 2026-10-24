@@ -58,7 +58,10 @@ def _model_runtime(handler):
             if ((handler.__name__ == "recheck_sura" and model_store.active_kind() != "phonetic")
                     or (handler.__name__ == "get_fast_log" and not model_store.supports_fast())):
                 raise HTTPException(400, "Проверка фонетических начал доступна только для Quran Phonetics.")
-            return handler(*args, **kwargs)
+            from surah_cutter.webgui.activity import generation_activity
+
+            with generation_activity():
+                return handler(*args, **kwargs)
         finally:
             model_store.RUNTIME_LOCK.release()
     return wrapped
@@ -111,8 +114,10 @@ class _GenJob:
 
     def _run(self, suras: list[int], mode: str) -> None:
         from surah_cutter.core.progress import progress_scope
+        from surah_cutter.webgui.activity import generation_activity
 
-        with model_store.RUNTIME_LOCK, cancellation_scope(self.cancel), progress_scope(self._work_progress):
+        with (model_store.RUNTIME_LOCK, generation_activity(),
+              cancellation_scope(self.cancel), progress_scope(self._work_progress)):
             self._run_selected(suras, mode)
 
     def _work_progress(self, fields) -> None:

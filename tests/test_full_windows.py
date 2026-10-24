@@ -85,6 +85,8 @@ def test_concurrent_windows_preserve_order_frames_and_single_window_scale(monkey
     np.testing.assert_allclose(parallel, expected)
     assert trace["fallback_cuts"] > 0
     assert trace["windows"][-1]["end_ms"] == len(pcm) / 16
+    assert trace["runtime"] == parallel_emitter.runtime_identity
+    assert trace["inference_cpu_s"] >= 0
 
 
 def test_short_clip_matches_original_exactly_without_dsp(monkeypatch):
@@ -97,6 +99,27 @@ def test_short_clip_matches_original_exactly_without_dsp(monkeypatch):
     expected = model.emissions(pcm, window_s=1)
     actual = full_windows.generate_pause_emissions(model, pcm, window_s=1, workers=4)
     np.testing.assert_array_equal(actual, expected)
+
+
+def test_slow_first_window_cannot_leave_the_other_worker_idle(monkeypatch):
+    monkeypatch.setattr("surah_cutter.core.candidates.detect_energy_pauses", lambda *a, **kw: [])
+    third_started = threading.Event()
+
+    class GatedSession(SampleSession):
+        def run(self, outputs, inputs):
+            first_sample = inputs["input_values"][0, 0]
+            if first_sample == 0:
+                assert third_started.wait(2), "The completed second window must free a slot"
+            elif first_sample > .4:
+                third_started.set()
+            return super().run(outputs, inputs)
+
+    result = full_windows.generate_pause_emissions(
+        emitter(GatedSession()), np.arange(64000, dtype=np.float32) / 64000,
+        window_s=1, context_s=.02, workers=2,
+    )
+    assert third_started.is_set()
+    assert result.shape == (200, 3)
 
 
 def test_normalization_is_global_and_seams_do_not_change_statistics(monkeypatch):
@@ -184,12 +207,35 @@ def test_strong_pause_gate_rejects_tonal_tail_and_records_evidence(monkeypatch):
         return pauses
 
     monkeypatch.setattr(candidates, "detect_energy_pauses", detect)
-    monkeypatch.setattr(candidates, "_dsp_pause_metrics", lambda pcm, sr, p: {
+    monkeypatch.setattr(candidates, "_dsp_pause_metrics", lambda pcm, sr, p, **kw: {
         "rms_ratio": .05 if p is pauses[0] else .5, "flatness": .01, "zcr": .01,
     })
     trace = {}
     assert full_windows.detect_strong_pauses(np.ones(80_000), trace=trace) == pauses[:1]
     assert [p["accepted"] for p in trace["pause_decisions"]] == [True, False]
+
+
+@pytest.mark.parametrize("dtype", [np.float32, np.float64])
+def test_strong_pause_metrics_scan_full_pcm_once_and_keep_exact_values(monkeypatch, dtype):
+    from surah_cutter.core import candidates
+
+    pcm = np.random.default_rng(8).normal(0, .1, 160000).astype(dtype)
+    pauses = [Pause(ms, ms + 400, 400) for ms in (1000, 3000, 6000)]
+    monkeypatch.setattr(candidates, "detect_energy_pauses", lambda *a, **kw: pauses)
+    original_mean = np.mean
+    scans = []
+
+    def mean(values, *args, **kwargs):
+        if values.ndim == 1 and values.size == pcm.size:
+            scans.append(values.dtype)
+        return original_mean(values, *args, **kwargs)
+
+    monkeypatch.setattr(np, "mean", mean)
+    trace = {}
+    full_windows.detect_strong_pauses(pcm, trace=trace)
+    assert scans == [np.dtype(np.float32)]
+    for pause, decision in zip(pauses, trace["pause_decisions"]):
+        assert decision["metrics"] == candidates._dsp_pause_metrics(pcm, 16000, pause)
 
 
 @pytest.mark.parametrize("workers", [5, 6])

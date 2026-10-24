@@ -71,7 +71,6 @@ hiddenimports = collect_submodules("onnxruntime") + [
     "uvicorn.loops.auto",
     "uvicorn.protocols.http.auto",
     "uvicorn.protocols.websockets.auto",
-    "soundfile",
     "imageio_ffmpeg",
 ]
 

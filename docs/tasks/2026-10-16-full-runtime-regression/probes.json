@@ -1,0 +1,69 @@
+{
+  "six_identical_windows": {
+    "cancellation": [
+      {
+        "enabled": false,
+        "wall_s": 4.259,
+        "cpu_s": 26.054
+      },
+      {
+        "enabled": true,
+        "wall_s": 4.17,
+        "cpu_s": 26.472
+      },
+      {
+        "enabled": false,
+        "wall_s": 3.803,
+        "cpu_s": 25.255
+      }
+    ],
+    "process_policy": [
+      {
+        "background": true,
+        "wall_s": 105.2,
+        "cpu_s": 91.313
+      },
+      {
+        "background": false,
+        "wall_s": 4.142,
+        "cpu_s": 25.556
+      }
+    ],
+    "parent_thread_qos_only": [
+      {
+        "qos": 9,
+        "wall_s": 3.899,
+        "cpu_s": 25.09
+      },
+      {
+        "qos": 21,
+        "wall_s": 3.67,
+        "cpu_s": 24.057
+      },
+      {
+        "qos": 25,
+        "wall_s": 4.098,
+        "cpu_s": 24.867
+      }
+    ]
+  },
+  "native_intermediate": {
+    "activity_only": {
+      "cancelled_by_investigator": true,
+      "observed_acoustic_done": 59,
+      "observed_acoustic_wall_s": 82.073,
+      "reason": "Still utility scheduling in acoustic pool"
+    },
+    "activity_and_parent_qos": {
+      "cancelled_by_investigator": true,
+      "observed_acoustic_done": 15,
+      "observed_acoustic_wall_s": 20.49,
+      "reason": "Python pool workers do not acquire parent explicit QoS; apply at actual run_window entry"
+    }
+  },
+  "notes": [
+    "No saved timings were inputs to the acoustic probes. Only the first six acoustic window coordinates were reused for the isolated scheduling comparison.",
+    "taskpolicy applied exclusively to the disposable probe process, then restored. No user process scheduling was changed.",
+    "Intermediate native FULL attempts were stopped with SIGTERM; no complete result or precision claim comes from them."
+  ]
+}

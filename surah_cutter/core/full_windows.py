@@ -8,8 +8,7 @@ context logits, and leaves canonical targets and CTC alignment unchanged.
 from __future__ import annotations
 
 from bisect import bisect_left, bisect_right
-from collections import deque
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 import math
 import threading
 import time
@@ -29,7 +28,7 @@ FULL_WORKERS = 3
 FULL_MAX_WINDOW_S = 60
 FULL_POLICY = "qpc-full-pause-v2-text-only"
 FULL_REVIEW_POLICY = "qpc-pause-review-v1"
-FULL_ONSET_POLICY = "qpc-waveform-pause-v9"
+FULL_ONSET_POLICY = "qpc-waveform-pause-v11"
 
 
 def detect_strong_pauses(pcm: np.ndarray, *, trace: dict | None = None):
@@ -38,14 +37,18 @@ def detect_strong_pauses(pcm: np.ndarray, *, trace: dict | None = None):
         _dsp_accepts_pause, _dsp_pause_metrics, detect_energy_pauses,
     )
 
+    audio = np.asarray(pcm, dtype=np.float32).reshape(-1)
     candidates = detect_energy_pauses(
-        pcm, EXPECTED_SR, min_pause_ms=STRONG_PAUSE_MIN_MS, use_ten_vad=False,
+        audio, EXPECTED_SR, min_pause_ms=STRONG_PAUSE_MIN_MS, use_ten_vad=False,
     )
+    # The same recording RMS is used for every pause. Computing it inside
+    # each metric call scans hours of PCM hundreds of times.
+    audio_rms = float(np.sqrt(np.mean(audio * audio))) if candidates and audio.size else 1e-10
     accepted = []
     decisions = []
     for pause in candidates:
         check_cancelled()
-        metrics = _dsp_pause_metrics(pcm, EXPECTED_SR, pause)
+        metrics = _dsp_pause_metrics(audio, EXPECTED_SR, pause, audio_rms=audio_rms)
         ok = pause.depth_ms >= STRONG_PAUSE_MIN_MS and _dsp_accepts_pause(metrics)
         decisions.append({"start_ms": pause.start_ms, "end_ms": pause.end_ms,
                           "center_ms": pause.center_ms, "duration_ms": pause.depth_ms,
@@ -139,15 +142,18 @@ def generate_pause_emissions(
     if trace is not None:
         trace.update(window_s=window_s, context_s=context_s, workers=workers,
                      batch_size=1, dsp_s=0.0, windows=[], max_window_s=max_window_s,
+                     runtime=getattr(emitter, "runtime_identity", None),
                      pause_policy="strong-dsp-v1" if strong_pauses else "energy-preferred")
     if len(audio) <= window_s * EXPECTED_SR:
         if max_window_s is not None and len(audio) > max_window_s * EXPECTED_SR:
             raise ValueError("FULL: участок без подтверждённой паузы слишком длинный")
         start = time.perf_counter()
+        cpu_start = time.process_time()
         result = emitter.emissions(audio, window_s=window_s, context_s=context_s)
         check_cancelled()
         if trace is not None:
             trace.update(inference_s=time.perf_counter() - start, short_clip=True,
+                         inference_cpu_s=time.process_time() - cpu_start,
                          windows=[{"start_ms": 0, "end_ms": len(audio) / 16,
                                    "cut_reason": "end", "frames": len(result)}])
         return result
@@ -200,23 +206,31 @@ def generate_pause_emissions(
 
     advance("acoustic", 0, len(spans))
     start = time.perf_counter()
-    results = []
-    intervals = []
+    cpu_start = time.process_time()
+    results = [None] * len(spans)
+    intervals = [None] * len(spans)
     pool = ThreadPoolExecutor(max_workers=workers)
-    pending = deque()
-    iterator = iter(spans)
+    pending = {}
+    iterator = iter(enumerate(spans))
+    completed = 0
     try:
         for _ in range(min(workers, len(spans))):
-            pending.append(pool.submit(run_window, next(iterator)))
+            index, span = next(iterator)
+            pending[pool.submit(run_window, span)] = index
         while pending:
             check_cancelled()
-            kept, interval = pending.popleft().result()
-            results.append(kept)
-            intervals.append(interval)
-            advance("acoustic", len(results), len(spans))
-            span = next(iterator, None)
-            if span is not None:
-                pending.append(pool.submit(run_window, span))
+            finished, _ = wait(pending, return_when=FIRST_COMPLETED)
+            # Refill any freed slot, even while an earlier long window runs.
+            # Only collection order changes; inputs and final frame order do not.
+            for future in sorted(finished, key=pending.__getitem__):
+                index = pending.pop(future)
+                results[index], intervals[index] = future.result()
+                completed += 1
+                advance("acoustic", completed, len(spans))
+                item = next(iterator, None)
+                if item is not None:
+                    index, span = item
+                    pending[pool.submit(run_window, span)] = index
     finally:
         stop.set()
         for future in pending:
@@ -225,6 +239,7 @@ def generate_pause_emissions(
     result = np.concatenate(results)
     if trace is not None:
         trace.update(inference_s=time.perf_counter() - start, windows=intervals,
+                     inference_cpu_s=time.process_time() - cpu_start,
                      pause_cuts=sum(s[2] == "pause" for s in spans),
                      fallback_cuts=sum(s[2] == "no-pause" for s in spans))
     return result

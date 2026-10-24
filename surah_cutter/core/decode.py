@@ -47,19 +47,7 @@ def decode(path: str, sr: int = DEFAULT_SR) -> np.ndarray:
         "-ar", str(sr),
         "-",
     ]
-    if current_event() is None:
-        proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    else:
-        with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE) as child:
-            with interruptible(child.kill):
-                stdout, stderr = child.communicate()
-            proc = subprocess.CompletedProcess(cmd, child.returncode, stdout, stderr)
-    if proc.returncode != 0:
-        msg = proc.stderr.decode("utf-8", "replace").strip()
-        raise DecodeError(f"ffmpeg failed for {path!r}: {msg or 'unknown error'}")
-
-    # frombuffer отдаёт read-only view на bytes; .copy() даёт writable массив.
-    return np.frombuffer(proc.stdout, dtype=np.float32).copy()
+    return _decode_command(cmd, path)
 
 
 def decode_range(
@@ -92,6 +80,11 @@ def decode_range(
         "-ar", str(sr),
         "-",
     ]
+    return _decode_command(cmd, path)
+
+
+def _decode_command(cmd: list[str], path: str) -> np.ndarray:
+    """Run ffmpeg with cancellation and return writable PCM."""
     if current_event() is None:
         proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     else:
